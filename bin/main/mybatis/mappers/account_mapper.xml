@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.see_nior.seeniorAdmin.account.mapper.AccountMapper">
+
+	<resultMap type="AdminAccountDto" id="AdminAccountDto">
+		<result column="no" property="no" />
+		<result column="pw" property="pw" />
+		<result column="name" property="name" />
+		<result column="phone" property="phone" />
+		<result column="department" property="department" />
+		<result column="level" property="level" />
+		<result column="position" property="position" />
+		<result column="authority_role" property="authority_role" />
+		<result column="isaccountnonexpired" property="isaccountnonexpired" />
+		<result column="isaccountnonlocked" property="isaccountnonlocked" />
+		<result column="iscredentialsnonexpired" property="iscredentialsnonexpired" />
+		<result column="isenabled" property="isenabled" />
+		<result column="is_deleted" property="is_deleted" />
+		<result column="is_deleted" property="is_deleted" />
+		<result column="reg_date" property="reg_date" />
+	</resultMap>
+
+	<insert id="insertNewAdmin">
+	
+		INSERT INTO 
+			ADMIN_ACCOUNT(ID, PW, NAME, PHONE, DEPARTMENT, LEVEL, POSITION)
+		VALUES(#{id}, #{pw}, #{name}, #{phone}, #{department}, #{level}, #{position})
+		
+	</insert>
+	
+	<select id="isAccount"
+			parameterType="String"
+			resultType="boolean">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			ADMIN_ACCOUNT 
+		WHERE 
+			ID = #{id};
+	
+	</select>
+	
+	<select id="getAdminAccountById"
+			parameterType="String"
+			resultMap="AdminAccountDto">
+		
+		SELECT
+			*
+		FROM 
+			ADMIN_ACCOUNT 
+		WHERE 
+			ID = #{id}
+		
+	</select>
+	
+	<update id="updateAdminInfo"
+			parameterType="AdminAccountDto">
+		
+		UPDATE 
+			ADMIN_ACCOUNT 
+		SET 
+			PW = #{pw},
+			NAME = #{name},
+			PHONE = #{phone},
+			DEPARTMENT = #{department},
+			LEVEL = #{level},
+			POSITION = #{position},
+			MOD_DATE = NOW()
+		WHERE 
+			NO = #{no}
+	
+	</update>
+	
+	<update id="updateAdminIsDeleted"
+			parameterType="String">
+			
+		UPDATE 
+			ADMIN_ACCOUNT 
+		SET 
+			IS_DELETED = 0
+		WHERE 
+			ID = #{id}
+			
+	</update>
+	
+	<select id="getAdminList"
+			resultType="AdminAccountDto">
+	
+		SELECT 
+			* 
+		FROM 
+			ADMIN_ACCOUNT 
+		WHERE 
+			(AUTHORITY_ROLE = "SUB_ADMIN" 
+			OR 
+			AUTHORITY_ROLE = "NOT_APPROVED")
+		AND 
+			IS_DELETED = 1
+	
+	</select>
+	
+	<update id="updateAdminRoleByNo"
+			parameterType="Integer">
+		
+		UPDATE 
+			ADMIN_ACCOUNT 
+		SET 
+			AUTHORITY_ROLE = "SUB_ADMIN"
+		WHERE 
+			NO = #{no}
+	
+	</update>
+	
+
+</mapper>
