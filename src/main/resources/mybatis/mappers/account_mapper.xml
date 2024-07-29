@@ -83,6 +83,33 @@
 		WHERE 
 			ID = #{id}
 			
+	</update>
+	
+	<select id="getAdminList"
+			resultType="AdminAccountDto">
+	
+		SELECT 
+			* 
+		FROM 
+			ADMIN_ACCOUNT 
+		WHERE 
+			(AUTHORITY_ROLE = "SUB_ADMIN" 
+			OR 
+			AUTHORITY_ROLE = "NOT_APPROVED")
+		AND 
+			IS_DELETED = 1
+	
+	</select>
+	
+	<update id="updateAdminRoleByNo"
+			parameterType="Integer">
+		
+		UPDATE 
+			ADMIN_ACCOUNT 
+		SET 
+			AUTHORITY_ROLE = "SUB_ADMIN"
+		WHERE 
+			NO = #{no}
 	
 	</update>
 	

@@ -88,11 +88,16 @@ public class AccountService {
 	// 관리자 리스트 가져오기
 	public ArrayList<AdminAccountDto> getAdminList() {
 		log.info("getAdminList()");
-		
-		return null;
-	}
 
+		return accountMapper.getAdminList();
+	}
 	
 	// 관리자 가입 승인
+	public void isApproval(int no) {
+		log.info("isApproval()");
+		
+		accountMapper.updateAdminRoleByNo(no);
+		
+	}
 	
 }

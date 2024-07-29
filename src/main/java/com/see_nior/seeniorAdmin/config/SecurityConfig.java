@@ -47,6 +47,10 @@ public class SecurityConfig {
 							"/account/sign_in_ng"
 							).permitAll()
 					.requestMatchers(
+							"/account/get_admin_list",
+							"/account/is_approval"
+							).hasRole("SUPER_ADMIN")
+					.requestMatchers(
 							"/",
 							"/account/modify_form",
 							"/account/modify_confirm",
