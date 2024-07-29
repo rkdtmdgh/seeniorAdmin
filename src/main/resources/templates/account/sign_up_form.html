@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html 
+   xmlns:th="http://www.thymeleaf.org" 
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<article>
+	   
+		<p>sign up form</p>
+		
+		<form action="/account/sign_up_confirm" name="sign_up_form" method="post">
+			<input type="text" name="id" placeholder="INPUT ADMIN ID">
+			<br>
+			<input type="password" name="pw" placeholder="INPUT ADMIN PW">
+			<br>
+			<input type="text" name="name" placeholder="INPUT ADMIN NAME">
+			<br>
+			<input type="text" name="phone" placeholder="INPUT ADMIN PHONE">
+			<br>
+			<input type="text" name="department" placeholder="INPUT ADMIN DEPARTMENT">
+			<br>
+			<input type="text" name="level" placeholder="INPUT ADMIN LEVEL">
+			<br>
+			<input type="text" name="position" placeholder="INPUT ADMIN POSITION">
+			<br>
+			<input type="submit" value="관리자 회원가입">
+			<input type="reset" value="초기화">
+		</form>
+	
+	</article>
+
+</body>
+</html>

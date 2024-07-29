@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html 
+   xmlns:th="http://www.thymeleaf.org" 
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<article>
+	   
+		<p>sign up result</p>
+		
+		<th:block th:switch="${signUpResult}">
+			<div th:case="1">
+				회원 가입 성공
+			</div>
+		</th:block>
+		
+		<th:block th:switch="${signUpResult}">
+			<div th:case="-1">
+				아이디 중복
+			</div>
+		</th:block>
+		
+		<th:block th:switch="${signUpResult}">
+			<div th:case="0">
+				회원 가입 실패
+			</div>
+		</th:block>
+
+		
+		<a href="/">홈</a>
+	
+	</article>
+
+</body>
+</html>
