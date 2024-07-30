@@ -41,6 +41,8 @@ SHOW INDEX FROM ADMIN_ACCOUNT;
 
 
 -- ADMIN 인가 테이블(관리자 권한) --------------------------------------------------------------------------------------------------------------
+-- 사용 안함
+/*
 CREATE TABLE ADMIN_AUTHORITY (
 	NO 			INT AUTO_INCREMENT COMMENT "관리자 권한 NO",			-- 관리자 권한 NO
 	ROLE_NAME 	VARCHAR(50) NOT NULL UNIQUE COMMENT "관리자 권한명",	-- 관리자 권한명
@@ -53,7 +55,7 @@ SHOW INDEX FROM ADMIN_AUTHORITY;
 INSERT INTO ADMIN_AUTHORITY(ROLE_NAME) VALUES("SUPER_ADMIN");		-- 최고 권한 관리자
 INSERT INTO ADMIN_AUTHORITY(ROLE_NAME) VALUES("ADMIN");				-- 일반 관리자
 INSERT INTO ADMIN_AUTHORITY(ROLE_NAME) VALUES("NOT_APPROVED");		-- 승인 되지 않은 관리자
-
+*/
 
 
 -- USER 계정 테이블 -------------------------------------------------------------------------------------------------------------------------
