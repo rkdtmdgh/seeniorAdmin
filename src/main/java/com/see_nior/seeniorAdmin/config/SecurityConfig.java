@@ -44,7 +44,12 @@ public class SecurityConfig {
 							"/account/sign_in_confirm",
 							"/account/sign_in_result/**",
 							"/account/sign_in_ok",
-							"/account/sign_in_ng"
+							"/account/sign_in_ng",
+							"/disease/create_category_form",
+							"/disease/create_category_confirm",
+							"/disease/create_form",
+							"/disease/create_confirm",
+							"/disease/disease_list"
 							).permitAll()
 					.requestMatchers(
 							"/account/get_admin_list",

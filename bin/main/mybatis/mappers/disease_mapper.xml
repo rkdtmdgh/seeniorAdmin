@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.see_nior.seeniorAdmin.disease.mapper.DiseaseMapper">
+
+	<resultMap type="DiseaseCategoryDto" id="DiseaseCategoryDto">
+		<result column="no" property="no" />
+		<result column="name" property="name" />
+		<result column="is_deleted" property="is_deleted" />
+		<result column="reg_date" property="reg_date" />
+		<result column="mod_date" property="mod_date" />
+	</resultMap>
+
+	<resultMap type="DiseaseDto" id="DiseaseDto">
+		<result column="no" property="no" />
+		<result column="name" property="name" />
+		<result column="info" property="info" />
+		<result column="good_food" property="good_food" />
+		<result column="bad_food" property="bad_food" />
+		<result column="bad_food" property="bad_food" />
+		<result column="is_deleted" property="is_deleted" />
+		<result column="reg_date" property="reg_date" />
+		<result column="mod_date" property="mod_date" />
+		<collection property="DiseaseCategoryDto" resultMap="DiseaseCategoryDto" />
+	</resultMap>
+
+	<insert id="insertNewDiseaseCategory">
+	
+		INSERT INTO
+			DISEASE_CATEGORY(NAME, INFO, GOOD_FOOD, BAD_FOOD) 
+		VALUES(#{name}, #{info}, #{good_food}, #{bad_food})
+	
+	</insert>
+	
+	<insert id="insertNewDisease">
+	
+		INSERT INTO
+			DISEASE(NAME) 
+		VALUES(#{name})
+	
+	</insert>
+	
+	<select id="isDiseaseCategory"
+			parameterType="String"
+			resultType="boolean">
+			
+			SELECT 
+				COUNT(*) 
+			FROM 
+				DISEASE_CATEGORY 
+			WHERE 
+				NAME = #{name}
+	
+	</select>
+	
+	<select id="isDisease"
+			parameterType="String"
+			resultType="boolean">
+			
+			SELECT 
+				COUNT(*) 
+			FROM 
+				DISEASE 
+			WHERE 
+				NAME = #{name}
+	
+	</select>
+	
+	<select id="getCategoryList"
+			resultMap="DiseaseCategoryDto">
+	
+			SELECT 
+				* 
+			FROM 
+				DISEASE_CATEGORY
+	
+	</select>
+
+
+</mapper>
