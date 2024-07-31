@@ -25,22 +25,16 @@
 		<collection property="DiseaseCategoryDto" resultMap="DiseaseCategoryDto" />
 	</resultMap>
 
+	<!-- 질환 카테고리 등록 -->
 	<insert id="insertNewDiseaseCategory">
 	
 		INSERT INTO
-			DISEASE_CATEGORY(NAME, INFO, GOOD_FOOD, BAD_FOOD) 
-		VALUES(#{name}, #{info}, #{good_food}, #{bad_food})
-	
-	</insert>
-	
-	<insert id="insertNewDisease">
-	
-		INSERT INTO
-			DISEASE(NAME) 
+			DISEASE_CATEGORY(NAME) 
 		VALUES(#{name})
 	
 	</insert>
 	
+	<!-- 질환 카테고리 중복 확인 -->
 	<select id="isDiseaseCategory"
 			parameterType="String"
 			resultType="boolean">
@@ -54,6 +48,52 @@
 	
 	</select>
 	
+	<!-- 질환 카테고리 가져오기 -->
+	<select id="getCategoryList"
+			resultMap="DiseaseCategoryDto">
+	
+			SELECT 
+				* 
+			FROM 
+				DISEASE_CATEGORY
+	
+	</select>
+	
+	<!-- 질환 카테고리 수정 -->
+	<update id="updateDiseaseCategory">
+	
+			UPDATE 
+				DISEASE_CATEGORY 
+			SET 
+				NAME = ${name} 
+			WHERE 
+				NO = ${no}
+	
+	</update>
+	
+	<!-- 질환 카테고리 삭제 -->
+	<update id="deleteCategoryConfirm">
+	
+			UPDATE 
+				DISEASE_CATEGORY 
+			SET 
+				IS_DELETE = 0 
+			WHERE 
+				NO = ${no}
+	
+	</update>
+	
+	
+	<!-- 질환 등록 -->
+	<insert id="insertNewDisease">
+	
+		INSERT INTO
+			DISEASE(NAME, INFO, GOOD_FOOD, BAD_FOOD) 
+		VALUES(#{name}, #{info}, #{good_food}, #{bad_food})
+	
+	</insert>
+	
+	<!-- 질환 중복 확인 -->
 	<select id="isDisease"
 			parameterType="String"
 			resultType="boolean">
@@ -67,15 +107,11 @@
 	
 	</select>
 	
-	<select id="getCategoryList"
-			resultMap="DiseaseCategoryDto">
+	<!-- 질환 수정 -->
 	
-			SELECT 
-				* 
-			FROM 
-				DISEASE_CATEGORY
 	
-	</select>
+	<!-- 질환 삭제 -->
+	
 
 
 </mapper>
