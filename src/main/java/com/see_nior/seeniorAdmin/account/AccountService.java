@@ -36,17 +36,38 @@ public class AccountService {
 		
 		if (!isAccount) {
 			
-			adminAccountDto.setPw(passwordEncoder.encode(adminAccountDto.getPw()));
-			
-			int result = accountMapper.insertNewAdmin(adminAccountDto);
-			
-			if (result <= 0) {
+			if (adminAccountDto.getId().equals("super_admin")) {
 				
-				return ADMIN_SIGN_UP_FAIL;
+				adminAccountDto.setPw(passwordEncoder.encode(adminAccountDto.getPw()));
+				adminAccountDto.setAuthority_role("SUPER_ADMIN");
+				
+				int result = accountMapper.insertNewAdmin(adminAccountDto);
+				
+				if (result <= 0) {
+					
+					return ADMIN_SIGN_UP_FAIL;
+					
+				} else {
+					
+					return ADMIN_SIGN_UP_SUCCESS;
+					
+				}
 				
 			} else {
 				
-				return ADMIN_SIGN_UP_SUCCESS;
+				adminAccountDto.setPw(passwordEncoder.encode(adminAccountDto.getPw()));
+				
+				int result = accountMapper.insertNewAdmin(adminAccountDto);
+				
+				if (result <= 0) {
+					
+					return ADMIN_SIGN_UP_FAIL;
+					
+				} else {
+					
+					return ADMIN_SIGN_UP_SUCCESS;
+					
+				}
 				
 			}
 			
