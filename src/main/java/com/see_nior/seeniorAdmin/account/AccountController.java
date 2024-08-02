@@ -163,5 +163,21 @@ public class AccountController {
 	
 	
 	// 관리자 가입 승인
+	@GetMapping("/is_approval")
+	public String isApproval(@RequestParam("no") int no, Model model) {
+		log.info("isApproval()");
+		
+		String nextPage = "account/admin_list";
+		
+		accountService.isApproval(no);
+		
+		ArrayList<AdminAccountDto> adminList = accountService.getAdminList();
+		
+		model.addAttribute("adminList", adminList);
+		
+		return nextPage;
+	
+	}
+	
 	
 }

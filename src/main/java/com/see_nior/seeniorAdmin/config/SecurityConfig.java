@@ -38,6 +38,10 @@ public class SecurityConfig {
 		http
 			.authorizeHttpRequests((request) -> request
 					.requestMatchers(
+							"/css/**",
+							"/image/**",
+							"/js/**",
+							"/error/**",
 							"/account/sign_up_form",
 							"/account/sign_up_confirm",
 							"/account/sign_in_form",
@@ -46,6 +50,10 @@ public class SecurityConfig {
 							"/account/sign_in_ok",
 							"/account/sign_in_ng"
 							).permitAll()
+					.requestMatchers(
+							"/account/get_admin_list",
+							"/account/is_approval"
+							).hasRole("SUPER_ADMIN")
 					.requestMatchers(
 							"/",
 							"/account/modify_form",

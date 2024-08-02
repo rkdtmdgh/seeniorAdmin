@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html 
+   xmlns:th="http://www.thymeleaf.org" 
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<article>
+	   
+		<p>modify form</p>
+		
+		<form action="/account/modify_confirm" name="modify_form" method="post">
+			<input type="hidden" name="no" th:value="${loginedAdminDto.no}">
+			<br>
+			<input type="text" name="id" th:value="${loginedAdminDto.id}" disabled readonly>
+			<br>
+			<input type="password" name="pw" placeholder="INPUT ADMIN PW">
+			<br>
+			<input type="text" name="name" th:value="${loginedAdminDto.name}" placeholder="INPUT ADMIN NAME">
+			<br>
+			<input type="text" name="phone" th:value="${loginedAdminDto.phone}" placeholder="INPUT ADMIN PHONE">
+			<br>
+			<input type="text" name="department" th:value="${loginedAdminDto.department}" placeholder="INPUT ADMIN DEPARTMENT">
+			<br>
+			<input type="text" name="level" th:value="${loginedAdminDto.level}" placeholder="INPUT ADMIN LEVEL">
+			<br>
+			<input type="text" name="position" th:value="${loginedAdminDto.position}" placeholder="INPUT ADMIN POSITION">
+			<br>
+			<input type="submit" value="정보수정">
+			<input type="reset" value="초기화">
+		</form>
+		
+		<br><br>
+		
+		<a href="/">홈</a>
+	
+	</article>
+
+</body>
+</html>
