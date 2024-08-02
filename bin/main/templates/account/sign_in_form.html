@@ -4,22 +4,7 @@
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
 
-<head>
-	<meta charset="UTF-8">
-	<title>로그인</title>
-	
-	<link rel="apple-touch-icon" sizes="180x180" href="../../image/logo/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="../../image/logo/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="../../image/logo/favicon-16x16.png">
-    <link rel="manifest" href="../../image/logo/site.webmanifest">
-    <link rel="mask-icon" href="../../image/logo/safari-pinned-tab.svg" color="#5bbad5">
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
-    
-    <link rel="stylesheet" href="/css/common.css">
-	<link rel="stylesheet" href="/css/default.css">
-	<link rel="stylesheet" href="/css/account/sign_in_form.css">
-</head>
+<head th:replace="~{/fragments/head.html::head}"></head>
 
 <body>	
 	<main class="sign_form_wrap">

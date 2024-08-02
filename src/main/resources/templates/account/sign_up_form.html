@@ -1,38 +1,55 @@
 <!DOCTYPE html>
 <html 
    xmlns:th="http://www.thymeleaf.org" 
-   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
    
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
+<head th:replace="~{/fragments/head.html::head}"></head>
+
 <body>
+	<main class="sign_form_wrap">
+        <article class="sign_form">
+            <div class="logo_info">
+                <h1 class="a11y-hidden">SEENIOR</h1>
+                <a href="" class="logo">
+                    <img src="/image/logo/signature-logo.png" alt="logo" class="logo_img">
+                </a>
+            </div>
 
-	<article>
-	   
-		<p>sign up form</p>
-		
-		<form action="/account/sign_up_confirm" name="sign_up_form" method="post">
-			<input type="text" name="id" placeholder="INPUT ADMIN ID">
-			<br>
-			<input type="password" name="pw" placeholder="INPUT ADMIN PW">
-			<br>
-			<input type="text" name="name" placeholder="INPUT ADMIN NAME">
-			<br>
-			<input type="text" name="phone" placeholder="INPUT ADMIN PHONE">
-			<br>
-			<input type="text" name="department" placeholder="INPUT ADMIN DEPARTMENT">
-			<br>
-			<input type="text" name="level" placeholder="INPUT ADMIN LEVEL">
-			<br>
-			<input type="text" name="position" placeholder="INPUT ADMIN POSITION">
-			<br>
-			<input type="submit" value="관리자 회원가입">
-			<input type="reset" value="초기화">
-		</form>
-	
-	</article>
+            <form name="sign_up_form" action="" method="post">
+                <div class="input_list">
+                    <label for="id" class="border_input">
+                        <span class="input_title">아이디</span>
+                        <input type="text" name="id" id="id" placeholder="아이디" class="input_txt">
+                    </label>
 
+                    <label for="password" class="border_input">
+                        <span class="input_title">비밀번호</span>
+                        <input type="password" name="password" id="password" placeholder="비밀번호" class="input_txt">
+                    </label>
+
+                    <label for="name" class="border_input">
+                        <span class="input_title">이름</span>
+                        <input type="text" name="name" id="name" placeholder="이름" class="input_txt">
+                    </label>
+
+                    <label for="email" class="border_input">
+                        <span class="input_title">이메일</span>
+                        <input type="text" name="email" id="email" placeholder="이메일" class="input_txt">
+                    </label>
+
+                    <label for="tel" class="border_input">
+                        <span class="input_title">연락처</span>
+                        <input type="text" name="tel" id="tel" placeholder='"-" 없이 입력하세요' class="input_txt">
+                    </label>
+
+                    <div class="btn_list col">
+                        <button type="submit" class="btns">회원가입</button>
+                        <a href="/account/sign_in_form" class="btns cancel">취소</a>
+                    </div>
+                </div>
+            </form>
+        </article>
+    </main>
 </body>
 </html>
