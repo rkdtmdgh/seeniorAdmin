@@ -38,6 +38,10 @@ public class SecurityConfig {
 		http
 			.authorizeHttpRequests((request) -> request
 					.requestMatchers(
+							"/css/**",
+							"/image/**",
+							"/js/**",
+							"/error/**",
 							"/account/sign_up_form",
 							"/account/sign_up_confirm",
 							"/account/sign_in_form",
