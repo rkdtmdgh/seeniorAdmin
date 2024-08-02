@@ -16,36 +16,22 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
     
+    <link rel="stylesheet" href="/css/common.css">
+	<link rel="stylesheet" href="/css/default.css">
+	<link rel="stylesheet" href="/css/account/sign_in_form.css">
 </head>
 
-<body>
-	<article>
-		<p>sign in form</p>
-		
-		<form action="/account/sign_in_confirm" name="sign_in_form" method="post">
-			<input type="text" name="id" placeholder="INPUT ADMIN ID">
-			<br>
- 			<input type="password" name="pw" placeholder="INPUT ADMIN PASSWORD">
-			<br>
-			<input type="submit" value="관리자 로그인">
-			<input type="reset" value="초기화">
-		</form>
-		
-		<a href="/account/sign_up_form">회원가입</a>
-		<a href="/">홈</a>
-   
-	</article>
-	
+<body>	
 	<main class="sign_form_wrap">
         <article class="sign_form">
             <div class="logo_info">
                 <h1 class="a11y-hidden">SEENIOR</h1>
-                <a href="" class="logo">
+                <a href="/" class="logo">
                     <img src="/image/logo/signature-logo.png" alt="logo" class="logo_img">
                 </a>
             </div>
 
-            <form name="sign_in_form" action="file:///C:/lljungho/SEENIOR/HTML_publishing/admin/contents/main/mainContent.html" method="post">
+            <form name="sign_in_form" action="" method="post">
                 <div class="input_list">
                     <label for="id" class="border_input">
                         <span class="input_title">아이디</span>
@@ -59,7 +45,7 @@
 
                     <div class="btn_list col">
                         <button type="submit" class="btns">관리자 로그인</button>
-                        <a href="file:///C:/lljungho/SEENIOR/HTML_publishing/admin/contents/sign/signUpForm.html" class="btns white">회원가입</a>
+                        <a href="/account/sign_up_form" class="btns white">회원가입</a>
                     </div>
                 </div>
             </form>

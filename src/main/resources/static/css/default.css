@@ -25,6 +25,10 @@
         left: 1em;
         transition: color var(--transition);
     }
+    
+    .input_txt {
+    	font-size: var(--subFontSize);
+    }
 
     &:focus-within {
         border-color: var(--primaryColor);
