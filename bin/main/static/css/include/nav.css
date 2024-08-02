@@ -1,0 +1,73 @@
+.side_menu_wrap {
+    min-width: var(--sideMenuWidth);
+    width: var(--sideMenuWidth);
+    height: 100%;
+
+    .side_menu_inner {
+        width: 100%;
+        height: 100%;
+        border-radius: var(--bdrs);
+        box-shadow: var(--bxsh);
+        background-color: var(--subBgColor);
+        overflow-y: auto; 
+
+        .side_menu_list {
+            border-bottom: 1px solid var(--lightGrayColor);
+    
+            .side_menu_btn {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: var(--textPadding);
+                cursor: pointer;
+    
+                .side_menu {
+                    font-size: var(--menuFontSize);
+                }
+            }
+    
+            .side_sub_menu_list {
+                overflow: hidden;
+                max-height: 0;
+                transition: max-height var(--transition);
+
+                .side_sub_menu_btn {
+                    display: block;
+                    font-size: var(--subFontSize);
+                    padding: var(--subTextPadding);
+
+                    .side_sub_menu {
+                        display: inline-block;
+                        padding: var(--subTextIndent);
+                    }
+
+                    &.on {
+                        font-weight: bold;;
+                        color: var(--primaryColor);
+                    }
+                }
+            }
+
+            &.on {
+                .side_menu_btn {        
+                    .side_menu {
+                        font-weight: bold;;
+                        color: var(--primaryColor);
+                    }
+    
+                    &.arrow {
+                        &::after {
+                            border-top-color: var(--primaryColor);
+                            transform: translateY(-25%) rotateX(180deg);
+                        }
+                    }
+                }
+
+                .side_sub_menu_list {
+                    max-height: 500px;
+                    padding-bottom: var(--ssize3);
+                }
+            }
+        }
+    }
+}
