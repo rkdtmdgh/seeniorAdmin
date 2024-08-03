@@ -8,6 +8,7 @@
     box-shadow: var(--bxsh);
 
     .sign_form {
+    	width: var(--signFormWidth);
         padding: var(--innerPadding);
         display: flex;
         flex-direction: column;

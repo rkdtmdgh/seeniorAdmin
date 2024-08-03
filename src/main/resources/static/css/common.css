@@ -11,10 +11,12 @@
     --baseFontFamily: 'Pretendard Variable';
     --baseFontSize: 16px;
     --subFontSize: 0.9em;
-    --smallFontSize: 0.75em;
+    --smallFontSize: 0.8em;
     --menuFontSize: 0.95em;
     --titleFontSize: 1.5em;
     --tableTextSize: 0.8em;
+    --bold: 600;
+    --thin: 300;
 
     /* main color palette */
     --primaryColor: #1291AD; /* primary */
@@ -40,6 +42,7 @@
     --headerHeight: 70px;
     --iconsWidth: 20px;
     --arrowWidth: 5px; /* X2 (5px = 10px) */
+    --signFormWidth: 340px;
 
     --innerPadding: 30px;
     --btnsPadding: 1em 1.5em;
@@ -156,7 +159,7 @@ table {
 
     th {
         vertical-align: middle;
-        font-weight: 600;
+        font-weight: var(--bold);
         background-color: var(--tableTitleBgColor);
     }
 

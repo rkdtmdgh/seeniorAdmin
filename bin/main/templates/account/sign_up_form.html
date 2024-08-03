@@ -20,7 +20,7 @@
                 <div class="input_list">
                     <label for="id" class="border_input">
                         <span class="input_title">아이디</span>
-                        <input type="text" name="id" id="id" placeholder="아이디" class="input_txt">
+                        <input type="text" name="id" id="id" maxLength="20" placeholder="아이디" class="input_txt" onblur="validateId(this)">
                     </label>
 
                     <label for="password" class="border_input">
