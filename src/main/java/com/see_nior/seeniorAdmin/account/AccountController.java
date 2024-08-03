@@ -32,10 +32,15 @@ public class AccountController {
 
 	// 회원 가입 양식
 	@GetMapping("/sign_up_form")
-	public String signUpForm() {
+	public String signUpForm(Model model) {
 		log.info("signUpForm()");
 		
 		String nextPage = "account/sign_up_form";
+		String cssPath = "/css/account/sign_form.css";
+		String pageTitle = "SEE-NIOR 회원가입";
+		
+		model.addAttribute("cssPath", cssPath);
+		model.addAttribute("pageTitle", pageTitle);
 		
 		return nextPage;
 	}
@@ -57,10 +62,15 @@ public class AccountController {
 	
 	// 로그인 양식
 	@GetMapping("/sign_in_form")
-	public String signInForm() {
+	public String signInForm(Model model) {
 		log.info("signInForm()");
 		
 		String nextPage = "account/sign_in_form";
+		String cssPath = "/css/account/sign_form.css";
+		String pageTitle = "SEE-NIOR 로그인";
+		
+		model.addAttribute("cssPath", cssPath);
+		model.addAttribute("pageTitle", pageTitle);
 		
 		return nextPage;
 	}
@@ -163,5 +173,21 @@ public class AccountController {
 	
 	
 	// 관리자 가입 승인
+	@GetMapping("/is_approval")
+	public String isApproval(@RequestParam("no") int no, Model model) {
+		log.info("isApproval()");
+		
+		String nextPage = "account/admin_list";
+		
+		accountService.isApproval(no);
+		
+		ArrayList<AdminAccountDto> adminList = accountService.getAdminList();
+		
+		model.addAttribute("adminList", adminList);
+		
+		return nextPage;
+	
+	}
+	
 	
 }

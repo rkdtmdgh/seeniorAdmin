@@ -36,17 +36,38 @@ public class AccountService {
 		
 		if (!isAccount) {
 			
-			adminAccountDto.setPw(passwordEncoder.encode(adminAccountDto.getPw()));
-			
-			int result = accountMapper.insertNewAdmin(adminAccountDto);
-			
-			if (result <= 0) {
+			if (adminAccountDto.getId().equals("super_admin")) {
 				
-				return ADMIN_SIGN_UP_FAIL;
+				adminAccountDto.setPw(passwordEncoder.encode(adminAccountDto.getPw()));
+				adminAccountDto.setAuthority_role("SUPER_ADMIN");
+				
+				int result = accountMapper.insertNewAdmin(adminAccountDto);
+				
+				if (result <= 0) {
+					
+					return ADMIN_SIGN_UP_FAIL;
+					
+				} else {
+					
+					return ADMIN_SIGN_UP_SUCCESS;
+					
+				}
 				
 			} else {
 				
-				return ADMIN_SIGN_UP_SUCCESS;
+				adminAccountDto.setPw(passwordEncoder.encode(adminAccountDto.getPw()));
+				
+				int result = accountMapper.insertNewAdmin(adminAccountDto);
+				
+				if (result <= 0) {
+					
+					return ADMIN_SIGN_UP_FAIL;
+					
+				} else {
+					
+					return ADMIN_SIGN_UP_SUCCESS;
+					
+				}
 				
 			}
 			
@@ -88,11 +109,16 @@ public class AccountService {
 	// 관리자 리스트 가져오기
 	public ArrayList<AdminAccountDto> getAdminList() {
 		log.info("getAdminList()");
-		
-		return null;
-	}
 
+		return accountMapper.getAdminList();
+	}
 	
 	// 관리자 가입 승인
+	public void isApproval(int no) {
+		log.info("isApproval()");
+		
+		accountMapper.updateAdminRoleByNo(no);
+		
+	}
 	
 }
