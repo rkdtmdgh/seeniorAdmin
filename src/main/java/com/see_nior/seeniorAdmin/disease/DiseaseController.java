@@ -15,6 +15,7 @@ import com.see_nior.seeniorAdmin.dto.DiseaseDto;
 import lombok.extern.log4j.Log4j2;
 
 
+
 @Log4j2
 @Controller
 @RequestMapping("/disease")
@@ -29,7 +30,7 @@ public class DiseaseController {
 	
 	// ----------------------------------------------------------------질환 카테고리
 	
-	// 질환 카테고리 추가 양식
+	// 질환 카테고리 등록 양식
 	@GetMapping("/create_category_form")
 	public String createCategoryForm() {
 		log.info("createCategoryForm()");
@@ -40,20 +41,20 @@ public class DiseaseController {
 		
 	}
 	
-	// 질환 카테고리 추가 확인
-		@PostMapping("/create_category_confirm")
-		public String createCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto, Model model) {
-			log.info("createCategoryConfirm()");
-			
-			int result = diseaseService.createCategoryConfirm(diseaseCategoryDto);
-			
-			model.addAttribute("createCategoryResult", result);
-			
-			String nextPage = "disease/create_category_result";
-			
-			return nextPage;
-			
-		}
+	// 질환 카테고리 등록 확인
+	@PostMapping("/create_category_confirm")
+	public String createCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto, Model model) {
+		log.info("createCategoryConfirm()");
+		
+		int result = diseaseService.createCategoryConfirm(diseaseCategoryDto);
+		
+		model.addAttribute("createCategoryResult", result);
+		
+		String nextPage = "disease/create_category_result";
+		
+		return nextPage;
+		
+	}
 	
 	// 질환 카테고리 가져오기
 	@GetMapping("/get_category_list")
@@ -110,7 +111,7 @@ public class DiseaseController {
 	
 	// ----------------------------------------------------------------질환
 	
-	// 질환 추가 양식
+	// 질환 등록 양식
 	@GetMapping("/create_form")
 	public String createForm() {
 		log.info("createForm()");
@@ -121,22 +122,22 @@ public class DiseaseController {
 		
 	}
 		
-		// 질환 추가 확인
-//		@PostMapping("/create_confirm")
-//		public String createConfirm(DiseaseDto diseaseDto, Model model) {
-//			log.info("createConfirm()");
-//			
-//			int result = diseaseService.createConfirm(diseaseDto);
-//			
-//			model.addAttribute("createResult", result);
-//			
-//			String nextPage = "disease/create_result";
-//			
-//			return nextPage;
-//			
-//		}
+	// 질환 등록 확인
+	@PostMapping("/create_confirm")
+	public String createConfirm(DiseaseDto diseaseDto, Model model) {
+		log.info("createConfirm()");
 		
-	// 질환 리스트 양식
+		int result = diseaseService.createConfirm(diseaseDto);
+		
+		model.addAttribute("createResult", result);
+		
+		String nextPage = "disease/create_result";
+		
+		return nextPage;
+		
+	}
+		
+	// 질환 리스트 양식 -- 수정해야함 (카테고리에 따른 질환, 모든 질환, 한개의 질환 가져오기)
 	@GetMapping("/disease_list")
 	public String diseaseList() {
 		log.info("diseaseList()");
@@ -146,6 +147,92 @@ public class DiseaseController {
 		return nextPage;
 		
 	}
+	
+	// 모든 질환 가져오기
+	@GetMapping("/get_all_disease_list")
+	public Object getAllDiseaseList() {
+		log.info("getAllDiseaseList");
+		
+		Map<String, Object> allDiseaseDtos = diseaseService.getAllDiseaseList();
+		
+		return allDiseaseDtos;
+		
+	}
+	
+	// 카테고리에 따른 질환 가져오기
+	@GetMapping("/get_disease_list_by_category")
+	public Object getDiseaseListByCategory(int no) {
+		log.info("getDiseaseListByCategory");
+		
+		Map<String, Object> diseaseDtosByCategory = diseaseService.getDiseaseListByCategory(no);
+		
+		return diseaseDtosByCategory;
+		
+	}
+	
+	// 질환 한 개 가져오기
+	@GetMapping("/get_disease")
+	public Object getDisease(int no) {
+		log.info("getDisease");
+		
+		DiseaseDto diseaseDto = diseaseService.getDisease(no);
+		
+		return diseaseDto;
+		
+	}
+	
+	// 질환 수정 양식
+	@GetMapping("/modify_form")
+	public String modifyForm() {
+		log.info("modifyForm()");
+		
+		String nextPage = "disease/modify_form";
+		
+		return nextPage;
+		
+	}
+	
+	// 질환 수정 확인
+	@PostMapping("/modify_confirm")
+	public String modifyConfirm(DiseaseDto diseaseDto, Model model) {
+		log.info("modifyConfirm()");
+		
+		int result = diseaseService.modifyConfirm(diseaseDto);
+		
+		model.addAttribute("modifyResult", result);
+		
+		String nextPage = "disease/modify_result";
+		
+		return nextPage;
+	}
+	
+	
+	// 질환 삭제 확인
+	@GetMapping("/delete_confirm")
+	public String deleteConfirm(@RequestParam int no, Model model) {
+		log.info("deleteConfirm()");
+		
+		int result = diseaseService.deleteConfirm(no);
+		
+		model.addAttribute("deleteResult", result);
+		
+		String nextPage = "disease/delete_result";
+		
+		return nextPage;
+		
+	}
+	
+	// 질환 검색
+	@GetMapping("/search_list")
+	public Object searchList(@RequestParam String name) {
+		log.info("searchList()");
+		
+		Map<String, Object> searchDiseaseDtos = diseaseService.searchList(name);
+		
+		return searchDiseaseDtos;
+		
+	}
+	
 	
 	
 }

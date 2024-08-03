@@ -22,15 +22,19 @@
 		<result column="is_deleted" property="is_deleted" />
 		<result column="reg_date" property="reg_date" />
 		<result column="mod_date" property="mod_date" />
-		<collection property="DiseaseCategoryDto" resultMap="DiseaseCategoryDto" />
+		<collection property="diseaseCategoryDto" resultMap="DiseaseCategoryDto" />
 	</resultMap>
+	
+	<!-- 질환 카테고리 관련 -->
 
 	<!-- 질환 카테고리 등록 -->
 	<insert id="insertNewDiseaseCategory">
 	
-		INSERT INTO
-			DISEASE_CATEGORY(NAME) 
-		VALUES(#{name})
+		INSERT INTO 
+			DISEASE_CATEGORY
+			(NAME) 
+		VALUES
+			(#{name})
 	
 	</insert>
 	
@@ -49,13 +53,17 @@
 	</select>
 	
 	<!-- 질환 카테고리 가져오기 -->
-	<select id="getCategoryList"
+	<select id="getDiseaseCategoryList"
 			resultMap="DiseaseCategoryDto">
 	
 			SELECT 
 				* 
 			FROM 
-				DISEASE_CATEGORY
+				DISEASE_CATEGORY 
+			WHERE 
+				IS_DELETED = 1 
+			ORDER BY 
+				NAME ASC
 	
 	</select>
 	
@@ -65,31 +73,34 @@
 			UPDATE 
 				DISEASE_CATEGORY 
 			SET 
-				NAME = ${name} 
+				NAME = #{name} 
 			WHERE 
-				NO = ${no}
+				NO = #{no}
 	
 	</update>
 	
 	<!-- 질환 카테고리 삭제 -->
-	<update id="deleteCategoryConfirm">
+	<update id="deleteDiseaseCategory">
 	
 			UPDATE 
 				DISEASE_CATEGORY 
 			SET 
 				IS_DELETE = 0 
 			WHERE 
-				NO = ${no}
+				NO = #{no}
 	
 	</update>
 	
+	<!-- 질환  관련 -->
 	
 	<!-- 질환 등록 -->
 	<insert id="insertNewDisease">
 	
-		INSERT INTO
-			DISEASE(NAME, INFO, GOOD_FOOD, BAD_FOOD) 
-		VALUES(#{name}, #{info}, #{good_food}, #{bad_food})
+		INSERT INTO 
+			DISEASE
+			(NAME, INFO, GOOD_FOOD, BAD_FOOD) 
+		VALUES 
+			(#{name}, #{info}, #{good_food}, #{bad_food})
 	
 	</insert>
 	
@@ -107,11 +118,95 @@
 	
 	</select>
 	
-	<!-- 질환 수정 -->
+	<!-- 모든 질환 가져오기 -->
+	<select id="getAllDiseaseList"
+			resultMap="DiseaseDto">
+		
+		SELECT 
+			D.*, 
+			DC.* 
+		FROM 
+		    DISEASE D
+		JOIN 
+		    DISEASE_CATEGORY DC
+		ON 
+		    D.CATEGORY_NO = DC.NO
+		WHERE 
+		    D.IS_DELETED = 1
 	
+	</select>
+	
+	<!-- 카테고리에 따른 질환 가져오기 -->
+	<select id="getDiseaseListByCategory"
+			resultMap="DiseaseDto">
+			
+			SELECT 
+				* 
+			FROM 
+				DISEASE 
+			WHERE 
+				CATEGORY_NO = #{no}
+	
+	</select>
+	
+	<!-- 질환 한개 가져오기 -->
+	<select id="getDiseaseByNo"
+			resultMap="DiseaseDto">
+			
+			SELECT 
+				* 
+			FROM 
+				DISEASE 
+			WHERE 
+				NO = #{no}
+	
+	</select>
+	
+	<!-- 질환 수정 -->
+	<update id="updateDisease">
+	
+			UPDATE 
+				DISEASE 
+			SET 
+				CATEGORY_NO = #{category_no}, 
+				NAME = #{name_no}, 
+				INFO = #{info}, 
+				GOOD_FOOD = #{good_food}, 
+				BAD_FOOD = #{bad_food} 
+			WHERE 
+				NO = #{no}
+	
+	</update>
 	
 	<!-- 질환 삭제 -->
+	<update id="deleteCategory">
 	
+			UPDATE 
+				DISEASE 
+			SET 
+				IS_DELETED = 0 
+			WHERE 
+				NO = #{no}
+	
+	</update>
+	
+	<!-- 질환 검색 -->
+	<select id="searchDiseaseByName"
+			parameterType="String"
+			resultMap="DiseaseDto">
+			
+			SELECT 
+				* 
+			FROM 
+				DISEASE D  
+			JOIN 
+				DISEASE_CATEGORY C 
+			WHERE 
+				D.CATEGORY_NO = C.NO 
+			AND 
+				D.NAME LIKE = '%#{name}%' 
+	
+	</select>
 
 
 </mapper>

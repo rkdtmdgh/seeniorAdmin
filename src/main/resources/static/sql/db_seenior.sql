@@ -302,6 +302,37 @@ CREATE TABLE DISEASE (
 SELECT * FROM DISEASE;
 SHOW INDEX FROM DISEASE;
 
+INSERT INTO DISEASE(CATEGORY_NO, NAME, INFO, GOOD_FOOD, BAD_FOOD) 
+VALUES(1, '당뇨', '당이 떨어지는 질병', '여주', '사탕');
+INSERT INTO DISEASE(CATEGORY_NO, NAME, INFO, GOOD_FOOD, BAD_FOOD) 
+VALUES(2, '22', '22', '4124', '666');
+INSERT INTO DISEASE(CATEGORY_NO, NAME, INFO, GOOD_FOOD, BAD_FOOD) 
+VALUES(3, '33', '33', '3333', '333');
+
+SELECT 
+	D.*, 
+	DC.NAME 
+FROM 
+    DISEASE D
+JOIN 
+    DISEASE_CATEGORY DC
+ON 
+    D.CATEGORY_NO = DC.NO
+WHERE 
+    D.IS_DELETED = 1;
+    
+SELECT 
+	D.*, 
+	DC.* 
+FROM 
+    DISEASE D
+JOIN 
+    DISEASE_CATEGORY DC
+ON 
+    D.CATEGORY_NO = DC.NO
+WHERE 
+    D.IS_DELETED = 1;
+
 
 
 -- 추천 영상 테이블 --------------------------------------------------------------------------------------------------------------
