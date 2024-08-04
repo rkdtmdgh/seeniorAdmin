@@ -21,13 +21,23 @@
         padding: 0 0.5em;
         background-color: var(--subBgColor);
         position: absolute;
-        top: -10px;
+        top: -8px;
         left: 1em;
         transition: color var(--transition);
     }
     
     .input_txt {
     	font-size: var(--subFontSize);
+    }
+    
+    .input_icon {
+    	width: var(--iconsWidth);
+    	height: var(--iconsWidth);
+    	padding: var(--iconsPadding);
+    	position: absolute;
+    	top: 1em;
+    	right: 1em;
+    	cursor: pointer;
     }
     
     .input_error {

@@ -1,4 +1,7 @@
 .sign_form_wrap {
+	max-height: 700px;
+   	overflow-y: auto;
+    padding: var(--innerPadding);
     position: fixed;
     top: 50%;
     left: 50%;
@@ -9,7 +12,6 @@
 
     .sign_form {
     	width: var(--signFormWidth);
-        padding: var(--innerPadding);
         display: flex;
         flex-direction: column;
         align-items: center;
