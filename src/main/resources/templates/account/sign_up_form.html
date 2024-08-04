@@ -25,12 +25,15 @@
 
                     <label for="password" class="border_input">
                         <span class="input_title">비밀번호</span>
-                        <input type="password" name="password" id="password" placeholder="비밀번호" class="input_txt">
+                        <input type="password" name="password" id="password" placeholder="비밀번호" class="input_txt" onblur="validatePw(this)">
+                        <span class="input_icon" onclick="setViewPw(this)">
+                        	<img src="" alt="toggle password visibility" class="icon">
+                        </span>
                     </label>
 
                     <label for="name" class="border_input">
                         <span class="input_title">이름</span>
-                        <input type="text" name="name" id="name" placeholder="이름" class="input_txt">
+                        <input type="text" name="name" id="name" placeholder="이름" class="input_txt" onblur="validateName(this)">
                     </label>
 
                     <label for="email" class="border_input">

@@ -11,7 +11,7 @@
     --baseFontFamily: 'Pretendard Variable';
     --baseFontSize: 16px;
     --subFontSize: 0.9em;
-    --smallFontSize: 0.8em;
+    --smallFontSize: 0.75em;
     --menuFontSize: 0.95em;
     --titleFontSize: 1.5em;
     --tableTextSize: 0.8em;
@@ -42,7 +42,7 @@
     --headerHeight: 70px;
     --iconsWidth: 20px;
     --arrowWidth: 5px; /* X2 (5px = 10px) */
-    --signFormWidth: 340px;
+    --signFormWidth: 300px;
 
     --innerPadding: 30px;
     --btnsPadding: 1em 1.5em;
@@ -50,8 +50,9 @@
     --textPadding: 0.7em 1.2em;
     --subTextPadding: 0.3em 1em;
     --subTextIndent: 0 0 0 0.85em;
-    --borderInputPadding: 0.9em 1.2em 0.6em;
+    --borderInputPadding: 1em 1em 10px;
     --selectPadding: 1.2em;
+    --iconsPadding: 0.2em;
 
     --baseGap: 20px;
     --smallGap: 10px;
@@ -103,7 +104,7 @@ a, button {
     border: none;
 }
 
-input, textarea, select {
+input, textarea, select, form {
     width: 100%;
     min-width: 240px;
     font-family: inherit;
