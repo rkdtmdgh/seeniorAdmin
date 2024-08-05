@@ -31,7 +31,7 @@
 	<insert id="insertNewDiseaseCategory">
 	
 		INSERT INTO 
-			DISEASE_CATEGORY
+			DISEASE_CATEGORY 
 			(NAME) 
 		VALUES
 			(#{name})
@@ -122,17 +122,17 @@
 	<select id="getAllDiseaseList"
 			resultMap="DiseaseDto">
 		
-		SELECT 
-			D.*, 
-			DC.* 
-		FROM 
-		    DISEASE D
-		JOIN 
-		    DISEASE_CATEGORY DC
-		ON 
-		    D.CATEGORY_NO = DC.NO
-		WHERE 
-		    D.IS_DELETED = 1
+			SELECT 
+				D.*, 
+				DC.* 
+			FROM 
+			    DISEASE D
+			JOIN 
+			    DISEASE_CATEGORY DC
+			ON 
+			    D.CATEGORY_NO = DC.NO
+			WHERE 
+			    D.IS_DELETED = 1
 	
 	</select>
 	
