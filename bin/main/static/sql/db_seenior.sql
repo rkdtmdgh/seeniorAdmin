@@ -41,6 +41,8 @@ SHOW INDEX FROM ADMIN_ACCOUNT;
 
 
 -- ADMIN 인가 테이블(관리자 권한) --------------------------------------------------------------------------------------------------------------
+-- 사용 안함
+/*
 CREATE TABLE ADMIN_AUTHORITY (
 	NO 			INT AUTO_INCREMENT COMMENT "관리자 권한 NO",			-- 관리자 권한 NO
 	ROLE_NAME 	VARCHAR(50) NOT NULL UNIQUE COMMENT "관리자 권한명",	-- 관리자 권한명
@@ -53,7 +55,7 @@ SHOW INDEX FROM ADMIN_AUTHORITY;
 INSERT INTO ADMIN_AUTHORITY(ROLE_NAME) VALUES("SUPER_ADMIN");		-- 최고 권한 관리자
 INSERT INTO ADMIN_AUTHORITY(ROLE_NAME) VALUES("ADMIN");				-- 일반 관리자
 INSERT INTO ADMIN_AUTHORITY(ROLE_NAME) VALUES("NOT_APPROVED");		-- 승인 되지 않은 관리자
-
+*/
 
 
 -- USER 계정 테이블 -------------------------------------------------------------------------------------------------------------------------
@@ -299,6 +301,37 @@ CREATE TABLE DISEASE (
 
 SELECT * FROM DISEASE;
 SHOW INDEX FROM DISEASE;
+
+INSERT INTO DISEASE(CATEGORY_NO, NAME, INFO, GOOD_FOOD, BAD_FOOD) 
+VALUES(1, '당뇨', '당이 떨어지는 질병', '여주', '사탕');
+INSERT INTO DISEASE(CATEGORY_NO, NAME, INFO, GOOD_FOOD, BAD_FOOD) 
+VALUES(2, '22', '22', '4124', '666');
+INSERT INTO DISEASE(CATEGORY_NO, NAME, INFO, GOOD_FOOD, BAD_FOOD) 
+VALUES(3, '33', '33', '3333', '333');
+
+SELECT 
+	D.*, 
+	DC.NAME 
+FROM 
+    DISEASE D
+JOIN 
+    DISEASE_CATEGORY DC
+ON 
+    D.CATEGORY_NO = DC.NO
+WHERE 
+    D.IS_DELETED = 1;
+    
+SELECT 
+	D.*, 
+	DC.* 
+FROM 
+    DISEASE D
+JOIN 
+    DISEASE_CATEGORY DC
+ON 
+    D.CATEGORY_NO = DC.NO
+WHERE 
+    D.IS_DELETED = 1;
 
 
 

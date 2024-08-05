@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html
+	xmlns:th="http://www.thymeleaf.org" >
+	
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+
+</head>
+<body>
+
+	<article>
+	
+		<p>create disease category form</p>
+		
+		<form th:action="@{/disease/create_category_confirm}" name="create_category_form" method="post">
+			
+			<input type="text" name="name" placeholder="INPUT DISEASE CATEGORY">
+			<br>
+			<input type="submit" value="질환 카테고리 생성" >
+			<input type="reset" value="초기화">
+		
+		</form>
+		
+		<br>
+		<a href="/disease/disease_list">질환 리스트</a>
+	
+	</article>
+
+
+</body>
+</html>
