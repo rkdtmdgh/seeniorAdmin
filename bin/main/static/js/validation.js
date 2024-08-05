@@ -39,15 +39,15 @@ function validateInput(input, regEx, errorMessage, checkProfanity = false) { // 
         errorEle.textContent = ""; // 에러 메시지 지우기
         parentEle.classList.remove('error'); // 에러 클래스 제거
     }
-
+	
     return isValid && !profanityCheck; // 두 조건에 부합해야 true 즉 정규 표현식 검사, 입력값 유무, 욕설 필터 모두 true를 반환 해야 함
 }
 
 // 아이디 유효성 검사
-function validateId(input) { 
-	const regEx = /^[a-z0-9_-]{6,20}$/; // 6~20자의 영문소문자, 숫자, 특수문자('_', '-')만 입력 가능
-    const errorMessage = "아이디는 6~20자의 영문소문자, 숫자, 특수문자('_', '-')를 사용할 수 있습니다.";
-    return validateInput(input, regEx, errorMessage, true); // 비속어 체크
+function validateEmail(input) { 
+	const regEx = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z.]{2,5}$/; // 로컬파트와 도메인은 영문, 숫자, 정해진 특수문자/ TLD는 영문, "."를 포함할 수 있고 2~5자
+	const errorMessage = "이메일을 정확히 입력해 주세요.";
+    return validateInput(input, regEx, errorMessage);
 }
 
 // 비밀번호 유효성 검사
@@ -64,16 +64,9 @@ function validateName(input) {
 }
 
 // 연락처 유효성 검사   
-function validateTel(input) {
+function validatePhone(input) {
 	const regEx = /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/; // 휴대폰 번호 정규 표현식
 	const errorMessage = "휴대폰 번호를 정확히 입력해 주세요.";
-	return validateInput(input, regEx, errorMessage); 
-}
-
-// 이메일 유효성 검사   
-function validateEmail(input) {
-	const regEx = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z.]{2,5}$/; // 로컬파트와 도메인은 영문, 숫자, 정해진 특수문자/ TLD는 영문, "."를 포함할 수 있고 2~5자
-	const errorMessage = "이메일을 정확히 입력해 주세요.";
 	return validateInput(input, regEx, errorMessage); 
 }
 
@@ -81,7 +74,7 @@ function validateEmail(input) {
 function setViewPw(ele) {
 	const icon = ele.querySelector('.icon');
 	const parentEle = ele.parentElement;
-	const passwordInput = parentEle.querySelector('#password');
+	const passwordInput = parentEle.querySelector('#pw');
 	
 	if(passwordInput.type === "password") {
 		passwordInput.type = "text";
@@ -93,7 +86,7 @@ function setViewPw(ele) {
 }
 
 // 휴대폰 번호 형식으로 변환
-function setReplaceTel(input) {
+function setReplacePhone(input) {
 	const telvalue = input.value.replace(/[^0-9]/g, "").replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(-{1,2})$/g, ""); // (01x-xxxx-xxxx)
 	input.value = telvalue;
 	return telvalue;
