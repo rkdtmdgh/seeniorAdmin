@@ -23,7 +23,7 @@ function createErrorElement(ele) {
 }
 
 // 유효성 검사
-function validateInput(input, regEx, errorMessage, checkProfanity = true) { // 욕설 필터 체크 기본값 true로 설정
+function validateInput(input, regEx, errorMessage, checkProfanity = false) { // 욕설 필터 체크 기본값 false로 설정
 	const value = input.value.trim(); // 앞뒤 공백 제거
 	const isValid = regEx ? regEx.test(value) : value.length > 0; // 정규 표현식 검사 또는 입력값 확인
 	const parentEle = input.parentElement;
@@ -41,27 +41,41 @@ function validateInput(input, regEx, errorMessage, checkProfanity = true) { // �
     }
 
     return isValid && !profanityCheck; // 두 조건에 부합해야 true 즉 정규 표현식 검사, 입력값 유무, 욕설 필터 모두 true를 반환 해야 함
-};
+}
 
 // 아이디 유효성 검사
 function validateId(input) { 
-	const regExId = /^[a-z0-9_-]{6,20}$/; // 6~20자의 영문소문자, 숫자, 특수문자('_', '-')만 입력 가능
+	const regEx = /^[a-z0-9_-]{6,20}$/; // 6~20자의 영문소문자, 숫자, 특수문자('_', '-')만 입력 가능
     const errorMessage = "아이디는 6~20자의 영문소문자, 숫자, 특수문자('_', '-')를 사용할 수 있습니다.";
-    return validateInput(input, regExId, errorMessage);
-};
+    return validateInput(input, regEx, errorMessage, true); // 비속어 체크
+}
 
 // 비밀번호 유효성 검사
 function validatePw(input) { 
-	const regExPw = /^(?=.*[a-zA-Z])(?=.*[@$!%*?&])[a-zA-Z\d@$!%*?&]{8,16}$/; // 8~16자의 영문 대소문자 중 최소 1개, 특수문자 최소 1개, 숫자 선택 입력
+	const regEx = /^(?=.*[a-zA-Z])(?=.*[@$!%*?&])[a-zA-Z\d@$!%*?&]{8,16}$/; // 8~16자의 영문 대소문자 중 최소 1개, 특수문자 최소 1개, 숫자 선택 입력
     const errorMessage = "비밀번호는 8~16자의 영문대소문자, 특수문자(@, $, !, %, *, ?, &), 숫자를 사용할 수 있습니다.<br>(필수: 영문대소문자, 특수문자)";
-    return validateInput(input, regExPw, errorMessage, false); 
-};
+    return validateInput(input, regEx, errorMessage); 
+}
 
 // 이름 유효성 검사   
 function validateName(input) { 
 	const errorMessage = "이름을 입력해 주세요.";
 	return validateInput(input, null, errorMessage); // 정규 표현식 대신 값의 길이만 확인
-};
+}
+
+// 연락처 유효성 검사   
+function validateTel(input) {
+	const regEx = /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/; // 휴대폰 번호 정규 표현식
+	const errorMessage = "휴대폰 번호를 정확히 입력해 주세요.";
+	return validateInput(input, regEx, errorMessage); 
+}
+
+// 이메일 유효성 검사   
+function validateEmail(input) {
+	const regEx = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z.]{2,5}$/; // 로컬파트와 도메인은 영문, 숫자, 정해진 특수문자/ TLD는 영문, "."를 포함할 수 있고 2~5자
+	const errorMessage = "이메일을 정확히 입력해 주세요.";
+	return validateInput(input, regEx, errorMessage); 
+}
 
 // 비밀번호 노출 설정
 function setViewPw(ele) {
@@ -71,9 +85,16 @@ function setViewPw(ele) {
 	
 	if(passwordInput.type === "password") {
 		passwordInput.type = "text";
-		icon.src = "open";
+		icon.src = "/image/icons/eye_open.svg";
 	} else {
 		passwordInput.type = "password";
-		icon.src = "close";
+		icon.src = "/image/icons/eye_off.svg";
 	}
-};
+}
+
+// 휴대폰 번호 형식으로 변환
+function setReplaceTel(input) {
+	const telvalue = input.value.replace(/[^0-9]/g, "").replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(-{1,2})$/g, ""); // (01x-xxxx-xxxx)
+	input.value = telvalue;
+	return telvalue;
+}

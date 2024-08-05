@@ -27,6 +27,7 @@
     }
     
     .input_txt {
+		padding-right: var(--baseGap);
     	font-size: var(--subFontSize);
     }
     

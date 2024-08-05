@@ -16,34 +16,34 @@
                 </a>
             </div>
 
-            <form name="sign_up_form" action="" method="post">
+            <form name="sign_up_form" action="" method="post" onsubmit="">
                 <div class="input_list">
                     <label for="id" class="border_input">
                         <span class="input_title">아이디</span>
-                        <input type="text" name="id" id="id" maxLength="20" placeholder="아이디" class="input_txt" onblur="validateId(this)">
+                        <input type="text" name="id" id="id" maxLength="20" placeholder="아이디" class="input_txt" oninput="validateId(this)" onblur="validateId(this)">
                     </label>
 
                     <label for="password" class="border_input">
                         <span class="input_title">비밀번호</span>
-                        <input type="password" name="password" id="password" placeholder="비밀번호" class="input_txt" onblur="validatePw(this)">
+                        <input type="password" name="password" id="password" placeholder="비밀번호" class="input_txt" oninput="validatePw(this)" onblur="validatePw(this)" autocomplete="off">
                         <span class="input_icon" onclick="setViewPw(this)">
-                        	<img src="" alt="toggle password visibility" class="icon">
+                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
                         </span>
                     </label>
 
                     <label for="name" class="border_input">
                         <span class="input_title">이름</span>
-                        <input type="text" name="name" id="name" placeholder="이름" class="input_txt" onblur="validateName(this)">
+                        <input type="text" name="name" id="name" placeholder="이름" class="input_txt" oninput="validateName(this)" onblur="validateName(this)">
+                    </label>
+					
+					<label for="tel" class="border_input">
+                        <span class="input_title">연락처</span>
+                        <input type="text" name="tel" id="tel" maxlength="13" placeholder='"-" 없이 입력하세요' class="input_txt" onkeydown="setReplaceTel(this)" onkeyup="validateTel(this)" onblur="validateTel(this)">
                     </label>
 
                     <label for="email" class="border_input">
                         <span class="input_title">이메일</span>
-                        <input type="text" name="email" id="email" placeholder="이메일" class="input_txt">
-                    </label>
-
-                    <label for="tel" class="border_input">
-                        <span class="input_title">연락처</span>
-                        <input type="text" name="tel" id="tel" placeholder='"-" 없이 입력하세요' class="input_txt">
+                        <input type="text" name="email" id="email" placeholder="이메일" class="input_txt" oninput="validateEmail(this)" onblur="validateEmail(this)">
                     </label>
 
                     <div class="btn_list col">
