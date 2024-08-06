@@ -1,6 +1,6 @@
 package com.see_nior.seeniorAdmin.account;
 
-import java.util.ArrayList;
+import java.util.Map;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -159,18 +159,30 @@ public class AccountController {
 		return nextPage;
 	}
 	
-	// 관리자 리스트 가져오기
-	@GetMapping("/get_admin_list")
-	public String getAdminList(Model model) {
-		log.info("getAdminList()");
+	// 관리자 리스트 바로가기 
+	@GetMapping("/admin_list_form")
+	public String adminListForm() {
+		log.info("adminListForm()");
 		
-		String nextPage = "account/admin_list";
-		
-		ArrayList<AdminAccountDto> adminList = accountService.getAdminList();
-		
-		model.addAttribute("adminList", adminList);
+		String nextPage = "account/admin_list_form";
 		
 		return nextPage;
+	}
+	
+	
+	// 관리자 리스트 가져오기
+	@GetMapping("/get_admin_list")
+	@ResponseBody
+	public Object getAdminList(
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("getAdminList()");
+		
+		Map<String, Object> adminList = accountService.getAdminPagingList(page);
+		
+		Map<String, Object> accountListPage = accountService.getAccountListPageNum(page);
+		adminList.put("accountListPage", accountListPage);
+		
+		return adminList;
 	}
 	
 	
@@ -179,13 +191,9 @@ public class AccountController {
 	public String isApproval(@RequestParam("no") int no, Model model) {
 		log.info("isApproval()");
 		
-		String nextPage = "account/admin_list";
+		String nextPage = "account/admin_list_form";
 		
 		accountService.isApproval(no);
-		
-		ArrayList<AdminAccountDto> adminList = accountService.getAdminList();
-		
-		model.addAttribute("adminList", adminList);
 		
 		return nextPage;
 	
