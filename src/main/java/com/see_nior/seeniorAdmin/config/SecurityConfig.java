@@ -54,7 +54,8 @@ public class SecurityConfig {
 							"/disease/create_form",
 							"/disease/create_confirm",
 							"/disease/disease_list",
-							"/disease/get_all_disease_list"
+							"/disease/get_all_disease_list",
+							"/disease/get_category_list"
 							).permitAll()
 					.requestMatchers(
 							"/account/get_admin_list",

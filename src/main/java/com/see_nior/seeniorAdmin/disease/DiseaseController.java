@@ -56,16 +56,31 @@ public class DiseaseController {
 		
 	}
 	
-	// 질환 카테고리 가져오기
-	@GetMapping("/get_category_list")
-	public Object getCategoryList() {
-		log.info("getCategoryList()");
-		
-		Map<String, Object> diseaseCategoryDtos = diseaseService.getCategoryList();
-		
-		return diseaseCategoryDtos;
-		
-	}
+	// 질환 카테고리 가져오기 -> 비동기 (기존)
+//	@GetMapping("/get_category_list")
+//	public Object getCategoryList() {
+//		log.info("getCategoryList()");
+//		
+//		Map<String, Object> diseaseCategoryDtos = diseaseService.getCategoryList();
+//		
+//		return diseaseCategoryDtos;
+//		
+//	}
+	
+	// 질환 카테고리 가져오기 -> 리스트 폼 같이 있는 메서드
+		@GetMapping("/get_category_list")
+		public String getCategoryList(Model model) {
+			log.info("getCategoryList()");
+			
+			String nextPage = "disease/category_list";
+			
+			Map<String, Object> diseaseCategoryDtos = diseaseService.getCategoryList();
+			
+			model.addAttribute("diseaseCategoryDtos", diseaseCategoryDtos);
+			
+			return nextPage;
+			
+		}
 	
 	// 질환 카테고리 수정 양식
 	@GetMapping("/modify_category_form")
