@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 
@@ -53,6 +54,18 @@ public class AccountController {
 		
 		return nextPage;
 	}
+	
+	// 아이디 중복 여부 확인
+	@GetMapping("/is_account")
+	@ResponseBody
+	public Object isAccount(@RequestParam("id") String id) {
+		log.info("isAccount()");
+		
+		boolean result = accountService.isAccount(id);
+		
+		return result;
+	}
+	
 	
 	
 	// 로그인 양식

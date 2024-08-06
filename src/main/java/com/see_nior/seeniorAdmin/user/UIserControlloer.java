@@ -12,10 +12,18 @@ import lombok.extern.log4j.Log4j2;
 @RequestMapping("/user")
 public class UIserControlloer {
 
+	final private UserService userService; 
+	
+	public UIserControlloer(UserService userService) {
+		this.userService = userService;
+		
+	}
+	
 	// 일반 멤버 리스트 가져오기 get_user_list
 	@GetMapping("/get_user_list")
 	public String getUserList() {
 		log.info("getUserList()");
+		
 		
 		return new String();
 	}

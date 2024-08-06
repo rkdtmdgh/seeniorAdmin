@@ -27,6 +27,13 @@ public class AccountService {
 		
 	}
 	
+	// 아이디 중복 확인
+	public boolean isAccount(String id) {
+		log.info("isAccount()");
+		
+		return accountMapper.isAccount(id);
+	}
+	
 	// 회원 가입 확인
 	public int signUpConfirm(AdminAccountDto adminAccountDto) {
 		log.info("signUpConfirm()");
@@ -120,5 +127,7 @@ public class AccountService {
 		accountMapper.updateAdminRoleByNo(no);
 		
 	}
+	
+
 	
 }
