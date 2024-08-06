@@ -64,7 +64,11 @@ public class SecurityConfig {
 							"/",
 							"/account/modify_form",
 							"/account/modify_confirm",
-							"/account/delete_confirm"
+							"/account/delete_confirm",
+							"/user/get_user_list",
+							"/user/modify_form",
+							"/user/modify_confirm",
+							"/user/delete_confirm"
 							).hasAnyRole("SUPER_ADMIN", "SUB_ADMIN"));
 		
 		http
