@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html 
    xmlns:th="http://www.thymeleaf.org" 
-   xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
->
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
-<head th:replace="~{fragments/head.html :: head}"></head>
+<head th:replace="~{fragments/head.html :: head(pageTitle='SEE-NIOR 회원가입', cssPath='/css/account/sign_form.css')}"></head>
 
 <body>
 	<main class="sign_form_wrap">
@@ -50,6 +49,7 @@
         </article>
     </main>
     
-    <script src="/js/submitForm.js"></script> 
+    <script src="/js/validation.js"></script>
+    <script src="/js/submitForm.js"></script>
 </body>
 </html>
