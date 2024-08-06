@@ -21,15 +21,18 @@
 					<th>name</th>
 					<th>reg_date</th>
 					<th>mod_date</th>
+					<th>수정</th>
+					<th>삭제</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="diseaseCategoryDto : ${diseaseCategoryDto}">
+				<tr th:each="diseaseCategoryDto : ${diseaseCategoryDtos.diseaseCategoryDto}">
 					<td th:text="${diseaseCategoryDto.no}"></td>
 					<td th:text="${diseaseCategoryDto.name}"></td>
 					<td th:text="${diseaseCategoryDto.reg_date}"></td>
 					<td th:text="${diseaseCategoryDto.mod_date}"></td>
-				
+					<td><a th:href="'/disease/modify_category_form?no=' + ${diseaseCategoryDto.no}">수정</a></td>
+					<td><a th:href="'/disease/delete_category_confirm?no=' + ${diseaseCategoryDto.no}">삭제</a></td>
 				</tr>
 			</tbody>
 		
@@ -38,7 +41,7 @@
 		<br>
 		<a href="/disease/create_category_form">질환 카테고리 추가</a>
 		<a href="/disease/create_form">질환 추가</a>
-	
+		<a href="/disease/disease_list">질환 리스트</a>
 	</article>
 
 

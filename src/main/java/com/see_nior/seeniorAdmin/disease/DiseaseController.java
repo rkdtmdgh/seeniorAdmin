@@ -56,21 +56,21 @@ public class DiseaseController {
 		
 	}
 	
-	// 질환 카테고리 가져오기 -> 비동기 (기존)
-//	@GetMapping("/get_category_list")
-//	public Object getCategoryList() {
-//		log.info("getCategoryList()");
-//		
-//		Map<String, Object> diseaseCategoryDtos = diseaseService.getCategoryList();
-//		
-//		return diseaseCategoryDtos;
-//		
-//	}
+	// 모든 질환 카테고리 가져오기 (질환 리스트에서 질환 카테고리 가져오기용 => 비동기)
+	@GetMapping("/get_category_list")
+	public Object getCategoryList() {
+		log.info("getCategoryList()");
+		
+		Map<String, Object> diseaseCategoryDtos = diseaseService.getCategoryList();
+		
+		return diseaseCategoryDtos;
+		
+	}
 	
-	// 질환 카테고리 가져오기 -> 리스트 폼 같이 있는 메서드
-		@GetMapping("/get_category_list")
-		public String getCategoryList(Model model) {
-			log.info("getCategoryList()");
+	// 질환 카테고리 리스트 양식
+		@GetMapping("/category_list")
+		public String category_list(Model model) {
+			log.info("category_list()");
 			
 			String nextPage = "disease/category_list";
 			
@@ -84,10 +84,14 @@ public class DiseaseController {
 	
 	// 질환 카테고리 수정 양식
 	@GetMapping("/modify_category_form")
-	public String modifyCategoryForm() {
+	public String modifyCategoryForm(@RequestParam(name = "no") int no, Model model) {
 		log.info("modifyCategoryForm()");
 		
 		String nextPage = "disease/modify_category_form";
+		
+		DiseaseCategoryDto diseaseCategoryDto = diseaseService.getCategory(no);
+		
+		model.addAttribute("diseaseCategoryDto", diseaseCategoryDto);
 		
 		return nextPage;
 		
@@ -100,7 +104,7 @@ public class DiseaseController {
 		
 		int result = diseaseService.modifyCategoryConfirm(diseaseCategoryDto);
 		
-		model.addAttribute("modifyCategoryResult" + result);
+		model.addAttribute("modifyCategoryResult", result);
 		
 		String nextPage = "disease/modify_category_result";
 		
@@ -110,7 +114,7 @@ public class DiseaseController {
 	
 	// 질환 카테고리 삭제 확인
 	@GetMapping("/delete_category_confirm")
-	public String deleteCategoryConfirm(@RequestParam int no, Model model) {
+	public String deleteCategoryConfirm(@RequestParam(name = "no") int no, Model model) {
 		log.info("deleteCategoryConfirm()");
 		
 		int result = diseaseService.deleteCategoryConfirm(no);

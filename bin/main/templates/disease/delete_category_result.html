@@ -10,23 +10,17 @@
 
 	<article>
 	
-		<p>create disease category result</p>
+		<p>delete disease category result</p>
 		
-		<th:block th:switch="${createResult}">
+		<th:block th:switch="${deleteCategoryResult}">
 			<div th:case="1">
-				질환 등록 성공
+				질환 카테고리 삭제 성공
 			</div>
 		</th:block>
 		
-		<th:block th:switch="${createResult}">
-			<div th:case="-1">
-				입력하신 질환은 이미 등록 되어 있습니다.
-			</div>
-		</th:block>
-		
-		<th:block th:switch="${createResult}">
+		<th:block th:switch="${deleteCategoryResult}">
 			<div th:case="0">
-				질환 등록 실패
+				질환 카테고리 삭제 실패
 			</div>
 		</th:block>
 		
