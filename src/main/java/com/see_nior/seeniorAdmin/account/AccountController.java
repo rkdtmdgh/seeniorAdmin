@@ -36,11 +36,6 @@ public class AccountController {
 		log.info("signUpForm()");
 		
 		String nextPage = "account/sign_up_form";
-		String cssPath = "/css/account/sign_form.css";
-		String pageTitle = "SEE-NIOR 회원가입";
-		
-		model.addAttribute("cssPath", cssPath);
-		model.addAttribute("pageTitle", pageTitle);
 		
 		return nextPage;
 	}
@@ -66,11 +61,6 @@ public class AccountController {
 		log.info("signInForm()");
 		
 		String nextPage = "account/sign_in_form";
-		String cssPath = "/css/account/sign_form.css";
-		String pageTitle = "SEE-NIOR 로그인";
-		
-		model.addAttribute("cssPath", cssPath);
-		model.addAttribute("pageTitle", pageTitle);
 		
 		return nextPage;
 	}

@@ -36,7 +36,7 @@ public class AccountService {
 		
 		if (!isAccount) {
 			
-			if (adminAccountDto.getId().equals("super_admin")) {
+			if (adminAccountDto.getId().equals("super_admin@seenior.com")) {
 				
 				adminAccountDto.setPw(passwordEncoder.encode(adminAccountDto.getPw()));
 				adminAccountDto.setAuthority_role("SUPER_ADMIN");
