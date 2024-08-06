@@ -189,7 +189,7 @@ public class DiseaseController {
 		
 	}
 	
-	// 질환 한 개 가져오기
+	// 질환 한 개 가져오기.
 	@GetMapping("/get_disease")
 	public Object getDisease(int no) {
 		log.info("getDisease");
