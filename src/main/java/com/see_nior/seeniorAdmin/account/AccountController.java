@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 
@@ -36,11 +37,6 @@ public class AccountController {
 		log.info("signUpForm()");
 		
 		String nextPage = "account/sign_up_form";
-		String cssPath = "/css/account/sign_form.css";
-		String pageTitle = "SEE-NIOR 회원가입";
-		
-		model.addAttribute("cssPath", cssPath);
-		model.addAttribute("pageTitle", pageTitle);
 		
 		return nextPage;
 	}
@@ -59,6 +55,17 @@ public class AccountController {
 		return nextPage;
 	}
 	
+	// 아이디 중복 여부 확인
+	@GetMapping("/is_account")
+	@ResponseBody
+	public Object isAccount(@RequestParam("id") String id) {
+		log.info("isAccount()");
+		
+		boolean result = accountService.isAccount(id);
+		
+		return result;
+	}
+	
 	
 	// 로그인 양식
 	@GetMapping("/sign_in_form")
@@ -66,11 +73,6 @@ public class AccountController {
 		log.info("signInForm()");
 		
 		String nextPage = "account/sign_in_form";
-		String cssPath = "/css/account/sign_form.css";
-		String pageTitle = "SEE-NIOR 로그인";
-		
-		model.addAttribute("cssPath", cssPath);
-		model.addAttribute("pageTitle", pageTitle);
 		
 		return nextPage;
 	}
