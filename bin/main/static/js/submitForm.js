@@ -1,3 +1,4 @@
+// 회원 가입 폼
 function signUpForm(formName) {
 	const form = document.forms[formName];
 	let input;
