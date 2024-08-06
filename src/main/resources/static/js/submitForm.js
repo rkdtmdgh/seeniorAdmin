@@ -28,7 +28,7 @@ function signUpForm(formName) {
 	}
 	
 	// 모든 유효성 검사가 통과되었을 때 폼 제출
-	form.action = "/sing_up_confirm"; // 서버에서 폼을 처리할 URL 설정
-    form.method = "post"; // HTTP 메서드 설정
+	form.action = "/account/sign_up_confirm"; 
+    form.method = "post"; 
     return true;
 }
