@@ -11,9 +11,9 @@ CREATE TABLE ADMIN_ACCOUNT (
 	PW 						VARCHAR(200) NOT NULL COMMENT "관리자 비밀번호",							-- 관리자 비밀번호
 	NAME	 				VARCHAR(50) NOT NULL COMMENT "관리자 이름",								-- 관리자 이름
 	PHONE 					VARCHAR(50) NOT NULL COMMENT "관리자 연락처",								-- 관리자 연락처
-	DEPARTMENT 				VARCHAR(50) NOT NULL COMMENT "관리자 부서",								-- 관리자 부서
-	LEVEL 					VARCHAR(50) NOT NULL COMMENT "관리자 직급",								-- 관리자 직급
-	POSITION 				VARCHAR(50) NOT NULL COMMENT "관리자 직책",								-- 관리자 직책
+	DEPARTMENT 				VARCHAR(50) COMMENT "관리자 부서",								-- 관리자 부서
+	LEVEL 					VARCHAR(50) COMMENT "관리자 직급",								-- 관리자 직급
+	POSITION 				VARCHAR(50) COMMENT "관리자 직책",								-- 관리자 직책
 	AUTHORITY_ROLE 			VARCHAR(50) DEFAULT "NOT_APPROVED" COMMENT "관리자 인가 권한명", 			-- 관리자 인가 권한명
 	ISACCOUNTNONEXPIRED 	TINYINT DEFAULT 1 COMMENT "관리자 계정 만료 유무(만료X = 1, 만료 = 0)",			-- 관리자 계정 만료 유무(만료X = 1, 만료 = 0)
 	ISACCOUNTNONLOCKED 		TINYINT DEFAULT 1 COMMENT "관리자 계정 잠김 유무(잠김X = 1, 잠김 = 0)",			-- 관리자 계정 잠김 유무(잠김X = 1, 잠김 = 0)
@@ -41,6 +41,8 @@ SHOW INDEX FROM ADMIN_ACCOUNT;
 
 
 -- ADMIN 인가 테이블(관리자 권한) --------------------------------------------------------------------------------------------------------------
+-- 사용 안함
+/*
 CREATE TABLE ADMIN_AUTHORITY (
 	NO 			INT AUTO_INCREMENT COMMENT "관리자 권한 NO",			-- 관리자 권한 NO
 	ROLE_NAME 	VARCHAR(50) NOT NULL UNIQUE COMMENT "관리자 권한명",	-- 관리자 권한명
@@ -53,7 +55,7 @@ SHOW INDEX FROM ADMIN_AUTHORITY;
 INSERT INTO ADMIN_AUTHORITY(ROLE_NAME) VALUES("SUPER_ADMIN");		-- 최고 권한 관리자
 INSERT INTO ADMIN_AUTHORITY(ROLE_NAME) VALUES("ADMIN");				-- 일반 관리자
 INSERT INTO ADMIN_AUTHORITY(ROLE_NAME) VALUES("NOT_APPROVED");		-- 승인 되지 않은 관리자
-
+*/
 
 
 -- USER 계정 테이블 -------------------------------------------------------------------------------------------------------------------------
@@ -299,6 +301,37 @@ CREATE TABLE DISEASE (
 
 SELECT * FROM DISEASE;
 SHOW INDEX FROM DISEASE;
+
+INSERT INTO DISEASE(CATEGORY_NO, NAME, INFO, GOOD_FOOD, BAD_FOOD) 
+VALUES(1, '당뇨', '당이 떨어지는 질병', '여주', '사탕');
+INSERT INTO DISEASE(CATEGORY_NO, NAME, INFO, GOOD_FOOD, BAD_FOOD) 
+VALUES(2, '22', '22', '4124', '666');
+INSERT INTO DISEASE(CATEGORY_NO, NAME, INFO, GOOD_FOOD, BAD_FOOD) 
+VALUES(3, '33', '33', '3333', '333');
+
+SELECT 
+	D.*, 
+	DC.NAME 
+FROM 
+    DISEASE D
+JOIN 
+    DISEASE_CATEGORY DC
+ON 
+    D.CATEGORY_NO = DC.NO
+WHERE 
+    D.IS_DELETED = 1;
+    
+SELECT 
+	D.*, 
+	DC.* 
+FROM 
+    DISEASE D
+JOIN 
+    DISEASE_CATEGORY DC
+ON 
+    D.CATEGORY_NO = DC.NO
+WHERE 
+    D.IS_DELETED = 1;
 
 
 
