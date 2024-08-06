@@ -85,7 +85,7 @@
 			
 	</update>
 	
-	<select id="getAdminList"
+	<select id="selectAdminList"
 			resultType="AdminAccountDto">
 	
 		SELECT 
@@ -97,6 +97,21 @@
 			OR 
 			AUTHORITY_ROLE = "NOT_APPROVED")
 		AND 
+			IS_DELETED = 1
+		ORDER BY NO ASC 
+		LIMIT 
+			#{start},#{limit}
+	
+	</select>
+	
+	<select id="selectAllAccountListCnt"
+			resultType="Integer">
+		
+		SELECT 
+			COUNT(NO)
+		FROM 
+			ADMIN_ACCOUNT
+		WHERE 
 			IS_DELETED = 1
 	
 	</select>
@@ -112,6 +127,7 @@
 			NO = #{no}
 	
 	</update>
+	
 	
 
 </mapper>
