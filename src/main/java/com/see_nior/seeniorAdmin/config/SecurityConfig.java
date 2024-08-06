@@ -48,6 +48,7 @@ public class SecurityConfig {
 							"/account/sign_in_confirm",
 							"/account/sign_in_result/**",
 							"/account/sign_in_ok",
+<<<<<<< HEAD
 							"/account/sign_in_ng",
 							"/disease/create_category_form",
 							"/disease/create_category_confirm",
@@ -56,6 +57,9 @@ public class SecurityConfig {
 							"/disease/disease_list",
 							"/disease/get_all_disease_list",
 							"/disease/get_category_list"
+=======
+							"/account/sign_in_ng"
+>>>>>>> 3446125e7e791a9394bf252b9348a01913420f3a
 							).permitAll()
 					.requestMatchers(
 							"/account/get_admin_list",
@@ -65,7 +69,12 @@ public class SecurityConfig {
 							"/",
 							"/account/modify_form",
 							"/account/modify_confirm",
-							"/account/delete_confirm"
+							"/account/delete_confirm",
+							"/user/**",
+							"/disease/**",
+							"/board/**",
+							"/video/**",
+							"/meal_providor/**"
 							).hasAnyRole("SUPER_ADMIN", "SUB_ADMIN"));
 		
 		http
