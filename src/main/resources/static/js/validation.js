@@ -39,9 +39,7 @@ function clearErrorMessage(input) {
 // 유효성 검사
 function validateInput(input, regEx, errorMessage, checkProfanity = false) { // 욕설 필터 체크 기본값 false로 설정
 	const value = input.value.trim(); // 앞뒤 공백 제거
-	const isValid = regEx ? regEx.test(value) : value.length > 0; // 정규 표현식 검사 또는 입력값 확인
-	const parentEle = input.parentElement;
-	const errorEle = createErrorElement(input); // 에러 요소 생성
+	const isValid = regEx ? regEx.test(value) : value.trim().length > 0; // 정규 표현식 검사 또는 입력값 확인
 	
 	// checkProfanity가 false일 경우 욕설 필터링 제외
     const profanityCheck = checkProfanity ? profanityFilter(value) : false;
@@ -56,7 +54,7 @@ function validateInput(input, regEx, errorMessage, checkProfanity = false) { // 
 }
 
 // 아이디 유효성 검사
-function validateEmail(input, usedCheck) { 
+async function validateEmail(input, usedCheck) { 
 	const regEx = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z.]{2,5}$/; // 로컬파트와 도메인은 영문, 숫자, 정해진 특수문자/ TLD는 영문, "."를 포함할 수 있고 2~5자
 	const errorMessage = "이메일을 정확히 입력해 주세요.";
 	const isValid = validateInput(input, regEx, errorMessage);
@@ -64,9 +62,8 @@ function validateEmail(input, usedCheck) {
 	
 	if(isValid && usedCheck) {
 		try {
-			const emailUsed = usedEmailCheck(input.value); // true=중복, false=정상 반환
-			// console.log('validateEmail usedEmailCheck emailUsed:', emailUsed);
-			if(!emailUsed) {
+			const isUsed = await usedEmailCheck(input.value); // true=중복, false=정상 반환
+			if(!isUsed) { 
 				clearErrorMessage(input);
 			} else {
 				setErrorMessage(input, "이미 사용 중인 이메일입니다.");
@@ -88,17 +85,17 @@ function validatePw(input) {
 	return validateInput(input, regEx, errorMessage);
 }
 
-// 이름 유효성 검사   
-function validateName(input) { 
-	const errorMessage = "이름을 입력해 주세요.";
-	return validateInput(input, null, errorMessage); // 정규 표현식 대신 값의 길이만 확인
-}
-
 // 연락처 유효성 검사   
 function validatePhone(input) {
 	const regEx = /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/; // 휴대폰 번호 정규 표현식
 	const errorMessage = "휴대폰 번호를 정확히 입력해 주세요.";
 	return validateInput(input, regEx, errorMessage); 
+}
+
+// 데이터 값 유효 확인
+function checkEmpty(input, txt) { 
+	const errorMessage = txt + " 입력해 주세요.";
+	return validateInput(input, null, errorMessage); // 정규 표현식 대신 값의 길이만 확인
 }
 
 // 비밀번호 노출 설정
