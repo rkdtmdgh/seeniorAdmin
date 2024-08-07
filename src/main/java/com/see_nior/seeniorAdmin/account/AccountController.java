@@ -63,8 +63,6 @@ public class AccountController {
 		
 		boolean result = accountService.isAccount(id);
 		
-		log.info("result ----", result);
-		
 		return result;
 	}
 	
