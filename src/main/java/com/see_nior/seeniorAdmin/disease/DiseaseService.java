@@ -77,7 +77,7 @@ public class DiseaseService {
 		
 	}
 	
-	// 질환 카테고리 가져오기
+	// 모든 질환 카테고리 가져오기
 	public Map<String, Object> getCategoryList() {
 		log.info("getCategoryList()");
 		
@@ -89,6 +89,15 @@ public class DiseaseService {
 		
 		return diseaseCategoryDtos;
 		
+	}
+	
+	// 질환 카테고리 한개 가져오기
+	public DiseaseCategoryDto getCategory(int no) {
+		log.info("getCategory()");
+		
+		DiseaseCategoryDto diseaseCategoryDto = diseaseMapper.getDiseaseCategory(no);
+		
+		return diseaseCategoryDto;
 	}
 
 	
@@ -280,6 +289,8 @@ public class DiseaseService {
 		return searchDiseaseDtos;
 		
 	}
+
+
 
 	
 
