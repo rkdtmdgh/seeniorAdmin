@@ -72,6 +72,7 @@ async function validateEmail(input, usedCheck) {
 			}
 		} catch(error) {
 			console.error('Error during email check:', error);
+			setErrorMessage(input, "이메일 중복 확인 중 오류가 발생했습니다.");
 			return false;
 		}
 	}

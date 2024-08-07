@@ -11,7 +11,7 @@ function signUpForm(formName) {
 	}
 	
 	input = form.pw;
-	if(!validatePw(input)) {
+	if(!validatePw(input, true)) { // 제출 전 한번 더 중복 확인
 		input.focus();
 		return false;
 	}

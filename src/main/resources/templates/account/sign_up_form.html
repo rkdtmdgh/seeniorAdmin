@@ -19,7 +19,7 @@
                 <div class="input_list">
                     <label for="id" class="border_input">
                         <span class="input_title">이메일</span>
-                        <input type="text" name="id" id="id" placeholder="이메일" class="input_txt" oninput="validateEmail(this)" onblur="validateEmail(this)">
+                        <input type="text" name="id" id="id" placeholder="이메일" class="input_txt" oninput="validateEmail(this)" onblur="validateEmail(this, true)">
                     </label>
 
                     <label for="password" class="border_input">
@@ -49,7 +49,7 @@
         </article>
     </main>
     
-    <script src="api_utils.js"></script>
+    <script src="/js/api_utils.js"></script>
     <script src="/js/validation.js"></script>
     <script src="/js/submitForm.js"></script>
 </body>
