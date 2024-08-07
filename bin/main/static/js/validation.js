@@ -64,6 +64,7 @@ async function validateEmail(input, usedCheck) {
 	if(isValid && usedCheck) {
 		try {
 			const emailUsed = await usedEmailCheck(input.value);
+			console.log('emailUsed:', emailUsed);
 			if(!emailUsed) {
 				setErrorMessage(input, "이미 사용 중인 이메일입니다.");
 				return false;
