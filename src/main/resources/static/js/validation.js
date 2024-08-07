@@ -66,11 +66,11 @@ function validateEmail(input, usedCheck) {
 		try {
 			const emailUsed = usedEmailCheck(input.value); // true=중복, false=정상 반환
 			// console.log('validateEmail usedEmailCheck emailUsed:', emailUsed);
-			if(emailUsed === true) {
+			if(!emailUsed) {
+				clearErrorMessage(input);
+			} else {
 				setErrorMessage(input, "이미 사용 중인 이메일입니다.");
 				return false;
-			} else {
-				clearErrorMessage(input);
 			}
 		} catch(error) {
 			console.error('Error during email check:', error);

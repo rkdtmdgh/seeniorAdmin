@@ -18,7 +18,7 @@ function usedEmailCheck(email) {
 		})
 		.fail((xhr, status, error) => {
 			console.error('Error during email check:', error);
-			console.log('Response text:', xhr.responseText); // 응답 내용 확인
+			// console.log('Response text:', xhr.responseText); // 응답 내용 확인
 			reject(error); // 실패 시 reject 호출하여 Promise 거부 상태로 변경
 		});
 	});	
