@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class DiseaseDto {
 
 	private int no;
+	private int category_no;
 	private String name;
 	private String info;
 	private String good_food;

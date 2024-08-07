@@ -1,6 +1,7 @@
 package com.see_nior.seeniorAdmin.disease.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -18,8 +19,14 @@ public interface DiseaseMapper {
 	// 질환 카테고리 중복체크
 	public boolean isDiseaseCategory(String name);
 	
-	// 모든 질환 카테고리 가져오기
+	// 모든 질환 카테고리 가져오기 (질환 리스트에서 <select>박스 => 비동기)
 	public List<DiseaseCategoryDto> getDiseaseCategoryList();
+	
+	// 모든 질환 카테고리 가져오기(페이지네이션 => 질환 카테고리 관리용 => 비동기)
+	public List<DiseaseCategoryDto> getDiseaseCategoryListWithPage(Map<String, Integer> pagingParams);
+	
+	// 질환 카테고리의 총 리스트 개수 구하기
+	public int getAllDiseaseCategoryCnt();
 	
 	// 질환 카테고리 한개 가져오기
 	public DiseaseCategoryDto getDiseaseCategory(int no);
@@ -55,6 +62,8 @@ public interface DiseaseMapper {
 
 	// 질환 검색
 	public List<DiseaseDto> searchDiseaseByName(String name);
+
+
 
 
 
