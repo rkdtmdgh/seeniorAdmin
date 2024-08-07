@@ -18,8 +18,11 @@ public interface DiseaseMapper {
 	// 질환 카테고리 중복체크
 	public boolean isDiseaseCategory(String name);
 	
-	// 질환 카테고리 가져오기
+	// 모든 질환 카테고리 가져오기
 	public List<DiseaseCategoryDto> getDiseaseCategoryList();
+	
+	// 질환 카테고리 한개 가져오기
+	public DiseaseCategoryDto getDiseaseCategory(int no);
 	
 	// 질환 카테고리 수정
 	public int updateDiseaseCategory(DiseaseCategoryDto diseaseCategoryDto);
@@ -52,6 +55,7 @@ public interface DiseaseMapper {
 
 	// 질환 검색
 	public List<DiseaseDto> searchDiseaseByName(String name);
+
 
 
 

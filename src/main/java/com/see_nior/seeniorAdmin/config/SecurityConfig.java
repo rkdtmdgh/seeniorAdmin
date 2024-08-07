@@ -49,6 +49,7 @@ public class SecurityConfig {
 							"/account/sign_in_result/**",
 							"/account/sign_in_ok",
 							"/account/sign_in_ng",
+							"/disease/**",
 							"/account/is_account"
 							).permitAll()
 					.requestMatchers(
@@ -63,7 +64,6 @@ public class SecurityConfig {
 							"/account/admin_list_form",
 							"/account/get_admin_list",
 							"/user/**",
-							"/disease/**",
 							"/board/**",
 							"/video/**",
 							"/meal_providor/**"

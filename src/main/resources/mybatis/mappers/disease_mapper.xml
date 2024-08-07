@@ -52,7 +52,7 @@
 	
 	</select>
 	
-	<!-- 질환 카테고리 가져오기 -->
+	<!-- 모든 질환 카테고리 가져오기 -->
 	<select id="getDiseaseCategoryList"
 			resultMap="DiseaseCategoryDto">
 	
@@ -63,8 +63,21 @@
 			WHERE 
 				IS_DELETED = 1 
 			ORDER BY 
-				NAME ASC
+				NO ASC
 	
+	</select>
+	
+	<!-- 질환 카테고리 한개 가져오기 -->
+	<select id="getDiseaseCategory"
+			resultMap="DiseaseCategoryDto">
+			
+			SELECT 
+				* 
+			FROM 
+				DISEASE_CATEGORY 
+			WHERE 
+				NO = #{no}		
+			
 	</select>
 	
 	<!-- 질환 카테고리 수정 -->
@@ -73,7 +86,8 @@
 			UPDATE 
 				DISEASE_CATEGORY 
 			SET 
-				NAME = #{name} 
+				NAME = #{name}, 
+				MOD_DATE = NOW() 
 			WHERE 
 				NO = #{no}
 	
@@ -85,7 +99,7 @@
 			UPDATE 
 				DISEASE_CATEGORY 
 			SET 
-				IS_DELETE = 0 
+				IS_DELETED = 0 
 			WHERE 
 				NO = #{no}
 	
@@ -172,7 +186,8 @@
 				NAME = #{name_no}, 
 				INFO = #{info}, 
 				GOOD_FOOD = #{good_food}, 
-				BAD_FOOD = #{bad_food} 
+				BAD_FOOD = #{bad_food}, 
+				MOD_DATE = NOW() 
 			WHERE 
 				NO = #{no}
 	

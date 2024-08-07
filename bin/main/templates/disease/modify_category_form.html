@@ -14,13 +14,14 @@
 
 	<article>
 	
-		<p>create disease category form</p>
+		<p>modify disease category form</p>
 		
-		<form th:action="@{/disease/create_category_confirm}" name="create_category_form" method="post">
+		<form th:action="@{/disease/modify_category_confirm}" name="modify_category_form" method="post">
 			
-			<input type="text" name="name" placeholder="INPUT DISEASE CATEGORY">
+			<input type="hidden" name="no" th:value="${diseaseCategoryDto.no}">
+			<input type="text" name="name" th:value="${diseaseCategoryDto.name}" placeholder="INPUT DISEASE CATEGORY">
 			<br>
-			<input type="submit" value="질환 카테고리 생성" >
+			<input type="submit" value="질환 카테고리 수정" >
 			<input type="reset" value="초기화">
 		
 		</form>
