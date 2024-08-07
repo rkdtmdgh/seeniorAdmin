@@ -1,6 +1,7 @@
 // 이메일 중복 검사 
 function usedEmailCheck(email) {
-	console.log('usedEmailChekc:', email);
+	// console.log('usedEmailChekc:', email);
+	
 	// Promise 사용으로 명확하게 처리
 	return new Promise((resolve, reject) => { // resolve=해결, reject=거부 여부
 		$.ajax({
@@ -12,7 +13,7 @@ function usedEmailCheck(email) {
 			},
 		})
 		.done(response => {
-			console.log('result:', response);
+			console.log('Ajax usedEmailCheck result:', response);
 			resolve(response); // 성공 시 resolve 호출하여 Promise를 이행 상태로 변경
 		})
 		.fail((xhr, status, error) => {
