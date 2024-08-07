@@ -15,7 +15,7 @@
                 </a>
             </div>
 
-            <form name="sign_up_form" onsubmit="return signUpForm('sign_up_form')">
+            <form name="sign_up_form" onsubmit="signUpForm(event, 'sign_up_form')">
                 <div class="input_list">
                     <label for="id" class="border_input">
                         <span class="input_title">이메일</span>
@@ -32,7 +32,7 @@
 
                     <label for="name" class="border_input">
                         <span class="input_title">이름</span>
-                        <input type="text" name="name" id="name" placeholder="이름" class="input_txt" oninput="validateName(this)" onblur="validateName(this)">
+                        <input type="text" name="name" id="name" placeholder="이름" class="input_txt" oninput="checkEmpty(this, '이름을')" onblur="checkEmpty(this, '이름을')">
                     </label>
 					
 					<label for="tel" class="border_input">

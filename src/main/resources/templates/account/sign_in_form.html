@@ -15,16 +15,19 @@
                 </a>
             </div>
 
-            <form name="sign_in_form" action="" method="post">
+            <form name="sign_in_form" onsubmit="signInForm(event, 'sign_in_form')">
                 <div class="input_list">
                     <label for="id" class="border_input">
                         <span class="input_title">이메일</span>
                         <input type="text" name="id" id="id" placeholder="관리자 이메일" class="input_txt">
                     </label>
 
-                    <label for="password" class="border_input">
+                    <label for="pw" class="border_input">
                         <span class="input_title">비밀번호</span>
                         <input type="password" name="pw" id="pw" placeholder="비밀번호" class="input_txt" autocomplete="off">
+                        <span class="input_icon" onclick="setViewPw(this)">
+                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
+                        </span>
                     </label>
 
                     <div class="btn_list col">
@@ -35,5 +38,8 @@
             </form>
         </article>
     </main>
+    
+    <script src="/js/validation.js"></script>
+    <script src="/js/submitForm.js"></script>
 </body>
 </html>
