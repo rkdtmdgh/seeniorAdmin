@@ -5,13 +5,13 @@ function signUpForm(formName) {
 	
 	// 유효성 검사 재실행
 	input = form.id;
-	if(!validateEmail(input)) {
+	if(!validateEmail(input, true)) { // 제출 전 한번 더 중복 확인
 		input.focus();
 		return false;
 	}
 	
 	input = form.pw;
-	if(!validatePw(input, true)) { // 제출 전 한번 더 중복 확인
+	if(!validatePw(input)) { 
 		input.focus();
 		return false;
 	}
