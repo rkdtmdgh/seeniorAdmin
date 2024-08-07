@@ -49,7 +49,11 @@ public class SecurityConfig {
 							"/account/sign_in_result/**",
 							"/account/sign_in_ok",
 							"/account/sign_in_ng",
+<<<<<<< HEAD
 							"/disease/**"
+=======
+							"/account/is_account"
+>>>>>>> 67dd290c4a20d6cb76c23f9d03c1f5ea16a46cbd
 							).permitAll()
 					.requestMatchers(
 							"/account/get_admin_list",
@@ -60,6 +64,8 @@ public class SecurityConfig {
 							"/account/modify_form",
 							"/account/modify_confirm",
 							"/account/delete_confirm",
+							"/account/admin_list_form",
+							"/account/get_admin_list",
 							"/user/**",
 							"/board/**",
 							"/video/**",

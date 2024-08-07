@@ -56,22 +56,25 @@ function validateInput(input, regEx, errorMessage, checkProfanity = false) { // 
 }
 
 // 아이디 유효성 검사
-async function validateEmail(input, usedCheck) { 
+function validateEmail(input, usedCheck) { 
 	const regEx = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z.]{2,5}$/; // 로컬파트와 도메인은 영문, 숫자, 정해진 특수문자/ TLD는 영문, "."를 포함할 수 있고 2~5자
 	const errorMessage = "이메일을 정확히 입력해 주세요.";
 	const isValid = validateInput(input, regEx, errorMessage);
+	// console.log('validateEmail isValid:', isValid);
 	
 	if(isValid && usedCheck) {
 		try {
-			const emailUsed = await usedEmailCheck(input.value);
+			const emailUsed = usedEmailCheck(input.value); // true=중복, false=정상 반환
+			// console.log('validateEmail usedEmailCheck emailUsed:', emailUsed);
 			if(!emailUsed) {
+				clearErrorMessage(input);
+			} else {
 				setErrorMessage(input, "이미 사용 중인 이메일입니다.");
 				return false;
-			} else {
-				clearErrorMessage(input);
 			}
 		} catch(error) {
 			console.error('Error during email check:', error);
+			setErrorMessage(input, "이메일 중복 확인 중 오류가 발생했습니다.");
 			return false;
 		}
 	}

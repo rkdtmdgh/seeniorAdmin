@@ -116,8 +116,8 @@
     }
 
     &.cancel {
-        background-color: var(--BgColor);
-        border-color: var(--BgColor);
+        background-color: var(--bgColor);
+        border-color: var(--bgColor);
         color: var(--grayColor);
     }
 
@@ -232,7 +232,7 @@
     .sub_title {
         font-size: var(--baseFontSize);
         font-weight: var(--bold);
-        background-color: var(--BgColor);
+        background-color: var(--bgColor);
         border-radius: var(--bdrs);
         padding: var(--textPadding);
     }
