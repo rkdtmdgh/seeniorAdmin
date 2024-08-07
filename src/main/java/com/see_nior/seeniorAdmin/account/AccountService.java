@@ -1,6 +1,8 @@
 package com.see_nior.seeniorAdmin.account;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,9 @@ public class AccountService {
 	final static public int ADMIN_SIGN_UP_FAIL = 0;
 	final static public int ADMIN_SIGN_UP_SUCCESS = 1;
 	
+	private int pageLimit = 5;		// 한 페이지당 보여줄 정보 수
+	private int blockLimit = 5;		// 하단에 보여질 페이지 번호 수
+	
 	final private AccountMapper accountMapper;
 	final private PasswordEncoder passwordEncoder;
 	
@@ -25,6 +30,13 @@ public class AccountService {
 		this.accountMapper = accountMapper;
 		this.passwordEncoder = passwordEncoder;
 		
+	}
+	
+	// 아이디 중복 확인
+	public boolean isAccount(String id) {
+		log.info("isAccount()");
+		
+		return accountMapper.isAccount(id);
 	}
 	
 	// 회원 가입 확인
@@ -36,7 +48,7 @@ public class AccountService {
 		
 		if (!isAccount) {
 			
-			if (adminAccountDto.getId().equals("super_admin")) {
+			if (adminAccountDto.getId().equals("super_admin@seenior.com")) {
 				
 				adminAccountDto.setPw(passwordEncoder.encode(adminAccountDto.getPw()));
 				adminAccountDto.setAuthority_role("SUPER_ADMIN");
@@ -107,10 +119,48 @@ public class AccountService {
 	}
 	
 	// 관리자 리스트 가져오기
-	public ArrayList<AdminAccountDto> getAdminList() {
+	public Map<String, Object> getAdminPagingList(int page) {
 		log.info("getAdminList()");
+		
+		int pagingStart = (page - 1) * pageLimit;	
+		
+		Map<String, Object> pagingList = new HashMap<>();
+		
+		Map<String, Integer> pagingParams = new HashMap<>();
+		pagingParams.put("start", pagingStart);
+		pagingParams.put("limit", pageLimit);
 
-		return accountMapper.getAdminList();
+		List<AdminAccountDto> adminAccountDtos = accountMapper.selectAdminList(pagingParams);
+		pagingList.put("adminAccountDtos", adminAccountDtos);
+		
+		return pagingList;
+	}
+	
+	// 관리자 리스트 총 개수
+	public Map<String, Object> getAccountListPageNum(int page) {
+		log.info("getAccountListPageNum()");
+		
+		Map<String, Object> accountListPageNum = new HashMap<>();
+		
+		// 전체 리스트 개수 조회 
+		int accountListCnt = accountMapper.selectAllAccountListCnt();
+
+		// 전체 페이지 개수 계산
+		int maxPage = (int) (Math.ceil((double) accountListCnt / pageLimit));
+		
+		// 시작 페이지 값 계산
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
+		
+		// 마지막 페이지 값 계산
+		int endPage = startPage + blockLimit - 1;
+		if (endPage > maxPage) endPage = maxPage;
+		
+		accountListPageNum.put("accountListCnt", accountListCnt);
+		accountListPageNum.put("maxPage", maxPage);
+		accountListPageNum.put("startPage", startPage);
+		accountListPageNum.put("endPage", endPage);
+		
+		return accountListPageNum;
 	}
 	
 	// 관리자 가입 승인
@@ -120,5 +170,7 @@ public class AccountService {
 		accountMapper.updateAdminRoleByNo(no);
 		
 	}
+	
+
 	
 }

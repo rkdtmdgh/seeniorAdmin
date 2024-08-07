@@ -1,6 +1,6 @@
 package com.see_nior.seeniorAdmin.account;
 
-import java.util.ArrayList;
+import java.util.Map;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 
@@ -36,11 +37,6 @@ public class AccountController {
 		log.info("signUpForm()");
 		
 		String nextPage = "account/sign_up_form";
-		String cssPath = "/css/account/sign_form.css";
-		String pageTitle = "SEE-NIOR 회원가입";
-		
-		model.addAttribute("cssPath", cssPath);
-		model.addAttribute("pageTitle", pageTitle);
 		
 		return nextPage;
 	}
@@ -59,6 +55,17 @@ public class AccountController {
 		return nextPage;
 	}
 	
+	// 아이디 중복 여부 확인
+	@GetMapping("/is_account")
+	@ResponseBody
+	public Object isAccount(@RequestParam("id") String id) {
+		log.info("isAccount()");
+		
+		boolean result = accountService.isAccount(id);
+		
+		return result;
+	}
+	
 	
 	// 로그인 양식
 	@GetMapping("/sign_in_form")
@@ -66,11 +73,6 @@ public class AccountController {
 		log.info("signInForm()");
 		
 		String nextPage = "account/sign_in_form";
-		String cssPath = "/css/account/sign_form.css";
-		String pageTitle = "SEE-NIOR 로그인";
-		
-		model.addAttribute("cssPath", cssPath);
-		model.addAttribute("pageTitle", pageTitle);
 		
 		return nextPage;
 	}
@@ -157,18 +159,30 @@ public class AccountController {
 		return nextPage;
 	}
 	
-	// 관리자 리스트 가져오기
-	@GetMapping("/get_admin_list")
-	public String getAdminList(Model model) {
-		log.info("getAdminList()");
+	// 관리자 리스트 바로가기 
+	@GetMapping("/admin_list_form")
+	public String adminListForm() {
+		log.info("adminListForm()");
 		
-		String nextPage = "account/admin_list";
-		
-		ArrayList<AdminAccountDto> adminList = accountService.getAdminList();
-		
-		model.addAttribute("adminList", adminList);
+		String nextPage = "account/admin_list_form";
 		
 		return nextPage;
+	}
+	
+	
+	// 관리자 리스트 가져오기
+	@GetMapping("/get_admin_list")
+	@ResponseBody
+	public Object getAdminList(
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("getAdminList()");
+		
+		Map<String, Object> adminList = accountService.getAdminPagingList(page);
+		
+		Map<String, Object> accountListPage = accountService.getAccountListPageNum(page);
+		adminList.put("accountListPage", accountListPage);
+		
+		return adminList;
 	}
 	
 	
@@ -177,13 +191,9 @@ public class AccountController {
 	public String isApproval(@RequestParam("no") int no, Model model) {
 		log.info("isApproval()");
 		
-		String nextPage = "account/admin_list";
+		String nextPage = "account/admin_list_form";
 		
 		accountService.isApproval(no);
-		
-		ArrayList<AdminAccountDto> adminList = accountService.getAdminList();
-		
-		model.addAttribute("adminList", adminList);
 		
 		return nextPage;
 	
