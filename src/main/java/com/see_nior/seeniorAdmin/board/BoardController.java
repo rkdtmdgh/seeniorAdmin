@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @Log4j2
@@ -21,6 +22,7 @@ public class BoardController {
 	
 	//모든 게시판 항목 가져오기(비동기?)
 	@GetMapping("/get_list")
+	@ResponseBody
 	public String get_list(@RequestParam String param) {
 		log.info("get_list()");
 		
