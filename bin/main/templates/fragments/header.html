@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html 
+   xmlns:th="http://www.thymeleaf.org" 
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
+<header th:fragment="header" id="header">
+	<div class="header_container">
+	    <div class="logo_info">
+	        <h1 class="a11y-hidden">SEENIOR</h1>
+	        <a href="/" class="logo">
+	            <img src="/image/logo/signature-logo.png" alt="logo" class="logo_img">
+	        </a>
+	    </div>
+	
+	    <div class="header_menu_list">
+	        <span class="header_menu user_name">userName</span>
+	
+	        <div class="header_menu func_icon">
+	            <svg aria-label="알람" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 27 27">
+	                <g>
+	                    <path d="M22.504,20.902h-1.443V10.691c0-4.169-3.392-7.56-7.56-7.56S5.94,6.522,5.94,10.691v10.211H4.496V10.691
+	                        c0-4.964,4.039-9.003,9.004-9.003s9.004,4.039,9.004,9.003V20.902z"/>
+	                    <rect x="1.824" y="20.902" width="23.351" height="1.443"/>
+	                    <rect x="12.779" y="0.131" width="1.443" height="3"/>
+	                    <path d="M13.5,26.869c-1.974,0-3.581-1.606-3.581-3.581v-2.387h1.443v2.387c0,1.178,0.959,2.137,2.138,2.137
+	                        s2.138-0.959,2.138-2.137v-2.387h1.443v2.387C17.081,25.263,15.474,26.869,13.5,26.869z"/>
+	                </g>
+	            </svg>
+	        </div>
+	
+	        <a href="" class="header_menu func_icon">
+	            <svg aria-label="로그아웃" class="stroke" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 27 27">
+	                <g>
+	                    <rect x="831" y="607.099" fill="none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" width="66" height="42"/>
+	                    <path fill="none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
+	                    M850.198,606.643v-9.939c0-7.624,6.18-13.803,13.803-13.803l0,0c7.623,0,13.802,6.18,13.802,13.803v9.939"/>
+	                </g>
+	            
+	                <line fill="none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="858" y1="628" x2="870" y2="628"/>
+	        
+	                <g>
+	                    <rect x="831" y="607.099" fill="none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" width="66" height="42"/>
+	                    <path fill="none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
+	                    M850.198,606.643v-9.939c0-7.624,6.18-13.803,13.803-13.803l0,0c7.623,0,13.802,6.18,13.802,13.803v9.939"/>
+	                </g>
+	
+	                <line fill="none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="858" y1="628" x2="870" y2="628"/>
+	                <polyline fill="none" stroke-width="1.4" stroke-linejoin="round" stroke-miterlimit="10" points="18.835,20.206 
+	                18.835,24.979 1.002,24.979 1.002,2.021 18.835,2.021 18.835,7.106 "/>
+	                <path fill="none" stroke-width="1.4" stroke-miterlimit="10" d="M22.507,16.798"/>
+	                <line fill="none" stroke-width="1.4" stroke-miterlimit="10" x1="10.136" y1="13.553" x2="25.752" y2="13.553"/>
+	                <polyline fill="none" stroke-width="1.4" stroke-miterlimit="10" points="22.478,10.226 25.752,13.5 
+	                22.478,16.774 "/>
+	            </svg>
+	        </a>
+	    </div>
+	</div>
+</header>
+</html>
