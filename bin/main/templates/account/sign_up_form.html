@@ -3,7 +3,15 @@
    xmlns:th="http://www.thymeleaf.org" 
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
-<head th:replace="~{fragments/head.html :: head(pageTitle='SEE-NIOR 회원가입', cssPath='/css/account/sign_form.css')}"></head>
+<head>
+	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 회원가입')}"></th:block>
+	
+	<script src="/js/api_utils.js"></script>
+    <script src="/js/validation.js"></script>
+    <script src="/js/submitForm.js"></script>
+    
+    <link rel="stylesheet" href="/css/account/sign_form.css">
+</head>
 
 <body>
 	<main class="sign_form_wrap">
@@ -48,9 +56,5 @@
             </form>
         </article>
     </main>
-    
-    <script src="/js/api_utils.js"></script>
-    <script src="/js/validation.js"></script>
-    <script src="/js/submitForm.js"></script>
 </body>
 </html>
