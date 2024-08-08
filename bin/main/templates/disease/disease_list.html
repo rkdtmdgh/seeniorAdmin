@@ -32,9 +32,9 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="diseaseDto : ${diseaseDto}">
+				<tr th:each="diseaseDto : ${allDiseaseDtos.allDiseaseDto}">
 					<td th:text="${diseaseDto.no}"></td>
-					<td th:text="${diseaseDto.diseaseCategoryDto.name}"></td>
+					<td th:text="${diseaseDto.diseaseCategoryDto.dc_name}"></td>
 					<td th:text="${diseaseDto.name}"></td>
 					<td th:text="${diseaseDto.info}"></td>
 					<td th:text="${diseaseDto.good_food}"></td>

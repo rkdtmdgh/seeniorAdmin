@@ -7,6 +7,11 @@
 	<resultMap type="DiseaseCategoryDto" id="DiseaseCategoryDto">
 		<result column="no" property="no" />
 		<result column="name" property="name" />
+		
+		<!-- 임의로 추가된 필드. 직렬화나 역직렬화 시에는 무시하게 설정하였음 -->
+		<result column="dc_name" property="dc_name" />
+		<!--  -->
+		
 		<result column="is_deleted" property="is_deleted" />
 		<result column="reg_date" property="reg_date" />
 		<result column="mod_date" property="mod_date" />
@@ -52,7 +57,7 @@
 	
 	</select>
 	
-	<!-- 모든 질환 카테고리 가져오기 -->
+	<!-- 모든 질환 카테고리 가져오기 (질환 리스트에서 select박스 => 비동기) -->
 	<select id="getDiseaseCategoryList"
 			resultMap="DiseaseCategoryDto">
 	
@@ -67,6 +72,34 @@
 	
 	</select>
 	
+	<!-- 모든 질환 카테고리 가져오기(페이지네이션 => 질환 카테고리 관리용 => 비동기) -->
+	<select id="getDiseaseCategoryListWithPage">
+	
+			SELECT 
+				* 
+			FROM 
+				DISEASE_CATEGORY 
+			WHERE 
+				IS_DELETED = 1 
+			ORDER BY NO ASC 
+			LIMIT 
+				#{start}, #{limit}
+	
+	</select>
+	
+	
+	<!-- 질환 카테고리의 총 리스트 개수 구하기 -->
+	<select id="getAllDiseaseCategoryCnt">
+	
+			SELECT 
+				COUNT(*) 
+			FROM 
+				DISEASE_CATEOGORY 
+			WHERE 
+				IS_DELETED = 1
+	
+	</select>
+	
 	<!-- 질환 카테고리 한개 가져오기 -->
 	<select id="getDiseaseCategory"
 			resultMap="DiseaseCategoryDto">
@@ -76,7 +109,7 @@
 			FROM 
 				DISEASE_CATEGORY 
 			WHERE 
-				NO = #{no}		
+				NO = #{no} 
 			
 	</select>
 	
@@ -112,9 +145,9 @@
 	
 		INSERT INTO 
 			DISEASE
-			(NAME, INFO, GOOD_FOOD, BAD_FOOD) 
+			(CATEGORY_NO, NAME, INFO, GOOD_FOOD, BAD_FOOD) 
 		VALUES 
-			(#{name}, #{info}, #{good_food}, #{bad_food})
+			(#{category_no}, #{name}, #{info}, #{good_food}, #{bad_food})
 	
 	</insert>
 	
@@ -138,13 +171,13 @@
 		
 			SELECT 
 				D.*, 
-				DC.* 
+				DC.NAME AS DC_NAME 
 			FROM 
 			    DISEASE D
 			JOIN 
-			    DISEASE_CATEGORY DC
+			    DISEASE_CATEGORY DC 
 			ON 
-			    D.CATEGORY_NO = DC.NO
+			    D.CATEGORY_NO = DC.NO 
 			WHERE 
 			    D.IS_DELETED = 1
 	
