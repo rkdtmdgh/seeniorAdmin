@@ -165,9 +165,6 @@
 
 /* basic layout */
 .contents_wrap {
-    width: 100vw;
-    height: 100vh;
-
     .contents_container {
         width: 100%;
         height: calc(100% - var(--headerHeight));
@@ -355,6 +352,7 @@
     }
 
     .func_icon {
+    	display: block;
         width: var(--iconsWidth);
         height: var(--iconsWidth);
         padding: var(--ssize1);

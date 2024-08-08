@@ -206,7 +206,7 @@ table {
 
 ::-webkit-scrollbar-thumb {
     border-radius: var(--bdrs);
-    background-color: var(--grayColor);
+    background-color: var(--middleGrayColor);
 }
 
 ::-webkit-scrollbar-track {
@@ -224,6 +224,6 @@ table {
 	}
 
     &:hover::-webkit-scrollbar-thumb {
-        background-color: var(--grayColor);
+        background-color: var(--middleGrayColor);
     }
 }
