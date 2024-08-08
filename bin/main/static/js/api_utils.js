@@ -5,7 +5,9 @@ function usedEmailCheck(email) {
 	// Promise 사용으로 명확하게 처리
 	return new Promise((resolve, reject) => { // resolve=해결, reject=거부 여부
 		$.ajax({
-			dataType: 'json',
+			headers: {
+				'Contents-Type': 'Apllication/json',
+			},
 			url: '/account/is_account',
 			type: 'GET',
 			data: {

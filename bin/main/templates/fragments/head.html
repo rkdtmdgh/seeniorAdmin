@@ -3,7 +3,7 @@
    xmlns:th="http://www.thymeleaf.org" 
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
-<head th:fragment="head(pageTitle, cssPath)">
+<th:block th:fragment="head1">
 	<meta charset="UTF-8">
 	<title th:text="${pageTitle}">Title</title>
 	
@@ -25,5 +25,5 @@
 	<th:block th:if="${cssPath != null and cssPath != ''}">
 		<link rel="stylesheet" th:href="@{${cssPath}}">
 	</th:block>
-</head>
+</th:block>
 </html>

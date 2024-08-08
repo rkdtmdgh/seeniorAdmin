@@ -18,7 +18,7 @@ async function signUpForm(event, formName) {
 	}
 	
 	input = form.name;
-	if(!validateName(input)) {
+	if(!checkEmpty(input, '이름을')) {
 		input.focus();
 		return false;
 	}
@@ -32,7 +32,7 @@ async function signUpForm(event, formName) {
 	// 모든 유효성 검사가 통과되었을 때 폼 제출
 	form.action = "/account/sign_up_confirm"; 
     form.method = "post"; 
-    form.submit();
+    form.submit()
 }
 
 // 로그인 폼
@@ -42,15 +42,13 @@ function signInForm(event, formName) {
 	let input;
 	
 	input = form.id;
-	if(!input.value.trim().length > 0) { 
-		alert('이메일을 입력해 주세요.');
+	if(!checkEmpty(input, '이메일을')) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.pw;
-	if(!input.value.trim().length > 0) { 
-		alert('비밀번호를 입력해 주세요.');
+	if(!checkEmpty(input, '비밀번호를')) {
 		input.focus();
 		return false;
 	}
