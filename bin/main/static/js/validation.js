@@ -10,7 +10,7 @@ function profanityFilter(value) {
 // 에러 메세지 요소 생성
 function createErrorElement(ele) {
     const parentEle = ele.parentElement;
-    let errorEle = parentEle.querySelector('.input_error'); // 부모 요소 다음에 있는 요소를 찾음
+    let errorEle = parentEle.querySelector('.input_error'); // 부모 요소 내에 에러 요소를 찾음
     
     // 에러 메세지 요소가 없으면 생성
     if (!errorEle) {
@@ -22,45 +22,82 @@ function createErrorElement(ele) {
     return errorEle;
 }
 
+// 전체 에러 메세지 요소 생성
+function createAllErrorElement(message) {
+    const parentEle = document.getElementById('input_list_info');
+	errorEle = document.createElement("span"); // 요소 생성
+    errorEle.id = "input_all_error"; // 아이디 추가
+    parentEle.appendChild(errorEle); // 부모 요소에 추가
+	errorEle.textContent = message ? message : '';
+}
+
+// 에러 메세지 노출
+function setErrorMessage(input, message) {
+	const errorEle = createErrorElement(input);
+	errorEle.textContent = message;
+	input.parentElement.classList.add('error');
+	
+	// 전체 에러 메세지 요소 제거
+	const allErrorEle = document.getElementById('input_all_error');
+	if(allErrorEle) {
+		allErrorEle.remove();
+	}
+}
+
+// 에러 메세시 제거
+function clearErrorMessage(input) {
+	const errorEle = createErrorElement(input);
+	errorEle.textContent = "";
+	input.parentElement.classList.remove('error');
+}
+
 // 유효성 검사
 function validateInput(input, regEx, errorMessage, checkProfanity = false) { // 욕설 필터 체크 기본값 false로 설정
 	const value = input.value.trim(); // 앞뒤 공백 제거
-	const isValid = regEx ? regEx.test(value) : value.length > 0; // 정규 표현식 검사 또는 입력값 확인
-	const parentEle = input.parentElement;
-	const errorEle = createErrorElement(input); // 에러 요소 생성
+	const isValid = regEx ? regEx.test(value) : value.trim().length > 0; // 정규 표현식 검사 또는 입력값 확인
 	
 	// checkProfanity가 false일 경우 욕설 필터링 제외
     const profanityCheck = checkProfanity ? profanityFilter(value) : false;
 	
 	if (value === "" || !isValid || profanityCheck) {
-        errorEle.innerHTML = profanityCheck ? "금지된 단어가 포함되어 있습니다." : errorMessage; // 에러 메시지 설정
-        parentEle.classList.add('error'); // 에러 클래스 추가
+		setErrorMessage(input, profanityCheck ? "금지된 단어가 포함되어 있습니다." : errorMessage); // 에러 메시지 설정
     } else {
-        errorEle.textContent = ""; // 에러 메시지 지우기
-        parentEle.classList.remove('error'); // 에러 클래스 제거
+		clearErrorMessage(input); // 에러 메시지 지우기
     }
 	
     return isValid && !profanityCheck; // 두 조건에 부합해야 true 즉 정규 표현식 검사, 입력값 유무, 욕설 필터 모두 true를 반환 해야 함
 }
 
 // 아이디 유효성 검사
-function validateEmail(input) { 
+async function validateEmail(input, usedCheck) { 
 	const regEx = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z.]{2,5}$/; // 로컬파트와 도메인은 영문, 숫자, 정해진 특수문자/ TLD는 영문, "."를 포함할 수 있고 2~5자
 	const errorMessage = "이메일을 정확히 입력해 주세요.";
-    return validateInput(input, regEx, errorMessage);
+	const isValid = validateInput(input, regEx, errorMessage);
+	// console.log('validateEmail isValid:', isValid);
+	
+	if(isValid && usedCheck) {
+		try {
+			const isUsed = await usedEmailCheck(input.value); // true=중복, false=정상 반환
+			if(!isUsed) { 
+				clearErrorMessage(input);
+			} else {
+				setErrorMessage(input, "이미 사용 중인 이메일입니다.");
+				return false;
+			}
+		} catch(error) {
+			console.error('Error during email check:', error);
+			setErrorMessage(input, "이메일 중복 확인 중 오류가 발생했습니다.");
+			return false;
+		}
+	}
+	return isValid;
 }
 
 // 비밀번호 유효성 검사
 function validatePw(input) { 
 	const regEx = /^(?=.*[a-zA-Z])(?=.*[@$!%*?&])[a-zA-Z\d@$!%*?&]{8,16}$/; // 8~16자의 영문 대소문자 중 최소 1개, 특수문자 최소 1개, 숫자 선택 입력
     const errorMessage = "비밀번호는 8~16자의 영문대소문자, 특수문자(@, $, !, %, *, ?, &), 숫자를 사용할 수 있습니다.<br>(필수: 영문대소문자, 특수문자)";
-    return validateInput(input, regEx, errorMessage); 
-}
-
-// 이름 유효성 검사   
-function validateName(input) { 
-	const errorMessage = "이름을 입력해 주세요.";
-	return validateInput(input, null, errorMessage); // 정규 표현식 대신 값의 길이만 확인
+	return validateInput(input, regEx, errorMessage);
 }
 
 // 연락처 유효성 검사   
@@ -70,16 +107,22 @@ function validatePhone(input) {
 	return validateInput(input, regEx, errorMessage); 
 }
 
+// 데이터 값 유효 확인
+function checkEmpty(input, txt) { 
+	const errorMessage = txt + " 입력해 주세요.";
+	return validateInput(input, null, errorMessage); // 정규 표현식 대신 값의 길이만 확인
+}
+
 // 비밀번호 노출 설정
 function setViewPw(ele) {
 	const icon = ele.querySelector('.icon');
 	const parentEle = ele.parentElement;
-	const passwordInput = parentEle.querySelector('#pw');
+	const passwordInput = parentEle.querySelector('input');
 	
-	if(passwordInput.type === "password") {
+	if(passwordInput && passwordInput.type === "password") {
 		passwordInput.type = "text";
 		icon.src = "/image/icons/eye_open.svg";
-	} else {
+	} else if(passwordInput) {
 		passwordInput.type = "password";
 		icon.src = "/image/icons/eye_off.svg";
 	}
@@ -87,7 +130,7 @@ function setViewPw(ele) {
 
 // 휴대폰 번호 형식으로 변환
 function setReplacePhone(input) {
-	const telvalue = input.value.replace(/[^0-9]/g, "").replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(-{1,2})$/g, ""); // (01x-xxxx-xxxx)
-	input.value = telvalue;
-	return telvalue;
+	const phoneValue = input.value.replace(/[^0-9]/g, "").replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(-{1,2})$/g, ""); // (01x-xxxx-xxxx)
+	input.value = phoneValue;
+	return phoneValue;
 }

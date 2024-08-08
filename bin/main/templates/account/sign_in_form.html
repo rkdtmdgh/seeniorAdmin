@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html 
    xmlns:th="http://www.thymeleaf.org" 
-   xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
->
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="~{fragments/head.html :: head}"></head>
+<head>
+	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 로그인')}"></th:block>
+	
+	<script src="/js/validation.js"></script>
+    <script src="/js/submitForm.js"></script>
+    
+    <link rel="stylesheet" href="/css/account/sign_form.css">
+</head>
 
 <body>	
 	<main class="sign_form_wrap">
@@ -16,22 +22,27 @@
                 </a>
             </div>
 
-            <form name="sign_in_form" action="" method="post">
-                <div class="input_list">
-                    <label for="id" class="border_input">
-                        <span class="input_title">아이디</span>
-                        <input type="text" name="id" id="id" placeholder="관리자 아이디" class="input_txt">
-                    </label>
-
-                    <label for="password" class="border_input">
-                        <span class="input_title">비밀번호</span>
-                        <input type="password" name="pw" id="pw" placeholder="비밀번호" class="input_txt">
-                    </label>
-
-                    <div class="btn_list col">
-                        <button type="submit" class="btns">관리자 로그인</button>
-                        <a href="/account/sign_up_form" class="btns white">회원가입</a>
-                    </div>
+            <form name="sign_in_form" onsubmit="signInForm(event, 'sign_in_form')">
+            	<div class="input_list_container">
+	                <div class="input_list" id="input_list_info">
+	                    <label for="id" class="border_input">
+	                        <span class="input_title">이메일</span>
+	                        <input type="text" name="id" id="id" placeholder="관리자 이메일" class="input_txt">
+	                    </label>
+	
+	                    <label for="pw" class="border_input">
+	                        <span class="input_title">비밀번호</span>
+	                        <input type="password" name="pw" id="pw" placeholder="비밀번호" class="input_txt" autocomplete="off">
+	                        <span class="input_icon" onclick="setViewPw(this)">
+	                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
+	                        </span>
+	                    </label>
+	                </div>
+	                
+	                <div class="btn_list col">
+	                    <button type="submit" class="btns">관리자 로그인</button>
+	                    <a href="/account/sign_up_form" class="btns white">회원가입</a>
+	                </div>
                 </div>
             </form>
         </article>

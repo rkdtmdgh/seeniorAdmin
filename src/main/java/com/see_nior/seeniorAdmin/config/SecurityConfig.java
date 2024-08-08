@@ -48,7 +48,9 @@ public class SecurityConfig {
 							"/account/sign_in_confirm",
 							"/account/sign_in_result/**",
 							"/account/sign_in_ok",
-							"/account/sign_in_ng"
+							"/account/sign_in_ng",
+							"/disease/**",
+							"/account/is_account"
 							).permitAll()
 					.requestMatchers(
 							"/account/get_admin_list",
@@ -58,7 +60,13 @@ public class SecurityConfig {
 							"/",
 							"/account/modify_form",
 							"/account/modify_confirm",
-							"/account/delete_confirm"
+							"/account/delete_confirm",
+							"/account/admin_list_form",
+							"/account/get_admin_list",
+							"/user/**",
+							"/board/**",
+							"/video/**",
+							"/meal_providor/**"
 							).hasAnyRole("SUPER_ADMIN", "SUB_ADMIN"));
 		
 		http

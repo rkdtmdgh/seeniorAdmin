@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html 
    xmlns:th="http://www.thymeleaf.org" 
-   xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
->
-<head th:fragment="head">
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
+<th:block th:fragment="head(pageTitle)">
 	<meta charset="UTF-8">
 	<title th:text="${pageTitle}">Title</title>
 	
@@ -15,12 +15,11 @@
 	<meta name="msapplication-TileColor" content="#da532c">
 	<meta name="theme-color" content="#ffffff">
 	
-	<script src="/js/validation.js"></script> 
-	<script src="/js/submitForm.js"></script> 
+	<!-- JS -->
+	<script src="/js/jquery-3.7.1.min.js"></script>
 	
 	<!-- CSS -->
 	<link rel="stylesheet" href="/css/common.css">
 	<link rel="stylesheet" href="/css/default.css">
-	<link rel="stylesheet" th:href="@{${cssPath}}">
-</head>
+</th:block>
 </html>
