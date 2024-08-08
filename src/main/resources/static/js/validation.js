@@ -38,7 +38,7 @@ function setErrorMessage(input, message) {
 	input.parentElement.classList.add('error');
 	
 	// 전체 에러 메세지 요소 제거
-	const allErrorEle = document.getElementById('input_list_info');
+	const allErrorEle = document.getElementById('input_all_error');
 	if(allErrorEle) {
 		allErrorEle.remove();
 	}
