@@ -9,6 +9,7 @@ function signUpForm(formName) {
 		return false;
 	}
 	
+	
 	input = form.pw;
 	if(!validatePw(input)) {
 		input.focus();
