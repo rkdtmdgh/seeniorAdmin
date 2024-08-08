@@ -1,8 +1,5 @@
 package com.see_nior.seeniorAdmin.config;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -93,6 +90,9 @@ public class SecurityConfig {
 						response.sendRedirect(targetURI);
 						
 					})
+					.failureHandler(new CustumAuthenticationFailureHandler()));
+					
+					/*
 					.failureHandler((request, response, exception) -> {
 						log.info("sign in fail handler");
 						
@@ -101,6 +101,7 @@ public class SecurityConfig {
 						response.sendRedirect("/account/sign_in_result?logined=" + false + "&errMsg=" + encodedValue);
 						
 					}));
+					*/
 		
 		http
 			.logout(logout -> logout

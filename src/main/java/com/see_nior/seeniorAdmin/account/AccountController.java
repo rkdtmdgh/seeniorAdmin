@@ -93,7 +93,7 @@ public class AccountController {
 			Model model) {
 		log.info("signInResult()");
 		
-		String nextPage = "account/sign_in_ok";
+		String nextPage = "home";
 		
 		if (!logined) {
 			nextPage = "account/sign_in_ng";
