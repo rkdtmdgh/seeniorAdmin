@@ -24,8 +24,24 @@
 	<insert id="insertNewAdmin">
 	
 		INSERT INTO 
-			ADMIN_ACCOUNT(ID, PW, NAME, PHONE)
-		VALUES(#{id}, #{pw}, #{name}, #{phone})
+			ADMIN_ACCOUNT(
+				ID, 
+				PW, 
+				NAME, 
+				PHONE
+				<if test="authority_role != null">
+				, AUTHORITY_ROLE
+				</if>
+				)
+		VALUES(
+			#{id}, 
+			#{pw}, 
+			#{name}, 
+			#{phone}
+			<if test="authority_role != null">
+			, #{authority_role}
+			</if>
+			)
 		
 	</insert>
 	
