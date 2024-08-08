@@ -285,8 +285,7 @@ SELECT * FROM DISEASE_CATEGORY;
 SHOW INDEX FROM DISEASE_CATEGORY;
 
 
-
--- 질환 테이블 --------------------------------------------------------------------------------------------------------------------
+-- 질환 테이블 -------------------------------------------------------------------------------------------------------------------
 CREATE TABLE DISEASE (
 	NO			INT	AUTO_INCREMENT COMMENT "질환 NO(PK)", 						-- 질환 NO(PK)
 	CATEGORY_NO	INT	NOT NULL COMMENT "질환 분류 NO(DISEASE_CATEGORY TABLE PK)",	-- 질환 분류 NO(DISEASE_CATEGORY TABLE PK)
