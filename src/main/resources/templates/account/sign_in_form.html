@@ -4,10 +4,12 @@
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
-	<th:block th:insert="~{fragments/head.html :: head1(pageTitle='SEE-NIOR 로그인', cssPath='/css/account/sign_form.css')}"></th:block>
+	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 로그인')}"></th:block>
 	
 	<script src="/js/validation.js"></script>
     <script src="/js/submitForm.js"></script>
+    
+    <link rel="stylesheet" href="/css/account/sign_form.css">
 </head>
 
 <body>	
