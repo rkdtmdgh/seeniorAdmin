@@ -15,6 +15,8 @@
     --menuFontSize: 0.95em;
     --titleFontSize: 1.5em;
     --tableTextSize: 0.8em;
+    --bold: 600;
+    --thin: 300;
 
     /* main color palette */
     --primaryColor: #1291AD; /* primary */
@@ -29,7 +31,7 @@
     --redColor: #FF5B45; /* red */
 
     /* background color palette */
-    --BgColor: #F3F9F9; /* default */
+    --bgColor: #F3F9F9; /* default */
     --subBgColor: #FFF; /* sub */
     --tableTitleBgColor: #F7F7F7;
     --tableDisabledBgColor: #F9F9F9;
@@ -40,6 +42,7 @@
     --headerHeight: 70px;
     --iconsWidth: 20px;
     --arrowWidth: 5px; /* X2 (5px = 10px) */
+    --signFormWidth: 340px;
 
     --innerPadding: 30px;
     --btnsPadding: 1em 1.5em;
@@ -47,8 +50,9 @@
     --textPadding: 0.7em 1.2em;
     --subTextPadding: 0.3em 1em;
     --subTextIndent: 0 0 0 0.85em;
-    --borderInputPadding: 0.9em 1.2em 0.6em;
+    --borderInputPadding: 1em 1em 10px;
     --selectPadding: 1.2em;
+    --iconsPadding: 0.15em;
 
     --baseGap: 20px;
     --smallGap: 10px;
@@ -83,7 +87,7 @@
 html, body {
     font-family: var(--baseFontFamily);
     font-size: var(--baseFontSize);
-    background-color: var(--BgColor);
+    background-color: var(--bgColor);
     color: var(--blackColor);
 }
 
@@ -100,7 +104,7 @@ a, button {
     border: none;
 }
 
-input, textarea, select {
+input, textarea, select, form {
     width: 100%;
     min-width: 240px;
     font-family: inherit;
@@ -156,7 +160,7 @@ table {
 
     th {
         vertical-align: middle;
-        font-weight: 600;
+        font-weight: var(--bold);
         background-color: var(--tableTitleBgColor);
     }
 
@@ -202,7 +206,7 @@ table {
 
 ::-webkit-scrollbar-thumb {
     border-radius: var(--bdrs);
-    background-color: transparent;
+    background-color: var(--grayColor);
 }
 
 ::-webkit-scrollbar-track {
@@ -213,8 +217,13 @@ table {
 .sc {
     overflow-y: auto;
     overflow-x: hidden;
+	
+	&::-webkit-scrollbar-thumb {
+	    border-radius: var(--bdrs);
+	    background-color: transparent;
+	}
 
     &:hover::-webkit-scrollbar-thumb {
-        background-color: var(--middleGrayColor);
+        background-color: var(--grayColor);
     }
 }

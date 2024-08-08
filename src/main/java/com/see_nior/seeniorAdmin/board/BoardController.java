@@ -23,9 +23,11 @@ public class BoardController {
 	//모든 게시판 항목 가져오기(비동기?)
 	@GetMapping("/get_list")
 	@ResponseBody
-	public String get_list(@RequestParam String param) {
+	public Object get_list() {
+		
 		log.info("get_list()");
 		
+		boardService.get_list();
 		
 		return null;
 	}

@@ -21,13 +21,44 @@
         padding: 0 0.5em;
         background-color: var(--subBgColor);
         position: absolute;
-        top: -20%;
+        top: -8px;
         left: 1em;
         transition: color var(--transition);
     }
     
     .input_txt {
+		padding-right: var(--baseGap);
     	font-size: var(--subFontSize);
+    }
+    
+    .input_icon {
+    	width: var(--iconsWidth);
+    	height: var(--iconsWidth);
+    	padding: var(--iconsPadding);
+    	position: absolute;
+    	top: 1em;
+    	right: 1em;
+    	cursor: pointer;
+    }
+    
+    .input_error {
+    	display: none;
+    	font-size: var(--smallFontSize);
+    	font-weight: var(--thin);
+    	padding-top: var(--ssize2);
+    	color: var(--redColor);
+    }
+    
+    &.error {
+    	border-color: var(--redColor);
+
+        .input_title {
+            color: var(--redColor);
+        }
+        
+        .input_error {
+        	display: block;
+        }
     }
 
     &:focus-within {
@@ -37,6 +68,7 @@
             color: var(--primaryColor);
         }
     }
+    
 }
 
 .arrow {
@@ -63,7 +95,7 @@
     min-width: 150px;
     padding: var(--btnsPadding);
     font-size: var(--subFontSize);
-    font-weight: 500;
+    font-weight: var(--bold);
     color: var(--whiteColor);
     background-color: var(--primaryColor);
     border: 1px solid var(--primaryColor);
@@ -84,8 +116,8 @@
     }
 
     &.cancel {
-        background-color: var(--BgColor);
-        border-color: var(--BgColor);
+        background-color: var(--bgColor);
+        border-color: var(--bgColor);
         color: var(--grayColor);
     }
 
@@ -185,7 +217,7 @@
             align-items: center;
             gap: var(--ssize1);
             font-size: var(--titleFontSize);
-            font-weight: 600;
+            font-weight: var(--bold);
     
             &::before {
                 content: '';
@@ -199,8 +231,8 @@
 
     .sub_title {
         font-size: var(--baseFontSize);
-        font-weight: 500;
-        background-color: var(--BgColor);
+        font-weight: var(--bold);
+        background-color: var(--bgColor);
         border-radius: var(--bdrs);
         padding: var(--textPadding);
     }

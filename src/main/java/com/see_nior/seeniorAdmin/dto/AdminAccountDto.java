@@ -26,5 +26,4 @@ public class AdminAccountDto {
 	private String reg_date;
 	private String mod_date;
 	
-	
 }

@@ -4,35 +4,57 @@
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-
-	<article>
-	   
-		<p>sign up form</p>
-		
-		<form action="/account/sign_up_confirm" name="sign_up_form" method="post">
-			<input type="text" name="id" placeholder="INPUT ADMIN ID">
-			<br>
-			<input type="password" name="pw" placeholder="INPUT ADMIN PW">
-			<br>
-			<input type="text" name="name" placeholder="INPUT ADMIN NAME">
-			<br>
-			<input type="text" name="phone" placeholder="INPUT ADMIN PHONE">
-			<br>
-			<input type="text" name="department" placeholder="INPUT ADMIN DEPARTMENT">
-			<br>
-			<input type="text" name="level" placeholder="INPUT ADMIN LEVEL">
-			<br>
-			<input type="text" name="position" placeholder="INPUT ADMIN POSITION">
-			<br>
-			<input type="submit" value="관리자 회원가입">
-			<input type="reset" value="초기화">
-		</form>
+	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 회원가입')}"></th:block>
 	
-	</article>
+	<script src="/js/api_utils.js"></script>
+    <script src="/js/validation.js"></script>
+    <script src="/js/submitForm.js"></script>
+    
+    <link rel="stylesheet" href="/css/account/sign_form.css">
+</head>
 
+<body>
+	<main class="sign_form_wrap">
+        <article class="sign_form">
+            <div class="logo_info">
+                <h1 class="a11y-hidden">SEENIOR</h1>
+                <a href="" class="logo">
+                    <img src="/image/logo/signature-logo.png" alt="logo" class="logo_img">
+                </a>
+            </div>
+
+            <form name="sign_up_form" onsubmit="signUpForm(event, 'sign_up_form')">
+                <div class="input_list">
+                    <label for="id" class="border_input">
+                        <span class="input_title">이메일</span>
+                        <input type="text" name="id" id="id" placeholder="이메일" class="input_txt" oninput="validateEmail(this)" onblur="validateEmail(this, true)">
+                    </label>
+
+                    <label for="password" class="border_input">
+                        <span class="input_title">비밀번호</span>
+                        <input type="password" name="pw" id="pw" placeholder="비밀번호" class="input_txt" oninput="validatePw(this)" onblur="validatePw(this)" autocomplete="off">
+                        <span class="input_icon" onclick="setViewPw(this)">
+                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
+                        </span>
+                    </label>
+
+                    <label for="name" class="border_input">
+                        <span class="input_title">이름</span>
+                        <input type="text" name="name" id="name" placeholder="이름" class="input_txt" oninput="checkEmpty(this, '이름을')" onblur="checkEmpty(this, '이름을')">
+                    </label>
+					
+					<label for="tel" class="border_input">
+                        <span class="input_title">연락처</span>
+                        <input type="text" name="phone" id="phone" maxlength="13" placeholder='"-" 없이 입력하세요' class="input_txt" onkeydown="setReplacePhone(this)" onkeyup="validatePhone(this)" onblur="validatePhone(this)">
+                    </label>
+
+                    <div class="btn_list col">
+                        <button type="submit" class="btns">회원가입</button>
+                        <a href="/account/sign_in_form" class="btns cancel">취소</a>
+                    </div>
+                </div>
+            </form>
+        </article>
+    </main>
 </body>
 </html>
