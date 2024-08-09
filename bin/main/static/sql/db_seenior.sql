@@ -396,7 +396,7 @@ CREATE TABLE CARE_LIST (
 	HOSPITAL			VARCHAR(100) COMMENT "환자 담당 병원",									-- 환자 담당 병원
 	DOCTOR				VARCHAR(100) COMMENT "환자 담당의",									-- 환자 담당의
 	HOSPITAL_TEL		VARCHAR(100) COMMENT "환자 담당 병원 연락처",							-- 환자 담당 병원 연락처
-	WORK_STATE			TINYINT NOT NULL COMMENT "환자 보행 상태",								-- 환자 보행 상태
+	WALK_STATE			TINYINT NOT NULL COMMENT "환자 보행 상태",								-- 환자 보행 상태
 	ASSISTIVE_DEVICE	VARCHAR(100) COMMENT "환자 보조 기구 유무", 								-- 환자 보조 기구 유무
 	WASHING_ASSISTANCE	TINYINT NOT NULL COMMENT "환자 세면 도움 정도",							-- 환자 세면 도움 정도
 	TOILET_ASSISTANCE	TINYINT NOT NULL COMMENT "환자 대소변 도움 정도",						-- 환자 대소변 도움 정도
