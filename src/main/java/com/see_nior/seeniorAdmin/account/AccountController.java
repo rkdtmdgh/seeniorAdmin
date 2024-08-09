@@ -164,7 +164,6 @@ public class AccountController {
 			
 		}
 		
-		
 		return nextPage;
 	}
 	
@@ -208,6 +207,7 @@ public class AccountController {
 	
 	}
 	
+	// AdminAccessDeniedHandler. 인가 실패 시 호출.
 	@GetMapping("/access_denied_page")
 	public String accessDeniedPage() {
 		log.info("accessDeniedPage()");
