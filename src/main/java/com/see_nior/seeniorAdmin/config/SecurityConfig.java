@@ -87,17 +87,6 @@ public class SecurityConfig {
 						
 					})
 					.failureHandler(new CustumAuthenticationFailureHandler()));
-					
-					/*
-					.failureHandler((request, response, exception) -> {
-						log.info("sign in fail handler");
-						
-						String encodedValue = URLEncoder.encode(exception.getMessage(), StandardCharsets.UTF_8.toString());
-						
-						response.sendRedirect("/account/sign_in_result?logined=" + false + "&errMsg=" + encodedValue);
-						
-					}));
-					*/
 		
 		http
 			.logout(logout -> logout
