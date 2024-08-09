@@ -6,7 +6,7 @@ function usedEmailCheck(email) {
 			'Contents-Type': 'Apllication/json',
 		},
 		url: '/account/is_account',
-		type: 'GET',
+		method: 'GET',
 		data: {
 			id: email
 		},
