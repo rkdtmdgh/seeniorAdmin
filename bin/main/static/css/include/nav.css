@@ -24,12 +24,19 @@
                 .side_menu {
                     font-size: var(--menuFontSize);
                 }
+                
+                &:hover {
+                	.side_menu {
+                    	color: var(--primaryColor);
+                	}
+                }
             }
     
             .side_sub_menu_list {
                 overflow: hidden;
                 max-height: 0;
-                transition: max-height var(--transition);
+                transform-origin: top;
+                transition: max-height var(--transition), padding var(--transition);
 
                 .side_sub_menu_btn {
                     display: block;
@@ -40,15 +47,27 @@
                         display: inline-block;
                         padding: var(--subTextIndent);
                     }
+                    
+                    &:hover {
+                    	.side_sub_menu {
+	                        color: var(--primaryColor);
+	                    }
+                    }
 
                     &.on {
                         font-weight: bold;;
                         color: var(--primaryColor);
                     }
                 }
+                
+                &.open {
+                	transform: scaleY(1);
+                	max-height: 500px;
+                	padding-bottom: var(--ssize3);
+                }
             }
 
-            &.on {
+            &.select {
                 .side_menu_btn {        
                     .side_menu {
                         font-weight: bold;;
@@ -68,6 +87,7 @@
                     padding-bottom: var(--ssize3);
                 }
             }
+            
         }
     }
 }
