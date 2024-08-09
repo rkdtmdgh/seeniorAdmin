@@ -93,7 +93,7 @@ public class AccountController {
 			Model model) {
 		log.info("signInResult()");
 		
-		String nextPage = "account/sign_in_ok";
+		String nextPage = "home";
 		
 		if (!logined) {
 			nextPage = "account/sign_in_ng";
@@ -199,5 +199,14 @@ public class AccountController {
 	
 	}
 	
+	@GetMapping("/access_denied_page")
+	public String accessDeniedPage() {
+		log.info("accessDeniedPage()");
+		
+		String nextPage = "account/access_denied_page";
+		
+		return nextPage;
+	
+	}
 	
 }
