@@ -3,7 +3,9 @@ package com.see_nior.seeniorAdmin.account;
 import java.io.IOException;
 
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +18,12 @@ public class AdminAccessDeniedHandler implements AccessDeniedHandler {@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response,
 			AccessDeniedException accessDeniedException) throws IOException, ServletException {
 		log.info("handle()");
-	
+		
+		Authentication authentication = (Authentication) request.getUserPrincipal();
+		
+		if (authentication != null) 
+			new SecurityContextLogoutHandler().logout(request, response, authentication);
+		
 		response.sendRedirect("/account/access_denied_page");
 		
 	}
