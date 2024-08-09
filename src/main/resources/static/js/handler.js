@@ -1,11 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-	// 현재 URL
-	const currentPath = window.location.pathname;
+	
+	// NAV 선택 표시 및 토글
+	const currentPath = window.location.pathname; // 현재 URL
 	console.log('URl:', currentPath);
 	
-	// 모든 사이드 메뉴 버튼의 부모 요소
-	const navMenulistbtns = document.querySelectorAll('.side_menu_list');
-	
+	const navMenulistbtns = document.querySelectorAll('.side_menu_list'); // 모든 사이드 메뉴 버튼의 부모 요소
 	navMenulistbtns.forEach((navMenulistbtn, index) => {
 		const navMenuBtn = navMenulistbtn.querySelector('.side_menu_btn'); // 메뉴 버튼
 		console.log(index + '. href:', navMenuBtn.getAttribute('href'));
@@ -37,4 +36,5 @@ document.addEventListener('DOMContentLoaded', () => {
 			});
 		}
 	});
+	
 });
