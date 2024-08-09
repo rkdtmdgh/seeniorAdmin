@@ -57,7 +57,7 @@
     --baseGap: 20px;
     --smallGap: 10px;
     --stepGap: 40px;
-    --formtGap: 30px;
+    --formGap: 30px;
 
     --bdrs: 0.5em;
     --bxsh: 0 1px 4px 0 rgba(0,0,0, .15);
@@ -206,7 +206,7 @@ table {
 
 ::-webkit-scrollbar-thumb {
     border-radius: var(--bdrs);
-    background-color: var(--grayColor);
+    background-color: var(--middleGrayColor);
 }
 
 ::-webkit-scrollbar-track {
@@ -224,6 +224,6 @@ table {
 	}
 
     &:hover::-webkit-scrollbar-thumb {
-        background-color: var(--grayColor);
+        background-color: var(--middleGrayColor);
     }
 }

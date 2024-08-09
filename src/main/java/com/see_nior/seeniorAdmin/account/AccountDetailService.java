@@ -28,14 +28,11 @@ public class AccountDetailService implements UserDetailsService {
 		
 		AdminAccountDto adminAccountDto = accountMapper.getAdminAccountById(username);
 		
-		if (adminAccountDto == null) {
+		if (adminAccountDto == null) 
 			throw new AccountException(String.format("%s는 잘못된 아이디입니다.", username));
-			
-		} else if (!adminAccountDto.is_deleted()) {
+		else if (!adminAccountDto.is_deleted()) 
 			throw new AccountException(String.format("%s는 탈퇴한 아이디입니다.", username));
-			
-		}
-			
+		
 		return new AccountDetails(adminAccountDto);
 		
 	}

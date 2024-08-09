@@ -199,5 +199,14 @@ public class AccountController {
 	
 	}
 	
+	@GetMapping("/access_denied_page")
+	public String accessDeniedPage() {
+		log.info("accessDeniedPage()");
+		
+		String nextPage = "account/access_denied_page";
+		
+		return nextPage;
+	
+	}
 	
 }

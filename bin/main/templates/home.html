@@ -4,20 +4,613 @@
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 관리자 페이지')}"></th:block>
+	
+	<link rel="stylesheet" href="/css/include/header.css">
+	<link rel="stylesheet" href="/css/include/nav.css">
 </head>
+
 <body>
+	<main class="contents_wrap">
+		<header th:replace="~{fragments/header.html :: header}"></header>
+	
+		<article class="contents_container">
+			<nav th:replace="~{fragments/nav.html :: nav}"></nav>
+			
+			<div class="content">
+                <div class="content_inner sc">
+                    <div class="main_content">
+                        <section class="content_info_wrap">
+                            <div class="content_top">
+                                <div class="content_top_info">
+                                    <h2 class="title">신고 현황</h2>
+                                    <a href="" class="textBtns arrow">자세히</a>
+                                </div>
+                            </div>
 
-	this is home.
+                            <div class="table_wrap">
+                                <table class="content_table">
+                                    <colgroup>
+                                        <col class="col_short">
+                                        <col class="col_default">
+                                        <col>
+                                        <col class="col_default">
+                                        <col class="col_default">
+                                    </colgroup>
 
-	<br>	
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <p class="table_title">상태</p>
+                                            </th>
+                                            <th>
+                                                <p class="table_title">게시판</p>
+                                            </th>
+                                            <th>
+                                                <p class="table_title">제목</p>
+                                            </th>
+                                            <th>
+                                                <p class="table_title">작성자</p>
+                                            </th>
+                                            <th>
+                                                <p class="table_title">등록일</p>
+                                            </th>
+                                        </tr>
+                                    </thead>
 
-	<a href="/account/modify_form">회원 정보 수정</a>
-	<a href="/account/sign_out_confirm">로그아웃</a>
-	<a href="/account/delete_confirm">회원 탈퇴</a>
-	<br><br>
-	<a href="/account/get_admin_list">관리자 목록</a>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info">신고</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">자유 게시판</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info text_overflow">모르는개산책</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-23</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info">신고</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">자유 게시판</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info text_overflow">모르는개산책</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-23</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info">신고</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">자유 게시판</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info text_overflow">모르는개산책</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-23</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info">신고</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">자유 게시판</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info text_overflow">모르는개산책</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-23</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info">신고</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">자유 게시판</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info text_overflow">모르는개산책</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-23</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info">신고</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">자유 게시판</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info text_overflow">모르는개산책</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-23</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info">신고</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">자유 게시판</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info text_overflow">모르는개산책</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-23</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
 
+                        <section class="content_info_wrap">
+                            <div class="content_top">
+                                <div class="content_top_info">
+                                    <h2 class="title">광고 현황</h2>
+                                    <a href="" class="textBtns arrow">자세히</a>
+                                </div>
+                            </div>
+
+                            <div class="table_wrap">
+                                <table class="content_list_table">
+                                    <colgroup>
+                                        <col class="col_short">
+                                        <col>
+                                        <col class="col_default">
+                                        <col class="col_default">
+                                        <col class="col_default">
+                                    </colgroup>
+
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <p class="table_title">구분</p>
+                                            </th>
+                                            <th>
+                                                <p class="table_title">광고명</p>
+                                            </th>
+                                            <th>
+                                                <p class="table_title">계약자</p>
+                                            </th>
+                                            <th>
+                                                <p class="table_title">시작일</p>
+                                            </th>
+                                            <th>
+                                                <p class="table_title">종료일</p>
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info">메인</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info text_overflow">(주)가나다라마바사줘</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-06-01</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-31</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info">메인</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info text_overflow">(주)가나다라마바사줘</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-06-01</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-31</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info">메인</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info text_overflow">(주)가나다라마바사줘</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-06-01</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-31</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info">메인</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info text_overflow">(주)가나다라마바사줘</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-06-01</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-31</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info">메인</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info text_overflow">(주)가나다라마바사줘</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-06-01</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-31</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+
+                        <section class="content_info_wrap">
+                            <div class="content_top">
+                                <div class="content_top_info">
+                                    <h2 class="title">질문과 답변</h2>
+                                    <a href="" class="textBtns arrow">자세히</a>
+                                </div>
+                            </div>
+
+                            <div class="table_wrap">
+                                <table class="content_list_table">
+                                    <colgroup>
+                                        <col>
+                                        <col class="col_default">
+                                        <col class="col_default">
+                                        <col class="col_no">
+                                    </colgroup>
+
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <p class="table_title">제목</p>
+                                            </th>
+                                            <th>
+                                                <p class="table_title">작성자</p>
+                                            </th>
+                                            <th>
+                                                <p class="table_title">등록일</p>
+                                            </th>
+                                            <th>
+                                                <p class="table_title">답변</p>
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">모르는개산책</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-23</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">X</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">모르는개산책</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-23</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">X</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">모르는개산책</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-23</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">X</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">모르는개산책</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-23</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">X</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">모르는개산책</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-23</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">X</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">모르는개산책</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-23</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">X</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">모르는개산책</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-23</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">X</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">모르는개산책</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-23</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">X</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">모르는개산책</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-23</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">X</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">모르는개산책</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-23</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">X</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+
+                        <section class="content_info_wrap">
+                            <div class="content_top">
+                                <div class="content_top_info">
+                                    <h2 class="title">공지 사항</h2>
+                                    <a href="" class="textBtns arrow">자세히</a>
+                                </div>
+                            </div>
+
+                            <div class="table_wrap">
+                                <table class="content_list_table">
+                                    <colgroup>
+                                        <col class="col_default">
+                                        <col>
+                                        <col class="col_default">
+                                        <col class="col_default">
+                                        <col class="col_short">
+                                    </colgroup>
+
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <p class="table_title">게시판</p>
+                                            </th>
+                                            <th>
+                                                <p class="table_title">제목</p>
+                                            </th>
+                                            <th>
+                                                <p class="table_title">관리자</p>
+                                            </th>
+                                            <th>
+                                                <p class="table_title">등록일</p>
+                                            </th>
+                                            <th>
+                                                <p class="table_title">조회수</p>
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info">자유 게시판</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">admin_ho1</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-23</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">12,345</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info">자유 게시판</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">admin_ho1</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-23</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">12,345</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info">자유 게시판</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">admin_ho1</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-23</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">12,345</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="table_info">자유 게시판</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info ta_l text_overflow">가나다라 마바사 아자차카 타파하 abcdefg hijk lmnopqr stuv wxyz</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">admin_ho1</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">2024-07-23</p>
+                                            </td>
+                                            <td>
+                                                <p class="table_info">12,345</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+		</article>
+	</main>
+	
+	
+	
+	
 </body>
 </html>

@@ -22,14 +22,29 @@ function createErrorElement(ele) {
     return errorEle;
 }
 
+// 전체 에러 메세지 요소 생성
+function createAllErrorElement(message) {
+    const parentEle = document.getElementById('input_list_info');
+	errorEle = document.createElement("span"); // 요소 생성
+    errorEle.id = "input_all_error"; // 아이디 추가
+    parentEle.appendChild(errorEle); // 부모 요소에 추가
+	errorEle.textContent = message ? message : '';
+}
+
 // 에러 메세지 노출
 function setErrorMessage(input, message) {
 	const errorEle = createErrorElement(input);
 	errorEle.textContent = message;
 	input.parentElement.classList.add('error');
+	
+	// 전체 에러 메세지 요소 제거
+	const allErrorEle = document.getElementById('input_all_error');
+	if(allErrorEle) {
+		allErrorEle.remove();
+	}
 }
 
-// 에러 메제시 제거
+// 에러 메세시 제거
 function clearErrorMessage(input) {
 	const errorEle = createErrorElement(input);
 	errorEle.textContent = "";
@@ -102,12 +117,12 @@ function checkEmpty(input, txt) {
 function setViewPw(ele) {
 	const icon = ele.querySelector('.icon');
 	const parentEle = ele.parentElement;
-	const passwordInput = parentEle.querySelector('#pw');
+	const passwordInput = parentEle.querySelector('input');
 	
-	if(passwordInput.type === "password") {
+	if(passwordInput && passwordInput.type === "password") {
 		passwordInput.type = "text";
 		icon.src = "/image/icons/eye_open.svg";
-	} else {
+	} else if(passwordInput) {
 		passwordInput.type = "password";
 		icon.src = "/image/icons/eye_off.svg";
 	}
@@ -115,7 +130,7 @@ function setViewPw(ele) {
 
 // 휴대폰 번호 형식으로 변환
 function setReplacePhone(input) {
-	const telvalue = input.value.replace(/[^0-9]/g, "").replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(-{1,2})$/g, ""); // (01x-xxxx-xxxx)
-	input.value = telvalue;
-	return telvalue;
+	const phoneValue = input.value.replace(/[^0-9]/g, "").replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(-{1,2})$/g, ""); // (01x-xxxx-xxxx)
+	input.value = phoneValue;
+	return phoneValue;
 }
