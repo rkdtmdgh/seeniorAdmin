@@ -187,8 +187,8 @@ public class AccountController {
 		
 		Map<String, Object> adminList = accountService.getAdminPagingList(page);
 		
-		Map<String, Object> accountListPage = accountService.getAccountListPageNum(page);
-		adminList.put("accountListPage", accountListPage);
+		Map<String, Object> adminListPage = accountService.getAdminListPageNum(page);
+		adminList.put("adminListPage", adminListPage);
 		
 		return adminList;
 	}
