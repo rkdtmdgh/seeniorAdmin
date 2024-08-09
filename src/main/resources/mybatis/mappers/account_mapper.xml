@@ -143,7 +143,5 @@
 			NO = #{no}
 	
 	</update>
-	
-	
 
 </mapper>

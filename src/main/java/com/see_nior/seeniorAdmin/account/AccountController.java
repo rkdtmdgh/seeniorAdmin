@@ -1,5 +1,6 @@
 package com.see_nior.seeniorAdmin.account;
 
+import java.security.Principal;
 import java.util.Map;
 
 import org.springframework.security.core.Authentication;
@@ -85,7 +86,7 @@ public class AccountController {
 		return null;
 	}
 	
-	// 로그인 결과 확인
+	// 로그인 결과 확인 - SecurityConfig formLogin successHandler, failureHandler 에서 호출  
 	@GetMapping("/sign_in_result")
 	public String signInResult(
 			@RequestParam("logined") boolean logined,
@@ -107,14 +108,21 @@ public class AccountController {
 	
 	// 회원 정보 수정 양식
 	@GetMapping("/modify_form")
-	public String modifyForm(Model model) {
+	public String modifyForm(Model model, Principal principal) {
 		log.info("modifyForm()");
 		
 		String nextPage = "account/modify_form";
 		
-		Authentication authenticateAction = SecurityContextHolder.getContext().getAuthentication();
-
-		AdminAccountDto loginedAdminDto = accountService.getAdminAccountById(authenticateAction.getName());
+		principal.getName();
+		
+		/*
+		 * 로그인 ID 꺼내는 방법
+		 * 1. Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		 * 		authentication.getName();
+		 * 2. principal.getName();
+		*/
+		
+		AdminAccountDto loginedAdminDto = accountService.getAdminAccountById(principal.getName());
 		
 		model.addAttribute("loginedAdminDto", loginedAdminDto);
 		
