@@ -97,6 +97,7 @@ public class AccountController {
 		
 		if (!logined) {
 			nextPage = "account/sign_in_ng";
+			model.addAttribute("logined", logined);
 			model.addAttribute("errMsg", errMsg);
 			
 		}

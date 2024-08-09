@@ -41,7 +41,5 @@ public class CustumAuthenticationFailureHandler implements AuthenticationFailure
 		response.sendRedirect("/account/sign_in_result?logined=" + false + "&errMsg=" + encodedValue);
 		
 	}
-
-	
 	
 }
