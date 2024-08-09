@@ -33,7 +33,7 @@ public class CustumAuthenticationFailureHandler implements AuthenticationFailure
 			
 		} else {
 			
-			errMsg = "로그인 오류가 발생했습니다.";
+			errMsg = "로그인 시도 중 오류가 발생했습니다.";
 			
 		}
 		
