@@ -19,10 +19,13 @@ public class AdminAccessDeniedHandler implements AccessDeniedHandler {@Override
 			AccessDeniedException accessDeniedException) throws IOException, ServletException {
 		log.info("handle()");
 		
+		// 인가 실패 시 ROLE_NOT_APPROVED 라면 로그 아웃 처리.
 		Authentication authentication = (Authentication) request.getUserPrincipal();
 		
-		if (authentication != null) 
+		if (authentication.getAuthorities().stream()
+				.anyMatch(grantedauthority -> grantedauthority.getAuthority().equals("ROLE_NOT_APPROVED"))) {
 			new SecurityContextLogoutHandler().logout(request, response, authentication);
+		}
 		
 		response.sendRedirect("/account/access_denied_page");
 		
