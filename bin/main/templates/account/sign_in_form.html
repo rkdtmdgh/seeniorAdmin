@@ -27,12 +27,12 @@
 	                <div class="input_list" id="input_list_info">
 	                    <label for="id" class="border_input">
 	                        <span class="input_title">이메일</span>
-	                        <input type="text" name="id" id="id" placeholder="관리자 이메일" class="input_txt">
+	                        <input type="text" name="id" id="id" placeholder="관리자 이메일" class="input_txt" onblur="checkEmpty(this, '이메일을')">
 	                    </label>
 	
 	                    <label for="pw" class="border_input">
 	                        <span class="input_title">비밀번호</span>
-	                        <input type="password" name="pw" id="pw" placeholder="비밀번호" class="input_txt" autocomplete="off">
+	                        <input type="password" name="pw" id="pw" placeholder="비밀번호" class="input_txt" autocomplete="off" onblur="checkEmpty(this, '비밀번호를')">
 	                        <span class="input_icon" onclick="setViewPw(this)">
 	                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
 	                        </span>
