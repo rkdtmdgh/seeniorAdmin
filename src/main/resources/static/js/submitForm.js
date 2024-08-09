@@ -11,7 +11,6 @@ async function signUpForm(event, formName) {
 		return false;
 	}
 	
-	
 	input = form.pw;
 	if(!validatePw(input)) { 
 		input.focus();
