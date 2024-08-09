@@ -1,8 +1,5 @@
 package com.see_nior.seeniorAdmin.config;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +10,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
+
+import com.see_nior.seeniorAdmin.account.AdminAccessDeniedHandler;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
@@ -36,7 +35,7 @@ public class SecurityConfig {
 			.csrf(csrf -> csrf.disable());
 		
 		http
-			.authorizeHttpRequests((request) -> request
+			.authorizeHttpRequests(auth -> auth
 					.requestMatchers(
 							"/css/**",
 							"/image/**",
@@ -49,6 +48,7 @@ public class SecurityConfig {
 							"/account/sign_in_result/**",
 							"/account/sign_in_ok",
 							"/account/sign_in_ng",
+							"/account/access_denied_page",
 							"/disease/**",
 							"/account/is_account"
 							).permitAll()
@@ -56,18 +56,11 @@ public class SecurityConfig {
 							"/account/get_admin_list",
 							"/account/is_approval"
 							).hasRole("SUPER_ADMIN")
-					.requestMatchers(
-							"/",
-							"/account/modify_form",
-							"/account/modify_confirm",
-							"/account/delete_confirm",
-							"/account/admin_list_form",
-							"/account/get_admin_list",
-							"/user/**",
-							"/board/**",
-							"/video/**",
-							"/meal_providor/**"
-							).hasAnyRole("SUPER_ADMIN", "SUB_ADMIN"));
+					.anyRequest().hasAnyRole("SUPER_ADMIN", "SUB_ADMIN"));
+		
+		http
+			.exceptionHandling(exceoptionConfig -> exceoptionConfig
+					.accessDeniedHandler(new AdminAccessDeniedHandler()));
 		
 		http
 			.formLogin(login -> login
@@ -93,14 +86,7 @@ public class SecurityConfig {
 						response.sendRedirect(targetURI);
 						
 					})
-					.failureHandler((request, response, exception) -> {
-						log.info("sign in fail handler");
-						
-						String encodedValue = URLEncoder.encode(exception.getMessage(), StandardCharsets.UTF_8.toString());
-						
-						response.sendRedirect("/account/sign_in_result?logined=" + false + "&errMsg=" + encodedValue);
-						
-					}));
+					.failureHandler(new CustumAuthenticationFailureHandler()));
 		
 		http
 			.logout(logout -> logout
@@ -114,6 +100,14 @@ public class SecurityConfig {
 						response.sendRedirect("/");
 						
 					}));
+		
+		http
+		.sessionManagement(sess -> sess
+			.maximumSessions(1)		
+			.maxSessionsPreventsLogin(false))
+		.sessionManagement(sess -> sess
+			.sessionFixation().newSession());
+	
 		
 		return http.build();
 	
