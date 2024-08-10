@@ -38,7 +38,7 @@ public class CustumAuthenticationFailureHandler implements AuthenticationFailure
 		}
 		
 		String encodedValue = URLEncoder.encode(errMsg, StandardCharsets.UTF_8.toString());
-		response.sendRedirect("/account/sign_in_result?logined=" + false + "&errMsg=" + encodedValue);
+		response.sendRedirect("/account/sign_in_ng?errMsg=" + encodedValue);
 		
 	}
 	

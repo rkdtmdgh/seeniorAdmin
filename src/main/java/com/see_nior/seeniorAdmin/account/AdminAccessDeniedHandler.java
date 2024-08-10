@@ -1,8 +1,6 @@
 package com.see_nior.seeniorAdmin.account;
 
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
