@@ -52,7 +52,9 @@ public class SecurityConfig {
 							"/account/is_account"
 							).permitAll()
 					.requestMatchers(
+							"/account/admin_list_form",
 							"/account/get_admin_list",
+							"/account/search_admin_list",
 							"/account/is_approval"
 							).hasRole("SUPER_ADMIN")
 					.anyRequest().hasAnyRole("SUPER_ADMIN", "SUB_ADMIN"));
