@@ -95,7 +95,7 @@ CREATE TABLE BOARD_CATEGORY (
 	NO			INT AUTO_INCREMENT COMMENT "게시판 NO(PK)",						-- 게시판 NO(PK)
 	NAME		VARCHAR(100) NOT NULL UNIQUE COMMENT "게시판 명",					-- 게시판 명
 	IDX			INT COMMENT "게시판 정렬 순서",										-- 게시판 정렬 순서
-	IS_DELETED	TINYINT DEFAULT 1 COMMENT "게시판 삭제 여부 (기본값 = 0, 삭제 시 = 1)",	-- 게시판 삭제 여부 (기본값 = 1, 삭제시 = 0)
+	IS_DELETED	TINYINT DEFAULT 1 COMMENT "게시판 삭제 여부 (기본값 = 1, 삭제 시 = 0)",	-- 게시판 삭제 여부 (기본값 = 1, 삭제시 = 0)
 	REG_DATE	DATETIME DEFAULT NOW() COMMENT "게시판 등록일",						-- 게시판 등록일
 	MOD_DATE	DATETIME DEFAULT NOW() COMMENT "게시판 수정일",						-- 게시판 수정일
     PRIMARY KEY(NO)

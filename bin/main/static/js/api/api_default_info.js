@@ -6,23 +6,26 @@ document.addEventListener('DOMContentLoaded', () => {
 			method: 'GET',
 		})
 		.then(response => {
+			console.log('getBoardList() response:', response);
+			
 			// side_sub_menu_list에 응답 데이터를 기반으로 항목 추가
 			const sideBoardSubMenu = document.getElementById('side_board_sub_menu');
-			sideBoardSubMenu.innerHTML = ""; // 예외 상황에 대비하여 자식 요소 제거
 			
-			response.data.filter(data => data.IS_DELETED === 1) // IS_DELETED가 1인(정상) 데이터만 필터링
-			.forEach((data) => {
-				let subMenuLink = document.createElement('a');
-				subMenuLink.className = 'side_sub_menu_btn';
-				subMenuLink.href = '/board/board_list?no=' + data.NO;
+			if(response && response.data) {
+				let filterData = response.filter(data => data.IS_DELETE === 1) // IS_DELETED가 1인(정상) 데이터만 필터링
+				.sort((a, b) => a.IDX - b.IDX); // 데이터를 IDX 오름차순으로 정렬
 				
-				let subMenuName = document.createElement('span');
-				subMenuName.className = 'side_sub_menu';
-				subMenuName.textContent = data.NAME;
-				
-				subMenuLink.appendChild(subMenuName);
-				sideBoardSubMenu.appendChild(subMenuLink);
-			});
+				filterData.forEach((data) => { 
+					let innerContent = `
+						<a href="/board/board_list?${data.NO}" class="side_sub_menu_btn">
+							<span class="side_sub_menu">${data.NAME}</span>
+						</a>
+					`;
+					sideBoardSubMenu.appendChild(innerContent);
+				});
+			} else {
+				console.error('데이터가 없거나 유효하지 않습니다.');
+			}
 		})
 		.catch((error) => {
 			console.error('getBoardList() error:', error);
