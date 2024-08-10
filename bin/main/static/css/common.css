@@ -102,11 +102,11 @@ a, button {
     font-weight: normal;
     text-decoration: none;
     border: none;
+    background: none;
 }
 
 input, textarea, select, form {
     width: 100%;
-    min-width: 240px;
     font-family: inherit;
     font-size: inherit;
     border: none;
