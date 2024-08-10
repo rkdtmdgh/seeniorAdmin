@@ -70,7 +70,7 @@ public class SecurityConfig {
 					.successHandler((request, response, authentication) -> {
 						log.info("admin sign in success handler");
 						
-						String targetURI = "/account/sign_in_result?logined=" + true;
+						String targetURI = "/";
 						
 						RequestCache requestCache = new HttpSessionRequestCache();
 						SavedRequest savedRequest = requestCache.getRequest(request, response);

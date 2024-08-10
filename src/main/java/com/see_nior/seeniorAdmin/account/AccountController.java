@@ -86,22 +86,16 @@ public class AccountController {
 		return null;
 	}
 	
-	// 로그인 결과 확인 - SecurityConfig formLogin successHandler, failureHandler 에서 호출  
-	@GetMapping("/sign_in_result")
-	public String signInResult(
-			@RequestParam("logined") boolean logined,
+	// 로그인 결과 확인
+	@GetMapping("/sign_in_ng")
+	public String signInNg(
 			@RequestParam(value = "errMsg", required = false) String errMsg,
 			Model model) {
-		log.info("signInResult()");
+		log.info("signInNg()");
 		
-		String nextPage = "home";
+		String nextPage = "account/sign_in_ng";
 		
-		if (!logined) {
-			nextPage = "account/sign_in_ng";
-			model.addAttribute("logined", logined);
-			model.addAttribute("errMsg", errMsg);
-			
-		}
+		model.addAttribute("errMsg", errMsg);
 		
 		return nextPage;
 	}
