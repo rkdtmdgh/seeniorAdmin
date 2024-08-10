@@ -20,6 +20,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
 
+
 @Log4j2
 @Controller
 @RequestMapping("/account")
@@ -100,7 +101,7 @@ public class AccountController {
 		return nextPage;
 	}
 	
-	// 회원 정보 수정 양식
+	// 내 정보 수정 양식
 	@GetMapping("/modify_form")
 	public String modifyForm(Model model, Principal principal) {
 		log.info("modifyForm()");
@@ -116,14 +117,15 @@ public class AccountController {
 		 * 2. principal.getName();
 		*/
 		
-		AdminAccountDto loginedAdminDto = accountService.getAdminAccountById(principal.getName());
+		AdminAccountDto loginedAdminDto = 
+				accountService.getAdminAccountById(principal.getName());
 		
 		model.addAttribute("loginedAdminDto", loginedAdminDto);
 		
 		return nextPage;
 	}
 	
-	// 회원 정보 수정 확인
+	// 내 정보 수정 확인
 	@PostMapping("/modify_confirm")
 	public String modifyConfirm(AdminAccountDto adminAccountDto) {
 		log.info("modifyConfirm()");
@@ -132,6 +134,32 @@ public class AccountController {
 		
 		return "redirect:/account/modify_form";
 	}
+	
+	// SUPER_ADMIN - ADMIN 정보 수정 양식
+	@GetMapping("/admin_modify_form")
+	public String adminModifyForm(@RequestParam("id") String id, Model model) {
+		log.info("adminModifyForm()");
+		
+		String nextPage = "account/modify_form";
+		
+		AdminAccountDto loginedAdminDto = 
+				accountService.getAdminAccountById(id);
+		
+		model.addAttribute("loginedAdminDto", loginedAdminDto);
+		
+		return nextPage;
+	}
+	
+	// SUPER_ADMIN - ADMIN 정보 수정 확인
+	@PostMapping("/admin_modify_confirm")
+	public String adminModifyConfirm(AdminAccountDto adminAccountDto) {
+		log.info("adminModifyConfirm()");
+		
+		accountService.adminModifyConfirm(adminAccountDto);
+		
+		return null;
+	}
+	
 	
 	// 회원 탈퇴 확인 
 	@GetMapping("/delete_confirm")
@@ -185,6 +213,25 @@ public class AccountController {
 		adminList.put("adminListPage", adminListPage);
 		
 		return adminList;
+	}
+	
+	// 관리자 리스트 검색
+	@GetMapping("/search_admin_list")
+	@ResponseBody
+	public Object searchAdminList(
+			@RequestParam("searchPart") String searchPart,
+			@RequestParam("searchString") String searchString,
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("searchAdminList()");
+		
+		Map<String, Object> searchAdminList = 
+				accountService.searchAdminPagingList(searchPart, searchString, page);
+		
+		Map<String, Object> searchAdminListPage = 
+				accountService.searchAdminListPageNum(searchPart, searchString, page);
+		searchAdminList.put("searchAdminListPage", searchAdminListPage);
+		
+		return searchAdminList;
 	}
 	
 	
