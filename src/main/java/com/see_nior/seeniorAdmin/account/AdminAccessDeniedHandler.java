@@ -32,23 +32,11 @@ public class AdminAccessDeniedHandler implements AccessDeniedHandler {
 			new SecurityContextLogoutHandler().logout(request, response, authentication);
 			request.getSession().invalidate();
 			
-			response.sendRedirect("/account/access_denied_page");
+			response.sendRedirect("/account/access_denied_page?isLogined=" + false);
 			
 		} else {
 			
-			String targetURI = "/";
-			
-			RequestCache requestCache = new HttpSessionRequestCache();
-			SavedRequest savedRequest = requestCache.getRequest(request, response);
-			
-			if (savedRequest != null) {
-				
-				targetURI = savedRequest.getRedirectUrl();
-				requestCache.removeRequest(request, response);
-				
-			}
-			
-			response.sendRedirect(targetURI);
+			response.sendRedirect("/account/access_denied_page?isLogined=" + true);
 			
 		}
 		
