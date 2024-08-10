@@ -1,5 +1,6 @@
 package com.see_nior.seeniorAdmin.account;
 
+import java.security.Principal;
 import java.util.Map;
 
 import org.springframework.security.core.Authentication;
@@ -86,34 +87,36 @@ public class AccountController {
 	}
 	
 	// 로그인 결과 확인
-	@GetMapping("/sign_in_result")
-	public String signInResult(
-			@RequestParam("logined") boolean logined,
+	@GetMapping("/sign_in_ng")
+	public String signInNg(
 			@RequestParam(value = "errMsg", required = false) String errMsg,
 			Model model) {
-		log.info("signInResult()");
+		log.info("signInNg()");
 		
-		String nextPage = "account/sign_in_ok";
+		String nextPage = "account/sign_in_ng";
 		
-		if (!logined) {
-			nextPage = "account/sign_in_ng";
-			model.addAttribute("errMsg", errMsg);
-			
-		}
+		model.addAttribute("errMsg", errMsg);
 		
 		return nextPage;
 	}
 	
 	// 회원 정보 수정 양식
 	@GetMapping("/modify_form")
-	public String modifyForm(Model model) {
+	public String modifyForm(Model model, Principal principal) {
 		log.info("modifyForm()");
 		
 		String nextPage = "account/modify_form";
 		
-		Authentication authenticateAction = SecurityContextHolder.getContext().getAuthentication();
-
-		AdminAccountDto loginedAdminDto = accountService.getAdminAccountById(authenticateAction.getName());
+		principal.getName();
+		
+		/*
+		 * 로그인 ID 꺼내는 방법
+		 * 1. Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		 * 		authentication.getName();
+		 * 2. principal.getName();
+		*/
+		
+		AdminAccountDto loginedAdminDto = accountService.getAdminAccountById(principal.getName());
 		
 		model.addAttribute("loginedAdminDto", loginedAdminDto);
 		
@@ -155,7 +158,6 @@ public class AccountController {
 			
 		}
 		
-		
 		return nextPage;
 	}
 	
@@ -179,8 +181,8 @@ public class AccountController {
 		
 		Map<String, Object> adminList = accountService.getAdminPagingList(page);
 		
-		Map<String, Object> accountListPage = accountService.getAccountListPageNum(page);
-		adminList.put("accountListPage", accountListPage);
+		Map<String, Object> adminListPage = accountService.getAdminListPageNum(page);
+		adminList.put("adminListPage", adminListPage);
 		
 		return adminList;
 	}
@@ -199,5 +201,19 @@ public class AccountController {
 	
 	}
 	
+	// AdminAccessDeniedHandler. 인가 실패 시 호출.
+	@GetMapping("/access_denied_page")
+	public String accessDeniedPage(
+			@RequestParam("isLogined") boolean isLogined,
+			Model model) {
+		log.info("accessDeniedPage()");
+		
+		String nextPage = "account/access_denied_page";
+		
+		model.addAttribute("isLogined", isLogined);
+		
+		return nextPage;
+	
+	}
 	
 }

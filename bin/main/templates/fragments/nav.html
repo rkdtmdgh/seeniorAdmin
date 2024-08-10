@@ -3,10 +3,10 @@
    xmlns:th="http://www.thymeleaf.org" 
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<nav th:fragment="nav" class="side_menu_wrap">
+<nav th:fragment="nav" class="side_menu_wrap" id="nav_wrap">
 	<div class="side_menu_inner sc">
 	    <div class="side_menu_list">
-	        <a href="" class="side_menu_btn">
+	        <a href="/" class="side_menu_btn">
 	            <span class="side_menu">메인</span>
 	        </a>
 	    </div>
@@ -20,12 +20,12 @@
 	            <span class="side_menu">회원 관리</span>
 	        </a>
 	    </div>
-	    <div class="side_menu_list on">
+	    <div class="side_menu_list">
 	        <p class="side_menu_btn arrow">
 	            <span class="side_menu">정보 관리</span>
 	        </p>
 	        <div class="side_sub_menu_list">
-	            <a href="" class="side_sub_menu_btn on">
+	            <a href="" class="side_sub_menu_btn">
 	                <span class="side_sub_menu">질환/질병 정보 관리</span>
 	            </a>
 	            <a href="" class="side_sub_menu_btn">
@@ -40,7 +40,7 @@
 	        <p class="side_menu_btn arrow">
 	            <span class="side_menu">게시판 관리</span>
 	        </p>
-	        <div class="side_sub_menu_list">
+	        <div class="side_sub_menu_list" id="side_board_sub_menu">
 	            <a href="" class="side_sub_menu_btn">
 	                <span class="side_sub_menu">게시판 관리</span>
 	            </a>

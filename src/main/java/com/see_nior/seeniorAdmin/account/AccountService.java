@@ -137,7 +137,7 @@ public class AccountService {
 	}
 	
 	// 관리자 리스트 총 개수
-	public Map<String, Object> getAccountListPageNum(int page) {
+	public Map<String, Object> getAdminListPageNum(int page) {
 		log.info("getAccountListPageNum()");
 		
 		Map<String, Object> accountListPageNum = new HashMap<>();
