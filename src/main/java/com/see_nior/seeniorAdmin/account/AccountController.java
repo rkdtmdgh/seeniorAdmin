@@ -203,10 +203,14 @@ public class AccountController {
 	
 	// AdminAccessDeniedHandler. 인가 실패 시 호출.
 	@GetMapping("/access_denied_page")
-	public String accessDeniedPage() {
+	public String accessDeniedPage(
+			@RequestParam("isLogined") boolean isLogined,
+			Model model) {
 		log.info("accessDeniedPage()");
 		
 		String nextPage = "account/access_denied_page";
+		
+		model.addAttribute("isLogined", isLogined);
 		
 		return nextPage;
 	
