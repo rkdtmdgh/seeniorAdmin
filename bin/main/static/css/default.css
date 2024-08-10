@@ -86,6 +86,30 @@
     }
 }
 
+/* search */
+.search_input_inner {
+	font-size: var(--smallFontSize);
+	display: flex;
+	align-items: center;
+	border-radius: var(--bdrs);
+	border: 1px solid var(--middleGrayColor);
+	overflow: hidden;
+	
+	.search_part {
+		width: max-content;
+		min-width: 80px;
+		padding: var(--smallBtnsPadding);
+	}
+	
+	.search_input {
+		display: flex;
+		align-items: center;
+		gap: var(--ssize1);
+		padding: var(--smallBtnsPadding);
+		border-left: 1px solid var(--middleGrayColor);
+	}
+}
+
 /* button */
 .btns {
     display: flex;
@@ -105,6 +129,7 @@
 
     &.small {
         width: max-content;
+        min-width: 50px;
         font-size: var(--smallFontSize);
         padding: var(--smallBtnsPadding);
     }
@@ -223,6 +248,12 @@
                 height: 1em;
                 background-color: var(--primaryColor);
             }
+        }
+        
+        .content_top_right {
+        	display: flex;
+	        align-items: center;
+	        gap: var(--baseGap);
         }
     }
 
@@ -368,8 +399,10 @@
 }
 
 .func_icon {
+	display: block;
     width: var(--iconsWidth);
     height: var(--iconsWidth);
+    cursor: pointer;
 
     .fill {
         fill: var(--blackColor);

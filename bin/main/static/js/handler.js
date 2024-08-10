@@ -1,5 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
-	
+document.addEventListener('DOMContentLoaded', () => {	
 	// NAV 선택 표시 및 토글
 	const currentPath = window.location.pathname; // 현재 URL
 	console.log('URl:', currentPath);
@@ -38,3 +37,13 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 	
 });
+
+// 로그아웃
+function signOut() {
+	location.replace('/account/sign_out_confirm');
+}
+
+// 현재 URL (쿼리스트링 제외)
+function getBaseUrl() {
+	location.href=location.origin + location.pathname;
+}
