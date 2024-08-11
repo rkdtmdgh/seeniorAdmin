@@ -15,14 +15,6 @@
             display: flex;
             align-items: center;
             gap: var(--innerPadding);
-
-            .header_menu {
-                cursor: pointer;
-                
-                &:hover {
-                    color: var(--primaryColor);
-                }
-            }
         }
     }
 }
