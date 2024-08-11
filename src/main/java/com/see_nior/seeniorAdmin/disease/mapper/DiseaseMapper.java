@@ -22,7 +22,7 @@ public interface DiseaseMapper {
 	// 모든 질환 카테고리 가져오기 (질환 리스트에서 <select>박스 => 비동기)
 	public List<DiseaseCategoryDto> getDiseaseCategoryList();
 	
-	// 모든 질환 카테고리 가져오기(페이지네이션 => 질환 카테고리 관리용 => 비동기)
+	// 페이지에 따른 질환 카테고리 가져오기
 	public List<DiseaseCategoryDto> getDiseaseCategoryListWithPage(Map<String, Integer> pagingParams);
 	
 	// 질환 카테고리의 총 리스트 개수 구하기
@@ -46,10 +46,22 @@ public interface DiseaseMapper {
 	public boolean isDisease(String name);
 	
 	// 모든 질환 가져오기
-	public List<DiseaseDto> getAllDiseaseList();
+	public List<DiseaseDto> getDiseaseList();
+	
+	// 페이지에 따른 질환 가져오기(모든 질환)
+	public List<DiseaseDto> getDiseaseListWithPage(Map<String, Integer> pagingParms);
+	
+	// 질환의 총 리스트 개수 구하기(모든 질환)
+	public int getAllDiseaseCnt();
 	
 	// 카테고리에 따른 질환 가져오기
 	public List<DiseaseDto> getDiseaseListByCategory(int no);
+	
+	// 페이지에 따른 질환 가져오기(카테고리별 질환)
+	public List<DiseaseDto> getDiseaseListByCategoryWithPage(Map<String, Integer> pagingParams);
+	
+	// 질환의 총 리스트 개수 구하기(카테고리별 질환)
+	public int getDiseaseByCategoryCnt();
 	
 	// 질환 한개 가져오기
 	public DiseaseDto getDiseaseByNo(int no);
@@ -58,10 +70,14 @@ public interface DiseaseMapper {
 	public int updateDisease(DiseaseDto diseaseDto);
 	
 	// 질환 삭제
-	public int deleteCategory(int no);
+	public int deleteDisease(int no);
 
 	// 질환 검색
 	public List<DiseaseDto> searchDiseaseByName(String name);
+
+
+
+
 
 
 
