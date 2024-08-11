@@ -280,6 +280,7 @@
 }
 
 .table_info {
+	display: block;
     padding: var(--textPadding);
     overflow: hidden;
     text-overflow: ellipsis;
