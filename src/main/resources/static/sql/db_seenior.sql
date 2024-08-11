@@ -106,6 +106,12 @@ SHOW INDEX FROM BOARD_CATEGORY;
 
 SHOW TRIGGERS;
 
+-- board cate 더미 데이터 -----------------------------------------------------------------------------------------
+INSERT INTO BOARD_CATEGORY(NAME,IDX) VALUES("게시판1",0);
+INSERT INTO BOARD_CATEGORY(NAME,IDX) VALUES("게시판2",1);
+INSERT INTO BOARD_CATEGORY(NAME,IDX) VALUES("게시판3",2);
+INSERT INTO BOARD_CATEGORY(NAME,IDX) VALUES("게시판4",3);
+
 -- IDX (게시판 정렬 순서) AUTO_INCREMENT 트리거
 DELIMITER //
 

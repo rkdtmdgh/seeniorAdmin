@@ -3,7 +3,30 @@
    xmlns:th="http://www.thymeleaf.org" 
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
-<th:block th:fragment="search(options)">
-	
-</th:block>
+<form th:fragment="search(option)" name="search_form" onsubmit="searchForm(event, 'search_form')">
+	<div class="search_input_inner">
+		<select class="search_part">
+			<th:block th:if="${option == '관리자 계정 관리'}">
+				<option value="id">아이디</option>
+				<option value="name">이름</option>
+				<option value="phone">연락처</option>
+			</th:block>
+			
+			<th:block th:if="${option == '게시판'}">
+				<option value="title">제목</option>
+				<option value="writer">작성자</option>
+			</th:block>
+		</select>
+		
+		<label class="search_input">
+			<input type="text" name="search_string" id="search_string" class="search_string" placeholder="검색">
+			<button type="submit" class="func_icon">
+				<svg aria-label="검색" fill="none" class="stroke" x="0px" y="0px" viewBox="0 0 27 27" enable-background="new 0 0 27 27">
+					<circle stroke-width="1.35" stroke-miterlimit="10" cx="12.133" cy="12.133" r="11.339"></circle>
+					<line stroke-width="1.35" stroke-miterlimit="10" x1="20.15" y1="20.15" x2="26.206" y2="26.206"></line>
+				</svg>
+		  	</button>
+		</label>
+	</div>
+</form>
 </html>
