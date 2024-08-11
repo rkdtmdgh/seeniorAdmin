@@ -37,13 +37,3 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 	
 });
-
-// 로그아웃
-function signOut() {
-	location.replace('/account/sign_out_confirm');
-}
-
-// 현재 URL (쿼리스트링 제외)
-function getBaseUrl() {
-	location.href=location.origin + location.pathname;
-}
