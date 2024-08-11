@@ -148,7 +148,7 @@
 			AUTHORITY_ROLE = "NOT_APPROVED")
 		AND 
 			IS_DELETED = 1
-		ORDER BY NO ASC 
+		ORDER BY NO DESC 
 		LIMIT 
 			#{start},#{limit}
 	
@@ -163,6 +163,10 @@
 		FROM 
 			ADMIN_ACCOUNT
 		WHERE 
+			(AUTHORITY_ROLE = "SUB_ADMIN" 
+			OR 
+			AUTHORITY_ROLE = "NOT_APPROVED")
+		AND
 			IS_DELETED = 1
 	
 	</select>
@@ -194,7 +198,7 @@
 				</when>
 			</choose>
 		</if>
-		ORDER BY NO ASC 
+		ORDER BY NO DESC 
 		LIMIT 
 			#{start},#{limit}
 	
@@ -209,6 +213,10 @@
 		FROM 
 			ADMIN_ACCOUNT
 		WHERE 
+			(AUTHORITY_ROLE = "SUB_ADMIN" 
+			OR 
+			AUTHORITY_ROLE = "NOT_APPROVED")
+		AND 
 			IS_DELETED = 1
 		<if test="searchPart != null and searchString != null">
 			<choose>
