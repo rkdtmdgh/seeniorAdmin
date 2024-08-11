@@ -11,20 +11,20 @@ document.addEventListener('DOMContentLoaded', () => {
 			// side_sub_menu_list에 응답 데이터를 기반으로 항목 추가
 			const sideBoardSubMenu = document.getElementById('side_board_sub_menu');
 			
-			if(response && response.data) {
-				let filterData = response.filter(data => data.IS_DELETE === 1) // IS_DELETED가 1인(정상) 데이터만 필터링
-				.sort((a, b) => a.IDX - b.IDX); // 데이터를 IDX 오름차순으로 정렬
+			if(response && response.boardCategoryDtos) {
+				let filterData = response.boardCategoryDtos.filter(data => data._deleted === true) // IS_DELETED가 1인(정상) 데이터만 필터링
+				.sort((a, b) => a.idx - b.idx); // 데이터를 IDX 오름차순으로 정렬
 				
 				filterData.forEach((data) => { 
 					let innerContent = `
-						<a href="/board/board_list?${data.NO}" class="side_sub_menu_btn">
-							<span class="side_sub_menu">${data.NAME}</span>
+						<a href="/board/board_list?${data.no}" class="side_sub_menu_btn">
+							<span class="side_sub_menu">${data.name}</span>
 						</a>
 					`;
-					sideBoardSubMenu.appendChild(innerContent);
+					sideBoardSubMenu.innerHTML += innerContent;
 				});
 			} else {
-				console.error('데이터가 없거나 유효하지 않습니다.');
+				console.log('데이터가 없거나 유효하지 않습니다.');
 			}
 		})
 		.catch((error) => {
