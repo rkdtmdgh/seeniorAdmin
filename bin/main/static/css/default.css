@@ -281,6 +281,9 @@
 
 .table_info {
     padding: var(--textPadding);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
     &.func_area {
         display: flex;
