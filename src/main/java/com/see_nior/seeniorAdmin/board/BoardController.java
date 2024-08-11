@@ -23,13 +23,10 @@ public class BoardController {
 	//모든 게시판 항목 가져오기(비동기?)
 	@GetMapping("/get_list")
 	@ResponseBody
-	public Object get_list() {
+	public Object getList() {		
+		log.info("getList()");
 		
-		log.info("get_list()");
-		
-		boardService.get_list();
-		
-		return null;
+		return boardService.getList();
 	}
 	
 	//게시판 생성 양식으로 이동
