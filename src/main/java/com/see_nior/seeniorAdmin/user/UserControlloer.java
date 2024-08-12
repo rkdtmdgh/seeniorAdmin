@@ -34,7 +34,7 @@ public class UserControlloer {
 	}
 	
 	
-	// 일반 멤버 리스트 가져오기 get_user_list
+	// 일반 멤버 리스트 가져오기 
 	@GetMapping("/get_user_list")
 	@ResponseBody
 	public Object getUserList(
@@ -42,6 +42,9 @@ public class UserControlloer {
 		log.info("getUserList()");
 		
 		Map<String, Object> userList = userService.getUserPagingList(page);
+		
+		Map<String, Object> userListPage = userService.getUserListPageNum(page);
+		userList.put("userListPage", userListPage);
 		
 		return userList;
 	}
@@ -63,6 +66,12 @@ public class UserControlloer {
 	}
 	
 	// 일반 멤버 탈퇴 확인 delete_confirm
+	@GetMapping("/delete_confirm")
+	public String deleteConfirm() {
+		log.info("deleteConfirm()");
+		
+		return new String();
+	}
 	
 	
 	

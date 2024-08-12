@@ -5,6 +5,7 @@
 
 	<resultMap type="AdminAccountDto" id="AdminAccountDto">
 		<result column="no" property="no" />
+		<result column="id" property="id" />
 		<result column="pw" property="pw" />
 		<result column="name" property="name" />
 		<result column="phone" property="phone" />
@@ -17,7 +18,7 @@
 		<result column="iscredentialsnonexpired" property="iscredentialsnonexpired" />
 		<result column="isenabled" property="isenabled" />
 		<result column="is_deleted" property="is_deleted" />
-		<result column="is_deleted" property="is_deleted" />
+		<result column="mod_date" property="mod_date" />
 		<result column="reg_date" property="reg_date" />
 	</resultMap>
 
@@ -150,7 +151,7 @@
 			IS_DELETED = 1
 		ORDER BY NO DESC 
 		LIMIT 
-			#{start},#{limit}
+			#{start}, #{limit}
 	
 	</select>
 	
@@ -200,7 +201,7 @@
 		</if>
 		ORDER BY NO DESC 
 		LIMIT 
-			#{start},#{limit}
+			#{start}, #{limit}
 	
 	</select>
 	

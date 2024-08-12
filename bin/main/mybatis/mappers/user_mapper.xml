@@ -4,6 +4,55 @@
 
 <mapper namespace="com.see_nior.seeniorAdmin.user.mapper.UserMapper">
 
+	<resultMap type="UserAccountDto" id="UserAccountDto">
+		<result column="id" property="id" />
+		<result column="pw" property="pw" />
+		<result column="name" property="name" />
+		<result column="phone" property="phone" />
+		<result column="nickname" property="nickname" />
+		<result column="gender" property="gender" />
+		<result column="birth" property="birth" />
+		<result column="address" property="address" />
+		<result column="profile_img" property="profile_img" />
+		<result column="company" property="company" />
+		<result column="is_personal" property="is_personal" />
+		<result column="social_id" property="social_id" />
+		<result column="isaccountnonexpired" property="isaccountnonexpired" />
+		<result column="isaccountnonlocked" property="isaccountnonlocked" />
+		<result column="iscredentialsnonexpired" property="iscredentialsnonexpired" />
+		<result column="isenabled" property="isenabled" />
+		<result column="is_deleted" property="is_deleted" />
+		<result column="mod_date" property="mod_date" />
+		<result column="reg_date" property="reg_date" />
+	</resultMap>
+
+	<!-- 멤버 리스트 카운트 -->
+	<select id="selectUserListCnt"
+			resultType="Integer">
 	
+		SELECT 
+			COUNT(NO)
+		FROM 
+			USER_ACCOUNT 
+		WHERE 
+			IS_DELETED = 1
+	
+	</select>
+	
+	<!-- 멤버 리스트 페이징  -->
+	<select id="selectUserList"
+			resultType="UserAccountDto">
+	
+		SELECT 
+			* 
+		FROM 
+			USER_ACCOUNT 
+		WHERE 
+			IS_DELETED = 1
+		ORDER BY NO DESC 
+		LIMIT 
+			#{start}, #{limit}
+
+	</select>
 
 </mapper>
