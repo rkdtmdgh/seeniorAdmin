@@ -7,9 +7,17 @@
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 로그인')}"></th:block>
 	
 	<script src="/js/validation.js"></script>
-    <script src="/js/submitForm.js"></script>
     
     <link rel="stylesheet" href="/css/account/sign_form.css">
+	
+	<script type="module">
+		import { postSignInForm } from '/js/submitForm.js';
+		import { setInputFocus } from '/js/handler.js';
+		window.postSignInForm = postSignInForm; // 전역으로 함수 선언
+		document.addEventListener('DOMContentLoaded', () => {
+            setInputFocus('id'); 
+        });
+	</script>
 </head>
 
 <body>	
@@ -22,7 +30,7 @@
                 </a>
             </div>
 
-            <form name="sign_in_form" onsubmit="signInForm(event, 'sign_in_form')">
+            <form name="sign_in_form" onsubmit="postSignInForm(event, 'sign_in_form')">
             	<div class="input_list_container">
 	                <div class="input_list" id="input_list_info">
 	                    <label for="id" class="border_input">
