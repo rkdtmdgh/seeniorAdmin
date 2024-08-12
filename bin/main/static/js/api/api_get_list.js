@@ -11,20 +11,19 @@ export function getAdminList() {
 		contentTable.innerHTML = '';
 		
 		if(response && response.adminAccountDtos) {
-			let filterData = response.adminAccountDtos.filter(data => data._deleted === true)
 			let adminListCnt = response.adminListPage.accountListCnt;
 
-			filterData.forEach((data) => { 
+			response.adminAccountDtos.forEach((data) => { 
 				let innerContent = `
 					<tr>
                         <td>
                             <p class="table_info">${adminListCnt}</p>
                         </td>
                         <td>
-                            <p class="table_info">${data.id}</p>
+                            <a href="" class="table_info">${data.id}</a>
                         </td>
                         <td>
-                            <p class="table_info">${data.authority_role}</p>
+                            <a href="" class="table_info">${data.authority_role}</a>
                         </td>
                         <td>
                             <p class="table_info">${data.phone}</p>
