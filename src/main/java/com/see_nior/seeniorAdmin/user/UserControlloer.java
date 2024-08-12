@@ -32,9 +32,8 @@ public class UserControlloer {
 		
 		return nextPage;
 	}
-	
-	
-	// 일반 멤버 리스트 가져오기 get_user_list
+
+	// 일반 멤버 리스트 가져오기 
 	@GetMapping("/get_user_list")
 	@ResponseBody
 	public Object getUserList(
@@ -43,10 +42,32 @@ public class UserControlloer {
 		
 		Map<String, Object> userList = userService.getUserPagingList(page);
 		
+		Map<String, Object> userListPage = userService.getUserListPageNum(page);
+		userList.put("userListPage", userListPage);
+		
 		return userList;
+	} 
+	
+	// 일반 멤버 검색 리스트 가져오기
+	@GetMapping("/search_user_list")
+	@ResponseBody
+	public Object searchUserList(
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+			@RequestParam("searchPart") String searchPart,
+			@RequestParam("searchString") String searchString) {
+		log.info("searchUserList()");
+		
+		Map<String, Object> searchUserList = 
+				userService.searchUserPagingList(page, searchPart, searchString);
+		
+		Map<String, Object> userListPage = 
+				userService.searchUserListPageNum(page, searchPart, searchString);
+		searchUserList.put("userListPage", userListPage);
+		
+		return searchUserList;
 	}
 	
-	// 일반 멤버 정보 수정 양식 modify_form
+	// 일반 멤버 정보 수정 양식
 	@GetMapping("/modify_form")
 	public String modifyForm() {
 		log.info("modifyForm()");
@@ -63,6 +84,12 @@ public class UserControlloer {
 	}
 	
 	// 일반 멤버 탈퇴 확인 delete_confirm
+	@GetMapping("/delete_confirm")
+	public String deleteConfirm() {
+		log.info("deleteConfirm()");
+		
+		return new String();
+	}
 	
 	
 	

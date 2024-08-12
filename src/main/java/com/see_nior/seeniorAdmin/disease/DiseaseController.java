@@ -292,7 +292,6 @@ public class DiseaseController {
 		String nextPage = "disease/delete_result";
 		
 		return nextPage;
-		
 	}
 	
 	// 질환 검색

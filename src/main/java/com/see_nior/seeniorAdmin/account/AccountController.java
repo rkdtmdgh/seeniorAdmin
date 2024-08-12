@@ -20,7 +20,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
 
-
 @Log4j2
 @Controller
 @RequestMapping("/account")
@@ -171,7 +170,8 @@ public class AccountController {
 		
 		String nextPage = "account/delete_result";
 		
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Authentication authentication = 
+				SecurityContextHolder.getContext().getAuthentication();
 		
 		int deleteResult = accountService.deleteConfirm(authentication.getName());
 		
@@ -180,7 +180,8 @@ public class AccountController {
 		if (deleteResult > 0) {
 		
 			if (authentication != null) {
-				new SecurityContextLogoutHandler().logout(request, response, authentication);
+				new SecurityContextLogoutHandler()
+					.logout(request, response, authentication);
 				
 			}
 			
@@ -198,7 +199,6 @@ public class AccountController {
 		
 		return nextPage;
 	}
-	
 	
 	// 관리자 리스트 가져오기
 	@GetMapping("/get_admin_list")

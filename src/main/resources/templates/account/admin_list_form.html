@@ -6,9 +6,13 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 관리자 계정 관리')}"></th:block>
 	
+	<script src="/js/validation.js"></script>
+	
 	<script type="module">
 		import { getAdminList } from '/js/api/api_get_list.js';
+		import { searchForm } from '/js/submitForm.js';
 		window.getAdminList = getAdminList;
+		window.searchForm = searchForm;
 		document.addEventListener('DOMContentLoaded', () => {
             getAdminList(); 
         });
@@ -30,7 +34,7 @@
 					            <h2 class="title">관리자 계정 관리</h2>
 					            
 					            <div class="content_top_right">
-									<form th:replace="~{fragments/search.html :: search('관리자 계정 관리')}"></form>
+									<form name="search_form" onsubmit="searchForm(event, 'search_form', 'admin_list_form')" th:insert="~{fragments/search.html :: search('관리자 계정 관리')}"></form>
 						            
 						            <div class="btn_list">
 						            	<div class="btns small" onclick="getAdminList()">전체보기</div>
