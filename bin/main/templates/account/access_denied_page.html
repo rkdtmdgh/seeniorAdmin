@@ -2,10 +2,11 @@
 <html 
 	xmlns:th="http://www.thymeleaf.org" 
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-	
-	<script type="text/javascript">
+
+	<script th:inline="javascript">
 		alert("승인 대기 중인 계정입니다. 관리자에게 문의하세요.");
 		location.replace("/");
 		document.form.id.focus();
 	</script>
+
 </html>
