@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.see_nior.seeniorAdmin.dto.DiseaseCategoryDto;
 import com.see_nior.seeniorAdmin.dto.DiseaseDto;
@@ -56,34 +57,6 @@ public class DiseaseController {
 		
 	}
 	
-	// 모든 질환 카테고리 가져오기 (질환 리스트에서 <select>박스 => 비동기)
-	@GetMapping("/get_category_list")
-	public Object getCategoryList() {
-		log.info("getCategoryList()");
-		
-		Map<String, Object> diseaseCategoryDtos = diseaseService.getCategoryList();
-		
-		return diseaseCategoryDtos;
-		
-	}
-	
-	// 모든 질환 카테고리 가져오기(페이지네이션 => 질환 카테고리 관리용 => 비동기)
-	@GetMapping("/get_category_list_with_page")
-	public Object getCategoryListWithPage(@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
-		log.info("getCategoryListWithPage()");
-		
-		// 페이지 번호에 따른 질환 카테고리 리스트들 가져오기
-		Map<String, Object> diseaseCategoryListWithPage = diseaseService.getCategoryListWithPage(page);
-		
-		// 질환 카테고리 총 페이지 개수 가져오기
-		Map<String, Object> diseaseCategoryListPageNum = diseaseService.getDiseaseCategoryListPageNum(page);
-		
-		diseaseCategoryListWithPage.put("diseaseCategoryListPageNum", diseaseCategoryListPageNum);
-		
-		return diseaseCategoryListWithPage;
-		
-	}
-	
 	// 질환 카테고리 리스트 양식 + 모든 질환 카테고리 가져오기 (기존)
 	@GetMapping("/category_list")
 	public String category_list(Model model) {
@@ -109,6 +82,36 @@ public class DiseaseController {
 //		return nextPage;
 //		
 //	}
+	
+	// 모든 질환 카테고리 가져오기 (질환 리스트에서 <select>박스 => 비동기)
+	@ResponseBody
+	@GetMapping("/get_category_list")
+	public Object getCategoryList() {
+		log.info("getCategoryList()");
+		
+		Map<String, Object> diseaseCategoryDtos = diseaseService.getCategoryList();
+		
+		return diseaseCategoryDtos;
+		
+	}
+	
+	// 모든 질환 카테고리 가져오기(페이지네이션 => 질환 카테고리 관리용 => 비동기)
+	@ResponseBody
+	@GetMapping("/get_category_list_with_page")
+	public Object getCategoryListWithPage(@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("getCategoryListWithPage()");
+		
+		// 페이지 번호에 따른 질환 카테고리 리스트들 가져오기
+		Map<String, Object> diseaseCategoryListWithPage = diseaseService.getCategoryListWithPage(page);
+		
+		// 질환 카테고리 총 페이지 개수 가져오기
+		Map<String, Object> diseaseCategoryListPageNum = diseaseService.getDiseaseCategoryListPageNum(page);
+		
+		diseaseCategoryListWithPage.put("diseaseCategoryListPageNum", diseaseCategoryListPageNum);
+		
+		return diseaseCategoryListWithPage;
+		
+	}
 	
 	// 질환 카테고리 수정 양식
 	@GetMapping("/modify_category_form")
@@ -183,6 +186,21 @@ public class DiseaseController {
 		return nextPage;
 		
 	}
+	
+	// 질환 리스트 양식 폼 + 모든 질환 가져오기 (기존)
+	@GetMapping("/disease_list")
+	public String diseaseList(Model model) {
+		log.info("diseaseList()");
+		
+		String nextPage = "disease/disease_list";
+		
+		Map<String, Object> diseaseDtos = diseaseService.getDiseaseList();
+		
+		model.addAttribute("diseaseDtos", diseaseDtos);
+		
+		return nextPage;
+		
+	}	
 		
 	// 질환 리스트 양식 폼
 //	@GetMapping("/disease_list")
@@ -195,61 +213,53 @@ public class DiseaseController {
 //		
 //	}
 	
-	// 질환 리스트 양식 폼 + 모든 질환 가져오기 (기존)
-		@GetMapping("/disease_list")
-		public String diseaseList(Model model) {
-			log.info("diseaseList()");
-			
-			String nextPage = "disease/disease_list";
-			
-			Map<String, Object> allDiseaseDtos = diseaseService.getAllDiseaseList();
-			
-			model.addAttribute("allDiseaseDtos", allDiseaseDtos);
-			log.info("allDiseaseDtos ============> {}", allDiseaseDtos);
-			
-			return nextPage;
-			
-		}
-	
-	// 모든 질환 가져오기
-	@GetMapping("/get_all_disease_list")
-	public Object getAllDiseaseList() {
-		log.info("getAllDiseaseList");
+	// 모든 질환 가져오기(페이지네이션 => 비동기)
+	@ResponseBody
+	@GetMapping("/get_all_disease_list_with_page")
+	public Object getAllDiseaseListWithPage(@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("getAllDiseaseListWithPage");
 		
-		Map<String, Object> allDiseaseDtos = diseaseService.getAllDiseaseList();
+		// 페이지 번호에 따른 질환 리스트들 가져오기
+		Map<String, Object> diseaseListWithPage = diseaseService.getDiseaseListWithPage(page);
 		
-		return allDiseaseDtos;
+		// 질환 총 페이지 개수 가져오기
+		Map<String, Object> diseaseListPageNum = diseaseService.getDiseaseListPageNum(page);
+		
+		diseaseListWithPage.put("diseaseListPageNum", diseaseListPageNum);
+		
+		return diseaseListWithPage;
 		
 	}
 	
-	// 카테고리에 따른 질환 가져오기
-	@GetMapping("/get_disease_list_by_category")
-	public Object getDiseaseListByCategory(int no) {
-		log.info("getDiseaseListByCategory");
+	// 카테고리에 따른 질환 가져오기(페이지네이션 => 비동기)
+	@ResponseBody
+	@GetMapping("/get_disease_list_by_category_with_page")
+	public Object getDiseaseListByCategoryWithPage(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+											@RequestParam(value = "category_no") int category_no) {
+		log.info("getDiseaseListByCategoryWithPage()");
 		
-		Map<String, Object> diseaseDtosByCategory = diseaseService.getDiseaseListByCategory(no);
+		// 페이지 번호에 따른 카테고리별 질환 리스트들 가져오기
+		Map<String, Object> diseaseListByCategoryWithPage = diseaseService.getDiseaseListByCategoryWithPage(page, category_no);
 		
-		return diseaseDtosByCategory;
+		// 카테고리별 질환 총 페이지 개수 가져오기
+		Map<String, Object> diseaseListByCategoryPageNum = diseaseService.getDiseaseListByCategoryPageNum(page);
 		
-	}
-	
-	// 질환 한 개 가져오기.
-	@GetMapping("/get_disease")
-	public Object getDisease(int no) {
-		log.info("getDisease");
+		diseaseListByCategoryWithPage.put("diseaseListByCategoryPageNum", diseaseListByCategoryPageNum);
 		
-		DiseaseDto diseaseDto = diseaseService.getDisease(no);
-		
-		return diseaseDto;
+		return diseaseListByCategoryWithPage;
 		
 	}
 	
 	// 질환 수정 양식
 	@GetMapping("/modify_form")
-	public String modifyForm() {
+	public String modifyForm(@RequestParam(value = "no") int no, Model model) {
 		log.info("modifyForm()");
 		
 		String nextPage = "disease/modify_form";
+		
+		DiseaseDto diseaseDto = diseaseService.getDisease(no);
+		
+		model.addAttribute("diseaseDto", diseaseDto);
 		
 		return nextPage;
 		
@@ -272,7 +282,7 @@ public class DiseaseController {
 	
 	// 질환 삭제 확인
 	@GetMapping("/delete_confirm")
-	public String deleteConfirm(@RequestParam int no, Model model) {
+	public String deleteConfirm(@RequestParam(value = "no") int no, Model model) {
 		log.info("deleteConfirm()");
 		
 		int result = diseaseService.deleteConfirm(no);
@@ -282,10 +292,10 @@ public class DiseaseController {
 		String nextPage = "disease/delete_result";
 		
 		return nextPage;
-		
 	}
 	
 	// 질환 검색
+	@ResponseBody
 	@GetMapping("/search_list")
 	public Object searchList(@RequestParam String name) {
 		log.info("searchList()");

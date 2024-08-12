@@ -108,9 +108,18 @@ function validatePhone(input) {
 }
 
 // 데이터 값 유효 확인
-function checkEmpty(input, txt) { 
+function checkEmpty(input, txt, alertMsg) { 
 	const errorMessage = txt + " 입력해 주세요.";
-	return validateInput(input, null, errorMessage); // 정규 표현식 대신 값의 길이만 확인
+	if(alertMsg) {
+		if(input.value.trim().length > 0) {
+			return true;
+		} else {
+			alert(errorMessage);
+			return false;
+		}
+	} else {
+		return validateInput(input, null, errorMessage); // 정규 표현식 대신 값의 길이만 확인
+	}
 }
 
 // 비밀번호 노출 설정

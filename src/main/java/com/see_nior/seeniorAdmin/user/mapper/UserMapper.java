@@ -14,4 +14,8 @@ public interface UserMapper {
 
 	public List<AdminAccountDto> selectUserList(Map<String, Integer> pagingParams);
 
+	public int selectSearchUserListCnt(Map<String, Object> searchParams);
+
+	public List<AdminAccountDto> selectSearchUserList(Map<String, Object> pagingParams);
+
 }

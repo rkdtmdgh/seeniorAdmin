@@ -54,5 +54,60 @@
 			#{start}, #{limit}
 
 	</select>
-
+	
+	<!-- 일반 멤버 검색 리스트 개수 -->
+	<select id="selectSearchUserListCnt"
+			resultType="Integer">
+			
+		SELECT 
+			COUNT(NO)
+		FROM 
+			USER_ACCOUNT 
+		WHERE 
+			IS_DELETED = 1
+		<if test="searchPart != null and searchString != null">
+			<choose>
+				<when test="searchPart == 'id'">
+					AND ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'name'">
+					AND NAME LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'phone'">
+					AND PHONE LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+			</choose>
+		</if>
+	
+	</select>
+	
+	<!-- 일반 멤버 검색 리스트 페이징 -->
+	<select id="selectSearchUserList"
+			resultType="UserAccountDto">
+	
+		SELECT 
+			* 
+		FROM 
+			USER_ACCOUNT 
+		WHERE 
+			IS_DELETED = 1
+		<if test="searchPart != null and searchString != null">
+			<choose>
+				<when test="searchPart == 'id'">
+					AND ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'name'">
+					AND NAME LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'phone'">
+					AND PHONE LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+			</choose>
+		</if>
+		ORDER BY NO DESC 
+		LIMIT 
+			#{start}, #{limit} 
+	
+	</select>
+	
 </mapper>

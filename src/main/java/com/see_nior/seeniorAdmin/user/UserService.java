@@ -70,6 +70,57 @@ public class UserService {
 		
 		return userListPageNum;
 	}
+
+	//일반 멤버 검색 리트스 가져오기
+	public Map<String, Object> searchUserPagingList(int page, String searchPart, String searchString) {
+		log.info("searchUserPagingList()");
+		
+		int pagingStart = (page - 1) * pageLimit;	
+		
+		Map<String, Object> pagingList = new HashMap<>();
+		
+		Map<String, Object> pagingParams = new HashMap<>();
+		pagingParams.put("start", pagingStart);
+		pagingParams.put("limit", pageLimit);
+		pagingParams.put("searchPart", searchPart);
+		pagingParams.put("searchString", searchString);
+
+		List<AdminAccountDto> searchUserAccountDtos = userMapper.selectSearchUserList(pagingParams);
+		pagingList.put("searchUserAccountDtos", searchUserAccountDtos);
+		
+		return pagingList;
+	}
+
+	// 일반 멤버 검색 리스트 개수
+	public Map<String, Object> searchUserListPageNum(int page, String searchPart, String searchString) {
+		log.info("searchUserListPageNum()");
+		
+		Map<String, Object> searchUserListPageNum = new HashMap<>();
+		
+		Map<String, Object> searchParams = new HashMap<>();
+		searchParams.put("searchPart", searchParams);
+		searchParams.put("searchString", searchString);
+		
+		// 전체 리스트 개수 조회 
+		int searchUserListCnt = userMapper.selectSearchUserListCnt(searchParams);
+
+		// 전체 페이지 개수 계산
+		int maxPage = (int) (Math.ceil((double) searchUserListCnt / pageLimit));
+		
+		// 시작 페이지 값 계산
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
+		
+		// 마지막 페이지 값 계산
+		int endPage = startPage + blockLimit - 1;
+		if (endPage > maxPage) endPage = maxPage;
+		
+		searchUserListPageNum.put("searchUserListCnt", searchUserListCnt);
+		searchUserListPageNum.put("maxPage", maxPage);
+		searchUserListPageNum.put("startPage", startPage);
+		searchUserListPageNum.put("endPage", endPage);
+		
+		return searchUserListPageNum;
+	}
 	
 	
 
