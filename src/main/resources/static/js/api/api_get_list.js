@@ -1,12 +1,14 @@
+// 관리자 계정 리스트 요청
 export function getAdminList() {
+	const seartStringInput = document.forms['search_form'].search_string;
+	seartStringInput.value = '';
+	
 	$.ajax({
 		url: '/account/get_admin_list',
 		method: 'GET',
 	})
 	.then(response => {
 		console.log('getAdminList() response:', response);
-		
-		// side_sub_menu_list에 응답 데이터를 기반으로 항목 추가
 		const contentTable = document.querySelector('.content_table tbody');
 		contentTable.innerHTML = '';
 		

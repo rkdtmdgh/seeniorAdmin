@@ -1,5 +1,5 @@
 // 회원 가입 폼
-async function signUpForm(event, formName) {
+export async function postSignUpForm(event, formName) {
 	event.preventDefault();
 	const form = document.forms[formName];
 	let input;
@@ -36,7 +36,7 @@ async function signUpForm(event, formName) {
 }
 
 // 로그인 폼
-function signInForm(event, formName) {
+export function postSignInForm(event, formName) {
 	event.preventDefault();
 	const form = document.forms[formName];
 	let input;
@@ -57,4 +57,79 @@ function signInForm(event, formName) {
 	form.action = "/account/sign_in_confirm"; 
     form.method = "post"; 
     form.submit();
+}
+
+// 검색 폼
+export function searchForm(event, formName, category) {
+	event.preventDefault();
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.search_string;
+	if(!checkEmpty(input, '검색어를', true)) { // true: alert으로 메세지 띄우기
+		input.focus();
+		return false;
+	}
+	
+	if(category) {
+		let apiUrl = '';
+		switch(category) {
+			case 'admin_list_form': // 관리자 계정 검색
+				apiUrl = '/account/search_admin_list';
+				break;
+			default:
+				console.log('알 수 없는 카테고리:', category);
+				return false;
+		}
+		
+		$.ajax({
+			url: apiUrl,
+			method: 'GET',
+			data: {
+				searchPart: form.search_part.value, // 검색 분류 select
+				searchString: input.value.trim(), // 검색 입력값
+			},
+		})
+		.then(response => {
+			console.log(category + 'searchForm() response:', response);
+			const contentTable = document.querySelector('.content_table tbody');
+			contentTable.innerHTML = '';
+			
+			if(response && response.adminAccountDtos) {
+				let adminListCnt = response.searchAdminListPage.accountListCnt;
+	
+				response.adminAccountDtos.forEach((data) => { 
+					let innerContent = `
+						<tr>
+	                        <td>
+	                            <p class="table_info">${adminListCnt}</p>
+	                        </td>
+	                        <td>
+	                            <a href="" class="table_info">${data.id}</a>
+	                        </td>
+	                        <td>
+	                            <a href="" class="table_info">${data.authority_role}</a>
+	                        </td>
+	                        <td>
+	                            <p class="table_info">${data.phone}</p>
+	                        </td>
+	                        <td>
+	                            <p class="table_info">${data.name}</p>
+	                        </td>
+	                        <td>
+	                            <p class="table_info">${formatDate(data.reg_date)}</p>
+	                        </td>
+	                    </tr>
+					`;
+					contentTable.innerHTML += innerContent;
+					adminListCnt --;
+				});
+			} else {
+				console.log('데이터가 없거나 유효하지 않습니다.');
+			}
+		})
+		.catch((error) => {
+			console.error('getAdminList() error:', error);
+		});
+	}
 }
