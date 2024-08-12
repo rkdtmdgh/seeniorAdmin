@@ -10,11 +10,15 @@
 	            <span class="side_menu">메인</span>
 	        </a>
 	    </div>
+	    
+	    <th:block sec:authorize="hasAnyRole('SUPER_ADMIN')">
 	    <div class="side_menu_list">
-	        <a href="" class="side_menu_btn">
+	        <a href="/account/admin_list_form" class="side_menu_btn">
 	            <span class="side_menu">관리자 계정 관리</span>
 	        </a>
 	    </div>
+	    </th:block>
+	    
 	    <div class="side_menu_list">
 	        <a href="" class="side_menu_btn">
 	            <span class="side_menu">회원 관리</span>

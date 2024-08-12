@@ -101,13 +101,21 @@ public class AccountService {
 		
 	}
 	
-	// 회원 정보 수정 확인
+	// 내 정보 수정 확인
 	public void modifyConfirm(AdminAccountDto adminAccountDto) {
 		log.info("modifyConfirm()");
 		
 		adminAccountDto.setPw(passwordEncoder.encode(adminAccountDto.getPw()));
 		
-		accountMapper.updateAdminInfo(adminAccountDto);
+		accountMapper.updateMyAdminInfo(adminAccountDto);
+		
+	}
+	
+	// SUPER_ADMIN - ADMIN 정보 수정 확인
+	public void adminModifyConfirm(AdminAccountDto adminAccountDto) {
+		log.info("adminModifyConfirm()");
+		
+		accountMapper.updateAdminInfoFromSuper(adminAccountDto);
 		
 	}
 	
@@ -137,7 +145,7 @@ public class AccountService {
 	}
 	
 	// 관리자 리스트 총 개수
-	public Map<String, Object> getAccountListPageNum(int page) {
+	public Map<String, Object> getAdminListPageNum(int page) {
 		log.info("getAccountListPageNum()");
 		
 		Map<String, Object> accountListPageNum = new HashMap<>();
@@ -163,6 +171,58 @@ public class AccountService {
 		return accountListPageNum;
 	}
 	
+	// 관리자 검색 리스트 가져오기
+	public Map<String, Object> searchAdminPagingList(String searchPart, String searchString, int page) {
+		log.info("searchAdminPagingList()");
+		
+		int pagingStart = (page - 1) * pageLimit;
+		
+		Map<String, Object> pagingSearchList = new HashMap<>();
+		
+		Map<String, Object> pagingParams = new HashMap<>();
+		pagingParams.put("start", pagingStart);
+		pagingParams.put("limit", pageLimit);
+		pagingParams.put("searchPart", searchPart);
+		pagingParams.put("searchString", searchString);
+
+		List<AdminAccountDto> adminAccountDtos = accountMapper.selectSearchAdminList(pagingParams);
+		pagingSearchList.put("adminAccountDtos", adminAccountDtos);
+		
+		return pagingSearchList;
+	}
+	
+	// 관리자 검색 리스트 개수
+	public Map<String, Object> searchAdminListPageNum(String searchPart, String searchString, int page) {
+		log.info("searchAdminListPageNum()");
+		
+		Map<String, Object> searchAdminListPageNum = new HashMap<>();
+		
+		Map<String, Object> searchParams = new HashMap<>();
+		searchParams.put("searchPart", searchPart);
+		searchParams.put("searchString", searchString);
+		
+		// 전체 리스트 개수 조회 
+		int searchAdminListCnt = accountMapper.selectSearchAdminListCnt(searchParams);
+
+		// 전체 페이지 개수 계산
+		int maxPage = (int) (Math.ceil((double) searchAdminListCnt / pageLimit));
+		
+		// 시작 페이지 값 계산
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
+		
+		// 마지막 페이지 값 계산
+		int endPage = startPage + blockLimit - 1;
+		if (endPage > maxPage) endPage = maxPage;
+		
+		searchAdminListPageNum.put("accountListCnt", searchAdminListCnt);
+		searchAdminListPageNum.put("maxPage", maxPage);
+		searchAdminListPageNum.put("startPage", startPage);
+		searchAdminListPageNum.put("endPage", endPage);
+		
+		return searchAdminListPageNum;
+	}
+	
+	
 	// 관리자 가입 승인
 	public void isApproval(int no) {
 		log.info("isApproval()");
@@ -170,6 +230,10 @@ public class AccountService {
 		accountMapper.updateAdminRoleByNo(no);
 		
 	}
+
+
+
+
 	
 
 	

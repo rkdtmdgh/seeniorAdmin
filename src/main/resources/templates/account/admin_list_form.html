@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html 
+   xmlns:th="http://www.thymeleaf.org" 
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
+<head>
+	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 관리자 계정 관리')}"></th:block>
+	
+	<script type="module">
+		import { getAdminList } from '/js/api/api_get_list.js';
+		window.getAdminList = getAdminList;
+		document.addEventListener('DOMContentLoaded', () => {
+            getAdminList(); 
+        });
+	</script>
+</head>
+
+<body>
+	<main class="contents_wrap">
+		<header th:replace="~{fragments/header.html :: header}"></header>
+	
+		<article class="contents_container">
+			<nav th:replace="~{fragments/nav.html :: nav}"></nav>
+			
+			<div class="content">
+                <div class="content_inner sc">
+					<section class="content_info_wrap">
+					    <div class="content_top">
+					        <div class="content_top_info">
+					            <h2 class="title">관리자 계정 관리</h2>
+					            
+					            <div class="content_top_right">
+									<form th:replace="~{fragments/search.html :: search('관리자 계정 관리')}"></form>
+						            
+						            <div class="btn_list">
+						            	<div class="btns small" onclick="getAdminList()">전체보기</div>
+						            </div>
+					            </div>
+					        </div>
+					    </div>
+					    
+					    <div class="table_wrap">
+	                        <table class="content_table">
+	                            <colgroup>
+	                                <col class="col_no">
+	                                <col class="col_default">
+	                                <col class="col_default">
+	                                <col class="col_default">
+	                                <col class="col_default">
+	                                <col class="col_default">
+	                            </colgroup>
+	
+	                            <thead>
+	                                <tr>
+	                                    <th>
+	                                        <p class="table_title">No</p>
+	                                    </th>
+	                                    <th>
+	                                        <p class="table_title">아이디</p>
+	                                    </th>
+	                                    <th>
+	                                        <p class="table_title">권한 등급</p>
+	                                    </th>
+	                                    <th>
+	                                        <p class="table_title">연락처</p>
+	                                    </th>
+	                                    <th>
+	                                        <p class="table_title">이름</p>
+	                                    </th>
+	                                    <th>
+	                                        <p class="table_title">가입일</p>
+	                                    </th>
+	                                </tr>
+	                            </thead>
+	
+	                            <tbody>
+	                                
+	                            </tbody>
+	                        </table>
+	                    </div>
+					</section>
+                </div>
+            </div>
+		</article>
+	</main>
+	
+	
+	
+	
+</body>
+</html>

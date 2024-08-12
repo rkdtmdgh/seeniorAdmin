@@ -20,6 +20,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
 
+
 @Log4j2
 @Controller
 @RequestMapping("/account")
@@ -86,27 +87,21 @@ public class AccountController {
 		return null;
 	}
 	
-	// 로그인 결과 확인 - SecurityConfig formLogin successHandler, failureHandler 에서 호출  
-	@GetMapping("/sign_in_result")
-	public String signInResult(
-			@RequestParam("logined") boolean logined,
+	// 로그인 결과 확인
+	@GetMapping("/sign_in_ng")
+	public String signInNg(
 			@RequestParam(value = "errMsg", required = false) String errMsg,
 			Model model) {
-		log.info("signInResult()");
+		log.info("signInNg()");
 		
-		String nextPage = "home";
+		String nextPage = "account/sign_in_ng";
 		
-		if (!logined) {
-			nextPage = "account/sign_in_ng";
-			model.addAttribute("logined", logined);
-			model.addAttribute("errMsg", errMsg);
-			
-		}
+		model.addAttribute("errMsg", errMsg);
 		
 		return nextPage;
 	}
 	
-	// 회원 정보 수정 양식
+	// 내 정보 수정 양식
 	@GetMapping("/modify_form")
 	public String modifyForm(Model model, Principal principal) {
 		log.info("modifyForm()");
@@ -122,14 +117,15 @@ public class AccountController {
 		 * 2. principal.getName();
 		*/
 		
-		AdminAccountDto loginedAdminDto = accountService.getAdminAccountById(principal.getName());
+		AdminAccountDto loginedAdminDto = 
+				accountService.getAdminAccountById(principal.getName());
 		
 		model.addAttribute("loginedAdminDto", loginedAdminDto);
 		
 		return nextPage;
 	}
 	
-	// 회원 정보 수정 확인
+	// 내 정보 수정 확인
 	@PostMapping("/modify_confirm")
 	public String modifyConfirm(AdminAccountDto adminAccountDto) {
 		log.info("modifyConfirm()");
@@ -138,6 +134,32 @@ public class AccountController {
 		
 		return "redirect:/account/modify_form";
 	}
+	
+	// SUPER_ADMIN - ADMIN 정보 수정 양식
+	@GetMapping("/admin_modify_form")
+	public String adminModifyForm(@RequestParam("id") String id, Model model) {
+		log.info("adminModifyForm()");
+		
+		String nextPage = "account/modify_form";
+		
+		AdminAccountDto loginedAdminDto = 
+				accountService.getAdminAccountById(id);
+		
+		model.addAttribute("loginedAdminDto", loginedAdminDto);
+		
+		return nextPage;
+	}
+	
+	// SUPER_ADMIN - ADMIN 정보 수정 확인
+	@PostMapping("/admin_modify_confirm")
+	public String adminModifyConfirm(AdminAccountDto adminAccountDto) {
+		log.info("adminModifyConfirm()");
+		
+		accountService.adminModifyConfirm(adminAccountDto);
+		
+		return null;
+	}
+	
 	
 	// 회원 탈퇴 확인 
 	@GetMapping("/delete_confirm")
@@ -187,10 +209,29 @@ public class AccountController {
 		
 		Map<String, Object> adminList = accountService.getAdminPagingList(page);
 		
-		Map<String, Object> accountListPage = accountService.getAccountListPageNum(page);
-		adminList.put("accountListPage", accountListPage);
+		Map<String, Object> adminListPage = accountService.getAdminListPageNum(page);
+		adminList.put("adminListPage", adminListPage);
 		
 		return adminList;
+	}
+	
+	// 관리자 리스트 검색
+	@GetMapping("/search_admin_list")
+	@ResponseBody
+	public Object searchAdminList(
+			@RequestParam("searchPart") String searchPart,
+			@RequestParam("searchString") String searchString,
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("searchAdminList()");
+		
+		Map<String, Object> searchAdminList = 
+				accountService.searchAdminPagingList(searchPart, searchString, page);
+		
+		Map<String, Object> searchAdminListPage = 
+				accountService.searchAdminListPageNum(searchPart, searchString, page);
+		searchAdminList.put("searchAdminListPage", searchAdminListPage);
+		
+		return searchAdminList;
 	}
 	
 	
@@ -209,10 +250,14 @@ public class AccountController {
 	
 	// AdminAccessDeniedHandler. 인가 실패 시 호출.
 	@GetMapping("/access_denied_page")
-	public String accessDeniedPage() {
+	public String accessDeniedPage(
+			@RequestParam("isLogined") boolean isLogined,
+			Model model) {
 		log.info("accessDeniedPage()");
 		
 		String nextPage = "account/access_denied_page";
+		
+		model.addAttribute("isLogined", isLogined);
 		
 		return nextPage;
 	

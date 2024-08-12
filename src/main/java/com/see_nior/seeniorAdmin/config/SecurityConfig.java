@@ -49,11 +49,12 @@ public class SecurityConfig {
 							"/account/sign_in_ok",
 							"/account/sign_in_ng",
 							"/account/access_denied_page",
-							"/disease/**",
 							"/account/is_account"
 							).permitAll()
 					.requestMatchers(
+							"/account/admin_list_form",
 							"/account/get_admin_list",
+							"/account/search_admin_list",
 							"/account/is_approval"
 							).hasRole("SUPER_ADMIN")
 					.anyRequest().hasAnyRole("SUPER_ADMIN", "SUB_ADMIN"));
@@ -71,7 +72,7 @@ public class SecurityConfig {
 					.successHandler((request, response, authentication) -> {
 						log.info("admin sign in success handler");
 						
-						String targetURI = "/account/sign_in_result?logined=" + true;
+						String targetURI = "/";
 						
 						RequestCache requestCache = new HttpSessionRequestCache();
 						SavedRequest savedRequest = requestCache.getRequest(request, response);
@@ -94,20 +95,20 @@ public class SecurityConfig {
 					.logoutSuccessHandler((request, response, authentication) -> {
 						log.info("sign out success handler");
 
-						HttpSession session = request.getSession();
-						session.invalidate();
+						HttpSession session = request.getSession(false);
+						
+						if (session != null) session.invalidate();
 						
 						response.sendRedirect("/");
 						
 					}));
 		
 		http
-		.sessionManagement(sess -> sess
-			.maximumSessions(1)		
-			.maxSessionsPreventsLogin(false))
-		.sessionManagement(sess -> sess
-			.sessionFixation().newSession());
-	
+			.sessionManagement(sess -> sess
+				.maximumSessions(1)		
+				.maxSessionsPreventsLogin(false))
+			.sessionManagement(sess -> sess
+				.sessionFixation().newSession());
 		
 		return http.build();
 	

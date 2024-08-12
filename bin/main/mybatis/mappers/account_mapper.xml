@@ -21,6 +21,7 @@
 		<result column="reg_date" property="reg_date" />
 	</resultMap>
 
+	<!-- 회원 가입 -->
 	<insert id="insertNewAdmin">
 	
 		INSERT INTO 
@@ -45,6 +46,7 @@
 		
 	</insert>
 	
+	<!-- 아이디 중복 체크 -->
 	<select id="isAccount"
 			parameterType="String"
 			resultType="boolean">
@@ -58,6 +60,7 @@
 	
 	</select>
 	
+	<!-- 계정 정보 가져오기 by id -->
 	<select id="getAdminAccountById"
 			parameterType="String"
 			resultMap="AdminAccountDto">
@@ -71,7 +74,8 @@
 		
 	</select>
 	
-	<update id="updateAdminInfo"
+	<!-- 내 정보 수정 -->
+	<update id="updateMyAdminInfo"
 			parameterType="AdminAccountDto">
 		
 		UPDATE 
@@ -80,6 +84,19 @@
 			PW = #{pw},
 			NAME = #{name},
 			PHONE = #{phone},
+			MOD_DATE = NOW()
+		WHERE 
+			NO = #{no}
+	
+	</update>
+	
+	<!-- 계정 정보 수정 form super_admin -->
+	<update id="updateAdminInfoFromSuper"
+			parameterType="AdminAccountDto">
+	
+		UPDATE 
+			ADMIN_ACCOUNT 
+		SET 
 			DEPARTMENT = #{department},
 			LEVEL = #{level},
 			POSITION = #{position},
@@ -89,18 +106,35 @@
 	
 	</update>
 	
+	<!-- 관리자 권한 업데이트 -->
+	<update id="updateAdminRoleByNo"
+			parameterType="Integer">
+		
+		UPDATE 
+			ADMIN_ACCOUNT 
+		SET 
+			AUTHORITY_ROLE = "SUB_ADMIN",
+			MOD_DATE = NOW() 
+		WHERE 
+			NO = #{no}
+	
+	</update>
+	
+	<!-- 계정 탈퇴 is_deleted update -->
 	<update id="updateAdminIsDeleted"
 			parameterType="String">
 			
 		UPDATE 
 			ADMIN_ACCOUNT 
 		SET 
-			IS_DELETED = 0
+			IS_DELETED = 0,
+			MOD_DATE = NOW()
 		WHERE 
 			ID = #{id}
 			
 	</update>
 	
+	<!-- 관리자 목록 페이징 -->
 	<select id="selectAdminList"
 			resultType="AdminAccountDto">
 	
@@ -114,12 +148,13 @@
 			AUTHORITY_ROLE = "NOT_APPROVED")
 		AND 
 			IS_DELETED = 1
-		ORDER BY NO ASC 
+		ORDER BY NO DESC 
 		LIMIT 
 			#{start},#{limit}
 	
 	</select>
 	
+	<!-- 관리자 목록 카운트 -->
 	<select id="selectAllAccountListCnt"
 			resultType="Integer">
 		
@@ -128,20 +163,75 @@
 		FROM 
 			ADMIN_ACCOUNT
 		WHERE 
+			(AUTHORITY_ROLE = "SUB_ADMIN" 
+			OR 
+			AUTHORITY_ROLE = "NOT_APPROVED")
+		AND
 			IS_DELETED = 1
 	
 	</select>
 	
-	<update id="updateAdminRoleByNo"
-			parameterType="Integer">
-		
-		UPDATE 
-			ADMIN_ACCOUNT 
-		SET 
-			AUTHORITY_ROLE = "SUB_ADMIN"
-		WHERE 
-			NO = #{no}
+	<!-- 관리자 검색 리스트 -->
+	<select id="selectSearchAdminList"
+			resultType="AdminAccountDto">
 	
-	</update>
-
+		SELECT 
+			* 
+		FROM 
+			ADMIN_ACCOUNT 
+		WHERE 
+			(AUTHORITY_ROLE = "SUB_ADMIN" 
+			OR 
+			AUTHORITY_ROLE = "NOT_APPROVED")
+		AND 
+			IS_DELETED = 1
+		<if test="searchPart != null and searchString != null">
+			<choose>
+				<when test="searchPart == 'id'">
+					AND ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'name'">
+					AND NAME LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'phone'">
+					AND PHONE LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+			</choose>
+		</if>
+		ORDER BY NO DESC 
+		LIMIT 
+			#{start},#{limit}
+	
+	</select>
+	
+	<!-- 관리자 검색 리스트 카운트 -->
+	<select id="selectSearchAdminListCnt"
+			resultType="Integer">
+		
+		SELECT 
+			COUNT(NO)
+		FROM 
+			ADMIN_ACCOUNT
+		WHERE 
+			(AUTHORITY_ROLE = "SUB_ADMIN" 
+			OR 
+			AUTHORITY_ROLE = "NOT_APPROVED")
+		AND 
+			IS_DELETED = 1
+		<if test="searchPart != null and searchString != null">
+			<choose>
+				<when test="searchPart == 'id'">
+					AND ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'name'">
+					AND NAME LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'phone'">
+					AND PHONE LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+			</choose>
+		</if>
+	
+	</select>
+	
 </mapper>

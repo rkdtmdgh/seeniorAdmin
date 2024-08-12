@@ -95,7 +95,7 @@ public class DiseaseService {
 		
 	}
 	
-	// 모든 질환 카테고리 가져오기(페이지네이션 => 질환 카테고리 관리용 => 비동기)
+	// 페이지에 따른 질환 카테고리 리스트 가져오기
 	public Map<String, Object> getCategoryListWithPage(int page) {
 		log.info("getCategoryListWithPage()");
 		
@@ -237,29 +237,109 @@ public class DiseaseService {
 	}
 	
 	// 모든 질환 가져오기 -> 페이지네이션 안 한 기존
-	public Map<String, Object> getAllDiseaseList() {
-		log.info("getAllDiseaseList()");
+	public Map<String, Object> getDiseaseList() {
+		log.info("getDiseaseList()");
 		
-		Map<String, Object> allDiseaseDtos = new HashMap<>();
+		Map<String, Object> diseaseDtos = new HashMap<>();
 		
-		List<DiseaseDto> allDiseaseDto = (List<DiseaseDto>) diseaseMapper.getAllDiseaseList();
+		List<DiseaseDto> diseaseDto = (List<DiseaseDto>) diseaseMapper.getDiseaseList();
 		
-		allDiseaseDtos.put("allDiseaseDto", allDiseaseDto);
+		diseaseDtos.put("diseaseDto", diseaseDto);
 		
-		return allDiseaseDtos;
+		return diseaseDtos;
 	}
 	
-	// 카테고리에 따른 질환 가져오기
-	public Map<String, Object> getDiseaseListByCategory(int no) {
-		log.info("getDiseaseListByCategory()");
+	// 페이지에 따른 질환 가져오기(모든 질환)
+	public Map<String, Object> getDiseaseListWithPage(int page) {
+		log.info("getDiseaseListWithPage()");
 		
-		Map<String, Object> diseaseDtosByCategory = new HashMap<>();
+		int pagingStart = (page - 1) * pageLimit;
 		
-		List<DiseaseDto> diseaseDtoByCategory = (List<DiseaseDto>) diseaseMapper.getDiseaseListByCategory(no);
+		Map<String, Object> pagingList = new HashMap<>();
 		
-		diseaseDtosByCategory.put("diseaseDtoByCategory", diseaseDtoByCategory);
+		Map<String, Integer> pagingParams = new HashMap<>();
+		pagingParams.put("start", pagingStart);
+		pagingParams.put("limit", pageLimit);
 		
-		return diseaseDtosByCategory;
+		List<DiseaseDto> diseaseDtos = diseaseMapper.getDiseaseListWithPage(pagingParams);
+		pagingList.put("diseaseDtos", diseaseDtos);
+		
+		return pagingList;
+		
+	}
+	
+	// 질환의 총 페이지 개수 구하기(모든 질환)
+	public Map<String, Object> getDiseaseListPageNum(int page) {
+		log.info("getDiseaseListPageNum()");
+		
+		Map<String, Object> diseaseListPageNum = new HashMap<>();
+		
+		// 전체 리스트 개수 조회
+		int diseaseListCnt = diseaseMapper.getAllDiseaseCnt();
+		
+		// 전체 페이지 개수 계산
+		int maxPage = (int) (Math.ceil((double) diseaseListCnt / pageLimit));
+		
+		// 시작 페이지 값 계산
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit;
+		
+		// 마지막 페이지 값 계산
+		int endPage = startPage + blockLimit - 1;
+		if (endPage > maxPage) endPage = maxPage;
+		
+		diseaseListPageNum.put("diseaseListCnt", diseaseListCnt);
+		diseaseListPageNum.put("maxPage", maxPage);
+		diseaseListPageNum.put("startPage", startPage);
+		diseaseListPageNum.put("endPage", endPage);
+		
+		return diseaseListPageNum;
+	}
+	
+	// 페이지에 따른 질환 가져오기(카테고리별 질환)
+	public Map<String, Object> getDiseaseListByCategoryWithPage(int page, int category_no) {
+		log.info("getDiseaseListByCategoryWithPage()");
+		
+		int pagingStart = (page - 1) * pageLimit;
+		
+		Map<String, Object> pagingList = new HashMap<>();
+		
+		Map<String, Integer> pagingParams = new HashMap<>();
+		pagingParams.put("start", pagingStart);
+		pagingParams.put("limit", pageLimit);
+		pagingParams.put("category_no", category_no);
+		
+		List<DiseaseDto> diseaseDtos = diseaseMapper.getDiseaseListByCategoryWithPage(pagingParams);
+		pagingList.put("diseaseDtos", diseaseDtos);
+		
+		return pagingList;
+		
+	}
+	
+	// 질환의 총 페이지 개수 구하기(카테고리별 질환)
+	public Map<String, Object> getDiseaseListByCategoryPageNum(int page) {
+		log.info("getDiseaseListByCategoryPageNum()");
+		
+		Map<String, Object> diseaseLisByCategoryPageNum = new HashMap<>();
+		
+		// 전체 리스트 개수 조회
+		int diseaseListByCategoryCnt = diseaseMapper.getDiseaseByCategoryCnt();
+		
+		// 전체 페이지 개수 계산
+		int maxPage = (int) (Math.ceil((double) diseaseListByCategoryCnt / pageLimit));
+		
+		// 시작 페이지 값 계산
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit;
+		
+		// 마지막 페이지 값 계산
+		int endPage = startPage + blockLimit - 1;
+		if (endPage > maxPage) endPage = maxPage;
+		
+		diseaseLisByCategoryPageNum.put("diseaseListCnt", diseaseListByCategoryCnt);
+		diseaseLisByCategoryPageNum.put("maxPage", maxPage);
+		diseaseLisByCategoryPageNum.put("startPage", startPage);
+		diseaseLisByCategoryPageNum.put("endPage", endPage);
+		
+		return diseaseLisByCategoryPageNum;
 	}
 	
 	// 질환 한 개 가져오기
@@ -267,6 +347,7 @@ public class DiseaseService {
 		log.info("getDisease()");
 		
 		DiseaseDto diseaseDto = diseaseMapper.getDiseaseByNo(no);
+		log.info("diseaseDto ========> {}", diseaseDto);
 		
 		return diseaseDto;
 	}
@@ -309,7 +390,7 @@ public class DiseaseService {
 	public int deleteConfirm(int no) {
 		log.info("deleteConfirm()");
 		
-		int result = diseaseMapper.deleteCategory(no);
+		int result = diseaseMapper.deleteDisease(no);
 		
 		// DB에 입력 실패
 		if (result <= 0) {
@@ -338,6 +419,12 @@ public class DiseaseService {
 		return searchDiseaseDtos;
 		
 	}
+
+	
+
+	
+
+	
 
 	
 

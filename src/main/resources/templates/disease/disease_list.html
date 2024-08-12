@@ -29,10 +29,12 @@
 					<th>bad_food</th>
 					<th>reg_date</th>
 					<th>mod_date</th>
+					<th>수정</th>
+					<th>삭제</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="diseaseDto : ${allDiseaseDtos.allDiseaseDto}">
+				<tr th:each="diseaseDto : ${diseaseDtos.diseaseDto}">
 					<td th:text="${diseaseDto.no}"></td>
 					<td th:text="${diseaseDto.diseaseCategoryDto.dc_name}"></td>
 					<td th:text="${diseaseDto.name}"></td>
@@ -41,7 +43,8 @@
 					<td th:text="${diseaseDto.bad_food}"></td>
 					<td th:text="${diseaseDto.reg_date}"></td>
 					<td th:text="${diseaseDto.mod_date}"></td>
-				
+					<td><a th:href="'/disease/modify_form?no=' + ${diseaseDto.no}">수정</a></td>
+					<td><a th:href="'/disease/delete_confirm?no=' + ${diseaseDto.no}">삭제</a></td>
 				</tr>
 			</tbody>
 		
