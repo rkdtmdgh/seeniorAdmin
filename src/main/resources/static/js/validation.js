@@ -22,26 +22,11 @@ function createErrorElement(ele) {
     return errorEle;
 }
 
-// 전체 에러 메세지 요소 생성
-function createAllErrorElement(message) {
-    const parentEle = document.getElementById('input_list_info');
-	errorEle = document.createElement("span"); // 요소 생성
-    errorEle.id = "input_all_error"; // 아이디 추가
-    parentEle.appendChild(errorEle); // 부모 요소에 추가
-	errorEle.textContent = message ? message : '';
-}
-
 // 에러 메세지 노출
 function setErrorMessage(input, message) {
 	const errorEle = createErrorElement(input);
 	errorEle.textContent = message;
 	input.parentElement.classList.add('error');
-	
-	// 전체 에러 메세지 요소 제거
-	const allErrorEle = document.getElementById('input_all_error');
-	if(allErrorEle) {
-		allErrorEle.remove();
-	}
 }
 
 // 에러 메세시 제거
