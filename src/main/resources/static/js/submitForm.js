@@ -5,25 +5,25 @@ export async function postSignUpForm(event, formName) {
 	let input;
 	
 	// 유효성 검사 재실행
-	input = form.id;
+	input = form.a_id;
 	if(!(await validateEmail(input, true))) { // 제출 전 한번 더 중복 확인
 		input.focus();
 		return false;
 	}
 	
-	input = form.pw;
+	input = form.a_pw;
 	if(!validatePw(input)) { 
 		input.focus();
 		return false;
 	}
 	
-	input = form.name;
+	input = form.a_name;
 	if(!checkEmpty(input, '이름을')) {
 		input.focus();
 		return false;
 	}
 	
-	input = form.phone;
+	input = form.a_phone;
 	if(!validatePhone(input)) {
 		input.focus();
 		return false;
@@ -41,13 +41,13 @@ export function postSignInForm(event, formName) {
 	const form = document.forms[formName];
 	let input;
 	
-	input = form.id;
+	input = form.a_id;
 	if(!checkEmpty(input, '이메일을')) {
 		input.focus();
 		return false;
 	}
 	
-	input = form.pw;
+	input = form.a_pw;
 	if(!checkEmpty(input, '비밀번호를')) {
 		input.focus();
 		return false;
@@ -105,19 +105,19 @@ export function searchForm(event, formName, category) {
 	                            <p class="table_info">${adminListCnt}</p>
 	                        </td>
 	                        <td>
-	                            <a href="" class="table_info">${data.id}</a>
+	                            <a href="" class="table_info">${data.a_id}</a>
 	                        </td>
 	                        <td>
-	                            <a href="" class="table_info">${data.authority_role}</a>
+	                            <a href="" class="table_info">${data.a_authority_role}</a>
 	                        </td>
 	                        <td>
-	                            <p class="table_info">${data.phone}</p>
+	                            <p class="table_info">${data.a_phone}</p>
 	                        </td>
 	                        <td>
-	                            <p class="table_info">${data.name}</p>
+	                            <p class="table_info">${data.a_name}</p>
 	                        </td>
 	                        <td>
-	                            <p class="table_info">${formatDate(data.reg_date)}</p>
+	                            <p class="table_info">${formatDate(data.a_reg_date)}</p>
 	                        </td>
 	                    </tr>
 					`;
