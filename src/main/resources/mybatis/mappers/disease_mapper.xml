@@ -198,7 +198,7 @@
 			
 			SELECT 
 				D.*, 
-				DC.NAME 
+				DC.DC_NAME 
 			FROM 
 			    DISEASE D 
 			JOIN 
@@ -232,7 +232,7 @@
 			
 			SELECT 
 				D.*, 
-				DC.NAME 
+				DC.DC_NAME 
 			FROM 
 			    DISEASE D 
 			JOIN 
