@@ -82,6 +82,9 @@ export function searchForm(event, formName, category) {
 				return false;
 		}
 		
+		console.log('searchPart:', form.search_part.value);
+		console.log('searchString:', input.value.trim());
+		
 		$.ajax({
 			url: apiUrl,
 			method: 'GET',
@@ -91,7 +94,7 @@ export function searchForm(event, formName, category) {
 			},
 		})
 		.then(response => {
-			console.log(category + 'searchForm() response:', response);
+			console.log(category + ' searchForm() response:', response);
 			const contentTable = document.querySelector('.content_table tbody');
 			contentTable.innerHTML = '';
 			
