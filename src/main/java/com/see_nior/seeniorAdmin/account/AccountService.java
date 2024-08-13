@@ -33,10 +33,10 @@ public class AccountService {
 	}
 	
 	// 아이디 중복 확인
-	public boolean isAccount(String id) {
+	public boolean isAccount(String a_id) {
 		log.info("isAccount()");
 		
-		return accountMapper.isAccount(id);
+		return accountMapper.isAccount(a_id);
 	}
 	
 	// 회원 가입 확인
@@ -44,14 +44,14 @@ public class AccountService {
 		log.info("signUpConfirm()");
 		
 		// 아이디 중복 여부
-		boolean isAccount = accountMapper.isAccount(adminAccountDto.getId());
+		boolean isAccount = accountMapper.isAccount(adminAccountDto.getA_id());
 		
 		if (!isAccount) {
 			
-			if (adminAccountDto.getId().equals("super_admin@seenior.com")) {
+			if (adminAccountDto.getA_id().equals("super_admin@seenior.com")) {
 				
-				adminAccountDto.setPw(passwordEncoder.encode(adminAccountDto.getPw()));
-				adminAccountDto.setAuthority_role("SUPER_ADMIN");
+				adminAccountDto.setA_pw(passwordEncoder.encode(adminAccountDto.getA_pw()));
+				adminAccountDto.setA_authority_role("SUPER_ADMIN");
 				
 				int result = accountMapper.insertNewAdmin(adminAccountDto);
 				
@@ -67,7 +67,7 @@ public class AccountService {
 				
 			} else {
 				
-				adminAccountDto.setPw(passwordEncoder.encode(adminAccountDto.getPw()));
+				adminAccountDto.setA_pw(passwordEncoder.encode(adminAccountDto.getA_pw()));
 				
 				int result = accountMapper.insertNewAdmin(adminAccountDto);
 				
@@ -92,10 +92,10 @@ public class AccountService {
 	}
 	
 	// 관리자 정보 조회 by id
-	public AdminAccountDto getAdminAccountById(String id) {
+	public AdminAccountDto getAdminAccountById(String a_id) {
 		log.info("getAdminAccountById()");
 		
-		AdminAccountDto adminAccountDto = accountMapper.getAdminAccountById(id);
+		AdminAccountDto adminAccountDto = accountMapper.getAdminAccountById(a_id);
 		
 		return adminAccountDto;
 		
@@ -105,7 +105,7 @@ public class AccountService {
 	public void modifyConfirm(AdminAccountDto adminAccountDto) {
 		log.info("modifyConfirm()");
 		
-		adminAccountDto.setPw(passwordEncoder.encode(adminAccountDto.getPw()));
+		adminAccountDto.setA_pw(passwordEncoder.encode(adminAccountDto.getA_pw()));
 		
 		accountMapper.updateMyAdminInfo(adminAccountDto);
 		
@@ -120,10 +120,10 @@ public class AccountService {
 	}
 	
 	// 회원 탈퇴 확인 
-	public int deleteConfirm(String id) {
+	public int deleteConfirm(String a_id) {
 		log.info("deleteConfirm()");
 		
-		return accountMapper.updateAdminIsDeleted(id);
+		return accountMapper.updateAdminIsDeleted(a_id);
 	}
 	
 	// 관리자 리스트 가져오기
@@ -224,10 +224,10 @@ public class AccountService {
 	
 	
 	// 관리자 가입 승인
-	public void isApproval(int no) {
+	public void isApproval(int a_no) {
 		log.info("isApproval()");
 		
-		accountMapper.updateAdminRoleByNo(no);
+		accountMapper.updateAdminRoleByNo(a_no);
 		
 	}
 
