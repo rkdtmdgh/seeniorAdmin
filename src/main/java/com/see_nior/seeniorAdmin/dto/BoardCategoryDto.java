@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardCategoryDto {
 	
-	private int no; 
-	private String name;
-	private int idx;
-	private boolean is_deleted;
-	private String reg_date;
-	private String mod_date;
+	private int bc_no; 
+	private String bc_name;
+	private int bc_idx;
+	private boolean bc_is_deleted;
+	private String bc_reg_date;
+	private String bc_mod_date;
 	
 }

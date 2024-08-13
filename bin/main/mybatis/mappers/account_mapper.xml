@@ -4,22 +4,22 @@
 <mapper namespace="com.see_nior.seeniorAdmin.account.mapper.AccountMapper">
 
 	<resultMap type="AdminAccountDto" id="AdminAccountDto">
-		<result column="no" property="no" />
-		<result column="id" property="id" />
-		<result column="pw" property="pw" />
-		<result column="name" property="name" />
-		<result column="phone" property="phone" />
-		<result column="department" property="department" />
-		<result column="level" property="level" />
-		<result column="position" property="position" />
-		<result column="authority_role" property="authority_role" />
-		<result column="isaccountnonexpired" property="isaccountnonexpired" />
-		<result column="isaccountnonlocked" property="isaccountnonlocked" />
-		<result column="iscredentialsnonexpired" property="iscredentialsnonexpired" />
-		<result column="isenabled" property="isenabled" />
-		<result column="is_deleted" property="is_deleted" />
-		<result column="mod_date" property="mod_date" />
-		<result column="reg_date" property="reg_date" />
+		<result column="a_no" property="a_no" />
+		<result column="a_id" property="a_id" />
+		<result column="a_pw" property="a_pw" />
+		<result column="a_name" property="a_name" />
+		<result column="a_phone" property="a_phone" />
+		<result column="a_department" property="a_department" />
+		<result column="a_level" property="a_level" />
+		<result column="a_position" property="a_position" />
+		<result column="a_authority_role" property="a_authority_role" />
+		<result column="a_isaccountnonexpired" property="a_isaccountnonexpired" />
+		<result column="a_isaccountnonlocked" property="a_isaccountnonlocked" />
+		<result column="a_iscredentialsnonexpired" property="a_iscredentialsnonexpired" />
+		<result column="a_isenabled" property="a_isenabled" />
+		<result column="a_is_deleted" property="a_is_deleted" />
+		<result column="a_mod_date" property="a_mod_date" />
+		<result column="a_reg_date" property="a_reg_date" />
 	</resultMap>
 
 	<!-- 회원 가입 -->
@@ -27,21 +27,21 @@
 	
 		INSERT INTO 
 			ADMIN_ACCOUNT(
-				ID, 
-				PW, 
-				NAME, 
-				PHONE
-				<if test="authority_role != null">
-				, AUTHORITY_ROLE
+				A_ID, 
+				A_PW, 
+				A_NAME, 
+				A_PHONE
+				<if test="a_authority_role != null">
+				, A_AUTHORITY_ROLE
 				</if>
 				)
 		VALUES(
-			#{id}, 
-			#{pw}, 
-			#{name}, 
-			#{phone}
-			<if test="authority_role != null">
-			, #{authority_role}
+			#{a_id}, 
+			#{a_pw}, 
+			#{a_name}, 
+			#{a_phone}
+			<if test="a_authority_role != null">
+			, #{a_authority_role}
 			</if>
 			)
 		
@@ -57,7 +57,7 @@
 		FROM 
 			ADMIN_ACCOUNT 
 		WHERE 
-			ID = #{id};
+			A_ID = #{a_id};
 	
 	</select>
 	
@@ -71,7 +71,7 @@
 		FROM 
 			ADMIN_ACCOUNT 
 		WHERE 
-			ID = #{id}
+			A_ID = #{a_id}
 		
 	</select>
 	
@@ -82,12 +82,12 @@
 		UPDATE 
 			ADMIN_ACCOUNT 
 		SET 
-			PW = #{pw},
-			NAME = #{name},
-			PHONE = #{phone},
-			MOD_DATE = NOW()
+			A_PW = #{a_pw},
+			A_NAME = #{a_name},
+			A_PHONE = #{a_phone},
+			A_MOD_DATE = NOW()
 		WHERE 
-			NO = #{no}
+			A_NO = #{a_no}
 	
 	</update>
 	
@@ -98,12 +98,12 @@
 		UPDATE 
 			ADMIN_ACCOUNT 
 		SET 
-			DEPARTMENT = #{department},
-			LEVEL = #{level},
-			POSITION = #{position},
-			MOD_DATE = NOW()
+			A_DEPARTMENT = #{a_department},
+			A_LEVEL = #{a_level},
+			A_POSITION = #{a_position},
+			A_MOD_DATE = NOW()
 		WHERE 
-			NO = #{no}
+			A_NO = #{a_no}
 	
 	</update>
 	
@@ -114,10 +114,10 @@
 		UPDATE 
 			ADMIN_ACCOUNT 
 		SET 
-			AUTHORITY_ROLE = "SUB_ADMIN",
-			MOD_DATE = NOW() 
+			A_AUTHORITY_ROLE = "SUB_ADMIN",
+			A_MOD_DATE = NOW() 
 		WHERE 
-			NO = #{no}
+			A_NO = #{a_no}
 	
 	</update>
 	
@@ -128,10 +128,10 @@
 		UPDATE 
 			ADMIN_ACCOUNT 
 		SET 
-			IS_DELETED = 0,
-			MOD_DATE = NOW()
+			A_IS_DELETED = 0,
+			A_MOD_DATE = NOW()
 		WHERE 
-			ID = #{id}
+			A_ID = #{a_id}
 			
 	</update>
 	
@@ -144,12 +144,12 @@
 		FROM 
 			ADMIN_ACCOUNT 
 		WHERE 
-			(AUTHORITY_ROLE = "SUB_ADMIN" 
+			(A_AUTHORITY_ROLE = "SUB_ADMIN" 
 			OR 
-			AUTHORITY_ROLE = "NOT_APPROVED")
+			A_AUTHORITY_ROLE = "NOT_APPROVED")
 		AND 
-			IS_DELETED = 1
-		ORDER BY NO DESC 
+			A_IS_DELETED = 1
+		ORDER BY A_NO DESC 
 		LIMIT 
 			#{start}, #{limit}
 	
@@ -160,15 +160,15 @@
 			resultType="Integer">
 		
 		SELECT 
-			COUNT(NO)
+			COUNT(A_NO)
 		FROM 
 			ADMIN_ACCOUNT
 		WHERE 
-			(AUTHORITY_ROLE = "SUB_ADMIN" 
+			(A_AUTHORITY_ROLE = "SUB_ADMIN" 
 			OR 
-			AUTHORITY_ROLE = "NOT_APPROVED")
+			A_AUTHORITY_ROLE = "NOT_APPROVED")
 		AND
-			IS_DELETED = 1
+			A_IS_DELETED = 1
 	
 	</select>
 	
@@ -181,25 +181,25 @@
 		FROM 
 			ADMIN_ACCOUNT 
 		WHERE 
-			(AUTHORITY_ROLE = "SUB_ADMIN" 
+			(A_AUTHORITY_ROLE = "SUB_ADMIN" 
 			OR 
-			AUTHORITY_ROLE = "NOT_APPROVED")
+			A_AUTHORITY_ROLE = "NOT_APPROVED")
 		AND 
-			IS_DELETED = 1
+			A_IS_DELETED = 1
 		<if test="searchPart != null and searchString != null">
 			<choose>
-				<when test="searchPart == 'id'">
-					AND ID LIKE CONCAT('%', #{searchString}, '%')
+				<when test="searchPart == 'a_id'">
+					AND A_ID LIKE CONCAT('%', #{searchString}, '%')
 				</when>
-				<when test="searchPart == 'name'">
-					AND NAME LIKE CONCAT('%', #{searchString}, '%')
+				<when test="searchPart == 'a_name'">
+					AND A_NAME LIKE CONCAT('%', #{searchString}, '%')
 				</when>
-				<when test="searchPart == 'phone'">
-					AND PHONE LIKE CONCAT('%', #{searchString}, '%')
+				<when test="searchPart == 'a_phone'">
+					AND A_PHONE LIKE CONCAT('%', #{searchString}, '%')
 				</when>
 			</choose>
 		</if>
-		ORDER BY NO DESC 
+		ORDER BY A_NO DESC 
 		LIMIT 
 			#{start}, #{limit}
 	
@@ -210,25 +210,25 @@
 			resultType="Integer">
 		
 		SELECT 
-			COUNT(NO)
+			COUNT(A_NO)
 		FROM 
 			ADMIN_ACCOUNT
 		WHERE 
-			(AUTHORITY_ROLE = "SUB_ADMIN" 
+			(A_AUTHORITY_ROLE = "SUB_ADMIN" 
 			OR 
-			AUTHORITY_ROLE = "NOT_APPROVED")
+			A_AUTHORITY_ROLE = "NOT_APPROVED")
 		AND 
-			IS_DELETED = 1
+			A_IS_DELETED = 1
 		<if test="searchPart != null and searchString != null">
 			<choose>
-				<when test="searchPart == 'id'">
-					AND ID LIKE CONCAT('%', #{searchString}, '%')
+				<when test="searchPart == 'a_id'">
+					AND A_ID LIKE CONCAT('%', #{searchString}, '%')
 				</when>
-				<when test="searchPart == 'name'">
-					AND NAME LIKE CONCAT('%', #{searchString}, '%')
+				<when test="searchPart == 'a_name'">
+					AND A_NAME LIKE CONCAT('%', #{searchString}, '%')
 				</when>
-				<when test="searchPart == 'phone'">
-					AND PHONE LIKE CONCAT('%', #{searchString}, '%')
+				<when test="searchPart == 'a_phone'">
+					AND A_PHONE LIKE CONCAT('%', #{searchString}, '%')
 				</when>
 			</choose>
 		</if>

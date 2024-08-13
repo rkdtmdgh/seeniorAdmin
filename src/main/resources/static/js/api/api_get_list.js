@@ -22,19 +22,19 @@ export function getAdminList() {
                             <p class="table_info">${adminListCnt}</p>
                         </td>
                         <td>
-                            <a href="" class="table_info">${data.id}</a>
+                            <a href="" class="table_info">${data.a_id}</a>
                         </td>
                         <td>
-                            <a href="" class="table_info">${data.authority_role}</a>
+                            <a href="" class="table_info">${data.a_authority_role}</a>
                         </td>
                         <td>
-                            <p class="table_info">${data.phone}</p>
+                            <p class="table_info">${data.a_phone}</p>
                         </td>
                         <td>
-                            <p class="table_info">${data.name}</p>
+                            <p class="table_info">${data.a_name}</p>
                         </td>
                         <td>
-                            <p class="table_info">${formatDate(data.reg_date)}</p>
+                            <p class="table_info">${formatDate(data.a_reg_date)}</p>
                         </td>
                     </tr>
 				`;

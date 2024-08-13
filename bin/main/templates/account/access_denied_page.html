@@ -2,10 +2,22 @@
 <html 
 	xmlns:th="http://www.thymeleaf.org" 
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-	
+
+<th:block th:if="${isLogined == false}">
 	<script type="text/javascript">
-		alert("승인 대기 중인 계정입니다. 관리자에게 문의하세요.");
-		location.replace("/");
-		document.form.id.focus();
+		window.onload = function() {
+			alert("승인 대기 중인 계정입니다. 관리자에게 문의하세요.");
+			location.replace("/");
+		}
 	</script>
+</th:block>
+
+<th:block th:if="${isLogined != false}">
+	<script type="text/javascript">
+		window.onload = function() {
+			alert("접근 권한이 없습니다.");
+			history.back();
+		}
+	</script>
+</th:block>
 </html>
