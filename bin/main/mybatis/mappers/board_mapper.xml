@@ -11,7 +11,7 @@
 		FROM 
 			BOARD_CATEGORY
 		ORDER BY 
-			IDX 
+			BC_IDX 
 		ASC
 	
 	</select>
