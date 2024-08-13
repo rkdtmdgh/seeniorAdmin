@@ -59,10 +59,10 @@ public class AccountController {
 	// 아이디 중복 여부 확인
 	@GetMapping("/is_account")
 	@ResponseBody
-	public Object isAccount(@RequestParam("id") String id) {
+	public Object isAccount(@RequestParam("a_id") String a_id) {
 		log.info("isAccount()");
 		
-		boolean result = accountService.isAccount(id);
+		boolean result = accountService.isAccount(a_id);
 		
 		return result;
 	}
@@ -136,13 +136,13 @@ public class AccountController {
 	
 	// SUPER_ADMIN - ADMIN 정보 수정 양식
 	@GetMapping("/admin_modify_form")
-	public String adminModifyForm(@RequestParam("id") String id, Model model) {
+	public String adminModifyForm(@RequestParam("a_id") String a_id, Model model) {
 		log.info("adminModifyForm()");
 		
 		String nextPage = "account/modify_form";
 		
 		AdminAccountDto loginedAdminDto = 
-				accountService.getAdminAccountById(id);
+				accountService.getAdminAccountById(a_id);
 		
 		model.addAttribute("loginedAdminDto", loginedAdminDto);
 		
@@ -237,12 +237,12 @@ public class AccountController {
 	
 	// 관리자 가입 승인
 	@GetMapping("/is_approval")
-	public String isApproval(@RequestParam("no") int no, Model model) {
+	public String isApproval(@RequestParam("a_no") int a_no, Model model) {
 		log.info("isApproval()");
 		
 		String nextPage = "account/admin_list_form";
 		
-		accountService.isApproval(no);
+		accountService.isApproval(a_no);
 		
 		return nextPage;
 	

@@ -67,8 +67,8 @@ public class SecurityConfig {
 			.formLogin(login -> login
 					.loginPage("/account/sign_in_form")
 					.loginProcessingUrl("/account/sign_in_confirm")
-					.usernameParameter("id")
-					.passwordParameter("pw")
+					.usernameParameter("a_id")
+					.passwordParameter("a_pw")
 					.successHandler((request, response, authentication) -> {
 						log.info("admin sign in success handler");
 						

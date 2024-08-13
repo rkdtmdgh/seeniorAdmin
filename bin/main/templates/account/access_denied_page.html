@@ -2,12 +2,20 @@
 <html 
 	xmlns:th="http://www.thymeleaf.org" 
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<<<<<<< HEAD
+
+	<script th:inline="javascript">
+=======
 	
 <th:block th:if="${param.isLogined == false}">
 	<script type="text/javascript">
+>>>>>>> d0991f8b611ceb8e4873b4fd100de3eb845acd21
 		alert("승인 대기 중인 계정입니다. 관리자에게 문의하세요.");
 		location.replace("/");
 	</script>
+<<<<<<< HEAD
+
+=======
 </th:block>
 
 <th:block th:unless="${param.isLogined == false}">
@@ -17,4 +25,5 @@
 	</script>
 </th:block>
 	
+>>>>>>> d0991f8b611ceb8e4873b4fd100de3eb845acd21
 </html>
