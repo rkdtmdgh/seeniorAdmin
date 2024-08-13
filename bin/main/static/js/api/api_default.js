@@ -48,13 +48,13 @@ document.addEventListener('DOMContentLoaded', () => {
 			const sideBoardSubMenu = document.getElementById('side_board_sub_menu');
 			
 			if(response && response.boardCategoryDtos) {
-				let filterData = response.boardCategoryDtos.filter(data => data._deleted === true)
-				.sort((a, b) => a.idx - b.idx); // 데이터를 IDX 오름차순으로 정렬
+				let filterData = response.boardCategoryDtos.filter(data => data.bc_is_deleted === true)
+				.sort((a, b) => a.bc_idx - b.bc_idx); // 데이터를 IDX 오름차순으로 정렬
 				
 				filterData.forEach((data) => { 
 					let innerContent = `
-						<a href="/board/board_list?${data.no}" class="side_sub_menu_btn">
-							<span class="side_sub_menu">${data.name}</span>
+						<a href="/board/board_list?${data.bc_no}" class="side_sub_menu_btn">
+							<span class="side_sub_menu">${data.bc_name}</span>
 						</a>
 					`;
 					sideBoardSubMenu.innerHTML += innerContent;
