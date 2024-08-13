@@ -19,6 +19,7 @@
 
 	<resultMap type="DiseaseDto" id="DiseaseDto">
 		<result column="no" property="no" />
+		<result column="category_no" property="category_no" />
 		<result column="name" property="name" />
 		<result column="info" property="info" />
 		<result column="good_food" property="good_food" />
@@ -68,7 +69,7 @@
 			WHERE 
 				IS_DELETED = 1 
 			ORDER BY 
-				NO ASC
+				NO DESC
 	
 	</select>
 	
@@ -81,7 +82,7 @@
 				DISEASE_CATEGORY 
 			WHERE 
 				IS_DELETED = 1 
-			ORDER BY NO ASC 
+			ORDER BY NO DESC 
 			LIMIT 
 				#{start}, #{limit}
 	
@@ -94,7 +95,7 @@
 			SELECT 
 				COUNT(*) 
 			FROM 
-				DISEASE_CATEOGORY 
+				DISEASE_CATEGORY 
 			WHERE 
 				IS_DELETED = 1
 	
@@ -129,12 +130,16 @@
 	<!-- 질환 카테고리 삭제 -->
 	<update id="deleteDiseaseCategory">
 	
-			UPDATE 
-				DISEASE_CATEGORY 
-			SET 
-				IS_DELETED = 0 
-			WHERE 
-				NO = #{no}
+		UPDATE 
+			DISEASE_CATEGORY DC 
+		LEFT JOIN 
+			DISEASE D 
+		ON 
+			DC.NO = D.CATEGORY_NO 
+		SET 
+			DC.IS_DELETED = 0, D.IS_DELETED = 0 
+		WHERE 
+			DC.NO = #{no}
 	
 	</update>
 	
@@ -144,7 +149,7 @@
 	<insert id="insertNewDisease">
 	
 		INSERT INTO 
-			DISEASE
+			DISEASE 
 			(CATEGORY_NO, NAME, INFO, GOOD_FOOD, BAD_FOOD) 
 		VALUES 
 			(#{category_no}, #{name}, #{info}, #{good_food}, #{bad_food})
@@ -166,33 +171,94 @@
 	</select>
 	
 	<!-- 모든 질환 가져오기 -->
-	<select id="getAllDiseaseList"
+	<select id="getDiseaseList"
 			resultMap="DiseaseDto">
 		
 			SELECT 
 				D.*, 
 				DC.NAME AS DC_NAME 
 			FROM 
-			    DISEASE D
+			    DISEASE D 
 			JOIN 
 			    DISEASE_CATEGORY DC 
 			ON 
 			    D.CATEGORY_NO = DC.NO 
 			WHERE 
-			    D.IS_DELETED = 1
+			    D.IS_DELETED = 1 
+			ORDER BY 
+				NO DESC 
 	
 	</select>
 	
-	<!-- 카테고리에 따른 질환 가져오기 -->
-	<select id="getDiseaseListByCategory"
+	<!-- 페이지에 따른 질환 가져오기(모든 질환) -->
+	<select id="getDiseaseListWithPage"
 			resultMap="DiseaseDto">
 			
 			SELECT 
-				* 
+				D.*, 
+				DC.NAME AS DC_NAME 
+			FROM 
+			    DISEASE D 
+			JOIN 
+			    DISEASE_CATEGORY DC 
+			ON 
+			    D.CATEGORY_NO = DC.NO 
+			WHERE 
+			    D.IS_DELETED = 1 
+			ORDER BY 
+				NO DESC 
+			LIMIT 
+				#{start}, #{limit}
+	
+	</select>
+	
+	<!-- 질환의 총 리스트 개수 구하기(모든 질환) -->
+	<select id="getAllDiseaseCnt">
+	
+			SELECT 
+				COUNT(*) 
 			FROM 
 				DISEASE 
 			WHERE 
-				CATEGORY_NO = #{no}
+				IS_DELETED = 1
+	
+	</select>
+	
+	<!-- 페이지에 따른 질환 가져오기(카테고리별 질환) -->
+	<select id="getDiseaseListByCategoryWithPage"
+			resultMap="DiseaseDto">
+			
+			SELECT 
+				D.*, 
+				DC.NAME AS DC_NAME 
+			FROM 
+			    DISEASE D 
+			JOIN 
+			    DISEASE_CATEGORY DC 
+			ON 
+			    D.CATEGORY_NO = DC.NO 
+			WHERE 
+			    D.IS_DELETED = 1 
+			AND 
+				D.CATEGORY_NO = #{category_no} 
+			ORDER BY 
+				NO DESC 
+			LIMIT 
+				#{start}, #{limit}
+	
+	</select>
+	
+	<!-- 질환의 총 리스트 개수 구하기(카테고리별 질환) -->
+	<select id="getDiseaseByCategoryCnt">
+	
+			SELECT 
+				COUNT(*) 
+			FROM 
+				DISEASE 
+			WHERE 
+				IS_DELETED = 1 
+			AND 
+				CATEGORY_NO = #{category_no}
 	
 	</select>
 	
@@ -216,7 +282,7 @@
 				DISEASE 
 			SET 
 				CATEGORY_NO = #{category_no}, 
-				NAME = #{name_no}, 
+				NAME = #{name}, 
 				INFO = #{info}, 
 				GOOD_FOOD = #{good_food}, 
 				BAD_FOOD = #{bad_food}, 
@@ -227,7 +293,7 @@
 	</update>
 	
 	<!-- 질환 삭제 -->
-	<update id="deleteCategory">
+	<update id="deleteDisease">
 	
 			UPDATE 
 				DISEASE 

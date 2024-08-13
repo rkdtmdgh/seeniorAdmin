@@ -6,7 +6,17 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 관리자 계정 관리')}"></th:block>
 	
-	<link rel="stylesheet" href="/css/home.css">
+	<script src="/js/validation.js"></script>
+	
+	<script type="module">
+		import { getAdminList } from '/js/api/api_get_list.js';
+		import { searchForm } from '/js/submitForm.js';
+		window.getAdminList = getAdminList;
+		window.searchForm = searchForm;
+		document.addEventListener('DOMContentLoaded', () => {
+            getAdminList(); 
+        });
+	</script>
 </head>
 
 <body>
@@ -24,32 +34,54 @@
 					            <h2 class="title">관리자 계정 관리</h2>
 					            
 					            <div class="content_top_right">
-			            			<form name="search_form" onsubmit="searchForm(event, 'search_form')">
-								   		<div class="search_input_inner">
-								   			<select class="search_part">
-								  				<option value="id">아이디</option>
-								  				<option value="name">이름</option>
-								  				<option value="phone">연락처</option>
-								   			</select>
-								    		
-								    		<label class="search_input">
-								    			<input type="text" name="search_string" id="search_string" class="search_string" placeholder="검색">
-								    			<button type="submit" class="func_icon">
-											        <svg aria-label="검색" fill="none" class="stroke" x="0px" y="0px" viewBox="0 0 27 27" enable-background="new 0 0 27 27">
-														<circle stroke-width="1.35" stroke-miterlimit="10" cx="12.133" cy="12.133" r="11.339"></circle>
-														<line stroke-width="1.35" stroke-miterlimit="10" x1="20.15" y1="20.15" x2="26.206" y2="26.206"></line>
-													</svg>
-											    </button>
-								    		</label>
-								   		</div>
-									</form>
+									<form name="search_form" onsubmit="searchForm(event, 'search_form', 'admin_list_form')" th:insert="~{fragments/search.html :: search('관리자 계정 관리')}"></form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getBaseUrl()">전체보기</div>
+						            	<div class="btns small" onclick="getAdminList()">전체보기</div>
 						            </div>
 					            </div>
 					        </div>
 					    </div>
+					    
+					    <div class="table_wrap">
+	                        <table class="content_table">
+	                            <colgroup>
+	                                <col class="col_no">
+	                                <col class="col_default">
+	                                <col class="col_default">
+	                                <col class="col_default">
+	                                <col class="col_default">
+	                                <col class="col_default">
+	                            </colgroup>
+	
+	                            <thead>
+	                                <tr>
+	                                    <th>
+	                                        <p class="table_title">No</p>
+	                                    </th>
+	                                    <th>
+	                                        <p class="table_title">아이디</p>
+	                                    </th>
+	                                    <th>
+	                                        <p class="table_title">권한 등급</p>
+	                                    </th>
+	                                    <th>
+	                                        <p class="table_title">연락처</p>
+	                                    </th>
+	                                    <th>
+	                                        <p class="table_title">이름</p>
+	                                    </th>
+	                                    <th>
+	                                        <p class="table_title">가입일</p>
+	                                    </th>
+	                                </tr>
+	                            </thead>
+	
+	                            <tbody>
+	                                
+	                            </tbody>
+	                        </table>
+	                    </div>
 					</section>
                 </div>
             </div>

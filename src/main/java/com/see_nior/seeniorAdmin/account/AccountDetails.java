@@ -31,7 +31,7 @@ public class AccountDetails implements UserDetails {
 			
 			@Override
 			public String getAuthority() {
-				return "ROLE_".concat(adminAccountDto.getAuthority_role());
+				return "ROLE_".concat(adminAccountDto.getA_authority_role());
 			}
 		});
 		
@@ -40,32 +40,32 @@ public class AccountDetails implements UserDetails {
 
 	@Override
 	public String getPassword() {
-		return adminAccountDto.getPw();
+		return adminAccountDto.getA_pw();
 	}
 
 	@Override
 	public String getUsername() {
-		return adminAccountDto.getId();
+		return adminAccountDto.getA_id();
 	}
 	
 	@Override
 	public boolean isAccountNonExpired() {
-		return adminAccountDto.isIsaccountnonexpired();
+		return adminAccountDto.isA_isaccountnonexpired();
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return adminAccountDto.isIsaccountnonlocked();
+		return adminAccountDto.isA_isaccountnonlocked();
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return adminAccountDto.isIscredentialsnonexpired();
+		return adminAccountDto.isA_iscredentialsnonexpired();
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return adminAccountDto.isIsenabled();
+		return adminAccountDto.isA_isenabled();
 	}
 	
 }

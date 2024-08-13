@@ -22,26 +22,11 @@ function createErrorElement(ele) {
     return errorEle;
 }
 
-// 전체 에러 메세지 요소 생성
-function createAllErrorElement(message) {
-    const parentEle = document.getElementById('input_list_info');
-	errorEle = document.createElement("span"); // 요소 생성
-    errorEle.id = "input_all_error"; // 아이디 추가
-    parentEle.appendChild(errorEle); // 부모 요소에 추가
-	errorEle.textContent = message ? message : '';
-}
-
 // 에러 메세지 노출
 function setErrorMessage(input, message) {
 	const errorEle = createErrorElement(input);
 	errorEle.textContent = message;
 	input.parentElement.classList.add('error');
-	
-	// 전체 에러 메세지 요소 제거
-	const allErrorEle = document.getElementById('input_all_error');
-	if(allErrorEle) {
-		allErrorEle.remove();
-	}
 }
 
 // 에러 메세시 제거
@@ -108,9 +93,18 @@ function validatePhone(input) {
 }
 
 // 데이터 값 유효 확인
-function checkEmpty(input, txt) { 
+function checkEmpty(input, txt, alertMsg) { 
 	const errorMessage = txt + " 입력해 주세요.";
-	return validateInput(input, null, errorMessage); // 정규 표현식 대신 값의 길이만 확인
+	if(alertMsg) {
+		if(input.value.trim().length > 0) {
+			return true;
+		} else {
+			alert(errorMessage);
+			return false;
+		}
+	} else {
+		return validateInput(input, null, errorMessage); // 정규 표현식 대신 값의 길이만 확인
+	}
 }
 
 // 비밀번호 노출 설정

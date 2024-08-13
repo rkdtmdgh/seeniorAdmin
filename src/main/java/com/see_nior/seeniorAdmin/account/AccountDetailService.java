@@ -33,7 +33,7 @@ public class AccountDetailService implements UserDetailsService {
 			throw new AccountException(String.format("아이디 또는 비밀번호가 잘못되었습니다."));
 		
 		// 탈퇴한 ID인 경우 
-		else if (!adminAccountDto.is_deleted()) 
+		else if (!adminAccountDto.isA_is_deleted()) 
 			throw new AccountException(String.format("아이디 또는 비밀번호가 잘못되었습니다."));
 		
 		return new AccountDetails(adminAccountDto);
