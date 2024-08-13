@@ -12,7 +12,7 @@
 	</script>
 </th:block>
 
-<th:block th:if="${isLogined == true}">
+<th:block th:if="${isLogined != false}">
 	<script type="text/javascript">
 		window.onload = function() {
 			alert("접근 권한이 없습니다.");
