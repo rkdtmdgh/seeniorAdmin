@@ -60,7 +60,7 @@ export function postSignInForm(event, formName) {
 }
 
 // 검색 폼
-export function searchForm(event, category, page) {
+export function searchForm(event, apiUrl, page) {
 	event ? event.preventDefault() : null;
 	const form = document.forms['search_form'];
 	let input;
@@ -77,18 +77,7 @@ export function searchForm(event, category, page) {
 		return false;
 	}
 	
-	let apiUrl = ''; // 커맨드 초기화
-	
-	if(category) {
-		switch(category) {
-			case 'admin_list_form': // 관리자 계정 검색
-				apiUrl = '/account/search_admin_list';
-				break;
-			default:
-				console.log('알 수 없는 카테고리:', category);
-				return false;
-		}
-		
+	if(apiUrl) {		
 		let intPage = page || 1;
 		
 		$.ajax({
@@ -101,7 +90,7 @@ export function searchForm(event, category, page) {
 			},
 		})
 		.then(response => {
-			console.log(category + ' searchForm() response:', response);
+			console.log(apiUrl + ' searchForm() response:', response);
 			
 			// url 검색 조건 추가
 			const url = new URL(window.location);
