@@ -5,29 +5,30 @@
 <mapper namespace="com.see_nior.seeniorAdmin.disease.mapper.DiseaseMapper">
 
 	<resultMap type="DiseaseCategoryDto" id="DiseaseCategoryDto">
-		<result column="no" property="no" />
-		<result column="name" property="name" />
+		<result column="dc_no" property="dc_no" />
+		<result column="dc_name" property="dc_name" />
 		
 		<!-- 임의로 추가된 필드. 직렬화나 역직렬화 시에는 무시하게 설정하였음 -->
+		<!-- 
 		<result column="dc_name" property="dc_name" />
-		<!--  -->
+		 -->
 		
-		<result column="is_deleted" property="is_deleted" />
-		<result column="reg_date" property="reg_date" />
-		<result column="mod_date" property="mod_date" />
+		
+		<result column="dc_is_deleted" property="dc_is_deleted" />
+		<result column="dc_reg_date" property="dc_reg_date" />
+		<result column="dc_mod_date" property="dc_mod_date" />
 	</resultMap>
 
 	<resultMap type="DiseaseDto" id="DiseaseDto">
-		<result column="no" property="no" />
-		<result column="category_no" property="category_no" />
-		<result column="name" property="name" />
-		<result column="info" property="info" />
-		<result column="good_food" property="good_food" />
-		<result column="bad_food" property="bad_food" />
-		<result column="bad_food" property="bad_food" />
-		<result column="is_deleted" property="is_deleted" />
-		<result column="reg_date" property="reg_date" />
-		<result column="mod_date" property="mod_date" />
+		<result column="d_no" property="d_no" />
+		<result column="d_category_no" property="d_category_no" />
+		<result column="d_name" property="d_name" />
+		<result column="d_info" property="d_info" />
+		<result column="d_good_food" property="d_good_food" />
+		<result column="d_bad_food" property="d_bad_food" />
+		<result column="d_is_deleted" property="d_is_deleted" />
+		<result column="d_reg_date" property="d_reg_date" />
+		<result column="d_mod_date" property="d_mod_date" />
 		<collection property="diseaseCategoryDto" resultMap="DiseaseCategoryDto" />
 	</resultMap>
 	
@@ -38,9 +39,9 @@
 	
 		INSERT INTO 
 			DISEASE_CATEGORY 
-			(NAME) 
+			(DC_NAME) 
 		VALUES
-			(#{name})
+			(#{dc_name})
 	
 	</insert>
 	
@@ -54,7 +55,7 @@
 			FROM 
 				DISEASE_CATEGORY 
 			WHERE 
-				NAME = #{name}
+				DC_NAME = #{dc_name}
 	
 	</select>
 	
@@ -67,9 +68,9 @@
 			FROM 
 				DISEASE_CATEGORY 
 			WHERE 
-				IS_DELETED = 1 
+				DC_IS_DELETED = 1 
 			ORDER BY 
-				NO DESC
+				DC_NO DESC
 	
 	</select>
 	
@@ -81,8 +82,9 @@
 			FROM 
 				DISEASE_CATEGORY 
 			WHERE 
-				IS_DELETED = 1 
-			ORDER BY NO DESC 
+				DC_IS_DELETED = 1 
+			ORDER BY 
+				DC_NO DESC 
 			LIMIT 
 				#{start}, #{limit}
 	
@@ -97,7 +99,7 @@
 			FROM 
 				DISEASE_CATEGORY 
 			WHERE 
-				IS_DELETED = 1
+				DC_IS_DELETED = 1
 	
 	</select>
 	
@@ -110,7 +112,7 @@
 			FROM 
 				DISEASE_CATEGORY 
 			WHERE 
-				NO = #{no} 
+				DC_NO = #{dc_no} 
 			
 	</select>
 	
@@ -120,10 +122,10 @@
 			UPDATE 
 				DISEASE_CATEGORY 
 			SET 
-				NAME = #{name}, 
-				MOD_DATE = NOW() 
+				DC_NAME = #{dc_name}, 
+				DC_MOD_DATE = NOW() 
 			WHERE 
-				NO = #{no}
+				DC_NO = #{dc_no}
 	
 	</update>
 	
@@ -135,11 +137,11 @@
 		LEFT JOIN 
 			DISEASE D 
 		ON 
-			DC.NO = D.CATEGORY_NO 
+			DC.DC_NO = D.D_CATEGORY_NO 
 		SET 
-			DC.IS_DELETED = 0, D.IS_DELETED = 0 
+			DC.DC_IS_DELETED = 0, D.D_IS_DELETED = 0 
 		WHERE 
-			DC.NO = #{no}
+			DC.DC_NO = #{dc_no}
 	
 	</update>
 	
@@ -150,9 +152,9 @@
 	
 		INSERT INTO 
 			DISEASE 
-			(CATEGORY_NO, NAME, INFO, GOOD_FOOD, BAD_FOOD) 
+			(D_CATEGORY_NO, D_NAME, D_INFO, D_GOOD_FOOD, D_BAD_FOOD) 
 		VALUES 
-			(#{category_no}, #{name}, #{info}, #{good_food}, #{bad_food})
+			(#{d_category_no}, #{d_name}, #{d_info}, #{d_good_food}, #{d_bad_food})
 	
 	</insert>
 	
@@ -166,7 +168,7 @@
 			FROM 
 				DISEASE 
 			WHERE 
-				NAME = #{name}
+				D_NAME = #{d_name}
 	
 	</select>
 	
@@ -176,17 +178,17 @@
 		
 			SELECT 
 				D.*, 
-				DC.NAME AS DC_NAME 
+				DC.DC_NAME 
 			FROM 
 			    DISEASE D 
 			JOIN 
 			    DISEASE_CATEGORY DC 
 			ON 
-			    D.CATEGORY_NO = DC.NO 
+			    D.D_CATEGORY_NO = DC.DC_NO 
 			WHERE 
-			    D.IS_DELETED = 1 
+			    D.D_IS_DELETED = 1 
 			ORDER BY 
-				NO DESC 
+				D_NO DESC 
 	
 	</select>
 	
@@ -196,17 +198,17 @@
 			
 			SELECT 
 				D.*, 
-				DC.NAME AS DC_NAME 
+				DC.DC_NAME 
 			FROM 
 			    DISEASE D 
 			JOIN 
 			    DISEASE_CATEGORY DC 
 			ON 
-			    D.CATEGORY_NO = DC.NO 
+			    D.D_CATEGORY_NO = DC.DC_NO 
 			WHERE 
-			    D.IS_DELETED = 1 
+			    D.D_IS_DELETED = 1 
 			ORDER BY 
-				NO DESC 
+				D_NO DESC 
 			LIMIT 
 				#{start}, #{limit}
 	
@@ -220,7 +222,7 @@
 			FROM 
 				DISEASE 
 			WHERE 
-				IS_DELETED = 1
+				D_IS_DELETED = 1
 	
 	</select>
 	
@@ -230,19 +232,19 @@
 			
 			SELECT 
 				D.*, 
-				DC.NAME AS DC_NAME 
+				DC.DC_NAME 
 			FROM 
 			    DISEASE D 
 			JOIN 
 			    DISEASE_CATEGORY DC 
 			ON 
-			    D.CATEGORY_NO = DC.NO 
+			    D.D_CATEGORY_NO = DC.DC_NO 
 			WHERE 
-			    D.IS_DELETED = 1 
+			    D.D_IS_DELETED = 1 
 			AND 
-				D.CATEGORY_NO = #{category_no} 
+				D.D_CATEGORY_NO = #{d_category_no} 
 			ORDER BY 
-				NO DESC 
+				D_NO DESC 
 			LIMIT 
 				#{start}, #{limit}
 	
@@ -256,9 +258,9 @@
 			FROM 
 				DISEASE 
 			WHERE 
-				IS_DELETED = 1 
+				D_IS_DELETED = 1 
 			AND 
-				CATEGORY_NO = #{category_no}
+				D_CATEGORY_NO = #{d_category_no}
 	
 	</select>
 	
@@ -271,7 +273,7 @@
 			FROM 
 				DISEASE 
 			WHERE 
-				NO = #{no}
+				D_NO = #{d_no}
 	
 	</select>
 	
@@ -281,14 +283,14 @@
 			UPDATE 
 				DISEASE 
 			SET 
-				CATEGORY_NO = #{category_no}, 
-				NAME = #{name}, 
-				INFO = #{info}, 
-				GOOD_FOOD = #{good_food}, 
-				BAD_FOOD = #{bad_food}, 
-				MOD_DATE = NOW() 
+				D_CATEGORY_NO = #{d_category_no}, 
+				D_NAME = #{d_name}, 
+				D_INFO = #{d_info}, 
+				D_GOOD_FOOD = #{d_good_food}, 
+				D_BAD_FOOD = #{d_bad_food}, 
+				D_MOD_DATE = NOW() 
 			WHERE 
-				NO = #{no}
+				D_NO = #{d_no}
 	
 	</update>
 	
@@ -298,9 +300,9 @@
 			UPDATE 
 				DISEASE 
 			SET 
-				IS_DELETED = 0 
+				D_IS_DELETED = 0 
 			WHERE 
-				NO = #{no}
+				D_NO = #{d_no}
 	
 	</update>
 	
@@ -319,6 +321,7 @@
 				D.CATEGORY_NO = C.NO 
 			AND 
 				D.NAME LIKE = '%#{name}%' 
+				
 	
 	</select>
 
