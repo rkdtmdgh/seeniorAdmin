@@ -63,6 +63,8 @@ public class UserControlloer {
 		Map<String, Object> userListPage = 
 				userService.searchUserListPageNum(page, searchPart, searchString);
 		searchUserList.put("userListPage", userListPage);
+		searchUserList.put("searchPart", searchPart);
+		searchUserList.put("searchString", searchString);
 		
 		return searchUserList;
 	}
