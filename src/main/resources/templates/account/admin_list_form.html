@@ -14,7 +14,13 @@
 		window.getList = getAdminList;
 		window.searchForm = searchForm;
 		document.addEventListener('DOMContentLoaded', () => {
-            getList(); 
+			const urlParams = new URLSearchParams(window.location.search);
+			const sForm = document.forms['search_form'];
+			sForm.search_part.value = urlParams.get('searchPart') || 'a_id';
+			sForm.search_string.value = urlParams.get('searchString');
+			const page = urlParams.get('page') || 1;
+
+			urlParams.get('searchString') ? searchForm(event, 'admin_list_form', page) : getList(page); 
         });
 	</script>
 </head>
@@ -34,7 +40,7 @@
 					            <h2 class="title">관리자 계정 관리</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="searchForm(event, 'search_form', 'admin_list_form')" th:insert="~{fragments/search.html :: search('관리자 계정 관리')}"></form>
+									<form name="search_form" onsubmit="searchForm(event, 'admin_list_form')" th:insert="~{fragments/search.html :: search('관리자 계정 관리')}"></form>
 						            
 						            <div class="btn_list">
 						            	<div class="btns small" onclick="getList(2)">전체보기</div>

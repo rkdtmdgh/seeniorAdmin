@@ -60,9 +60,9 @@ export function postSignInForm(event, formName) {
 }
 
 // 검색 폼
-export function searchForm(event, formName, category) {
-	event.preventDefault();
-	const form = document.forms[formName];
+export function searchForm(event, category, page) {
+	event ? event.preventDefault() : null;
+	const form = document.forms['search_form'];
 	let input;
 	
 	input = form.search_string;
@@ -89,16 +89,27 @@ export function searchForm(event, formName, category) {
 				return false;
 		}
 		
+		let intPage = page || 1;
+		
 		$.ajax({
 			url: apiUrl,
 			method: 'GET',
 			data: {
 				searchPart: form.search_part.value, // 검색 분류 select
 				searchString: input.value.trim(), // 검색 입력값
+				page: intPage,
 			},
 		})
 		.then(response => {
 			console.log(category + ' searchForm() response:', response);
+			
+			// url 검색 조건 추가
+			const url = new URL(window.location);
+			url.searchParams.set('searchPart', response.searchPart); // 검색 파트
+			url.searchParams.set('searchString', response.searchString); // 검색어
+			url.searchParams.set('page', response.searchAdminListPage.page); // 페이지
+			window.history.replaceState({}, '', url); // 현재 url 변경 및 리로드 제어
+			
 			const contentTable = document.querySelector('.content_table tbody');
 			contentTable.innerHTML = '';
 			
