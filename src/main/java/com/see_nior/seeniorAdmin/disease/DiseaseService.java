@@ -347,7 +347,6 @@ public class DiseaseService {
 		log.info("getDisease()");
 		
 		DiseaseDto diseaseDto = diseaseMapper.getDiseaseByNo(no);
-		log.info("diseaseDto ========> {}", diseaseDto);
 		
 		return diseaseDto;
 	}
