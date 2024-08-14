@@ -103,7 +103,7 @@ export function searchForm(event, formName, category) {
 			contentTable.innerHTML = '';
 			
 			if(response && response.adminAccountDtos) {
-				let adminListCnt = response.searchAdminListPage.accountListCnt;
+				let adminListCnt = response.searchAdminListPage.searchAdminListCnt;
 				if(adminListCnt > 0) {
 					response.adminAccountDtos.forEach((data) => { 
 						let innerContent = `
