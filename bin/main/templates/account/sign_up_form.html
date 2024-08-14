@@ -12,9 +12,9 @@
     <link rel="stylesheet" href="/css/account/sign_form.css">
     
     <script type="module">
-		import { postSignUpForm } from '/js/submitForm.js';
-		import { setInputFocus } from '/js/handler.js';
-		window.postSignUpForm = postSignUpForm; // 전역으로 함수 선언
+		import { postSignUpForm } from '/js/submitForm.js'; // 회원가입 폼 제출
+		import { setInputFocus } from '/js/handler.js'; // 포커스 설정
+		window.postSignUpForm = postSignUpForm;
 		document.addEventListener('DOMContentLoaded', () => {
             setInputFocus('a_id'); 
         });
