@@ -164,6 +164,7 @@ public class AccountService {
 		if (endPage > maxPage) endPage = maxPage;
 		
 		accountListPageNum.put("accountListCnt", accountListCnt);
+		accountListPageNum.put("page", page);
 		accountListPageNum.put("maxPage", maxPage);
 		accountListPageNum.put("startPage", startPage);
 		accountListPageNum.put("endPage", endPage);
@@ -214,7 +215,8 @@ public class AccountService {
 		int endPage = startPage + blockLimit - 1;
 		if (endPage > maxPage) endPage = maxPage;
 		
-		searchAdminListPageNum.put("accountListCnt", searchAdminListCnt);
+		searchAdminListPageNum.put("searchAdminListCnt", searchAdminListCnt);
+		searchAdminListPageNum.put("page", page);
 		searchAdminListPageNum.put("maxPage", maxPage);
 		searchAdminListPageNum.put("startPage", startPage);
 		searchAdminListPageNum.put("endPage", endPage);
