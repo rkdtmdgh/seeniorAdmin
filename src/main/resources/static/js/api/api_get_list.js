@@ -18,6 +18,8 @@ export function getAdminList(page) {
 		
 		// url 검색 조건 추가
 		const url = new URL(window.location);
+		url.searchParams.delete('searchPart');
+		url.searchParams.delete('searchString');
 		url.searchParams.set('page', response.adminListPage.page); // 페이지
 		window.history.replaceState({}, '', url); // 현재 url 변경 및 리로드 제어
 					
