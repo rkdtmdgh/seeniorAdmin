@@ -71,8 +71,15 @@ export function searchForm(event, formName, category) {
 		return false;
 	}
 	
+	if(input.value.trim().length < 2) {
+		alert('검색어는 2자 이상 입력해 주세요.');
+		input.focus();
+		return false;
+	}
+	
+	let apiUrl = ''; // 커맨드 초기화
+	
 	if(category) {
-		let apiUrl = '';
 		switch(category) {
 			case 'admin_list_form': // 관리자 계정 검색
 				apiUrl = '/account/search_admin_list';
@@ -81,9 +88,6 @@ export function searchForm(event, formName, category) {
 				console.log('알 수 없는 카테고리:', category);
 				return false;
 		}
-		
-		console.log('searchPart:', form.search_part.value);
-		console.log('searchString:', input.value.trim());
 		
 		$.ajax({
 			url: apiUrl,
@@ -100,33 +104,43 @@ export function searchForm(event, formName, category) {
 			
 			if(response && response.adminAccountDtos) {
 				let adminListCnt = response.searchAdminListPage.accountListCnt;
-	
-				response.adminAccountDtos.forEach((data) => { 
-					let innerContent = `
-						<tr>
-	                        <td>
-	                            <p class="table_info">${adminListCnt}</p>
-	                        </td>
-	                        <td>
-	                            <a href="" class="table_info">${data.a_id}</a>
-	                        </td>
-	                        <td>
-	                            <a href="" class="table_info">${data.a_authority_role}</a>
-	                        </td>
-	                        <td>
-	                            <p class="table_info">${data.a_phone}</p>
-	                        </td>
-	                        <td>
-	                            <p class="table_info">${data.a_name}</p>
-	                        </td>
-	                        <td>
-	                            <p class="table_info">${formatDate(data.a_reg_date)}</p>
-	                        </td>
-	                    </tr>
+				if(adminListCnt > 0) {
+					response.adminAccountDtos.forEach((data) => { 
+						let innerContent = `
+							<tr>
+		                        <td>
+		                            <p class="table_info">${adminListCnt}</p>
+		                        </td>
+		                        <td>
+		                            <a href="" class="table_info">${data.a_id}</a>
+		                        </td>
+		                        <td>
+		                            <a href="" class="table_info">${data.a_authority_role}</a>
+		                        </td>
+		                        <td>
+		                            <p class="table_info">${data.a_phone}</p>
+		                        </td>
+		                        <td>
+		                            <p class="table_info">${data.a_name}</p>
+		                        </td>
+		                        <td>
+		                            <p class="table_info">${formatDate(data.a_reg_date)}</p>
+		                        </td>
+		                    </tr>
+						`;
+						contentTable.innerHTML += innerContent;
+						adminListCnt --;
+					});
+				} else {
+					contentTable.innerHTML = `
+					<tr>
+                        <td colspan="6">
+                            <p class="table_info">검색된 내용이 없습니다.</p>
+                        </td>
+                    </tr>
 					`;
-					contentTable.innerHTML += innerContent;
-					adminListCnt --;
-				});
+				}
+				
 			} else {
 				console.log('데이터가 없거나 유효하지 않습니다.');
 			}

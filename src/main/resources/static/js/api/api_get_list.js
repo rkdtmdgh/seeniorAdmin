@@ -1,11 +1,15 @@
 // 관리자 계정 리스트 요청
-export function getAdminList() {
+export function getAdminList(page) {
 	const seartStringInput = document.forms['search_form'].search_string;
 	seartStringInput.value = '';
+	let intPage = page || 1;
 	
 	$.ajax({
 		url: '/account/get_admin_list',
 		method: 'GET',
+		data: {
+			page: intPage,
+		},
 	})
 	.then(response => {
 		console.log('getAdminList() response:', response);

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html 
+<html
    xmlns:th="http://www.thymeleaf.org" 
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
@@ -11,10 +11,10 @@
 	<script type="module">
 		import { getAdminList } from '/js/api/api_get_list.js';
 		import { searchForm } from '/js/submitForm.js';
-		window.getAdminList = getAdminList;
+		window.getList = getAdminList;
 		window.searchForm = searchForm;
 		document.addEventListener('DOMContentLoaded', () => {
-            getAdminList(); 
+            getList(); 
         });
 	</script>
 </head>
@@ -37,7 +37,7 @@
 									<form name="search_form" onsubmit="searchForm(event, 'search_form', 'admin_list_form')" th:insert="~{fragments/search.html :: search('관리자 계정 관리')}"></form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getAdminList()">전체보기</div>
+						            	<div class="btns small" onclick="getList(2)">전체보기</div>
 						            </div>
 					            </div>
 					        </div>
@@ -81,6 +81,8 @@
 	                                
 	                            </tbody>
 	                        </table>
+	                        
+	                        <th:block th:replace="~{fragments/pagination.html :: pagination}"></th:block>
 	                    </div>
 					</section>
                 </div>

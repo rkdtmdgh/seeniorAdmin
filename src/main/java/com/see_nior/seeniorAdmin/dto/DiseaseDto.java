@@ -9,15 +9,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DiseaseDto {
 
-	private int no;
-	private int category_no;
-	private String name;
-	private String info;
-	private String good_food;
-	private String bad_food;
-	private boolean is_deleted;
-	private String reg_date;
-	private String mod_date;
+	private int d_no;
+	private int d_category_no;
+	private String d_name;
+	private String d_info;
+	private String d_good_food;
+	private String d_bad_food;
+	private boolean d_is_deleted;
+	private String d_reg_date;
+	private String d_mod_date;
 	
 	DiseaseCategoryDto diseaseCategoryDto;
 	
