@@ -9,12 +9,14 @@
 	<script src="/js/validation.js"></script>
 	
 	<script type="module">
-		import { getAdminList } from '/js/api/api_get_list.js';
-		import { searchForm } from '/js/submitForm.js';
+		import { getAdminList } from '/js/api/api_get_list.js'; // 테이블 리스트 불러오기
+		import { searchForm } from '/js/submitForm.js'; // 검색폼 제출
+		import { setFormValuesFromUrl } from '/js/handler.js'; // 새로고침 시 현재 페이지 적용
 		window.getList = getAdminList;
 		window.searchForm = searchForm;
 		document.addEventListener('DOMContentLoaded', () => {
-            getList(); 
+			const { hasSearchString, page } = setFormValuesFromUrl('a_id'); // 검색 파트 기본값
+			hasSearchString ? searchForm(event, 'search_admin_list', page) : getList(page);
         });
 	</script>
 </head>
@@ -34,10 +36,10 @@
 					            <h2 class="title">관리자 계정 관리</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="searchForm(event, 'search_form', 'admin_list_form')" th:insert="~{fragments/search.html :: search('관리자 계정 관리')}"></form>
+									<form name="search_form" onsubmit="searchForm(event, 'search_admin_list')" th:insert="~{fragments/search.html :: search('관리자 계정 관리')}"></form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList(2)">전체보기</div>
+						            	<div class="btns small" onclick="getList()">전체보기</div>
 						            </div>
 					            </div>
 					        </div>
