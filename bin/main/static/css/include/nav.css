@@ -30,6 +30,14 @@
                     	color: var(--primaryColor);
                 	}
                 }
+                
+                &.on {
+                	&.arrow {
+                        &::after {
+                            transform: translateY(-25%) rotateX(180deg);
+                        }
+                    }
+                }
             }
     
             .side_sub_menu_list {
@@ -87,7 +95,6 @@
                     padding-bottom: var(--ssize3);
                 }
             }
-            
         }
     }
 }

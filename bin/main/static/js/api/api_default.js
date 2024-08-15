@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 								
 				// 클릭된 요소에만 토글
 				if(!navMenulistbtn.classList.contains('select')) {
+					navMenuBtn.classList.toggle('on');
 					subMenuList.classList.toggle('open');
 				}
 			});
