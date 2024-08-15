@@ -204,13 +204,15 @@ public class AccountController {
 	@GetMapping("/get_admin_list")
 	@ResponseBody
 	public Object getAdminList(
+			@RequestParam(value = "sort", required = false, defaultValue = "all") String sort,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("getAdminList()");
 		
-		Map<String, Object> adminList = accountService.getAdminPagingList(page);
+		Map<String, Object> adminList = accountService.getAdminPagingList(sort, page);
 		
 		Map<String, Object> adminListPage = accountService.getAdminListPageNum(page);
 		adminList.put("adminListPage", adminListPage);
+		adminList.put("sort", sort);
 		
 		return adminList;
 	}
@@ -221,15 +223,17 @@ public class AccountController {
 	public Object searchAdminList(
 			@RequestParam("searchPart") String searchPart,
 			@RequestParam("searchString") String searchString,
+			@RequestParam(value = "sort", required = false, defaultValue = "all") String sort,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("searchAdminList()");
 		
 		Map<String, Object> searchAdminList = 
-				accountService.searchAdminPagingList(searchPart, searchString, page);
+				accountService.searchAdminPagingList(searchPart, searchString, sort, page);
 		
 		Map<String, Object> searchAdminListPage = 
 				accountService.searchAdminListPageNum(searchPart, searchString, page);
 		searchAdminList.put("searchAdminListPage", searchAdminListPage);
+		searchAdminList.put("sort", sort);
 		searchAdminList.put("searchPart", searchPart);
 		searchAdminList.put("searchString", searchString);
 		

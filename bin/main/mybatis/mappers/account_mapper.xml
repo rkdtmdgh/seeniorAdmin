@@ -149,7 +149,17 @@
 			A_AUTHORITY_ROLE = "NOT_APPROVED")
 		AND 
 			A_IS_DELETED = 1
-		ORDER BY A_NO DESC 
+		<choose>
+			<when test="sort == all">
+				ORDER BY A_NO DESC 
+			</when>
+			<when test="sort == approval">
+				ORDER BY A_AUTHORITY_ROLE DESC, A_NO DESC 
+			</when>
+			<when test="sort == notApproval">
+				ORDER BY A_AUTHORITY_ROLE ASC, A_NO DESC 
+			</when>
+		</choose>
 		LIMIT 
 			#{start}, #{limit}
 	
@@ -199,7 +209,18 @@
 				</when>
 			</choose>
 		</if>
-		ORDER BY A_NO DESC 
+		<choose>
+			<when test="sort == all">
+				ORDER BY A_NO DESC 
+			</when>
+			<when test="sort == approval">
+				ORDER BY A_AUTHORITY_ROLE DESC, A_NO DESC 
+			</when>
+			<when test="sort == notApproval">
+				ORDER BY A_AUTHORITY_ROLE ASC, A_NO DESC 
+			</when>
+		</choose>
+		
 		LIMIT 
 			#{start}, #{limit}
 	
