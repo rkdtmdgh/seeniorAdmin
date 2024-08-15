@@ -117,16 +117,17 @@ public class AccountService {
 	}
 	
 	// 관리자 리스트 가져오기
-	public Map<String, Object> getAdminPagingList(int page) {
+	public Map<String, Object> getAdminPagingList(String sort, int page) {
 		log.info("getAdminList()");
 		
 		int pagingStart = (page - 1) * pageLimit;	
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		Map<String, Integer> pagingParams = new HashMap<>();
+		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
+		pagingParams.put("sort", sort);
 
 		List<AdminAccountDto> adminAccountDtos = accountMapper.selectAdminList(pagingParams);
 		pagingList.put("adminAccountDtos", adminAccountDtos);
@@ -165,7 +166,7 @@ public class AccountService {
 	}
 	
 	// 관리자 검색 리스트 가져오기
-	public Map<String, Object> searchAdminPagingList(String searchPart, String searchString, int page) {
+	public Map<String, Object> searchAdminPagingList(String searchPart, String searchString, String sort, int page) {
 		log.info("searchAdminPagingList()");
 		
 		int pagingStart = (page - 1) * pageLimit;
