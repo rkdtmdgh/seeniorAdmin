@@ -1,5 +1,5 @@
 // 관리자 계정 리스트 요청
-export function getAdminList(page) {
+export function getAdminList(page, sort) {
 	// 검색 인풋 벨류 삭제
 	const seartStringInput = document.forms['search_form'].search_string;
 	seartStringInput.value = '';
@@ -7,7 +7,7 @@ export function getAdminList(page) {
 	let intPage = page || 1;
 	
 	$.ajax({
-		url: '/account/get_admin_list',
+		url: `/account/get_admin_list${sort ? '?sort=' + sort : ''}`,
 		method: 'GET',
 		data: {
 			page: intPage,

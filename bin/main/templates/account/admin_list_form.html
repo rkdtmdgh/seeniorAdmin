@@ -64,9 +64,16 @@
 	                                    <th>
 	                                        <p class="table_title">아이디</p>
 	                                    </th>
+	                                    
 	                                    <th>
-	                                        <p class="table_title">권한 등급</p>
+                                    	<th:block th:if="${sort == 'approval'}">
+	                                        <p class="table_title" onclick="getList(1, 'notApproval')">권한 등급</p>
+                                        </th:block>
+                                        <th:block th:unless="${sort != 'approval'}">
+	                                        <p class="table_title" onclick="getList(1, 'approval')">권한 등급</p>
+                                        </th:block>
 	                                    </th>
+	                                    
 	                                    <th>
 	                                        <p class="table_title">연락처</p>
 	                                    </th>
