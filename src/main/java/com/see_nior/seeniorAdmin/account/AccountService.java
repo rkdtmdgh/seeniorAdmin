@@ -56,13 +56,9 @@ public class AccountService {
 				int result = accountMapper.insertNewAdmin(adminAccountDto);
 				
 				if (result <= 0) {
-					
 					return ADMIN_SIGN_UP_FAIL;
-					
 				} else {
-					
 					return ADMIN_SIGN_UP_SUCCESS;
-					
 				}
 				
 			} else {
@@ -72,21 +68,15 @@ public class AccountService {
 				int result = accountMapper.insertNewAdmin(adminAccountDto);
 				
 				if (result <= 0) {
-					
 					return ADMIN_SIGN_UP_FAIL;
-					
 				} else {
-					
 					return ADMIN_SIGN_UP_SUCCESS;
-					
 				}
 				
 			}
 			
 		} else {
-			
 			return ADMIN_ALREADY;
-			
 		}
 		
 	}
@@ -168,6 +158,8 @@ public class AccountService {
 		accountListPageNum.put("maxPage", maxPage);
 		accountListPageNum.put("startPage", startPage);
 		accountListPageNum.put("endPage", endPage);
+		accountListPageNum.put("blockLimit", blockLimit);
+		accountListPageNum.put("pageLimit", pageLimit);
 		
 		return accountListPageNum;
 	}
@@ -220,10 +212,11 @@ public class AccountService {
 		searchAdminListPageNum.put("maxPage", maxPage);
 		searchAdminListPageNum.put("startPage", startPage);
 		searchAdminListPageNum.put("endPage", endPage);
+		searchAdminListPageNum.put("blockLimit", blockLimit);
+		searchAdminListPageNum.put("pageLimit", pageLimit);
 		
 		return searchAdminListPageNum;
 	}
-	
 	
 	// 관리자 가입 승인
 	public void isApproval(int a_no) {
@@ -233,10 +226,4 @@ public class AccountService {
 		
 	}
 
-
-
-
-	
-
-	
 }
