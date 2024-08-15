@@ -21,7 +21,7 @@ public interface AccountMapper {
 
 	public int updateAdminIsDeleted(String a_id);
 
-	public ArrayList<AdminAccountDto> selectAdminList(Map<String, Integer> pagingParams);
+	public ArrayList<AdminAccountDto> selectAdminList(Map<String, Object> pagingParams);
 
 	public void updateAdminRoleByNo(int a_no);
 
