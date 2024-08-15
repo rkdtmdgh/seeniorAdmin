@@ -39,7 +39,6 @@ class AccountServiceTest {
 	    mockAdminList.put("accountListPage", mockAccountListPage);
 
 	    // AccountService 메서드 동작을 Mock으로 정의
-	    given(accountService.getAdminPagingList(page)).willReturn(mockAdminList);
 
 	    // When: MockMvc를 사용해 GET 요청을 보냄
 	    mockMvc.perform(get("/get_admin_list")
