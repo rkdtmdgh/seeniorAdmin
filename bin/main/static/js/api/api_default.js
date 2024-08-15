@@ -48,8 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			const sideBoardSubMenu = document.getElementById('side_board_sub_menu');
 			
 			if(response && response.boardCategoryDtos) {
-				let filterData = response.boardCategoryDtos.filter(data => data.bc_is_deleted === true)
-				.sort((a, b) => a.bc_idx - b.bc_idx); // 데이터를 IDX 오름차순으로 정렬
+				let filterData = response.boardCategoryDtos.filter(data => data.bc_is_deleted === true);
 				
 				filterData.forEach((data) => { 
 					let innerContent = `

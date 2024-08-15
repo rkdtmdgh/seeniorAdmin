@@ -345,44 +345,36 @@
 /* pagination */
 .pagination_wrap {
     padding-top: var(--baseGap);
-
-    .pagination_list {
+    display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--smallGap);
+	
+    .num {
+    	font-size: var(--subFontSize);
+        width: var(--iconsWidth);
+        height: var(--iconsWidth);
         display: flex;
-        align-items: center;
         justify-content: center;
-        gap: var(--smallGap);
+        align-items: center;
+        cursor: pointer;
+        transition: color var(--transition);
 
-        .page_num {
-            font-size: var(--subFontSize);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--smallGap);
-
-            .num {
-                width: var(--iconsWidth);
-                height: var(--iconsWidth);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                transition: color var(--transition);
-
-                &:hover {
-                    color: var(--primaryColor);
-                }
-            }
-
-            .current {
-                width: var(--iconsWidth);
-                height: var(--iconsWidth);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                border-radius: var(--bdrs);
-                color: var(--whiteColor);
-                background-color: var(--primaryColor);
-            }
+        &:hover {
+            color: var(--primaryColor);
         }
+    }
+
+    .current {
+    	font-size: var(--subFontSize);
+        width: var(--iconsWidth);
+        height: var(--iconsWidth);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: var(--bdrs);
+        color: var(--whiteColor);
+        background-color: var(--primaryColor);
     }
 
     .next, .last {
