@@ -132,6 +132,8 @@ public class AccountService {
 		List<AdminAccountDto> adminAccountDtos = accountMapper.selectAdminList(pagingParams);
 		pagingList.put("adminAccountDtos", adminAccountDtos);
 		
+		log.info("pagingList --- {}", pagingList);
+		
 		return pagingList;
 	}
 	
