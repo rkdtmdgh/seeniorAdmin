@@ -68,6 +68,8 @@ public class UserService {
 		userListPageNum.put("maxPage", maxPage);
 		userListPageNum.put("startPage", startPage);
 		userListPageNum.put("endPage", endPage);
+		userListPageNum.put("blockLimit", blockLimit);
+		userListPageNum.put("pageLimit", pageLimit);
 		
 		return userListPageNum;
 	}
@@ -120,6 +122,8 @@ public class UserService {
 		searchUserListPageNum.put("maxPage", maxPage);
 		searchUserListPageNum.put("startPage", startPage);
 		searchUserListPageNum.put("endPage", endPage);
+		searchUserListPageNum.put("pageLimit", pageLimit);
+		searchUserListPageNum.put("blockLimit", blockLimit);
 		
 		return searchUserListPageNum;
 	}
