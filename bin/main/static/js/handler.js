@@ -25,5 +25,5 @@ export function setFormValuesFromUrl(part) {
 		sForm.search_string.value = searchString;
 	}
 	
-	return { hasSearchString, page }
+	return { hasSearchString, page };
 }
