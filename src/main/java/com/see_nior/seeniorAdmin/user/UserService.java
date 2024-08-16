@@ -15,7 +15,7 @@ import lombok.extern.log4j.Log4j2;
 @Service
 public class UserService {
 	
-	private int pageLimit = 5;		// 한 페이지당 보여줄 정보 수
+	private int pageLimit = 10;		// 한 페이지당 보여줄 정보 수
 	private int blockLimit = 5;		// 하단에 보여질 페이지 번호 수
 	
 	private UserMapper userMapper;
@@ -26,16 +26,17 @@ public class UserService {
 	}
 	
 	// 일반 멤버 리스트 가져오기 
-	public Map<String, Object> getUserPagingList(int page) {
+	public Map<String, Object> getUserPagingList(String sort, int page) {
 		log.info("getUserPagingList()");
 		
 		int pagingStart = (page - 1) * pageLimit;	
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		Map<String, Integer> pagingParams = new HashMap<>();
+		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
+		pagingParams.put("sort", sort);
 
 		List<AdminAccountDto> userAccountDtos = userMapper.selectUserList(pagingParams);
 		pagingList.put("userAccountDtos", userAccountDtos);
