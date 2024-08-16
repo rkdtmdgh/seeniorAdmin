@@ -156,9 +156,8 @@ public class AccountController {
 		
 		accountService.adminModifyConfirm(adminAccountDto);
 		
-		return null;
+		return "redirect:/account/admin_modify_form?a_id=" + adminAccountDto.getA_id();
 	}
-	
 	
 	// 회원 탈퇴 확인 
 	@GetMapping("/delete_confirm")
@@ -239,7 +238,6 @@ public class AccountController {
 		
 		return searchAdminList;
 	}
-	
 	
 	// 관리자 가입 승인
 	@GetMapping("/is_approval")
