@@ -101,6 +101,14 @@
 			A_DEPARTMENT = #{a_department},
 			A_LEVEL = #{a_level},
 			A_POSITION = #{a_position},
+		<choose>
+			<when test="a_authority_role == 'not_approved'">
+				A_AUTHORITY_ROLE = "SUB_ADMIN",
+			</when>
+			<when test="a_authority_role == 'sub_admin'">
+				A_AUTHORITY_ROLE = "NOT_APPROVED",
+			</when>
+		</choose>
 			A_MOD_DATE = NOW()
 		WHERE 
 			A_NO = #{a_no}
@@ -117,7 +125,7 @@
 			A_AUTHORITY_ROLE = "SUB_ADMIN",
 			A_MOD_DATE = NOW() 
 		WHERE 
-			A_NO = #{a_no}
+			A_NO = #{a_no} 
 	
 	</update>
 	
