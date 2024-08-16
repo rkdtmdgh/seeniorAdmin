@@ -136,13 +136,13 @@ public class AccountController {
 	
 	// SUPER_ADMIN - ADMIN 정보 수정 양식
 	@GetMapping("/admin_modify_form")
-	public String adminModifyForm(@RequestParam("a_id") String a_id, Model model) {
+	public String adminModifyForm(@RequestParam("a_no") int a_no, Model model) {
 		log.info("adminModifyForm()");
 		
 		String nextPage = "account/modify_form";
 		
 		AdminAccountDto loginedAdminDto = 
-				accountService.getAdminAccountById(a_id);
+				accountService.getAdminAccountByNo(a_no);
 		
 		model.addAttribute("loginedAdminDto", loginedAdminDto);
 		
@@ -156,7 +156,7 @@ public class AccountController {
 		
 		accountService.adminModifyConfirm(adminAccountDto);
 		
-		return "redirect:/account/admin_modify_form?a_id=" + adminAccountDto.getA_id();
+		return "redirect:/account/admin_modify_form?a_no=" + adminAccountDto.getA_no();
 	}
 	
 	// 회원 탈퇴 확인 
