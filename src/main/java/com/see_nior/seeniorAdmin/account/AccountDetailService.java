@@ -26,7 +26,7 @@ public class AccountDetailService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		log.info("loadUserByUsername()");
 		
-		AdminAccountDto adminAccountDto = accountMapper.getAdminAccountById(username);
+		AdminAccountDto adminAccountDto = accountMapper.selectAdminAccountById(username);
 		
 		// 계정이 없는 경우 
 		if (adminAccountDto == null) 

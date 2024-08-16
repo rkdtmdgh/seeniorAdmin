@@ -15,7 +15,9 @@ public interface AccountMapper {
 
 	public boolean isAccount(String a_id);
 	
-	public AdminAccountDto getAdminAccountById(String a_id);
+	public AdminAccountDto selectAdminAccountById(String a_id);
+	
+	public AdminAccountDto selectAdminAccountByNo(int a_no);
 
 	public void updateMyAdminInfo(AdminAccountDto adminAccountDto);
 
@@ -32,5 +34,6 @@ public interface AccountMapper {
 	public int selectSearchAdminListCnt(Map<String, Object> searchParams);
 
 	public void updateAdminInfoFromSuper(AdminAccountDto adminAccountDto);
+
 
 }
