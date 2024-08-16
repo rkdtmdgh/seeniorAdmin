@@ -8,16 +8,6 @@
 	
 	<script src="/js/validation.js"></script>
 	
-	<script type="module">
-		import { getAdminList } from '/js/api/api_get_list.js'; // 테이블 리스트 불러오기
-		import { searchForm } from '/js/submitForm.js'; // 검색폼 제출
-		window.getList = getAdminList;
-		window.searchForm = searchForm;
-		document.addEventListener('DOMContentLoaded', () => {
-			const { hasSearchString, page, sort, sortValue } = setFormValuesFromUrl('a_id'); // 검색 파트 기본값
-			hasSearchString ? searchForm(null, 'search_admin_list', page) : getList(sort, sortValue, page);
-        });
-	</script>
 </head>
 <body>
 
