@@ -85,7 +85,17 @@ public class AccountService {
 	public AdminAccountDto getAdminAccountById(String a_id) {
 		log.info("getAdminAccountById()");
 		
-		AdminAccountDto adminAccountDto = accountMapper.getAdminAccountById(a_id);
+		AdminAccountDto adminAccountDto = accountMapper.selectAdminAccountById(a_id);
+		
+		return adminAccountDto;
+		
+	}
+	
+	// 관리자 정보 조회 by no
+	public AdminAccountDto getAdminAccountByNo(int a_no) {
+		log.info("getAdminAccountByNo()");
+		
+		AdminAccountDto adminAccountDto = accountMapper.selectAdminAccountByNo(a_no);
 		
 		return adminAccountDto;
 		
