@@ -61,7 +61,7 @@ export function postSignInForm(event, formName) {
 
 // 검색 폼
 export function searchForm(event, apiUrl, page) {
-	event ? event.preventDefault() : null;
+	if(event) event.preventDefault();
 	const form = document.forms['search_form'];
 	let input;
 	
@@ -79,7 +79,7 @@ export function searchForm(event, apiUrl, page) {
 	
 	if(apiUrl) {		
 		let intPage = page || 1;
-		
+				
 		$.ajax({
 			url: apiUrl,
 			method: 'GET',
@@ -92,52 +92,36 @@ export function searchForm(event, apiUrl, page) {
 		.then(response => {
 			console.log(apiUrl + ' searchForm() response:', response);
 			
-			// url 검색 조건 추가
-			const url = new URL(window.location);
-			url.searchParams.set('searchPart', response.searchPart); // 검색 파트
-			url.searchParams.set('searchString', response.searchString); // 검색어
-			url.searchParams.set('page', response.searchAdminListPage.page); // 페이지
-			window.history.replaceState({}, '', url); // 현재 url 변경 및 리로드 제어
+			// 쿼리스트링 조건 추가
+			// page, sort or part, sortValue or string, boolSearch // boolSearch값에 따라 사용값 다름
+			setQueryString(response.searchAdminListPage.page, response.searchPart, response.searchString, true); 
 			
-			const contentTable = document.querySelector('.content_table tbody');
+			const contentTable = document.querySelector('.content_table tbody'); // 데이터가 나열될 테이블 요소
+			const pagination = document.querySelector('.pagination_wrap'); // 페이지 네이션 요소
 			contentTable.innerHTML = '';
+			pagination.innerHTML = '';
 			
 			if(response && response.adminAccountDtos) {
-				let adminListCnt = response.searchAdminListPage.searchAdminListCnt;
+				const pagingValues = response.searchAdminListPage; // 페이지네이션을 위한 값들
+				const paging = setPagination(pagingValues, 'searchForm', null, apiUrl, true); // 페이징벨류값, 핸들러,  sort, 검색 커맨드 or sortValue, boolSearch
+				pagination.innerHTML = paging;
+				
+				let pageLimit = pagingValues.pageLimit; // 한 페이지에 노출될 리스트 수
+				let totalCnt = pagingValues.searchAdminListCnt; // 총 리스트 합계
+				let adminListCnt = totalCnt - (pageLimit * (pagingValues.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
+							
 				if(adminListCnt > 0) {
 					response.adminAccountDtos.forEach((data) => { 
-						let innerContent = `
-							<tr>
-		                        <td>
-		                            <p class="table_info">${adminListCnt}</p>
-		                        </td>
-		                        <td>
-		                            <a href="" class="table_info">${data.a_id}</a>
-		                        </td>
-		                        <td>
-		                            <a href="" class="table_info">${data.a_authority_role}</a>
-		                        </td>
-		                        <td>
-		                            <p class="table_info">${data.a_phone}</p>
-		                        </td>
-		                        <td>
-		                            <p class="table_info">${data.a_name}</p>
-		                        </td>
-		                        <td>
-		                            <p class="table_info">${formatDate(data.a_reg_date)}</p>
-		                        </td>
-		                    </tr>
-						`;
-						contentTable.innerHTML += innerContent;
+						contentTable.insertAdjacentHTML('beforeend', setDataList(apiUrl, data, adminListCnt));
 						adminListCnt --;
 					});
 				} else {
 					contentTable.innerHTML = `
-					<tr>
-                        <td colspan="6">
-                            <p class="table_info">검색된 내용이 없습니다.</p>
-                        </td>
-                    </tr>
+						<tr>
+	                        <td colspan="6">
+	                            <p class="table_info">검색된 내용이 없습니다.</p>
+	                        </td>
+	                    </tr>
 					`;
 				}
 				
@@ -146,7 +130,7 @@ export function searchForm(event, apiUrl, page) {
 			}
 		})
 		.catch((error) => {
-			console.error('getAdminList() error:', error);
+			console.error(apiUrl + ' searchForm() error:', error);
 		});
 	}
 }
