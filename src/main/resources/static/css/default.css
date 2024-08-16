@@ -280,6 +280,10 @@
     align-items: center;
     gap: var(--baseGap);
     padding: var(--textPadding);
+    
+    &.sort {
+    	cursor: pointer;
+    }
 }
 
 .table_info {

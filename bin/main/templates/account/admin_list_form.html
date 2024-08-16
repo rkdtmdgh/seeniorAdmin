@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html
-   xmlns:th="http://www.thymeleaf.org" 
+   xmlns:th="http://www.thymeleaf.org"
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
 <head>
@@ -11,12 +11,11 @@
 	<script type="module">
 		import { getAdminList } from '/js/api/api_get_list.js'; // 테이블 리스트 불러오기
 		import { searchForm } from '/js/submitForm.js'; // 검색폼 제출
-		import { setFormValuesFromUrl } from '/js/handler.js'; // 새로고침 시 현재 페이지 적용
 		window.getList = getAdminList;
 		window.searchForm = searchForm;
 		document.addEventListener('DOMContentLoaded', () => {
-			const { hasSearchString, page } = setFormValuesFromUrl('a_id'); // 검색 파트 기본값
-			hasSearchString ? searchForm(event, 'search_admin_list', page) : getList(page);
+			const { hasSearchString, page, sort, sortValue } = setFormValuesFromUrl('a_id'); // 검색 파트 기본값
+			hasSearchString ? searchForm(null, 'search_admin_list', page) : getList(sort, sortValue, page);
         });
 	</script>
 </head>
@@ -66,7 +65,7 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title" onclick="getList(1, 'approval')">권한 등급</p>
+	                                        <p data-sort="approval" class="table_title sort" onclick="setToggleSort(event, 'approval', 'notApproval')">권한 등급</p>
 	                                    </th>
 	                                    
 	                                    <th>
