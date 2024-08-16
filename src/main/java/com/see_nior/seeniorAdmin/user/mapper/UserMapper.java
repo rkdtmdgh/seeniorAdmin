@@ -12,7 +12,7 @@ public interface UserMapper {
 
 	public int selectUserListCnt();
 
-	public List<AdminAccountDto> selectUserList(Map<String, Integer> pagingParams);
+	public List<AdminAccountDto> selectUserList(Map<String, Object> pagingParams);
 
 	public int selectSearchUserListCnt(Map<String, Object> searchParams);
 

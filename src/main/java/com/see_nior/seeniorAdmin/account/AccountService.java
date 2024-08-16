@@ -20,7 +20,7 @@ public class AccountService {
 	final static public int ADMIN_SIGN_UP_FAIL = 0;
 	final static public int ADMIN_SIGN_UP_SUCCESS = 1;
 	
-	private int pageLimit = 5;		// 한 페이지당 보여줄 정보 수
+	private int pageLimit = 10;		// 한 페이지당 보여줄 정보 수
 	private int blockLimit = 5;		// 하단에 보여질 페이지 번호 수
 	
 	final private AccountMapper accountMapper;
@@ -131,8 +131,6 @@ public class AccountService {
 
 		List<AdminAccountDto> adminAccountDtos = accountMapper.selectAdminList(pagingParams);
 		pagingList.put("adminAccountDtos", adminAccountDtos);
-		
-		log.info("pagingList --- {}", pagingList);
 		
 		return pagingList;
 	}
