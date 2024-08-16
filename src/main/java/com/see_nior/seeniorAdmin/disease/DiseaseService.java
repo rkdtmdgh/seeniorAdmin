@@ -35,7 +35,7 @@ public class DiseaseService {
 	final static public int DISEASE_DELETE_SUCCESS = 1;
 	
 	// 페이지네이션 관련
-	private int pageLimit = 5;	// 한 페이지당 보여줄 항목의 개수
+	private int pageLimit = 10;	// 한 페이지당 보여줄 항목의 개수
 	private int blockLimit = 5;	// 하단에 보여질 페이지 번호의 수
 	
 	final private DiseaseMapper diseaseMapper;
@@ -96,16 +96,17 @@ public class DiseaseService {
 	}
 	
 	// 페이지에 따른 질환 카테고리 리스트 가져오기
-	public Map<String, Object> getCategoryListWithPage(int page) {
+	public Map<String, Object> getCategoryListWithPage(String sort, int page) {
 		log.info("getCategoryListWithPage()");
 		
 		int pagingStart = (page - 1) * pageLimit;
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		Map<String, Integer> pagingParams = new HashMap<>();
+		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
+		pagingParams.put("sort", sort);
 		
 		List<DiseaseCategoryDto> diseaseCategoryDtos = diseaseMapper.getDiseaseCategoryListWithPage(pagingParams);
 		pagingList.put("diseaseCategoryDtos", diseaseCategoryDtos);

@@ -98,11 +98,13 @@ public class DiseaseController {
 	// 모든 질환 카테고리 가져오기(페이지네이션 => 질환 카테고리 관리용 => 비동기)
 	@ResponseBody
 	@GetMapping("/get_category_list_with_page")
-	public Object getCategoryListWithPage(@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+	public Object getCategoryListWithPage(
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
+			@RequestParam(value = "sort", required = false, defaultValue = "all") String sort) {
 		log.info("getCategoryListWithPage()");
 		
 		// 페이지 번호에 따른 질환 카테고리 리스트들 가져오기
-		Map<String, Object> diseaseCategoryListWithPage = diseaseService.getCategoryListWithPage(page);
+		Map<String, Object> diseaseCategoryListWithPage = diseaseService.getCategoryListWithPage(sort, page);
 		
 		// 질환 카테고리 총 페이지 개수 가져오기
 		Map<String, Object> diseaseCategoryListPageNum = diseaseService.getDiseaseCategoryListPageNum(page);

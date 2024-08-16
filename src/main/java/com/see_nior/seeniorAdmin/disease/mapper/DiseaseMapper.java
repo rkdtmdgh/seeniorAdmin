@@ -23,7 +23,7 @@ public interface DiseaseMapper {
 	public List<DiseaseCategoryDto> getDiseaseCategoryList();
 	
 	// 페이지에 따른 질환 카테고리 가져오기
-	public List<DiseaseCategoryDto> getDiseaseCategoryListWithPage(Map<String, Integer> pagingParams);
+	public List<DiseaseCategoryDto> getDiseaseCategoryListWithPage(Map<String, Object> pagingParams);
 	
 	// 질환 카테고리의 총 리스트 개수 구하기
 	public int getAllDiseaseCategoryCnt();

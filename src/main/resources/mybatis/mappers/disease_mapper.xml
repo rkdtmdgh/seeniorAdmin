@@ -83,8 +83,17 @@
 				DISEASE_CATEGORY 
 			WHERE 
 				DC_IS_DELETED = 1 
-			ORDER BY 
-				DC_NO DESC 
+			<choose>
+				<when test="sort == 'all'">
+					ORDER BY DC_NO DESC				
+				</when>
+				<when test="sort == 'dc_name_asc'">
+					ORDER BY DC_NAME ASC				
+				</when>
+				<when test="sort == 'dc_name_desc'">
+					ORDER BY DC_NAME DESC				
+				</when>			
+			</choose>
 			LIMIT 
 				#{start}, #{limit}
 	

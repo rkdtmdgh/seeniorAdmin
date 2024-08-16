@@ -1,4 +1,27 @@
+// 로그아웃
+function signOut() {
+	location.replace('/account/sign_out_confirm');
+}
+
+// 날짜 포맷팅
+function formatDate(dateString) { // yyyy-mm-dd 형식
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2); // 월은 0부터 시작하므로 +1
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+	// 정렬 버튼 세팅(새로 고침 후 버튼 기능 정상화)
+	const urlParams = new URLSearchParams(window.location.search);
+	const sort = urlParams.get('sort');
+	const sortValue = urlParams.get('sortValue');
+	
+	if(sort) {
+		const sortBtn = document.querySelector(`.table_title[data-sort = "${sort}"]`);
+		sortBtn.setAttribute('data-sort', sortValue || sort);
+	}
 	
 	// NAV 선택 표시 및 토글
 	const currentPath = window.location.pathname; // 현재 URL
@@ -31,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
 								
 				// 클릭된 요소에만 토글
 				if(!navMenulistbtn.classList.contains('select')) {
+					navMenuBtn.classList.toggle('on');
 					subMenuList.classList.toggle('open');
 				}
 			});
@@ -66,8 +90,5 @@ document.addEventListener('DOMContentLoaded', () => {
 			console.error('getBoardList() error:', error);
 		});
 	}
-	
-	getBoardList();
-	
-	
+	getBoardList();	
 });
