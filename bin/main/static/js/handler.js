@@ -121,7 +121,7 @@ function setDataList(api, data, index) {
 		                <p class="table_info">${index}</p>
 		            </td>
 		            <td>
-		                <a href="" class="table_info">${data.a_id || 'N/A'}</a>
+		                <a href="/account/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_id || 'N/A'}</a>
 		            </td>
 		            <td>
 		                <a href="" class="table_info">${data.a_authority_role || 'N/A'}</a>
