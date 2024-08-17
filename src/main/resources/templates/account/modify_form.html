@@ -7,50 +7,108 @@
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 관리자 계정 관리')}"></th:block>
 	
 	<script src="/js/validation.js"></script>
-	
-	<script type="module">
-		import { getAdminList } from '/js/api/api_get_list.js'; // 테이블 리스트 불러오기
-		import { searchForm } from '/js/submitForm.js'; // 검색폼 제출
-		window.getList = getAdminList;
-		window.searchForm = searchForm;
-		document.addEventListener('DOMContentLoaded', () => {
-			const { hasSearchString, page, sort, sortValue } = setFormValuesFromUrl('a_id'); // 검색 파트 기본값
-			hasSearchString ? searchForm(null, 'search_admin_list', page) : getList(sort, sortValue, page);
-        });
-	</script>
 </head>
 <body>
-
-	<article>
-	   
-		<p>modify form</p>
-		
-		<form action="/account/modify_confirm" name="modify_form" method="post">
-			<input type="hidden" name="no" th:value="${loginedAdminDto.no}">
-			<br>
-			<input type="text" name="id" th:value="${loginedAdminDto.id}" disabled readonly>
-			<br>
-			<input type="password" name="pw" placeholder="INPUT ADMIN PW">
-			<br>
-			<input type="text" name="name" th:value="${loginedAdminDto.name}" placeholder="INPUT ADMIN NAME">
-			<br>
-			<input type="text" name="phone" th:value="${loginedAdminDto.phone}" placeholder="INPUT ADMIN PHONE">
-			<br>
-			<input type="text" name="department" th:value="${loginedAdminDto.department}" placeholder="INPUT ADMIN DEPARTMENT">
-			<br>
-			<input type="text" name="level" th:value="${loginedAdminDto.level}" placeholder="INPUT ADMIN LEVEL">
-			<br>
-			<input type="text" name="position" th:value="${loginedAdminDto.position}" placeholder="INPUT ADMIN POSITION">
-			<br>
-			<input type="submit" value="정보수정">
-			<input type="reset" value="초기화">
-		</form>
-		
-		<br><br>
-		
-		<a href="/">홈</a>
+	<main class="contents_wrap">
+		<header th:replace="~{fragments/header.html :: header}"></header>
 	
-	</article>
-
+		<article class="contents_container">
+			<nav th:replace="~{fragments/nav.html :: nav}"></nav>
+			
+			<div class="content">
+                <div class="content_inner sc">
+					<section class="content_info_wrap">
+					    <div class="content_top">
+					        <div class="content_top_info">
+					            <h2 class="title">관리자 계정 관리</h2>
+					        </div>
+				            <p class="sub_title">관리자 계정 정보</p>
+					    </div>
+					    
+					    <form>
+						    <div class="table_wrap">
+		                        <table class="content_edit_table">
+		                            <colgroup>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                </colgroup>
+	                                
+		                            <tbody>
+		                                <tr>
+		                                	<th><p class="table_title">아이디</p></th>
+		                                	<td>
+		                                		<input type="text" name="a_name" id="a_name" class="table_info disabled"
+	                                            	th:value="${loginedAdminDto.a_id}" disabled>
+	                                        </td>
+	                                        <th><p class="table_title">관리자 승인</p></th>
+		                                	<td>
+	                                            <div class="table_info radio_info">
+	                                            	<label class="radio"
+	                                            		th:classappend="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')} ? 'disabled' : ''">
+	                                            		<input type="radio" name="a_authority_role" value="NOT_APPROVED"
+	                                            			th:checked="${a_authority_role != 'SUB_ADMIN'}"
+	                                            			th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}"> 미승인
+	                                            	</label>
+	                                            	<label class="radio"
+	                                            		th:classappend="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')} ? 'disabled' : ''">
+	                                            		<input type="radio" name="a_authority_role" value="SUB_ADMIN"
+	                                            			th:checked="${a_authority_role == 'SUB_ADMIN'}"
+	                                            			th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}"> 승인
+	                                            	</label>
+	                                            </div>
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">이름</p></th>
+		                                	<td>
+	                                            <input type="text" name="a_name" id="a_name" class="table_info" placeholder="이름"
+	                                            	th:value="${loginedAdminDto.a_name}">
+	                                        </td>
+		                                	<th><p class="table_title">비밀번호</p></th>
+		                                	<td>
+	                                            <input type="text" name="a_pw" id="a_pw" class="table_info" placeholder="변경 시 입력">
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">연락처</p></th>
+		                                	<td>
+	                                            <input type="text" name="a_phone" id="a_phone" class="table_info" placeholder="연락처"
+	                                            	th:value="${loginedAdminDto.a_phone}">
+	                                        </td>
+		                                	<th><p class="table_title">부서</p></th>
+		                                	<td>
+	                                            <input type="text" name="a_department" id="a_department" class="table_info" placeholder="부서"
+	                                            	th:value="${loginedAdminDto.a_department}"
+	                                            	th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}">
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">직위</p></th>
+		                                	<td>
+	                                            <input type="text" name="a_level" id="a_level" class="table_info" placeholder="직위"
+	                                            	th:value="${loginedAdminDto.a_level}"
+	                                            	th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}">
+	                                        </td>
+		                                	<th><p class="table_title">직책</p></th>
+		                                	<td>
+	                                            <input type="text" name="a_position" id="a_position" class="table_info" placeholder="직책"
+	                                            	th:value="${loginedAdminDto.a_position}"
+	                                            	th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}">
+	                                        </td>
+		                                </tr>
+		                            </tbody>
+		                        </table>
+		                    </div>
+	                    </form>
+					</section>
+                </div>
+            </div>
+		</article>
+	</main>
 </body>
 </html>

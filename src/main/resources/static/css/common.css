@@ -34,7 +34,7 @@
     --bgColor: #F3F9F9; /* default */
     --subBgColor: #FFF; /* sub */
     --tableTitleBgColor: #F7F7F7;
-    --tableDisabledBgColor: #F9F9F9;
+    --tableDisabledBgColor: #FAFAFA;
 
     /* element property */
     --logoWidth: 160px;
@@ -46,7 +46,7 @@
 
     --innerPadding: 30px;
     --btnsPadding: 1em 1.5em;
-    --smallBtnsPadding: 0.6em 1.2em;
+    --smallBtnsPadding: 0.53em 1.1em;
     --textPadding: 0.7em 1.2em;
     --subTextPadding: 0.3em 1em;
     --subTextIndent: 0 0 0 0.85em;
@@ -105,17 +105,35 @@ a, button {
     background: none;
 }
 
-input, textarea, select, form {
-    width: 100%;
+input[type="text"], input[type="password"], textarea, select, form {
+	width: 100%;
     font-family: inherit;
     font-size: inherit;
     border: none;
-    color: var(--blackColor);
+    color: var(--grayColor);
     outline: none;
 }
 
 input::placeholder {
     color: var(--middleGrayColor);
+}
+
+input:disabled {
+	cursor: not-allowed;
+}
+
+.disabled {
+    background-color: var(--tableDisabledBgColor);
+    cursor: not-allowed;
+}
+
+
+label {
+	&.radio {
+		display: flex;
+		align-items: center;
+		gap: var(--ssize1);
+	}
 }
 
 select {
@@ -173,11 +191,6 @@ table {
             border: none;
         }
     }
-}
-
-.disabled {
-    background-color: var(--tableDisabledBgColor);
-    cursor: not-allowed;
 }
 
 /* accessibility */
