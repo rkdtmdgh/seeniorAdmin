@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html
-   xmlns:th="http://www.thymeleaf.org" 
+   xmlns:th="http://www.thymeleaf.org"
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
 <head>
@@ -9,18 +9,13 @@
 	<script src="/js/validation.js"></script>
 	
 	<script type="module">
-		import { getAdminList } from '/js/api/api_get_list.js';
-		import { searchForm } from '/js/submitForm.js';
+		import { getAdminList } from '/js/api/api_get_list.js'; // 테이블 리스트 불러오기
+		import { searchForm } from '/js/submitForm.js'; // 검색폼 제출
 		window.getList = getAdminList;
 		window.searchForm = searchForm;
 		document.addEventListener('DOMContentLoaded', () => {
-			const urlParams = new URLSearchParams(window.location.search);
-			const sForm = document.forms['search_form'];
-			sForm.search_part.value = urlParams.get('searchPart') || 'a_id';
-			sForm.search_string.value = urlParams.get('searchString');
-			const page = urlParams.get('page') || 1;
-
-			urlParams.get('searchString') ? searchForm(event, 'admin_list_form', page) : getList(page); 
+			const { hasSearchString, page, sort, sortValue } = setFormValuesFromUrl('a_id'); // 검색 파트 기본값
+			hasSearchString ? searchForm(null, 'search_admin_list', page) : getList(sort, sortValue, page);
         });
 	</script>
 </head>
@@ -40,10 +35,10 @@
 					            <h2 class="title">관리자 계정 관리</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="searchForm(event, 'admin_list_form')" th:insert="~{fragments/search.html :: search('관리자 계정 관리')}"></form>
+									<form name="search_form" onsubmit="searchForm(event, 'search_admin_list')" th:insert="~{fragments/search.html :: search('관리자 계정 관리')}"></form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList(2)">전체보기</div>
+						            	<div class="btns small" onclick="getList()">전체보기</div>
 						            </div>
 					            </div>
 					        </div>
@@ -68,9 +63,11 @@
 	                                    <th>
 	                                        <p class="table_title">아이디</p>
 	                                    </th>
+	                                    
 	                                    <th>
-	                                        <p class="table_title">권한 등급</p>
+	                                        <p data-sort="approval" class="table_title sort" onclick="setToggleSort(event, 'approval', 'notApproval')">관리자 승인</p>
 	                                    </th>
+	                                    
 	                                    <th>
 	                                        <p class="table_title">연락처</p>
 	                                    </th>
@@ -88,16 +85,12 @@
 	                            </tbody>
 	                        </table>
 	                        
-	                        <th:block th:replace="~{fragments/pagination.html :: pagination}"></th:block>
+	                        <div class="pagination_wrap"></div>
 	                    </div>
 					</section>
                 </div>
             </div>
 		</article>
 	</main>
-	
-	
-	
-	
 </body>
 </html>

@@ -37,13 +37,15 @@ public class UserControlloer {
 	@GetMapping("/get_user_list")
 	@ResponseBody
 	public Object getUserList(
+			@RequestParam(value = "sort", required = false, defaultValue = "all") String sort,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("getUserList()");
 		
-		Map<String, Object> userList = userService.getUserPagingList(page);
+		Map<String, Object> userList = userService.getUserPagingList(sort, page);
 		
 		Map<String, Object> userListPage = userService.getUserListPageNum(page);
 		userList.put("userListPage", userListPage);
+		userList.put("sort", sort);
 		
 		return userList;
 	} 

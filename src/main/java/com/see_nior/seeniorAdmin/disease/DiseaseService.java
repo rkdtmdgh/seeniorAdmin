@@ -35,7 +35,7 @@ public class DiseaseService {
 	final static public int DISEASE_DELETE_SUCCESS = 1;
 	
 	// 페이지네이션 관련
-	private int pageLimit = 5;	// 한 페이지당 보여줄 항목의 개수
+	private int pageLimit = 10;	// 한 페이지당 보여줄 항목의 개수
 	private int blockLimit = 5;	// 하단에 보여질 페이지 번호의 수
 	
 	final private DiseaseMapper diseaseMapper;
@@ -96,16 +96,17 @@ public class DiseaseService {
 	}
 	
 	// 페이지에 따른 질환 카테고리 리스트 가져오기
-	public Map<String, Object> getCategoryListWithPage(int page) {
+	public Map<String, Object> getCategoryListWithPage(int page, String sort) {
 		log.info("getCategoryListWithPage()");
 		
 		int pagingStart = (page - 1) * pageLimit;
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		Map<String, Integer> pagingParams = new HashMap<>();
+		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
+		pagingParams.put("sort", sort);
 		
 		List<DiseaseCategoryDto> diseaseCategoryDtos = diseaseMapper.getDiseaseCategoryListWithPage(pagingParams);
 		pagingList.put("diseaseCategoryDtos", diseaseCategoryDtos);
@@ -250,16 +251,17 @@ public class DiseaseService {
 	}
 	
 	// 페이지에 따른 질환 가져오기(모든 질환)
-	public Map<String, Object> getDiseaseListWithPage(int page) {
+	public Map<String, Object> getDiseaseListWithPage(int page, String sort) {
 		log.info("getDiseaseListWithPage()");
 		
 		int pagingStart = (page - 1) * pageLimit;
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		Map<String, Integer> pagingParams = new HashMap<>();
+		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
+		pagingParams.put("sort", sort);
 		
 		List<DiseaseDto> diseaseDtos = diseaseMapper.getDiseaseListWithPage(pagingParams);
 		pagingList.put("diseaseDtos", diseaseDtos);
@@ -296,17 +298,18 @@ public class DiseaseService {
 	}
 	
 	// 페이지에 따른 질환 가져오기(카테고리별 질환)
-	public Map<String, Object> getDiseaseListByCategoryWithPage(int page, int category_no) {
+	public Map<String, Object> getDiseaseListByCategoryWithPage(int page, int category_no, String sort) {
 		log.info("getDiseaseListByCategoryWithPage()");
 		
 		int pagingStart = (page - 1) * pageLimit;
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		Map<String, Integer> pagingParams = new HashMap<>();
+		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
 		pagingParams.put("category_no", category_no);
+		pagingParams.put("sort", sort);
 		
 		List<DiseaseDto> diseaseDtos = diseaseMapper.getDiseaseListByCategoryWithPage(pagingParams);
 		pagingList.put("diseaseDtos", diseaseDtos);
@@ -342,12 +345,11 @@ public class DiseaseService {
 		return diseaseLisByCategoryPageNum;
 	}
 	
-	// 질환 한 개 가져오기
+	// 질환 한 개 가져오기(질환 수정 용)
 	public DiseaseDto getDisease(int no) {
 		log.info("getDisease()");
 		
 		DiseaseDto diseaseDto = diseaseMapper.getDiseaseByNo(no);
-		log.info("diseaseDto ========> {}", diseaseDto);
 		
 		return diseaseDto;
 	}
@@ -357,31 +359,54 @@ public class DiseaseService {
 	public int modifyConfirm(DiseaseDto diseaseDto) {
 		log.info("modifyConfirm");
 		
-		// 질환 중복 여부
-		boolean isDisease = diseaseMapper.isDisease(diseaseDto.getD_name());
-
-		// 질환이 없다면
-		if (!isDisease) {
-			
-		int result = diseaseMapper.updateDisease(diseaseDto);
+		// 질환명을 변경 하지 않을시에는 질환 중복 여부 검사 하지 않도록 처리
+		DiseaseDto curDiseaseDto = diseaseMapper.getDiseaseByNo(diseaseDto.getD_no());
 		
-			// DB에 입력 실패
-			if (result <= 0) {
-				
-				return DISEASE_MODIFY_FAIL;
-				
-			// DB에 입력 실패
-			} else {
-				
-				return DISEASE_MODIFY_SUCCESS;
-				
-			}
+		if (curDiseaseDto.getD_name().equals(diseaseDto.getD_name())) {
 			
-		// 질환이 이미 있다면	
+			int result = diseaseMapper.updateDisease(diseaseDto);
+			
+				// DB에 입력 실패
+				if (result <= 0) {
+					
+					return DISEASE_MODIFY_FAIL;
+					
+				// DB에 입력 실패
+				} else {
+					
+					return DISEASE_MODIFY_SUCCESS;
+					
+				}
+			
 		} else {
 			
-			return DISEASE_ALREADY;
+			// 질환 중복 여부
+			boolean isDisease = diseaseMapper.isDisease(diseaseDto.getD_name());
+
+			// 질환이 없다면
+			if (!isDisease) {
+				
+			int result = diseaseMapper.updateDisease(diseaseDto);
 			
+				// DB에 입력 실패
+				if (result <= 0) {
+					
+					return DISEASE_MODIFY_FAIL;
+					
+				// DB에 입력 실패
+				} else {
+					
+					return DISEASE_MODIFY_SUCCESS;
+					
+				}
+				
+			// 질환이 이미 있다면	
+			} else {
+				
+				return DISEASE_ALREADY;
+			
+			}	
+		
 		}
 		
 	}
@@ -406,19 +431,55 @@ public class DiseaseService {
 		
 	}
 
-	// 질환 검색
-	public Map<String, Object> searchList(String name) {
-		log.info("searchList()");
+	// 페이지에 따른 질환 가져오기(검색한 질환)
+	public Map<String, Object> getSearchDiseaseListWithPage(String searchPart, String searchString, String sort, int page) {
+		log.info("getSearchDiseaseListWithPage()");
 		
-		Map<String, Object> searchDiseaseDtos = new HashMap<>();
+		int pagingStart = (page - 1) * pageLimit;
 		
-		List<DiseaseDto> searchDiseaseDto = (List<DiseaseDto>) diseaseMapper.searchDiseaseByName(name);
+		Map<String, Object> pagingList = new HashMap<>();
 		
-		searchDiseaseDtos.put("searchDiseaseDto", searchDiseaseDto);
+		Map<String, Object> pagingParams = new HashMap<>();
+		pagingParams.put("start", pagingStart);
+		pagingParams.put("limit", pageLimit);
+		pagingParams.put("searchString", searchString);
+		pagingParams.put("sort", sort);
 		
-		return searchDiseaseDtos;
+		List<DiseaseDto> searchDiseaseDtos = diseaseMapper.getSearchDisease(pagingParams);
+		pagingList.put("searchDiseaseDtos", searchDiseaseDtos);
+		
+		return pagingList;
 		
 	}
+
+	// 질환의 총 페이지 개수 구하기(검색한 질환)
+	public Map<String, Object> getSearchDiseaseListPageNum(String searchPart, String searchString, int page) {
+		log.info("getSearchDiseaseListPageNum()");
+		
+		Map<String, Object> searchDiseaseListPageNum = new HashMap<>();
+		
+		// 전체 리스트 개수 조회
+		int searchDiseaseListCnt = diseaseMapper.getSearchDiseaseListCnt(searchPart, searchString);
+		
+		// 전체 페이지 개수 계산
+		int maxPage = (int) (Math.ceil((double) searchDiseaseListCnt / pageLimit));
+		
+		// 시작 페이지 값 계산
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit;
+		
+		// 마지막 페이지 값 계산
+		int endPage = startPage + blockLimit - 1;
+		if (endPage > maxPage) endPage = maxPage;
+		
+		searchDiseaseListPageNum.put("searchDiseaseListCnt", searchDiseaseListCnt);
+		searchDiseaseListPageNum.put("maxPage", maxPage);
+		searchDiseaseListPageNum.put("startPage", startPage);
+		searchDiseaseListPageNum.put("endPage", endPage);
+		
+		return searchDiseaseListPageNum;
+		
+	}
+
 
 	
 

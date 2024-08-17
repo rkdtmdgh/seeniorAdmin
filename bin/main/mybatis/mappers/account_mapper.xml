@@ -62,7 +62,7 @@
 	</select>
 	
 	<!-- 계정 정보 가져오기 by id -->
-	<select id="getAdminAccountById"
+	<select id="selectAdminAccountById"
 			parameterType="String"
 			resultMap="AdminAccountDto">
 		
@@ -72,6 +72,20 @@
 			ADMIN_ACCOUNT 
 		WHERE 
 			A_ID = #{a_id}
+		
+	</select>
+	
+	<!-- 계정 정보 가져오기 by no -->
+	<select id="selectAdminAccountByNo"
+			parameterType="Integer"
+			resultMap="AdminAccountDto">
+		
+		SELECT
+			*
+		FROM 
+			ADMIN_ACCOUNT 
+		WHERE 
+			A_NO = #{a_no}
 		
 	</select>
 	
@@ -101,6 +115,14 @@
 			A_DEPARTMENT = #{a_department},
 			A_LEVEL = #{a_level},
 			A_POSITION = #{a_position},
+		<choose>
+			<when test="a_authority_role == 'not_approved'">
+				A_AUTHORITY_ROLE = "SUB_ADMIN",
+			</when>
+			<when test="a_authority_role == 'sub_admin'">
+				A_AUTHORITY_ROLE = "NOT_APPROVED",
+			</when>
+		</choose>
 			A_MOD_DATE = NOW()
 		WHERE 
 			A_NO = #{a_no}
@@ -117,7 +139,7 @@
 			A_AUTHORITY_ROLE = "SUB_ADMIN",
 			A_MOD_DATE = NOW() 
 		WHERE 
-			A_NO = #{a_no}
+			A_NO = #{a_no} 
 	
 	</update>
 	
@@ -149,7 +171,17 @@
 			A_AUTHORITY_ROLE = "NOT_APPROVED")
 		AND 
 			A_IS_DELETED = 1
-		ORDER BY A_NO DESC 
+		<choose>
+			<when test="sort == 'all'">
+				ORDER BY A_NO DESC 
+			</when>
+			<when test="sort == 'approval'">
+				ORDER BY A_AUTHORITY_ROLE DESC, A_NO DESC 
+			</when>
+			<when test="sort == 'notApproval'">
+				ORDER BY A_AUTHORITY_ROLE ASC, A_NO DESC 
+			</when>
+		</choose>
 		LIMIT 
 			#{start}, #{limit}
 	
@@ -199,7 +231,17 @@
 				</when>
 			</choose>
 		</if>
-		ORDER BY A_NO DESC 
+		<choose>
+			<when test="sort == 'all'">
+				ORDER BY A_NO DESC 
+			</when>
+			<when test="sort == 'approval'">
+				ORDER BY A_AUTHORITY_ROLE DESC, A_NO DESC 
+			</when>
+			<when test="sort == 'notApproval'">
+				ORDER BY A_AUTHORITY_ROLE ASC, A_NO DESC 
+			</when>
+		</choose>
 		LIMIT 
 			#{start}, #{limit}
 	

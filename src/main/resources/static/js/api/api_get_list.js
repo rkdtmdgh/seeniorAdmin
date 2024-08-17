@@ -1,58 +1,52 @@
 // 관리자 계정 리스트 요청
-export function getAdminList(page) {
+export function getAdminList(sort, sortValue, page) {
 	// 검색 인풋 벨류 삭제
-	const seartStringInput = document.forms['search_form'].search_string;
-	seartStringInput.value = '';
+	const searchStringInput = document.forms['search_form'].search_string;
+	if(searchStringInput.value.trim().length > 0) searchStringInput.value = ''; // 검색 이력이 남았을 경우에만 삭제
 	
-	let intPage = page || 1;
+	const intPage = page || 1;
+	const queryParams =  sort ? `?sort=${sortValue}&page=${intPage}` : `?page=${intPage}`;
 	
 	$.ajax({
-		url: '/account/get_admin_list',
+		url: `/account/get_admin_list${queryParams}`,
 		method: 'GET',
-		data: {
-			page: intPage,
-		},
 	})
 	.then(response => {
 		console.log('getAdminList() response:', response);
 		
-		// url 검색 조건 추가
-		const url = new URL(window.location);
-		url.searchParams.set('page', response.adminListPage.page); // 페이지
-		window.history.replaceState({}, '', url); // 현재 url 변경 및 리로드 제어
+		// 쿼리스트링 조건 추가
+		// page, sort or part, sortValue or string, boolSearch // boolSearch값에 따라 사용값 다름
+		setQueryString(response.adminListPage.page, sort, sortValue);
 					
-		const contentTable = document.querySelector('.content_table tbody');
+		const contentTable = document.querySelector('.content_table tbody'); // 데이터가 나열될 테이블 요소
+		const pagination = document.querySelector('.pagination_wrap'); // 페이지 네이션 요소
 		contentTable.innerHTML = '';
+		pagination.innerHTML = '';
 		
 		if(response && response.adminAccountDtos) {
-			let adminListCnt = response.adminListPage.accountListCnt;
+			const pagingValues = response.adminListPage; // 페이지네이션을 위한 값들
+			const paging = setPagination(pagingValues, 'getList', sort, sortValue); // 페이징벨류값, 핸들러,  sort, 검색 커맨드 or sortValue, boolSearch
+			pagination.innerHTML = paging;
+			
+			let pageLimit = pagingValues.pageLimit; // 한 페이지에 노출될 리스트 수
+			let totalCnt = pagingValues.accountListCnt; // 총 리스트 합계
+			let adminListCnt = totalCnt - (pageLimit * (pagingValues.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
 
-			response.adminAccountDtos.forEach((data) => { 
-				let innerContent = `
+			if(adminListCnt > 0) {
+				response.adminAccountDtos.forEach((data) => { 
+					contentTable.insertAdjacentHTML('beforeend', setDataList('getAdminList', data, adminListCnt));
+					adminListCnt --;
+				});
+			} else {
+				contentTable.innerHTML = `
 					<tr>
-                        <td>
-                            <p class="table_info">${adminListCnt}</p>
-                        </td>
-                        <td>
-                            <a href="" class="table_info">${data.a_id}</a>
-                        </td>
-                        <td>
-                            <a href="" class="table_info">${data.a_authority_role}</a>
-                        </td>
-                        <td>
-                            <p class="table_info">${data.a_phone}</p>
-                        </td>
-                        <td>
-                            <p class="table_info">${data.a_name}</p>
-                        </td>
-                        <td>
-                            <p class="table_info">${formatDate(data.a_reg_date)}</p>
-                        </td>
-                    </tr>
+	                    <td colspan="6">
+	                        <p class="table_info">목록이 없습니다.</p>
+	                    </td>
+	                </tr>
 				`;
-				contentTable.innerHTML += innerContent;
-				adminListCnt --;
-			});
+			}
+			
 		} else {
 			console.log('데이터가 없거나 유효하지 않습니다.');
 		}

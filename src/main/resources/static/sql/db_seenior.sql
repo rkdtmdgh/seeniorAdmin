@@ -52,6 +52,19 @@ VALUES("admin19@seenior.com", "12345678", "admin19", "010-1234-1234");
 INSERT INTO ADMIN_ACCOUNT(A_ID, A_PW, A_NAME, A_PHONE)
 VALUES("admin20@seenior.com", "12345678", "admin20", "010-1234-1234");
 
+SELECT 
+	* 
+FROM 
+	ADMIN_ACCOUNT 
+WHERE 
+	(A_AUTHORITY_ROLE = "SUB_ADMIN" 
+	OR 
+	A_AUTHORITY_ROLE = "NOT_APPROVED")
+AND 
+	A_IS_DELETED = 1
+ORDER BY A_AUTHORITY_ROLE DESC, A_NO DESC;
+
+
 
 -- ADMIN 인가 테이블(관리자 권한) --------------------------------------------------------------------------------------------------------------
 -- 사용 안함

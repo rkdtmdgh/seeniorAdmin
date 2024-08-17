@@ -15,13 +15,15 @@ public interface AccountMapper {
 
 	public boolean isAccount(String a_id);
 	
-	public AdminAccountDto getAdminAccountById(String a_id);
+	public AdminAccountDto selectAdminAccountById(String a_id);
+	
+	public AdminAccountDto selectAdminAccountByNo(int a_no);
 
 	public void updateMyAdminInfo(AdminAccountDto adminAccountDto);
 
 	public int updateAdminIsDeleted(String a_id);
 
-	public ArrayList<AdminAccountDto> selectAdminList(Map<String, Integer> pagingParams);
+	public ArrayList<AdminAccountDto> selectAdminList(Map<String, Object> pagingParams);
 
 	public void updateAdminRoleByNo(int a_no);
 
@@ -32,5 +34,6 @@ public interface AccountMapper {
 	public int selectSearchAdminListCnt(Map<String, Object> searchParams);
 
 	public void updateAdminInfoFromSuper(AdminAccountDto adminAccountDto);
+
 
 }

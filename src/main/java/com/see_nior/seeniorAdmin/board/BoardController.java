@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
+
 import lombok.extern.log4j.Log4j2;
 
 
@@ -20,7 +22,7 @@ public class BoardController {
 		this.boardService = boardService;
 	}
 	
-	//모든 게시판 항목 가져오기(비동기?)
+	//모든 게시판 항목 가져오기
 	@GetMapping("/get_list")
 	@ResponseBody
 	public Object getList() {		
@@ -41,8 +43,10 @@ public class BoardController {
 	
 	//게시판 생성 요청 처리
 	@PostMapping("/create_confirm")
-	public String createConfirm() {
+	public String createConfirm(BoardCategoryDto boardCategoryDto) {
 		log.info("createConfirm()");
+		
+		int result = boardService.createConfirm(boardCategoryDto);
 		
 		return null;
 	}

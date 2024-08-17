@@ -136,13 +136,13 @@ public class AccountController {
 	
 	// SUPER_ADMIN - ADMIN 정보 수정 양식
 	@GetMapping("/admin_modify_form")
-	public String adminModifyForm(@RequestParam("a_id") String a_id, Model model) {
+	public String adminModifyForm(@RequestParam("a_no") int a_no, Model model) {
 		log.info("adminModifyForm()");
 		
 		String nextPage = "account/modify_form";
 		
 		AdminAccountDto loginedAdminDto = 
-				accountService.getAdminAccountById(a_id);
+				accountService.getAdminAccountByNo(a_no);
 		
 		model.addAttribute("loginedAdminDto", loginedAdminDto);
 		
@@ -156,9 +156,8 @@ public class AccountController {
 		
 		accountService.adminModifyConfirm(adminAccountDto);
 		
-		return null;
+		return "redirect:/account/admin_modify_form?a_no=" + adminAccountDto.getA_no();
 	}
-	
 	
 	// 회원 탈퇴 확인 
 	@GetMapping("/delete_confirm")
@@ -204,13 +203,15 @@ public class AccountController {
 	@GetMapping("/get_admin_list")
 	@ResponseBody
 	public Object getAdminList(
+			@RequestParam(value = "sort", required = false, defaultValue = "all") String sort,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("getAdminList()");
 		
-		Map<String, Object> adminList = accountService.getAdminPagingList(page);
+		Map<String, Object> adminList = accountService.getAdminPagingList(sort, page);
 		
 		Map<String, Object> adminListPage = accountService.getAdminListPageNum(page);
 		adminList.put("adminListPage", adminListPage);
+		adminList.put("sort", sort);
 		
 		return adminList;
 	}
@@ -221,21 +222,22 @@ public class AccountController {
 	public Object searchAdminList(
 			@RequestParam("searchPart") String searchPart,
 			@RequestParam("searchString") String searchString,
+			@RequestParam(value = "sort", required = false, defaultValue = "all") String sort,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("searchAdminList()");
 		
 		Map<String, Object> searchAdminList = 
-				accountService.searchAdminPagingList(searchPart, searchString, page);
+				accountService.searchAdminPagingList(searchPart, searchString, sort, page);
 		
 		Map<String, Object> searchAdminListPage = 
 				accountService.searchAdminListPageNum(searchPart, searchString, page);
 		searchAdminList.put("searchAdminListPage", searchAdminListPage);
+		searchAdminList.put("sort", sort);
 		searchAdminList.put("searchPart", searchPart);
 		searchAdminList.put("searchString", searchString);
 		
 		return searchAdminList;
 	}
-	
 	
 	// 관리자 가입 승인
 	@GetMapping("/is_approval")

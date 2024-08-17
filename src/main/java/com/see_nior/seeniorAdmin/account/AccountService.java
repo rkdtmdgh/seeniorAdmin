@@ -20,7 +20,7 @@ public class AccountService {
 	final static public int ADMIN_SIGN_UP_FAIL = 0;
 	final static public int ADMIN_SIGN_UP_SUCCESS = 1;
 	
-	private int pageLimit = 5;		// 한 페이지당 보여줄 정보 수
+	private int pageLimit = 10;		// 한 페이지당 보여줄 정보 수
 	private int blockLimit = 5;		// 하단에 보여질 페이지 번호 수
 	
 	final private AccountMapper accountMapper;
@@ -56,13 +56,9 @@ public class AccountService {
 				int result = accountMapper.insertNewAdmin(adminAccountDto);
 				
 				if (result <= 0) {
-					
 					return ADMIN_SIGN_UP_FAIL;
-					
 				} else {
-					
 					return ADMIN_SIGN_UP_SUCCESS;
-					
 				}
 				
 			} else {
@@ -72,21 +68,15 @@ public class AccountService {
 				int result = accountMapper.insertNewAdmin(adminAccountDto);
 				
 				if (result <= 0) {
-					
 					return ADMIN_SIGN_UP_FAIL;
-					
 				} else {
-					
 					return ADMIN_SIGN_UP_SUCCESS;
-					
 				}
 				
 			}
 			
 		} else {
-			
 			return ADMIN_ALREADY;
-			
 		}
 		
 	}
@@ -95,7 +85,17 @@ public class AccountService {
 	public AdminAccountDto getAdminAccountById(String a_id) {
 		log.info("getAdminAccountById()");
 		
-		AdminAccountDto adminAccountDto = accountMapper.getAdminAccountById(a_id);
+		AdminAccountDto adminAccountDto = accountMapper.selectAdminAccountById(a_id);
+		
+		return adminAccountDto;
+		
+	}
+	
+	// 관리자 정보 조회 by no
+	public AdminAccountDto getAdminAccountByNo(int a_no) {
+		log.info("getAdminAccountByNo()");
+		
+		AdminAccountDto adminAccountDto = accountMapper.selectAdminAccountByNo(a_no);
 		
 		return adminAccountDto;
 		
@@ -127,16 +127,17 @@ public class AccountService {
 	}
 	
 	// 관리자 리스트 가져오기
-	public Map<String, Object> getAdminPagingList(int page) {
+	public Map<String, Object> getAdminPagingList(String sort, int page) {
 		log.info("getAdminList()");
 		
 		int pagingStart = (page - 1) * pageLimit;	
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		Map<String, Integer> pagingParams = new HashMap<>();
+		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
+		pagingParams.put("sort", sort);
 
 		List<AdminAccountDto> adminAccountDtos = accountMapper.selectAdminList(pagingParams);
 		pagingList.put("adminAccountDtos", adminAccountDtos);
@@ -168,12 +169,14 @@ public class AccountService {
 		accountListPageNum.put("maxPage", maxPage);
 		accountListPageNum.put("startPage", startPage);
 		accountListPageNum.put("endPage", endPage);
+		accountListPageNum.put("blockLimit", blockLimit);
+		accountListPageNum.put("pageLimit", pageLimit);
 		
 		return accountListPageNum;
 	}
 	
 	// 관리자 검색 리스트 가져오기
-	public Map<String, Object> searchAdminPagingList(String searchPart, String searchString, int page) {
+	public Map<String, Object> searchAdminPagingList(String searchPart, String searchString, String sort, int page) {
 		log.info("searchAdminPagingList()");
 		
 		int pagingStart = (page - 1) * pageLimit;
@@ -183,6 +186,7 @@ public class AccountService {
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
+		pagingParams.put("sort", sort);
 		pagingParams.put("searchPart", searchPart);
 		pagingParams.put("searchString", searchString);
 
@@ -220,10 +224,11 @@ public class AccountService {
 		searchAdminListPageNum.put("maxPage", maxPage);
 		searchAdminListPageNum.put("startPage", startPage);
 		searchAdminListPageNum.put("endPage", endPage);
+		searchAdminListPageNum.put("blockLimit", blockLimit);
+		searchAdminListPageNum.put("pageLimit", pageLimit);
 		
 		return searchAdminListPageNum;
 	}
-	
 	
 	// 관리자 가입 승인
 	public void isApproval(int a_no) {
@@ -233,10 +238,4 @@ public class AccountService {
 		
 	}
 
-
-
-
-	
-
-	
 }
