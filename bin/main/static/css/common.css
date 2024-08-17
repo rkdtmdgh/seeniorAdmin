@@ -53,6 +53,7 @@
     --borderInputPadding: 1em 1em 10px;
     --selectPadding: 1.2em;
     --iconsPadding: 0.15em;
+    --tableInputErrorPadding: 0 1.2em 0.7em;
 
     --baseGap: 20px;
     --smallGap: 10px;
@@ -125,8 +126,8 @@ input:disabled {
 .disabled {
     background-color: var(--tableDisabledBgColor);
     cursor: not-allowed;
+    color: var(--middleGrayColor);
 }
-
 
 label {
 	&.radio {
@@ -183,7 +184,7 @@ table {
     }
 
     td {
-        vertical-align: middle;
+        vertical-align: top;
         color: var(--grayColor);
         border-right: 1px solid var(--lightGrayColor);
 

@@ -11,13 +11,11 @@
 	        </a>
 	    </div>
 	    
-	    <th:block sec:authorize="hasAnyRole('SUPER_ADMIN')">
-	    <div class="side_menu_list">
+	    <div sec:authorize="hasAnyRole('SUPER_ADMIN')" class="side_menu_list">
 	        <a href="/account/admin_list_form" class="side_menu_btn">
 	            <span class="side_menu">관리자 계정 관리</span>
 	        </a>
 	    </div>
-	    </th:block>
 	    
 	    <div class="side_menu_list">
 	        <a href="" class="side_menu_btn">

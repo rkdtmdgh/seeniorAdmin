@@ -9,6 +9,28 @@ function setInputFocus(ele) {
 	}
 }
 
+// 비밀번호 노출 설정
+function setViewPw(ele) {
+	const icon = ele.querySelector('.icon');
+	const parentEle = ele.parentElement;
+	const passwordInput = parentEle.querySelector('input');
+	
+	if(passwordInput && passwordInput.type === "password") {
+		passwordInput.type = "text";
+		icon.src = "/image/icons/eye_open.svg";
+	} else if(passwordInput) {
+		passwordInput.type = "password";
+		icon.src = "/image/icons/eye_off.svg";
+	}
+}
+
+// 휴대폰 번호 형식으로 변환
+function setReplacePhone(input) {
+	const phoneValue = input.value.replace(/[^0-9]/g, "").replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(-{1,2})$/g, ""); // (01x-xxxx-xxxx)
+	input.value = phoneValue;
+	return phoneValue;
+}
+
 // 검색 폼 데이터인지 확인하여 초기화
 function setFormValuesFromUrl(part) {
 	const urlParams = new URLSearchParams(window.location.search);
