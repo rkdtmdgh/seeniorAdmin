@@ -116,7 +116,7 @@ function setDataList(api, data, index) {
 		case 'getAdminList': 
 		case 'search_admin_list':
 			innerContent = `
-				<tr data-key="${data.a_no || ''}">
+				<tr>
 		            <td>
 		                <p class="table_info">${index}</p>
 		            </td>
@@ -124,7 +124,7 @@ function setDataList(api, data, index) {
 		                <a href="/account/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_id || 'N/A'}</a>
 		            </td>
 		            <td>
-		                <a href="" class="table_info">${data.a_authority_role || 'N/A'}</a>
+		                <a href="/account/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_authority_role == 'SUB_ADMIN' ? '완료' : '대기'}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${data.a_phone || 'N/A'}</p>

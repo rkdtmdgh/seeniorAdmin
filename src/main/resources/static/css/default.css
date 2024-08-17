@@ -217,7 +217,6 @@
 /* content layout */
 .content_info_wrap {
     width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
     gap: var(--baseGap);
@@ -258,7 +257,7 @@
     }
 
     .sub_title {
-        font-size: var(--baseFontSize);
+        font-size: var(--subFontSize);
         font-weight: var(--bold);
         background-color: var(--bgColor);
         border-radius: var(--bdrs);
@@ -326,6 +325,12 @@
 
     .table_info {
         text-align: left;
+        
+        &.radio_info {
+        	display: flex;
+        	align-items: center;
+        	gap: var(--baseGap);
+        }
     }
 }
 
@@ -348,7 +353,6 @@
 
 /* pagination */
 .pagination_wrap {
-    padding-top: var(--baseGap);
     display: flex;
 	align-items: center;
 	justify-content: center;
