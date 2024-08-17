@@ -64,6 +64,7 @@ public class UserService {
 		if (endPage > maxPage) endPage = maxPage;
 		
 		userListPageNum.put("userListCnt", userListCnt);
+		userListPageNum.put("page", page);
 		userListPageNum.put("maxPage", maxPage);
 		userListPageNum.put("startPage", startPage);
 		userListPageNum.put("endPage", endPage);
@@ -115,6 +116,7 @@ public class UserService {
 		if (endPage > maxPage) endPage = maxPage;
 		
 		searchUserListPageNum.put("searchUserListCnt", searchUserListCnt);
+		searchUserListPageNum.put("page", page);
 		searchUserListPageNum.put("maxPage", maxPage);
 		searchUserListPageNum.put("startPage", startPage);
 		searchUserListPageNum.put("endPage", endPage);

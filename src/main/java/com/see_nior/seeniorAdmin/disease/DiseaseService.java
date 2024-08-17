@@ -52,7 +52,7 @@ public class DiseaseService {
 		log.info("createCategoryConfirm()");
 		
 		// 질환 카테고리 중복 여부
-		boolean isDiseaseCategory = diseaseMapper.isDiseaseCategory(diseaseCategoryDto.getName());
+		boolean isDiseaseCategory = diseaseMapper.isDiseaseCategory(diseaseCategoryDto.getDc_name());
 		
 		// 질환 카테고리가 없다면
 		if (!isDiseaseCategory) {
@@ -155,7 +155,7 @@ public class DiseaseService {
 		log.info("modifyCategoryConfirm()");
 		
 		// 질환 카테고리 중복 여부
-		boolean isDiseaseCategory = diseaseMapper.isDiseaseCategory(diseaseCategoryDto.getName());
+		boolean isDiseaseCategory = diseaseMapper.isDiseaseCategory(diseaseCategoryDto.getDc_name());
 		
 		// 질환 카테고리가 없다면
 		if (!isDiseaseCategory) {
@@ -210,7 +210,7 @@ public class DiseaseService {
 		log.info("createConfirm()");
 		
 		// 질환 중복 여부
-		boolean isDisease = diseaseMapper.isDisease(diseaseDto.getName());
+		boolean isDisease = diseaseMapper.isDisease(diseaseDto.getD_name());
 		
 		// 질환이 없다면
 		if (!isDisease) {
@@ -358,7 +358,7 @@ public class DiseaseService {
 		log.info("modifyConfirm");
 		
 		// 질환 중복 여부
-		boolean isDisease = diseaseMapper.isDisease(diseaseDto.getName());
+		boolean isDisease = diseaseMapper.isDisease(diseaseDto.getD_name());
 
 		// 질환이 없다면
 		if (!isDisease) {

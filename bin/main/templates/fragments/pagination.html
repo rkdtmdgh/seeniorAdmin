@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html 
+   xmlns:th="http://www.thymeleaf.org" 
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
+<div th:fragment="pagination" class="pagination_wrap">
+    <div class="pagination_list">
+    	<th:block th:if="${currentPage > 1}">
+	    	<div onclick="getList()" class="first func_icon">
+	            <svg aria-label="first" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" enable-background="new 0 0 20 20">
+	                <polygon points="10,5 10,0 0,10 10,20 10,15 5,10 	"/>
+	             <polygon points="15,5 10,10 15,15 20,20 20,0 	"/>
+	            </svg>
+	        </div>
+	        
+	        <div onclick="getList(${currentPage - 1)" class="prev func_icon">
+	            <svg aria-label="first" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" enable-background="new 0 0 20 20">
+	                <polygon points="15,0 5,10 15,20 "/>
+	            </svg>
+	        </div>
+    	</th:block>
+        
+        <div class="page_num">
+            <div class="current">1</div>
+            <a href="" class="num">2</a>
+            <a href="" class="num">3</a>
+            <a href="" class="num">4</a>
+            <a href="" class="num">5</a>
+            <a href="" class="num">6</a>
+            <a href="" class="num">7</a>
+            <a href="" class="num">8</a>
+            <a href="" class="num">9</a>
+            <a href="" class="num">10</a>
+        </div>
+        
+        <th:block th:if="${currentPage < maxPage}">
+	        <div onclick="getList(${currentPage + 1})" class="next func_icon">
+	            <svg aria-label="first" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" enable-background="new 0 0 20 20">
+	                <polygon points="15,0 5,10 15,20 "/>
+	            </svg>
+	        </div>
+	        
+	        <div onclick="getList(${maxPage}})" class="last func_icon">
+	            <svg aria-label="first" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" enable-background="new 0 0 20 20">
+	                <polygon points="10,5 10,0 0,10 10,20 10,15 5,10 	"/>
+	             <polygon points="15,5 10,10 15,15 20,20 20,0 	"/>
+	            </svg>
+	        </div>
+        </th:block>
+    </div>
+</div>
+</html>

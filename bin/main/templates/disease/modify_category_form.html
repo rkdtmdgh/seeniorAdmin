@@ -18,8 +18,8 @@
 		
 		<form th:action="@{/disease/modify_category_confirm}" name="modify_category_form" method="post">
 			
-			<input type="hidden" name="no" th:value="${diseaseCategoryDto.no}">
-			<input type="text" name="name" th:value="${diseaseCategoryDto.name}" placeholder="INPUT DISEASE CATEGORY">
+			<input type="hidden" name="dc_no" th:value="${diseaseCategoryDto.dc_no}">
+			<input type="text" name="dc_name" th:value="${diseaseCategoryDto.dc_name}" placeholder="INPUT DISEASE CATEGORY">
 			<br>
 			<input type="submit" value="질환 카테고리 수정" >
 			<input type="reset" value="초기화">

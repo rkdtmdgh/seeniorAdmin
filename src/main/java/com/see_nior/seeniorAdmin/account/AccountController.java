@@ -230,6 +230,8 @@ public class AccountController {
 		Map<String, Object> searchAdminListPage = 
 				accountService.searchAdminListPageNum(searchPart, searchString, page);
 		searchAdminList.put("searchAdminListPage", searchAdminListPage);
+		searchAdminList.put("searchPart", searchPart);
+		searchAdminList.put("searchString", searchString);
 		
 		return searchAdminList;
 	}

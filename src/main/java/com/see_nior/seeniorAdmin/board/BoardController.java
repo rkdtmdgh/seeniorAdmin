@@ -2,6 +2,7 @@ package com.see_nior.seeniorAdmin.board;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -30,13 +31,22 @@ public class BoardController {
 	
 	//게시판 생성 양식으로 이동
 	@GetMapping("/create_form")
-	public String create_form() {
-		log.info("create_form()");
+	public String createForm() {
+		log.info("createForm()");
 		
 		String nextPage = "board/create_form";
 		
 		return nextPage;
 	}
+	
+	//게시판 생성 요청 처리
+	@PostMapping("/create_confirm")
+	public String createConfirm() {
+		log.info("createConfirm()");
+		
+		return null;
+	}
+	
 	
 	
 

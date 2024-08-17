@@ -27,12 +27,12 @@
 			</thead>
 			<tbody>
 				<tr th:each="diseaseCategoryDto : ${diseaseCategoryDtos.diseaseCategoryDto}">
-					<td th:text="${diseaseCategoryDto.no}"></td>
-					<td th:text="${diseaseCategoryDto.name}"></td>
-					<td th:text="${diseaseCategoryDto.reg_date}"></td>
-					<td th:text="${diseaseCategoryDto.mod_date}"></td>
-					<td><a th:href="'/disease/modify_category_form?no=' + ${diseaseCategoryDto.no}">수정</a></td>
-					<td><a th:href="'/disease/delete_category_confirm?no=' + ${diseaseCategoryDto.no}">삭제</a></td>
+					<td th:text="${diseaseCategoryDto.dc_no}"></td>
+					<td th:text="${diseaseCategoryDto.dc_name}"></td>
+					<td th:text="${diseaseCategoryDto.dc_reg_date}"></td>
+					<td th:text="${diseaseCategoryDto.dc_mod_date}"></td>
+					<td><a th:href="'/disease/modify_category_form?no=' + ${diseaseCategoryDto.dc_no}">수정</a></td>
+					<td><a th:href="'/disease/delete_category_confirm?no=' + ${diseaseCategoryDto.dc_no}">삭제</a></td>
 				</tr>
 			</tbody>
 		

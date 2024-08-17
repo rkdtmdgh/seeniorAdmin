@@ -1,14 +1,26 @@
 // 관리자 계정 리스트 요청
-export function getAdminList() {
+export function getAdminList(page) {
+	// 검색 인풋 벨류 삭제
 	const seartStringInput = document.forms['search_form'].search_string;
 	seartStringInput.value = '';
+	
+	let intPage = page || 1;
 	
 	$.ajax({
 		url: '/account/get_admin_list',
 		method: 'GET',
+		data: {
+			page: intPage,
+		},
 	})
 	.then(response => {
 		console.log('getAdminList() response:', response);
+		
+		// url 검색 조건 추가
+		const url = new URL(window.location);
+		url.searchParams.set('page', response.adminListPage.page); // 페이지
+		window.history.replaceState({}, '', url); // 현재 url 변경 및 리로드 제어
+					
 		const contentTable = document.querySelector('.content_table tbody');
 		contentTable.innerHTML = '';
 		
