@@ -42,7 +42,7 @@
     }
     
     .input_error {
-    	display: none;
+    	display: block;
     	font-size: var(--smallFontSize);
     	font-weight: var(--thin);
     	padding-top: var(--ssize2);
@@ -54,10 +54,6 @@
 
         .input_title {
             color: var(--redColor);
-        }
-        
-        .input_error {
-        	display: block;
         }
     }
 
@@ -171,6 +167,14 @@
         .btns {
             width: 100%;
         }
+    }
+    
+    &.left {
+    	justify-content: flex-start;
+    }
+    
+    &.right {
+    	justify-content: flex-end;
     }
 }
 
@@ -331,6 +335,21 @@
         	align-items: center;
         	gap: var(--baseGap);
         }
+    }
+    
+    .input_error {
+    	display: none;
+    	text-align: left;
+    	font-size: var(--subFontSize);
+    	font-weight: var(--thin);
+    	padding: var(--tableInputErrorPadding);
+    	color: var(--redColor);
+    }
+    
+    td.error {
+    	.input_error {
+    		display: block;
+    	}
     }
 }
 
