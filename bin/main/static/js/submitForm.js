@@ -134,3 +134,32 @@ export function searchForm(event, apiUrl, page) {
 		});
 	}
 }
+
+// 관리자 계정 정보 수정 
+export function modifyForm(event, formName) {
+	event.preventDefault();
+	const form = document.forms[formName];
+	const isSuperAdmin = form.user_role.value;
+	let input;
+	
+	input = form.a_name;
+	if(!checkEmpty(input, '이름을')) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.a_phone;
+	if(!validatePhone(input)) {
+		input.focus();
+		return false;
+	}
+	
+	// 모든 유효성 검사가 통과되었을 때 폼 제출	
+	if(isSuperAdmin) { // 권한에 따라 action 양식 변경
+		form.action = "/account/admin_modify_confirm"; 
+	} else {
+		form.action = "/account/modify_confirm"; 
+	}
+    form.method = "post"; 
+    form.submit();
+}
