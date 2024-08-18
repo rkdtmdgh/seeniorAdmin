@@ -30,10 +30,7 @@
 				            <p class="sub_title">관리자 계정 정보</p>
 					    </div>
 					    
-					    <form name="modify_form" onsubmit="modifyForm(event, 'modify_form')">
-					    	<input type="hidden" name="user_role" id="user_role"
-					    		th:value="${#authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}">
-					    	
+					    <form name="modify_form" onsubmit="modifyForm(event, 'modify_form')">					    	
 						    <div class="table_wrap">
 		                        <table class="content_edit_table">
 		                            <colgroup>
@@ -52,17 +49,15 @@
 	                                            	th:value="${loginedAdminDto.a_id}" disabled>
 	                                        </td>
 	                                        <th><p class="table_title">관리자 승인</p></th>
-		                                	<td th:classappend="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')} ? 'disabled' : ''">
+		                                	<td class="disabled">
 	                                            <div class="table_info radio_info">
 	                                            	<label class="radio">
 	                                            		<input type="radio" name="a_authority_role" value="NOT_APPROVED"
-	                                            			th:checked="${a_authority_role != 'SUB_ADMIN'}"
-	                                            			th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}"> 미승인
+	                                            			th:checked="${a_authority_role != 'SUB_ADMIN'}" disabled> 미승인
 	                                            	</label>
 	                                            	<label class="radio">
 	                                            		<input type="radio" name="a_authority_role" value="SUB_ADMIN"
-	                                            			th:checked="${a_authority_role == 'SUB_ADMIN'}"
-	                                            			th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}"> 승인
+	                                            			th:checked="${a_authority_role == 'SUB_ADMIN'}" disabled> 승인
 	                                            	</label>
 	                                            </div>
 	                                        </td>
@@ -72,6 +67,7 @@
 		                                	<th><p class="table_title">이름</p></th>
 		                                	<td>
 	                                            <input type="text" name="a_name" id="a_name" class="table_info" placeholder="이름"
+	                                            	oninput="checkEmpty(this, '이름을')" onblur="checkEmpty(this, '이름을')"
 	                                            	th:value="${loginedAdminDto.a_name}">
 	                                        </td>
 		                                	<th><p class="table_title">비밀번호</p></th>
@@ -88,34 +84,28 @@
 	                                            	th:value="${loginedAdminDto.a_phone}">
 	                                        </td>
 		                                	<th><p class="table_title">부서</p></th>
-		                                	<td th:classappend="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')} ? 'disabled' : ''">
+		                                	<td class="disabled">
 	                                            <input type="text" name="a_department" id="a_department" class="table_info" placeholder="부서"
-	                                            	th:value="${loginedAdminDto.a_department}"
-	                                            	th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}">
+	                                            	th:value="${loginedAdminDto.a_department}" disabled>
 	                                        </td>
 		                                </tr>
 		                                
 		                                <tr>
 		                                	<th><p class="table_title">직위</p></th>
-		                                	<td th:classappend="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')} ? 'disabled' : ''">
+		                                	<td class="disabled">
 	                                            <input type="text" name="a_level" id="a_level" class="table_info" placeholder="직위"
-	                                            	th:value="${loginedAdminDto.a_level}"
-	                                            	th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}">
+	                                            	th:value="${loginedAdminDto.a_level}" disabled>
 	                                        </td>
 		                                	<th><p class="table_title">직책</p></th>
-		                                	<td th:classappend="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')} ? 'disabled' : ''">
+		                                	<td class="disabled">
 	                                            <input type="text" name="a_position" id="a_position" class="table_info" placeholder="직책"
-	                                            	th:value="${loginedAdminDto.a_position}"
-	                                            	th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}">
+	                                            	th:value="${loginedAdminDto.a_position}" disabled>
 	                                        </td>
 		                                </tr>
 		                            </tbody>
 		                        </table>
 		                        
-		                        <div class="btn_list"
-		                        	th:classappend="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')} ? 'right' : ''">
-	                                <a sec:authorize="hasAnyRole('SUPER_ADMIN')" th:href="@{/account/delete_confirm(a_no=${loginedAdminDto.a_no})}" class="btns delete">삭제</a>
-	
+		                        <div class="btn_list right">
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">목록</a>
 	                                    <button type="submit" class="btns">저장</button>
