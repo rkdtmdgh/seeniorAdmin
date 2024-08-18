@@ -121,6 +121,7 @@ input::placeholder {
 
 input:disabled {
 	cursor: not-allowed;
+	background-color: unset;
 }
 
 .disabled {

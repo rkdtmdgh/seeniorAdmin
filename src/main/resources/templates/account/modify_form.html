@@ -38,22 +38,20 @@
 		                            <tbody>
 		                                <tr>
 		                                	<th><p class="table_title">아이디</p></th>
-		                                	<td>
+		                                	<td class="disabled">
 		                                		<input type="hidden" name="a_no" th:value="${loginedAdminDto.a_no}">
 		                                		<input type="text" name="a_name" id="a_name" class="table_info disabled"
 	                                            	th:value="${loginedAdminDto.a_id}" disabled>
 	                                        </td>
 	                                        <th><p class="table_title">관리자 승인</p></th>
-		                                	<td>
+		                                	<td th:classappend="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')} ? 'disabled' : ''">
 	                                            <div class="table_info radio_info">
-	                                            	<label class="radio"
-	                                            		th:classappend="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')} ? 'disabled' : ''">
+	                                            	<label class="radio">
 	                                            		<input type="radio" name="a_authority_role" value="NOT_APPROVED"
 	                                            			th:checked="${a_authority_role != 'SUB_ADMIN'}"
 	                                            			th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}"> 미승인
 	                                            	</label>
-	                                            	<label class="radio"
-	                                            		th:classappend="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')} ? 'disabled' : ''">
+	                                            	<label class="radio">
 	                                            		<input type="radio" name="a_authority_role" value="SUB_ADMIN"
 	                                            			th:checked="${a_authority_role == 'SUB_ADMIN'}"
 	                                            			th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}"> 승인
@@ -82,7 +80,7 @@
 	                                            	th:value="${loginedAdminDto.a_phone}">
 	                                        </td>
 		                                	<th><p class="table_title">부서</p></th>
-		                                	<td>
+		                                	<td th:classappend="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')} ? 'disabled' : ''">
 	                                            <input type="text" name="a_department" id="a_department" class="table_info" placeholder="부서"
 	                                            	th:value="${loginedAdminDto.a_department}"
 	                                            	th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}">
@@ -91,13 +89,13 @@
 		                                
 		                                <tr>
 		                                	<th><p class="table_title">직위</p></th>
-		                                	<td>
+		                                	<td th:classappend="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')} ? 'disabled' : ''">
 	                                            <input type="text" name="a_level" id="a_level" class="table_info" placeholder="직위"
 	                                            	th:value="${loginedAdminDto.a_level}"
 	                                            	th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}">
 	                                        </td>
 		                                	<th><p class="table_title">직책</p></th>
-		                                	<td>
+		                                	<td th:classappend="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')} ? 'disabled' : ''">
 	                                            <input type="text" name="a_position" id="a_position" class="table_info" placeholder="직책"
 	                                            	th:value="${loginedAdminDto.a_position}"
 	                                            	th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}">

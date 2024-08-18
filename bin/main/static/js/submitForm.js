@@ -90,7 +90,7 @@ export function searchForm(event, apiUrl, page) {
 			},
 		})
 		.then(response => {
-			console.log(apiUrl + ' searchForm() response:', response);
+			logger.info(apiUrl + ' searchForm() response:', response);
 			
 			// 쿼리스트링 조건 추가
 			// page, sort or part, sortValue or string, boolSearch // boolSearch값에 따라 사용값 다름
@@ -126,11 +126,11 @@ export function searchForm(event, apiUrl, page) {
 				}
 				
 			} else {
-				console.log('데이터가 없거나 유효하지 않습니다.');
+				logger.info('데이터가 없거나 유효하지 않습니다.');
 			}
 		})
 		.catch((error) => {
-			console.error(apiUrl + ' searchForm() error:', error);
+			logger.error(apiUrl + ' searchForm() error:', error);
 		});
 	}
 }
