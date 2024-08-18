@@ -116,9 +116,20 @@ export function searchForm(event, apiUrl, page) {
 						adminListCnt --;
 					});
 				} else {
+		            // 테이블의 전체 열 수 계산하기
+					const rows = document.querySelectorAll('table thead tr');
+		            let maxCols = 0;
+		
+		            rows.forEach(row => {
+		                const cols = row.querySelectorAll('th');
+		                if (cols.length > maxCols) {
+		                    maxCols = cols.length;
+		                }
+		            });
+		            
 					contentTable.innerHTML = `
 						<tr>
-	                        <td colspan="6">
+	                        <td colspan="${maxCols}">
 	                            <p class="table_info">검색된 내용이 없습니다.</p>
 	                        </td>
 	                    </tr>
