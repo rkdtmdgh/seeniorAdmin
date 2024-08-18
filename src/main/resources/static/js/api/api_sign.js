@@ -1,6 +1,6 @@
 // 이메일 중복 검사 
 function usedEmailCheck(email) {
-	// console.log('usedEmailChekc:', email);
+	logger.info('usedEmailChekc:', email);
 	return $.ajax({
 		headers: {
 			'Contents-Type': 'Apllication/json',
@@ -12,11 +12,11 @@ function usedEmailCheck(email) {
 		},
 	})
 	.then(response => {
-		console.log('Ajax usedEmailCheck result:', response);
+		logger.info('Ajax usedEmailCheck result:', response);
 		return response;
 	})
 	.catch(error => {
-		console.error('Error during email check:', error);
+		logger.error('Error during email check:', error);
 		throw error;
 	});
 }

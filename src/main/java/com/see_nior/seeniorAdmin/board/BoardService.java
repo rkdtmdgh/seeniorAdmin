@@ -33,4 +33,15 @@ public class BoardService {
 		return cateDtos;
 	}
 
+	public int createConfirm(BoardCategoryDto boardCategoryDto) {
+		log.info("getList()");
+		
+		int bc_idx = boardCategoryDto.getBc_idx();
+		String bc_name = boardCategoryDto.getBc_name();
+						
+		return 0;
+	}
+
+	
+
 }

@@ -35,12 +35,14 @@
 	                <div class="input_list" id="input_list_info">
 	                    <label for="id" class="border_input">
 	                        <span class="input_title">이메일</span>
-	                        <input type="text" name="a_id" id="id" placeholder="이메일" class="input_txt" oninput="validateEmail(this)" onblur="validateEmail(this, true)">
+	                        <input type="text" name="a_id" id="id" placeholder="이메일" class="input_txt" 
+	                        	oninput="validateEmail(this)" onblur="validateEmail(this, true)">
 	                    </label>
 	
 	                    <label for="password" class="border_input">
 	                        <span class="input_title">비밀번호</span>
-	                        <input type="password" name="a_pw" id="pw" placeholder="비밀번호" class="input_txt" oninput="validatePw(this)" onblur="validatePw(this)" autocomplete="off">
+	                        <input type="password" name="a_pw" id="pw" placeholder="비밀번호" class="input_txt" 
+	                        	oninput="validatePw(this)" onblur="validatePw(this)" autocomplete="off">
 	                        <span class="input_icon" onclick="setViewPw(this)">
 	                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
 	                        </span>
@@ -48,12 +50,14 @@
 	
 	                    <label for="name" class="border_input">
 	                        <span class="input_title">이름</span>
-	                        <input type="text" name="a_name" id="name" placeholder="이름" class="input_txt" oninput="checkEmpty(this, '이름을')" onblur="checkEmpty(this, '이름을')">
+	                        <input type="text" name="a_name" id="name" placeholder="이름" class="input_txt" 
+	                        	oninput="checkEmpty(this, '이름을')" onblur="checkEmpty(this, '이름을')">
 	                    </label>
 						
 						<label for="tel" class="border_input">
 	                        <span class="input_title">연락처</span>
-	                        <input type="text" name="a_phone" id="phone" maxlength="13" placeholder='"-" 없이 입력하세요' class="input_txt" onkeydown="setReplacePhone(this)" onkeyup="validatePhone(this)" onblur="validatePhone(this)">
+	                        <input type="text" name="a_phone" id="phone" maxlength="13" placeholder='"-" 없이 입력하세요' class="input_txt" 
+	                        	onkeydown="setReplacePhone(this)" onkeyup="validatePhone(this)" onblur="validatePhone(this)">
 	                    </label>
 	                </div>
 	                
