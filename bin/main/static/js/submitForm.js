@@ -90,7 +90,7 @@ export function searchForm(event, apiUrl, page) {
 			},
 		})
 		.then(response => {
-			console.log(apiUrl + ' searchForm() response:', response);
+			logger.info(apiUrl + ' searchForm() response:', response);
 			
 			// 쿼리스트링 조건 추가
 			// page, sort or part, sortValue or string, boolSearch // boolSearch값에 따라 사용값 다름
@@ -116,9 +116,20 @@ export function searchForm(event, apiUrl, page) {
 						adminListCnt --;
 					});
 				} else {
+		            // 테이블의 전체 열 수 계산하기
+					const rows = document.querySelectorAll('table thead tr');
+		            let maxCols = 0;
+		
+		            rows.forEach(row => {
+		                const cols = row.querySelectorAll('th');
+		                if (cols.length > maxCols) {
+		                    maxCols = cols.length;
+		                }
+		            });
+		            
 					contentTable.innerHTML = `
 						<tr>
-	                        <td colspan="6">
+	                        <td colspan="${maxCols}">
 	                            <p class="table_info">검색된 내용이 없습니다.</p>
 	                        </td>
 	                    </tr>
@@ -126,11 +137,67 @@ export function searchForm(event, apiUrl, page) {
 				}
 				
 			} else {
-				console.log('데이터가 없거나 유효하지 않습니다.');
+				logger.info('데이터가 없거나 유효하지 않습니다.');
 			}
 		})
 		.catch((error) => {
-			console.error(apiUrl + ' searchForm() error:', error);
+			logger.error(apiUrl + ' searchForm() error:', error);
 		});
 	}
+}
+
+// 관리자 계정 정보 수정(SUPER_ADMIN)
+export function adminModifyForm(event, formName) {
+	event.preventDefault();
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.a_name;
+	if(!checkEmpty(input, '이름을')) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.a_phone;
+	if(!validatePhone(input)) {
+		input.focus();
+		return false;
+	}
+	
+	// 모든 유효성 검사가 통과되었을 때 폼 제출	
+	form.action = "/account/admin_modify_confirm";
+    form.method = "post"; 
+    form.submit();
+}
+
+// 본인 계정 정보 수정
+export function modifyForm(event, formName) {
+	event.preventDefault();
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.a_name;
+	if(!checkEmpty(input, '이름을')) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.a_pw;
+	if(input.value.trim().length > 0) {
+		const isConfirm = confirm('비밀번호를 변경하시겠습니까?\n변경하지 않을 경우 입력한 값을 삭제해 주세요.');
+		if(!isConfirm) {
+			return false;	
+		}
+	}
+	
+	input = form.a_phone;
+	if(!validatePhone(input)) {
+		input.focus();
+		return false;
+	}
+	
+	// 모든 유효성 검사가 통과되었을 때 폼 제출	
+	form.action = "/account/modify_confirm";
+    form.method = "post"; 
+    form.submit();
 }

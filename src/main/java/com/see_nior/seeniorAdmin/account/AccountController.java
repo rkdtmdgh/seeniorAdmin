@@ -139,12 +139,12 @@ public class AccountController {
 	public String adminModifyForm(@RequestParam("a_no") int a_no, Model model) {
 		log.info("adminModifyForm()");
 		
-		String nextPage = "account/modify_form";
+		String nextPage = "account/admin_modify_form";
 		
-		AdminAccountDto loginedAdminDto = 
+		AdminAccountDto selectedAdminDto = 
 				accountService.getAdminAccountByNo(a_no);
 		
-		model.addAttribute("loginedAdminDto", loginedAdminDto);
+		model.addAttribute("selectedAdminDto", selectedAdminDto);
 		
 		return nextPage;
 	}
