@@ -135,11 +135,10 @@ export function searchForm(event, apiUrl, page) {
 	}
 }
 
-// 관리자 계정 정보 수정 
-export function modifyForm(event, formName) {
+// 관리자 계정 정보 수정(SUPER_ADMIN)
+export function adminModifyForm(event, formName) {
 	event.preventDefault();
 	const form = document.forms[formName];
-	const isSuperAdmin = form.user_role.value;
 	let input;
 	
 	input = form.a_name;
@@ -155,11 +154,39 @@ export function modifyForm(event, formName) {
 	}
 	
 	// 모든 유효성 검사가 통과되었을 때 폼 제출	
-	if(isSuperAdmin) { // 권한에 따라 action 양식 변경
-		form.action = "/account/admin_modify_confirm"; 
-	} else {
-		form.action = "/account/modify_confirm"; 
+	form.action = "/account/admin_modify_confirm";
+    form.method = "post"; 
+    form.submit();
+}
+
+// 본인 계정 정보 수정
+export function modifyForm(event, formName) {
+	event.preventDefault();
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.a_name;
+	if(!checkEmpty(input, '이름을')) {
+		input.focus();
+		return false;
 	}
+	
+	input = form.a_pw;
+	if(input.value.trim().length > 0) {
+		const isConfirm = confirm('비밀번호를 변경하시겠습니까?\n변경하지 않을 경우 입력한 값을 삭제해 주세요.');
+		if(!isConfirm) {
+			return false;	
+		}
+	}
+	
+	input = form.a_phone;
+	if(!validatePhone(input)) {
+		input.focus();
+		return false;
+	}
+	
+	// 모든 유효성 검사가 통과되었을 때 폼 제출	
+	form.action = "/account/modify_confirm";
     form.method = "post"; 
     form.submit();
 }
