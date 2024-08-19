@@ -1,5 +1,7 @@
 package com.see_nior.seeniorAdmin.disease;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -274,10 +276,10 @@ public class DiseaseController {
 	
 	// 질환 삭제 확인
 	@GetMapping("/delete_confirm")
-	public String deleteConfirm(@RequestParam(value = "d_no") int d_no, Model model) {
+	public String deleteConfirm(@RequestParam(value = "d_nos") List<Integer> d_nos, Model model) {
 		log.info("deleteConfirm()");
 		
-		int result = diseaseService.deleteConfirm(d_no);
+		int result = diseaseService.deleteConfirm(new ArrayList<>(d_nos));
 		
 		model.addAttribute("deleteResult", result);
 		

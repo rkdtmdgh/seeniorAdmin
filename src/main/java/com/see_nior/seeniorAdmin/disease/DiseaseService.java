@@ -1,10 +1,12 @@
 package com.see_nior.seeniorAdmin.disease;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.see_nior.seeniorAdmin.disease.mapper.DiseaseMapper;
 import com.see_nior.seeniorAdmin.dto.DiseaseCategoryDto;
@@ -421,22 +423,25 @@ public class DiseaseService {
 	}
 
 	// 질환 삭제 확인
-	public int deleteConfirm(int d_no) {
+	@Transactional
+	public int deleteConfirm(ArrayList<Integer> d_nos) {
 		log.info("deleteConfirm()");
+	   
+	   try {
+		   
+		   for (int d_no : d_nos) {
+			   diseaseMapper.deleteDisease(d_no);
+			   
+		   }
 		
-		int result = diseaseMapper.deleteDisease(d_no);
-		
-		// DB에 입력 실패
-		if (result <= 0) {
-			
-			return DISEASE_DELETE_FAIL;
-		
-		// DB에 입력 성공
-		} else {
-			
-			return DISEASE_DELETE_SUCCESS;
-			
-		}
+	   } catch (Exception e) {
+		   log.error("Error ==========>",e);
+		   
+		   return DISEASE_DELETE_FAIL;
+		   
+	   }
+	   
+	   return DISEASE_DELETE_SUCCESS;
 	
 	}
 
