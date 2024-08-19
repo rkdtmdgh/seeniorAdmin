@@ -76,19 +76,34 @@ function setSearchQueryString(page, searchPart, searchString) {
 function setParseResponseByCommand(command, response) {
 	let getListDtos;
 	let getListPage;
+	let getListCnt;
 	switch(command) {
 		case '/account/get_admin_list': // 관리자 계정 관리
 			getListDtos = response.adminAccountDtos;
 			getListPage = response.adminListPage;
+			getListCnt = response.adminListPage.accountListCnt;
 			break;
 			
-		case 'search_admin_list': // 관리자 계정 관리 검색
+		case '/account/search_admin_list': // 관리자 계정 관리 검색
 			getListDtos = response.adminAccountDtos;
 			getListPage = response.searchAdminListPage;
+			getListCnt = response.searchAdminListPage.searchAdminListCnt;
+			break;
+			
+		case '/disease/get_all_disease_list_with_page': // 질환 / 질병 정보 관리
+			getListDtos = response.diseaseDtos;
+			getListPage = response.diseaseListPageNum;
+			getListCnt = response.diseaseListPageNum.diseaseListCnt;
+			break;
+			
+		case '/disease/search_disease': // 질환 / 질병 정보 관리
+			getListDtos = response.diseaseDtos;
+			getListPage = response.diseaseListPageNum;
+			getListCnt = response.diseaseListPageNum.diseaseListCnt;
 			break;
 	}
 	
-	return { getListDtos, getListPage }
+	return { getListDtos, getListPage, getListCnt }
 }
 
 // 페이지네이션 생성
@@ -160,7 +175,7 @@ function setDataList(api, data, index) {
 	
 	switch(api) {
 		case '/account/get_admin_list': 
-		case 'search_admin_list':
+		case '/account/search_admin_list':
 			innerContent = `
 				<tr>
 		            <td>
@@ -180,6 +195,28 @@ function setDataList(api, data, index) {
 		            </td>
 		            <td>
 		                <p class="table_info">${formatDate(data.a_reg_date || 'N/A')}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/disease/get_all_disease_list_with_page':
+			innerContent = `
+				<tr>
+		            <td>
+		                <div class="table_info"><input type="checkbox" name="d_no" id="d_no" value="${data.d_no}"></div>
+		            </td>
+		            <td>
+		                <a href="/account/admin_modify_form?a_no=" class="table_info">${index}</a>
+		            </td>
+		            <td>
+		                <a href="/account/admin_modify_form?a_no=" class="table_info">${data.diseaseCategoryDto.dc_name}</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${data.d_name || 'N/A'}</p>
+		            </td>
+		            <td>
+		                <p class="table_info">${formatDate(data.d_reg_date) || 'N/A'}</p>
 		            </td>
 		        </tr>
 			`;

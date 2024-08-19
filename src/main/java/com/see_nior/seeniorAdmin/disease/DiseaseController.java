@@ -201,6 +201,7 @@ public class DiseaseController {
 		Map<String, Object> diseaseListPageNum = diseaseService.getDiseaseListPageNum(page);
 		
 		diseaseListWithPage.put("diseaseListPageNum", diseaseListPageNum);
+		diseaseListWithPage.put("sort", sort);
 		
 		return diseaseListWithPage;
 		
@@ -222,6 +223,7 @@ public class DiseaseController {
 		Map<String, Object> diseaseListByCategoryPageNum = diseaseService.getDiseaseListByCategoryPageNum(page);
 		
 		diseaseListByCategoryWithPage.put("diseaseListByCategoryPageNum", diseaseListByCategoryPageNum);
+		diseaseListByCategoryWithPage.put("sort", sort);
 		
 		return diseaseListByCategoryWithPage;
 		
@@ -300,6 +302,7 @@ public class DiseaseController {
 		Map<String, Object> searchDiseaseListPageNum = diseaseService.getSearchDiseaseListPageNum(searchPart, searchString, page);
 		
 		searchDiseaseListWithPage.put("searchDiseaseListPageNum", searchDiseaseListPageNum);
+		searchDiseaseListWithPage.put("sort", sort);
 		
 		return searchDiseaseListWithPage;
 		

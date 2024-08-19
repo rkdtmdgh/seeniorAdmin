@@ -21,7 +21,7 @@ export function getList(command, sort, sortValue, page) {
 		contentTable.innerHTML = '';
 		pagination.innerHTML = '';
 		
-		const { getListDtos, getListPage } = setParseResponseByCommand(command, response);
+		const { getListDtos, getListPage, getListCnt } = setParseResponseByCommand(command, response);
 		if(response && getListDtos) {
 			// 쿼리스트링 조건 추가
 			setListQueryString(getListPage.page, sort, sortValue); // page, sort, sortValue
@@ -30,13 +30,13 @@ export function getList(command, sort, sortValue, page) {
 			pagination.innerHTML = paging;
 			
 			let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
-			let totalCnt = getListPage.accountListCnt; // 총 리스트 합계
-			let adminListCnt = totalCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
+			let listCnt = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
+			logger.info('response list cnt:', getListCnt, pageLimit, getListPage.page, listCnt);
 			
-			if(adminListCnt > 0) {
+			if(listCnt > 0) {
 				getListDtos.forEach((data) => { 
-					contentTable.insertAdjacentHTML('beforeend', setDataList(command, data, adminListCnt));
-					adminListCnt --;
+					contentTable.insertAdjacentHTML('beforeend', setDataList(command, data, listCnt));
+					listCnt --;
 				});
 			} else {
 				const maxCols = setTableColumnsNum();
@@ -62,6 +62,6 @@ export function getList(command, sort, sortValue, page) {
 		}
 	})
 	.catch((error) => {
-		logger.error('getAdminList() error:', error);
+		logger.error(command + ' error:', error);
 	});
 }
