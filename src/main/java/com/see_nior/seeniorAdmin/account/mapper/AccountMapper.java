@@ -21,7 +21,7 @@ public interface AccountMapper {
 
 	public void updateMyAdminInfo(AdminAccountDto adminAccountDto);
 
-	public int updateAdminIsDeleted(String a_id);
+	public int updateAdminIsDeletedByNo(int a_no);
 
 	public ArrayList<AdminAccountDto> selectAdminList(Map<String, Object> pagingParams);
 
@@ -34,6 +34,8 @@ public interface AccountMapper {
 	public int selectSearchAdminListCnt(Map<String, Object> searchParams);
 
 	public void updateAdminInfoFromSuper(AdminAccountDto adminAccountDto);
+
+	public int updateAdminPwReset(int a_no, String a_pw);
 
 
 }
