@@ -30,18 +30,20 @@
 				A_ID, 
 				A_PW, 
 				A_NAME, 
-				A_PHONE
+				A_PHONE,
+				A_BIRTH
 				<if test="a_authority_role != null">
-				, A_AUTHORITY_ROLE
+					, A_AUTHORITY_ROLE
 				</if>
 				)
 		VALUES(
 			#{a_id}, 
 			#{a_pw}, 
 			#{a_name}, 
-			#{a_phone}
+			#{a_phone},
+			#{a_birth}
 			<if test="a_authority_role != null">
-			, #{a_authority_role}
+				, #{a_authority_role}
 			</if>
 			)
 		
@@ -96,33 +98,32 @@
 		UPDATE 
 			ADMIN_ACCOUNT 
 		SET 
-			A_PW = #{a_pw},
+			<if test="a_pw != '' and a_pw != null">
+				A_PW = #{a_pw},
+			</if>
 			A_NAME = #{a_name},
 			A_PHONE = #{a_phone},
+			A_BIRTH = #{a_birth},
 			A_MOD_DATE = NOW()
 		WHERE 
 			A_NO = #{a_no}
 	
 	</update>
 	
-	<!-- 계정 정보 수정 form super_admin -->
+	<!-- 계정 정보 수정 from super_admin -->
 	<update id="updateAdminInfoFromSuper"
 			parameterType="AdminAccountDto">
 	
 		UPDATE 
 			ADMIN_ACCOUNT 
 		SET 
+			A_NAME = #{a_name},
+			A_PHONE = #{a_phone},
+			A_BIRTH = #{a_birth},
 			A_DEPARTMENT = #{a_department},
 			A_LEVEL = #{a_level},
 			A_POSITION = #{a_position},
-		<choose>
-			<when test="a_authority_role == 'not_approved'">
-				A_AUTHORITY_ROLE = "SUB_ADMIN",
-			</when>
-			<when test="a_authority_role == 'sub_admin'">
-				A_AUTHORITY_ROLE = "NOT_APPROVED",
-			</when>
-		</choose>
+			A_AUTHORITY_ROLE = #{a_authority_role},
 			A_MOD_DATE = NOW()
 		WHERE 
 			A_NO = #{a_no}
@@ -144,7 +145,7 @@
 	</update>
 	
 	<!-- 계정 탈퇴 is_deleted update -->
-	<update id="updateAdminIsDeleted"
+	<update id="updateAdminIsDeletedByNo"
 			parameterType="String">
 			
 		UPDATE 
@@ -153,7 +154,7 @@
 			A_IS_DELETED = 0,
 			A_MOD_DATE = NOW()
 		WHERE 
-			A_ID = #{a_id}
+			A_NO = #{a_no}
 			
 	</update>
 	
@@ -276,5 +277,18 @@
 		</if>
 	
 	</select>
+	
+	<!-- 비밀번호 초기화 -->
+	<update id="updateAdminPwReset">
+	
+		UPDATE 
+			ADMIN_ACCOUNT 
+		SET 
+			A_PW = #{a_pw},
+			A_MOD_DATE = NOW()
+		WHERE 
+			A_NO = #{a_no}
+	
+	</update>
 	
 </mapper>
