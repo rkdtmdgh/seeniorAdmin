@@ -58,7 +58,7 @@ async function validateEmail(input, usedCheck) {
 	const regEx = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z.]{2,5}$/; // 로컬파트와 도메인은 영문, 숫자, 정해진 특수문자/ TLD는 영문, "."를 포함할 수 있고 2~5자
 	const errorMessage = "이메일을 정확히 입력해 주세요.";
 	const isValid = validateInput(input, regEx, errorMessage);
-	// console.log('validateEmail isValid:', isValid);
+	logger.info('validateEmail isValid:', isValid);
 	
 	if(isValid && usedCheck) {
 		try {
@@ -70,7 +70,7 @@ async function validateEmail(input, usedCheck) {
 				return false;
 			}
 		} catch(error) {
-			console.error('Error during email check:', error);
+			logger.error('Error during email check:', error);
 			setErrorMessage(input, "이메일 중복 확인 중 오류가 발생했습니다.");
 			return false;
 		}
@@ -105,26 +105,4 @@ function checkEmpty(input, txt, alertMsg) {
 	} else {
 		return validateInput(input, null, errorMessage); // 정규 표현식 대신 값의 길이만 확인
 	}
-}
-
-// 비밀번호 노출 설정
-function setViewPw(ele) {
-	const icon = ele.querySelector('.icon');
-	const parentEle = ele.parentElement;
-	const passwordInput = parentEle.querySelector('input');
-	
-	if(passwordInput && passwordInput.type === "password") {
-		passwordInput.type = "text";
-		icon.src = "/image/icons/eye_open.svg";
-	} else if(passwordInput) {
-		passwordInput.type = "password";
-		icon.src = "/image/icons/eye_off.svg";
-	}
-}
-
-// 휴대폰 번호 형식으로 변환
-function setReplacePhone(input) {
-	const phoneValue = input.value.replace(/[^0-9]/g, "").replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(-{1,2})$/g, ""); // (01x-xxxx-xxxx)
-	input.value = phoneValue;
-	return phoneValue;
 }

@@ -12,7 +12,7 @@ export function getAdminList(sort, sortValue, page) {
 		method: 'GET',
 	})
 	.then(response => {
-		console.log('getAdminList() response:', response);
+		logger.info('getAdminList() response:', response);
 		
 		// 쿼리스트링 조건 추가
 		// page, sort or part, sortValue or string, boolSearch // boolSearch값에 따라 사용값 다름
@@ -48,10 +48,10 @@ export function getAdminList(sort, sortValue, page) {
 			}
 			
 		} else {
-			console.log('데이터가 없거나 유효하지 않습니다.');
+			logger.info('데이터가 없거나 유효하지 않습니다.');
 		}
 	})
 	.catch((error) => {
-		console.error('getAdminList() error:', error);
+		logger.error('getAdminList() error:', error);
 	});
 }
