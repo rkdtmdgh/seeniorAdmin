@@ -3,9 +3,6 @@ package com.see_nior.seeniorAdmin.account;
 import java.security.Principal;
 import java.util.Map;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -162,29 +157,15 @@ public class AccountController {
 	// 회원 탈퇴 확인 
 	@GetMapping("/delete_confirm")
 	public String deleteConfirm(
-			HttpServletRequest request, 
-			HttpServletResponse response,
+			@RequestParam("a_no") int a_no,
 			Model model) {
 		log.info("deleteConfirm()");
 		
 		String nextPage = "account/delete_result";
 		
-		Authentication authentication = 
-				SecurityContextHolder.getContext().getAuthentication();
-		
-		int deleteResult = accountService.deleteConfirm(authentication.getName());
+		int deleteResult = accountService.deleteConfirm(a_no);
 		
 		model.addAttribute("deleteResult", deleteResult);
-		
-		if (deleteResult > 0) {
-		
-			if (authentication != null) {
-				new SecurityContextLogoutHandler()
-					.logout(request, response, authentication);
-				
-			}
-			
-		}
 		
 		return nextPage;
 	}
@@ -266,5 +247,18 @@ public class AccountController {
 		return nextPage;
 	
 	}
+	
+	// 비밀번호 초기화
+	@GetMapping("/reset_password")
+	public String resetPassword(@RequestParam("a_no") int a_no, Model model) {
+		log.info("resetPassword()");
+		
+		int resetResult = accountService.resetPassword(a_no);
+		
+		model.addAttribute("resetResult", resetResult);
+		
+		return new String();
+	}
+	
 	
 }
