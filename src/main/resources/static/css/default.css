@@ -98,7 +98,6 @@
 	.search_part {
 		width: max-content;
 		min-width: 80px;
-		padding: var(--smallBtnsPadding);
 	}
 	
 	.search_input {

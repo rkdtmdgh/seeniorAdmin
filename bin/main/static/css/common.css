@@ -51,7 +51,7 @@
     --subTextPadding: 0.3em 1em;
     --subTextIndent: 0 0 0 0.85em;
     --borderInputPadding: 1em 1em 10px;
-    --selectPadding: 1.2em;
+    --selectPadding: 0.53em 2em 0.53em 1em;;
     --iconsPadding: 0.15em;
     --tableInputErrorPadding: 0 1.2em 0.7em;
 
@@ -145,8 +145,8 @@ select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    padding-right: var(--selectPadding);
-    background: url(../image/icons/gray_arrow.png) right var(--selectPadding) center no-repeat;
+    padding: var(--selectPadding);
+    background: url(../image/icons/gray_arrow.png) right 1em center no-repeat;
 }
 
 input:-webkit-autofill,
