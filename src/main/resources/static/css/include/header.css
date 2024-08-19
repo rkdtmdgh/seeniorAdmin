@@ -15,6 +15,14 @@
             display: flex;
             align-items: center;
             gap: var(--innerPadding);
+            
+            .user_name {
+            	font-size: var(--menuFontSize);
+            	
+            	&:hover {
+            		color: var(--primaryColor);
+            	}
+            }
         }
     }
 }

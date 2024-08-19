@@ -12,9 +12,8 @@
 				<option value="a_phone">연락처</option>
 			</th:block>
 			
-			<th:block th:if="${option == '게시판'}">
-				<option value="title">제목</option>
-				<option value="writer">작성자</option>
+			<th:block th:if="${option == '질환 / 질병 정보 관리'}">
+				<option value="d_name" selected>질환/질병명</option>
 			</th:block>
 		</select>
 		

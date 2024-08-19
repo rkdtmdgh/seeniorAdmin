@@ -14,6 +14,7 @@ public class AdminAccountDto {
 	private String a_pw;
 	private String a_name;
 	private String a_phone;
+	private String a_birth;
 	private String a_department;
 	private String a_level;
 	private String a_position;

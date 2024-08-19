@@ -92,41 +92,31 @@ export function searchForm(event, apiUrl, page) {
 		.then(response => {
 			logger.info(apiUrl + ' searchForm() response:', response);
 			
-			// 쿼리스트링 조건 추가
-			// page, sort or part, sortValue or string, boolSearch // boolSearch값에 따라 사용값 다름
-			setQueryString(response.searchAdminListPage.page, response.searchPart, response.searchString, true); 
-			
 			const contentTable = document.querySelector('.content_table tbody'); // 데이터가 나열될 테이블 요소
 			const pagination = document.querySelector('.pagination_wrap'); // 페이지 네이션 요소
 			contentTable.innerHTML = '';
 			pagination.innerHTML = '';
 			
-			if(response && response.adminAccountDtos) {
-				const pagingValues = response.searchAdminListPage; // 페이지네이션을 위한 값들
-				const paging = setPagination(pagingValues, 'searchForm', null, apiUrl, true); // 페이징벨류값, 핸들러,  sort, 검색 커맨드 or sortValue, boolSearch
+			const { getListDtos, getListPage } = setParseResponseByCommand(apiUrl, response);
+			if(response && getListDtos) {
+				// 쿼리스트링 조건 추가
+				setSearchQueryString(getListPage.page, response.searchPart, response.searchString); // page, searchPart, searchString
+							
+				const paging = setPagination(getListPage, null, null, apiUrl, true); // 페이징벨류값, sort, sortValue, 커맨드, isSearch
 				pagination.innerHTML = paging;
 				
-				let pageLimit = pagingValues.pageLimit; // 한 페이지에 노출될 리스트 수
-				let totalCnt = pagingValues.searchAdminListCnt; // 총 리스트 합계
-				let adminListCnt = totalCnt - (pageLimit * (pagingValues.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
-							
+				let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
+				let totalCnt = getListPage.searchAdminListCnt; // 총 리스트 합계
+				let adminListCnt = totalCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
+											
 				if(adminListCnt > 0) {
-					response.adminAccountDtos.forEach((data) => { 
+					getListDtos.forEach((data) => { 
 						contentTable.insertAdjacentHTML('beforeend', setDataList(apiUrl, data, adminListCnt));
 						adminListCnt --;
 					});
 				} else {
 		            // 테이블의 전체 열 수 계산하기
-					const rows = document.querySelectorAll('table thead tr');
-		            let maxCols = 0;
-		
-		            rows.forEach(row => {
-		                const cols = row.querySelectorAll('th');
-		                if (cols.length > maxCols) {
-		                    maxCols = cols.length;
-		                }
-		            });
-		            
+					const maxCols = setTableColumnsNum();
 					contentTable.innerHTML = `
 						<tr>
 	                        <td colspan="${maxCols}">
@@ -138,6 +128,15 @@ export function searchForm(event, apiUrl, page) {
 				
 			} else {
 				logger.info('데이터가 없거나 유효하지 않습니다.');
+				// 테이블의 전체 열 수 계산하기
+				const maxCols = setTableColumnsNum();
+				contentTable.innerHTML = `
+					<tr>
+                        <td colspan="${maxCols}">
+                            <p class="table_info">검색된 내용이 없습니다.</p>
+                        </td>
+                    </tr>
+				`;
 			}
 		})
 		.catch((error) => {
@@ -184,9 +183,14 @@ export function modifyForm(event, formName) {
 	
 	input = form.a_pw;
 	if(input.value.trim().length > 0) {
-		const isConfirm = confirm('비밀번호를 변경하시겠습니까?\n변경하지 않을 경우 입력한 값을 삭제해 주세요.');
+		const isConfirm = confirm('비밀번호를 변경하시겠습니까?\n변경하지 않을 경우 입력한 값을 삭제 후 다시 저장해 주세요.');
 		if(!isConfirm) {
 			return false;	
+		}
+		
+		if(!validatePw(input)) { 
+			input.focus();
+			return false;
 		}
 	}
 	

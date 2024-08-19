@@ -53,25 +53,61 @@ function setFormValuesFromUrl(part) {
 }
 
 // 페이지 유지를 위한 쿼리 스트링 제어(검색 이력 제거)
-function setQueryString(page, sortOrPart, sortValueOrString, isSearch) {
+function setListQueryString(page, sort, sortValue) {
 	const url = new URL(window.location);
-	if(isSearch) {
-        url.searchParams.delete('sort');
-        url.searchParams.delete('sortValue');
-        url.searchParams.set('searchPart', sortOrPart);
-        url.searchParams.set('searchString', sortValueOrString);
-    } else {
-        url.searchParams.delete('searchPart');
-        url.searchParams.delete('searchString');
-        if (sortOrPart) url.searchParams.set('sort', sortOrPart);
-        if (sortValueOrString) url.searchParams.set('sortValue', sortValueOrString);
-    }
+    url.search = '';
 	url.searchParams.set('page', page); 
+    if (sort) url.searchParams.set('sort', sort);
+    if (sortValue) url.searchParams.set('sortValue', sortValue);
 	window.history.replaceState({}, '', url); // 현재 url 변경 및 리로드 제어
 }
 
+// 검색 후 페이지 유지를 위한 쿼리 스트링 제어(검색 파트, 스트링 재입력)
+function setSearchQueryString(page, searchPart, searchString) {
+	const url = new URL(window.location);
+    url.search = '';
+	url.searchParams.set('page', page); 
+    url.searchParams.set('searchPart', searchPart);
+    url.searchParams.set('searchString', searchString);
+	window.history.replaceState({}, '', url); // 현재 url 변경 및 리로드 제어
+}
+
+// 카테고리에 맞도록 객체 선택 
+function setParseResponseByCommand(command, response) {
+	let getListDtos;
+	let getListPage;
+	let getListCnt;
+	switch(command) {
+		case '/account/get_admin_list': // 관리자 계정 관리
+			getListDtos = response.adminAccountDtos;
+			getListPage = response.adminListPage;
+			getListCnt = response.adminListPage.accountListCnt;
+			break;
+			
+		case '/account/search_admin_list': // 관리자 계정 관리 검색
+			getListDtos = response.adminAccountDtos;
+			getListPage = response.searchAdminListPage;
+			getListCnt = response.searchAdminListPage.searchAdminListCnt;
+			break;
+			
+		case '/disease/get_all_disease_list_with_page': // 질환 / 질병 정보 관리
+			getListDtos = response.diseaseDtos;
+			getListPage = response.diseaseListPageNum;
+			getListCnt = response.diseaseListPageNum.diseaseListCnt;
+			break;
+			
+		case '/disease/search_disease': // 질환 / 질병 정보 관리
+			getListDtos = response.diseaseDtos;
+			getListPage = response.diseaseListPageNum;
+			getListCnt = response.diseaseListPageNum.diseaseListCnt;
+			break;
+	}
+	
+	return { getListDtos, getListPage, getListCnt }
+}
+
 // 페이지네이션 생성
-function setPagination(pagingValues, handlerFunction, sort, sortValueORsearchCommend, isSearch) {
+function setPagination(pagingValues, sort, sortValue, command, isSearch) { // 페이징벨류값, 핸들러,  sort, sortValue, 커맨드, boolSearch
 	const blockLimit = pagingValues.blockLimit; // 한 블럭에 포함되는 페이지 수
 	const startPage = pagingValues.startPage; // 현재 블럭의 시작 페이지
 	const endPage = pagingValues.endPage; // 현재 블럭의 마지막 페이지
@@ -79,22 +115,25 @@ function setPagination(pagingValues, handlerFunction, sort, sortValueORsearchCom
 	const maxPage = pagingValues.maxPage; // 마지막 페이지
 	const totalBlocks = Math.ceil(maxPage / blockLimit); // 전체 블록 수
 	const currentBlock = Math.ceil(currentPage / blockLimit); // 현재 블록
-	// 검색폼일 경우 event 값 null 적용 검색폼이 아닐 경우 sort 기본 값
-	const sortStrORsearchEvent = isSearch ? null : sort ? `'${sort}'` : 'null'; 
-	// 검색폼일 경우 api 커맨드 검색폼이 아닐 경우 sortValue 
-	const sortValueStrORsearchCommend = isSearch ? `'${sortValueORsearchCommend}'` : sortValueORsearchCommend ? `'${sortValueORsearchCommend}'` : 'null'; 
+	const handlerFunction = isSearch ? 'searchForm' : 'getList';
+	// 검색폼일 경우 event 값 null 적용 검색폼이 아닐 경우 getList 커맨드
+	const params1 = isSearch ? null : `'${command}'`; 
+	// 검색폼일 경우 커맨드 검색폼이 아닐 경우 sort, sortValue 값 입력
+	const isSort = sort ? sort : '';
+	const isSortValue = sortValue ? sortValue : '';
+	const params2 = isSearch ? `'${command}'` : `'${isSort}', '${isSortValue}'`;
 	let paging = '';
 	
 	if(totalBlocks > 1 && currentBlock > 1) { // 블럭이 1개 이상일 경우 2번째 블럭 부터 노출
 		paging += `
-			<div onclick="${handlerFunction}(${sortStrORsearchEvent}, ${sortValueStrORsearchCommend}, 1)" class="first func_icon">
+			<div onclick="${handlerFunction}(${params1}, ${params2}, 1)" class="first func_icon">
 	            <svg aria-label="first" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" enable-background="new 0 0 20 20">
 	                <polygon points="10,5 10,0 0,10 10,20 10,15 5,10 	"/>
 	             <polygon points="15,5 10,10 15,15 20,20 20,0 	"/>
 	            </svg>
 	        </div>
 	        
-	        <div onclick="${handlerFunction}(${sortStrORsearchEvent}, ${sortValueStrORsearchCommend}, ${startPage - 1})" class="prev func_icon">
+	        <div onclick="${handlerFunction}(${params1}, ${params2}, ${startPage - 1})" class="prev func_icon">
 	            <svg aria-label="first" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" enable-background="new 0 0 20 20">
 	                <polygon points="15,0 5,10 15,20 "/>
 	            </svg>
@@ -106,19 +145,19 @@ function setPagination(pagingValues, handlerFunction, sort, sortValueORsearchCom
 		if(i === currentPage) {
 			paging += `<div class="current">${i}</div>`;
 		} else {
-			paging += `<div class="num" onclick="${handlerFunction}(${sortStrORsearchEvent}, ${sortValueStrORsearchCommend}, ${i})">${i}</div>`;
+			paging += `<div class="num" onclick="${handlerFunction}(${params1}, ${params2}, ${i})">${i}</div>`;
 		}
 	}
 	
 	if(totalBlocks > 1 && currentBlock < totalBlocks) { // 마지막 전 블럭까지 노출
 		paging += `
-			<div onclick="${handlerFunction}(${sortStrORsearchEvent}, ${sortValueStrORsearchCommend}, ${endPage + 1})" class="next func_icon">
+			<div onclick="${handlerFunction}(${params1}, ${params2}, ${endPage + 1})" class="next func_icon">
 	            <svg aria-label="first" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" enable-background="new 0 0 20 20">
 	                <polygon points="15,0 5,10 15,20 "/>
 	            </svg>
 	        </div>
 	        
-	        <div onclick="${handlerFunction}(${sortStrORsearchEvent}, ${sortValueStrORsearchCommend}, ${maxPage})" class="last func_icon">
+	        <div onclick="${handlerFunction}(${params1}, ${params2}, ${maxPage})" class="last func_icon">
 	            <svg aria-label="first" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" enable-background="new 0 0 20 20">
 	                <polygon points="10,5 10,0 0,10 10,20 10,15 5,10 	"/>
 	             <polygon points="15,5 10,10 15,15 20,20 20,0 	"/>
@@ -135,8 +174,8 @@ function setDataList(api, data, index) {
 	let innerContent = '';
 	
 	switch(api) {
-		case 'getAdminList': 
-		case 'search_admin_list':
+		case '/account/get_admin_list': 
+		case '/account/search_admin_list':
 			innerContent = `
 				<tr>
 		            <td>
@@ -160,6 +199,28 @@ function setDataList(api, data, index) {
 		        </tr>
 			`;
 			break;
+			
+		case '/disease/get_all_disease_list_with_page':
+			innerContent = `
+				<tr>
+		            <td>
+		                <div class="table_info"><input type="checkbox" name="d_no" id="d_no" value="${data.d_no}"></div>
+		            </td>
+		            <td>
+		                <a href="/account/admin_modify_form?a_no=" class="table_info">${index}</a>
+		            </td>
+		            <td>
+		                <a href="/account/admin_modify_form?a_no=" class="table_info">${data.diseaseCategoryDto.dc_name}</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${data.d_name || 'N/A'}</p>
+		            </td>
+		            <td>
+		                <p class="table_info">${formatDate(data.d_reg_date) || 'N/A'}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
 		
 		default:
 			innerContent = '';
@@ -169,10 +230,25 @@ function setDataList(api, data, index) {
 }
 
 // 콘텐츠 리스트 정렬 버튼 세팅
-function setToggleSort(event, defaultSort, changeSort) {
+function setToggleSort(event, command, defaultSort, changeSort) {
     const sortBtn = event.target; // 클릭된 버튼 요소
     const currentSort = sortBtn.getAttribute('data-sort'); // 현재 정렬 값 가져오기
     const newSort = currentSort === defaultSort ? changeSort : defaultSort; // 정렬 값 토글
     sortBtn.setAttribute('data-sort', newSort); // 버튼의 data-sort 속성 값 업데이트
-    getList(defaultSort, newSort, 1); // 변경된 정렬 값으로 getList 호출
+    getList(command, defaultSort, newSort, 1); // 변경된 정렬 값으로 getList 호출
+}
+
+// 테이블의 전체 열 수 계산하기
+function setTableColumnsNum() {
+	const rows = document.querySelectorAll('table thead tr');
+	let maxCols = 0;
+
+	rows.forEach(row => {
+	    const cols = row.querySelectorAll('th');
+	    if (cols.length > maxCols) {
+	        maxCols = cols.length;
+	    }
+	});
+	
+	return maxCols;
 }

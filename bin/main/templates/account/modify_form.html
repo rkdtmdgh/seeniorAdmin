@@ -6,15 +6,12 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 관리자 계정 관리')}"></th:block>
 	
-	<script src="/js/validation.js"></script>
-	
 	<script type="module">
 		import { modifyForm } from '/js/submitForm.js'; // 로그인 폼 제출
 		window.modifyForm = modifyForm;
 	</script>
 </head>
 <body>
-
 	<main class="contents_wrap">
 		<header th:replace="~{fragments/header.html :: header}"></header>
 	
@@ -49,19 +46,6 @@
 		                                		<input type="text" name="a_id" id="a_id" class="table_info disabled"
 	                                            	th:value="${loginedAdminDto.a_id}" disabled>
 	                                        </td>
-	                                        <th><p class="table_title">관리자 승인</p></th>
-		                                	<td class="disabled">
-	                                            <div class="table_info radio_info">
-	                                            	<label class="radio">
-	                                            		<input type="radio" name="a_authority_role" value="NOT_APPROVED"
-	                                            			th:checked="${a_authority_role != 'SUB_ADMIN'}" disabled> 미승인
-	                                            	</label>
-	                                            	<label class="radio">
-	                                            		<input type="radio" name="a_authority_role" value="SUB_ADMIN"
-	                                            			th:checked="${a_authority_role == 'SUB_ADMIN'}" disabled> 승인
-	                                            	</label>
-	                                            </div>
-	                                        </td>
 		                                </tr>
 		                                
 		                                <tr>
@@ -73,7 +57,13 @@
 	                                        </td>
 		                                	<th><p class="table_title">비밀번호</p></th>
 		                                	<td>
-	                                            <input type="text" name="a_pw" id="a_pw" class="table_info" placeholder="변경 시 입력">
+		                                		<label class="cont_info">
+		                                			<input type="password" name="a_pw" id="a_pw" class="table_info" placeholder="변경 시 입력" autocomplete="off"
+		                                				oninput="clearErrorMessage(this)">
+		                                			<span class="input_icon" onclick="setViewPw(this)">
+							                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
+							                        </span>
+		                                		</label>
 	                                        </td>
 		                                </tr>
 		                                
@@ -87,7 +77,8 @@
 		                                	<th><p class="table_title">부서</p></th>
 		                                	<td class="disabled">
 	                                            <input type="text" name="a_department" id="a_department" class="table_info" placeholder="부서"
-	                                            	th:value="${loginedAdminDto.a_department}" disabled>
+	                                            	th:value="${loginedAdminDto.a_department}"
+	                                            	th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}">
 	                                        </td>
 		                                </tr>
 		                                
@@ -95,12 +86,14 @@
 		                                	<th><p class="table_title">직위</p></th>
 		                                	<td class="disabled">
 	                                            <input type="text" name="a_level" id="a_level" class="table_info" placeholder="직위"
-	                                            	th:value="${loginedAdminDto.a_level}" disabled>
+	                                            	th:value="${loginedAdminDto.a_level}"
+	                                            	th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}">
 	                                        </td>
 		                                	<th><p class="table_title">직책</p></th>
 		                                	<td class="disabled">
 	                                            <input type="text" name="a_position" id="a_position" class="table_info" placeholder="직책"
-	                                            	th:value="${loginedAdminDto.a_position}" disabled>
+	                                            	th:value="${loginedAdminDto.a_position}"
+	                                            	th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}">
 	                                        </td>
 		                                </tr>
 		                            </tbody>
@@ -108,7 +101,7 @@
 		                        
 		                        <div class="btn_list right">
 	                                <div class="btn_list">
-	                                    <a href="javascript: history.back();" class="btns cancel">목록</a>
+	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
 	                                    <button type="submit" class="btns">저장</button>
 	                                </div>
 	                            </div>
@@ -119,6 +112,5 @@
             </div>
 		</article>
 	</main>
-	
 </body>
 </html>

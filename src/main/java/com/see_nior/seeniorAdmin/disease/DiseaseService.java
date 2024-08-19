@@ -127,16 +127,19 @@ public class DiseaseService {
 		int maxPage = (int) (Math.ceil((double) diseaseCategoryListCnt / pageLimit));
 		
 		// 시작 페이지 값 계산 
-		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit;
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
 		
 		// 마지막 페이지 값 계산
 		int endPage = startPage + blockLimit - 1;
 		if (endPage > maxPage) endPage = maxPage;
 		
 		diseaseCategoryListPageNum.put("diseaseCategoryListCnt", diseaseCategoryListCnt);
+		diseaseCategoryListPageNum.put("page", page);
 		diseaseCategoryListPageNum.put("maxPage", maxPage);
 		diseaseCategoryListPageNum.put("startPage", startPage);
 		diseaseCategoryListPageNum.put("endPage", endPage);
+		diseaseCategoryListPageNum.put("blockLimit", blockLimit);
+		diseaseCategoryListPageNum.put("pageLimit", pageLimit);
 		
 		return diseaseCategoryListPageNum;
 	}
@@ -283,16 +286,19 @@ public class DiseaseService {
 		int maxPage = (int) (Math.ceil((double) diseaseListCnt / pageLimit));
 		
 		// 시작 페이지 값 계산
-		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit;
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
 		
 		// 마지막 페이지 값 계산
 		int endPage = startPage + blockLimit - 1;
 		if (endPage > maxPage) endPage = maxPage;
 		
 		diseaseListPageNum.put("diseaseListCnt", diseaseListCnt);
+		diseaseListPageNum.put("page", page);
 		diseaseListPageNum.put("maxPage", maxPage);
 		diseaseListPageNum.put("startPage", startPage);
 		diseaseListPageNum.put("endPage", endPage);
+		diseaseListPageNum.put("blockLimit", blockLimit);
+		diseaseListPageNum.put("pageLimit", pageLimit);
 		
 		return diseaseListPageNum;
 	}
@@ -331,16 +337,19 @@ public class DiseaseService {
 		int maxPage = (int) (Math.ceil((double) diseaseListByCategoryCnt / pageLimit));
 		
 		// 시작 페이지 값 계산
-		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit;
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
 		
 		// 마지막 페이지 값 계산
 		int endPage = startPage + blockLimit - 1;
 		if (endPage > maxPage) endPage = maxPage;
 		
 		diseaseLisByCategoryPageNum.put("diseaseListCnt", diseaseListByCategoryCnt);
+		diseaseLisByCategoryPageNum.put("page", page);
 		diseaseLisByCategoryPageNum.put("maxPage", maxPage);
 		diseaseLisByCategoryPageNum.put("startPage", startPage);
 		diseaseLisByCategoryPageNum.put("endPage", endPage);
+		diseaseLisByCategoryPageNum.put("blockLimit", blockLimit);
+		diseaseLisByCategoryPageNum.put("pageLimit", pageLimit);
 		
 		return diseaseLisByCategoryPageNum;
 	}

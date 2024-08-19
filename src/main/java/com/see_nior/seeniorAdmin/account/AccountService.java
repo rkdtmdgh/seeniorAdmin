@@ -105,7 +105,11 @@ public class AccountService {
 	public void modifyConfirm(AdminAccountDto adminAccountDto) {
 		log.info("modifyConfirm()");
 		
-		adminAccountDto.setA_pw(passwordEncoder.encode(adminAccountDto.getA_pw()));
+		if (adminAccountDto.getA_pw() != "" && adminAccountDto.getA_pw() != null) {
+			
+			adminAccountDto.setA_pw(passwordEncoder.encode(adminAccountDto.getA_pw()));
+			
+		}
 		
 		accountMapper.updateMyAdminInfo(adminAccountDto);
 		
@@ -120,10 +124,10 @@ public class AccountService {
 	}
 	
 	// 회원 탈퇴 확인 
-	public int deleteConfirm(String a_id) {
+	public int deleteConfirm(int a_no) {
 		log.info("deleteConfirm()");
 		
-		return accountMapper.updateAdminIsDeleted(a_id);
+		return accountMapper.updateAdminIsDeletedByNo(a_no);
 	}
 	
 	// 관리자 리스트 가져오기
@@ -236,6 +240,19 @@ public class AccountService {
 		
 		accountMapper.updateAdminRoleByNo(a_no);
 		
+	}
+
+	
+	// 비밀번호 초기화
+	public int resetPassword(int a_no) {
+		log.info("resetPassword()");
+		
+		AdminAccountDto adminAccountDto = 
+				accountMapper.selectAdminAccountByNo(a_no);
+		
+		String a_pw = "s" + adminAccountDto.getA_birth() + "!";
+		
+		return accountMapper.updateAdminPwReset(a_no, passwordEncoder.encode(a_pw));
 	}
 
 }

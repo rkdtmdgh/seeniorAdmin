@@ -1,61 +1,89 @@
 <!DOCTYPE html>
 <html
-	xmlns:th="http://www.thymeleaf.org" >
-	
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-
-
+	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 질환 / 질병 정보 관리')}"></th:block>
+	
+	<script type="module">
+		import { getList } from '/js/api/api_get_list.js'; // 테이블 리스트 불러오기
+		import { searchForm } from '/js/submitForm.js'; // 검색폼 제출
+		window.getList = getList;
+		window.searchForm = searchForm;
+		document.addEventListener('DOMContentLoaded', () => {
+			const { hasSearchString, page, sort, sortValue } = setFormValuesFromUrl('d_name'); // 검색 파트 기본값
+			hasSearchString ? searchForm(null, '/disease/search_disease', page) : getList('/disease/get_all_disease_list_with_page', sort, sortValue, page);
+        });
+	</script>
 </head>
 <body>
-
-	<article>
+	<main class="contents_wrap">
+		<header th:replace="~{fragments/header.html :: header}"></header>
 	
-		<p>disease list</p>
-		
-		<select>
-			<option value="">카테고리를 선택하세요</option>
-		</select>
-		
-		<table>
-			<thead>
-				<tr>
-					<th>no</th>
-					<th>category</th>
-					<th>name</th>
-					<th>info</th>
-					<th>good_food</th>
-					<th>bad_food</th>
-					<th>reg_date</th>
-					<th>mod_date</th>
-					<th>수정</th>
-					<th>삭제</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="diseaseDto : ${diseaseDtos.diseaseDto}">
-					<td th:text="${diseaseDto.d_no}"></td>
-					<td th:text="${diseaseDto.diseaseCategoryDto.dc_name}"></td>
-					<td th:text="${diseaseDto.d_name}"></td>
-					<td th:text="${diseaseDto.d_info}"></td>
-					<td th:text="${diseaseDto.d_good_food}"></td>
-					<td th:text="${diseaseDto.d_bad_food}"></td>
-					<td th:text="${diseaseDto.d_reg_date}"></td>
-					<td th:text="${diseaseDto.d_mod_date}"></td>
-					<td><a th:href="'/disease/modify_form?no=' + ${diseaseDto.d_no}">수정</a></td>
-					<td><a th:href="'/disease/delete_confirm?no=' + ${diseaseDto.d_no}">삭제</a></td>
-				</tr>
-			</tbody>
-		
-		</table>
-		
-		<br>
-		<a href="/disease/create_category_form">질환 카테고리 추가</a>
-		<a href="/disease/create_form">질환 추가</a>
-		<a href="/disease/category_list">질환 카테고리 리스트</a>
-	</article>
-
-
+		<article class="contents_container">
+			<nav th:replace="~{fragments/nav.html :: nav}"></nav>
+			
+			<div class="content">
+                <div class="content_inner sc">
+					<section class="content_info_wrap">
+					    <div class="content_top">
+					        <div class="content_top_info">
+					            <h2 class="title">질환 / 질병 정보 관리</h2>
+					            
+					            <div class="content_top_right">
+									<form name="search_form" onsubmit="searchForm(event, '/disease/search_disease')" th:insert="~{fragments/search.html :: search('질환 / 질병 정보 관리')}"></form>
+						            
+						            <div class="btn_list">
+						            	<div class="btns small" onclick="getList('/disease/get_all_disease_list_with_page', null, null, 1)">전체보기</div>
+						            </div>
+					            </div>
+					        </div>
+					    </div>
+					    
+					    <div class="table_wrap">
+	                        <table class="content_table">
+	                            <colgroup>
+	                                <col class="col_checkBox">
+	                                <col class="col_no">
+	                                <col class="col_default">
+	                                <col>
+	                                <col class="col_default">
+	                            </colgroup>
+	
+	                            <thead>
+	                                <tr>
+	                                	<th>
+	                                		<div class="table_title"><input type="checkbox" name="all_check" id="all_check" ></div>	                                        
+	                                    </th>
+	                                    <th>
+	                                        <p class="table_title">No</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">분류명</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">질환 / 질병명</p>
+	                                    </th>
+	                                    <th>
+	                                        <p class="table_title">등록일</p>
+	                                    </th>
+	                                </tr>
+	                            </thead>
+	
+	                            <tbody>
+	                                
+	                            </tbody>
+	                        </table>
+	                        
+	                        <div class="pagination_wrap"></div>
+	                    </div>
+					</section>
+                </div>
+            </div>
+		</article>
+	</main>
 </body>
 </html>
