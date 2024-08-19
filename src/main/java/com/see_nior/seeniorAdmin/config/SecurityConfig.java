@@ -55,6 +55,8 @@ public class SecurityConfig {
 							"/account/admin_list_form",
 							"/account/get_admin_list",
 							"/account/search_admin_list",
+							"/account/admin_modify_form",
+							"/account/admin_modify_confirm",
 							"/account/is_approval"
 							).hasRole("SUPER_ADMIN")
 					.anyRequest().hasAnyRole("SUPER_ADMIN", "SUB_ADMIN"));

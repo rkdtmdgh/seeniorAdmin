@@ -165,7 +165,7 @@ public class AccountController {
 			HttpServletRequest request, 
 			HttpServletResponse response,
 			Model model) {
-		log.info("deleteConfirm");
+		log.info("deleteConfirm()");
 		
 		String nextPage = "account/delete_result";
 		
