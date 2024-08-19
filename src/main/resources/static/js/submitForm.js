@@ -184,9 +184,14 @@ export function modifyForm(event, formName) {
 	
 	input = form.a_pw;
 	if(input.value.trim().length > 0) {
-		const isConfirm = confirm('비밀번호를 변경하시겠습니까?\n변경하지 않을 경우 입력한 값을 삭제해 주세요.');
+		const isConfirm = confirm('비밀번호를 변경하시겠습니까?\n변경하지 않을 경우 입력한 값을 삭제 후 다시 저장해 주세요.');
 		if(!isConfirm) {
 			return false;	
+		}
+		
+		if(!validatePw(input)) { 
+			input.focus();
+			return false;
 		}
 	}
 	

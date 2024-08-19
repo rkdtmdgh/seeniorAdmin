@@ -44,20 +44,20 @@
 		                                <tr>
 		                                	<th><p class="table_title">아이디</p></th>
 		                                	<td class="disabled">
-		                                		<input type="hidden" name="a_no" th:value="${loginedAdminDto.a_no}">
+		                                		<input type="hidden" name="a_no" th:value="${selectedAdminDto.a_no}">
 		                                		<input type="text" name="a_id" id="a_id" class="table_info disabled"
-	                                            	th:value="${loginedAdminDto.a_id}" disabled>
+	                                            	th:value="${selectedAdminDto.a_id}" disabled>
 	                                        </td>
 	                                        <th><p class="table_title">관리자 승인</p></th>
 		                                	<td>
-	                                            <div class="table_info radio_info">
+	                                            <div class="table_info cont_info">
 	                                            	<label class="radio">
 	                                            		<input type="radio" name="a_authority_role" value="NOT_APPROVED"
-	                                            			th:checked="${a_authority_role != 'SUB_ADMIN'}"> 미승인
+	                                            			th:checked="${selectedAdminDto.a_authority_role != 'SUB_ADMIN'}"> 미승인
 	                                            	</label>
 	                                            	<label class="radio">
 	                                            		<input type="radio" name="a_authority_role" value="SUB_ADMIN"
-	                                            			th:checked="${a_authority_role == 'SUB_ADMIN'}"> 승인
+	                                            			th:checked="${selectedAdminDto.a_authority_role == 'SUB_ADMIN'}"> 승인
 	                                            	</label>
 	                                            </div>
 	                                        </td>
@@ -68,13 +68,13 @@
 		                                	<td>
 	                                            <input type="text" name="a_name" id="a_name" class="table_info" placeholder="이름"
 	                                            	oninput="checkEmpty(this, '이름을')" onblur="checkEmpty(this, '이름을')"
-	                                            	th:value="${loginedAdminDto.a_name}">
+	                                            	th:value="${selectedAdminDto.a_name}">
 	                                        </td>
 	                                        <th><p class="table_title">연락처</p></th>
 		                                	<td>
 	                                            <input type="text" name="a_phone" id="a_phone" maxlength="13" class="table_info" placeholder="연락처"
 	                                            	onkeydown="setReplacePhone(this)" onkeyup="validatePhone(this)" onblur="validatePhone(this)"
-	                                            	th:value="${loginedAdminDto.a_phone}">
+	                                            	th:value="${selectedAdminDto.a_phone}">
 	                                        </td>
 		                                </tr>
 		                                
@@ -82,12 +82,12 @@
 		                                	<th><p class="table_title">부서</p></th>
 		                                	<td>
 	                                            <input type="text" name="a_department" id="a_department" class="table_info" placeholder="부서"
-	                                            	th:value="${loginedAdminDto.a_department}">
+	                                            	th:value="${selectedAdminDto.a_department}">
 	                                        </td>
 	                                        <th><p class="table_title">직위</p></th>
 		                                	<td>
 	                                            <input type="text" name="a_level" id="a_level" class="table_info" placeholder="직위"
-	                                            	th:value="${loginedAdminDto.a_level}">
+	                                            	th:value="${selectedAdminDto.a_level}">
 	                                        </td>
 		                                </tr>
 		                                
@@ -95,17 +95,18 @@
 		                                	<th><p class="table_title">직책</p></th>
 		                                	<td>
 	                                            <input type="text" name="a_position" id="a_position" class="table_info" placeholder="직책"
-	                                            	th:value="${loginedAdminDto.a_position}">
+	                                            	th:value="${selectedAdminDto.a_position}">
 	                                        </td>
 		                                </tr>
 		                            </tbody>
 		                        </table>
 		                        
 		                        <div class="btn_list">
-	                                <a th:href="@{/account/delete_confirm(a_no=${loginedAdminDto.a_no})}" class="btns delete">삭제</a>
-	
+		                        	<div th:if="${selectedAdminDto.a_no} != null and ${selectedAdminDto.a_id} != null"
+		                        		 th:onclick='deleteAccount([[${selectedAdminDto.a_no}]], [[${selectedAdminDto.a_id}]])' class="btns delete">삭제</div>
+		                        	
 	                                <div class="btn_list">
-	                                    <a href="javascript: history.back();" class="btns cancel">목록</a>
+	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
 	                                    <button type="submit" class="btns">저장</button>
 	                                </div>
 	                            </div>

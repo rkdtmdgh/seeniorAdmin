@@ -31,18 +31,8 @@
     	font-size: var(--subFontSize);
     }
     
-    .input_icon {
-    	width: var(--iconsWidth);
-    	height: var(--iconsWidth);
-    	padding: var(--iconsPadding);
-    	position: absolute;
-    	top: 1em;
-    	right: 1em;
-    	cursor: pointer;
-    }
-    
     .input_error {
-    	display: block;
+    	display: none;
     	font-size: var(--smallFontSize);
     	font-weight: var(--thin);
     	padding-top: var(--ssize2);
@@ -55,6 +45,10 @@
         .input_title {
             color: var(--redColor);
         }
+        
+        .input_error {
+        	display: block;
+        }
     }
 
     &:focus-within {
@@ -65,6 +59,16 @@
         }
     }
     
+}
+
+.input_icon {
+	width: var(--iconsWidth);
+	height: var(--iconsWidth);
+	padding: var(--iconsPadding);
+	position: absolute;
+	top: var(--inputIconTop);
+	right: 1em;
+	cursor: pointer;
 }
 
 .arrow {
@@ -332,13 +336,15 @@
 
     .table_info {
         text-align: left;
-        
-        &.radio_info {
-        	display: flex;
-        	align-items: center;
-        	gap: var(--baseGap);
-        }
     }
+    
+    .cont_info {
+       	position: relative;
+       	
+       	.input_icon {
+       		top: var(--tableInputIconTop);
+       	}
+	}	
     
     .input_error {
     	display: none;
@@ -349,7 +355,7 @@
     	color: var(--redColor);
     }
     
-    td.error {
+    .error {
     	.input_error {
     		display: block;
     	}

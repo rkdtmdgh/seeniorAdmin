@@ -8,46 +8,12 @@
 	
 	<script src="/js/validation.js"></script>
 	
-<<<<<<< HEAD
-</head>
-<body>
-
-	<article>
-	   
-		<p>modify form</p>
-		
-		<form action="/account/modify_confirm" name="modify_form" method="post">
-			<input type="hidden" name="no" th:value="${loginedAdminDto.a_no}">
-			<br>
-			<input type="text" name="id" th:value="${loginedAdminDto.a_id}" disabled readonly>
-			<br>
-			<input type="password" name="pw" placeholder="INPUT ADMIN PW">
-			<br>
-			<input type="text" name="name" th:value="${loginedAdminDto.a_name}" placeholder="INPUT ADMIN NAME">
-			<br>
-			<input type="text" name="phone" th:value="${loginedAdminDto.a_phone}" placeholder="INPUT ADMIN PHONE">
-			<br>
-			<input type="text" name="department" th:value="${loginedAdminDto.a_department}" placeholder="INPUT ADMIN DEPARTMENT">
-			<br>
-			<input type="text" name="level" th:value="${loginedAdminDto.a_level}" placeholder="INPUT ADMIN LEVEL">
-			<br>
-			<input type="text" name="position" th:value="${loginedAdminDto.a_position}" placeholder="INPUT ADMIN POSITION">
-			<br>
-			<input type="submit" value="정보수정">
-			<input type="reset" value="초기화">
-		</form>
-		
-		<br><br>
-		
-		<a href="/">홈</a>
-=======
 	<script type="module">
 		import { modifyForm } from '/js/submitForm.js'; // 로그인 폼 제출
 		window.modifyForm = modifyForm;
 	</script>
 </head>
 <body>
-
 	<main class="contents_wrap">
 		<header th:replace="~{fragments/header.html :: header}"></header>
 	
@@ -82,19 +48,6 @@
 		                                		<input type="text" name="a_id" id="a_id" class="table_info disabled"
 	                                            	th:value="${loginedAdminDto.a_id}" disabled>
 	                                        </td>
-	                                        <th><p class="table_title">관리자 승인</p></th>
-		                                	<td class="disabled">
-	                                            <div class="table_info radio_info">
-	                                            	<label class="radio">
-	                                            		<input type="radio" name="a_authority_role" value="NOT_APPROVED"
-	                                            			th:checked="${a_authority_role != 'SUB_ADMIN'}" disabled> 미승인
-	                                            	</label>
-	                                            	<label class="radio">
-	                                            		<input type="radio" name="a_authority_role" value="SUB_ADMIN"
-	                                            			th:checked="${a_authority_role == 'SUB_ADMIN'}" disabled> 승인
-	                                            	</label>
-	                                            </div>
-	                                        </td>
 		                                </tr>
 		                                
 		                                <tr>
@@ -106,7 +59,13 @@
 	                                        </td>
 		                                	<th><p class="table_title">비밀번호</p></th>
 		                                	<td>
-	                                            <input type="text" name="a_pw" id="a_pw" class="table_info" placeholder="변경 시 입력">
+		                                		<label class="cont_info">
+		                                			<input type="password" name="a_pw" id="a_pw" class="table_info" placeholder="변경 시 입력" autocomplete="off"
+		                                				oninput="clearErrorMessage(this)">
+		                                			<span class="input_icon" onclick="setViewPw(this)">
+							                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
+							                        </span>
+		                                		</label>
 	                                        </td>
 		                                </tr>
 		                                
@@ -120,7 +79,8 @@
 		                                	<th><p class="table_title">부서</p></th>
 		                                	<td class="disabled">
 	                                            <input type="text" name="a_department" id="a_department" class="table_info" placeholder="부서"
-	                                            	th:value="${loginedAdminDto.a_department}" disabled>
+	                                            	th:value="${loginedAdminDto.a_department}"
+	                                            	th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}">
 	                                        </td>
 		                                </tr>
 		                                
@@ -128,12 +88,14 @@
 		                                	<th><p class="table_title">직위</p></th>
 		                                	<td class="disabled">
 	                                            <input type="text" name="a_level" id="a_level" class="table_info" placeholder="직위"
-	                                            	th:value="${loginedAdminDto.a_level}" disabled>
+	                                            	th:value="${loginedAdminDto.a_level}"
+	                                            	th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}">
 	                                        </td>
 		                                	<th><p class="table_title">직책</p></th>
 		                                	<td class="disabled">
 	                                            <input type="text" name="a_position" id="a_position" class="table_info" placeholder="직책"
-	                                            	th:value="${loginedAdminDto.a_position}" disabled>
+	                                            	th:value="${loginedAdminDto.a_position}"
+	                                            	th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}">
 	                                        </td>
 		                                </tr>
 		                            </tbody>
@@ -141,7 +103,7 @@
 		                        
 		                        <div class="btn_list right">
 	                                <div class="btn_list">
-	                                    <a href="javascript: history.back();" class="btns cancel">목록</a>
+	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
 	                                    <button type="submit" class="btns">저장</button>
 	                                </div>
 	                            </div>
@@ -152,7 +114,5 @@
             </div>
 		</article>
 	</main>
->>>>>>> 6c9589312117067a838b1ed02affd5725bb41425
-	
 </body>
 </html>

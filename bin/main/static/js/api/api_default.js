@@ -1,6 +1,21 @@
 // 로그아웃
 function signOut() {
+	logger.info('signOut()');
+	const isConfirm = confirm('로그아웃하시겠습니까?');
+	if(!isConfirm) {
+		return false;	
+	}
 	location.replace('/account/sign_out_confirm');
+}
+
+// 계정 삭제
+function deleteAccount(a_no, a_id) {
+	logger.info('deleteAccount()', a_no, a_id);
+	const isConfirm = confirm(a_id + ' 계정을 삭제하시겠습니까?');
+	if(!isConfirm) {
+		return false;	
+	}
+	location.replace('/account/delete_confirm?a_no=' + a_no);
 }
 
 // 날짜 포맷팅
