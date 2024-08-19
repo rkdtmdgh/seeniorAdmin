@@ -68,6 +68,8 @@
 
     /* position */
     --trslC: -50%, -50%; /*translate center*/
+    --inputIconTop: 1em;
+    --tableInputIconTop: 0.7em;
 
     /* small size */
     --ssize1: 0.3em;
@@ -132,7 +134,8 @@ input:disabled {
 
 label {
 	&.radio {
-		display: flex;
+		padding-right: var(--smallGap);
+		display: inline-flex;
 		align-items: center;
 		gap: var(--ssize1);
 	}
