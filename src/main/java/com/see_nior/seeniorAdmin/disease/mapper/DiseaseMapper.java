@@ -17,7 +17,7 @@ public interface DiseaseMapper {
 	public int insertNewDiseaseCategory(DiseaseCategoryDto diseaseCategoryDto);
 
 	// 질환 카테고리 중복체크
-	public boolean isDiseaseCategory(String name);
+	public boolean isDiseaseCategory(String dc_name);
 	
 	// 모든 질환 카테고리 가져오기 (질환 리스트에서 <select>박스 => 비동기)
 	public List<DiseaseCategoryDto> getDiseaseCategoryList();
@@ -29,13 +29,13 @@ public interface DiseaseMapper {
 	public int getAllDiseaseCategoryCnt();
 	
 	// 질환 카테고리 한개 가져오기
-	public DiseaseCategoryDto getDiseaseCategory(int no);
+	public DiseaseCategoryDto getDiseaseCategory(int dc_no);
 	
 	// 질환 카테고리 수정
 	public int updateDiseaseCategory(DiseaseCategoryDto diseaseCategoryDto);
 
 	// 질환 카테고리 삭제
-	public int deleteDiseaseCategory(int no);
+	public int deleteDiseaseCategory(int dc_no);
 	
 	// -----------------------------------질환 -------------------------------------------------------------
 
@@ -43,7 +43,7 @@ public interface DiseaseMapper {
 	public int insertNewDisease(DiseaseDto diseaseDto);
 		
 	// 질환 중복체크
-	public boolean isDisease(String name);
+	public boolean isDisease(String d_name);
 	
 	// 모든 질환 가져오기
 	public List<DiseaseDto> getDiseaseList();
@@ -54,9 +54,6 @@ public interface DiseaseMapper {
 	// 질환의 총 리스트 개수 구하기(모든 질환)
 	public int getAllDiseaseCnt();
 	
-	// 카테고리에 따른 질환 가져오기
-	public List<DiseaseDto> getDiseaseListByCategory(int no);
-	
 	// 페이지에 따른 질환 가져오기(카테고리별 질환)
 	public List<DiseaseDto> getDiseaseListByCategoryWithPage(Map<String, Object> pagingParams);
 	
@@ -64,13 +61,13 @@ public interface DiseaseMapper {
 	public int getDiseaseByCategoryCnt();
 	
 	// 질환 한개 가져오기
-	public DiseaseDto getDiseaseByNo(int no);
+	public DiseaseDto getDiseaseByNo(int d_no);
 	
 	// 질환 수정
 	public int updateDisease(DiseaseDto diseaseDto);
 	
 	// 질환 삭제
-	public int deleteDisease(int no);
+	public int deleteDisease(int d_no);
 
 	// 페이지에 따른 질환 가져오기(검색한 질환)
 	public List<DiseaseDto> getSearchDisease(Map<String, Object> pagingParams);
