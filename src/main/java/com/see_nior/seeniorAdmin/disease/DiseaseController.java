@@ -59,7 +59,7 @@ public class DiseaseController {
 	
 	
 	// 질환 카테고리 리스트 양식
-	@GetMapping("/category_list")
+	@GetMapping("/category_list_form")
 	public String category_list() {
 		log.info("category_list()");
 		
