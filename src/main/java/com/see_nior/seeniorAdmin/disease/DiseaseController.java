@@ -1,5 +1,7 @@
 package com.see_nior.seeniorAdmin.disease;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -59,11 +61,11 @@ public class DiseaseController {
 	
 	
 	// 질환 카테고리 리스트 양식
-	@GetMapping("/category_list")
-	public String category_list() {
-		log.info("category_list()");
+	@GetMapping("/category_list_form")
+	public String categoryListForm() {
+		log.info("categoryListForm()");
 		
-		String nextPage = "disease/category_list";
+		String nextPage = "disease/category_list_form";
 		
 		return nextPage;
 		
@@ -96,6 +98,7 @@ public class DiseaseController {
 		Map<String, Object> diseaseCategoryListPageNum = diseaseService.getDiseaseCategoryListPageNum(page);
 		
 		diseaseCategoryListWithPage.put("diseaseCategoryListPageNum", diseaseCategoryListPageNum);
+		diseaseCategoryListWithPage.put("sort", sort);
 		
 		return diseaseCategoryListWithPage;
 		
@@ -103,12 +106,12 @@ public class DiseaseController {
 	
 	// 질환 카테고리 수정 양식
 	@GetMapping("/modify_category_form")
-	public String modifyCategoryForm(@RequestParam(value = "no") int no, Model model) {
+	public String modifyCategoryForm(@RequestParam(value = "dc_no") int dc_no, Model model) {
 		log.info("modifyCategoryForm()");
 		
 		String nextPage = "disease/modify_category_form";
 		
-		DiseaseCategoryDto diseaseCategoryDto = diseaseService.getCategory(no);
+		DiseaseCategoryDto diseaseCategoryDto = diseaseService.getCategory(dc_no);
 		
 		model.addAttribute("diseaseCategoryDto", diseaseCategoryDto);
 		
@@ -133,10 +136,10 @@ public class DiseaseController {
 	
 	// 질환 카테고리 삭제 확인
 	@GetMapping("/delete_category_confirm")
-	public String deleteCategoryConfirm(@RequestParam(value = "no") int no, Model model) {
+	public String deleteCategoryConfirm(@RequestParam(value = "dc_no") int dc_no, Model model) {
 		log.info("deleteCategoryConfirm()");
 		
-		int result = diseaseService.deleteCategoryConfirm(no);
+		int result = diseaseService.deleteCategoryConfirm(dc_no);
 		
 		model.addAttribute("deleteCategoryResult", result);
 		
@@ -176,11 +179,11 @@ public class DiseaseController {
 	}
 		
 	// 질환 리스트 양식
-	@GetMapping("/disease_list")
-	public String diseaseList() {
-		log.info("diseaseList()");
+	@GetMapping("/disease_list_form")
+	public String diseaseListForm() {
+		log.info("diseaseListForm()");
 		
-		String nextPage = "disease/disease_list";
+		String nextPage = "disease/disease_list_form";
 		
 		return nextPage;
 		
@@ -212,12 +215,12 @@ public class DiseaseController {
 	@GetMapping("/get_disease_list_by_category_with_page")
 	public Object getDiseaseListByCategoryWithPage(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-			@RequestParam(value = "category_no") int category_no,
+			@RequestParam(value = "d_category_no") int d_category_no,
 			@RequestParam(value = "sort", required = false, defaultValue = "all") String sort) {
 		log.info("getDiseaseListByCategoryWithPage()");
 		
 		// 페이지 번호에 따른 카테고리별 질환 리스트들 가져오기
-		Map<String, Object> diseaseListByCategoryWithPage = diseaseService.getDiseaseListByCategoryWithPage(page, category_no, sort);
+		Map<String, Object> diseaseListByCategoryWithPage = diseaseService.getDiseaseListByCategoryWithPage(page, d_category_no, sort);
 		
 		// 카테고리별 질환 총 페이지 개수 가져오기
 		Map<String, Object> diseaseListByCategoryPageNum = diseaseService.getDiseaseListByCategoryPageNum(page);
@@ -232,10 +235,10 @@ public class DiseaseController {
 	// 질환 한개 가져오기
 	@ResponseBody
 	@GetMapping("/get_disease")
-	public Object getDisease(@RequestParam(value = "no") int no) {
+	public Object getDisease(@RequestParam(value = "d_no") int d_no) {
 		log.info("getDisease()");
 		
-		DiseaseDto diseaseDto = diseaseService.getDisease(no);
+		DiseaseDto diseaseDto = diseaseService.getDisease(d_no);
 		
 		return diseaseDto;
 		
@@ -243,12 +246,12 @@ public class DiseaseController {
 	
 	// 질환 수정 양식
 	@GetMapping("/modify_form")
-	public String modifyForm(@RequestParam(value = "no") int no, Model model) {
+	public String modifyForm(@RequestParam(value = "no") int d_no, Model model) {
 		log.info("modifyForm()");
 		
 		String nextPage = "disease/modify_form";
 		
-		DiseaseDto diseaseDto = diseaseService.getDisease(no);
+		DiseaseDto diseaseDto = diseaseService.getDisease(d_no);
 		
 		model.addAttribute("diseaseDto", diseaseDto);
 		
@@ -273,10 +276,10 @@ public class DiseaseController {
 	
 	// 질환 삭제 확인
 	@GetMapping("/delete_confirm")
-	public String deleteConfirm(@RequestParam(value = "no") int no, Model model) {
+	public String deleteConfirm(@RequestParam(value = "d_nos") List<Integer> d_nos, Model model) {
 		log.info("deleteConfirm()");
 		
-		int result = diseaseService.deleteConfirm(no);
+		int result = diseaseService.deleteConfirm(new ArrayList<>(d_nos));
 		
 		model.addAttribute("deleteResult", result);
 		

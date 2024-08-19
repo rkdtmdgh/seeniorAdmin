@@ -1,10 +1,12 @@
 package com.see_nior.seeniorAdmin.disease;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.see_nior.seeniorAdmin.disease.mapper.DiseaseMapper;
 import com.see_nior.seeniorAdmin.dto.DiseaseCategoryDto;
@@ -145,10 +147,10 @@ public class DiseaseService {
 	}
 	
 	// 질환 카테고리 한개 가져오기
-	public DiseaseCategoryDto getCategory(int no) {
+	public DiseaseCategoryDto getCategory(int dc_no) {
 		log.info("getCategory()");
 		
-		DiseaseCategoryDto diseaseCategoryDto = diseaseMapper.getDiseaseCategory(no);
+		DiseaseCategoryDto diseaseCategoryDto = diseaseMapper.getDiseaseCategory(dc_no);
 		
 		return diseaseCategoryDto;
 	}
@@ -187,10 +189,10 @@ public class DiseaseService {
 	}
 	
 	// 질환 카테고리 삭제 확인
-	public int deleteCategoryConfirm(int no) {
+	public int deleteCategoryConfirm(int dc_no) {
 		log.info("deleteCategoryConfirm()");
 		
-		int result = diseaseMapper.deleteDiseaseCategory(no);
+		int result = diseaseMapper.deleteDiseaseCategory(dc_no);
 		
 		// DB에 입력 실패
 		if (result <= 0) {
@@ -304,7 +306,7 @@ public class DiseaseService {
 	}
 	
 	// 페이지에 따른 질환 가져오기(카테고리별 질환)
-	public Map<String, Object> getDiseaseListByCategoryWithPage(int page, int category_no, String sort) {
+	public Map<String, Object> getDiseaseListByCategoryWithPage(int page, int d_category_no, String sort) {
 		log.info("getDiseaseListByCategoryWithPage()");
 		
 		int pagingStart = (page - 1) * pageLimit;
@@ -314,7 +316,7 @@ public class DiseaseService {
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
-		pagingParams.put("category_no", category_no);
+		pagingParams.put("d_category_no", d_category_no);
 		pagingParams.put("sort", sort);
 		
 		List<DiseaseDto> diseaseDtos = diseaseMapper.getDiseaseListByCategoryWithPage(pagingParams);
@@ -355,10 +357,10 @@ public class DiseaseService {
 	}
 	
 	// 질환 한 개 가져오기(질환 수정 용)
-	public DiseaseDto getDisease(int no) {
+	public DiseaseDto getDisease(int d_no) {
 		log.info("getDisease()");
 		
-		DiseaseDto diseaseDto = diseaseMapper.getDiseaseByNo(no);
+		DiseaseDto diseaseDto = diseaseMapper.getDiseaseByNo(d_no);
 		
 		return diseaseDto;
 	}
@@ -421,23 +423,26 @@ public class DiseaseService {
 	}
 
 	// 질환 삭제 확인
-	public int deleteConfirm(int no) {
+	@Transactional
+	public int deleteConfirm(ArrayList<Integer> d_nos) {
 		log.info("deleteConfirm()");
+	   
+	   try {
+		   
+		   for (int d_no : d_nos) {
+			   diseaseMapper.deleteDisease(d_no);
+			   
+		   }
 		
-		int result = diseaseMapper.deleteDisease(no);
-		
-		// DB에 입력 실패
-		if (result <= 0) {
-			
-			return DISEASE_DELETE_FAIL;
-		
-		// DB에 입력 성공
-		} else {
-			
-			return DISEASE_DELETE_SUCCESS;
-			
-		}
-		
+	   } catch (Exception e) {
+		   log.error("Error ==========>",e);
+		   
+		   return DISEASE_DELETE_FAIL;
+		   
+	   }
+	   
+	   return DISEASE_DELETE_SUCCESS;
+	
 	}
 
 	// 페이지에 따른 질환 가져오기(검색한 질환)
@@ -481,9 +486,12 @@ public class DiseaseService {
 		if (endPage > maxPage) endPage = maxPage;
 		
 		searchDiseaseListPageNum.put("searchDiseaseListCnt", searchDiseaseListCnt);
+		searchDiseaseListPageNum.put("page", page);
 		searchDiseaseListPageNum.put("maxPage", maxPage);
 		searchDiseaseListPageNum.put("startPage", startPage);
 		searchDiseaseListPageNum.put("endPage", endPage);
+		searchDiseaseListPageNum.put("blockLimit", blockLimit);
+		searchDiseaseListPageNum.put("pageLimit", pageLimit);
 		
 		return searchDiseaseListPageNum;
 		

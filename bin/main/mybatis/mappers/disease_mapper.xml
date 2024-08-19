@@ -13,7 +13,6 @@
 		<result column="dc_name" property="dc_name" />
 		 -->
 		
-		
 		<result column="dc_is_deleted" property="dc_is_deleted" />
 		<result column="dc_reg_date" property="dc_reg_date" />
 		<result column="dc_mod_date" property="dc_mod_date" />
