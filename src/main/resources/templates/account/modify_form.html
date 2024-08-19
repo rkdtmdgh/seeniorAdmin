@@ -16,21 +16,21 @@
 		<p>modify form</p>
 		
 		<form action="/account/modify_confirm" name="modify_form" method="post">
-			<input type="hidden" name="no" th:value="${loginedAdminDto.no}">
+			<input type="hidden" name="no" th:value="${loginedAdminDto.a_no}">
 			<br>
-			<input type="text" name="id" th:value="${loginedAdminDto.id}" disabled readonly>
+			<input type="text" name="id" th:value="${loginedAdminDto.a_id}" disabled readonly>
 			<br>
 			<input type="password" name="pw" placeholder="INPUT ADMIN PW">
 			<br>
-			<input type="text" name="name" th:value="${loginedAdminDto.name}" placeholder="INPUT ADMIN NAME">
+			<input type="text" name="name" th:value="${loginedAdminDto.a_name}" placeholder="INPUT ADMIN NAME">
 			<br>
-			<input type="text" name="phone" th:value="${loginedAdminDto.phone}" placeholder="INPUT ADMIN PHONE">
+			<input type="text" name="phone" th:value="${loginedAdminDto.a_phone}" placeholder="INPUT ADMIN PHONE">
 			<br>
-			<input type="text" name="department" th:value="${loginedAdminDto.department}" placeholder="INPUT ADMIN DEPARTMENT">
+			<input type="text" name="department" th:value="${loginedAdminDto.a_department}" placeholder="INPUT ADMIN DEPARTMENT">
 			<br>
-			<input type="text" name="level" th:value="${loginedAdminDto.level}" placeholder="INPUT ADMIN LEVEL">
+			<input type="text" name="level" th:value="${loginedAdminDto.a_level}" placeholder="INPUT ADMIN LEVEL">
 			<br>
-			<input type="text" name="position" th:value="${loginedAdminDto.position}" placeholder="INPUT ADMIN POSITION">
+			<input type="text" name="position" th:value="${loginedAdminDto.a_position}" placeholder="INPUT ADMIN POSITION">
 			<br>
 			<input type="submit" value="정보수정">
 			<input type="reset" value="초기화">
