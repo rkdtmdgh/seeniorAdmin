@@ -11,6 +11,7 @@ CREATE TABLE ADMIN_ACCOUNT (
 	A_PW 						VARCHAR(200) NOT NULL COMMENT "관리자 비밀번호",							-- 관리자 비밀번호
 	A_NAME	 					VARCHAR(50) NOT NULL COMMENT "관리자 이름",								-- 관리자 이름
 	A_PHONE 					VARCHAR(50) NOT NULL COMMENT "관리자 연락처",								-- 관리자 연락처
+	A_BIRTH 					DATE NOT NULL COMMENT "관리자 생년월일",									-- 관리자 생년월일
 	A_DEPARTMENT 				VARCHAR(50) COMMENT "관리자 부서",											-- 관리자 부서
 	A_LEVEL 					VARCHAR(50) COMMENT "관리자 직급",											-- 관리자 직급
 	A_POSITION 					VARCHAR(50) COMMENT "관리자 직책",											-- 관리자 직책
