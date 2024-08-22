@@ -7,6 +7,11 @@
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 본인 확인')}"></th:block>
 	
 	<link rel="stylesheet" href="/css/account/sign_form.css">
+	
+	<script type="module">
+		import { modifyCheckForm } from '/js/submitForm.js'; // 검색폼 제출
+		window.modifyCheckForm = modifyCheckForm;
+	</script>
 </head>
 <body>
 	<main class="contents_wrap">
@@ -33,7 +38,7 @@
 					                    <label for="password" class="border_input">
 					                        <span class="input_title">비밀번호</span>
 					                        <input type="password" name="a_pw" id="pw" placeholder="비밀번호" class="input_txt" 
-					                        	oninput="validatePw(this)" onblur="checkEmpty(this, '비밀번호를')" autocomplete="off">
+				                        		onblur="checkEmpty(this, '비밀번호를')" autocomplete="off">
 					                        <span class="input_icon" onclick="setViewPw(this)">
 					                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
 					                        </span>

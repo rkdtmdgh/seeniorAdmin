@@ -148,7 +148,7 @@ export function searchForm(event, apiUrl, page) {
 // 본인 확인
 export function modifyCheckForm(event, formName) {
 	if(event) event.preventDefault();
-	const form = document.forms['search_form'];
+	const form = document.forms[formName];
 	let input;
 	
 	input = form.a_pw;
