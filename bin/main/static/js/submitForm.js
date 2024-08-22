@@ -148,8 +148,19 @@ export function searchForm(event, apiUrl, page) {
 // 본인 확인
 export function modifyCheckForm(event, formName) {
 	if(event) event.preventDefault();
-	const form = document.forms['search_form'];
+	const form = document.forms[formName];
 	let input;
+	
+	input = form.a_pw;
+	if(!checkEmpty(input, '비밀번호를')) {
+		input.focus();
+		return false;
+	}
+	
+	// 모든 유효성 검사가 통과되었을 때 폼 제출	
+	form.action = "/account/modify_form";
+    form.method = "post"; 
+    form.submit();
 }
 
 // 관리자 계정 정보 수정(SUPER_ADMIN)
