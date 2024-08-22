@@ -82,12 +82,18 @@ public class AccountService {
 	}
 	
 	// 관리자 정보 조회 by id
-	public AdminAccountDto getAdminAccountById(String a_id) {
+	public AdminAccountDto getAdminAccountById(String a_id, String a_pw) {
 		log.info("getAdminAccountById()");
 		
 		AdminAccountDto adminAccountDto = accountMapper.selectAdminAccountById(a_id);
 		
-		return adminAccountDto;
+		if (passwordEncoder.matches(a_pw, adminAccountDto.getA_pw())) {
+			
+			return adminAccountDto;
+			
+		}
+		
+		return null;
 		
 	}
 	
