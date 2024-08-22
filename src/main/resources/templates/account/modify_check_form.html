@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
+<head>
+	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 본인 확인')}"></th:block>
+</head>
+<body>
+	<main class="contents_wrap">
+		<header th:replace="~{fragments/header.html :: header}"></header>
+	
+		<article class="contents_container">
+			<nav th:replace="~{fragments/nav.html :: nav}"></nav>
+			
+			<div class="content">
+                <div class="content_inner sc">
+					<section class="content_info_wrap">
+					    <div class="content_top">
+					        <div class="content_top_info">
+					            <h2 class="title">본인 확인</h2>
+					        </div>
+					    </div>
+					    
+					    
+					</section>
+                </div>
+            </div>
+		</article>
+	</main>
+</body>
+</html>

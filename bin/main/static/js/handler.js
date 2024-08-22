@@ -207,13 +207,13 @@ function setDataList(api, data, index) {
 		                <div class="table_info func_area"><input type="checkbox" name="d_no" id="d_no" value="${data.d_no}"></div>
 		            </td>
 		            <td>
-		                <a href="/disease/modify_category_form?d_no=${data.d_no}" class="table_info">${index}</a>
+		                <a href="/disease/modify_form?d_no=${data.d_no}" class="table_info">${index}</a>
 		            </td>
 		            <td>
-		                <a href="/disease/modify_category_form?d_no=${data.d_no}" class="table_info">${data.diseaseCategoryDto.dc_name}</a>
+		                <a href="/disease/modify_form?d_no=${data.d_no}" class="table_info">${data.diseaseCategoryDto.dc_name}</a>
 		            </td>
 		            <td>
-		                <a href="/disease/modify_category_form?d_no=${data.d_no}" class="table_info">${data.d_name || 'N/A'}</a>
+		                <a href="/disease/modify_form?d_no=${data.d_no}" class="table_info">${data.d_name || 'N/A'}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${formatDate(data.d_reg_date) || 'N/A'}</p>
