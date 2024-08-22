@@ -306,7 +306,7 @@ public class DiseaseService {
 	}
 	
 	// 페이지에 따른 질환 가져오기(카테고리별 질환)
-	public Map<String, Object> getDiseaseListByCategoryWithPage(int page, int d_category_no, String sort) {
+	public Map<String, Object> getDiseaseListByCategoryWithPage(int page, int dc_no, String sort) {
 		log.info("getDiseaseListByCategoryWithPage()");
 		
 		int pagingStart = (page - 1) * pageLimit;
@@ -316,7 +316,7 @@ public class DiseaseService {
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
-		pagingParams.put("d_category_no", d_category_no);
+		pagingParams.put("dc_no", dc_no);
 		pagingParams.put("sort", sort);
 		
 		List<DiseaseDto> diseaseDtos = diseaseMapper.getDiseaseListByCategoryWithPage(pagingParams);
@@ -327,13 +327,13 @@ public class DiseaseService {
 	}
 	
 	// 질환의 총 페이지 개수 구하기(카테고리별 질환)
-	public Map<String, Object> getDiseaseListByCategoryPageNum(int page) {
+	public Map<String, Object> getDiseaseListByCategoryPageNum(int page, int dc_no) {
 		log.info("getDiseaseListByCategoryPageNum()");
 		
 		Map<String, Object> diseaseLisByCategoryPageNum = new HashMap<>();
 		
 		// 전체 리스트 개수 조회
-		int diseaseListByCategoryCnt = diseaseMapper.getDiseaseByCategoryCnt();
+		int diseaseListByCategoryCnt = diseaseMapper.getDiseaseByCategoryCnt(dc_no);
 		
 		// 전체 페이지 개수 계산
 		int maxPage = (int) (Math.ceil((double) diseaseListByCategoryCnt / pageLimit));
