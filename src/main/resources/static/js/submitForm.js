@@ -145,6 +145,13 @@ export function searchForm(event, apiUrl, page) {
 	}
 }
 
+// 본인 확인
+export function modifyCheckForm(event, formName) {
+	if(event) event.preventDefault();
+	const form = document.forms['search_form'];
+	let input;
+}
+
 // 관리자 계정 정보 수정(SUPER_ADMIN)
 export function adminModifyForm(formName) {
 	const form = document.forms[formName];
