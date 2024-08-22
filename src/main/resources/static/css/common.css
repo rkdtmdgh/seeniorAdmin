@@ -29,6 +29,7 @@
     --greenColor: #33D486; /* green */
     --yellowColor: #FFC73C; /* yellow */
     --redColor: #FF5B45; /* red */
+    --optionColor: #1967D2;
 
     /* background color palette */
     --bgColor: #F3F9F9; /* default */
@@ -51,9 +52,10 @@
     --subTextPadding: 0.3em 1em;
     --subTextIndent: 0 0 0 0.85em;
     --borderInputPadding: 1em 1em 10px;
-    --selectPadding: 0.53em 2em 0.53em 1em;;
+    --selectPadding: 0.53em 2.2em 0.53em 1em;;
     --iconsPadding: 0.15em;
     --tableInputErrorPadding: 0 1.2em 0.7em;
+    --optionPadding: 0.5em 1.2em;
 
     --baseGap: 20px;
     --smallGap: 10px;
@@ -112,6 +114,7 @@ input[type="text"], input[type="password"], textarea, select, form {
 	width: 100%;
     font-family: inherit;
     font-size: inherit;
+    font-weight: inherit;
     border: none;
     color: var(--grayColor);
     outline: none;
@@ -194,6 +197,10 @@ table {
 
         &:last-child {
             border: none;
+        }
+        
+        &.vam {
+        	vertical-align: middle;
         }
     }
 }

@@ -203,17 +203,17 @@ function setDataList(api, data, index) {
 		case '/disease/get_all_disease_list_with_page':
 			innerContent = `
 				<tr>
-		            <td>
-		                <div class="table_info"><input type="checkbox" name="d_no" id="d_no" value="${data.d_no}"></div>
+		            <td class="vam">
+		                <div class="table_info func_area"><input type="checkbox" name="d_no" id="d_no" value="${data.d_no}"></div>
 		            </td>
 		            <td>
-		                <a href="/account/admin_modify_form?a_no=" class="table_info">${index}</a>
+		                <a href="/disease/modify_category_form?d_no=${data.d_no}" class="table_info">${index}</a>
 		            </td>
 		            <td>
-		                <a href="/account/admin_modify_form?a_no=" class="table_info">${data.diseaseCategoryDto.dc_name}</a>
+		                <a href="/disease/modify_category_form?d_no=${data.d_no}" class="table_info">${data.diseaseCategoryDto.dc_name}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${data.d_name || 'N/A'}</p>
+		                <a href="/disease/modify_category_form?d_no=${data.d_no}" class="table_info">${data.d_name || 'N/A'}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${formatDate(data.d_reg_date) || 'N/A'}</p>
@@ -227,15 +227,6 @@ function setDataList(api, data, index) {
 	}
 	
 	return innerContent;
-}
-
-// 콘텐츠 리스트 정렬 버튼 세팅
-function setToggleSort(event, command, defaultSort, changeSort) {
-    const sortBtn = event.target; // 클릭된 버튼 요소
-    const currentSort = sortBtn.getAttribute('data-sort'); // 현재 정렬 값 가져오기
-    const newSort = currentSort === defaultSort ? changeSort : defaultSort; // 정렬 값 토글
-    sortBtn.setAttribute('data-sort', newSort); // 버튼의 data-sort 속성 값 업데이트
-    getList(command, defaultSort, newSort, 1); // 변경된 정렬 값으로 getList 호출
 }
 
 // 테이블의 전체 열 수 계산하기
