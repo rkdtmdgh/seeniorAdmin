@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -109,7 +110,7 @@ public class AccountController {
 	
 	// 내 정보 수정 양식
 	@PostMapping("/modify_form")
-	public String modifyForm(Model model, Principal principal, @RequestParam String a_pw) {
+	public String modifyForm(Model model, Principal principal, @RequestBody String a_pw) {
 		log.info("modifyForm()");
 		
 		String nextPage = "account/modify_form";
