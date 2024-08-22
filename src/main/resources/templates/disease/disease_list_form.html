@@ -7,13 +7,17 @@
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 질환 / 질병 정보 관리')}"></th:block>
 	
 	<script type="module">
-		import { getList } from '/js/api/api_get_list.js'; // 테이블 리스트 불러오기
+		import { getList, getOptionList } from '/js/api/api_get_list.js'; // 테이블 기본 or 정렬 리스트 불러오기
 		import { searchForm } from '/js/submitForm.js'; // 검색폼 제출
 		window.getList = getList;
+		window.getOptionList = getOptionList;
 		window.searchForm = searchForm;
 		document.addEventListener('DOMContentLoaded', () => {
-			const { hasSearchString, page, sort, sortValue } = setFormValuesFromUrl('d_name'); // 검색 파트 기본값
-			hasSearchString ? searchForm(null, '/disease/search_disease', page) : getList('/disease/get_all_disease_list_with_page', sort, sortValue, page);
+			const { hasSearchString, page, part, value } = setFormValuesFromUrl('d_name'); // 검색 파트 기본값
+			hasSearchString ? searchForm(null, '/disease/search_disease', page) : getList('/disease/get_all_disease_list_with_page', part, value, page);
+
+			// DISEASE_CATEGORY 가져오기
+			getOptionList('/disease/get_category_list', 'dc_name');
         });
 	</script>
 </head>
@@ -36,6 +40,8 @@
 						            
 						            <div class="btn_list">
 						            	<div class="btns small" onclick="getList('/disease/get_all_disease_list_with_page', null, null, 1)">전체보기</div>
+						            	<div class="btns small delete" onclick="getList('/disease/get_all_disease_list_with_page', null, null, 1)">삭제</div>
+						            	<a href="" class="btns small" onclick="getList('/disease/get_all_disease_list_with_page', null, null, 1)">등록</a>
 						            </div>
 					            </div>
 					        </div>
@@ -46,9 +52,9 @@
 	                            <colgroup>
 	                                <col class="col_checkBox">
 	                                <col class="col_no">
-	                                <col class="col_default">
 	                                <col>
-	                                <col class="col_default">
+	                                <col>
+	                                <col>
 	                            </colgroup>
 	
 	                            <thead>
@@ -61,7 +67,7 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">분류명</p>
+	                                        <div class="table_title select" id="dc_name">분류명</div>
 	                                    </th>
 	                                    
 	                                    <th>

@@ -1,6 +1,6 @@
 // 회원 가입 폼
 export async function postSignUpForm(event, formName) {
-	event.preventDefault();
+	if(event) event.preventDefault();
 	const form = document.forms[formName];
 	let input;
 	
@@ -37,7 +37,7 @@ export async function postSignUpForm(event, formName) {
 
 // 로그인 폼
 export function postSignInForm(event, formName) {
-	event.preventDefault();
+	if(event) event.preventDefault();
 	const form = document.forms[formName];
 	let input;
 	
@@ -146,8 +146,7 @@ export function searchForm(event, apiUrl, page) {
 }
 
 // 관리자 계정 정보 수정(SUPER_ADMIN)
-export function adminModifyForm(event, formName) {
-	event.preventDefault();
+export function adminModifyForm(formName) {
 	const form = document.forms[formName];
 	let input;
 	
@@ -170,8 +169,7 @@ export function adminModifyForm(event, formName) {
 }
 
 // 본인 계정 정보 수정
-export function modifyForm(event, formName) {
-	event.preventDefault();
+export function modifyForm(formName) {
 	const form = document.forms[formName];
 	let input;
 	
