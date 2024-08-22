@@ -95,9 +95,21 @@ public class AccountController {
 		return nextPage;
 	}
 	
+	// 내 정보 수정 양식 가기 전 비밀번호 확인
+	@GetMapping("/modify_check_form")
+	public String modifyCheckForm() {
+		log.info("modifyCheckForm()");
+		
+		String nextPage = "account/modify_check_form";
+		
+		return nextPage;
+	}
+	
+	
+	
 	// 내 정보 수정 양식
-	@GetMapping("/modify_form")
-	public String modifyForm(Model model, Principal principal) {
+	@PostMapping("/modify_form")
+	public String modifyForm(Model model, Principal principal, @RequestParam String a_pw) {
 		log.info("modifyForm()");
 		
 		String nextPage = "account/modify_form";
@@ -112,7 +124,7 @@ public class AccountController {
 		*/
 		
 		AdminAccountDto loginedAdminDto = 
-				accountService.getAdminAccountById(principal.getName());
+				accountService.getAdminAccountById(principal.getName(), a_pw);
 		
 		model.addAttribute("loginedAdminDto", loginedAdminDto);
 		
