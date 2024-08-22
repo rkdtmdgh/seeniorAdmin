@@ -13,8 +13,8 @@
 		window.getOptionList = getOptionList;
 		window.searchForm = searchForm;
 		document.addEventListener('DOMContentLoaded', () => {
-			const { hasSearchString, page, part, value } = setFormValuesFromUrl('d_name'); // 검색 파트 기본값
-			hasSearchString ? searchForm(null, '/disease/search_disease', page) : getList('/disease/get_all_disease_list_with_page', part, value, page);
+			const { hasSearchString, page, sort, sortValue } = setFormValuesFromUrl('d_name'); // 검색 파트 기본값
+			hasSearchString ? searchForm(null, '/disease/search_disease', page) : getList('/disease/get_all_disease_list_with_page', sort, sortValue, page);
 
 			// DISEASE_CATEGORY 가져오기
 			getOptionList('/disease/get_category_list', 'dc_name');
