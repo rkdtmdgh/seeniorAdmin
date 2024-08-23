@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	
 	if(sort) {
 		const sortBtn = document.querySelector(`.table_title[data-sort = "${sort}"]`);
-		sortBtn.setAttribute('data-sort', sortValue || sort);
+		if(sortBtn) sortBtn.setAttribute('data-sort', sortValue || sort);
 	}
 	
 	// NAV 선택 표시 및 토글
