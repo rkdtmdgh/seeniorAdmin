@@ -31,11 +31,20 @@ function setReplacePhone(input) {
 	return phoneValue;
 }
 
-// 숫자만 입력 가능하도록 변환
-function setReplaceNumber(input) {
-	const numberValue = input.value.replace(/[^0-9]/g, ""); // 숫자만 입력 
-	input.value = numberValue;
-	return numberValue;
+// 숫자만 입력 가능하도록 변환 및 YYYY-MM-DD 형식으로 변환
+function setReplaceBirth(input) {
+    let birthValue = input.value.replace(/[^0-9]/g, ""); // 입력 값에서 숫자 이외의 모든 문자를 제거
+
+    // 자동으로 하이픈 삽입: 5번째와 8번째 자리에 삽입
+    if (birthValue.length > 4) {
+        birthValue = birthValue.slice(0, 4) + '-' + birthValue.slice(4);
+    }
+    if (birthValue.length > 7) {
+        birthValue = birthValue.slice(0, 7) + '-' + birthValue.slice(7);
+    }
+
+    input.value = birthValue;
+    return birthValue;
 }
 
 // 날짜 포맷팅
