@@ -1,5 +1,6 @@
 package com.see_nior.seeniorAdmin.account;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.Map;
 
@@ -110,7 +111,7 @@ public class AccountController {
 	
 	// 내 정보 수정 양식
 	@PostMapping("/modify_form")
-	public String modifyForm(Model model, Principal principal, @RequestBody String a_pw) {
+	public String modifyForm(Model model, Principal principal, @RequestParam("a_pw") String a_pw) {
 		log.info("modifyForm()");
 		
 		String nextPage = "account/modify_form";
