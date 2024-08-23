@@ -87,7 +87,7 @@ function validatePw(input) {
 
 // 생년월일 유효성 검사
 function validateBirth(input) {
-	const regEx = 	/^(19[0-9][0-9]|20\d{2})(0[0-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])$/; // 현재 입력 가능 연도 기준으로 date 형식에 맞게 입력
+	const regEx = 	/^(19[0-9]{2}|20[0-9]{2})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/; // 현재 입력 가능 연도 기준으로 date 형식에 맞게 입력
 	const errorMessage = "생년월일을 정확히 입력해 주세요.";
 	return validateInput(input, regEx, errorMessage);
 }

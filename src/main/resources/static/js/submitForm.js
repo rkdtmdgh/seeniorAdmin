@@ -180,6 +180,12 @@ export function adminModifyForm(formName) {
 		return false;
 	}
 	
+	input = form.a_birth;
+	if(!validateBirth(input)) {
+		input.focus();
+		return false;
+	}
+	
 	input = form.a_phone;
 	if(!validatePhone(input)) {
 		input.focus();
@@ -199,6 +205,12 @@ export function modifyForm(formName) {
 	
 	input = form.a_name;
 	if(!checkEmpty(input, '이름을')) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.a_birth;
+	if(!validateBirth(input)) {
 		input.focus();
 		return false;
 	}
