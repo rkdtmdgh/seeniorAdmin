@@ -7,10 +7,11 @@
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 질환 / 질병 정보 관리')}"></th:block>
 	
 	<script type="module">
-		import { getList, getOptionList } from '/js/api/api_get_list.js'; // 테이블 기본 or 정렬 리스트 불러오기
+		import { getList, getOptionList, getSortList } from '/js/api/api_get_list.js'; // 테이블 기본, 정렬 리스트 불러오기
 		import { searchForm } from '/js/submitForm.js'; // 검색폼 제출
 		window.getList = getList;
 		window.getOptionList = getOptionList;
+		window.getSortList = getSortList;
 		window.searchForm = searchForm;
 		document.addEventListener('DOMContentLoaded', () => {
 			const { hasSearchString, page, sort, sortValue } = setFormValuesFromUrl('d_name'); // 검색 파트 기본값
@@ -40,8 +41,8 @@
 						            
 						            <div class="btn_list">
 						            	<div class="btns small" onclick="getList('/disease/get_all_disease_list_with_page', null, null, 1)">전체보기</div>
-						            	<div class="btns small delete" onclick="getList('/disease/get_all_disease_list_with_page', null, null, 1)">삭제</div>
-						            	<a href="" class="btns small" onclick="getList('/disease/get_all_disease_list_with_page', null, null, 1)">등록</a>
+						            	<div class="btns small delete" onclick="">삭제</div>
+						            	<a href="" class="btns small">등록</a>
 						            </div>
 					            </div>
 					        </div>
@@ -71,7 +72,11 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">질환 / 질병명</p>
+	                                        <p data-sort="approval" class="table_title sort"
+	                                        	onclick="getSortList(event, '/disease/get_all_disease_list_with_page', 'dc_name', 'all')">
+	                                        	질환 / 질병명
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
 	                                    </th>
 	                                    <th>
 	                                        <p class="table_title">등록일</p>
