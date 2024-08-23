@@ -51,6 +51,12 @@
 	                        <input type="text" name="a_name" id="name" placeholder="이름" class="input_txt" 
 	                        	oninput="checkEmpty(this, '이름을')" onblur="checkEmpty(this, '이름을')">
 	                    </label>
+	                    
+	                    <label for="birth" class="border_input">
+	                        <span class="input_title">생년월일</span>
+	                        <input type="text" name="a_birth" id="birth" maxlength="8" placeholder="생년월일 8자 (YYYYMMDD)" class="input_txt" 
+	                        	onkeydown="setReplaceNumber(this)" onkeyup="validateBirth(this)" onblur="validateBirth(this)">
+	                    </label>
 						
 						<label for="tel" class="border_input">
 	                        <span class="input_title">연락처</span>
