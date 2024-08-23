@@ -1,6 +1,5 @@
 package com.see_nior.seeniorAdmin.account;
 
-import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.Map;
 
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -97,18 +95,7 @@ public class AccountController {
 		return nextPage;
 	}
 	
-	// 내 정보 수정 양식 가기 전 비밀번호 확인
-	@GetMapping("/modify_check_form")
-	public String modifyCheckForm() {
-		log.info("modifyCheckForm()");
-		
-		String nextPage = "account/modify_check_form";
-		
-		return nextPage;
-	}
-	
-	
-	
+	/*
 	// 내 정보 수정 양식
 	@PostMapping("/modify_form")
 	public String modifyForm(Model model, Principal principal, @RequestParam("a_pw") String a_pw) {
@@ -116,6 +103,38 @@ public class AccountController {
 		
 		String nextPage = "account/modify_form";
 		
+		principal.getName();
+		
+		 * 로그인 ID 꺼내는 방법
+		 * 1. Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		 * 		authentication.getName();
+		 * 2. principal.getName();
+		
+		AdminAccountDto loginedAdminDto = 
+				accountService.getAdminAccountById(principal.getName(), a_pw);
+		
+		model.addAttribute("loginedAdminDto", loginedAdminDto);
+		
+		return nextPage;
+	}
+	*/
+	
+	// 내 정보 수정 양식
+	@GetMapping("/modify_form")
+	public String modifyForm(@RequestParam String param) {
+		log.info("modifyForm()");
+		
+		String nextPage = "account/modify_form";
+		
+		return nextPage;
+	}
+	
+	// 내 정보 수정 양식 가기 전 비밀번호 확인
+	@PostMapping("/modify_check")
+	@ResponseBody
+	public Object modifyCheck(Model model, Principal principal, @RequestParam("a_pw") String a_pw) {
+		log.info("modifyCheck()");
+
 		principal.getName();
 		
 		/*
@@ -126,11 +145,11 @@ public class AccountController {
 		*/
 		
 		AdminAccountDto loginedAdminDto = 
-				accountService.getAdminAccountById(principal.getName(), a_pw);
+				accountService.modifyCheck(principal.getName(), a_pw);
 		
 		model.addAttribute("loginedAdminDto", loginedAdminDto);
 		
-		return nextPage;
+		return loginedAdminDto;
 	}
 	
 	// 내 정보 수정 확인

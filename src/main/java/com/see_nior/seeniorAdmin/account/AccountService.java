@@ -82,19 +82,12 @@ public class AccountService {
 	}
 	
 	// 관리자 정보 조회 by id
-	public AdminAccountDto getAdminAccountById(String a_id, String a_pw) {
+	public AdminAccountDto getAdminAccountById(String a_id) {
 		log.info("getAdminAccountById()");
 		
 		AdminAccountDto adminAccountDto = accountMapper.selectAdminAccountById(a_id);
 		
-		if (passwordEncoder.matches(a_pw, adminAccountDto.getA_pw())) {
-			
-			return adminAccountDto;
-			
-		}
-		
-		return null;
-		
+		return adminAccountDto;
 	}
 	
 	// 관리자 정보 조회 by no
@@ -104,7 +97,6 @@ public class AccountService {
 		AdminAccountDto adminAccountDto = accountMapper.selectAdminAccountByNo(a_no);
 		
 		return adminAccountDto;
-		
 	}
 	
 	// 내 정보 수정 확인
@@ -259,6 +251,22 @@ public class AccountService {
 		String a_pw = "s" + adminAccountDto.getA_birth() + "!";
 		
 		return accountMapper.updateAdminPwReset(a_no, passwordEncoder.encode(a_pw));
+	}
+
+	// 비밀번호 확인
+	public AdminAccountDto modifyCheck(String a_id, String a_pw) {
+		log.info("modifyCheck()");
+		
+		AdminAccountDto loginedAdminDto = 
+				accountMapper.selectAdminAccountById(a_id);
+		
+		if (passwordEncoder.matches(a_pw, loginedAdminDto.getA_pw())) {
+			
+			return loginedAdminDto;
+			
+		}
+		
+		return null;
 	}
 
 }
