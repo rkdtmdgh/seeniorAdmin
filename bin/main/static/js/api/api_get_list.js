@@ -92,7 +92,7 @@ export function getOptionList(apiUrl, ele) {
 			method: 'GET',
 		})
 		.then(response => {
-			logger.info(apiUrl + ' getList() response:', response);
+			logger.info(apiUrl + ' getOptionList() response:', response);
 			
 			switch(apiUrl) {
 				case '/disease/get_category_list': // 질환 / 질병 정보 관리 분류명 정렬
@@ -110,7 +110,7 @@ export function getOptionList(apiUrl, ele) {
 			
 			if(getListDtos && getListDtos.length > 0) {
 				if (!selectOptionlist) { // 커스텀 셀렉트 요소가 없을 경우 생성
-					const ceateSelect = `<ul class="select_option_list sc" onclick=""></ul>`;
+					const ceateSelect = `<ul class="select_option_list sc"></ul>`;
 			        selectEle.insertAdjacentHTML('beforeend', ceateSelect);
 			        selectOptionlist = selectEle.querySelector('ul.select_option_list');
 			    }

@@ -1,5 +1,5 @@
 // 이메일 중복 검사 
-function usedEmailCheck(email) {
+export function usedEmailCheck(email) {
 	logger.info('usedEmailChekc:', email);
 	return $.ajax({
 		headers: {

@@ -356,6 +356,10 @@
 			color: var(--whiteColor);
 		}
 	}
+	
+	&.active {
+		display: block;
+	}
 }
 
 .table_info {
