@@ -12,6 +12,13 @@
 	</script>
 </head>
 <body>
+<th:block th:unless="${${loginedAdminDto}}">
+	<script type="text/javascript">
+	
+	</script>
+</th:block>
+
+<th:block th:if="${loginedAdminDto}">
 	<main class="contents_wrap">
 		<header th:replace="~{fragments/header.html :: header}"></header>
 	
@@ -112,5 +119,6 @@
             </div>
 		</article>
 	</main>
+</th:block>
 </body>
 </html>
