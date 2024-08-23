@@ -23,6 +23,12 @@ export async function postSignUpForm(event, formName) {
 		return false;
 	}
 	
+	input = form.a_birth;
+	if(!validateBirth(input)) {
+		input.focus();
+		return false;
+	}
+	
 	input = form.a_phone;
 	if(!validatePhone(input)) {
 		input.focus();

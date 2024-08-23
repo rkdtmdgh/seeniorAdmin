@@ -3,7 +3,14 @@
    xmlns:th="http://www.thymeleaf.org"
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
-<head>
+<head>	
+	<th:block th:unless="${${loginedAdminDto}">
+		<script type="text/javascript">
+			alert("비밀번호가 일치하지 않습니다.\n확인 후 다시 시도해 주세요.");
+			location.replace("/account/modify_check_form");
+		</script>
+	</th:block>
+	
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 관리자 계정 관리')}"></th:block>
 	
 	<script type="module">

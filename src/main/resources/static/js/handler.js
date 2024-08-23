@@ -31,6 +31,13 @@ function setReplacePhone(input) {
 	return phoneValue;
 }
 
+// 숫자만 입력 가능하도록 변환
+function setReplaceNumber(input) {
+	const numberValue = input.value.replace(/[^0-9]/g, ""); // 숫자만 입력 
+	input.value = numberValue;
+	return numberValue;
+}
+
 // 검색 폼 데이터인지 확인하여 초기화
 function setFormValuesFromUrl(part) {
 	const urlParams = new URLSearchParams(window.location.search);
