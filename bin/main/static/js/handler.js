@@ -38,6 +38,15 @@ function setReplaceNumber(input) {
 	return numberValue;
 }
 
+// 날짜 포맷팅
+function setFormatDate(dateString) { // yyyy-mm-dd 형식
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2); // 월은 0부터 시작하므로 +1
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+}
+
 // 검색 폼 데이터인지 확인하여 초기화
 function setFormValuesFromUrl(part) {
 	const urlParams = new URLSearchParams(window.location.search);
@@ -201,7 +210,7 @@ function setDataList(api, data, index) {
 		                <p class="table_info">${data.a_name || 'N/A'}</p>
 		            </td>
 		            <td>
-		                <p class="table_info">${formatDate(data.a_reg_date || 'N/A')}</p>
+		                <p class="table_info">${setFormatDate(data.a_reg_date || 'N/A')}</p>
 		            </td>
 		        </tr>
 			`;
@@ -223,7 +232,7 @@ function setDataList(api, data, index) {
 		                <a href="/disease/modify_form?d_no=${data.d_no}" class="table_info">${data.d_name || 'N/A'}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${formatDate(data.d_reg_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.d_reg_date) || 'N/A'}</p>
 		            </td>
 		        </tr>
 			`;
@@ -250,3 +259,16 @@ function setTableColumnsNum() {
 	
 	return maxCols;
 }
+
+// 테이블 셀렉트 옵션 노출 토글 버튼
+function setSelectOptionTopggle(event) {
+	const selectEle = event.currentTarget.querySelector('.select_option_list');
+	logger.info('setSelectOptionTopggle() select element:', selectEle);
+	if(selectEle) {
+		selectEle.style.display = selectEle.style.display === 'block' ? 'none' : 'block';
+	}
+}
+
+document.addEventListener('click', (event) => {
+	const targetEle = event.target;
+});

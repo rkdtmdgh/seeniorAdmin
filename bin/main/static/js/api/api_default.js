@@ -18,15 +18,6 @@ function deleteAccount(a_no, a_id) {
 	location.replace('/account/delete_confirm?a_no=' + a_no);
 }
 
-// 날짜 포맷팅
-function formatDate(dateString) { // yyyy-mm-dd 형식
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = ('0' + (date.getMonth() + 1)).slice(-2); // 월은 0부터 시작하므로 +1
-    const day = ('0' + date.getDate()).slice(-2);
-    return `${year}-${month}-${day}`;
-}
-
 document.addEventListener('DOMContentLoaded', () => {
 	// 정렬 버튼 세팅(새로 고침 후 버튼 기능 정상화)
 	const urlParams = new URLSearchParams(window.location.search);
