@@ -456,9 +456,10 @@ public class DiseaseService {
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
 		pagingParams.put("searchString", searchString);
+		pagingParams.put("searchPart", searchPart);
 		
 		List<DiseaseDto> searchDiseaseDtos = diseaseMapper.getSearchDisease(pagingParams);
-		pagingList.put("searchDiseaseDtos", searchDiseaseDtos);
+		pagingList.put("diseaseDtos", searchDiseaseDtos);
 		
 		return pagingList;
 		
