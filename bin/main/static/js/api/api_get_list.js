@@ -94,7 +94,6 @@ export function getSelectList(event) {
 // 콘텐츠 정렬 셀렉트 옵션 리스트 요청
 export function getOptionList(apiUrl, ele) {
 	const selectEle = document.getElementById(ele); // 셀렉트 요소가 생성될 table th
-	let selectOptionlist = selectEle.querySelector('ul.select_option_list'); // 커스텀 셀렉트 요소
 	let getListDtos;
 	let dataNo;
 	let dataName;
@@ -124,20 +123,15 @@ export function getOptionList(apiUrl, ele) {
 			logger.info(apiUrl + ' getListDtos:', getListDtos);
 			
 			if(getListDtos && getListDtos.length > 0) {
-				if (!selectOptionlist) { // 커스텀 셀렉트 요소가 없을 경우 생성
-					const ceateSelect = `<ul data-sort="${dataNo}" data-api="${command}" class="select_option_list sc"></ul>`;
-			        selectEle.insertAdjacentHTML('beforeend', ceateSelect);
-			        selectOptionlist = selectEle.querySelector('ul.select_option_list');
-			    }
+				const ceateSelect = `<ul data-sort="${dataNo}" data-api="${command}" class="select_option_list sc"></ul>`;
+		        selectEle.insertAdjacentHTML('beforeend', ceateSelect);
+		        const selectOptionlist = selectEle.querySelector('ul.select_option_list');
 				
 				getListDtos.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
 					let option = `<li data-sort-value="${data[dataNo]}" class="option" onclick="getSelectList(event);">${data[dataName]}</li>`;
 					selectOptionlist.insertAdjacentHTML('beforeend', option);
 				});
 			} else {
-				if (selectOptionlist) { // 리스트가 비어있을 경우
-					selectOptionlist.remove();
-				}
 				selectEle.classList.remove('select');
 			}
 		})
