@@ -82,7 +82,14 @@ function setListQueryString(page, sort, sortValue) {
 	const url = new URL(window.location);
     url.search = '';
 	url.searchParams.set('page', page); 
-    if (sort) url.searchParams.set(`${sort}`, sortValue);
+    if (sort) {
+		url.searchParams.set(`${sort}`, sortValue); 
+    } else {
+		const sortElements = document.querySelectorAll('.sort');
+		sortElements.forEach(sortElement => {
+			sortElement.setAttribute('data-current-sort', 'all');
+		})
+	}
 	window.history.replaceState({}, '', url); // 현재 url 변경 및 리로드 제어
 }
 
