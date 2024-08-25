@@ -246,6 +246,7 @@
             gap: var(--ssize1);
             font-size: var(--titleFontSize);
             font-weight: var(--bold);
+            line-height: var(--titleLineHeight);
     
             &::before {
                 content: '';
