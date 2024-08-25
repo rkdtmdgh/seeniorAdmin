@@ -82,8 +82,7 @@ function setListQueryString(page, sort, sortValue) {
 	const url = new URL(window.location);
     url.search = '';
 	url.searchParams.set('page', page); 
-    if (sort) url.searchParams.set('sort', sort);
-    if (sortValue) url.searchParams.set('sortValue', sortValue);
+    if (sort) url.searchParams.set(`${sort}`, sortValue);
 	window.history.replaceState({}, '', url); // 현재 url 변경 및 리로드 제어
 }
 
@@ -126,13 +125,19 @@ function setParseResponseByCommand(command, response) {
 			getListPage = response.diseaseListPageNum;
 			getListCnt = response.diseaseListPageNum.diseaseListCnt;
 			break;
+		
+		case '/disease/get_disease_list_by_category_with_page': // 질환 / 질병 정보 관리 질환명 sort
+			getListDtos = response.diseaseDtos;
+			getListPage = response.diseaseListByCategoryPageNum;
+			getListCnt = response.diseaseListByCategoryPageNum.diseaseListCnt;
+			break;
 	}
 	
 	return { getListDtos, getListPage, getListCnt }
 }
 
 // 페이지네이션 생성
-function setPagination(pagingValues, sort, sortValue, command, isSearch) { // 페이징벨류값, 핸들러,  sort, sortValue, 커맨드, boolSearch
+function setPagination(pagingValues, sort, sortValue, command, isSearch) { // 페이징벨류값, 핸들러,  sort, sortValue, 커맨드, isSearch
 	const blockLimit = pagingValues.blockLimit; // 한 블럭에 포함되는 페이지 수
 	const startPage = pagingValues.startPage; // 현재 블럭의 시작 페이지
 	const endPage = pagingValues.endPage; // 현재 블럭의 마지막 페이지
@@ -226,6 +231,7 @@ function setDataList(api, data, index) {
 			break;
 			
 		case '/disease/get_all_disease_list_with_page':
+		case '/disease/get_disease_list_by_category_with_page':
 			innerContent = `
 				<tr>
 		            <td class="vam">

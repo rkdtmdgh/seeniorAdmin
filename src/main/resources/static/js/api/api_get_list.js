@@ -6,7 +6,7 @@ export function getList(command, sort, sortValue, page) {
 	
 	const intPage = page || 1;
 	let queryParams = `?page=${intPage}`;
-	if(sort) queryParams = queryParams + `&sort=${sortValue}`;
+	if(sort) queryParams = queryParams + `&${sort}=${sortValue}`;
 	const apiUrl = command + queryParams;
 	
 	$.ajax({
@@ -72,10 +72,11 @@ export function getList(command, sort, sortValue, page) {
 // 버튼으로 정렬된 리스트 요청
 export function getSortList(event, command, defaultSort, changeSort) {
     const sortBtn = event.target; // 클릭된 버튼 요소
-    const currentSort = sortBtn.getAttribute('data-sort'); // 현재 정렬 값 가져오기
+    const sort = sortBtn.getAttribute('data-sort'); // 정렬 종류 가져오기
+    const currentSort = sortBtn.getAttribute('data-current-sort'); // 현재 정렬 값 가져오기
     const newSort = currentSort === defaultSort ? changeSort : defaultSort; // 정렬 값 토글
-    sortBtn.setAttribute('data-sort', newSort); // 버튼의 data-sort 속성 값 업데이트
-    getList(command, defaultSort, newSort, 1); // 변경된 정렬 값으로 getList 호출
+    sortBtn.setAttribute('data-current-sort', newSort); // 버튼의 data-sort 속성 값 업데이트
+    getList(command, sort, newSort, 1); // 변경된 정렬 값으로 getList 호출
 }
 
 // 콘텐츠 정렬 셀렉트 옵션 리스트 요청
