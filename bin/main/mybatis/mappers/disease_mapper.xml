@@ -333,10 +333,6 @@
 			AND 
 				D.D_IS_DELETED = 1 
 			<choose>
-				<when test="searchPart == 'dc_name">
-					AND 
-						DC.DC_NAME LIKE CONCAT('%', #{searchString}, '%')
-				</when>
 				<when test="searchPart == 'd_name'">
 					AND 
 						D.D_NAME LIKE CONCAT('%', #{searchString}, '%')
