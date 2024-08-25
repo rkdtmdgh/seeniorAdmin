@@ -85,6 +85,8 @@ export function searchForm(event, apiUrl, page) {
 	
 	if(apiUrl) {		
 		let intPage = page || 1;
+		logger.info('searchForm() searchPart:', form.search_part.value);
+		logger.info('searchForm() searchString:', input.value.trim());
 				
 		$.ajax({
 			url: apiUrl,
