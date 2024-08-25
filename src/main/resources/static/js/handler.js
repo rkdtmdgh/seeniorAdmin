@@ -56,6 +56,12 @@ function setFormatDate(dateString) { // yyyy-mm-dd 형식
     return `${year}-${month}-${day}`;
 }
 
+// 본인 확인 페이지 이동
+function setModifyCheckForm(event) {
+	if(event) event.preventDefault(); // 기본 동작인 href로 이동을 막음
+	location.href = '/account/modify_check_form';
+}
+
 // 검색 폼 데이터인지 확인하여 초기화
 function setFormValuesFromUrl(part) {
 	const urlParams = new URLSearchParams(window.location.search);
