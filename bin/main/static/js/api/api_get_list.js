@@ -6,7 +6,7 @@ export function getList(command, sort, sortValue, page) {
 	
 	const intPage = page || 1;
 	let queryParams = `?page=${intPage}`;
-	if(sort) queryParams = queryParams + `&sort=${sortValue}`;
+	if(sort) queryParams = queryParams + `&${sort}=${sortValue}`;
 	const apiUrl = command + queryParams;
 	
 	$.ajax({
@@ -72,10 +72,23 @@ export function getList(command, sort, sortValue, page) {
 // 버튼으로 정렬된 리스트 요청
 export function getSortList(event, command, defaultSort, changeSort) {
     const sortBtn = event.target; // 클릭된 버튼 요소
-    const currentSort = sortBtn.getAttribute('data-sort'); // 현재 정렬 값 가져오기
+    const sort = sortBtn.getAttribute('data-sort'); // 정렬 종류 가져오기
+    const currentSort = sortBtn.getAttribute('data-current-sort'); // 현재 정렬 값 가져오기
     const newSort = currentSort === defaultSort ? changeSort : defaultSort; // 정렬 값 토글
-    sortBtn.setAttribute('data-sort', newSort); // 버튼의 data-sort 속성 값 업데이트
-    getList(command, defaultSort, newSort, 1); // 변경된 정렬 값으로 getList 호출
+    sortBtn.setAttribute('data-current-sort', newSort); // 버튼의 data-sort 속성 값 업데이트
+    getList(command, sort, newSort, 1); // 변경된 정렬 값으로 getList 호출
+}
+
+// 셀렉트로 정렬된 리스트 요청
+export function getSelectList(event) {
+	const sortBtn = event.target; // 클릭된 버튼 요소
+	const command = sortBtn.parentElement.getAttribute('data-api'); // 커맨드 가져오기
+	const sort = sortBtn.parentElement.getAttribute('data-sort'); // 정렬 종류 가져오기
+	const sortValue = sortBtn.getAttribute('data-sort-value'); // 정렬할 값
+	logger.info('getSelectList() command:', command);
+	logger.info('getSelectList() sort:', sort);
+	logger.info('getSelectList() sortValue:', sortValue);
+	getList(command, sort, sortValue, 1);
 }
 
 // 콘텐츠 정렬 셀렉트 옵션 리스트 요청
@@ -85,6 +98,7 @@ export function getOptionList(apiUrl, ele) {
 	let getListDtos;
 	let dataNo;
 	let dataName;
+	let command;
 	
 	if(selectEle) {
 		$.ajax({
@@ -99,6 +113,7 @@ export function getOptionList(apiUrl, ele) {
 					getListDtos = response.diseaseCategoryDto;
 					dataNo = 'dc_no';
 					dataName = 'dc_name';
+					command = '/disease/get_disease_list_by_category_with_page';
 					break;
 				
 				default:
@@ -110,13 +125,13 @@ export function getOptionList(apiUrl, ele) {
 			
 			if(getListDtos && getListDtos.length > 0) {
 				if (!selectOptionlist) { // 커스텀 셀렉트 요소가 없을 경우 생성
-					const ceateSelect = `<ul class="select_option_list sc"></ul>`;
+					const ceateSelect = `<ul data-sort="${dataNo}" data-api="${command}" class="select_option_list sc"></ul>`;
 			        selectEle.insertAdjacentHTML('beforeend', ceateSelect);
 			        selectOptionlist = selectEle.querySelector('ul.select_option_list');
 			    }
 				
 				getListDtos.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
-					let option = `<li data-${dataNo}="${data[dataNo]}" class="option">${data[dataName]}</li>`;
+					let option = `<li data-sort-value="${data[dataNo]}" class="option" onclick="getSelectList(event);">${data[dataName]}</li>`;
 					selectOptionlist.insertAdjacentHTML('beforeend', option);
 				});
 			} else {

@@ -246,6 +246,7 @@
             gap: var(--ssize1);
             font-size: var(--titleFontSize);
             font-weight: var(--bold);
+            line-height: var(--titleLineHeight);
     
             &::before {
                 content: '';
@@ -336,7 +337,7 @@
 
 .select_option_list {
 	display: none;
-	width: max-content;
+	max-width: 100%;
 	max-height: 260px;
 	border-radius: var(--bdrs);
 	background-color: var(--whiteColor);
