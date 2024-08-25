@@ -15,8 +15,4 @@ public class DiseaseCategoryDto {
 	private String dc_reg_date;
 	private String dc_mod_date;
 	
-//	@JsonIgnore				
-	// 직렬화나 역직렬화시 이 필드는 무시하게 설정하였음. 필요할때만 사용할 수 있는 필드
-//	private String dc_name;
-	
 }
