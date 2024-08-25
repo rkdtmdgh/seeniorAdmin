@@ -288,12 +288,14 @@ public class DiseaseController {
 	
 	// 질환 검색(페이지네이션 => 비동기)
 	@ResponseBody
-	@GetMapping("/search_disease")
-	public Object searchDisease(
+	@GetMapping("/search_disease_list")
+	public Object searchDiseaseList(
 			@RequestParam("searchPart") String searchPart,
 			@RequestParam("searchString") String searchString,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
-		log.info("searchDisease()");
+		log.info("searchDiseaseList()");
+		log.info("searchPart ===========> {}", searchPart);
+		log.info("searchString ===========> {}", searchString);
 		
 		// 페이지 번호에 따른 검색 질환 리스트들 가져오기
 		Map<String, Object> searchDiseaseListWithPage = diseaseService.getSearchDiseaseListWithPage(searchPart, searchString, page);
