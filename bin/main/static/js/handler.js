@@ -82,7 +82,14 @@ function setListQueryString(page, sort, sortValue) {
 	const url = new URL(window.location);
     url.search = '';
 	url.searchParams.set('page', page); 
-    if (sort) url.searchParams.set(`${sort}`, sortValue);
+    if (sort) {
+		url.searchParams.set(`${sort}`, sortValue); 
+    } else {
+		const sortElements = document.querySelectorAll('.sort');
+		sortElements.forEach(sortElement => {
+			sortElement.setAttribute('data-current-sort', 'all');
+		})
+	}
 	window.history.replaceState({}, '', url); // 현재 url 변경 및 리로드 제어
 }
 
@@ -120,10 +127,10 @@ function setParseResponseByCommand(command, response) {
 			getListCnt = response.diseaseListPageNum.diseaseListCnt;
 			break;
 			
-		case '/disease/search_disease': // 질환 / 질병 정보 관리
+		case '/disease/search_disease_list': // 질환 / 질병 정보 관리 검색
 			getListDtos = response.diseaseDtos;
-			getListPage = response.diseaseListPageNum;
-			getListCnt = response.diseaseListPageNum.diseaseListCnt;
+			getListPage = response.searchDiseaseListPageNum;
+			getListCnt = response.searchDiseaseListPageNum.searchDiseaseListCnt;
 			break;
 		
 		case '/disease/get_disease_list_by_category_with_page': // 질환 / 질병 정보 관리 질환명 sort
@@ -231,6 +238,7 @@ function setDataList(api, data, index) {
 			break;
 			
 		case '/disease/get_all_disease_list_with_page':
+		case '/disease/search_disease_list':
 		case '/disease/get_disease_list_by_category_with_page':
 			innerContent = `
 				<tr>
