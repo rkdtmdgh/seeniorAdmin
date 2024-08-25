@@ -294,6 +294,8 @@ public class DiseaseController {
 			@RequestParam("searchString") String searchString,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("searchDiseaseList()");
+		log.info("searchPart ===========> {}", searchPart);
+		log.info("searchString ===========> {}", searchString);
 		
 		// 페이지 번호에 따른 검색 질환 리스트들 가져오기
 		Map<String, Object> searchDiseaseListWithPage = diseaseService.getSearchDiseaseListWithPage(searchPart, searchString, page);
