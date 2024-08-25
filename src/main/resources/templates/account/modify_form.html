@@ -3,7 +3,14 @@
    xmlns:th="http://www.thymeleaf.org"
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
-<head>	
+<head>
+	<th:block th:if="${loginedAdminDto} == null">
+		<script type="text/javascript">
+			alert('올바른 접근이 아닙니다.');
+			history.back();
+		</script>
+	</th:block>
+
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 관리자 계정 관리')}"></th:block>
 	
 	<script type="module">

@@ -166,7 +166,7 @@ export function modifyCheckForm(event, formName) {
 	}
 	
 	// 모든 유효성 검사가 통과되었을 때 폼 제출	
-	form.action = "/account/modify_form";
+	form.action = "/account/modify_check";
     form.method = "post"; 
     form.submit();
 }
