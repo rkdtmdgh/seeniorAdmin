@@ -84,6 +84,8 @@ export function searchForm(event, apiUrl, page) {
 	}
 	
 	if(apiUrl) {		
+		resetAllcheck(); // all_check 체크박스 초기화
+		
 		let intPage = page || 1;
 		logger.info('searchForm() searchPart:', form.search_part.value);
 		logger.info('searchForm() searchString:', input.value.trim());
@@ -105,7 +107,7 @@ export function searchForm(event, apiUrl, page) {
 			contentTable.innerHTML = '';
 			pagination.innerHTML = '';
 			
-			const { getListDtos, getListPage } = setParseResponseByCommand(apiUrl, response);
+			const { getListDtos, getListPage, getListCnt } = setParseResponseByCommand(apiUrl, response);
 			if(response && getListDtos) {
 				// 쿼리스트링 조건 추가
 				setSearchQueryString(getListPage.page, response.searchPart, response.searchString); // page, searchPart, searchString
@@ -114,13 +116,16 @@ export function searchForm(event, apiUrl, page) {
 				pagination.innerHTML = paging;
 				
 				let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
-				let totalCnt = getListPage.searchAdminListCnt; // 총 리스트 합계
-				let adminListCnt = totalCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
+				let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
+				logger.info('getListCnt:', getListCnt);
+				logger.info('pageLimit:', pageLimit);
+				logger.info('getListPage.page:', getListPage.page);
+				logger.info('listCnt:', listIndex);
 											
-				if(adminListCnt > 0) {
+				if(listIndex > 0) {
 					getListDtos.forEach((data) => { 
-						contentTable.insertAdjacentHTML('beforeend', setDataList(apiUrl, data, adminListCnt));
-						adminListCnt --;
+						contentTable.insertAdjacentHTML('beforeend', setDataList(apiUrl, data, listIndex));
+						listIndex --;
 					});
 				} else {
 		            // 테이블의 전체 열 수 계산하기
@@ -166,7 +171,7 @@ export function modifyCheckForm(event, formName) {
 	}
 	
 	// 모든 유효성 검사가 통과되었을 때 폼 제출	
-	form.action = "/account/modify_form";
+	form.action = "/account/modify_check";
     form.method = "post"; 
     form.submit();
 }

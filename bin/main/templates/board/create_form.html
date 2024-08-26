@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<div>
+		<p>board create form</p>
+	</div>
+
+	<div>
+		<form action="/board/create_confirm" method="post">
+			<input type="number" id="bc_idx" name="bc_idx" placeholder="input idx">
+			<br>
+			<input type="text" id="bc_name" name="bc_name" placeholder="input name">
+			<br>
+			<input type="submit" value="submit">
+		</form>
+	</div>
+
+</body>
+</html>

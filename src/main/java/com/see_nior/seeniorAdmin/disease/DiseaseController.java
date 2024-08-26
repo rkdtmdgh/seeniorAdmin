@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -244,7 +245,7 @@ public class DiseaseController {
 	
 	// 질환 수정 양식
 	@GetMapping("/modify_form")
-	public String modifyForm(@RequestParam(value = "no") int d_no, Model model) {
+	public String modifyForm(@RequestParam(value = "d_no") int d_no, Model model) {
 		log.info("modifyForm()");
 		
 		String nextPage = "disease/modify_form";
@@ -272,30 +273,39 @@ public class DiseaseController {
 	}
 	
 	
+	// 질환 삭제 확인(기존)
+//	@GetMapping("/delete_confirm")
+//	public String deleteConfirm(@RequestParam(value = "deleteData") List<Integer> d_nos, Model model) {
+//		log.info("deleteConfirm()");
+//		
+//		int result = diseaseService.deleteConfirm(new ArrayList<>(d_nos));
+//		
+//		model.addAttribute("deleteResult", result);
+//		
+//		String nextPage = "disease/delete_result";
+//		
+//		return nextPage;
+//	}
+	
 	// 질환 삭제 확인
-	@GetMapping("/delete_confirm")
-	public String deleteConfirm(@RequestParam(value = "d_nos") List<Integer> d_nos, Model model) {
+	@PostMapping("/delete_confirm")
+	public Object deleteConfirm(@RequestParam(value = "deleteData") List<Integer> d_nos) {
 		log.info("deleteConfirm()");
 		
-		int result = diseaseService.deleteConfirm(new ArrayList<>(d_nos));
+		boolean deleteResult = diseaseService.deleteConfirm(new ArrayList<>(d_nos));
 		
-		model.addAttribute("deleteResult", result);
-		
-		String nextPage = "disease/delete_result";
-		
-		return nextPage;
+		return ResponseEntity.ok(deleteResult);
 	}
 	
 	// 질환 검색(페이지네이션 => 비동기)
 	@ResponseBody
 	@GetMapping("/search_disease_list")
 	public Object searchDiseaseList(
-			@RequestParam("searchPart") String searchPart,
-			@RequestParam("searchString") String searchString,
+			@RequestParam(value = "searchPart") String searchPart,
+			@RequestParam(value = "searchString") String searchString,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("searchDiseaseList()");
-		log.info("searchPart ===========> {}", searchPart);
-		log.info("searchString ===========> {}", searchString);
+		
 		
 		// 페이지 번호에 따른 검색 질환 리스트들 가져오기
 		Map<String, Object> searchDiseaseListWithPage = diseaseService.getSearchDiseaseListWithPage(searchPart, searchString, page);
@@ -304,9 +314,12 @@ public class DiseaseController {
 		Map<String, Object> searchDiseaseListPageNum = diseaseService.getSearchDiseaseListPageNum(searchPart, searchString, page);
 		
 		searchDiseaseListWithPage.put("searchDiseaseListPageNum", searchDiseaseListPageNum);
+		searchDiseaseListWithPage.put("searchPart", searchPart);
+		searchDiseaseListWithPage.put("searchString", searchString);
 		
 		return searchDiseaseListWithPage;
 		
-	}	
+	}
+	
 	
 }

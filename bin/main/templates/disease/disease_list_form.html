@@ -7,7 +7,7 @@
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 질환 / 질병 정보 관리')}"></th:block>
 	
 	<script type="module">
-		import { getList, getOptionList, getSortList, getSelectList } from '/js/api/api_get_list.js'; // 테이블 기본, 정렬 리스트 불러오기
+		import { getList, getOptionList, getSortList, getSelectList } from '/js/api/api_get_list.js'; // 리스트 불러오기
 		import { searchForm } from '/js/submitForm.js'; // 검색폼 제출
 		window.getList = getList;
 		window.getOptionList = getOptionList;
@@ -15,8 +15,23 @@
 		window.getSelectList = getSelectList;
 		window.searchForm = searchForm;
 		document.addEventListener('DOMContentLoaded', () => {
-			const { hasSearchString, page, sort, sortValue } = setFormValuesFromUrl('d_name'); // 검색 파트 기본값
-			hasSearchString ? searchForm(null, '/disease/search_disease_list', page) : getList('/disease/get_all_disease_list_with_page', sort, sortValue, page);
+			const { sortType, sort, sortValue, page } = setFormValuesFromUrl('d_name'); // 검색 파트 기본값
+			switch(sortType) {
+				case '2': // 검색
+					searchForm(null, '/disease/search_disease_list', page);
+					break;
+
+				case '1': // 카테고리 셀렉트
+					getList('/disease/get_disease_list_by_category_with_page', sort, sortValue, page);
+					break;
+
+				case '0':  // 정렬
+					getList('/disease/get_all_disease_list_with_page', sort, sortValue, page);
+					break;
+					
+				default: // 기본
+					getList('/disease/get_all_disease_list_with_page', sort, sortValue, page);
+			}
 
 			// DISEASE_CATEGORY 가져오기
 			getOptionList('/disease/get_category_list', 'dc_name');
@@ -41,9 +56,9 @@
 									<form name="search_form" onsubmit="searchForm(event, '/disease/search_disease_list')" th:insert="~{fragments/search.html :: search('질환 / 질병 정보 관리')}"></form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/disease/get_all_disease_list_with_page', null, null, 1)">전체보기</div>
-						            	<div class="btns small delete" onclick="">삭제</div>
-						            	<a href="" class="btns small">등록</a>
+						            	<div class="btns small" onclick="getList('/disease/get_all_disease_list_with_page', null, null, 1);">전체보기</div>
+						            	<div class="btns small delete" onclick="deleteCheckBoxList('/disease/delete_confirm', 'd_no')">삭제</div>
+						            	<a href="/disease/create_form" class="btns small">등록</a>
 						            </div>
 					            </div>
 					        </div>
@@ -62,7 +77,7 @@
 	                            <thead>
 	                                <tr>
 	                                	<th>
-	                                		<div class="table_title"><input type="checkbox" name="all_check" id="all_check" ></div>	                                        
+	                                		<div class="table_title"><input type="checkbox" name="all_check" id="all_check" onchange="setAllCheckBox(this)" value="d_no" ></div>	                                        
 	                                    </th>
 	                                    <th>
 	                                        <p class="table_title">No</p>

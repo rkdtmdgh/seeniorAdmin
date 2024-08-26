@@ -1,5 +1,7 @@
 // 콘텐츠 리스트 요청
 export function getList(command, sort, sortValue, page) {
+	resetAllcheck(); // all_check 체크박스 초기화
+	
 	// 검색 인풋 벨류 삭제
 	const searchStringInput = document.forms['search_form'].search_string;
 	if(searchStringInput.value.trim().length > 0) searchStringInput.value = ''; // 검색 이력이 남았을 경우에만 삭제
@@ -51,7 +53,6 @@ export function getList(command, sort, sortValue, page) {
 	                </tr>
 				`;
 			}
-			
 		} else {
 			logger.info('데이터가 없거나 유효하지 않습니다.');
 			const maxCols = setTableColumnsNum();
@@ -71,11 +72,20 @@ export function getList(command, sort, sortValue, page) {
 
 // 버튼으로 정렬된 리스트 요청
 export function getSortList(event, command, defaultSort, changeSort) {
-    const sortBtn = event.target; // 클릭된 버튼 요소
+	if(event) event.preventDefault();
+    const sortBtn = event.currentTarget.closest('.sort'); // 클릭된 요소가 가장 가까운 부모 요소 중 클래스가 "sort"인 요소를 찾음
+	if(!sortBtn) return; // 만약 sort 요소가 없다면 아무 작업도 하지 않음
+	
     const sort = sortBtn.getAttribute('data-sort'); // 정렬 종류 가져오기
     const currentSort = sortBtn.getAttribute('data-current-sort'); // 현재 정렬 값 가져오기
     const newSort = currentSort === defaultSort ? changeSort : defaultSort; // 정렬 값 토글
     sortBtn.setAttribute('data-current-sort', newSort); // 버튼의 data-sort 속성 값 업데이트
+	
+	const urlParams = new URLSearchParams(window.location.search);
+	urlParams.set('sortType', 0); // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
+	const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+	window.history.replaceState({}, '', newUrl);
+	
     getList(command, sort, newSort, 1); // 변경된 정렬 값으로 getList 호출
 }
 
@@ -85,14 +95,17 @@ export function getSelectList(event) {
 	const command = sortBtn.parentElement.getAttribute('data-api'); // 커맨드 가져오기
 	const sort = sortBtn.parentElement.getAttribute('data-sort'); // 정렬 종류 가져오기
 	const sortValue = sortBtn.getAttribute('data-sort-value'); // 정렬할 값
-	logger.info('getSelectList() command:', command);
-	logger.info('getSelectList() sort:', sort);
-	logger.info('getSelectList() sortValue:', sortValue);
+
+	const urlParams = new URLSearchParams(window.location.search);
+	urlParams.set('sortType', 1); // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
+	const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+	window.history.replaceState({}, '', newUrl);
+	
 	getList(command, sort, sortValue, 1);
 }
 
 // 콘텐츠 정렬 셀렉트 옵션 리스트 요청
-export function getOptionList(apiUrl, ele) {
+export function getOptionList(apiUrl, ele, isForm) {
 	const selectEle = document.getElementById(ele); // 셀렉트 요소가 생성될 table th
 	let getListDtos;
 	let dataNo;
@@ -123,14 +136,22 @@ export function getOptionList(apiUrl, ele) {
 			logger.info(apiUrl + ' getListDtos:', getListDtos);
 			
 			if(getListDtos && getListDtos.length > 0) {
-				const ceateSelect = `<ul data-sort="${dataNo}" data-api="${command}" class="select_option_list sc"></ul>`;
-		        selectEle.insertAdjacentHTML('beforeend', ceateSelect);
-		        const selectOptionlist = selectEle.querySelector('ul.select_option_list');
+				if(isForm) {
+					getListDtos.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
+						let option = `<option value="${data[dataNo]}">${data[dataName]}</option>`;
+						selectEle.insertAdjacentHTML('beforeend', option);
+					});
+				} else {
+					const ceateSelect = `<ul data-sort="${dataNo}" data-api="${command}" class="select_option_list sc"></ul>`;
+			        selectEle.insertAdjacentHTML('beforeend', ceateSelect);
+			        const selectOptionlist = selectEle.querySelector('ul.select_option_list');
+					
+					getListDtos.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
+						let option = `<li data-sort-value="${data[dataNo]}" class="option" onclick="getSelectList(event);">${data[dataName]}</li>`;
+						selectOptionlist.insertAdjacentHTML('beforeend', option);
+					});
+				}
 				
-				getListDtos.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
-					let option = `<li data-sort-value="${data[dataNo]}" class="option" onclick="getSelectList(event);">${data[dataName]}</li>`;
-					selectOptionlist.insertAdjacentHTML('beforeend', option);
-				});
 			} else {
 				selectEle.classList.remove('select');
 			}

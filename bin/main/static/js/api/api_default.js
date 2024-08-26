@@ -8,27 +8,13 @@ function signOut() {
 	location.replace('/account/sign_out_confirm');
 }
 
-// 계정 삭제
-function deleteAccount(a_no, a_id) {
-	logger.info('deleteAccount()', a_no, a_id);
-	const isConfirm = confirm(a_id + ' 계정을 삭제하시겠습니까?');
-	if(!isConfirm) {
-		return false;	
-	}
-	location.replace('/account/delete_confirm?a_no=' + a_no);
+// all_check 체크박스 초기화
+function  resetAllcheck() {
+	const allCheckBox = document.querySelector('input[type="checkbox"][name="all_check"]');
+	if(allCheckBox && allCheckBox.checked === true) allCheckBox.checked = false;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-	// 정렬 버튼 세팅(새로 고침 후 버튼 기능 정상화)
-	const urlParams = new URLSearchParams(window.location.search);
-	const sort = urlParams.get('sort');
-	const sortValue = urlParams.get('sortValue');
-	
-	if(sort) {
-		const sortBtn = document.querySelector(`.table_title[data-sort = "${sort}"]`);
-		if(sortBtn) sortBtn.setAttribute('data-sort', sortValue || sort);
-	}
-	
 	// NAV 선택 표시 및 토글
 	const currentPath = window.location.pathname; // 현재 URL
 	logger.info('URl:', currentPath);

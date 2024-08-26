@@ -423,7 +423,7 @@ public class DiseaseService {
 
 	// 질환 삭제 확인
 	@Transactional
-	public int deleteConfirm(ArrayList<Integer> d_nos) {
+	public boolean deleteConfirm(ArrayList<Integer> d_nos) {
 		log.info("deleteConfirm()");
 	   
 	   try {
@@ -436,11 +436,11 @@ public class DiseaseService {
 	   } catch (Exception e) {
 		   log.error("Error ==========>",e);
 		   
-		   return DISEASE_DELETE_FAIL;
+		   return false;
 		   
 	   }
 	   
-	   return DISEASE_DELETE_SUCCESS;
+	   return true;
 	
 	}
 
@@ -455,8 +455,8 @@ public class DiseaseService {
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
-		pagingParams.put("searchString", searchString);
 		pagingParams.put("searchPart", searchPart);
+		pagingParams.put("searchString", searchString);
 		
 		List<DiseaseDto> searchDiseaseDtos = diseaseMapper.getSearchDisease(pagingParams);
 		pagingList.put("diseaseDtos", searchDiseaseDtos);
@@ -471,14 +471,18 @@ public class DiseaseService {
 		
 		Map<String, Object> searchDiseaseListPageNum = new HashMap<>();
 		
+		Map<String, Object> pagingParams = new HashMap<>();
+		pagingParams.put("searchPart", searchPart);
+		pagingParams.put("searchString", searchString);
+		
 		// 전체 리스트 개수 조회
-		int searchDiseaseListCnt = diseaseMapper.getSearchDiseaseListCnt(searchPart, searchString);
+		int searchDiseaseListCnt = diseaseMapper.getSearchDiseaseListCnt(pagingParams);
 		
 		// 전체 페이지 개수 계산
 		int maxPage = (int) (Math.ceil((double) searchDiseaseListCnt / pageLimit));
 		
 		// 시작 페이지 값 계산
-		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit;
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
 		
 		// 마지막 페이지 값 계산
 		int endPage = startPage + blockLimit - 1;
