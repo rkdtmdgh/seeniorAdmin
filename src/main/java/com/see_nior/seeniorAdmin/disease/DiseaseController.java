@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -287,13 +288,13 @@ public class DiseaseController {
 //	}
 	
 	// 질환 삭제 확인
-	@GetMapping("/delete_confirm")
+	@PostMapping("/delete_confirm")
 	public Object deleteConfirm(@RequestParam(value = "deleteData") List<Integer> d_nos) {
 		log.info("deleteConfirm()");
 		
 		boolean deleteResult = diseaseService.deleteConfirm(new ArrayList<>(d_nos));
 		
-		return deleteResult;
+		return ResponseEntity.ok(deleteResult);
 	}
 	
 	// 질환 검색(페이지네이션 => 비동기)
