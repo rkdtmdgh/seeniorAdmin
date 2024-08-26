@@ -447,8 +447,6 @@ public class DiseaseService {
 	// 페이지에 따른 질환 가져오기(검색한 질환)
 	public Map<String, Object> getSearchDiseaseListWithPage(String searchPart, String searchString, int page) {
 		log.info("getSearchDiseaseListWithPage()");
-		log.info("searchPart ============> {}", searchPart);
-		log.info("searchString ============> {}", searchString);
 		
 		int pagingStart = (page - 1) * pageLimit;
 		
@@ -484,7 +482,7 @@ public class DiseaseService {
 		int maxPage = (int) (Math.ceil((double) searchDiseaseListCnt / pageLimit));
 		
 		// 시작 페이지 값 계산
-		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit;
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
 		
 		// 마지막 페이지 값 계산
 		int endPage = startPage + blockLimit - 1;

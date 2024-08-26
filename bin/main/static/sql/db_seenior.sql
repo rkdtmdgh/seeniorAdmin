@@ -430,8 +430,8 @@ CREATE TABLE DISEASE (
 	D_CATEGORY_NO	INT	NOT NULL COMMENT "질환 분류 NO(DISEASE_CATEGORY TABLE PK)",	-- 질환 분류 NO(DISEASE_CATEGORY TABLE PK)
 	D_NAME			VARCHAR(100) NOT NULL COMMENT "질환 명",							-- 질환 명
 	D_INFO			TEXT NOT NULL COMMENT "질환 정보",								-- 질환 정보
-	D_GOOD_FOOD		VARCHAR(255) NOT NULL COMMENT "질환에 좋은 추천 음식 재료",			-- 질환에 좋은 추천 음식 재료
-	D_BAD_FOOD		VARCHAR(255) NOT NULL COMMENT "질환에 나쁜 비추천 음식 재료",			-- 질환에 나쁜 비추천 음식 재료
+	D_GOOD_FOOD		TEXT NOT NULL COMMENT "질환에 좋은 추천 음식 재료",			-- 질환에 좋은 추천 음식 재료
+	D_BAD_FOOD		TEXT NOT NULL COMMENT "질환에 나쁜 비추천 음식 재료",			-- 질환에 나쁜 비추천 음식 재료
 	D_IS_DELETED	TINYINT DEFAULT 1 COMMENT "질환 삭제 여부(기본값 = 1, 삭제 시 = 0)",	-- 질환 삭제 여부(기본값 = 1, 삭제 시 = 0)
 	D_REG_DATE		DATETIME DEFAULT NOW() COMMENT "질환 등록일",						-- 질환 등록일
 	D_MOD_DATE		DATETIME DEFAULT NOW() COMMENT "질환 수정일",						-- 질환 수정일
