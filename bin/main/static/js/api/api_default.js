@@ -8,6 +8,12 @@ function signOut() {
 	location.replace('/account/sign_out_confirm');
 }
 
+// all_check 체크박스 초기화
+function  resetAllcheck() {
+	const allCheckBox = document.querySelector('input[type="checkbox"][name="all_check"]');
+	if(allCheckBox && allCheckBox.checked === true) allCheckBox.checked = false;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 	// NAV 선택 표시 및 토글
 	const currentPath = window.location.pathname; // 현재 URL

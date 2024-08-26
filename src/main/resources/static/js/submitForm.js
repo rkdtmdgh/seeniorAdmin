@@ -84,6 +84,8 @@ export function searchForm(event, apiUrl, page) {
 	}
 	
 	if(apiUrl) {		
+		resetAllcheck(); // all_check 체크박스 초기화
+		
 		let intPage = page || 1;
 		logger.info('searchForm() searchPart:', form.search_part.value);
 		logger.info('searchForm() searchString:', input.value.trim());

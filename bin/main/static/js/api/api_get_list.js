@@ -1,5 +1,7 @@
 // 콘텐츠 리스트 요청
 export function getList(command, sort, sortValue, page) {
+	resetAllcheck(); // all_check 체크박스 초기화
+	
 	// 검색 인풋 벨류 삭제
 	const searchStringInput = document.forms['search_form'].search_string;
 	if(searchStringInput.value.trim().length > 0) searchStringInput.value = ''; // 검색 이력이 남았을 경우에만 삭제
@@ -51,7 +53,6 @@ export function getList(command, sort, sortValue, page) {
 	                </tr>
 				`;
 			}
-			
 		} else {
 			logger.info('데이터가 없거나 유효하지 않습니다.');
 			const maxCols = setTableColumnsNum();
