@@ -245,7 +245,7 @@ public class DiseaseController {
 	
 	// 질환 수정 양식
 	@GetMapping("/modify_form")
-	public String modifyForm(@RequestParam(value = "no") int d_no, Model model) {
+	public String modifyForm(@RequestParam(value = "d_no") int d_no, Model model) {
 		log.info("modifyForm()");
 		
 		String nextPage = "disease/modify_form";
