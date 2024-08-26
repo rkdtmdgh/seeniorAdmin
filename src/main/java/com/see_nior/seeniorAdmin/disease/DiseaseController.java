@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -272,18 +273,28 @@ public class DiseaseController {
 	}
 	
 	
+	// 질환 삭제 확인(기존)
+//	@GetMapping("/delete_confirm")
+//	public String deleteConfirm(@RequestParam(value = "deleteData") List<Integer> d_nos, Model model) {
+//		log.info("deleteConfirm()");
+//		
+//		int result = diseaseService.deleteConfirm(new ArrayList<>(d_nos));
+//		
+//		model.addAttribute("deleteResult", result);
+//		
+//		String nextPage = "disease/delete_result";
+//		
+//		return nextPage;
+//	}
+	
 	// 질환 삭제 확인
-	@GetMapping("/delete_confirm")
-	public String deleteConfirm(@RequestParam(value = "d_nos") List<Integer> d_nos, Model model) {
+	@PostMapping("/delete_confirm")
+	public Object deleteConfirm(@RequestParam(value = "deleteData") List<Integer> d_nos) {
 		log.info("deleteConfirm()");
 		
-		int result = diseaseService.deleteConfirm(new ArrayList<>(d_nos));
+		boolean deleteResult = diseaseService.deleteConfirm(new ArrayList<>(d_nos));
 		
-		model.addAttribute("deleteResult", result);
-		
-		String nextPage = "disease/delete_result";
-		
-		return nextPage;
+		return ResponseEntity.ok(deleteResult);
 	}
 	
 	// 질환 검색(페이지네이션 => 비동기)
