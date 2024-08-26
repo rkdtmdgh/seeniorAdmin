@@ -57,8 +57,12 @@ function setFormatDate(dateString) { // yyyy-mm-dd 형식
 }
 
 // 체크박스 일괄 체크 및 해제
-function setAllCheckBox(ele, checkName) {
-	
+function setAllCheckBox(ele) {	
+	const isChecked = ele.checked;
+	const checkboxList = document.querySelectorAll(`input[name="${ele.value}"]`);
+	checkboxList.forEach(checkbox => {
+		checkbox.checked = isChecked;
+	});
 }
 
 // 본인 확인 페이지 이동
