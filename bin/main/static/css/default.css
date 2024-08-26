@@ -347,6 +347,7 @@
 	top: 90%;
 	left: 50%;
 	transform: translate(-50%);
+	z-index: 1;
 	
 	.option {
 		padding: var(--optionPadding);
@@ -366,6 +367,7 @@
 .table_info {
 	display: block;
     padding: var(--textPadding);
+    position: relative;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -380,12 +382,6 @@
             display: flex;
         }
     }
-}
-
-.table_flex_element {
-    display: flex;
-    align-items: center;
-    padding-right: 0.5em;
 }
 
 .content_edit_table {
