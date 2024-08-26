@@ -272,18 +272,28 @@ public class DiseaseController {
 	}
 	
 	
+	// 질환 삭제 확인(기존)
+//	@GetMapping("/delete_confirm")
+//	public String deleteConfirm(@RequestParam(value = "deleteData") List<Integer> d_nos, Model model) {
+//		log.info("deleteConfirm()");
+//		
+//		int result = diseaseService.deleteConfirm(new ArrayList<>(d_nos));
+//		
+//		model.addAttribute("deleteResult", result);
+//		
+//		String nextPage = "disease/delete_result";
+//		
+//		return nextPage;
+//	}
+	
 	// 질환 삭제 확인
 	@GetMapping("/delete_confirm")
-	public String deleteConfirm(@RequestParam(value = "d_nos") List<Integer> d_nos, Model model) {
+	public Object deleteConfirm(@RequestParam(value = "deleteData") List<Integer> d_nos) {
 		log.info("deleteConfirm()");
 		
-		int result = diseaseService.deleteConfirm(new ArrayList<>(d_nos));
+		boolean deleteResult = diseaseService.deleteConfirm(new ArrayList<>(d_nos));
 		
-		model.addAttribute("deleteResult", result);
-		
-		String nextPage = "disease/delete_result";
-		
-		return nextPage;
+		return deleteResult;
 	}
 	
 	// 질환 검색(페이지네이션 => 비동기)
