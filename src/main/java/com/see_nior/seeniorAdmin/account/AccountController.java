@@ -149,6 +149,12 @@ public class AccountController {
 		
 		model.addAttribute("loginedAdminDto", loginedAdminDto);
 		
+		if (loginedAdminDto == null) {
+			model.addAttribute("checkResult", false);
+		} else {
+			model.addAttribute("checkResult", true);
+		}
+		
 		return loginedAdminDto;
 	}
 	
