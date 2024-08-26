@@ -56,6 +56,11 @@ function setFormatDate(dateString) { // yyyy-mm-dd 형식
     return `${year}-${month}-${day}`;
 }
 
+// 체크박스 일괄 체크 및 해제
+function setAllCheckBox(ele, checkName) {
+	
+}
+
 // 본인 확인 페이지 이동
 function setModifyCheckForm(event) {
 	if(event) event.preventDefault(); // 기본 동작인 href로 이동을 막음
@@ -256,7 +261,7 @@ function setDataList(api, data, index) {
 			innerContent = `
 				<tr>
 		            <td class="vam">
-		                <div class="table_info func_area"><input type="checkbox" name="d_no" id="d_no" value="${data.d_no}"></div>
+		                <div class="table_info func_area"><input type="checkbox" name="d_no" class="d_no" value="${data.d_no}"></div>
 		            </td>
 		            <td>
 		                <a href="/disease/modify_form?d_no=${data.d_no}" class="table_info">${index}</a>
