@@ -37,7 +37,7 @@ function deleteCheckBoxList(apiUrl, checkName) {
 	.then(response => {
 		logger.info(apiUrl + ' deleteCheckBoxList() response:', response);
 		
-		if(response && response.deleteResult) {
+		if(response) {
 			location.reload(true);
 		} else {
 			alert('삭제에 실패하였습니다. 다시 시도해 주세요.');

@@ -105,7 +105,7 @@ export function getSelectList(event) {
 }
 
 // 콘텐츠 정렬 셀렉트 옵션 리스트 요청
-export function getOptionList(apiUrl, ele) {
+export function getOptionList(apiUrl, ele, isForm) {
 	const selectEle = document.getElementById(ele); // 셀렉트 요소가 생성될 table th
 	let getListDtos;
 	let dataNo;
@@ -136,14 +136,22 @@ export function getOptionList(apiUrl, ele) {
 			logger.info(apiUrl + ' getListDtos:', getListDtos);
 			
 			if(getListDtos && getListDtos.length > 0) {
-				const ceateSelect = `<ul data-sort="${dataNo}" data-api="${command}" class="select_option_list sc"></ul>`;
-		        selectEle.insertAdjacentHTML('beforeend', ceateSelect);
-		        const selectOptionlist = selectEle.querySelector('ul.select_option_list');
+				if(isForm) {
+					getListDtos.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
+						let option = `<option value="${data[dataNo]}">${data[dataName]}</option>`;
+						selectEle.insertAdjacentHTML('beforeend', option);
+					});
+				} else {
+					const ceateSelect = `<ul data-sort="${dataNo}" data-api="${command}" class="select_option_list sc"></ul>`;
+			        selectEle.insertAdjacentHTML('beforeend', ceateSelect);
+			        const selectOptionlist = selectEle.querySelector('ul.select_option_list');
+					
+					getListDtos.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
+						let option = `<li data-sort-value="${data[dataNo]}" class="option" onclick="getSelectList(event);">${data[dataName]}</li>`;
+						selectOptionlist.insertAdjacentHTML('beforeend', option);
+					});
+				}
 				
-				getListDtos.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
-					let option = `<li data-sort-value="${data[dataNo]}" class="option" onclick="getSelectList(event);">${data[dataName]}</li>`;
-					selectOptionlist.insertAdjacentHTML('beforeend', option);
-				});
 			} else {
 				selectEle.classList.remove('select');
 			}

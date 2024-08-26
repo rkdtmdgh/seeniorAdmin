@@ -442,23 +442,6 @@ SELECT * FROM DISEASE;
 SHOW INDEX FROM DISEASE;
 DROP TABLE DISEASE;
 
--- 추천 영상 테이블 --------------------------------------------------------------------------------------------------------------
-CREATE TABLE VIDEO (
-	V_NO			INT	AUTO_INCREMENT COMMENT "추천 영상 NO(PK)", 						-- 추천 영상 NO(PK)
-	V_DISEASE_NO	INT	NOT NULL COMMENT "추천 영상 질환 NO(DISEASE TABLE PK)",				-- 추천 영상 질환 NO(DISEASE TABLE PK)
-	V_TITLE			VARCHAR(100) NOT NULL COMMENT "추천 영상 제목",							-- 추천 영상 제목
-	V_TEXT			VARCHAR(255) NOT NULL COMMENT "추천 영상 설명",							-- 추천 영상 설명
-	V_LINK			VARCHAR(255) NOT NULL COMMENT "추천 영상 URL",						-- 추천 영상 URL
-	V_IS_DELETED	TINYINT DEFAULT 1 COMMENT "추천 영상 삭제 여부(기본값 = 1, 삭제 시 = 0)",	-- 추천 영상 삭제 여부(기본값 = 1, 삭제 시 = 0)
-	V_REG_DATE		DATETIME DEFAULT NOW() COMMENT "추천 영상 등록일",						-- 추천 영상 등록일
-	V_MOD_DATE		DATETIME DEFAULT NOW() COMMENT "추천 영상 수정일",						-- 추천 영상 수정일
-    PRIMARY KEY(V_NO)
-);
-
-SELECT * FROM VIDEO;
-SHOW INDEX FROM VIDEO;
-DROP TABLE VIDEO;
-
 -- 질환 더미데이터
 INSERT INTO 
    DISEASE(
@@ -1061,6 +1044,23 @@ VALUES(
         '주위에서 노인들이 기운이 없다고 하거나, 행동이 느려지고, 어디가 자꾸 아프다고 호소할 때, 우리는 흔히 "나이가 들만큼 들었으니까 그렇지" 하고 흘려 버리게 됩니다. 노인성 우울증 환자는 젊은 연령의 우울증 환자보다 자살 기도율이 훨씬 높으며, 자살의 성공률 또한 다른 질병들과 비교할 수 없을 만큼 높습니다.\n우울증을 앓는 기간이 오래 될수록 치료하기가 어려워질 수 있기 때문에, 조기에 발견하여 치료하는 것이 절실히 요구됩니다.\n다행히 우울증은 현재 적절한 항우울제 등을 사용하면서 정신과적인 치료를 병행할 경우에 비교적 치료 효과가 좋은 편이므로 노인들에 대한 애정어린 관심과 세심한 관찰을 통해서 조기에 발견하는 것이 중요하다고 하겠습니다.', 
         '고등어, 달걀, 브로콜리, 상추, 시금치, 아스파라거스, 오리고기, 케일, 닭고기, 정어리, 청어, 참치, 호두, 소간, 연어', 
         '커피, 술, 케이크, 쿠키, 햄버거, 피자');    
+
+-- 추천 영상 테이블 --------------------------------------------------------------------------------------------------------------
+CREATE TABLE VIDEO (
+	V_NO			INT	AUTO_INCREMENT COMMENT "추천 영상 NO(PK)", 						-- 추천 영상 NO(PK)
+	V_DISEASE_NO	INT	NOT NULL COMMENT "추천 영상 질환 NO(DISEASE TABLE PK)",				-- 추천 영상 질환 NO(DISEASE TABLE PK)
+	V_TITLE			VARCHAR(100) NOT NULL COMMENT "추천 영상 제목",							-- 추천 영상 제목
+	V_TEXT			VARCHAR(255) NOT NULL COMMENT "추천 영상 설명",							-- 추천 영상 설명
+	V_LINK			VARCHAR(255) NOT NULL COMMENT "추천 영상 URL",						-- 추천 영상 URL
+	V_IS_DELETED	TINYINT DEFAULT 1 COMMENT "추천 영상 삭제 여부(기본값 = 1, 삭제 시 = 0)",	-- 추천 영상 삭제 여부(기본값 = 1, 삭제 시 = 0)
+	V_REG_DATE		DATETIME DEFAULT NOW() COMMENT "추천 영상 등록일",						-- 추천 영상 등록일
+	V_MOD_DATE		DATETIME DEFAULT NOW() COMMENT "추천 영상 수정일",						-- 추천 영상 수정일
+    PRIMARY KEY(V_NO)
+);
+
+SELECT * FROM VIDEO;
+SHOW INDEX FROM VIDEO;
+DROP TABLE VIDEO;
 
 -- 광고 테이블 -------------------------------------------------------------------------------------------------------------------
 CREATE TABLE ADVERTISEMENT (
