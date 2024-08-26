@@ -423,7 +423,7 @@ public class DiseaseService {
 
 	// 질환 삭제 확인
 	@Transactional
-	public int deleteConfirm(ArrayList<Integer> d_nos) {
+	public boolean deleteConfirm(ArrayList<Integer> d_nos) {
 		log.info("deleteConfirm()");
 	   
 	   try {
@@ -436,11 +436,11 @@ public class DiseaseService {
 	   } catch (Exception e) {
 		   log.error("Error ==========>",e);
 		   
-		   return DISEASE_DELETE_FAIL;
+		   return false;
 		   
 	   }
 	   
-	   return DISEASE_DELETE_SUCCESS;
+	   return true;
 	
 	}
 
