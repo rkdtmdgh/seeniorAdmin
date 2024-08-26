@@ -132,7 +132,10 @@ public class AccountController {
 	// 내 정보 수정 양식 가기 전 비밀번호 확인
 	@PostMapping("/modify_check")
 	@ResponseBody
-	public Object modifyCheck(Model model, Principal principal, @RequestParam("a_pw") String a_pw) {
+	public Object modifyCheck(
+			Model model, 
+			Principal principal, 
+			@RequestParam("a_pw") String a_pw) {
 		log.info("modifyCheck()");
 
 		principal.getName();
@@ -148,6 +151,12 @@ public class AccountController {
 				accountService.modifyCheck(principal.getName(), a_pw);
 		
 		model.addAttribute("loginedAdminDto", loginedAdminDto);
+		
+		if (loginedAdminDto == null) {
+			model.addAttribute("checkResult", false);
+		} else {
+			model.addAttribute("checkResult", true);
+		}
 		
 		return loginedAdminDto;
 	}
@@ -217,15 +226,15 @@ public class AccountController {
 	@GetMapping("/get_admin_list")
 	@ResponseBody
 	public Object getAdminList(
-			@RequestParam(value = "sort", required = false, defaultValue = "all") String sort,
+			@RequestParam(value = "approval", required = false, defaultValue = "all") String approval,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("getAdminList()");
 		
-		Map<String, Object> adminList = accountService.getAdminPagingList(sort, page);
+		Map<String, Object> adminList = accountService.getAdminPagingList(approval, page);
 		
 		Map<String, Object> adminListPage = accountService.getAdminListPageNum(page);
 		adminList.put("adminListPage", adminListPage);
-		adminList.put("sort", sort);
+		adminList.put("approval", approval);
 		
 		return adminList;
 	}
@@ -236,17 +245,17 @@ public class AccountController {
 	public Object searchAdminList(
 			@RequestParam("searchPart") String searchPart,
 			@RequestParam("searchString") String searchString,
-			@RequestParam(value = "sort", required = false, defaultValue = "all") String sort,
+			@RequestParam(value = "approval", required = false, defaultValue = "all") String approval,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("searchAdminList()");
 		
 		Map<String, Object> searchAdminList = 
-				accountService.searchAdminPagingList(searchPart, searchString, sort, page);
+				accountService.searchAdminPagingList(searchPart, searchString, approval, page);
 		
 		Map<String, Object> searchAdminListPage = 
 				accountService.searchAdminListPageNum(searchPart, searchString, page);
 		searchAdminList.put("searchAdminListPage", searchAdminListPage);
-		searchAdminList.put("sort", sort);
+		searchAdminList.put("approval", approval);
 		searchAdminList.put("searchPart", searchPart);
 		searchAdminList.put("searchString", searchString);
 		

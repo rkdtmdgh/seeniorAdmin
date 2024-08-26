@@ -173,13 +173,13 @@
 		AND 
 			A_IS_DELETED = 1
 		<choose>
-			<when test="sort == 'all'">
+			<when test="approval == 'all'">
 				ORDER BY A_NO DESC 
 			</when>
-			<when test="sort == 'approval'">
+			<when test="approval == 'approval'">
 				ORDER BY A_AUTHORITY_ROLE DESC, A_NO DESC 
 			</when>
-			<when test="sort == 'notApproval'">
+			<when test="approval == 'notApproval'">
 				ORDER BY A_AUTHORITY_ROLE ASC, A_NO DESC 
 			</when>
 		</choose>
@@ -233,13 +233,13 @@
 			</choose>
 		</if>
 		<choose>
-			<when test="sort == 'all'">
+			<when test="approval == 'all'">
 				ORDER BY A_NO DESC 
 			</when>
-			<when test="sort == 'approval'">
+			<when test="approval == 'approval'">
 				ORDER BY A_AUTHORITY_ROLE DESC, A_NO DESC 
 			</when>
-			<when test="sort == 'notApproval'">
+			<when test="approval == 'notApproval'">
 				ORDER BY A_AUTHORITY_ROLE ASC, A_NO DESC 
 			</when>
 		</choose>

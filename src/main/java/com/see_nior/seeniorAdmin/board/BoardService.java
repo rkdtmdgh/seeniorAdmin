@@ -38,7 +38,9 @@ public class BoardService {
 					
 		int bc_idx = boardCategoryDto.getBc_idx();
 		String bc_name = boardCategoryDto.getBc_name();
-				
+		
+		log.info("bc_idx --- {}", bc_idx);
+		log.info("bc_name --- {}", bc_name);
 				
 		return 0;
 	}
