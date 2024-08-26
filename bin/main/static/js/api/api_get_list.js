@@ -71,11 +71,20 @@ export function getList(command, sort, sortValue, page) {
 
 // 버튼으로 정렬된 리스트 요청
 export function getSortList(event, command, defaultSort, changeSort) {
-    const sortBtn = event.target; // 클릭된 버튼 요소
+	if(event) event.preventDefault();
+    const sortBtn = event.currentTarget.closest('.sort'); // 클릭된 요소가 가장 가까운 부모 요소 중 클래스가 "sort"인 요소를 찾음
+	if(!sortBtn) return; // 만약 sort 요소가 없다면 아무 작업도 하지 않음
+	
     const sort = sortBtn.getAttribute('data-sort'); // 정렬 종류 가져오기
     const currentSort = sortBtn.getAttribute('data-current-sort'); // 현재 정렬 값 가져오기
     const newSort = currentSort === defaultSort ? changeSort : defaultSort; // 정렬 값 토글
     sortBtn.setAttribute('data-current-sort', newSort); // 버튼의 data-sort 속성 값 업데이트
+	
+	const urlParams = new URLSearchParams(window.location.search);
+	urlParams.set('sortType', 0); // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
+	const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+	window.history.replaceState({}, '', newUrl);
+	
     getList(command, sort, newSort, 1); // 변경된 정렬 값으로 getList 호출
 }
 
@@ -85,9 +94,12 @@ export function getSelectList(event) {
 	const command = sortBtn.parentElement.getAttribute('data-api'); // 커맨드 가져오기
 	const sort = sortBtn.parentElement.getAttribute('data-sort'); // 정렬 종류 가져오기
 	const sortValue = sortBtn.getAttribute('data-sort-value'); // 정렬할 값
-	logger.info('getSelectList() command:', command);
-	logger.info('getSelectList() sort:', sort);
-	logger.info('getSelectList() sortValue:', sortValue);
+
+	const urlParams = new URLSearchParams(window.location.search);
+	urlParams.set('sortType', 1); // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
+	const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+	window.history.replaceState({}, '', newUrl);
+	
 	getList(command, sort, sortValue, 1);
 }
 

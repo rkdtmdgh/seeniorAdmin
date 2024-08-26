@@ -15,8 +15,19 @@
 		window.getSelectList = getSelectList;
 		window.searchForm = searchForm;
 		document.addEventListener('DOMContentLoaded', () => {
-			const { hasSearchString, page, sort, sortValue } = setFormValuesFromUrl('d_name'); // 검색 파트 기본값
-			hasSearchString ? searchForm(null, '/disease/search_disease_list', page) : getList('/disease/get_all_disease_list_with_page', sort, sortValue, page);
+			const { sortType, sort, sortValue, page } = setFormValuesFromUrl('d_name'); // 검색 파트 기본값
+			switch(sortType) {
+				case '2':
+					searchForm(null, '/disease/search_disease_list', page);
+					break;
+
+				case '1':
+					getList('/disease/get_disease_list_by_category_with_page', sort, sortValue, page);
+					break;
+					
+				default: 
+					getList('/disease/get_all_disease_list_with_page', sort, sortValue, page);
+			}
 
 			// DISEASE_CATEGORY 가져오기
 			getOptionList('/disease/get_category_list', 'dc_name');

@@ -13,8 +13,18 @@
 		window.getSortList = getSortList;
 		window.searchForm = searchForm;
 		document.addEventListener('DOMContentLoaded', () => {
-			const { hasSearchString, page, sort, sortValue } = setFormValuesFromUrl('a_id'); // 검색 파트 기본값
-			hasSearchString ? searchForm(null, '/account/search_admin_list', page) : getList('/account/get_admin_list', sort, sortValue, page);
+			const { sortType, sort, sortValue, page } = setFormValuesFromUrl('d_name'); // 검색 파트 기본값
+			switch(sortType) {
+				case '2':
+					searchForm(null, '/account/search_admin_list', page);
+					break;
+					
+				default: 
+					getList('/account/get_admin_list', sort, sortValue, page);
+			}
+
+			// DISEASE_CATEGORY 가져오기
+			getOptionList('/disease/get_category_list', 'dc_name');
         });
 	</script>
 </head>

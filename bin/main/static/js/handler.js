@@ -62,35 +62,41 @@ function setModifyCheckForm(event) {
 	location.href = '/account/modify_check_form';
 }
 
-// 검색 폼 데이터인지 확인하여 초기화
+// 검색 폼 데이터인지, 정렬된 데이터인지 확인하여 초기화
 function setFormValuesFromUrl(part) {
 	const urlParams = new URLSearchParams(window.location.search);
     const sForm = document.forms['search_form'];
 	const searchPart = urlParams.get('searchPart') || part;
     const searchString = urlParams.get('searchString') || '';
     const page = urlParams.get('page') || 1;
+	const sortType = urlParams.get('sortType') || undefined;
 	const sort = urlParams.get('sort') || undefined;
-	const sortValue = urlParams.get('sortValue') || undefined;
-	
-	const hasSearchString = searchString.trim().length > 0; // 검색어가 있는지 확인
+	const sortValue = urlParams.get(`${sort}`) || undefined;
 	
 	// 검색어가 있을 경우 검색 폼 사용으로 새로고침 시 재적용
-	if(hasSearchString) {
+	if(sortType === 2) { // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
 		sForm.search_part.value = searchPart;
 		sForm.search_string.value = searchString;
 	}
 	
-	return { hasSearchString, page, sort, sortValue };
+	return { sortType, sort, sortValue, page };
 }
 
 // 페이지 유지를 위한 쿼리 스트링 제어(검색 이력 제거)
 function setListQueryString(page, sort, sortValue) {
-	const url = new URL(window.location);
-    url.search = '';
+	const url = new URL(window.location); // 현재 url
+	const sortType = url.searchParams.get('sortType') || undefined; // sortType이 있을 경우 값 가지고 있기
+    url.search = ''; // 파라미텉 비우기
+	
+	// 파라미터 추가
 	url.searchParams.set('page', page); 
+	 
     if (sort) {
+		if(sortType) url.searchParams.set('sortType', sortType); 
+		url.searchParams.set('sort', sort); 
 		url.searchParams.set(`${sort}`, sortValue); 
     } else {
+		// sort 버튼 기본값으로 초기화
 		const sortElements = document.querySelectorAll('.sort');
 		sortElements.forEach(sortElement => {
 			sortElement.setAttribute('data-current-sort', 'all');
@@ -103,6 +109,7 @@ function setListQueryString(page, sort, sortValue) {
 function setSearchQueryString(page, searchPart, searchString) {
 	const url = new URL(window.location);
     url.search = '';
+	url.searchParams.set('sortType', 2); // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
 	url.searchParams.set('page', page); 
     url.searchParams.set('searchPart', searchPart);
     url.searchParams.set('searchString', searchString);
