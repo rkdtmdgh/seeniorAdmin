@@ -303,6 +303,8 @@ public class DiseaseController {
 		Map<String, Object> searchDiseaseListPageNum = diseaseService.getSearchDiseaseListPageNum(searchPart, searchString, page);
 		
 		searchDiseaseListWithPage.put("searchDiseaseListPageNum", searchDiseaseListPageNum);
+		searchDiseaseListWithPage.put("searchPart", searchPart);
+		searchDiseaseListWithPage.put("searchString", searchString);
 		
 		return searchDiseaseListWithPage;
 		
