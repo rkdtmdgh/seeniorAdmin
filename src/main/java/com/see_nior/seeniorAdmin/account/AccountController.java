@@ -1,6 +1,8 @@
 package com.see_nior.seeniorAdmin.account;
 
 import java.security.Principal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -95,36 +97,17 @@ public class AccountController {
 		return nextPage;
 	}
 	
-	/*
-	// 내 정보 수정 양식
-	@PostMapping("/modify_form")
-	public String modifyForm(Model model, Principal principal, @RequestParam("a_pw") String a_pw) {
-		log.info("modifyForm()");
-		
-		String nextPage = "account/modify_form";
-		
-		principal.getName();
-		
-		 * 로그인 ID 꺼내는 방법
-		 * 1. Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		 * 		authentication.getName();
-		 * 2. principal.getName();
-		
-		AdminAccountDto loginedAdminDto = 
-				accountService.getAdminAccountById(principal.getName(), a_pw);
-		
-		model.addAttribute("loginedAdminDto", loginedAdminDto);
-		
-		return nextPage;
-	}
-	*/
-	
 	// 내 정보 수정 양식
 	@GetMapping("/modify_form")
-	public String modifyForm(@RequestParam String param) {
+	public String modifyForm(Model model, Principal principal) {
 		log.info("modifyForm()");
 		
 		String nextPage = "account/modify_form";
+		
+		AdminAccountDto loginedAdminDto = 
+				accountService.getAdminAccountById(principal.getName());
+		
+		model.addAttribute("loginedAdminDto", loginedAdminDto);
 		
 		return nextPage;
 	}
@@ -133,7 +116,6 @@ public class AccountController {
 	@PostMapping("/modify_check")
 	@ResponseBody
 	public Object modifyCheck(
-			Model model, 
 			Principal principal, 
 			@RequestParam("a_pw") String a_pw) {
 		log.info("modifyCheck()");
@@ -142,7 +124,8 @@ public class AccountController {
 		
 		/*
 		 * 로그인 ID 꺼내는 방법
-		 * 1. Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		 * 1. Authentication authentication = 
+		 * 			SecurityContextHolder.getContext().getAuthentication();
 		 * 		authentication.getName();
 		 * 2. principal.getName();
 		*/
@@ -150,25 +133,39 @@ public class AccountController {
 		AdminAccountDto loginedAdminDto = 
 				accountService.modifyCheck(principal.getName(), a_pw);
 		
-		model.addAttribute("loginedAdminDto", loginedAdminDto);
+		Date now = new Date();
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		if (loginedAdminDto == null) {
-			model.addAttribute("checkResult", false);
+			return null;
 		} else {
-			model.addAttribute("checkResult", true);
+			return dateFormat.format(now);
 		}
 		
-		return loginedAdminDto;
 	}
 	
 	// 내 정보 수정 확인
 	@PostMapping("/modify_confirm")
-	public String modifyConfirm(AdminAccountDto adminAccountDto) {
+	public String modifyConfirm(Model model, Principal principal, AdminAccountDto adminAccountDto) {
 		log.info("modifyConfirm()");
 		
-		accountService.modifyConfirm(adminAccountDto);
+		String nextPage = "account/modify_result_form";
 		
-		return "redirect:/account/modify_form";
+		int modifyResult = -1;
+		
+		if (principal.getName().equals(adminAccountDto.getA_id())) {
+			
+			modifyResult = accountService.modifyConfirm(adminAccountDto);
+			model.addAttribute("modifyResult", modifyResult);
+			
+		} else {
+			
+			model.addAttribute("modifyResult", modifyResult);
+			
+		}
+		
+		return nextPage;
 	}
 	
 	// SUPER_ADMIN - ADMIN 정보 수정 양식
@@ -299,8 +296,7 @@ public class AccountController {
 		
 		model.addAttribute("resetResult", resetResult);
 		
-		return new String();
+		return "redirect:/account/admin_list_form";
 	}
-	
 	
 }
