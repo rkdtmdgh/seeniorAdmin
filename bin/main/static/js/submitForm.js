@@ -294,5 +294,7 @@ function regDiseaseCategoryForm(event, formName) {
 	})
 	.catch((error) => {
 		logger.error('/disease/create_category_confirm searchForm() error:', error);
+		alert('분류 등록에 실패했습니다. 다시 시도해 주세요.');
+		location.reload(true);
 	});
 }
