@@ -47,12 +47,12 @@ public class DiseaseController {
 	
 	// 질환 카테고리 등록 확인
 	@PostMapping("/create_category_confirm")
-	public int createCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto) {
+	public Object createCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto) {
 		log.info("createCategoryConfirm()");
 		
 		int createCategoryResult = diseaseService.createCategoryConfirm(diseaseCategoryDto);
 		
-		return createCategoryResult;
+		return ResponseEntity.ok(createCategoryResult);
 		
 	}
 	
