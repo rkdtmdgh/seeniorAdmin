@@ -45,6 +45,7 @@
     --iconsWidth: 20px;
     --arrowWidth: 5px; /* X2 (5px = 10px) */
     --signFormWidth: 340px;
+    --tableTextareaHeight: 200px;
 
     --innerPadding: 30px;
     --btnsPadding: 1em 1.5em;
@@ -121,7 +122,7 @@ input[type="text"], input[type="password"], textarea, select, form {
     outline: none;
 }
 
-input::placeholder {
+input::placeholder, textarea::placeholder {
     color: var(--middleGrayColor);
 }
 
@@ -204,6 +205,11 @@ table {
         	vertical-align: middle;
         }
     }
+}
+
+/* margin, padding */
+.mb_stepGap {
+	margin-bottom: var(--stepGap);
 }
 
 /* accessibility */

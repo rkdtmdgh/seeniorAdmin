@@ -71,6 +71,16 @@
 	cursor: pointer;
 }
 
+/* textarea */
+.table_textarea {
+	width: 100%;
+	height: var(--tableTextareaHeight);
+    padding: var(--textPadding);
+    border: 1px solid transparent;
+    resize: none;
+}
+
+/* border arrow */
 .arrow {
     &::after {
         content: '';
@@ -278,7 +288,7 @@
     border-top: 1px solid var(--middleGrayColor);
     display: flex;
     flex-direction: column;
-    gap: var(--stepGap);
+    gap: var(--formGap);
 }
 
 .table_title {
