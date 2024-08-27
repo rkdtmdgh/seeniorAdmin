@@ -3,31 +3,29 @@
    xmlns:th="http://www.thymeleaf.org" 
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
-<body>
-	<th:block th:switch="${signUpResult}">
-		<th:block th:case="1"> 
-			<script type="text/javascript">
-				// 회원가입성공으로 로그인 페이지 이동
-				alert('회원 가입에 성공하였습니다.');
-				location.replace("/account/sign_in_form");
-			</script>
-		</th:block>
-		
-		<th:block th:case="-1"> 
-			<script type="text/javascript">
-				// 아이디 중복으로 회원가입 페이지 이동(모든 항목 재입력)
-				alert('이미 사용 중인 이메일입니다.');
-				location.replace("/account/sign_up_form");
-			</script>
-		</th:block>
-		
-		<th:block th:case="0"> 
-			<script type="text/javascript">
-				// 회원 가입 실패로 다시 시도
-				alert('회원 가입에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
-				location.replace("/account/sign_up_form");
-			</script>
-		</th:block>
+<th:block th:switch="${signUpResult}">
+	<th:block th:case="1"> 
+		<script type="text/javascript">
+			// 회원가입성공으로 로그인 페이지 이동
+			alert('회원 가입에 성공하였습니다.');
+			location.replace("/account/sign_in_form");
+		</script>
 	</th:block>
-</body>
+	
+	<th:block th:case="-1"> 
+		<script type="text/javascript">
+			// 아이디 중복으로 회원가입 페이지 이동(모든 항목 재입력)
+			alert('이미 사용 중인 이메일입니다.');
+			location.replace("/account/sign_up_form");
+		</script>
+	</th:block>
+	
+	<th:block th:case="0"> 
+		<script type="text/javascript">
+			// 회원 가입 실패로 다시 시도
+			alert('회원 가입에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
+			location.replace("/account/sign_up_form");
+		</script>
+	</th:block>
+</th:block>
 </html>

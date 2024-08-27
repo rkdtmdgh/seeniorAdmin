@@ -49,6 +49,7 @@
     --innerPadding: 30px;
     --btnsPadding: 1em 1.5em;
     --smallBtnsPadding: 0.53em 1.1em;
+    --tableBtnPadding: 0.3em;
     --textPadding: 0.7em 1.2em;
     --subTextPadding: 0.3em 1em;
     --subTextIndent: 0 0 0 0.85em;
@@ -72,7 +73,6 @@
     /* position */
     --trslC: -50%, -50%; /*translate center*/
     --inputIconTop: 1em;
-    --tableInputIconTop: 0.7em;
 
     /* small size */
     --ssize1: 0.3em;

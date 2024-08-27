@@ -402,10 +402,18 @@
     }
     
     .cont_info {
-       	position: relative;
+       	display: flex;
+       	justify-content: space-between;
+       	align-items: center;
        	
        	.input_icon {
-       		top: var(--tableInputIconTop);
+       		position: static;
+       		display: inline-block;
+       	}
+       	
+       	.btns {
+       		font-size: var(--menuFontSize);
+       		padding: var(--tableBtnPadding);
        	}
 	}	
     
