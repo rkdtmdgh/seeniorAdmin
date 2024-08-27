@@ -6,9 +6,7 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 질환 / 질병 정보 관리')}"></th:block>
 	
-	<script type="module">
-		import { getOptionList } from '/js/api/api_get_list.js'; // 리스트 불러오기
-		window.getOptionList = getOptionList;
+	<script type="text/javascript">
 		document.addEventListener('DOMContentLoaded', () => {
 			// DISEASE_CATEGORY 가져오기
 			getOptionList('/disease/get_category_list', 'dc_name', true); // command, element id, isForm
@@ -25,10 +23,39 @@
 			<div class="content">
                 <div class="content_inner sc">
 					<section class="content_info_wrap">
-					    <div class="content_top">
+						<div class="content_top">
 					        <div class="content_top_info">
 					            <h2 class="title">질환 / 질병 정보 관리</h2>
 					        </div>
+				            <p class="sub_title">신규 분류로 질환 / 질병 등록 시 먼저 분류 등록해 주세요</p>
+					    </div>
+					    
+						<form name="reg_disease_category_form" onsubmit="regDiseaseCategoryForm(event, 'reg_disease_category_form')">					    	
+						    <div class="table_wrap">
+		                        <table class="content_edit_table">
+		                            <colgroup>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                </colgroup>
+	                                
+		                            <tbody>
+		                                <tr>
+	                                        <th><p class="table_title">분류명</p></th>
+		                                	<td>
+		                                		<div class="cont_info">
+			                                		<input type="text" name="dc_name" id="dc_name" class="table_info" placeholder="신규 분류 등록 시 입력해 주세요">
+			                                		<button type="submit" class="btns small">등록</button>
+		                                		</div>
+	                                        </td>
+		                                </tr>
+		                            </tbody>
+		                        </table>
+		                    </div>
+	                    </form>
+	                    
+					    <div class="content_top">
 				            <p class="sub_title">질환 / 질병 정보 등록</p>
 					    </div>
 					    
@@ -51,9 +78,9 @@
 		                                		</select>
 	                                        </td>
 	                                        
-	                                        <th><p class="table_title">분류 등록</p></th>
+	                                        <th><p class="table_title">질환 / 질병명</p></th>
 		                                	<td>
-		                                		<input type="text" name="red_dc_name" id="red_dc_name" class="table_info" placeholder="신규 분류 등록 시 입력하세요">
+		                                		<input type="text" name="red_dc_name" id="red_dc_name" class="table_info" placeholder="질환 / 질병명">
 	                                        </td>
 		                                </tr>
 		                                

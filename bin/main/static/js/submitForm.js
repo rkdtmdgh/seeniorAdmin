@@ -1,5 +1,5 @@
 // 회원 가입 폼
-export async function postSignUpForm(event, formName) {
+async function postSignUpForm(event, formName) {
 	if(event) event.preventDefault();
 	const form = document.forms[formName];
 	let input;
@@ -42,7 +42,7 @@ export async function postSignUpForm(event, formName) {
 }
 
 // 로그인 폼
-export function postSignInForm(event, formName) {
+function postSignInForm(event, formName) {
 	if(event) event.preventDefault();
 	const form = document.forms[formName];
 	let input;
@@ -66,7 +66,7 @@ export function postSignInForm(event, formName) {
 }
 
 // 검색 폼
-export function searchForm(event, apiUrl, page) {
+function searchForm(event, apiUrl, page) {
 	if(event) event.preventDefault();
 	const form = document.forms['search_form'];
 	let input;
@@ -158,8 +158,8 @@ export function searchForm(event, apiUrl, page) {
 	}
 }
 
-// 본인 확인
-export function modifyCheckForm(event, formName) {
+// 본인 확인 폼
+function modifyCheckForm(event, formName) {
 	if(event) event.preventDefault();
 	const form = document.forms[formName];
 	let input;
@@ -176,8 +176,8 @@ export function modifyCheckForm(event, formName) {
     form.submit();
 }
 
-// 관리자 계정 정보 수정(SUPER_ADMIN)
-export function adminModifyForm(formName) {
+// 관리자 계정 정보 수정(SUPER_ADMIN) 폼
+function adminModifyForm(formName) {
 	const form = document.forms[formName];
 	let input;
 	
@@ -205,8 +205,8 @@ export function adminModifyForm(formName) {
     form.submit();
 }
 
-// 본인 계정 정보 수정
-export function modifyForm(formName) {
+// 본인 계정 정보 수정 폼
+function modifyForm(formName) {
 	const form = document.forms[formName];
 	let input;
 	
@@ -245,4 +245,54 @@ export function modifyForm(formName) {
 	form.action = "/account/modify_confirm";
     form.method = "post"; 
     form.submit();
+}
+
+
+// 질환 /질병 분류 등록 폼
+function regDiseaseCategoryForm(event, formName) {
+	if(event) event.preventDefault();
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.reg_dc_name;
+	if(!checkEmpty(input, '분류명을', true)) { // 인풋요소, 메세지, alert 사용 여부
+		input.focus();
+		return false;
+	}
+	
+	$.ajax({
+		url: '/disease/create_category_confirm',
+		method: 'GET',
+		data: {
+			dc_name: input.value.trim(),
+		},
+	})
+	.then(response => {
+		logger.info('/disease/create_category_confirm regDiseaseCategoryForm() response:', response);
+		
+		if(response) {
+			switch(response) {
+				case '1':
+					alert('"' + input.value + '" 분류가 등록되었습니다');
+					location.reload(true);
+					break;
+				
+				case '-1':
+					alert('"' + input.value + '" 분류는 이미 등록되어 있습니다\n확인 후 다시 시도해 주세요.');
+					return;
+				
+				case '0':
+					alert('분류 등록에 실패했습니다. 다시 시도해 주세요.');
+					location.reload(true);
+					break;			
+					
+				default:
+					logger.error('regDiseaseCategoryForm():', response);
+					return;
+			}
+		}
+	})
+	.catch((error) => {
+		logger.error('/disease/create_category_confirm searchForm() error:', error);
+	});
 }
