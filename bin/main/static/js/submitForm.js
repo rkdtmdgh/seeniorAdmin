@@ -262,7 +262,7 @@ function regDiseaseCategoryForm(event, formName) {
 	
 	$.ajax({
 		url: '/disease/create_category_confirm',
-		method: 'GET',
+		method: 'POST',
 		data: {
 			dc_name: input.value.trim(),
 		},
@@ -279,7 +279,7 @@ function regDiseaseCategoryForm(event, formName) {
 				
 				case '-1':
 					alert('"' + input.value + '" 분류는 이미 등록되어 있습니다\n확인 후 다시 시도해 주세요.');
-					return;
+					break;
 				
 				case '0':
 					alert('분류 등록에 실패했습니다. 다시 시도해 주세요.');
