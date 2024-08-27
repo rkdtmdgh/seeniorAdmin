@@ -19,22 +19,22 @@ import lombok.extern.log4j.Log4j2;
 public class DiseaseService {
 	
 	// 질환 카테고리
-	final static public int DISEASE_CATEGORY_ALREADY = -1;
-	final static public int DISEASE_CATEGORY_CREATE_FAIL = 0;
-	final static public int DISEASE_CATEGORY_CREATE_SUCCESS = 1;
-	final static public int DISEASE_CATEGORY_MODIFY_FAIL = 0;
-	final static public int DISEASE_CATEGORY_MODIFY_SUCCESS = 1;
-	final static public int DISEASE_CATEGORY_DELETE_FAIL = 0;
-	final static public int DISEASE_CATEGORY_DELETE_SUCCESS = 1;
+	final static public int DISEASE_CATEGORY_ALREADY = -1;				// 질환 카테고리가 이미 있음
+	final static public int DISEASE_CATEGORY_CREATE_FAIL = 0;			// 질환 카테고리 생성 실패
+	final static public int DISEASE_CATEGORY_CREATE_SUCCESS = 1;		// 질환 카테고리 생성 성공
+	final static public int DISEASE_CATEGORY_MODIFY_FAIL = 0;			// 질환 카테고리 수정 실패
+	final static public int DISEASE_CATEGORY_MODIFY_SUCCESS = 1;		// 질환 카테고리 수정 성공
+	final static public int DISEASE_CATEGORY_DELETE_FAIL = 0;			// 질환 카테고리 삭제 실패
+	final static public int DISEASE_CATEGORY_DELETE_SUCCESS = 1;		// 질환 카테고리 삭제 성공
 	
 	// 질환
-	final static public int DISEASE_ALREADY = -1;
-	final static public int DISEASE_CREATE_FAIL = 0;
-	final static public int DISEASE_CREATE_SUCCESS = 1;
-	final static public int DISEASE_MODIFY_FAIL = 0;
-	final static public int DISEASE_MODIFY_SUCCESS = 1;
-	final static public int DISEASE_DELETE_FAIL = 0;
-	final static public int DISEASE_DELETE_SUCCESS = 1;
+	final static public int DISEASE_ALREADY = -1;						// 질환이 이미 있음
+	final static public int DISEASE_CREATE_FAIL = 0;					// 질환 생성 실패
+	final static public int DISEASE_CREATE_SUCCESS = 1;					// 질환 생성 성공
+	final static public int DISEASE_MODIFY_FAIL = 0;					// 질환 수정 실패
+	final static public int DISEASE_MODIFY_SUCCESS = 1;					// 질환 수정 성공
+	final static public int DISEASE_DELETE_FAIL = 0;					// 질환 삭제 실패
+	final static public int DISEASE_DELETE_SUCCESS = 1;					// 질환 삭제 성공
 	
 	// 페이지네이션 관련
 	private int pageLimit = 10;	// 한 페이지당 보여줄 항목의 개수
