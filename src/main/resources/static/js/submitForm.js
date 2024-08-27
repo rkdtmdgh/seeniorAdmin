@@ -262,7 +262,7 @@ function regDiseaseCategoryForm(event, formName) {
 	
 	$.ajax({
 		url: '/disease/create_category_confirm',
-		method: 'GET',
+		method: 'POST',
 		data: {
 			dc_name: input.value.trim(),
 		},
