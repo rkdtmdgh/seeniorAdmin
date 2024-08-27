@@ -6,31 +6,31 @@ async function postSignUpForm(event, formName) {
 	
 	// 유효성 검사 재실행
 	input = form.a_id;
-	if(!(await validateEmail(input, true))) { // 제출 전 한번 더 중복 확인
+	if(!(await validateEmail(input, true, true))) { // 제출 전 한번 더 중복 확인
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_pw;
-	if(!validatePw(input)) { 
+	if(!validatePw(input, true)) { 
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_name;
-	if(!checkEmpty(input, '이름을')) {
+	if(!checkEmpty(input, '이름을', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_birth;
-	if(!validateBirth(input)) {
+	if(!validateBirth(input, true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_phone;
-	if(!validatePhone(input)) {
+	if(!validatePhone(input, true)) {
 		input.focus();
 		return false;
 	}
@@ -48,13 +48,13 @@ function postSignInForm(event, formName) {
 	let input;
 	
 	input = form.a_id;
-	if(!checkEmpty(input, '이메일을')) {
+	if(!checkEmpty(input, '이메일을', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_pw;
-	if(!checkEmpty(input, '비밀번호를')) {
+	if(!checkEmpty(input, '비밀번호를', true)) {
 		input.focus();
 		return false;
 	}
@@ -165,7 +165,7 @@ function modifyCheckForm(event, formName) {
 	let input;
 	
 	input = form.a_pw;
-	if(!checkEmpty(input, '비밀번호를')) {
+	if(!checkEmpty(input, '비밀번호를'), true) {
 		input.focus();
 		return false;
 	}
@@ -182,19 +182,19 @@ function adminModifyForm(formName) {
 	let input;
 	
 	input = form.a_name;
-	if(!checkEmpty(input, '이름을')) {
+	if(!checkEmpty(input, '이름을'), true) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_birth;
-	if(!validateBirth(input)) {
+	if(!validateBirth(input), true) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_phone;
-	if(!validatePhone(input)) {
+	if(!validatePhone(input), true) {
 		input.focus();
 		return false;
 	}
@@ -211,13 +211,13 @@ function modifyForm(formName) {
 	let input;
 	
 	input = form.a_name;
-	if(!checkEmpty(input, '이름을')) {
+	if(!checkEmpty(input, '이름을'), true) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_birth;
-	if(!validateBirth(input)) {
+	if(!validateBirth(input), true) {
 		input.focus();
 		return false;
 	}
@@ -229,14 +229,14 @@ function modifyForm(formName) {
 			return false;	
 		}
 		
-		if(!validatePw(input)) { 
+		if(!validatePw(input), true) { 
 			input.focus();
 			return false;
 		}
 	}
 	
 	input = form.a_phone;
-	if(!validatePhone(input)) {
+	if(!validatePhone(input), true) {
 		input.focus();
 		return false;
 	}
@@ -247,14 +247,13 @@ function modifyForm(formName) {
     form.submit();
 }
 
-
 // 질환 /질병 분류 등록 폼
 function regDiseaseCategoryForm(event, formName) {
 	if(event) event.preventDefault();
 	const form = document.forms[formName];
 	let input;
 	
-	input = form.reg_dc_name;
+	input = form.dc_name;
 	if(!checkEmpty(input, '분류명을', true)) { // 인풋요소, 메세지, alert 사용 여부
 		input.focus();
 		return false;
@@ -272,16 +271,16 @@ function regDiseaseCategoryForm(event, formName) {
 		
 		if(response) {
 			switch(response) {
-				case '1':
+				case 1:
 					alert('"' + input.value + '" 분류가 등록되었습니다');
 					location.reload(true);
 					break;
 				
-				case '-1':
+				case -1:
 					alert('"' + input.value + '" 분류는 이미 등록되어 있습니다\n확인 후 다시 시도해 주세요.');
-					return;
+					break;
 				
-				case '0':
+				case 0:
 					alert('분류 등록에 실패했습니다. 다시 시도해 주세요.');
 					location.reload(true);
 					break;			
@@ -297,4 +296,45 @@ function regDiseaseCategoryForm(event, formName) {
 		alert('분류 등록에 실패했습니다. 다시 시도해 주세요.');
 		location.reload(true);
 	});
+}
+
+// 질환 / 질병 등록
+function regDiseaseForm(formName) {
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.dc_no;
+	if(input.value === "") {
+		alert('분류를 선택해 주세요.');
+		return false;
+	}
+	
+	input = form.d_name;
+	if(!checkEmpty(input, '질환/질병명을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.d_good_food;
+	if(!checkEmpty(input, '추천 식단 재료를', true)) {
+		input.focus();
+		return false;
+	}
+		
+	input = form.d_bad_food;
+	if(!checkEmpty(input, '비추천 식단 재료를', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.d_info;
+	if(!checkEmpty(input, '질환 / 질병 정보를', true)) {
+		input.focus();
+		return false;
+	}
+	
+	// 모든 유효성 검사가 통과되었을 때 폼 제출	
+	form.action = "";
+    form.method = "post"; 
+    form.submit();
 }
