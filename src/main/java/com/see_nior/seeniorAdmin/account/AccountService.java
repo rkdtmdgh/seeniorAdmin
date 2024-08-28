@@ -20,6 +20,9 @@ public class AccountService {
 	final static public int ADMIN_SIGN_UP_FAIL = 0;
 	final static public int ADMIN_SIGN_UP_SUCCESS = 1;
 	
+	final static public int ADMIN_MODIFY_SUCCESS = 1;
+	final static public int ADMIN_MODIFY_FAIL = 0;
+	
 	private int pageLimit = 10;		// 한 페이지당 보여줄 정보 수
 	private int blockLimit = 5;		// 하단에 보여질 페이지 번호 수
 	
@@ -100,7 +103,7 @@ public class AccountService {
 	}
 	
 	// 내 정보 수정 확인
-	public void modifyConfirm(AdminAccountDto adminAccountDto) {
+	public int modifyConfirm(AdminAccountDto adminAccountDto) {
 		log.info("modifyConfirm()");
 		
 		if (adminAccountDto.getA_pw() != "" && adminAccountDto.getA_pw() != null) {
@@ -109,8 +112,19 @@ public class AccountService {
 			
 		}
 		
-		accountMapper.updateMyAdminInfo(adminAccountDto);
+		int modifyResult = 
+				accountMapper.updateMyAdminInfo(adminAccountDto);
 		
+		
+		if (modifyResult >= 0) {
+			
+			return ADMIN_MODIFY_SUCCESS;
+			
+		} else {
+			
+			return ADMIN_MODIFY_FAIL;
+			
+		}
 	}
 	
 	// SUPER_ADMIN - ADMIN 정보 수정 확인
