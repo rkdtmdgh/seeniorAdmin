@@ -75,14 +75,6 @@ public class AccountController {
 		return nextPage;
 	}
 	
-	// 로그인 확인
-	@PostMapping("/sign_in_confirm")
-	public String signInConfirm() {
-		log.info("signUpConfirm()");
-		
-		return null;
-	}
-	
 	// 로그인 결과 확인
 	@GetMapping("/sign_in_ng")
 	public String signInNg(
