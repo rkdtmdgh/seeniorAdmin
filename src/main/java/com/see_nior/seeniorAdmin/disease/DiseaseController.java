@@ -44,6 +44,18 @@ public class DiseaseController {
 		
 	}
 	
+	// 질환 카테고리명 중복 확인
+	@ResponseBody
+	@GetMapping("/is_disease_category")
+	public boolean isDiseaseCategory(@RequestParam(value = "dc_name") String dc_name) {
+		log.info("isDiseaseCategory()");
+		
+		boolean isDiseaseCategory = diseaseService.isDiseaseCategory(dc_name);
+		
+		return isDiseaseCategory;
+		
+	}
+	
 	// 질환 카테고리 등록 확인
 	@ResponseBody
 	@PostMapping("/create_category_confirm")
@@ -157,6 +169,19 @@ public class DiseaseController {
 		String nextPage = "disease/create_form";
 		
 		return nextPage;
+		
+	}
+	
+	// 질환명 중복 확인
+	@ResponseBody
+	@GetMapping("/is_disease")
+	public boolean isDisease(@RequestParam(value = "d_name") String d_name,
+							@RequestParam(value = "d_no", required = false, defaultValue = "0") int d_no) {
+		log.info("isDisease()");
+		
+		boolean isDisease = diseaseService.isDisease(d_name, d_no);
+		
+		return isDisease;
 		
 	}
 		
