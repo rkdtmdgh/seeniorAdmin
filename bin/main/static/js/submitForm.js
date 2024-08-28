@@ -299,7 +299,7 @@ function regDiseaseCategoryForm(event, formName) {
 }
 
 // 질환 / 질병 등록
-function regDiseaseForm(formName) {
+async function regDiseaseForm(formName) {
 	const form = document.forms[formName];
 	let input;
 	
@@ -310,7 +310,8 @@ function regDiseaseForm(formName) {
 	}
 	
 	input = form.d_name;
-	if(usedDiseaseCheck(input, true)) {
+	const isCheck = await usedDiseaseCheck(input, true);
+	if(isCheck) { // true = 중복, false = 정상
 		input.focus();
 		return false;
 	}

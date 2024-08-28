@@ -127,6 +127,7 @@ function validatePhone(input, alertMsg) {
 
 // 아이디 유효성 검사
 async function validateEmail(input, usedCheck, alertMsg) { 
+	const regEx = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z.]{2,5}$/; // 로컬파트와 도메인은 영문, 숫자, 정해진 특수문자/ TLD는 영문, "."를 포함할 수 있고 2~5자
 	const errorMessage = "이메일을 정확히 입력해 주세요.";
 	const isValid = validateInput(input, regEx, errorMessage);
 	logger.info('validateEmail isValid:', isValid);
