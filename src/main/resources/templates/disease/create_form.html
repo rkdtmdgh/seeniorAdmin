@@ -5,7 +5,7 @@
    
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 질환 / 질병 정보 관리')}"></th:block>
-	
+	<script src="/js/api/api_utils.js"></script>
 	<script type="text/javascript">
 		document.addEventListener('DOMContentLoaded', () => {
 			// DISEASE_CATEGORY 가져오기
@@ -81,7 +81,7 @@
 	                                        <th><p class="table_title">질환 / 질병명</p></th>
 		                                	<td>
 		                                		<input type="text" name="d_name" id="d_name" class="table_info" placeholder="질환 / 질병명"
-		                                			onblur="checkEmpty(this, '질환/질병명을');">
+		                                			onblur="usedDiseaseCheck(this);">
 	                                        </td>
 		                                </tr>
 		                                

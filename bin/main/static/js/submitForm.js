@@ -281,7 +281,7 @@ function regDiseaseCategoryForm(event, formName) {
 					break;
 				
 				case 0:
-					alert('분류 등록에 실패했습니다. 다시 시도해 주세요.');
+					alert('분류 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
 					location.reload(true);
 					break;			
 					
@@ -293,7 +293,7 @@ function regDiseaseCategoryForm(event, formName) {
 	})
 	.catch((error) => {
 		logger.error('/disease/create_category_confirm regDiseaseCategoryForm() error:', error);
-		alert('분류 등록에 실패했습니다. 다시 시도해 주세요.');
+		alert('분류 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
 		location.reload(true);
 	});
 }
