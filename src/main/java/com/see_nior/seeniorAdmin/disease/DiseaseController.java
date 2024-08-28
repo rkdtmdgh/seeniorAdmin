@@ -143,7 +143,8 @@ public class DiseaseController {
 		
 	}
 	
-	// 질환 카테고리 삭제 확인
+	// 질환 카테고리 삭제 확인(기존)
+	/*
 	@GetMapping("/delete_category_confirm")
 	public String deleteCategoryConfirm(@RequestParam(value = "dc_no") int dc_no, Model model) {
 		log.info("deleteCategoryConfirm()");
@@ -155,6 +156,19 @@ public class DiseaseController {
 		String nextPage = "disease/delete_category_result";
 		
 		return nextPage;
+		
+	}
+	*/
+	
+	// 질환 카테고리 삭제 확인(비동기)
+	@ResponseBody
+	@GetMapping("/delete_category_confirm")
+	public Object deleteCategoryConfirm(@RequestParam(value = "dc_no") int dc_no) {
+		log.info("deleteCategoryConfirm()");
+		
+		boolean deleteCategoryResult = diseaseService.deleteCategoryConfirm(dc_no);
+		
+		return deleteCategoryResult;
 		
 	}
 	
