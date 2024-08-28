@@ -88,7 +88,8 @@ public class AccountService {
 	public AdminAccountDto getAdminAccountById(String a_id) {
 		log.info("getAdminAccountById()");
 		
-		AdminAccountDto adminAccountDto = accountMapper.selectAdminAccountById(a_id);
+		AdminAccountDto adminAccountDto = 
+				accountMapper.selectAdminAccountById(a_id);
 		
 		return adminAccountDto;
 	}
@@ -97,7 +98,8 @@ public class AccountService {
 	public AdminAccountDto getAdminAccountByNo(int a_no) {
 		log.info("getAdminAccountByNo()");
 		
-		AdminAccountDto adminAccountDto = accountMapper.selectAdminAccountByNo(a_no);
+		AdminAccountDto adminAccountDto = 
+				accountMapper.selectAdminAccountByNo(a_no);
 		
 		return adminAccountDto;
 	}
