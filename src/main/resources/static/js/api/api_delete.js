@@ -41,13 +41,13 @@ async function deleteCheckBoxList(apiUrl, checkName) {
 			alert('삭제되었습니다.');
 			location.reload(true);
 		} else {
-			alert('삭제에 실패하였습니다. 다시 시도해 주세요.');
+			alert('삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
 			location.reload(true);
 		}
 	})
 	.catch((error) => {
 		logger.error(apiUrl + ' error:', error);
-		alert('삭제에 실패하였습니다. 다시 시도해 주세요.');
+		alert('삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
 		location.reload(true);
 	});
 }

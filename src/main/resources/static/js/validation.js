@@ -150,11 +150,8 @@ async function validateEmail(input, usedCheck, alertMsg) {
 			}
 		} catch(error) {
 			logger.error('Error during email check:', error);
-			if(alertMsg) {
-				alert("이메일 중복 확인 중 오류가 발생했습니다.");
-			}
-			addErrorMessage(input, "이메일 중복 확인 중 오류가 발생했습니다.");
-			return false;
+			alert("이메일 중복 확인 중 오류가 발생했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.");
+			location.reload(true);
 		}
 	}
 	return isValid;
