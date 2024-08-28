@@ -200,7 +200,7 @@ public class DiseaseService {
 		
 		boolean isDisease;
 		
-		// 질환을 새로 등록 할 시(수정 폼이 아니라서 d_no가 defalutValue인 0으로 넘어 왔을 시) 중복검사 실행
+		// 질환 등록 시(수정 폼이 아니라서 d_no가 defalutValue인 0으로 넘어 왔을 시) 중복검사 실행
 		if (d_no == 0) {
 			
 			isDisease = diseaseMapper.isDisease(d_name);
