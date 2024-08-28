@@ -165,7 +165,7 @@ function modifyCheckForm(event, formName) {
 	let input;
 	
 	input = form.a_pw;
-	if(!checkEmpty(input, '비밀번호를'), true) {
+	if(!checkEmpty(input, '비밀번호를', true)) {
 		input.focus();
 		return false;
 	}
@@ -182,19 +182,19 @@ function adminModifyForm(formName) {
 	let input;
 	
 	input = form.a_name;
-	if(!checkEmpty(input, '이름을'), true) {
+	if(!checkEmpty(input, '이름을', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_birth;
-	if(!validateBirth(input), true) {
+	if(!validateBirth(input, true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_phone;
-	if(!validatePhone(input), true) {
+	if(!validatePhone(input, true)) {
 		input.focus();
 		return false;
 	}
@@ -211,13 +211,13 @@ function modifyForm(formName) {
 	let input;
 	
 	input = form.a_name;
-	if(!checkEmpty(input, '이름을'), true) {
+	if(!checkEmpty(input, '이름을', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_birth;
-	if(!validateBirth(input), true) {
+	if(!validateBirth(input, true)) {
 		input.focus();
 		return false;
 	}
@@ -229,14 +229,14 @@ function modifyForm(formName) {
 			return false;	
 		}
 		
-		if(!validatePw(input), true) { 
+		if(!validatePw(input, true)) { 
 			input.focus();
 			return false;
 		}
 	}
 	
 	input = form.a_phone;
-	if(!validatePhone(input), true) {
+	if(!validatePhone(input, true)) {
 		input.focus();
 		return false;
 	}
@@ -281,7 +281,7 @@ function regDiseaseCategoryForm(event, formName) {
 					break;
 				
 				case 0:
-					alert('분류 등록에 실패했습니다. 다시 시도해 주세요.');
+					alert('분류 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
 					location.reload(true);
 					break;			
 					
@@ -293,7 +293,7 @@ function regDiseaseCategoryForm(event, formName) {
 	})
 	.catch((error) => {
 		logger.error('/disease/create_category_confirm regDiseaseCategoryForm() error:', error);
-		alert('분류 등록에 실패했습니다. 다시 시도해 주세요.');
+		alert('분류 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
 		location.reload(true);
 	});
 }
@@ -310,8 +310,7 @@ function regDiseaseForm(formName) {
 	}
 	
 	input = form.d_name;
-	if(!checkEmpty(input, '질환/질병명을', true)) {
-		input.focus();
+	if(!usedDiseaseCheck(input, true)) {
 		return false;
 	}
 	
@@ -334,7 +333,7 @@ function regDiseaseForm(formName) {
 	}
 	
 	// 모든 유효성 검사가 통과되었을 때 폼 제출	
-	form.action = "";
+	form.action = "/disease/create_confirm";
     form.method = "post"; 
     form.submit();
 }
