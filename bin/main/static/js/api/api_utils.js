@@ -21,15 +21,6 @@ function usedEmailCheck(email) {
 // 질환/질병명 중복 검사(정규표현식 검사가 필요없으므로 즉시 에러 메세지 노출)
 function usedDiseaseCheck(input, alertMsg) {		
 	if(!checkEmpty(input, '질환/질병명을', alertMsg)){
-		input.focus();
-		return false;
-	}
-	
-	const form = document.forms['reg_disease_form'];
-	const dc_no = form.dc_no;
-	
-	if(dc_no.value === "") {
-		alert('질환/질병명 중복검사를 위해 분류를 선택해 주세요.');
 		return false;
 	}
 	
@@ -37,7 +28,6 @@ function usedDiseaseCheck(input, alertMsg) {
 		url: '/disease/is_disease',
 		method: 'GET',
 		data: {
-			dc_no: dc_no.value,
 			d_name: input.value.trim(),
 		},
 	})

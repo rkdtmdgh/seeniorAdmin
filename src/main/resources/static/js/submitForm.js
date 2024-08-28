@@ -303,14 +303,15 @@ function regDiseaseForm(formName) {
 	const form = document.forms[formName];
 	let input;
 	
-	input = form.dc_no;
+	input = form.d_category_no;
 	if(input.value === "") {
 		alert('분류를 선택해 주세요.');
 		return false;
 	}
 	
 	input = form.d_name;
-	if(!usedDiseaseCheck(input, true)) {
+	if(usedDiseaseCheck(input, true)) {
+		input.focus();
 		return false;
 	}
 	
