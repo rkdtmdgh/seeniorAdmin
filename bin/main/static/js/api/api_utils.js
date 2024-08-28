@@ -51,3 +51,5 @@ function usedDiseaseCheck(input, alertMsg) {
 		location.reload(true);
 	});
 }
+
+// 세션스토리지에서 본인확인 데이터 가져오기
