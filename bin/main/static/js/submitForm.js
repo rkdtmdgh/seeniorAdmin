@@ -310,8 +310,7 @@ function regDiseaseForm(formName) {
 	}
 	
 	input = form.d_name;
-	if(!checkEmpty(input, '질환/질병명을', true)) {
-		input.focus();
+	if(!usedDiseaseCheck(input, true)) {
 		return false;
 	}
 	
