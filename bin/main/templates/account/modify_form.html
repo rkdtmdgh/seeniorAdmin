@@ -4,13 +4,6 @@
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
 <head>
-	<th:block th:if="${loginedAdminDto} == null">
-		<script type="text/javascript">
-			alert('올바른 접근이 아닙니다.');
-			history.back();
-		</script>
-	</th:block>
-
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 관리자 계정 관리')}"></th:block>
 </head>
 <body>
@@ -23,100 +16,33 @@
 			<div class="content">
                 <div class="content_inner sc">
 					<section class="content_info_wrap">
-					    <div class="content_top">
+						<div class="content_top">
 					        <div class="content_top_info">
-					            <h2 class="title">관리자 계정 관리</h2>
+					            <h2 class="title">본인 확인</h2>
 					        </div>
-				            <p class="sub_title">관리자 계정 정보</p>
+				            <p class="sub_title">본인 확인을 위해 비밀번호를 입력해 주세요.</p>
 					    </div>
 					    
-					    <form name="modify_form">					    	
-						    <div class="table_wrap">
-		                        <table class="content_edit_table">
-		                            <colgroup>
-	                                    <col class="col_row_title">
-	                                    <col>
-	                                    <col class="col_row_title">
-	                                    <col>
-	                                </colgroup>
-	                                
-		                            <tbody>
-		                                <tr>
-		                                	<th><p class="table_title">아이디</p></th>
-		                                	<td class="disabled">
-		                                		<input type="hidden" name="a_no" th:value="${loginedAdminDto.a_no}">
-		                                		<input type="text" name="a_id" id="id" class="table_info disabled"
-	                                            	th:value="${loginedAdminDto.a_id}" disabled>
-	                                        </td>
-	                                        
-	                                        <th><p class="table_title">비밀번호</p></th>
-		                                	<td>
-		                                		<label class="cont_info">
-		                                			<input type="password" name="a_pw" id="pw" class="table_info" placeholder="변경 시 입력" autocomplete="off"
-		                                				oninput="clearErrorMessage(this)">
-		                                			<span class="input_icon" onclick="setViewPw(this)">
-							                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
-							                        </span>
-		                                		</label>
-	                                        </td>
-		                                </tr>
-		                                
-		                                <tr>
-		                                	<th><p class="table_title">이름</p></th>
-		                                	<td>
-	                                            <input type="text" name="a_name" id="name" class="table_info" placeholder="이름"
-	                                            	oninput="checkEmpty(this, '이름을')" onblur="checkEmpty(this, '이름을')"
-	                                            	th:value="${loginedAdminDto.a_name}">
-	                                        </td>
-	                                        
-		                                	<th><p class="table_title">생년월일</p></th>
-		                                	<td>
-	                                            <input type="text" name="a_birth" id="birth" maxlength="10" class="table_info" placeholder="생년월일 8자 (YYYYMMDD)"
-	                                            	onkeydown="setReplaceBirth(this)" onkeyup="validateBirth(this)" onblur="validateBirth(this)"
-	                                            	th:value="${loginedAdminDto.a_birth}">
-	                                        </td>
-		                                </tr>
-		                                
-		                                <tr>
-		                                	<th><p class="table_title">연락처</p></th>
-		                                	<td>
-	                                            <input type="text" name="a_phone" id="phone" maxlength="13" class="table_info" placeholder="연락처"
-	                                            	onkeydown="setReplacePhone(this)" onkeyup="validatePhone(this)" onblur="validatePhone(this)"
-	                                            	th:value="${loginedAdminDto.a_phone}">
-	                                        </td>
-		                                	<th><p class="table_title">부서</p></th>
-		                                	<td class="disabled">
-	                                            <input type="text" name="a_department" id="department" class="table_info" placeholder="부서"
-	                                            	th:value="${loginedAdminDto.a_department}"
-	                                            	th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}">
-	                                        </td>
-		                                </tr>
-		                                
-		                                <tr>
-		                                	<th><p class="table_title">직위</p></th>
-		                                	<td class="disabled">
-	                                            <input type="text" name="a_level" id="level" class="table_info" placeholder="직위"
-	                                            	th:value="${loginedAdminDto.a_level}"
-	                                            	th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}">
-	                                        </td>
-		                                	<th><p class="table_title">직책</p></th>
-		                                	<td class="disabled">
-	                                            <input type="text" name="a_position" id="position" class="table_info" placeholder="직책"
-	                                            	th:value="${loginedAdminDto.a_position}"
-	                                            	th:disabled="${not #authorization.expression('hasAnyRole(''SUPER_ADMIN'')')}">
-	                                        </td>
-		                                </tr>
-		                            </tbody>
-		                        </table>
-		                        
-		                        <div class="btn_list right">
-	                                <div class="btn_list">
-	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <a href="javascript: modifyForm('modify_form')" class="btns">저장</a>
-	                                </div>
-	                            </div>
-		                    </div>
-	                    </form>
+					    <div class="sign_form">
+					    	<form name="modify_check_form" onsubmit="modifyCheckForm(event, 'modify_check_form')">
+				            	<div class="input_list_container">
+					                <div class="input_list" id="input_list_info">					
+					                    <label for="pw" class="border_input">
+					                        <span class="input_title">비밀번호</span>
+					                        <input type="password" name="a_pw" id="pw" placeholder="비밀번호" class="input_txt" autocomplete="off">
+					                        <span class="input_icon" onclick="setViewPw(this)">
+					                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
+					                        </span>
+					                    </label>
+					                </div>
+					                
+				                    <div class="btn_list col">
+				                        <button type="submit" class="btns">확인</button>
+				                        <a href="javascript: history.back();" class="btns cancel">취소</a>
+				                    </div>
+				                </div>
+				            </form>
+					    </div>
 					</section>
                 </div>
             </div>
