@@ -24,8 +24,8 @@ public class DiseaseService {
 	final static public int DISEASE_CATEGORY_CREATE_SUCCESS = 1;		// 질환 카테고리 생성 성공
 	final static public int DISEASE_CATEGORY_MODIFY_FAIL = 0;			// 질환 카테고리 수정 실패
 	final static public int DISEASE_CATEGORY_MODIFY_SUCCESS = 1;		// 질환 카테고리 수정 성공
-	final static public int DISEASE_CATEGORY_DELETE_FAIL = 0;			// 질환 카테고리 삭제 실패
-	final static public int DISEASE_CATEGORY_DELETE_SUCCESS = 1;		// 질환 카테고리 삭제 성공
+	final static public boolean DISEASE_CATEGORY_DELETE_FAIL = false;	// 질환 카테고리 삭제 실패
+	final static public boolean DISEASE_CATEGORY_DELETE_SUCCESS = true;	// 질환 카테고리 삭제 성공
 	
 	// 질환
 	final static public int DISEASE_ALREADY = -1;						// 질환이 이미 있음
@@ -33,8 +33,8 @@ public class DiseaseService {
 	final static public int DISEASE_CREATE_SUCCESS = 1;					// 질환 생성 성공
 	final static public int DISEASE_MODIFY_FAIL = 0;					// 질환 수정 실패
 	final static public int DISEASE_MODIFY_SUCCESS = 1;					// 질환 수정 성공
-	final static public int DISEASE_DELETE_FAIL = 0;					// 질환 삭제 실패
-	final static public int DISEASE_DELETE_SUCCESS = 1;					// 질환 삭제 성공
+	final static public boolean DISEASE_DELETE_FAIL = false;			// 질환 삭제 실패
+	final static public boolean DISEASE_DELETE_SUCCESS = true;			// 질환 삭제 성공
 	
 	// 페이지네이션 관련
 	private int pageLimit = 10;	// 한 페이지당 보여줄 항목의 개수
@@ -172,7 +172,7 @@ public class DiseaseService {
 	}
 	
 	// 질환 카테고리 삭제 확인
-	public int deleteCategoryConfirm(int dc_no) {
+	public boolean deleteCategoryConfirm(int dc_no) {
 		log.info("deleteCategoryConfirm()");
 		
 		int result = diseaseMapper.deleteDiseaseCategory(dc_no);
@@ -404,11 +404,11 @@ public class DiseaseService {
 	   } catch (Exception e) {
 		   log.error("Error ==========>",e);
 		   
-		   return false;
+		   return DISEASE_DELETE_FAIL;
 		   
 	   }
 	   
-	   return true;
+	   return DISEASE_DELETE_SUCCESS;
 	
 	}
 
