@@ -1,5 +1,5 @@
 // 콘텐츠 리스트 요청
-export function getList(command, sort, sortValue, page) {
+function getList(command, sort, sortValue, page) {
 	resetAllcheck(); // all_check 체크박스 초기화
 	
 	// 검색 인풋 벨류 삭제
@@ -71,7 +71,7 @@ export function getList(command, sort, sortValue, page) {
 }
 
 // 버튼으로 정렬된 리스트 요청
-export function getSortList(event, command, defaultSort, changeSort) {
+function getSortList(event, command, defaultSort, changeSort) {
 	if(event) event.preventDefault();
     const sortBtn = event.currentTarget.closest('.sort'); // 클릭된 요소가 가장 가까운 부모 요소 중 클래스가 "sort"인 요소를 찾음
 	if(!sortBtn) return; // 만약 sort 요소가 없다면 아무 작업도 하지 않음
@@ -90,7 +90,7 @@ export function getSortList(event, command, defaultSort, changeSort) {
 }
 
 // 셀렉트로 정렬된 리스트 요청
-export function getSelectList(event) {
+function getSelectList(event) {
 	const sortBtn = event.target; // 클릭된 버튼 요소
 	const command = sortBtn.parentElement.getAttribute('data-api'); // 커맨드 가져오기
 	const sort = sortBtn.parentElement.getAttribute('data-sort'); // 정렬 종류 가져오기
@@ -105,7 +105,7 @@ export function getSelectList(event) {
 }
 
 // 콘텐츠 정렬 셀렉트 옵션 리스트 요청
-export function getOptionList(apiUrl, ele, isForm) {
+function getOptionList(apiUrl, ele, isForm) {
 	const selectEle = document.getElementById(ele); // 셀렉트 요소가 생성될 table th
 	let getListDtos;
 	let dataNo;

@@ -6,12 +6,7 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 관리자 계정 관리')}"></th:block>
 	
-	<script type="module">
-		import { getList, getSortList } from '/js/api/api_get_list.js'; // 리스트 불러오기
-		import { searchForm } from '/js/submitForm.js'; // 검색폼 제출
-		window.getList = getList;
-		window.getSortList = getSortList;
-		window.searchForm = searchForm;
+	<script type="text/javascript">
 		document.addEventListener('DOMContentLoaded', () => {
 			const { sortType, sort, sortValue, page } = setFormValuesFromUrl('d_name'); // 검색 파트 기본값
 			switch(sortType) {

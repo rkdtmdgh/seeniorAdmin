@@ -45,10 +45,12 @@
     --iconsWidth: 20px;
     --arrowWidth: 5px; /* X2 (5px = 10px) */
     --signFormWidth: 340px;
+    --tableTextareaHeight: 200px;
 
     --innerPadding: 30px;
     --btnsPadding: 1em 1.5em;
     --smallBtnsPadding: 0.53em 1.1em;
+    --tableBtnPadding: 0.3em;
     --textPadding: 0.7em 1.2em;
     --subTextPadding: 0.3em 1em;
     --subTextIndent: 0 0 0 0.85em;
@@ -72,7 +74,6 @@
     /* position */
     --trslC: -50%, -50%; /*translate center*/
     --inputIconTop: 1em;
-    --tableInputIconTop: 0.7em;
 
     /* small size */
     --ssize1: 0.3em;
@@ -121,7 +122,7 @@ input[type="text"], input[type="password"], textarea, select, form {
     outline: none;
 }
 
-input::placeholder {
+input::placeholder, textarea::placeholder {
     color: var(--middleGrayColor);
 }
 
@@ -204,6 +205,11 @@ table {
         	vertical-align: middle;
         }
     }
+}
+
+/* margin, padding */
+.mb_stepGap {
+	margin-bottom: var(--stepGap);
 }
 
 /* accessibility */
