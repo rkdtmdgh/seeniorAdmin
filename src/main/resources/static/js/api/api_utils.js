@@ -19,10 +19,15 @@ function usedEmailCheck(email) {
 }
 
 // 질환/질병명 중복 검사(정규표현식 검사가 필요없으므로 즉시 에러 메세지 노출)
-function usedDiseaseCheck(input, alertMsg) {		
+function usedDiseaseCheck(input, defaultValue, alertMsg) {		
 	if(input.value.trim().length === 0) {
 		addErrorMessage(input, "질환/질병명을 입력해 주세요.")
 		if(alertMsg) alert("질환/질병명을 입력해 주세요.");
+		return false;
+	}
+	
+	if(defaultValue && input.value.trim() === defaultValue) {
+		clearErrorMessage(input);
 		return false;
 	}
 	
@@ -52,4 +57,3 @@ function usedDiseaseCheck(input, alertMsg) {
 	});
 }
 
-// 세션스토리지에서 본인확인 데이터 가져오기

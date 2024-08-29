@@ -1,5 +1,5 @@
 // 회원 가입 폼
-async function postSignUpForm(event, formName) {
+async function signUpForm(event, formName) {
 	if(event) event.preventDefault();
 	const form = document.forms[formName];
 	let input;
@@ -42,7 +42,7 @@ async function postSignUpForm(event, formName) {
 }
 
 // 로그인 폼
-function postSignInForm(event, formName) {
+function signInForm(event, formName) {
 	if(event) event.preventDefault();
 	const form = document.forms[formName];
 	let input;
@@ -176,35 +176,6 @@ function modifyCheckForm(event, formName) {
     form.submit();
 }
 
-// 관리자 계정 정보 수정(SUPER_ADMIN) 폼
-function adminModifyForm(formName) {
-	const form = document.forms[formName];
-	let input;
-	
-	input = form.a_name;
-	if(!checkEmpty(input, '이름을', true)) {
-		input.focus();
-		return false;
-	}
-	
-	input = form.a_birth;
-	if(!validateBirth(input, true)) {
-		input.focus();
-		return false;
-	}
-	
-	input = form.a_phone;
-	if(!validatePhone(input, true)) {
-		input.focus();
-		return false;
-	}
-	
-	// 모든 유효성 검사가 통과되었을 때 폼 제출	
-	form.action = "/account/admin_modify_confirm";
-    form.method = "post"; 
-    form.submit();
-}
-
 // 본인 계정 정보 수정 폼
 function modifyForm(formName) {
 	const form = document.forms[formName];
@@ -247,8 +218,37 @@ function modifyForm(formName) {
     form.submit();
 }
 
+// 관리자 계정 정보 수정(SUPER_ADMIN) 폼
+function adminModifyForm(formName) {
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.a_name;
+	if(!checkEmpty(input, '이름을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.a_birth;
+	if(!validateBirth(input, true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.a_phone;
+	if(!validatePhone(input, true)) {
+		input.focus();
+		return false;
+	}
+	
+	// 모든 유효성 검사가 통과되었을 때 폼 제출	
+	form.action = "/account/admin_modify_confirm";
+    form.method = "post"; 
+    form.submit();
+}
+
 // 질환 /질병 분류 등록 폼
-function regDiseaseCategoryForm(event, formName) {
+function diseaseCategoryRegForm(event, formName) {
 	if(event) event.preventDefault();
 	const form = document.forms[formName];
 	let input;
@@ -299,7 +299,7 @@ function regDiseaseCategoryForm(event, formName) {
 }
 
 // 질환 / 질병 등록
-async function regDiseaseForm(formName) {
+async function diseaseRegForm(formName) {
 	const form = document.forms[formName];
 	let input;
 	
@@ -310,7 +310,7 @@ async function regDiseaseForm(formName) {
 	}
 	
 	input = form.d_name;
-	const isCheck = await usedDiseaseCheck(input, true);
+	const isCheck = await usedDiseaseCheck(input, null, true);
 	if(isCheck) { // true = 중복, false = 정상
 		input.focus();
 		return false;
@@ -336,6 +336,50 @@ async function regDiseaseForm(formName) {
 	
 	// 모든 유효성 검사가 통과되었을 때 폼 제출	
 	form.action = "/disease/create_confirm";
+    form.method = "post"; 
+    form.submit();
+}
+
+// 질환 / 질병 수정
+async function diseaseModifyForm(formName, d_nameDefaultValue) {
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.d_category_no;
+	if(input.value === "") {
+		alert('분류를 선택해 주세요.');
+		return false;
+	}
+	
+	input = form.d_name;
+	if(input.value.trim() != d_nameDefaultValue) { // 수정이 되었을 경우
+		const isCheck = await usedDiseaseCheck(input, null, true);
+		if(isCheck) { // true = 중복, false = 정상
+			input.focus();
+			return false;
+		}
+	}
+	
+	input = form.d_good_food;
+	if(!checkEmpty(input, '추천 식단 재료를', true)) {
+		input.focus();
+		return false;
+	}
+		
+	input = form.d_bad_food;
+	if(!checkEmpty(input, '비추천 식단 재료를', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.d_info;
+	if(!checkEmpty(input, '질환 / 질병 정보를', true)) {
+		input.focus();
+		return false;
+	}
+	
+	// 모든 유효성 검사가 통과되었을 때 폼 제출	
+	form.action = "/disease/modify_confirm";
     form.method = "post"; 
     form.submit();
 }
