@@ -54,11 +54,16 @@ function validateInput(input, regEx, errorMessage, checkProfanity = false) { // 
 }
 
 // 아이디 유효성 검사
-async function validateEmail(input, usedCheck) { 
+async function validateEmail(input, usedCheck, alertMsg) { 
 	const regEx = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z.]{2,5}$/; // 로컬파트와 도메인은 영문, 숫자, 정해진 특수문자/ TLD는 영문, "."를 포함할 수 있고 2~5자
 	const errorMessage = "이메일을 정확히 입력해 주세요.";
 	const isValid = validateInput(input, regEx, errorMessage);
 	logger.info('validateEmail isValid:', isValid);
+	
+	if(alertMsg && !isValid) {
+		alert(errorMessage);
+		return false;
+	}
 	
 	if(isValid && usedCheck) {
 		try {
@@ -66,11 +71,17 @@ async function validateEmail(input, usedCheck) {
 			if(!isUsed) { 
 				clearErrorMessage(input);
 			} else {
+				if(alertMsg) {
+					alert("이미 사용 중인 이메일입니다.");
+				}
 				addErrorMessage(input, "이미 사용 중인 이메일입니다.");
 				return false;
 			}
 		} catch(error) {
 			logger.error('Error during email check:', error);
+			if(alertMsg) {
+				alert("이메일 중복 확인 중 오류가 발생했습니다.");
+			}
 			addErrorMessage(input, "이메일 중복 확인 중 오류가 발생했습니다.");
 			return false;
 		}
@@ -79,24 +90,72 @@ async function validateEmail(input, usedCheck) {
 }
 
 // 비밀번호 유효성 검사
-function validatePw(input) { 
+function validatePw(input, alertMsg) { 
 	const regEx = /^(?=.*[a-zA-Z])(?=.*[@$!%*?&])[a-zA-Z\d@$!%*?&]{8,16}$/; // 8~16자의 영문 대소문자 중 최소 1개, 특수문자 최소 1개, 숫자 선택 입력
     const errorMessage = "비밀번호는 8~16자의 영문대소문자, 특수문자(@, $, !, %, *, ?, &), 숫자를 사용할 수 있습니다. (필수: 영문대소문자, 특수문자)";
-	return validateInput(input, regEx, errorMessage);
+	const isValid = validateInput(input, regEx, errorMessage);
+	if(alertMsg && !isValid) {
+		alert(errorMessage);
+		return false;
+	}
+	return isValid;
 }
 
 // 생년월일 유효성 검사
-function validateBirth(input) {
+function validateBirth(input, alertMsg) {
 	const regEx = 	/^(19[0-9]{2}|20[0-9]{2})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/; // 현재 입력 가능 연도 기준으로 date 형식에 맞게 입력
 	const errorMessage = "생년월일을 정확히 입력해 주세요.";
-	return validateInput(input, regEx, errorMessage);
+	const isValid = validateInput(input, regEx, errorMessage);
+	if(alertMsg && !isValid) {
+		alert(errorMessage);
+		return false;
+	}
+	return isValid;
 }
 
 // 연락처 유효성 검사   
-function validatePhone(input) {
+function validatePhone(input, alertMsg) {
 	const regEx = /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/; // 휴대폰 번호 정규 표현식
 	const errorMessage = "휴대폰 번호를 정확히 입력해 주세요.";
-	return validateInput(input, regEx, errorMessage); 
+	const isValid = validateInput(input, regEx, errorMessage);
+	if(alertMsg && !isValid) {
+		alert(errorMessage);
+		return false;
+	}
+	return isValid; 
+}
+
+// 아이디 유효성 검사
+async function validateEmail(input, usedCheck, alertMsg) { 
+	const regEx = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z.]{2,5}$/; // 로컬파트와 도메인은 영문, 숫자, 정해진 특수문자/ TLD는 영문, "."를 포함할 수 있고 2~5자
+	const errorMessage = "이메일을 정확히 입력해 주세요.";
+	const isValid = validateInput(input, regEx, errorMessage);
+	logger.info('validateEmail isValid:', isValid);
+	
+	if(alertMsg && !isValid) {
+		alert(errorMessage);
+		return false;
+	}
+	
+	if(isValid && usedCheck) {
+		try {
+			const isUsed = await usedEmailCheck(input.value); // true=중복, false=정상 반환
+			if(!isUsed) { 
+				clearErrorMessage(input);
+			} else {
+				if(alertMsg) {
+					alert("이미 사용 중인 이메일입니다.");
+				}
+				addErrorMessage(input, "이미 사용 중인 이메일입니다.");
+				return false;
+			}
+		} catch(error) {
+			logger.error('Error during email check:', error);
+			alert("이메일 중복 확인 중 오류가 발생했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.");
+			location.reload(true);
+		}
+	}
+	return isValid;
 }
 
 // 데이터 값 유효 확인

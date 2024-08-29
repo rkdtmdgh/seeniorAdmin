@@ -19,7 +19,7 @@ public interface AccountMapper {
 	
 	public AdminAccountDto selectAdminAccountByNo(int a_no);
 
-	public void updateMyAdminInfo(AdminAccountDto adminAccountDto);
+	public int updateMyAdminInfo(AdminAccountDto adminAccountDto);
 
 	public int updateAdminIsDeletedByNo(int a_no);
 

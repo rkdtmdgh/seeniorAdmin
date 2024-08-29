@@ -4,7 +4,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
@@ -44,12 +43,10 @@ public class BoardController {
 	
 	//게시판 생성 요청 처리
 	@PostMapping("/create_confirm")
-	public String createConfirm(
-			@RequestParam("bc_idx") int bc_idx,
-			@RequestParam("bc_name") String bc_name) {
+	public String createConfirm(BoardCategoryDto boardCategoryDto) {
 		log.info("createConfirm()");
 		
-		int result = boardService.createConfirm(bc_idx, bc_name);
+		int result = boardService.createConfirm(boardCategoryDto);
 		
 		return null;
 	}

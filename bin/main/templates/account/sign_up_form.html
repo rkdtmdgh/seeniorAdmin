@@ -5,14 +5,9 @@
    
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 회원가입')}"></th:block>
-	
     <link rel="stylesheet" href="/css/account/sign_form.css">
-    
-    <script type="module">
-		import { postSignUpForm } from '/js/submitForm.js'; // 회원가입 폼 제출
-		import { usedEmailCheck } from '/js/api/api_utils.js'; // 이메일 중복 확인 요청
-		window.postSignUpForm = postSignUpForm;
-		window.usedEmailCheck = usedEmailCheck;
+	<script src="/js/api/api_utils.js"></script>
+    <script type="text/javascript">
 		document.addEventListener('DOMContentLoaded', () => {
             setInputFocus('a_id'); 
         });
@@ -29,7 +24,7 @@
                 </a>
             </div>
 
-            <form name="sign_up_form" onsubmit="postSignUpForm(event, 'sign_up_form')">
+            <form name="sign_up_form" onsubmit="signUpForm(event, 'sign_up_form')">
             	<div class="input_list_container">
 	                <div class="input_list" id="input_list_info">
 	                    <label for="id" class="border_input">

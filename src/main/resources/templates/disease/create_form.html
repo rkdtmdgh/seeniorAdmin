@@ -5,13 +5,11 @@
    
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 질환 / 질병 정보 관리')}"></th:block>
-	
-	<script type="module">
-		import { getOptionList } from '/js/api/api_get_list.js'; // 리스트 불러오기
-		window.getOptionList = getOptionList;
+	<script src="/js/api/api_utils.js"></script>
+	<script type="text/javascript">
 		document.addEventListener('DOMContentLoaded', () => {
 			// DISEASE_CATEGORY 가져오기
-			getOptionList('/disease/get_category_list', 'dc_name', true); // command, element id, isForm
+			getOptionList('/disease/get_category_list', 'd_category_no', true); // command, element id, isForm
         });
 	</script>
 </head>
@@ -25,14 +23,43 @@
 			<div class="content">
                 <div class="content_inner sc">
 					<section class="content_info_wrap">
-					    <div class="content_top">
+						<div class="content_top">
 					        <div class="content_top_info">
 					            <h2 class="title">질환 / 질병 정보 관리</h2>
 					        </div>
+				            <p class="sub_title">질환 / 질병 분류 등록</p>
+					    </div>
+					    
+						<form name="disease_category_reg_form" onsubmit="diseaseCategoryRegForm(event, 'disease_category_reg_form')">					    	
+						    <div class="table_wrap mb_stepGap">
+		                        <table class="content_edit_table">
+		                            <colgroup>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                </colgroup>
+	                                
+		                            <tbody>
+		                                <tr>
+	                                        <th><p class="table_title">분류명</p></th>
+		                                	<td>
+		                                		<div class="cont_info">
+			                                		<input type="text" name="dc_name" id="dc_name" class="table_info" placeholder="신규 분류 등록 시 입력해 주세요">
+			                                		<button type="submit" class="btns small">등록</button>
+		                                		</div>
+	                                        </td>
+		                                </tr>
+		                            </tbody>
+		                        </table>
+		                    </div>
+	                    </form>
+	                    
+					    <div class="content_top">
 				            <p class="sub_title">질환 / 질병 정보 등록</p>
 					    </div>
 					    
-					    <form name="modify_form">					    	
+					    <form name="disease_reg_form">					    	
 						    <div class="table_wrap">
 		                        <table class="content_edit_table">
 		                            <colgroup>
@@ -46,26 +73,36 @@
 		                                <tr>
 		                                	<th><p class="table_title">분류 선택</p></th>
 		                                	<td>
-		                                		<select class="table_info select" name="dc_name" id="dc_name">
-		                                			<option selected disabled>선택하세요</option>
+		                                		<select class="table_info select" name="d_category_no" id="d_category_no">
+		                                			<option value="" selected disabled>선택하세요</option>
 		                                		</select>
 	                                        </td>
 	                                        
-	                                        <th><p class="table_title">분류 등록</p></th>
+	                                        <th><p class="table_title">질환 / 질병명</p></th>
 		                                	<td>
-		                                		<input type="text" name="red_dc_name" id="red_dc_name" class="table_info" placeholder="신규 분류 등록 시 입력하세요">
+		                                		<input type="text" name="d_name" id="d_name" class="table_info" placeholder="질환 / 질병명"
+		                                			onblur="usedDiseaseCheck(this, null, null);">
 	                                        </td>
 		                                </tr>
 		                                
 		                                <tr>
 		                                	<th><p class="table_title">추천 식단 재료</p></th>
-		                                	<td>
-	                                            <input type="text" name="d_good_food" id="d_good_food" class="table_info" placeholder='","로 구분하여 입력하세요'>
+		                                	<td colspan="3">
+	                                            <input type="text" name="d_good_food" id="d_good_food" class="table_info" placeholder='","로 구분하여 입력하세요'
+	                                            	onblur="checkEmpty(this, '추천 식단 재료를');">
 	                                        </td>
-	                                        
+		                                </tr>
+		                                <tr>
 		                                	<th><p class="table_title">비추천 식단 재료</p></th>
-		                                	<td>
-	                                            <input type="text" name="d_bad_food" id="d_bad_food" class="table_info" placeholder='","로 구분하여 입력하세요'>
+		                                	<td colspan="3">
+	                                            <input type="text" name="d_bad_food" id="d_bad_food" class="table_info" placeholder='","로 구분하여 입력하세요'
+	                                            	onblur="checkEmpty(this, '비추천 식단 재료를');">
+	                                        </td>
+		                                </tr>
+		                                <tr>
+		                                	<th><p class="table_title">질환 / 질병 정보</p></th>
+		                                	<td colspan="3">
+	                                			<textarea name="d_info" id="d_info" class="table_textarea" placeholder="내용을 입력하세요"></textarea>
 	                                        </td>
 		                                </tr>
 		                            </tbody>
@@ -74,7 +111,7 @@
 		                        <div class="btn_list right">
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <a href="javascript: modifyForm('modify_form')" class="btns">저장</a>
+	                                    <a href="javascript: diseaseRegForm('disease_reg_form')" class="btns">저장</a>
 	                                </div>
 	                            </div>
 		                    </div>

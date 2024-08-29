@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,18 +44,27 @@ public class DiseaseController {
 		
 	}
 	
+	// 질환 카테고리명 중복 확인
+	@ResponseBody
+	@GetMapping("/is_disease_category")
+	public boolean isDiseaseCategory(@RequestParam(value = "dc_name") String dc_name) {
+		log.info("isDiseaseCategory()");
+		
+		boolean isDiseaseCategory = diseaseService.isDiseaseCategory(dc_name);
+		
+		return isDiseaseCategory;
+		
+	}
+	
 	// 질환 카테고리 등록 확인
+	@ResponseBody
 	@PostMapping("/create_category_confirm")
-	public String createCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto, Model model) {
+	public int createCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto) {
 		log.info("createCategoryConfirm()");
 		
-		int result = diseaseService.createCategoryConfirm(diseaseCategoryDto);
+		int createCategoryResult = diseaseService.createCategoryConfirm(diseaseCategoryDto);
 		
-		model.addAttribute("createCategoryResult", result);
-		
-		String nextPage = "disease/create_category_result";
-		
-		return nextPage;
+		return createCategoryResult;
 		
 	}
 	
@@ -135,7 +143,8 @@ public class DiseaseController {
 		
 	}
 	
-	// 질환 카테고리 삭제 확인
+	// 질환 카테고리 삭제 확인(기존)
+	/*
 	@GetMapping("/delete_category_confirm")
 	public String deleteCategoryConfirm(@RequestParam(value = "dc_no") int dc_no, Model model) {
 		log.info("deleteCategoryConfirm()");
@@ -147,6 +156,19 @@ public class DiseaseController {
 		String nextPage = "disease/delete_category_result";
 		
 		return nextPage;
+		
+	}
+	*/
+	
+	// 질환 카테고리 삭제 확인(비동기)
+	@ResponseBody
+	@GetMapping("/delete_category_confirm")
+	public Object deleteCategoryConfirm(@RequestParam(value = "dc_no") int dc_no) {
+		log.info("deleteCategoryConfirm()");
+		
+		boolean deleteCategoryResult = diseaseService.deleteCategoryConfirm(dc_no);
+		
+		return deleteCategoryResult;
 		
 	}
 	
@@ -161,6 +183,19 @@ public class DiseaseController {
 		String nextPage = "disease/create_form";
 		
 		return nextPage;
+		
+	}
+	
+	// 질환명 중복 확인
+	@ResponseBody
+	@GetMapping("/is_disease")
+	public boolean isDisease(@RequestParam(value = "d_name") String d_name,
+							@RequestParam(value = "d_no", required = false, defaultValue = "0") int d_no) {
+		log.info("isDisease()");
+		
+		boolean isDisease = diseaseService.isDisease(d_name, d_no);
+		
+		return isDisease;
 		
 	}
 		
@@ -272,29 +307,15 @@ public class DiseaseController {
 		return nextPage;
 	}
 	
-	
-	// 질환 삭제 확인(기존)
-//	@GetMapping("/delete_confirm")
-//	public String deleteConfirm(@RequestParam(value = "deleteData") List<Integer> d_nos, Model model) {
-//		log.info("deleteConfirm()");
-//		
-//		int result = diseaseService.deleteConfirm(new ArrayList<>(d_nos));
-//		
-//		model.addAttribute("deleteResult", result);
-//		
-//		String nextPage = "disease/delete_result";
-//		
-//		return nextPage;
-//	}
-	
 	// 질환 삭제 확인
+	@ResponseBody
 	@PostMapping("/delete_confirm")
 	public Object deleteConfirm(@RequestParam(value = "deleteData") List<Integer> d_nos) {
 		log.info("deleteConfirm()");
 		
 		boolean deleteResult = diseaseService.deleteConfirm(new ArrayList<>(d_nos));
 		
-		return ResponseEntity.ok(deleteResult);
+		return deleteResult;
 	}
 	
 	// 질환 검색(페이지네이션 => 비동기)

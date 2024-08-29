@@ -11,7 +11,7 @@ function deleteAccount(a_no, a_id) {
 }
 
 // 체크 리스트 삭제
-function deleteCheckBoxList(apiUrl, checkName) {
+async function deleteCheckBoxList(apiUrl, checkName) {
 	const checkBoxs = document.querySelectorAll(`input[type="checkbox"][name="${checkName}"]:checked`);
 	
 	if(checkBoxs.length === 0) {
@@ -38,14 +38,16 @@ function deleteCheckBoxList(apiUrl, checkName) {
 		logger.info(apiUrl + ' deleteCheckBoxList() response:', response);
 		
 		if(response) {
+			alert('삭제되었습니다.');
 			location.reload(true);
 		} else {
-			alert('삭제에 실패하였습니다. 다시 시도해 주세요.');
+			alert('삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
 			location.reload(true);
 		}
 	})
 	.catch((error) => {
-		alert('삭제에 실패하였습니다. 다시 시도해 주세요.');
 		logger.error(apiUrl + ' error:', error);
+		alert('삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
+		location.reload(true);
 	});
 }

@@ -19,22 +19,22 @@ import lombok.extern.log4j.Log4j2;
 public class DiseaseService {
 	
 	// 질환 카테고리
-	final static public int DISEASE_CATEGORY_ALREADY = -1;
-	final static public int DISEASE_CATEGORY_CREATE_FAIL = 0;
-	final static public int DISEASE_CATEGORY_CREATE_SUCCESS = 1;
-	final static public int DISEASE_CATEGORY_MODIFY_FAIL = 0;
-	final static public int DISEASE_CATEGORY_MODIFY_SUCCESS = 1;
-	final static public int DISEASE_CATEGORY_DELETE_FAIL = 0;
-	final static public int DISEASE_CATEGORY_DELETE_SUCCESS = 1;
+	final static public int DISEASE_CATEGORY_ALREADY = -1;				// 질환 카테고리가 이미 있음
+	final static public int DISEASE_CATEGORY_CREATE_FAIL = 0;			// 질환 카테고리 생성 실패
+	final static public int DISEASE_CATEGORY_CREATE_SUCCESS = 1;		// 질환 카테고리 생성 성공
+	final static public int DISEASE_CATEGORY_MODIFY_FAIL = 0;			// 질환 카테고리 수정 실패
+	final static public int DISEASE_CATEGORY_MODIFY_SUCCESS = 1;		// 질환 카테고리 수정 성공
+	final static public boolean DISEASE_CATEGORY_DELETE_FAIL = false;	// 질환 카테고리 삭제 실패
+	final static public boolean DISEASE_CATEGORY_DELETE_SUCCESS = true;	// 질환 카테고리 삭제 성공
 	
 	// 질환
-	final static public int DISEASE_ALREADY = -1;
-	final static public int DISEASE_CREATE_FAIL = 0;
-	final static public int DISEASE_CREATE_SUCCESS = 1;
-	final static public int DISEASE_MODIFY_FAIL = 0;
-	final static public int DISEASE_MODIFY_SUCCESS = 1;
-	final static public int DISEASE_DELETE_FAIL = 0;
-	final static public int DISEASE_DELETE_SUCCESS = 1;
+	final static public int DISEASE_ALREADY = -1;						// 질환이 이미 있음
+	final static public int DISEASE_CREATE_FAIL = 0;					// 질환 생성 실패
+	final static public int DISEASE_CREATE_SUCCESS = 1;					// 질환 생성 성공
+	final static public int DISEASE_MODIFY_FAIL = 0;					// 질환 수정 실패
+	final static public int DISEASE_MODIFY_SUCCESS = 1;					// 질환 수정 성공
+	final static public boolean DISEASE_DELETE_FAIL = false;			// 질환 삭제 실패
+	final static public boolean DISEASE_DELETE_SUCCESS = true;			// 질환 삭제 성공
 	
 	// 페이지네이션 관련
 	private int pageLimit = 10;	// 한 페이지당 보여줄 항목의 개수
@@ -49,37 +49,32 @@ public class DiseaseService {
 	
 	// --------------------------------------------- 질환 카테고리
 
+	// 질환 카테고리명 중복 확인
+	public boolean isDiseaseCategory(String dc_name) {
+		log.info("isDiseaseCategory()");
+		
+		boolean isDiseaseCategory = diseaseMapper.isDiseaseCategory(dc_name);
+		
+		return isDiseaseCategory;
+	}
+	
 	// 질환 카테고리 추가 확인
 	public int createCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto) {
 		log.info("createCategoryConfirm()");
 		
-		// 질환 카테고리 중복 여부
-		boolean isDiseaseCategory = diseaseMapper.isDiseaseCategory(diseaseCategoryDto.getDc_name());
+		int result = diseaseMapper.insertNewDiseaseCategory(diseaseCategoryDto);
 		
-		// 질환 카테고리가 없다면
-		if (!isDiseaseCategory) {
+		// DB에 입력 실패
+		if (result <= 0) {
 			
-			int result = diseaseMapper.insertNewDiseaseCategory(diseaseCategoryDto);
+			return DISEASE_CATEGORY_CREATE_FAIL;
 			
-			// DB에 입력 실패
-			if (result <= 0) {
-				
-				return DISEASE_CATEGORY_CREATE_FAIL;
-				
-			// DB에 입력 성공
-			} else {
-				
-				return DISEASE_CATEGORY_CREATE_SUCCESS;
-				
-			}
-			
-			
-		// 질환 카테고리가 이미 있다면
+		// DB에 입력 성공
 		} else {
-			log.info("DISEASE_CATEGORY_ALREADY");
-			return DISEASE_CATEGORY_ALREADY;
 			
-		}
+			return DISEASE_CATEGORY_CREATE_SUCCESS;
+			
+		}		
 		
 	}
 	
@@ -159,37 +154,25 @@ public class DiseaseService {
 	// 질환 카테고리 수정 확인
 	public int modifyCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto) {
 		log.info("modifyCategoryConfirm()");
+			
+		int result = diseaseMapper.updateDiseaseCategory(diseaseCategoryDto);
 		
-		// 질환 카테고리 중복 여부
-		boolean isDiseaseCategory = diseaseMapper.isDiseaseCategory(diseaseCategoryDto.getDc_name());
-		
-		// 질환 카테고리가 없다면
-		if (!isDiseaseCategory) {
+		// DB에 입력 실패
+		if (result <= 0) {
 			
-			int result = diseaseMapper.updateDiseaseCategory(diseaseCategoryDto);
+			return DISEASE_CATEGORY_MODIFY_FAIL;
 			
-			// DB에 입력 실패
-			if (result <= 0) {
-				
-				return DISEASE_CATEGORY_MODIFY_FAIL;
-				
-			// DB에 입력 성공
-			} else {
-				
-				return DISEASE_CATEGORY_MODIFY_SUCCESS;
-				
-			}
-			
-		// 질환 카테고리가 이미 있다면
+		// DB에 입력 성공
 		} else {
-			return DISEASE_CATEGORY_ALREADY;
+			
+			return DISEASE_CATEGORY_MODIFY_SUCCESS;
 			
 		}
 	
 	}
 	
 	// 질환 카테고리 삭제 확인
-	public int deleteCategoryConfirm(int dc_no) {
+	public boolean deleteCategoryConfirm(int dc_no) {
 		log.info("deleteCategoryConfirm()");
 		
 		int result = diseaseMapper.deleteDiseaseCategory(dc_no);
@@ -211,34 +194,55 @@ public class DiseaseService {
 	
 	// --------------------------------------------- 질환
 	
+	// 질환명 중복 확인
+	public boolean isDisease(String d_name, int d_no) {
+		log.info("isDisease()");
+		
+		boolean isDisease;
+		
+		// 질환 등록 시(수정 폼이 아니라서 d_no가 defalutValue인 0으로 넘어 왔을 시) 중복검사 실행
+		if (d_no == 0) {
+			
+			isDisease = diseaseMapper.isDisease(d_name);
+			
+		// 질환 수정 시
+		} else {
+			DiseaseDto curDiseaseDto = diseaseMapper.getDiseaseByNo(d_no);
+			
+			// 질환명을 변경 하지 않았을 경우 => 중복검사 실행하지 않고 false 반환
+			if (curDiseaseDto.getD_name().equals(d_name)) {
+				
+				isDisease = false;
+				
+			// 질환명을 변경 했을 경우 중복검사 실행
+			} else {
+				
+				isDisease = diseaseMapper.isDisease(d_name);
+				
+			}
+		
+		}
+				
+		return isDisease;
+			
+		}
+	
 	// 질환 추가 확인
 	public int createConfirm(DiseaseDto diseaseDto) {
 		log.info("createConfirm()");
+			
+		int result = diseaseMapper.insertNewDisease(diseaseDto);
 		
-		// 질환 중복 여부
-		boolean isDisease = diseaseMapper.isDisease(diseaseDto.getD_name());
-		
-		// 질환이 없다면
-		if (!isDisease) {
+		// DB에 입력 실패
+		if (result <= 0) {
+			return DISEASE_CREATE_FAIL;
 			
-			int result = diseaseMapper.insertNewDisease(diseaseDto);
-			
-			// DB에 입력 실패
-			if (result <= 0) {
-				return DISEASE_CREATE_FAIL;
-				
-			// DB에 입력 성공
-			} else {
-				
-				return DISEASE_CREATE_SUCCESS;
-			}
-			
-			
-		// 질환이 이미 있다면
+		// DB에 입력 성공
 		} else {
-			return DISEASE_ALREADY;
 			
+			return DISEASE_CREATE_SUCCESS;
 		}
+	
 		
 	}
 	
@@ -368,56 +372,20 @@ public class DiseaseService {
 	// 질환 수정 확인
 	public int modifyConfirm(DiseaseDto diseaseDto) {
 		log.info("modifyConfirm");
-		
-		// 질환명을 변경 하지 않을시에는 질환 중복 여부 검사 하지 않도록 처리
-		DiseaseDto curDiseaseDto = diseaseMapper.getDiseaseByNo(diseaseDto.getD_no());
-		
-		if (curDiseaseDto.getD_name().equals(diseaseDto.getD_name())) {
 			
 			int result = diseaseMapper.updateDisease(diseaseDto);
 			
-				// DB에 입력 실패
-				if (result <= 0) {
-					
-					return DISEASE_MODIFY_FAIL;
-					
-				// DB에 입력 실패
-				} else {
-					
-					return DISEASE_MODIFY_SUCCESS;
-					
-				}
-			
-		} else {
-			
-			// 질환 중복 여부
-			boolean isDisease = diseaseMapper.isDisease(diseaseDto.getD_name());
-
-			// 질환이 없다면
-			if (!isDisease) {
+			// DB에 입력 실패
+			if (result <= 0) {
 				
-			int result = diseaseMapper.updateDisease(diseaseDto);
-			
-				// DB에 입력 실패
-				if (result <= 0) {
-					
-					return DISEASE_MODIFY_FAIL;
-					
-				// DB에 입력 실패
-				} else {
-					
-					return DISEASE_MODIFY_SUCCESS;
-					
-				}
+				return DISEASE_MODIFY_FAIL;
 				
-			// 질환이 이미 있다면	
+			// DB에 입력 실패
 			} else {
 				
-				return DISEASE_ALREADY;
-			
-			}	
-		
-		}
+				return DISEASE_MODIFY_SUCCESS;
+				
+			}
 		
 	}
 
@@ -436,11 +404,11 @@ public class DiseaseService {
 	   } catch (Exception e) {
 		   log.error("Error ==========>",e);
 		   
-		   return false;
+		   return DISEASE_DELETE_FAIL;
 		   
 	   }
 	   
-	   return true;
+	   return DISEASE_DELETE_SUCCESS;
 	
 	}
 
@@ -499,32 +467,5 @@ public class DiseaseService {
 		return searchDiseaseListPageNum;
 		
 	}
-
-
 	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-		
-	
-		
-		
-		
-
-	
-	
-
 }

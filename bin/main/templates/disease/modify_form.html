@@ -1,48 +1,99 @@
 <!DOCTYPE html>
-<html
-	xmlns:th="http://www.thymeleaf.org" >
-	
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-
+    <th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 질환 / 질병 정보 관리')}"></th:block>
+    <script src="/js/api/api_utils.js"></script>
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            // DISEASE_CATEGORY 가져오기
+            const selectedCategory = /*[[${diseaseDto.d_category_no}]]*/ ''; // 기본값 설정
+            logger.info('disease/modify_form selectedCategory:', selectedCategory);
+            getOptionList('/disease/get_category_list', 'd_category_no', true, selectedCategory); // command, element id, isForm
+        });
+    </script>
 </head>
 <body>
-
-	<article>
+	<main class="contents_wrap">
+	    <header th:replace="~{fragments/header.html :: header}"></header>
 	
-		<p>modify disease form</p>
-		
-		<form action="/disease/modify_confirm" name="modify_form" method="post">
-			
-			
-			<select>
-			<option value="">카테고리를 선택하세요</option>
-			</select>
-			<br>
-			
-			<input type="hidden" name="d_no" th:value="${diseaseDto.d_no}">
-			<input type="number" name="d_category_no" th:value="${diseaseDto.d_category_no}" placeholder="INPUT CATEGORY NO">
-			<br>
-			<input type="text" name="d_name" th:value="${diseaseDto.d_name}" placeholder="INPUT DISEASE NAME">
-			<br>
-			<input type="text" name="d_info" th:value="${diseaseDto.d_info}" placeholder="INPUT DISEASE INFO">
-			<br>
-			<input type="text" name="d_good_food" th:value="${diseaseDto.d_good_food}" placeholder="INPUT DISEASE GOOD FOOD">
-			<br>
-			<input type="text" name="d_bad_food" th:value="${diseaseDto.d_bad_food}" placeholder="INPUT DISEASE BAD_FOOD">
-			<br>
-			<input type="submit" value="질환 수정">
-			<input type="reset" value="초기화">
-		
-		</form>
-		
-		<br>
-		<a href="/disease/disease_list">질환 리스트</a>
-		<a href="/disease/category_list">질환 카테고리 리스트</a>
+	    <article class="contents_container">
+	        <nav th:replace="~{fragments/nav.html :: nav}"></nav>
 	
-	</article>
-
-
+	        <div class="content">
+	            <div class="content_inner sc">
+	                <section class="content_info_wrap">
+	                    <div class="content_top">
+	                        <div class="content_top_info">
+	                            <h2 class="title">질환 / 질병 정보 관리</h2>
+	                        </div>
+	                        <p class="sub_title">질환 / 질병 정보</p>
+	                    </div>
+	
+	                    <form name="disease_modify_form">
+	                        <div class="table_wrap">
+	                            <table class="content_edit_table">
+	                                <colgroup>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                </colgroup>
+	
+	                                <tbody>
+	                                <tr>
+	                                    <th><p class="table_title">분류</p></th>
+	                                    <td>
+	                                        <select class="table_info select" name="d_category_no" id="d_category_no"></select>
+	                                    </td>
+	
+	                                    <th><p class="table_title">질환 / 질병명</p></th>
+	                                    <td>
+	                                        <input type="hidden" name="d_no" th:value="${diseaseDto.d_no}">
+	                                        <input type="text" name="d_name" id="d_name" class="table_info" placeholder="질환 / 질병명"
+	                                               th:onblur="usedDiseaseCheck(this, [[${diseaseDto.d_name}]], null);"
+	                                               th:value="${diseaseDto.d_name}">
+	                                    </td>
+	                                </tr>
+	
+	                                <tr>
+	                                    <th><p class="table_title">추천 식단 재료</p></th>
+	                                    <td colspan="3">
+	                                        <input type="text" name="d_good_food" id="d_good_food" class="table_info" placeholder='","로 구분하여 입력하세요'
+	                                               onblur="checkEmpty(this, '추천 식단 재료를');"
+	                                               th:value="${diseaseDto.d_good_food}">
+	                                    </td>
+	                                </tr>
+	                                <tr>
+	                                    <th><p class="table_title">비추천 식단 재료</p></th>
+	                                    <td colspan="3">
+	                                        <input type="text" name="d_bad_food" id="d_bad_food" class="table_info" placeholder='","로 구분하여 입력하세요'
+	                                               onblur="checkEmpty(this, '비추천 식단 재료를');"
+	                                               th:value="${diseaseDto.d_bad_food}">
+	                                    </td>
+	                                </tr>
+	                                <tr>
+	                                    <th><p class="table_title">질환 / 질병 정보</p></th>
+	                                    <td colspan="3">
+	                                        <textarea name="d_info" id="d_info" class="table_textarea" placeholder="내용을 입력하세요"
+	                                                  th:text="${diseaseDto.d_info}"></textarea>
+	                                    </td>
+	                                </tr>
+	                                </tbody>
+	                            </table>
+	
+	                            <div class="btn_list right">
+	                                <div class="btn_list">
+	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
+	                                    <a href="javascript: diseaseModifyForm('disease_modify_form', [[${diseaseDto.d_name}]])"
+	                                       class="btns">저장</a>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </form>
+	                </section>
+	            </div>
+	        </div>
+	    </article>
+	</main>
 </body>
 </html>

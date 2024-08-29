@@ -5,12 +5,8 @@
 
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 로그인')}"></th:block>
-	
     <link rel="stylesheet" href="/css/account/sign_form.css">
-	
-	<script type="module">
-		import { postSignInForm } from '/js/submitForm.js'; // 로그인 폼 제출
-		window.postSignInForm = postSignInForm;
+	<script type="text/javascript">
 		document.addEventListener('DOMContentLoaded', () => {
             setInputFocus('a_id'); 
         });
@@ -27,7 +23,7 @@
                 </a>
             </div>
 
-            <form name="sign_in_form" onsubmit="postSignInForm(event, 'sign_in_form')">
+            <form name="sign_in_form" onsubmit="signInForm(event, 'sign_in_form')">
             	<div class="input_list_container">
 	                <div class="input_list" id="input_list_info">
 	                    <label for="id" class="border_input">
