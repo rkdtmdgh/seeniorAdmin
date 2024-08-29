@@ -128,7 +128,8 @@ public class DiseaseController {
 		
 	}
 	
-	// 질환 카테고리 수정 확인
+	// 질환 카테고리 수정 확인 (기존)
+	/*
 	@PostMapping("/modify_category_confirm")
 	public String modifyCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto, Model model) {
 		log.info("modifyCategoryConfirm()");
@@ -140,6 +141,19 @@ public class DiseaseController {
 		String nextPage = "disease/modify_category_result";
 		
 		return nextPage;
+		
+	}
+	*/
+	
+	// 질환 카테고리 수정 확인 (비동기)
+	@ResponseBody
+	@PostMapping("/modify_category_confirm")
+	public boolean modifyCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto) {
+		log.info("modifyCategoryConfirm()");
+		
+		boolean modifyCategoryResult = diseaseService.modifyCategoryConfirm(diseaseCategoryDto);
+		
+		return modifyCategoryResult;
 		
 	}
 	
@@ -163,7 +177,7 @@ public class DiseaseController {
 	// 질환 카테고리 삭제 확인(비동기)
 	@ResponseBody
 	@GetMapping("/delete_category_confirm")
-	public Object deleteCategoryConfirm(@RequestParam(value = "dc_no") int dc_no) {
+	public boolean deleteCategoryConfirm(@RequestParam(value = "dc_no") int dc_no) {
 		log.info("deleteCategoryConfirm()");
 		
 		boolean deleteCategoryResult = diseaseService.deleteCategoryConfirm(dc_no);
@@ -294,23 +308,20 @@ public class DiseaseController {
 	}
 	
 	// 질환 수정 확인
+	@ResponseBody
 	@PostMapping("/modify_confirm")
-	public String modifyConfirm(DiseaseDto diseaseDto, Model model) {
+	public boolean modifyConfirm(DiseaseDto diseaseDto) {
 		log.info("modifyConfirm()");
 		
-		int result = diseaseService.modifyConfirm(diseaseDto);
+		boolean modifyResult = diseaseService.modifyConfirm(diseaseDto);
 		
-		model.addAttribute("modifyResult", result);
-		
-		String nextPage = "disease/modify_result";
-		
-		return nextPage;
+		return modifyResult;
 	}
 	
 	// 질환 삭제 확인
 	@ResponseBody
 	@PostMapping("/delete_confirm")
-	public Object deleteConfirm(@RequestParam(value = "deleteData") List<Integer> d_nos) {
+	public boolean deleteConfirm(@RequestParam(value = "deleteData") List<Integer> d_nos) {
 		log.info("deleteConfirm()");
 		
 		boolean deleteResult = diseaseService.deleteConfirm(new ArrayList<>(d_nos));
