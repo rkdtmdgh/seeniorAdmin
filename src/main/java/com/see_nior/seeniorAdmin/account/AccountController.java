@@ -3,6 +3,7 @@ package com.see_nior.seeniorAdmin.account;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -135,10 +136,14 @@ public class AccountController {
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
+		Map<String, Object> responseMap = new HashMap<>();
+		
 		if (loginedAdminDto == null) {
 			return null;
 		} else {
-			return dateFormat.format(now);
+			responseMap.put("loginedId", principal.getName());
+			responseMap.put("checkDate", dateFormat.format(now));
+			return responseMap;
 		}
 		
 	}
