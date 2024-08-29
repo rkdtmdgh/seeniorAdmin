@@ -22,8 +22,8 @@ public class DiseaseService {
 	final static public int DISEASE_CATEGORY_ALREADY = -1;				// 질환 카테고리가 이미 있음
 	final static public int DISEASE_CATEGORY_CREATE_FAIL = 0;			// 질환 카테고리 생성 실패
 	final static public int DISEASE_CATEGORY_CREATE_SUCCESS = 1;		// 질환 카테고리 생성 성공
-	final static public int DISEASE_CATEGORY_MODIFY_FAIL = 0;			// 질환 카테고리 수정 실패
-	final static public int DISEASE_CATEGORY_MODIFY_SUCCESS = 1;		// 질환 카테고리 수정 성공
+	final static public boolean DISEASE_CATEGORY_MODIFY_FAIL = false;	// 질환 카테고리 수정 실패
+	final static public boolean DISEASE_CATEGORY_MODIFY_SUCCESS = true;	// 질환 카테고리 수정 성공
 	final static public boolean DISEASE_CATEGORY_DELETE_FAIL = false;	// 질환 카테고리 삭제 실패
 	final static public boolean DISEASE_CATEGORY_DELETE_SUCCESS = true;	// 질환 카테고리 삭제 성공
 	
@@ -31,8 +31,8 @@ public class DiseaseService {
 	final static public int DISEASE_ALREADY = -1;						// 질환이 이미 있음
 	final static public int DISEASE_CREATE_FAIL = 0;					// 질환 생성 실패
 	final static public int DISEASE_CREATE_SUCCESS = 1;					// 질환 생성 성공
-	final static public int DISEASE_MODIFY_FAIL = 0;					// 질환 수정 실패
-	final static public int DISEASE_MODIFY_SUCCESS = 1;					// 질환 수정 성공
+	final static public boolean DISEASE_MODIFY_FAIL = false;			// 질환 수정 실패
+	final static public boolean DISEASE_MODIFY_SUCCESS = true;			// 질환 수정 성공
 	final static public boolean DISEASE_DELETE_FAIL = false;			// 질환 삭제 실패
 	final static public boolean DISEASE_DELETE_SUCCESS = true;			// 질환 삭제 성공
 	
@@ -152,7 +152,7 @@ public class DiseaseService {
 
 	
 	// 질환 카테고리 수정 확인
-	public int modifyCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto) {
+	public boolean modifyCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto) {
 		log.info("modifyCategoryConfirm()");
 			
 		int result = diseaseMapper.updateDiseaseCategory(diseaseCategoryDto);
@@ -359,7 +359,7 @@ public class DiseaseService {
 		return diseaseLisByCategoryPageNum;
 	}
 	
-	// 질환 한 개 가져오기(질환 수정 용)
+	// 질환 한 개 가져오기
 	public DiseaseDto getDisease(int d_no) {
 		log.info("getDisease()");
 		
@@ -370,7 +370,7 @@ public class DiseaseService {
 	
 	
 	// 질환 수정 확인
-	public int modifyConfirm(DiseaseDto diseaseDto) {
+	public boolean modifyConfirm(DiseaseDto diseaseDto) {
 		log.info("modifyConfirm");
 			
 			int result = diseaseMapper.updateDisease(diseaseDto);
