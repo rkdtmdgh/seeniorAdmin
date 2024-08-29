@@ -3,6 +3,7 @@ package com.see_nior.seeniorAdmin.account;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -96,12 +97,18 @@ public class AccountController {
 		
 		String nextPage = "account/modify_form";
 		
+		return nextPage;
+	}
+	
+	// 내 정보 가져오기
+	@GetMapping("/get_account_info")
+	@ResponseBody
+	public Object getAccountInfo(Principal principal) {
+		
 		AdminAccountDto loginedAdminDto = 
 				accountService.getAdminAccountById(principal.getName());
 		
-		model.addAttribute("loginedAdminDto", loginedAdminDto);
-		
-		return nextPage;
+		return loginedAdminDto;
 	}
 	
 	// 내 정보 수정 양식 가기 전 비밀번호 확인
@@ -129,10 +136,14 @@ public class AccountController {
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
+		Map<String, Object> responseMap = new HashMap<>();
+		
 		if (loginedAdminDto == null) {
 			return null;
 		} else {
-			return dateFormat.format(now);
+			responseMap.put("loginedId", principal.getName());
+			responseMap.put("checkDate", dateFormat.format(now));
+			return responseMap;
 		}
 		
 	}
