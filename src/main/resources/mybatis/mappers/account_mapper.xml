@@ -9,7 +9,6 @@
 		<result column="a_pw" property="a_pw" />
 		<result column="a_name" property="a_name" />
 		<result column="a_phone" property="a_phone" />
-		<result column="a_birth" property="a_birth" />
 		<result column="a_department" property="a_department" />
 		<result column="a_level" property="a_level" />
 		<result column="a_position" property="a_position" />
