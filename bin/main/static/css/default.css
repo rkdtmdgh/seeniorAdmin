@@ -354,7 +354,7 @@
 	border: 1px solid var(--lightGrayColor);
 	box-shadow: var(--bxsh);
 	position: absolute;
-	top: 90%;
+	top: 100%;
 	left: 50%;
 	transform: translate(-50%);
 	z-index: 1;
