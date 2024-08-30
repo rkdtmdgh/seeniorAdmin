@@ -69,17 +69,7 @@
 			resultMap="AdminAccountDto">
 		
 		SELECT
-			A_NO, 
-			A_ID, 
-			A_NAME, 
-			A_PHONE, 
-			A_BIRTH, 
-			A_DEPARTMENT, 
-			A_LEVEL, 
-			A_POSITION, 
-			A_AUTHORITY_ROLE, 
-			A_REG_DATE, 
-			A_MOD_DATE
+			*
 		FROM 
 			ADMIN_ACCOUNT 
 		WHERE 
@@ -93,17 +83,7 @@
 			resultMap="AdminAccountDto">
 		
 		SELECT
-			A_NO, 
-			A_ID, 
-			A_NAME, 
-			A_PHONE, 
-			A_BIRTH, 
-			A_DEPARTMENT, 
-			A_LEVEL, 
-			A_POSITION, 
-			A_AUTHORITY_ROLE, 
-			A_REG_DATE, 
-			A_MOD_DATE
+			*
 		FROM 
 			ADMIN_ACCOUNT 
 		WHERE 
