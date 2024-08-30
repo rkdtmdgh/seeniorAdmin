@@ -70,6 +70,7 @@ async function validateEmail(input, usedCheck, alertMsg) {
 			const isUsed = await usedEmailCheck(input.value); // true=중복, false=정상 반환
 			if(!isUsed) { 
 				clearErrorMessage(input);
+				return true;
 			} else {
 				if(alertMsg) {
 					alert("이미 사용 중인 이메일입니다.");
@@ -123,39 +124,6 @@ function validatePhone(input, alertMsg) {
 		return false;
 	}
 	return isValid; 
-}
-
-// 아이디 유효성 검사
-async function validateEmail(input, usedCheck, alertMsg) { 
-	const regEx = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z.]{2,5}$/; // 로컬파트와 도메인은 영문, 숫자, 정해진 특수문자/ TLD는 영문, "."를 포함할 수 있고 2~5자
-	const errorMessage = "이메일을 정확히 입력해 주세요.";
-	const isValid = validateInput(input, regEx, errorMessage);
-	logger.info('validateEmail isValid:', isValid);
-	
-	if(alertMsg && !isValid) {
-		alert(errorMessage);
-		return false;
-	}
-	
-	if(isValid && usedCheck) {
-		try {
-			const isUsed = await usedEmailCheck(input.value); // true=중복, false=정상 반환
-			if(!isUsed) { 
-				clearErrorMessage(input);
-			} else {
-				if(alertMsg) {
-					alert("이미 사용 중인 이메일입니다.");
-				}
-				addErrorMessage(input, "이미 사용 중인 이메일입니다.");
-				return false;
-			}
-		} catch(error) {
-			logger.error('Error during email check:', error);
-			alert("이메일 중복 확인 중 오류가 발생했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.");
-			location.reload(true);
-		}
-	}
-	return isValid;
 }
 
 // 데이터 값 유효 확인

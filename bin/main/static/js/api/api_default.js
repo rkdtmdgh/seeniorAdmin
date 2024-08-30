@@ -15,38 +15,8 @@ function  resetAllcheck() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-	// 게시판 리스트 요청
-	function getBoardList() {
-		return $.ajax({
-			url: '/board/get_list',
-			method: 'GET',
-		})
-		.then(response => {
-			logger.info('getBoardList() response:', response);
-			const sideBoardSubMenu = document.getElementById('side_board_sub_menu');
-			
-			if(response && response.boardCategoryDtos) {
-				let filterData = response.boardCategoryDtos.filter(data => data.bc_is_deleted === true);
-				
-				filterData.forEach((data) => { 
-					let innerContent = `
-						<a href="/board/board_list?${data.bc_no}" class="side_sub_menu_btn">
-							<span class="side_sub_menu">${data.bc_name}</span>
-						</a>
-					`;
-					sideBoardSubMenu.innerHTML += innerContent;
-				});
-			} else {
-				logger.info('데이터가 없거나 유효하지 않습니다.');
-			}
-		})
-		.catch((error) => {
-			logger.error('getBoardList() error:', error);
-		});
-	}
-	
-	getBoardList().then(() => {
-		// NAV 선택 표시 및 토글
+	// NAV 선택 표시 및 토글
+	function setNavActiveToggle() {
 		const currentPath = window.location.pathname; // 현재 URL
 		const currentFirstPath = currentPath.split('/')[1] || ''; // 첫 번째 path
 		logger.info('URl:', currentPath);
@@ -89,5 +59,41 @@ document.addEventListener('DOMContentLoaded', () => {
 				});
 			}
 		});
-	});	
+	}
+			
+			
+	// 게시판 리스트 요청
+	async function getBoardList() {
+		try {
+			const response = await $.ajax({
+				url: '/board/get_list',
+				method: 'GET',
+			});
+			
+			logger.info('getBoardList() response:', response);
+			
+			const sideBoardSubMenu = document.getElementById('side_board_sub_menu');
+			
+			if(response && response.boardCategoryDtos) {
+				let filterData = response.boardCategoryDtos.filter(data => data.bc_is_deleted === true);
+				
+				filterData.forEach((data) => { 
+					let innerContent = `
+						<a href="/board/board_list?${data.bc_no}" class="side_sub_menu_btn">
+							<span class="side_sub_menu">${data.bc_name}</span>
+						</a>
+					`;
+					sideBoardSubMenu.innerHTML += innerContent;
+				});
+			} else {
+				logger.info('데이터가 없거나 유효하지 않습니다.');
+			}
+		} catch(error) {
+			logger.error('getBoardList() error:', error);
+		} finally {
+			setNavActiveToggle(); // NAV 선택 표시 및 토글 세팅
+		}
+	}
+	
+	getBoardList(); // 게시판 리스트 요청 후 NAV SET
 });
