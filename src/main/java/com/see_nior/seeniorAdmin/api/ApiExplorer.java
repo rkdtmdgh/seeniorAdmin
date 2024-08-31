@@ -17,15 +17,15 @@ public class ApiExplorer {
 	
 	// 사용 API : 식품 의약품 안전처 -> 조리식품의 레시피 DB
 	// 레시피 가져오기
-	public String getRecipe() throws IOException {
+	public String getRecipe(int startState, int EndState) throws IOException {
 		log.info("ApiExplorer()");
 		
 		StringBuilder urlBuilder = new StringBuilder("http://openapi.foodsafetykorea.go.kr/api"); 	// open API URL
 		urlBuilder.append("/" + URLEncoder.encode("04745747c876457c8d98", "UTF-8"));				// 인증키 (sample 사용시에는 호출이 제한됨)
 		urlBuilder.append("/" + URLEncoder.encode("COOKRCP01", "UTF-8"));							// 서비스명 (대소문자 구분 필수)
 		urlBuilder.append("/" + URLEncoder.encode("json", "UTF-8"));								// 요청 파일 타입 (xml, xmlf, xls, json)
-		urlBuilder.append("/" + URLEncoder.encode("1", "UTF-8"));									// 요청 시작 위치 (sample 인증키 사용시 5 이내 숫자)
-		urlBuilder.append("/" + URLEncoder.encode("1", "UTF-8"));									// 요청 종료 위치 (sample 인증키 사용시 5이상 숫자 선택 안 됨)
+		urlBuilder.append("/" + URLEncoder.encode(String.valueOf(startState), "UTF-8"));			// 요청 시작 위치 (sample 인증키 사용시 5 이내 숫자)
+		urlBuilder.append("/" + URLEncoder.encode(String.valueOf(EndState), "UTF-8"));				// 요청 종료 위치 (sample 인증키 사용시 5이상 숫자 선택 안 됨)
 		
 		// https://openapi.foodsafetykorea.go.kr/api/04745747c876457c8d98/COOKRCP01/json/1/5
 		
@@ -85,7 +85,6 @@ public class ApiExplorer {
 		rd.close();
 		conn.disconnect();
 		
-		log.info(sb.toString());
 		return sb.toString();
 		
 		
