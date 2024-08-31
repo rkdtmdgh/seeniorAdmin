@@ -76,9 +76,10 @@ function setFormValuesFromUrl(part) {
 	const sort = urlParams.get('sort') || undefined;
 	const sortValue = urlParams.get(`${sort}`) || undefined;
 	
+	sForm.search_part.value = searchPart;
+	
 	// 검색어가 있을 경우 검색 폼 사용으로 새로고침 시 재적용
-	if(sortType === 2) { // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
-		sForm.search_part.value = searchPart;
+	if(sortType === '2') { // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
 		sForm.search_string.value = searchString;
 	}
 	
