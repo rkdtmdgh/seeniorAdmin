@@ -5,7 +5,7 @@ function usedEmailCheck(email) {
 		url: '/account/is_account',
 		method: 'GET',
 		data: {
-			a_id: email
+			a_id: email,
 		},
 	})
 	.then(response => {

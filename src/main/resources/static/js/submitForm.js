@@ -352,7 +352,7 @@ async function diseaseModifyForm(formName, d_nameDefaultValue) {
 	}
 	
 	input = form.d_name;
-	if(input.value.trim() != d_nameDefaultValue) { // 수정이 되었을 경우
+	if(input.value.trim() !== d_nameDefaultValue) { // 수정이 되었을 경우
 		const isCheck = await usedDiseaseCheck(input, null, true);
 		if(isCheck) { // true = 중복, false = 정상
 			input.focus();
