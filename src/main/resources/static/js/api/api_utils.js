@@ -1,17 +1,7 @@
 // 이메일 중복 검사 
 async function usedEmailCheck(email) {
 	logger.info('usedEmailChekc():', email);
-<<<<<<< HEAD
-	return $.ajax({
-		url: '/account/is_account',
-		method: 'GET',
-		data: {
-			a_id: email,
-		},
-	})
-	.then(response => {
-=======
-	
+
 	try {
 		const response = await $.ajax({
 			url: '/account/is_account',
@@ -21,7 +11,6 @@ async function usedEmailCheck(email) {
 			},
 		});
 		
->>>>>>> 6e89dcbc053252f42e4c972d07db43d3dcfe5c97
 		logger.info('usedEmailCheck() result:', response);
 		return response;
 		
@@ -92,6 +81,7 @@ async function usedDiseaseCheck(input, defaultValue, alertMsg) {
 		if(!response) { // true=중복, false=정상 반환
 			clearErrorMessage(input);
 			return true;
+			
 		} else {
 			if(alertMsg) {
 				alert("이미 등록된 질환/질병명입니다.");

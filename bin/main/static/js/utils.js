@@ -1,9 +1,9 @@
 // input focus
 function setInputFocus(ele) {
-	const input = document.querySelector(`input[name="${ele}"]`);
-	if (input) {
-		logger.info('focus input:', input.name);
-		input.focus();
+	const $input = $(`input[name="${ele}"]`);
+	if ($input.length) {
+		logger.info('focus input:', $input.attr('name'));
+		$input.focus();
 	} else {
 		logger.info(`No input found with name: ${ele}`);
 	}
@@ -11,16 +11,19 @@ function setInputFocus(ele) {
 
 // 비밀번호 노출 설정
 function setViewPw(ele) {
-	const icon = ele.querySelector('.icon');
-	const parentEle = ele.parentElement;
-	const passwordInput = parentEle.querySelector('input');
+	const $icon = $(ele).find('.icon');
+	const $parentEle = $(ele).parent();
+	const $passwordInput = $parentEle.find('input');
 	
-	if(passwordInput && passwordInput.type === "password") {
-		passwordInput.type = "text";
-		icon.src = "/image/icons/eye_open.svg";
-	} else if(passwordInput) {
-		passwordInput.type = "password";
-		icon.src = "/image/icons/eye_off.svg";
+	if($passwordInput.length) {
+		if($passwordInput.attr('type') === "password") {
+			$passwordInput.attr('type', 'text');
+			$icon.attr('src', '/image/icons/eye_open.svg');
+			
+		} else {
+			$passwordInput.attr('type', 'password');
+			$icon.attr('src', '/image/icons/eye_off.svg');
+		}
 	}
 }
 
@@ -59,10 +62,8 @@ function setFormatDate(dateString) { // yyyy-mm-dd 형식
 // 체크박스 일괄 체크 및 해제
 function setAllCheckBox(ele) {	
 	const isChecked = ele.checked;
-	const checkboxList = document.querySelectorAll(`input[name="${ele.value}"]`);
-	checkboxList.forEach(checkbox => {
-		checkbox.checked = isChecked;
-	});
+	const $checkboxList = $(`input[name="${ele.value}"]`);
+	$checkboxList.prop('checked', isChecked);
 }
 
 // 검색 폼 데이터인지, 정렬된 데이터인지 확인하여 초기화
@@ -309,6 +310,7 @@ function setSelectOptionTopggle(event) {
 		if(selectEle) {
 			if(dropdown === selectEle) { // 클릭한 요소와 동일한 요소인 경우
 				selectEle.classList.toggle('active');
+				
 			} else { // 클릭한 요소가 아닌 경우
 				dropdown.classList.remove('active'); 
 			}
