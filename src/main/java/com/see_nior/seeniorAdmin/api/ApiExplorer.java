@@ -7,20 +7,27 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import org.springframework.stereotype.Component;
+
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
+@Component
 public class ApiExplorer {
 	
-	public ApiExplorer() throws IOException {
+	// 사용 API : 식품 의약품 안전처 -> 조리식품의 레시피 DB
+	// 레시피 가져오기
+	public String getRecipe(int startIdx, int EndIdx) throws IOException {
 		log.info("ApiExplorer()");
 		
 		StringBuilder urlBuilder = new StringBuilder("http://openapi.foodsafetykorea.go.kr/api"); 	// open API URL
 		urlBuilder.append("/" + URLEncoder.encode("04745747c876457c8d98", "UTF-8"));				// 인증키 (sample 사용시에는 호출이 제한됨)
-		urlBuilder.append("/" + URLEncoder.encode("seenior", "UTF-8"));								// 서비스명 (대소문자 구분 필수)
+		urlBuilder.append("/" + URLEncoder.encode("COOKRCP01", "UTF-8"));							// 서비스명 (대소문자 구분 필수)
 		urlBuilder.append("/" + URLEncoder.encode("json", "UTF-8"));								// 요청 파일 타입 (xml, xmlf, xls, json)
-		urlBuilder.append("/" + URLEncoder.encode("1", "UTF-8"));									// 요청 시작 위치 (sample 인증키 사용시 5 이내 숫자)
-		urlBuilder.append("/" + URLEncoder.encode("5", "UTF-8"));									// 요청 종료 위치 (sample 인증키 사용시 5이상 숫자 선택 안 됨)
+		urlBuilder.append("/" + URLEncoder.encode(String.valueOf(startIdx), "UTF-8"));			// 요청 시작 위치 (sample 인증키 사용시 5 이내 숫자)
+		urlBuilder.append("/" + URLEncoder.encode(String.valueOf(EndIdx), "UTF-8"));				// 요청 종료 위치 (sample 인증키 사용시 5이상 숫자 선택 안 됨)
+		
+		// https://openapi.foodsafetykorea.go.kr/api/04745747c876457c8d98/COOKRCP01/json/1/5
 		
 		/*
 		추가 요청 인자. 자세한 내용은 각 API마다 다름. '요청인자' 부분에 자세히 나와있다.
@@ -41,16 +48,19 @@ public class ApiExplorer {
 		// http://openapi.foodsafetykorea.go.kr/api/인증키/서비스명/요청파일타입/요청시작위치/요청종료위치/변수명=값&변수명=값2
 		// ex) http://openapi.foodsafetykorea.go.kr/api/sample/COOKRCP01/xml/1/5/RCP_NM=값 &RCP_PARTS_DTLS=값 &CHNG_DT=값 &RCP_PAT2=값
 		
+		/*
 		urlBuilder.append("/" + URLEncoder.encode("RCP_NM=" + "", "UTF-8"));			// 메뉴명	
 		urlBuilder.append("/" + URLEncoder.encode("&RCP_PARTS_DTLS=" + "", "UTF-8"));	// 재료 정보	
 		urlBuilder.append("/" + URLEncoder.encode("&CHNG_DT=" + "", "UTF-8"));			// 변경 일자	
 		urlBuilder.append("/" + URLEncoder.encode("&RCP_PAT2=" + "", "UTF-8"));			// 요리 종류	
+		*/
 		
 		URL url = new URL(urlBuilder.toString());
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("GET");
-		conn.setRequestProperty("Cotnet-type", "application/jsom");
+		conn.setRequestProperty("Cotent-type", "application/json");
 		log.info("Response code: " + conn.getResponseCode());	// 연결 자체에 대한 확인
+		
 		BufferedReader rd;
 		
 		// 서비스코드가 정상이면 200 ~ 300 사이의 숫자가 나옴
@@ -74,7 +84,8 @@ public class ApiExplorer {
 		
 		rd.close();
 		conn.disconnect();
-		log.info(sb.toString());
+		
+		return sb.toString();
 		
 		
 	}

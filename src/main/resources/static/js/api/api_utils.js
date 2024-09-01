@@ -1,6 +1,7 @@
 // 이메일 중복 검사 
-function usedEmailCheck(email) {
+async function usedEmailCheck(email) {
 	logger.info('usedEmailChekc():', email);
+<<<<<<< HEAD
 	return $.ajax({
 		url: '/account/is_account',
 		method: 'GET',
@@ -9,25 +10,32 @@ function usedEmailCheck(email) {
 		},
 	})
 	.then(response => {
+=======
+	
+	try {
+		const response = await $.ajax({
+			url: '/account/is_account',
+			method: 'GET',
+			data: {
+				a_id: email
+			},
+		});
+		
+>>>>>>> 6e89dcbc053252f42e4c972d07db43d3dcfe5c97
 		logger.info('usedEmailCheck() result:', response);
 		return response;
-	})
-	.catch(error => {
+		
+	} catch (error) {
 		logger.error('Error during email check:', error);
 		throw error;
-	});
+	}
 }
 
-// 질환/질병명 중복 검사(정규표현식 검사가 필요없으므로 즉시 에러 메세지 노출)
-function usedDiseaseCheck(input, defaultValue, alertMsg) {		
+// 질환/질병 분류명 중복 검사(정규표현식 검사가 필요없으므로 즉시 에러 메세지 노출)
+function usedDiseaseCategoryCheck(input, alertMsg) {		
 	if(input.value.trim().length === 0) {
-		addErrorMessage(input, "질환/질병명을 입력해 주세요.")
-		if(alertMsg) alert("질환/질병명을 입력해 주세요.");
-		return false;
-	}
-	
-	if(defaultValue && input.value.trim() === defaultValue) {
-		clearErrorMessage(input);
+		addErrorMessage(input, "질환/질병 분류명을 입력해 주세요.")
+		if(alertMsg) alert("질환/질병 분류명명을 입력해 주세요.");
 		return false;
 	}
 	
@@ -39,7 +47,7 @@ function usedDiseaseCheck(input, defaultValue, alertMsg) {
 		},
 	})
 	.then(response => {
-		logger.info('usedDiseaseCheck() result:', response);
+		logger.info('usedDiseaseCategoryCheck() result:', response);
 		if(!response) { // true=중복, false=정상 반환
 			clearErrorMessage(input);
 		} else {
@@ -47,7 +55,7 @@ function usedDiseaseCheck(input, defaultValue, alertMsg) {
 				alert("이미 등록된 질환/질병명입니다.");
 			}
 			addErrorMessage(input, "이미 등록된 질환/질병명입니다.");
-			return true;
+			return false;
 		}
 	})
 	.catch(error => {
@@ -55,5 +63,48 @@ function usedDiseaseCheck(input, defaultValue, alertMsg) {
 		alert("질환/질병명 중복 확인 중 오류가 발생했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.");
 		location.reload(true);
 	});
+}
+
+// 질환/질병명 중복 검사(정규표현식 검사가 필요없으므로 즉시 에러 메세지 노출)
+async function usedDiseaseCheck(input, defaultValue, alertMsg) {		
+	if(input.value.trim().length === 0) {
+		addErrorMessage(input, "질환/질병명을 입력해 주세요.")
+		if(alertMsg) alert("질환/질병명을 입력해 주세요.");
+		return false;
+	}
+	
+	if(defaultValue && input.value.trim() === defaultValue) {
+		clearErrorMessage(input);
+		return false;
+	}
+	
+	try {
+		const response = await $.ajax({
+			url: '/disease/is_disease',
+			method: 'GET',
+			data: {
+				d_name: input.value.trim(),
+			},
+		}); 
+		
+		logger.info('usedDiseaseCheck() result:', response);
+		
+		if(!response) { // true=중복, false=정상 반환
+			clearErrorMessage(input);
+			return true;
+		} else {
+			if(alertMsg) {
+				alert("이미 등록된 질환/질병명입니다.");
+			}
+			addErrorMessage(input, "이미 등록된 질환/질병명입니다.");
+			return false; // submitForm 유효성 검사 return처리로 false 직접입력
+		}
+		
+	} catch(error) {
+		logger.error('Error during disease check:', error);
+		alert("질환/질병명 중복 확인 중 오류가 발생했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.");
+		location.reload(true);
+		return false;
+	}
 }
 

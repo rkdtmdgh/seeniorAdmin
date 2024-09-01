@@ -1195,3 +1195,70 @@ SELECT * FROM PRESCRIPTIONS;
 SHOW INDEX FROM PRESCRIPTIONS;
 DROP TABLE PRESCRIPTIONS;
 
+-- 식단 테이블 (API 기준으로 컬럼명 채택) ----------------------------------------------------------------------------------------------
+CREATE TABLE RECIPE(
+    RCP_SEQ	INT NOT NULL COMMENT "일련번호(PK)",							-- 일련번호(PK)
+    RCP_NM	VARCHAR(255) NOT NULL COMMENT "메뉴명",						-- 메뉴명
+    RCP_WAY2 VARCHAR(255) NOT NULL COMMENT "조리 방법",					-- 조리 방법
+    RCP_PAT2 VARCHAR(255) NOT NULL COMMENT "요리 종류",					-- 요리 종류
+    INFO_WGT VARCHAR(255) COMMENT "중량(1인분)", 							-- 중량(1인분)
+    INFO_ENG VARCHAR(10) COMMENT "열량", 								-- 열량
+    INFO_CAR DOUBLE COMMENT "탄수화물", 									-- 탄수화물
+    INFO_PRO DOUBLE COMMENT "단백질", 									-- 단백질
+    INFO_FAT DOUBLE COMMENT "지방", 										-- 지방
+    INFO_NA DOUBLE COMMENT "나트륨", 										-- 나트륨
+    HASH_TAG VARCHAR(255) COMMENT "해쉬 태그",							-- 해쉬 태그
+    ATT_FILE_NO_MAIN VARCHAR(255) COMMENT "이미지 경로(소)", 				-- 이미지 경로(소)
+    ATT_FILE_NO_MK VARCHAR(255) COMMENT "이미지 경로(대)", 					-- 이미지 경로(대)
+    RCP_PARTS_DTLS TEXT COMMENT "재료 정보", 								-- 재료 정보
+    MANUAL01 TEXT COMMENT "만드는법_01",									-- 만드는법_01
+    MANUAL_IMG01 VARCHAR(255) COMMENT "만드는법_이미지_01",					-- 만드는법_이미지_01
+    MANUAL02 TEXT COMMENT "만드는법_02",									-- 만드는법_02
+    MANUAL_IMG02 VARCHAR(255) COMMENT "만드는법_이미지_02",					-- 만드는법_이미지_02
+    MANUAL03 TEXT COMMENT "만드는법_03",									-- 만드는법_03
+    MANUAL_IMG03 VARCHAR(255) COMMENT "만드는법_이미지_03",					-- 만드는법_이미지_03
+    MANUAL04 TEXT COMMENT "만드는법_04",									-- 만드는법_04
+    MANUAL_IMG04 VARCHAR(255) COMMENT "만드는법_이미지_04",					-- 만드는법_이미지_04
+    MANUAL05 TEXT COMMENT "만드는법_05",									-- 만드는법_05
+    MANUAL_IMG05 VARCHAR(255) COMMENT "만드는법_이미지_05",					-- 만드는법_이미지_05
+    MANUAL06 TEXT COMMENT "만드는법_06",									-- 만드는법_06
+    MANUAL_IMG06 VARCHAR(255) COMMENT "만드는법_이미지_06",					-- 만드는법_이미지_06
+    MANUAL07 TEXT COMMENT "만드는법_07",									-- 만드는법_07
+    MANUAL_IMG07 VARCHAR(255) COMMENT "만드는법_이미지_07",					-- 만드는법_이미지_07
+    MANUAL08 TEXT COMMENT "만드는법_08",									-- 만드는법_08
+    MANUAL_IMG08 VARCHAR(255) COMMENT "만드는법_이미지_08",					-- 만드는법_이미지_08
+    MANUAL09 TEXT COMMENT "만드는법_09",									-- 만드는법_09
+    MANUAL_IMG09 VARCHAR(255) COMMENT "만드는법_이미지_09",					-- 만드는법_이미지_09
+    MANUAL10 TEXT COMMENT "만드는법_10",									-- 만드는법_10
+    MANUAL_IMG10 VARCHAR(255) COMMENT "만드는법_이미지_10",					-- 만드는법_이미지_10
+    MANUAL11 TEXT COMMENT "만드는법_11",									-- 만드는법_11
+    MANUAL_IMG11 VARCHAR(255) COMMENT "만드는법_이미지_11",					-- 만드는법_이미지_11
+    MANUAL12 TEXT COMMENT "만드는법_12",									-- 만드는법_12
+    MANUAL_IMG12 VARCHAR(255) COMMENT "만드는법_이미지_12",					-- 만드는법_이미지_12
+    MANUAL13 TEXT COMMENT "만드는법_13",									-- 만드는법_13
+    MANUAL_IMG13 VARCHAR(255) COMMENT "만드는법_이미지_13",					-- 만드는법_이미지_13
+    MANUAL14 TEXT COMMENT "만드는법_14",									-- 만드는법_14
+    MANUAL_IMG14 VARCHAR(255) COMMENT "만드는법_이미지_14",					-- 만드는법_이미지_14
+    MANUAL15 TEXT COMMENT "만드는법_15",									-- 만드는법_15
+    MANUAL_IMG15 VARCHAR(255) COMMENT "만드는법_이미지_15",					-- 만드는법_이미지_15
+    MANUAL16 TEXT COMMENT "만드는법_16",									-- 만드는법_16
+    MANUAL_IMG16 VARCHAR(255) COMMENT "만드는법_이미지_16",					-- 만드는법_이미지_16
+    MANUAL17 TEXT COMMENT "만드는법_17",									-- 만드는법_17
+    MANUAL_IMG17 VARCHAR(255) COMMENT "만드는법_이미지_17",					-- 만드는법_이미지_17
+    MANUAL18 TEXT COMMENT "만드는법_18",									-- 만드는법_18
+    MANUAL_IMG18 VARCHAR(255) COMMENT "만드는법_이미지_18",					-- 만드는법_이미지_18
+    MANUAL19 TEXT COMMENT "만드는법_19",									-- 만드는법_19
+    MANUAL_IMG19 VARCHAR(255) COMMENT "만드는법_이미지_19",					-- 만드는법_이미지_19
+    MANUAL20 TEXT COMMENT "만드는법_20",									-- 만드는법_20
+    MANUAL_IMG20 VARCHAR(255) COMMENT "만드는법_이미지_20",					-- 만드는법_이미지_20
+    RCP_NA_TIP TEXT COMMENT "저감 조리법 TIP",								-- 저감 조리법 TIP
+    PRIMARY KEY(RCP_SEQ)
+);
+
+SELECT * FROM RECIPE WHERE RCP_SEQ = 18;
+SELECT * FROM RECIPE WHERE RCP_SEQ = 3298;
+
+
+SELECT * FROM RECIPE;
+SHOW INDEX FROM RECIPE;
+DROP TABLE RECIPE;

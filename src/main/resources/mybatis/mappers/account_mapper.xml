@@ -9,6 +9,7 @@
 		<result column="a_pw" property="a_pw" />
 		<result column="a_name" property="a_name" />
 		<result column="a_phone" property="a_phone" />
+		<result column="a_birth" property="a_birth" />
 		<result column="a_department" property="a_department" />
 		<result column="a_level" property="a_level" />
 		<result column="a_position" property="a_position" />
@@ -163,7 +164,17 @@
 			resultType="AdminAccountDto">
 	
 		SELECT 
-			* 
+			A_NO, 
+			A_ID, 
+			A_NAME, 
+			A_PHONE, 
+			A_BIRTH, 
+			A_DEPARTMENT, 
+			A_LEVEL, 
+			A_POSITION, 
+			A_AUTHORITY_ROLE, 
+			A_REG_DATE, 
+			A_MOD_DATE
 		FROM 
 			ADMIN_ACCOUNT 
 		WHERE 
@@ -210,7 +221,17 @@
 			resultType="AdminAccountDto">
 	
 		SELECT 
-			* 
+			A_NO, 
+			A_ID, 
+			A_NAME, 
+			A_PHONE, 
+			A_BIRTH, 
+			A_DEPARTMENT, 
+			A_LEVEL, 
+			A_POSITION, 
+			A_AUTHORITY_ROLE, 
+			A_REG_DATE, 
+			A_MOD_DATE
 		FROM 
 			ADMIN_ACCOUNT 
 		WHERE 
