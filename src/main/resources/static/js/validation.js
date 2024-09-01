@@ -73,18 +73,22 @@ async function validateEmail(input, usedCheck, alertMsg) {
 			if(!isUsed) { 
 				clearErrorMessage(input);
 				return true;
+				
 			} else {
 				if(alertMsg) {
 					alert("이미 사용 중인 이메일입니다.");
 				}
+				
 				addErrorMessage(input, "이미 사용 중인 이메일입니다.");
 				return false;
 			}
 		} catch(error) {
 			logger.error('Error during email check:', error);
+			
 			if(alertMsg) {
 				alert("이메일 중복 확인 중 오류가 발생했습니다.");
 			}
+			
 			addErrorMessage(input, "이메일 중복 확인 중 오류가 발생했습니다.");
 			return false;
 		}
@@ -101,6 +105,7 @@ function validatePw(input, alertMsg) {
 		alert(errorMessage);
 		return false;
 	}
+	
 	return isValid;
 }
 
@@ -113,6 +118,7 @@ function validateBirth(input, alertMsg) {
 		alert(errorMessage);
 		return false;
 	}
+	
 	return isValid;
 }
 
@@ -125,6 +131,7 @@ function validatePhone(input, alertMsg) {
 		alert(errorMessage);
 		return false;
 	}
+	
 	return isValid; 
 }
 
@@ -134,10 +141,12 @@ function checkEmpty(input, txt, alertMsg) {
 	if(alertMsg) {
 		if(input.value.trim().length > 0) {
 			return true;
+			
 		} else {
 			alert(errorMessage);
 			return false;
 		}
+		
 	} else {
 		return validateInput(input, null, errorMessage); // 정규 표현식 대신 값의 길이만 확인
 	}

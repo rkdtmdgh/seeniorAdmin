@@ -18,18 +18,18 @@ function getList(command, sort, sortValue, page) {
 	.then(response => {
 		logger.info(apiUrl + ' getList() response:', response);
 					
-		const contentTable = document.querySelector('.content_table tbody'); // 데이터가 나열될 테이블 요소
-		const pagination = document.querySelector('.pagination_wrap'); // 페이지 네이션 요소
-		contentTable.innerHTML = '';
-		pagination.innerHTML = '';
-		
 		const { getListDtos, getListPage, getListCnt } = setParseResponseByCommand(command, response);
+		const $contentTable = $('.content_table tbody'); // 데이터가 나열될 테이블 요소
+		const $pagination = $('.pagination_wrap'); // 페이지 네이션 요소
+		$contentTable.html('');
+		$pagination.html('');
+		
 		if(response && getListDtos) {
 			// 쿼리스트링 조건 추가
 			setListQueryString(getListPage.page, sort, sortValue); // page, sort, sortValue
 					
 			const paging = setPagination(getListPage, sort, sortValue, command); // 페이징벨류값, sort, sortValue, 커맨드, isSearch
-			pagination.innerHTML = paging;
+			$pagination.html(paging);
 			
 			let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
 			let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
@@ -40,29 +40,29 @@ function getList(command, sort, sortValue, page) {
 			
 			if(listIndex > 0) {
 				getListDtos.forEach((data) => { 
-					contentTable.insertAdjacentHTML('beforeend', setDataList(command, data, listIndex));
+					$contentTable[0].insertAdjacentHTML('beforeend', setDataList(command, data, listIndex));
 					listIndex --;
 				});
 			} else {
 				const maxCols = setTableColumnsNum();
-				contentTable.innerHTML = `
+				$contentTable.html(`
 					<tr>
 	                    <td colspan="${maxCols}">
 	                        <p class="table_info">목록이 없습니다.</p>
 	                    </td>
 	                </tr>
-				`;
+				`);
 			}
 		} else {
 			logger.info('데이터가 없거나 유효하지 않습니다.');
 			const maxCols = setTableColumnsNum();
-			contentTable.innerHTML = `
+			$contentTable.html(`
 				<tr>
                     <td colspan="${maxCols}">
                         <p class="table_info">목록이 없습니다.</p>
                     </td>
                 </tr>
-			`;
+			`);
 		}
 	})
 	.catch((error) => {
@@ -149,11 +149,11 @@ function getOptionList(apiUrl, ele, isForm, selectedValue) {
 				} else {
 					const ceateSelect = `<ul data-sort="${dataNo}" data-api="${command}" class="select_option_list sc"></ul>`;
 			        selectEle.insertAdjacentHTML('beforeend', ceateSelect);
-			        const selectOptionlist = selectEle.querySelector('ul.select_option_list');
+			        const $selectOptionlist = $('ul.select_option_list');
 					
 					getListDtos.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
 						let option = `<li data-sort-value="${data[dataNo]}" class="option" onclick="getSelectList(event);">${data[dataName]}</li>`;
-						selectOptionlist.insertAdjacentHTML('beforeend', option);
+						$selectOptionlist[0].insertAdjacentHTML('beforeend', option);
 					});
 				}
 				

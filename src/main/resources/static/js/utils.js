@@ -4,6 +4,7 @@ function setInputFocus(ele) {
 	if ($input.length) {
 		logger.info('focus input:', $input.attr('name'));
 		$input.focus();
+		
 	} else {
 		logger.info(`No input found with name: ${ele}`);
 	}
@@ -42,6 +43,7 @@ function setReplaceBirth(input) {
     if (birthValue.length > 4) {
         birthValue = birthValue.slice(0, 4) + '-' + birthValue.slice(4);
     }
+    
     if (birthValue.length > 7) {
         birthValue = birthValue.slice(0, 7) + '-' + birthValue.slice(7);
     }
@@ -69,7 +71,7 @@ function setAllCheckBox(ele) {
 // 검색 폼 데이터인지, 정렬된 데이터인지 확인하여 초기화
 function setFormValuesFromUrl(part) {
 	const urlParams = new URLSearchParams(window.location.search);
-    const sForm = document.forms['search_form'];
+    const $sForm = $('form[name="search_form"]');
 	const searchPart = urlParams.get('searchPart') || part;
     const searchString = urlParams.get('searchString') || '';
     const page = urlParams.get('page') || 1;
@@ -77,11 +79,11 @@ function setFormValuesFromUrl(part) {
 	const sort = urlParams.get('sort') || undefined;
 	const sortValue = urlParams.get(`${sort}`) || undefined;
 	
-	sForm.search_part.value = searchPart;
+	$sForm.find('select[name="search_part"]').val(searchPart);
 	
 	// 검색어가 있을 경우 검색 폼 사용으로 새로고침 시 재적용
 	if(sortType === '2') { // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
-		sForm.search_string.value = searchString;
+		$sForm.find('input[name="search_string"]').val(searchString);
 	}
 	
 	return { sortType, sort, sortValue, page };
@@ -91,7 +93,7 @@ function setFormValuesFromUrl(part) {
 function setListQueryString(page, sort, sortValue) {
 	const url = new URL(window.location); // 현재 url
 	const sortType = url.searchParams.get('sortType') || undefined; // sortType이 있을 경우 값 가지고 있기
-    url.search = ''; // 파라미텉 비우기
+    url.search = ''; // 파라미터 비우기
 	
 	// 파라미터 추가
 	url.searchParams.set('page', page); 
@@ -100,12 +102,10 @@ function setListQueryString(page, sort, sortValue) {
 		if(sortType) url.searchParams.set('sortType', sortType); 
 		url.searchParams.set('sort', sort); 
 		url.searchParams.set(`${sort}`, sortValue); 
+		
     } else {
 		// sort 버튼 기본값으로 초기화
-		const sortElements = document.querySelectorAll('.sort');
-		sortElements.forEach(sortElement => {
-			sortElement.setAttribute('data-current-sort', 'all');
-		})
+		$('.sort').attr('data-current-sort', 'all');
 	}
 	window.history.replaceState({}, '', url); // 현재 url 변경 및 리로드 제어
 }
@@ -126,6 +126,7 @@ function setParseResponseByCommand(command, response) {
 	let getListDtos;
 	let getListPage;
 	let getListCnt;
+	
 	switch(command) {
 		case '/account/get_admin_list': // 관리자 계정 관리
 			getListDtos = response.adminAccountDtos;
@@ -288,46 +289,23 @@ function setDataList(api, data, index) {
 
 // 테이블의 전체 열 수 계산하기
 function setTableColumnsNum() {
-	const rows = document.querySelectorAll('table thead tr');
-	let maxCols = 0;
-
-	rows.forEach(row => {
-	    const cols = row.querySelectorAll('th');
-	    if (cols.length > maxCols) {
-	        maxCols = cols.length;
-	    }
-	});
-	
+	const maxCols = $('table thead tr').find('th').length;
 	return maxCols;
 }
 
 // 테이블 셀렉트 옵션 노출 토글 버튼
 function setSelectOptionTopggle(event) {
-	const selectEle = event.currentTarget.querySelector('.select_option_list'); // 클릭한 요소 내의 커스텀 셀렉트 요소 찾기
-	const allSelectEle = document.querySelectorAll('.select_option_list'); // 모든 커스텀 셀렉트 요소
-	
-	allSelectEle.forEach(dropdown => {
-		if(selectEle) {
-			if(dropdown === selectEle) { // 클릭한 요소와 동일한 요소인 경우
-				selectEle.classList.toggle('active');
-				
-			} else { // 클릭한 요소가 아닌 경우
-				dropdown.classList.remove('active'); 
-			}
-		} else { // 예외 상황일 경우 모든 커스텀 셀렉트 요소 클라스 제거
-			dropdown.classList.remove('active');
-		}
-	});
+	const $selectEle = $(event.currentTarget).find('.select_option_list'); // 클릭한 요소 내의 커스텀 셀렉트 요소 찾기
+	const $allSelectEle = $('.select_option_list'); // 모든 커스텀 셀렉트 요소
+	$allSelectEle.not($selectEle).removeClass('active');
+	$selectEle.toggleClass('active');
 }
 
-// 페이지 전체 클릭 이벤트 리스터
-document.addEventListener('click', (event) => {
+$(document).on('click', (event) => {
 	// 커스텀 셀렉트
-	const openSelectEle = document.querySelectorAll('.select_option_list.active'); // 열려 있는 셀렉트 옵션 요소
+	const $openSelectEle = $('.select_option_list.active'); // 열려 있는 셀렉트 옵션 요소
 	const isTriggerClick = event.target.closest('.table_title.select'); // 클릭한 요소가 커스텀 셀렉트 버튼인지 확인
 	if(!isTriggerClick) { // 클릭한 요소가 커스텀 셀렉트 버튼이 아닐 경우
-		openSelectEle.forEach(dropdown => {
-			dropdown.classList.remove('active'); // 열려 있는 셀렉트 옵션 닫기
-		});
+		$openSelectEle.removeClass('active'); // 열려 있는 셀렉트 옵션 닫기
 	}
 });
