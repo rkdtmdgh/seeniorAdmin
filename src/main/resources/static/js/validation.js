@@ -8,32 +8,33 @@
 //}
 
 // 에러 메세지 요소 생성
-function createErrorElement(ele) {
-    const parentEle = ele.parentElement;
-    let errorEle = parentEle.querySelector('.input_error'); // 부모 요소 내에 에러 요소를 찾음
+function createErrorElement($ele) { // jQeury 객체를 받음을 명시
+    const $parentEle = $ele.parent();
+    let $errorEle = $parentEle.find('.input_error'); // 부모 요소 내에 에러 요소를 찾음
     
     // 에러 메세지 요소가 없으면 생성
-    if (!errorEle) {
-        errorEle = document.createElement("span"); // 요소 생성
-        errorEle.className = "input_error"; // 클래스 추가
-        parentEle.appendChild(errorEle); // 부모 요소에 추가
+    if (!$errorEle.length) {
+        $errorEle = $('<span>').addClass('input_error'); // 요소 생성 및 클래스 추가
+        $parentEle.append($errorEle); // 부모 요소에 추가
     }
 
-    return errorEle;
+    return $errorEle;
 }
 
 // 에러 메세지 노출
 function addErrorMessage(input, message) {
-	const errorEle = createErrorElement(input);
-	errorEle.textContent = message;
-	input.parentElement.classList.add('error');
+	const $input = $(input); // DOM 요소를 jQuery 객체로 변환
+	const $errorEle = createErrorElement($input);
+	$errorEle.text(message);
+	$input.parent().addClass('error');
 }
 
 // 에러 메세시 제거
 function clearErrorMessage(input) {
-	const errorEle = createErrorElement(input);
-	errorEle.textContent = "";
-	input.parentElement.classList.remove('error');
+	const $input = $(input); // DOM 요소를 jQuery 객체로 변환
+	const $errorEle = createErrorElement($input);
+	$errorEle.text();
+	$input.parent().removeClass('error');
 }
 
 // 유효성 검사
@@ -46,6 +47,7 @@ function validateInput(input, regEx, errorMessage, checkProfanity = false) { // 
 	
 	if (value === "" || !isValid || profanityCheck) {
 		addErrorMessage(input, profanityCheck ? "금지된 단어가 포함되어 있습니다." : errorMessage); // 에러 메시지 설정
+		
     } else {
 		clearErrorMessage(input); // 에러 메시지 지우기
     }
