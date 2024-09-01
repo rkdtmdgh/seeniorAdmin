@@ -39,10 +39,12 @@ function usedDiseaseCategoryCheck(input, alertMsg) {
 		logger.info('usedDiseaseCategoryCheck() result:', response);
 		if(!response) { // true=중복, false=정상 반환
 			clearErrorMessage(input);
+			
 		} else {
 			if(alertMsg) {
 				alert("이미 등록된 질환/질병명입니다.");
 			}
+			
 			addErrorMessage(input, "이미 등록된 질환/질병명입니다.");
 			return false;
 		}
@@ -59,6 +61,7 @@ async function usedDiseaseCheck(input, defaultValue, alertMsg) {
 	if(input.value.trim().length === 0) {
 		addErrorMessage(input, "질환/질병명을 입력해 주세요.")
 		if(alertMsg) alert("질환/질병명을 입력해 주세요.");
+		
 		return false;
 	}
 	
@@ -86,6 +89,7 @@ async function usedDiseaseCheck(input, defaultValue, alertMsg) {
 			if(alertMsg) {
 				alert("이미 등록된 질환/질병명입니다.");
 			}
+			
 			addErrorMessage(input, "이미 등록된 질환/질병명입니다.");
 			return false; // submitForm 유효성 검사 return처리로 false 직접입력
 		}
