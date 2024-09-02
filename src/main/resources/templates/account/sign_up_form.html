@@ -24,7 +24,7 @@
                 </a>
             </div>
 
-            <form name="sign_up_form" onsubmit="signUpForm(event, 'sign_up_form')">
+            <form name="sign_up_form" onsubmit="postSignUpForm(event, 'sign_up_form')">
             	<div class="input_list_container">
 	                <div class="input_list" id="input_list_info">
 	                    <label for="id" class="border_input">
@@ -37,7 +37,7 @@
 	                        <span class="input_title">비밀번호</span>
 	                        <input type="password" name="a_pw" id="pw" placeholder="비밀번호" class="input_txt" 
 	                        	oninput="validatePw(this)" onblur="validatePw(this)" autocomplete="off">
-	                        <span class="input_icon" onclick="setViewPw(this)">
+	                        <span class="input_icon" onclick="setPwViewToggle(this)">
 	                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
 	                        </span>
 	                    </label>

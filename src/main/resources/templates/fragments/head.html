@@ -20,12 +20,13 @@
 	<script src="/js/createLogger.js"></script>
 	<script src="/js/utils.js"></script>
 	<script src="/js/validation.js"></script>
-	<script src="/js/submitForm.js"></script>
+	<script src="/js/api/api_post.js"></script>
 	
 	<th:block th:unless="${pageTitle == 'SEE-NIOR 로그인' or pageTitle == 'SEE-NIOR 회원가입'}">
 		<!-- 로그인, 회원가입 페이지 외 -->
 		<script src="/js/api/api_default.js"></script>
-		<script src="/js/api/api_get_list.js"></script>
+		<script src="/js/api/api_get.js"></script>
+		<script src="/js/api/api_put.js"></script>
 		<script src="/js/api/api_delete.js"></script>
 	</th:block>
 	

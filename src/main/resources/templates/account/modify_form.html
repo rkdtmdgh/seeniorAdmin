@@ -25,13 +25,13 @@
 					    </div>
 					    
 					    <div class="sign_form">
-					    	<form name="modify_check_form" onsubmit="modifyCheckForm(event, 'modify_check_form')">
+					    	<form name="modify_check_form" onsubmit="postIdentityCheckForm(event, 'modify_check_form')">
 				            	<div class="input_list_container">
 					                <div class="input_list" id="input_list_info">					
 					                    <label for="pw" class="border_input">
 					                        <span class="input_title">비밀번호</span>
 					                        <input type="password" name="a_pw" id="pw" placeholder="비밀번호" class="input_txt" autocomplete="off">
-					                        <span class="input_icon" onclick="setViewPw(this)">
+					                        <span class="input_icon" onclick="setPwViewToggle(this)">
 					                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
 					                        </span>
 					                    </label>
@@ -67,9 +67,8 @@
 	                                        <th><p class="table_title">비밀번호</p></th>
 		                                	<td>
 		                                		<label class="cont_info">
-		                                			<input type="password" name="a_pw" id="pw" class="table_info" placeholder="변경 시 입력" autocomplete="off"
-		                                				oninput="clearErrorMessage(this)">
-		                                			<span class="input_icon" onclick="setViewPw(this)">
+		                                			<input type="password" name="a_pw" id="pw" class="table_info" placeholder="변경 시 입력" autocomplete="off">
+		                                			<span class="input_icon" onclick="setPwViewToggle(this)">
 							                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
 							                        </span>
 		                                		</label>
@@ -127,7 +126,7 @@
 		                        <div class="btn_list right">
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <a href="javascript: modifyForm('modify_form')" class="btns">저장</a>
+	                                    <a href="javascript: putModifyForm('modify_form')" class="btns">저장</a>
 	                                </div>
 	                            </div>
 		                    </div>

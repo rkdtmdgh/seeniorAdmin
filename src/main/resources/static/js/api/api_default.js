@@ -10,12 +10,6 @@ function signOut() {
 	location.replace('/account/sign_out_confirm');
 }
 
-// all_check 체크박스 초기화
-function  resetAllcheck() {
-	const $allCheckBox = $('input[type="checkbox"][name="all_check"]');
-	if($allCheckBox && $allCheckBox.prop('checked')) $allCheckBox.prop('checked', false);
-}
-
 $(document).ready(function() {
 	// NAV 선택 표시 및 토글
 	function setNavActiveToggle() {
@@ -47,6 +41,7 @@ $(document).ready(function() {
 						$navSubMenu.addClass('on'); // 네비 서브 메뉴 선택
 						$navMenu.addClass('select'); // 네비 버튼 선택
 					}
+					
 					logger.info(index + '. subHref:', subHrefFirstPath);
 				});
 			}
@@ -87,13 +82,16 @@ $(document).ready(function() {
 							<span class="side_sub_menu">${data.bc_name}</span>
 						</a>
 					`;
+					
 					$sideBoardSubMenu.append(innerContent);
 				});
 			} else {
 				logger.info('데이터가 없거나 유효하지 않습니다.');
 			}
+			
 		} catch(error) {
 			logger.error('getBoardList() error:', error);
+			
 		} finally {
 			setNavActiveToggle(); // NAV 선택 표시 및 토글 세팅
 		}

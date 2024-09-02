@@ -7,36 +7,6 @@
 //    return profanityList.some(word => normalizedValue.includes(word)); // 표준화된 입력값이 비속어에 포함되어 있는지 검사
 //}
 
-// 에러 메세지 요소 생성
-function createErrorElement($ele) { // jQeury 객체를 받음을 명시
-    const $parentEle = $ele.parent();
-    let $errorEle = $parentEle.find('.input_error'); // 부모 요소 내에 에러 요소를 찾음
-    
-    // 에러 메세지 요소가 없으면 생성
-    if (!$errorEle.length) {
-        $errorEle = $('<span>').addClass('input_error'); // 요소 생성 및 클래스 추가
-        $parentEle.append($errorEle); // 부모 요소에 추가
-    }
-
-    return $errorEle;
-}
-
-// 에러 메세지 노출
-function addErrorMessage(input, message) {
-	const $input = $(input); // DOM 요소를 jQuery 객체로 변환
-	const $errorEle = createErrorElement($input);
-	$errorEle.text(message);
-	$input.parent().addClass('error');
-}
-
-// 에러 메세시 제거
-function clearErrorMessage(input) {
-	const $input = $(input); // DOM 요소를 jQuery 객체로 변환
-	const $errorEle = createErrorElement($input);
-	$errorEle.text();
-	$input.parent().removeClass('error');
-}
-
 // 유효성 검사
 function validateInput(input, regEx, errorMessage, checkProfanity = false) { // 욕설 필터 체크 기본값 false로 설정
 	const value = input.value.trim(); // 앞뒤 공백 제거
@@ -46,10 +16,10 @@ function validateInput(input, regEx, errorMessage, checkProfanity = false) { // 
     const profanityCheck = checkProfanity ? profanityFilter(value) : false;
 	
 	if (value === "" || !isValid || profanityCheck) {
-		addErrorMessage(input, profanityCheck ? "금지된 단어가 포함되어 있습니다." : errorMessage); // 에러 메시지 설정
+		setAddErrorMessage(input, profanityCheck ? "금지된 단어가 포함되어 있습니다." : errorMessage); // 에러 메시지 설정
 		
     } else {
-		clearErrorMessage(input); // 에러 메시지 지우기
+		setClearErrorMessage(input); // 에러 메시지 지우기
     }
 	
     return isValid && !profanityCheck; // 두 조건에 부합해야 true 즉 정규 표현식 검사, 입력값 유무, 욕설 필터 모두 true를 반환 해야 함
@@ -71,7 +41,7 @@ async function validateEmail(input, usedCheck, alertMsg) {
 		try {
 			const isUsed = await usedEmailCheck(input.value); // true=중복, false=정상 반환
 			if(!isUsed) { 
-				clearErrorMessage(input);
+				setClearErrorMessage(input);
 				return true;
 				
 			} else {
@@ -79,7 +49,7 @@ async function validateEmail(input, usedCheck, alertMsg) {
 					alert("이미 사용 중인 이메일입니다.");
 				}
 				
-				addErrorMessage(input, "이미 사용 중인 이메일입니다.");
+				setAddErrorMessage(input, "이미 사용 중인 이메일입니다.");
 				return false;
 			}
 		} catch(error) {
@@ -89,7 +59,7 @@ async function validateEmail(input, usedCheck, alertMsg) {
 				alert("이메일 중복 확인 중 오류가 발생했습니다.");
 			}
 			
-			addErrorMessage(input, "이메일 중복 확인 중 오류가 발생했습니다.");
+			setAddErrorMessage(input, "이메일 중복 확인 중 오류가 발생했습니다.");
 			return false;
 		}
 	}

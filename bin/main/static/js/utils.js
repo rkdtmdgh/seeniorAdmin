@@ -10,8 +10,21 @@ function setInputFocus(ele) {
 	}
 }
 
+// all_check 체크박스 초기화
+function  setAllcheck() {
+	const $allCheckBox = $('input[type="checkbox"][name="all_check"]');
+	if($allCheckBox && $allCheckBox.prop('checked')) $allCheckBox.prop('checked', false);
+}
+
+// 체크박스 일괄 체크 및 해제
+function setAllCheckBox(ele) {	
+	const isChecked = ele.checked;
+	const $checkboxList = $(`input[name="${ele.value}"]`);
+	$checkboxList.prop('checked', isChecked);
+}
+
 // 비밀번호 노출 설정
-function setViewPw(ele) {
+function setPwViewToggle(ele) {
 	const $icon = $(ele).find('.icon');
 	const $parentEle = $(ele).parent();
 	const $passwordInput = $parentEle.find('input');
@@ -26,6 +39,36 @@ function setViewPw(ele) {
 			$icon.attr('src', '/image/icons/eye_off.svg');
 		}
 	}
+}
+
+// 에러 메세지 요소 생성
+function setCreateErrorElement($ele) { // jQeury 객체를 받음을 명시
+    const $parentEle = $ele.parent();
+    let $errorEle = $parentEle.find('.input_error'); // 부모 요소 내에 에러 요소를 찾음
+    
+    // 에러 메세지 요소가 없으면 생성
+    if (!$errorEle.length) {
+        $errorEle = $('<span>').addClass('input_error'); // 요소 생성 및 클래스 추가
+        $parentEle.append($errorEle); // 부모 요소에 추가
+    }
+
+    return $errorEle;
+}
+
+// 에러 메세지 노출
+function setAddErrorMessage(input, message) {
+	const $input = $(input); // DOM 요소를 jQuery 객체로 변환
+	const $errorEle = setCreateErrorElement($input);
+	$errorEle.text(message);
+	$input.parent().addClass('error');
+}
+
+// 에러 메세시 제거
+function setClearErrorMessage(input) {
+	const $input = $(input); // DOM 요소를 jQuery 객체로 변환
+	const $errorEle = setCreateErrorElement($input);
+	$errorEle.text();
+	$input.parent().removeClass('error');
 }
 
 // 휴대폰 번호 형식으로 변환
@@ -59,13 +102,6 @@ function setFormatDate(dateString) { // yyyy-mm-dd 형식
     const month = ('0' + (date.getMonth() + 1)).slice(-2); // 월은 0부터 시작하므로 +1
     const day = ('0' + date.getDate()).slice(-2);
     return `${year}-${month}-${day}`;
-}
-
-// 체크박스 일괄 체크 및 해제
-function setAllCheckBox(ele) {	
-	const isChecked = ele.checked;
-	const $checkboxList = $(`input[name="${ele.value}"]`);
-	$checkboxList.prop('checked', isChecked);
 }
 
 // 검색 폼 데이터인지, 정렬된 데이터인지 확인하여 초기화
@@ -302,7 +338,7 @@ function setSelectOptionTopggle(event) {
 }
 
 $(document).on('click', (event) => {
-	// 커스텀 셀렉트
+	// 커스텀 셀렉트 open, close 기능
 	const $openSelectEle = $('.select_option_list.active'); // 열려 있는 셀렉트 옵션 요소
 	const isTriggerClick = event.target.closest('.table_title.select'); // 클릭한 요소가 커스텀 셀렉트 버튼인지 확인
 	if(!isTriggerClick) { // 클릭한 요소가 커스텀 셀렉트 버튼이 아닐 경우
