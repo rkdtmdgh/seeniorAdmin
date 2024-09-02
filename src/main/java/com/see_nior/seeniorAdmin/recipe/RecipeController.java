@@ -1,13 +1,14 @@
 package com.see_nior.seeniorAdmin.recipe;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Log4j2
@@ -15,8 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/recipe")
 public class RecipeController {
 
-	@Autowired
-	private RecipeService recipeService;
+	final private RecipeService recipeService;
+	
+	public RecipeController(RecipeService recipeService) {
+		this.recipeService = recipeService;
+		
+	}
 
 	// 레시피 API 불러온 후 json 으로 넘어온 API Data DB에 저장하기
 	@ResponseBody
@@ -35,11 +40,38 @@ public class RecipeController {
 		
 	}
 	
-	// 식단 등록 양식
-	@GetMapping("/create_form")
-	public String getMethodName(@RequestParam String param) {
-		return new String();
+	// 식단 리스트 양식
+	@GetMapping("/recipe_list")
+	public String recipeList() {
+		log.info("recipeList()");
+		
+		String nextPage = "recipe/recipe_list";
+		
+		return nextPage;
+		
 	}
+	
+	// 모든 식단 가져오기 (페이지네이션)
+	@ResponseBody
+	@GetMapping("/get_all_recipe_list_with_page")
+	public Object getAllRecipeListWithPage(
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+			@RequestParam(value = "sort", required = false, defaultValue = "all") String sort) {
+		log.info("getAllRecipeListWithPage()");
+		
+		// 페이지 번호에 따른 식단 리스트들 가져오기
+		Map<String, Object> recipeListWithPage = recipeService.getRecipeListWithPage(page, sort);
+		
+		// 식단 총 페이지 개수 가져오기
+		Map<String, Object> recipeListPageNum = recipeService.getRecipeListPageNum(page);
+		
+		recipeListWithPage.put("recipeListPageNum", recipeListPageNum);
+		recipeListWithPage.put("sort", sort);
+		
+		return recipeListWithPage;
+		
+	}
+	
 	
 
 }

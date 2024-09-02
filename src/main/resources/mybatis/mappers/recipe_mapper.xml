@@ -4,6 +4,66 @@
 
 <mapper namespace="com.see_nior.seeniorAdmin.recipe.mapper.RecipeMapper">
 
+	<resultMap type="RecipeDto" id="RecipeDto">
+		<result column="rcp_seq" property="rcp_seq" />
+		<result column="rcp_nm" property="rcp_nm" />
+		<result column="rcp_way2" property="rcp_way2" />
+		<result column="rcp_pat2" property="rcp_pat2" />
+		<result column="info_wgt" property="info_wgt" />
+		<result column="info_eng" property="info_eng" />
+		<result column="info_car" property="info_car" />
+		<result column="info_pro" property="info_pro" />
+		<result column="rcp_seq" property="rcp_seq" />
+		<result column="info_fat" property="info_fat" />
+		<result column="info_na" property="info_na" />
+		<result column="hash_tag" property="hash_tag" />
+		<result column="att_file_no_main" property="att_file_no_main" />
+		<result column="att_file_no_mk" property="att_file_no_mk" />
+		<result column="rcp_parts_dtls" property="rcp_parts_dtls" />
+		<result column="manual01" property="manual01" />
+		<result column="manual_img01" property="manual_img01" />
+		<result column="manual02" property="manual02" />
+		<result column="manual_img02" property="manual_img02" />
+		<result column="manual03" property="manual03" />
+		<result column="manual_img03" property="manual_img03" />
+		<result column="manual04" property="manual04" />
+		<result column="manual_img04" property="manual_img04" />
+		<result column="manual05" property="manual05" />
+		<result column="manual_img05" property="manual_img05" />
+		<result column="manual06" property="manual06" />
+		<result column="manual_img06" property="manual_img06" />
+		<result column="manual07" property="manual07" />
+		<result column="manual_img07" property="manual_img07" />
+		<result column="manual08" property="manual08" />
+		<result column="manual_img08" property="manual_img08" />
+		<result column="manual09" property="manual09" />
+		<result column="manual_img09" property="manual_img09" />
+		<result column="manual10" property="manual10" />
+		<result column="manual_img10" property="manual_img10" />
+		<result column="manual11" property="manual11" />
+		<result column="manual_img11" property="manual_img11" />
+		<result column="manual12" property="manual12" />
+		<result column="manual_img12" property="manual_img12" />
+		<result column="manual13" property="manual13" />
+		<result column="manual_img13" property="manual_img13" />
+		<result column="manual14" property="manual14" />
+		<result column="manual_img14" property="manual_img14" />
+		<result column="manual15" property="manual15" />
+		<result column="manual_img15" property="manual_img15" />
+		<result column="manual16" property="manual16" />
+		<result column="manual_img16" property="manual_img16" />
+		<result column="manual17" property="manual17" />
+		<result column="manual_img17" property="manual_img17" />
+		<result column="manual18" property="manual18" />
+		<result column="manual_img18" property="manual_img18" />
+		<result column="manual19" property="manual19" />
+		<result column="manual_img19" property="manual_img19" />
+		<result column="manual20" property="manual20" />
+		<result column="manual_img20" property="manual_img20" />
+		<result column="rcp_na_tip" property="rcp_na_tip" />
+	</resultMap>
+
+
 	<insert id="insertApiRecipeData">
 
 		INSERT INTO 
@@ -31,5 +91,40 @@
 			)
 
 	</insert>
+	
+	<!-- 페이지에 따른 식단 가져오기(모든 식단) -->
+	<select id="getRecipeListWithPage"
+			resultMap="RecipeDto">
+		
+		SELECT 
+			* 
+		FROM 
+			RECIPE 
+		<choose>
+			<when test="sort == 'all'">
+				ORDER BY RCP_SEQ DESC 
+			</when>
+			<when test="sort == 'asc'">
+				ORDER BY RCP_NM ASC 
+			</when>
+			<when test="sort == 'desc'">
+				ORDER BY RCP_NM DESC 
+			</when>
+		</choose>
+		LIMIT 
+			#{start}, #{limit}		
+	
+	</select>
+	
+	<!-- 식단의 총 리스트 개수 구하기 (모든 식단) -->
+	<select id="getAllRecipeCnt">
+		
+		SELECT 
+			COUNT(*) 
+		FROM 
+			RECIPE 
+	
+	</select>
+	
 
 </mapper>
