@@ -45,7 +45,8 @@
 	                                        <th><p class="table_title">분류명</p></th>
 		                                	<td>
 		                                		<div class="cont_info">
-			                                		<input type="text" name="dc_name" id="dc_name" class="table_info" placeholder="신규 분류 등록 시 입력해 주세요">
+			                                		<input type="text" name="dc_name" id="dc_name" class="table_info" placeholder="신규 분류 등록 시 입력해 주세요"
+			                                			onblur="usedInputValueCheck(this)">
 			                                		<button type="submit" class="btns small">등록</button>
 		                                		</div>
 	                                        </td>
@@ -81,7 +82,7 @@
 	                                        <th><p class="table_title">질환 / 질병명</p></th>
 		                                	<td>
 		                                		<input type="text" name="d_name" id="d_name" class="table_info" placeholder="질환 / 질병명"
-		                                			onblur="usedDiseaseCheck(this, null, null);">
+		                                			onblur="usedInputValueCheck(this, true);">
 	                                        </td>
 		                                </tr>
 		                                

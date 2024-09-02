@@ -34,10 +34,6 @@ async function getList(command, sort, sortValue, page) {
 			
 			let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
 			let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
-			logger.info('getListCnt:', getListCnt);
-			logger.info('pageLimit:', pageLimit);
-			logger.info('getListPage.page:', getListPage.page);
-			logger.info('listCnt:', listIndex);
 			
 			if(listIndex > 0) {
 				getListDtos.forEach((data) => { 
@@ -220,10 +216,6 @@ async function getSearchList(event, apiUrl, page) {
 				
 				let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
 				let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
-				logger.info('getListCnt:', getListCnt);
-				logger.info('pageLimit:', pageLimit);
-				logger.info('getListPage.page:', getListPage.page);
-				logger.info('listCnt:', listIndex);
 											
 				if(listIndex > 0) {
 					getListDtos.forEach((data) => { 

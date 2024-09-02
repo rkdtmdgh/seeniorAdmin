@@ -67,7 +67,7 @@ function setAddErrorMessage(input, message) {
 function setClearErrorMessage(input) {
 	const $input = $(input); // DOM 요소를 jQuery 객체로 변환
 	const $errorEle = setCreateErrorElement($input);
-	$errorEle.text();
+	$errorEle.remove();
 	$input.parent().removeClass('error');
 }
 
@@ -155,6 +155,30 @@ function setSearchQueryString(page, searchPart, searchString) {
     url.searchParams.set('searchPart', searchPart);
     url.searchParams.set('searchString', searchString);
 	window.history.replaceState({}, '', url); // 현재 url 변경 및 리로드 제어
+}
+
+// 중복 확인 커맨드, 메세지 설정
+function setWordAndCommand(inputName) {
+	let word;
+	let apiUrl;
+	
+	switch(inputName) {
+		case 'dc_name':
+			word = '질환/질병 분류명';
+			apiUrl = '/disease/is_disease_category';
+			break;
+			
+		case 'd_name':
+			word = '질환/질병명';
+			apiUrl = '/disease/is_disease';
+			break;
+			
+		default:
+			logger.error('usedInputValueCheck() inputName:', inputName);
+			return false;
+	}
+	
+	return { word, apiUrl };
 }
 
 // 카테고리에 맞도록 객체 선택 

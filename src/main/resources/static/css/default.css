@@ -412,15 +412,16 @@
     }
     
     .cont_info {
-       	display: flex;
-       	align-items: center;
+       	position: relative;
        	
-       	.input_icon {
-       		position: static;
-       		display: inline-block;
+       	.table_info {
+       		padding-right: 80px; 
        	}
        	
        	.btns {
+       		position: absolute;
+       		top: 0.35em;
+       		right: 1.2em;
        		font-size: var(--menuFontSize);
        		padding: var(--tableBtnPadding);
        	}

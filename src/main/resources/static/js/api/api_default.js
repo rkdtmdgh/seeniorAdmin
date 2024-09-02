@@ -75,7 +75,6 @@ $(document).ready(function() {
 
 			if (response && response.boardCategoryDtos) {
 				let filterData = response.boardCategoryDtos.filter(data => data.bc_is_deleted === true);
-
 				filterData.forEach((data) => { 
 					let innerContent = `
 						<a href="/board/board_list?${data.bc_no}" class="side_sub_menu_btn">
@@ -85,6 +84,7 @@ $(document).ready(function() {
 					
 					$sideBoardSubMenu.append(innerContent);
 				});
+				
 			} else {
 				logger.info('데이터가 없거나 유효하지 않습니다.');
 			}

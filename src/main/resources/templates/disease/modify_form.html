@@ -50,7 +50,7 @@
 	                                    <td>
 	                                        <input type="hidden" name="d_no" th:value="${diseaseDto.d_no}">
 	                                        <input type="text" name="d_name" id="d_name" class="table_info" placeholder="질환 / 질병명"
-	                                               th:onblur="usedDiseaseCheck(this, [[${diseaseDto.d_name}]], null);"
+	                                               th:onblur="usedInputValueCheck(this, true, [[${diseaseDto.d_name}]], null);"
 	                                               th:value="${diseaseDto.d_name}">
 	                                    </td>
 	                                </tr>
