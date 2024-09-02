@@ -21,52 +21,54 @@ async function usedEmailCheck(email) {
 }
 
 // 질환/질병 분류명 중복 검사(정규표현식 검사가 필요없으므로 즉시 에러 메세지 노출)
-function usedDiseaseCategoryCheck(input, alertMsg) {		
+async function usedDiseaseCategoryCheck(input, alertMsg) {		
 	if(input.value.trim().length === 0) {
-		addErrorMessage(input, "질환/질병 분류명을 입력해 주세요.")
+		setAddErrorMessage(input, "질환/질병 분류명을 입력해 주세요.")
 		if(alertMsg) alert("질환/질병 분류명명을 입력해 주세요.");
 		return false;
 	}
 	
-	return $.ajax({
-		url: '/disease/is_disease',
-		method: 'GET',
-		data: {
-			d_name: input.value.trim(),
-		},
-	})
-	.then(response => {
+	try {
+		const response = await $.ajax({
+			url: '/disease/is_disease',
+			method: 'GET',
+			data: {
+				d_name: input.value.trim(),
+			},
+		});
+		
 		logger.info('usedDiseaseCategoryCheck() result:', response);
+		
 		if(!response) { // true=중복, false=정상 반환
-			clearErrorMessage(input);
+			setClearErrorMessage(input);
 			
 		} else {
 			if(alertMsg) {
 				alert("이미 등록된 질환/질병명입니다.");
 			}
 			
-			addErrorMessage(input, "이미 등록된 질환/질병명입니다.");
+			setAddErrorMessage(input, "이미 등록된 질환/질병명입니다.");
 			return false;
 		}
-	})
-	.catch(error => {
+		
+	} catch(error) {
 		logger.error('Error during disease check:', error);
 		alert("질환/질병명 중복 확인 중 오류가 발생했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.");
 		location.reload(true);
-	});
+	}
 }
 
 // 질환/질병명 중복 검사(정규표현식 검사가 필요없으므로 즉시 에러 메세지 노출)
 async function usedDiseaseCheck(input, defaultValue, alertMsg) {		
 	if(input.value.trim().length === 0) {
-		addErrorMessage(input, "질환/질병명을 입력해 주세요.")
+		setAddErrorMessage(input, "질환/질병명을 입력해 주세요.")
 		if(alertMsg) alert("질환/질병명을 입력해 주세요.");
 		
 		return false;
 	}
 	
 	if(defaultValue && input.value.trim() === defaultValue) {
-		clearErrorMessage(input);
+		setClearErrorMessage(input);
 		return false;
 	}
 	
@@ -82,7 +84,7 @@ async function usedDiseaseCheck(input, defaultValue, alertMsg) {
 		logger.info('usedDiseaseCheck() result:', response);
 		
 		if(!response) { // true=중복, false=정상 반환
-			clearErrorMessage(input);
+			setClearErrorMessage(input);
 			return true;
 			
 		} else {
@@ -90,7 +92,7 @@ async function usedDiseaseCheck(input, defaultValue, alertMsg) {
 				alert("이미 등록된 질환/질병명입니다.");
 			}
 			
-			addErrorMessage(input, "이미 등록된 질환/질병명입니다.");
+			setAddErrorMessage(input, "이미 등록된 질환/질병명입니다.");
 			return false; // submitForm 유효성 검사 return처리로 false 직접입력
 		}
 		

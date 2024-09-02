@@ -1,5 +1,5 @@
 // 계정 삭제
-function deleteAccount(a_no, a_id) {
+function delAccount(a_no, a_id) {
 	logger.info('deleteAccount()', a_no, a_id);
 	
 	const isConfirm = confirm(a_id + ' 계정을 삭제하시겠습니까?');
@@ -11,7 +11,7 @@ function deleteAccount(a_no, a_id) {
 }
 
 // 체크 리스트 삭제
-async function deleteCheckBoxList(apiUrl, checkName) {
+async function delCheckBoxList(apiUrl, checkName) {
 	const $checkBoxs = $(`input[type="checkbox"][name="${checkName}"]:checked`);
 	
 	if($checkBoxs.length === 0) {

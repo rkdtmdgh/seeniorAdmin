@@ -25,13 +25,13 @@
 					    </div>
 					    
 					    <div class="sign_form">
-					    	<form name="modify_check_form" onsubmit="modifyCheckForm(event, 'modify_check_form')">
+					    	<form name="modify_check_form" onsubmit="postIdentityCheckForm(event, 'modify_check_form')">
 				            	<div class="input_list_container">
 					                <div class="input_list" id="input_list_info">					
 					                    <label for="pw" class="border_input">
 					                        <span class="input_title">비밀번호</span>
 					                        <input type="password" name="a_pw" id="pw" placeholder="비밀번호" class="input_txt" autocomplete="off">
-					                        <span class="input_icon" onclick="setViewPw(this)">
+					                        <span class="input_icon" onclick="setPwViewToggle(this)">
 					                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
 					                        </span>
 					                    </label>

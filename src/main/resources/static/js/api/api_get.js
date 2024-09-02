@@ -1,6 +1,6 @@
 // 콘텐츠 리스트 요청
-function getList(command, sort, sortValue, page) {
-	resetAllcheck(); // all_check 체크박스 초기화
+async function getList(command, sort, sortValue, page) {
+	setAllcheck(); // all_check 체크박스 초기화
 	
 	// 검색 인풋 벨류 삭제
 	const searchStringInput = document.forms['search_form'].search_string;
@@ -11,13 +11,14 @@ function getList(command, sort, sortValue, page) {
 	if(sort) queryParams = queryParams + `&${sort}=${sortValue}`;
 	const apiUrl = command + queryParams;
 	
-	$.ajax({
-		url: apiUrl,
-		method: 'GET',
-	})
-	.then(response => {
+	try {
+		const response = await $.ajax({
+			url: apiUrl,
+			method: 'GET',
+		});
+		
 		logger.info(apiUrl + ' getList() response:', response);
-					
+		
 		const { getListDtos, getListPage, getListCnt } = setParseResponseByCommand(command, response);
 		const $contentTable = $('.content_table tbody'); // 데이터가 나열될 테이블 요소
 		const $pagination = $('.pagination_wrap'); // 페이지 네이션 요소
@@ -64,10 +65,10 @@ function getList(command, sort, sortValue, page) {
                 </tr>
 			`);
 		}
-	})
-	.catch((error) => {
+		
+	} catch(error) {
 		logger.error(command + ' error:', error);
-	});
+	}
 }
 
 // 버튼으로 정렬된 리스트 요청
@@ -105,7 +106,7 @@ function getSelectList(event) {
 }
 
 // 콘텐츠 정렬 셀렉트 옵션 리스트 요청
-function getOptionList(apiUrl, ele, isForm, selectedValue) {
+async function getOptionList(apiUrl, ele, isForm, selectedValue) {
 	const selectEle = document.getElementById(ele); // 셀렉트 요소가 생성될 table th
 	let getListDtos;
 	let dataNo;
@@ -113,12 +114,11 @@ function getOptionList(apiUrl, ele, isForm, selectedValue) {
 	let command;
 	
 	if(selectEle) {
-		$.ajax({
-			url: apiUrl,
-			method: 'GET',
-		})
-		.then(response => {
-			logger.info(apiUrl + ' getOptionList() response:', response);
+		try {
+			const response = await $.ajax({
+				url: apiUrl,
+				method: 'GET',
+			});
 			
 			switch(apiUrl) {
 				case '/disease/get_category_list': // 질환 / 질병 정보 관리 분류명 정렬
@@ -160,10 +160,104 @@ function getOptionList(apiUrl, ele, isForm, selectedValue) {
 			} else {
 				selectEle.classList.remove('select');
 			}
-		})
-		.catch((error) => {
+			
+		} catch(error) {
 			logger.error(apiUrl + ' error:', error);
-		});
+		}
 	}
 }
 
+// 검색 리스트 요청
+async function getSearchList(event, apiUrl, page) {
+	if(event) event.preventDefault();
+	const form = document.forms['search_form'];
+	let input;
+	
+	input = form.search_string;
+	if(!checkEmpty(input, '검색어를', true)) { // true: alert으로 메세지 띄우기
+		input.focus();
+		return false;
+	}
+	
+	if(input.value.trim().length < 2) {
+		alert('검색어는 2자 이상 입력해 주세요.');
+		input.focus();
+		return false;
+	}
+	
+	if(apiUrl) {		
+		setAllcheck(); // all_check 체크박스 초기화
+		
+		let intPage = page || 1;
+		logger.info('searchForm() searchPart:', form.search_part.value);
+		logger.info('searchForm() searchString:', input.value.trim());
+				
+		try {
+			const response = await $.ajax({
+				url: apiUrl,
+				method: 'GET',
+				data: {
+					searchPart: form.search_part.value, // 검색 분류 select
+					searchString: input.value.trim(), // 검색 입력값
+					page: intPage,
+				},
+			});
+			
+			logger.info(apiUrl + ' searchForm() response:', response);
+			
+			const { getListDtos, getListPage, getListCnt } = setParseResponseByCommand(apiUrl, response);
+			const $contentTable = $('.content_table tbody'); // 데이터가 나열될 테이블 요소
+			const $pagination = $('.pagination_wrap'); // 페이지 네이션 요소
+			$contentTable.html('');
+			$pagination.html('');
+			
+			if(response && getListDtos) {
+				// 쿼리스트링 조건 추가
+				setSearchQueryString(getListPage.page, response.searchPart, response.searchString); // page, searchPart, searchString
+							
+				const paging = setPagination(getListPage, null, null, apiUrl, true); // 페이징벨류값, sort, sortValue, 커맨드, isSearch
+				$pagination.html(paging);
+				
+				let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
+				let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
+				logger.info('getListCnt:', getListCnt);
+				logger.info('pageLimit:', pageLimit);
+				logger.info('getListPage.page:', getListPage.page);
+				logger.info('listCnt:', listIndex);
+											
+				if(listIndex > 0) {
+					getListDtos.forEach((data) => { 
+						$contentTable[0].insertAdjacentHTML('beforeend', setDataList(apiUrl, data, listIndex)); // jQuery 선택자에서 DOM 요소가져오기[0]
+						listIndex --;
+					});
+					
+				} else {
+		            // 테이블의 전체 열 수 계산하기
+					const maxCols = setTableColumnsNum();
+					$contentTable.html(`
+						<tr>
+	                        <td colspan="${maxCols}">
+	                            <p class="table_info">검색된 내용이 없습니다.</p>
+	                        </td>
+	                    </tr>
+					`);
+				}
+				
+			} else {
+				logger.info('데이터가 없거나 유효하지 않습니다.');
+				// 테이블의 전체 열 수 계산하기
+				const maxCols = setTableColumnsNum();
+				$contentTable.html(`
+					<tr>
+                        <td colspan="${maxCols}">
+                            <p class="table_info">검색된 내용이 없습니다.</p>
+                        </td>
+                    </tr>
+				`);
+			}
+			
+		} catch(error) {
+			logger.error(apiUrl + ' searchForm() error:', error);
+		}
+	}
+}

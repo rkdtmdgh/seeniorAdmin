@@ -96,11 +96,11 @@
 		                        
 		                        <div class="btn_list">
 		                        	<div th:if="${selectedAdminDto.a_no} != null and ${selectedAdminDto.a_id} != null"
-		                        		 th:onclick='deleteAccount([[${selectedAdminDto.a_no}]], [[${selectedAdminDto.a_id}]])' class="btns delete">삭제</div>
+		                        		 th:onclick='delAccount([[${selectedAdminDto.a_no}]], [[${selectedAdminDto.a_id}]])' class="btns delete">삭제</div>
 		                        	
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <a href="javascript: adminModifyForm('admin_modify_form')" class="btns">저장</a>
+	                                    <a href="javascript: putAdminModifyForm('admin_modify_form')" class="btns">저장</a>
 	                                </div>
 	                            </div>
 		                    </div>
