@@ -182,7 +182,7 @@ public class DiseaseController {
 	public String createConfirm(DiseaseDto diseaseDto, Model model) {
 		log.info("createConfirm()");
 		
-		int result = diseaseService.createConfirm(diseaseDto);
+		boolean result = diseaseService.createConfirm(diseaseDto);
 		
 		model.addAttribute("createResult", result);
 		
