@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Log4j2
 @Controller
@@ -16,7 +18,6 @@ public class RecipeController {
 	@Autowired
 	private RecipeService recipeService;
 
-	
 	// 레시피 API 불러온 후 json 으로 넘어온 API Data DB에 저장하기
 	@ResponseBody
 	@GetMapping("/save_api_recipe_data")
@@ -33,5 +34,12 @@ public class RecipeController {
 		}
 		
 	}
+	
+	// 식단 등록 양식
+	@GetMapping("/create_form")
+	public String getMethodName(@RequestParam String param) {
+		return new String();
+	}
+	
 
 }
