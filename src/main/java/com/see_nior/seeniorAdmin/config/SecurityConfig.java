@@ -76,15 +76,18 @@ public class SecurityConfig {
 						
 						String targetURI = "/";
 						
-						RequestCache requestCache = new HttpSessionRequestCache();
-						SavedRequest savedRequest = requestCache.getRequest(request, response);
-						
-						if (savedRequest != null) {
-							
-							targetURI = savedRequest.getRedirectUrl();
-							requestCache.removeRequest(request, response);
-							
-						}
+						/*
+						 * 로그인 전 URI 가져오기 
+						 * RequestCache requestCache = new HttpSessionRequestCache(); SavedRequest
+						 * savedRequest = requestCache.getRequest(request, response);
+						 * 
+						 * if (savedRequest != null) {
+						 * 
+						 * targetURI = savedRequest.getRedirectUrl();
+						 * requestCache.removeRequest(request, response);
+						 * 
+						 * }
+						 */
 						
 						response.sendRedirect(targetURI);
 						
