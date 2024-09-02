@@ -23,7 +23,7 @@ import lombok.extern.log4j.Log4j2;
 public class RecipeService {
 	
 	@Autowired
-	private ApiExplorer apiExplorer;
+	ApiExplorer apiExplorer;
 	
 	@Autowired
 	RecipeMapper recipeMapper;
