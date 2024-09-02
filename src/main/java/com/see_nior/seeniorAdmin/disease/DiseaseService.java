@@ -19,18 +19,16 @@ import lombok.extern.log4j.Log4j2;
 public class DiseaseService {
 	
 	// 질환 카테고리
-	final static public int DISEASE_CATEGORY_ALREADY = -1;				// 질환 카테고리가 이미 있음
-	final static public boolean DISEASE_CATEGORY_CREATE_FAIL = false;			// 질환 카테고리 생성 실패
-	final static public boolean DISEASE_CATEGORY_CREATE_SUCCESS = true;		// 질환 카테고리 생성 성공
+	final static public boolean DISEASE_CATEGORY_CREATE_FAIL = false;	// 질환 카테고리 생성 실패
+	final static public boolean DISEASE_CATEGORY_CREATE_SUCCESS = true;	// 질환 카테고리 생성 성공
 	final static public boolean DISEASE_CATEGORY_MODIFY_FAIL = false;	// 질환 카테고리 수정 실패
 	final static public boolean DISEASE_CATEGORY_MODIFY_SUCCESS = true;	// 질환 카테고리 수정 성공
 	final static public boolean DISEASE_CATEGORY_DELETE_FAIL = false;	// 질환 카테고리 삭제 실패
 	final static public boolean DISEASE_CATEGORY_DELETE_SUCCESS = true;	// 질환 카테고리 삭제 성공
 	
 	// 질환
-	final static public int DISEASE_ALREADY = -1;						// 질환이 이미 있음
-	final static public int DISEASE_CREATE_FAIL = 0;					// 질환 생성 실패
-	final static public int DISEASE_CREATE_SUCCESS = 1;					// 질환 생성 성공
+	final static public boolean DISEASE_CREATE_FAIL = false;			// 질환 생성 실패
+	final static public boolean DISEASE_CREATE_SUCCESS = true;			// 질환 생성 성공
 	final static public boolean DISEASE_MODIFY_FAIL = false;			// 질환 수정 실패
 	final static public boolean DISEASE_MODIFY_SUCCESS = true;			// 질환 수정 성공
 	final static public boolean DISEASE_DELETE_FAIL = false;			// 질환 삭제 실패
@@ -228,7 +226,7 @@ public class DiseaseService {
 		}
 	
 	// 질환 추가 확인
-	public int createConfirm(DiseaseDto diseaseDto) {
+	public boolean createConfirm(DiseaseDto diseaseDto) {
 		log.info("createConfirm()");
 			
 		int result = diseaseMapper.insertNewDisease(diseaseDto);
