@@ -20,8 +20,8 @@ public class DiseaseService {
 	
 	// 질환 카테고리
 	final static public int DISEASE_CATEGORY_ALREADY = -1;				// 질환 카테고리가 이미 있음
-	final static public int DISEASE_CATEGORY_CREATE_FAIL = 0;			// 질환 카테고리 생성 실패
-	final static public int DISEASE_CATEGORY_CREATE_SUCCESS = 1;		// 질환 카테고리 생성 성공
+	final static public boolean DISEASE_CATEGORY_CREATE_FAIL = false;			// 질환 카테고리 생성 실패
+	final static public boolean DISEASE_CATEGORY_CREATE_SUCCESS = true;		// 질환 카테고리 생성 성공
 	final static public boolean DISEASE_CATEGORY_MODIFY_FAIL = false;	// 질환 카테고리 수정 실패
 	final static public boolean DISEASE_CATEGORY_MODIFY_SUCCESS = true;	// 질환 카테고리 수정 성공
 	final static public boolean DISEASE_CATEGORY_DELETE_FAIL = false;	// 질환 카테고리 삭제 실패
@@ -59,7 +59,7 @@ public class DiseaseService {
 	}
 	
 	// 질환 카테고리 추가 확인
-	public int createCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto) {
+	public boolean createCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto) {
 		log.info("createCategoryConfirm()");
 		
 		int result = diseaseMapper.insertNewDiseaseCategory(diseaseCategoryDto);
