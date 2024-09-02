@@ -1,8 +1,10 @@
 package com.see_nior.seeniorAdmin.recipe;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +27,20 @@ public class RecipeService {
 	@Autowired
 	private ApiExplorer apiExplorer;
 	
-	@Autowired
-	RecipeMapper recipeMapper;
 	
 	@Autowired
-	ObjectMapper objectMapper;
+	private ObjectMapper objectMapper;
+	
+	final private RecipeMapper recipeMapper;
+	
+	public RecipeService(RecipeMapper recipeMapper) {
+		this.recipeMapper = recipeMapper;
+		
+	}
+	
+	// 페이지네이션 관련
+	private int pageLimit = 10;	// 한 페이지당 보여줄 항목의 개수
+	private int blockLimit = 5;	// 하단에 보여질 페이지 번호의 수
 
 	// 레시피 API 불러온 후 json 으로 넘어온 API Data DB에 저장하기
 	public void saveApiRecipeData() {
@@ -165,6 +176,57 @@ public class RecipeService {
 				
 			}
 			
+	}
+
+	// 페이지에 따른 식단 가져오기 (모든 식단)
+	public Map<String, Object> getRecipeListWithPage(int page, String sort) {
+		log.info("getRecipeListWithPage()");
+		
+		int pagingStart = (page - 1) * pageLimit;
+		
+		Map<String, Object> pagingList = new HashMap<>();
+		
+		Map<String, Object> pagingParams = new HashMap<>();
+		pagingParams.put("start", pagingStart);
+		pagingParams.put("limit", pageLimit);
+		pagingParams.put("sort", sort);
+		
+		List<RecipeDto> recipeDtos = recipeMapper.getRecipeListWithPage(pagingParams);
+		pagingList.put("recipeDtos", recipeDtos);
+		
+		return pagingList;
+		
+	}
+
+	// 식단의 총 페이지 개수 구하기 (모든 식단)
+	public Map<String, Object> getRecipeListPageNum(int page) {
+		log.info("getRecipeListPageNum()");
+		
+		Map<String, Object> recipeListPageNum = new HashMap<>();
+		
+		// 전체 리스트 개수 조회
+		int recipeListCnt = recipeMapper.getAllRecipeCnt();
+		
+		// 전체 페이지 개수 계산
+		int maxPage = (int) (Math.ceil((double) recipeListCnt / pageLimit));
+		
+		// 시작 페이지 값 계산
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
+		
+		// 마지막 페이지 값 계산
+		int endPage = startPage+ + blockLimit - 1;
+		if (endPage > maxPage) endPage = maxPage;
+		
+		recipeListPageNum.put("recipeListCnt", recipeListCnt);
+		recipeListPageNum.put("page", page);
+		recipeListPageNum.put("maxPage", maxPage);
+		recipeListPageNum.put("startPage", startPage);
+		recipeListPageNum.put("endPage", endPage);
+		recipeListPageNum.put("blockLimit", blockLimit);
+		recipeListPageNum.put("pageLimit", pageLimit);
+		
+		return recipeListPageNum;
+		
 	}
 		
 } 
