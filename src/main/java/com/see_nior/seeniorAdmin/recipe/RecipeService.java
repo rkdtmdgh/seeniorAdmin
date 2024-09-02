@@ -23,13 +23,13 @@ import lombok.extern.log4j.Log4j2;
 public class RecipeService {
 	
 	@Autowired
-	ApiExplorer apiExplorer;
+	private ApiExplorer apiExplorer;
 	
 	@Autowired
-	RecipeMapper recipeMapper;
+	private RecipeMapper recipeMapper;
 	
 	@Autowired
-	ObjectMapper objectMapper;
+	private ObjectMapper objectMapper;
 
 	// 레시피 API 불러온 후 json 으로 넘어온 API Data DB에 저장하기
 	public void saveApiRecipeData() {
