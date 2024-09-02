@@ -82,7 +82,7 @@ async function putDiseaseModifyForm(formName, d_nameDefaultValue) {
 	
 	input = form.d_name;
 	if(input.value.trim() !== d_nameDefaultValue) { // 수정이 되었을 경우
-		const isCheck = await usedDiseaseCheck(input, null, true);
+		const isCheck = await usedInputValueCheck(input, true, null, true); // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 		if(!isCheck) {
 			input.focus();
 			return false;
