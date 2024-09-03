@@ -59,15 +59,14 @@ public class DiseaseController {
 	// 질환 카테고리 등록 확인
 	@ResponseBody
 	@PostMapping("/create_category_confirm")
-	public int createCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto) {
+	public boolean createCategoryConfirmW(DiseaseCategoryDto diseaseCategoryDto) {
 		log.info("createCategoryConfirm()");
 		
-		int createCategoryResult = diseaseService.createCategoryConfirm(diseaseCategoryDto);
+		boolean createCategoryResult = diseaseService.createCategoryConfirm(diseaseCategoryDto);
 		
 		return createCategoryResult;
 		
 	}
-	
 	
 	// 질환 카테고리 리스트 양식
 	@GetMapping("/category_list_form")
@@ -128,23 +127,6 @@ public class DiseaseController {
 		
 	}
 	
-	// 질환 카테고리 수정 확인 (기존)
-	/*
-	@PostMapping("/modify_category_confirm")
-	public String modifyCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto, Model model) {
-		log.info("modifyCategoryConfirm()");
-		
-		int result = diseaseService.modifyCategoryConfirm(diseaseCategoryDto);
-		
-		model.addAttribute("modifyCategoryResult", result);
-		
-		String nextPage = "disease/modify_category_result";
-		
-		return nextPage;
-		
-	}
-	*/
-	
 	// 질환 카테고리 수정 확인 (비동기)
 	@ResponseBody
 	@PostMapping("/modify_category_confirm")
@@ -157,23 +139,6 @@ public class DiseaseController {
 		
 	}
 	
-	// 질환 카테고리 삭제 확인(기존)
-	/*
-	@GetMapping("/delete_category_confirm")
-	public String deleteCategoryConfirm(@RequestParam(value = "dc_no") int dc_no, Model model) {
-		log.info("deleteCategoryConfirm()");
-		
-		int result = diseaseService.deleteCategoryConfirm(dc_no);
-		
-		model.addAttribute("deleteCategoryResult", result);
-		
-		String nextPage = "disease/delete_category_result";
-		
-		return nextPage;
-		
-	}
-	*/
-	
 	// 질환 카테고리 삭제 확인(비동기)
 	@ResponseBody
 	@GetMapping("/delete_category_confirm")
@@ -185,7 +150,6 @@ public class DiseaseController {
 		return deleteCategoryResult;
 		
 	}
-	
 	
 	// ----------------------------------------------------------------질환
 	
@@ -218,7 +182,7 @@ public class DiseaseController {
 	public String createConfirm(DiseaseDto diseaseDto, Model model) {
 		log.info("createConfirm()");
 		
-		int result = diseaseService.createConfirm(diseaseDto);
+		boolean result = diseaseService.createConfirm(diseaseDto);
 		
 		model.addAttribute("createResult", result);
 		
