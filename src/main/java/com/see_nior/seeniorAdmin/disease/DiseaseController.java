@@ -178,6 +178,7 @@ public class DiseaseController {
 	}
 		
 	// 질환 등록 확인
+	@ResponseBody
 	@PostMapping("/create_confirm")
 	public boolean createConfirm(DiseaseDto diseaseDto) {
 		log.info("createConfirm()");
