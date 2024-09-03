@@ -29,7 +29,6 @@ public class RecipeService {
 	@Autowired
 	private ApiExplorer apiExplorer;
 	
-	
 	@Autowired
 	private ObjectMapper objectMapper;
 	
@@ -49,7 +48,7 @@ public class RecipeService {
 	public void refreshApiRecipeData() {
 		log.info("refreshApiRecipeData()");
 		
-		// 기존 레시피 테이블 drop
+		// 기존 레시피 테이블 drop (mybatis 매퍼에서 테이블이 있을 시만 삭제하게 구현하였음)
 		recipeMapper.dropRecipeTable();
 		
 		// 새로운 레시피 테이블 create
@@ -162,7 +161,7 @@ public class RecipeService {
 			
 			// rowNode를 가지고 오지 못 했다면
 			} else {
-				log.info("Expected 'row' to be an array but found something else.");
+				log.info("데이터의 row값을 가져오는데 실패하였습니다.");
 				
 			}
 			
