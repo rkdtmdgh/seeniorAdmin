@@ -5,12 +5,8 @@
 
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 로그인')}"></th:block>
-	
     <link rel="stylesheet" href="/css/account/sign_form.css">
-	
-	<script type="module">
-		import { postSignInForm } from '/js/submitForm.js'; // 로그인 폼 제출
-		window.postSignInForm = postSignInForm;
+	<script type="text/javascript">
 		document.addEventListener('DOMContentLoaded', () => {
             setInputFocus('a_id'); 
         });
@@ -32,13 +28,13 @@
 	                <div class="input_list" id="input_list_info">
 	                    <label for="id" class="border_input">
 	                        <span class="input_title">이메일</span>
-	                        <input type="text" name="a_id" id="id" placeholder="관리자 이메일" class="input_txt" onblur="checkEmpty(this, '이메일을')">
+	                        <input type="text" name="a_id" id="id" placeholder="관리자 이메일" class="input_txt">
 	                    </label>
 	
 	                    <label for="pw" class="border_input">
 	                        <span class="input_title">비밀번호</span>
-	                        <input type="password" name="a_pw" id="pw" placeholder="비밀번호" class="input_txt" autocomplete="off" onblur="checkEmpty(this, '비밀번호를')">
-	                        <span class="input_icon" onclick="setViewPw(this)">
+	                        <input type="password" name="a_pw" id="pw" placeholder="비밀번호" class="input_txt" autocomplete="off">
+	                        <span class="input_icon" onclick="setPwViewToggle(this)">
 	                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
 	                        </span>
 	                    </label>

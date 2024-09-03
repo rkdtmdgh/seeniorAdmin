@@ -20,6 +20,9 @@ public class AccountService {
 	final static public int ADMIN_SIGN_UP_FAIL = 0;
 	final static public int ADMIN_SIGN_UP_SUCCESS = 1;
 	
+	final static public int ADMIN_MODIFY_SUCCESS = 1;
+	final static public int ADMIN_MODIFY_FAIL = 0;
+	
 	private int pageLimit = 10;		// 한 페이지당 보여줄 정보 수
 	private int blockLimit = 5;		// 하단에 보여질 페이지 번호 수
 	
@@ -82,33 +85,27 @@ public class AccountService {
 	}
 	
 	// 관리자 정보 조회 by id
-	public AdminAccountDto getAdminAccountById(String a_id, String a_pw) {
+	public AdminAccountDto getAdminAccountById(String a_id) {
 		log.info("getAdminAccountById()");
 		
-		AdminAccountDto adminAccountDto = accountMapper.selectAdminAccountById(a_id);
+		AdminAccountDto adminAccountDto = 
+				accountMapper.selectAdminAccountById(a_id);
 		
-		if (passwordEncoder.matches(a_pw, adminAccountDto.getA_pw())) {
-			
-			return adminAccountDto;
-			
-		}
-		
-		return null;
-		
+		return adminAccountDto;
 	}
 	
 	// 관리자 정보 조회 by no
 	public AdminAccountDto getAdminAccountByNo(int a_no) {
 		log.info("getAdminAccountByNo()");
 		
-		AdminAccountDto adminAccountDto = accountMapper.selectAdminAccountByNo(a_no);
+		AdminAccountDto adminAccountDto = 
+				accountMapper.selectAdminAccountByNo(a_no);
 		
 		return adminAccountDto;
-		
 	}
 	
 	// 내 정보 수정 확인
-	public void modifyConfirm(AdminAccountDto adminAccountDto) {
+	public int modifyConfirm(AdminAccountDto adminAccountDto) {
 		log.info("modifyConfirm()");
 		
 		if (adminAccountDto.getA_pw() != "" && adminAccountDto.getA_pw() != null) {
@@ -117,8 +114,19 @@ public class AccountService {
 			
 		}
 		
-		accountMapper.updateMyAdminInfo(adminAccountDto);
+		int modifyResult = 
+				accountMapper.updateMyAdminInfo(adminAccountDto);
 		
+		
+		if (modifyResult >= 0) {
+			
+			return ADMIN_MODIFY_SUCCESS;
+			
+		} else {
+			
+			return ADMIN_MODIFY_FAIL;
+			
+		}
 	}
 	
 	// SUPER_ADMIN - ADMIN 정보 수정 확인
@@ -137,7 +145,7 @@ public class AccountService {
 	}
 	
 	// 관리자 리스트 가져오기
-	public Map<String, Object> getAdminPagingList(String sort, int page) {
+	public Map<String, Object> getAdminPagingList(String approval, int page) {
 		log.info("getAdminList()");
 		
 		int pagingStart = (page - 1) * pageLimit;	
@@ -147,7 +155,7 @@ public class AccountService {
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
-		pagingParams.put("sort", sort);
+		pagingParams.put("approval", approval);
 
 		List<AdminAccountDto> adminAccountDtos = accountMapper.selectAdminList(pagingParams);
 		pagingList.put("adminAccountDtos", adminAccountDtos);
@@ -186,7 +194,7 @@ public class AccountService {
 	}
 	
 	// 관리자 검색 리스트 가져오기
-	public Map<String, Object> searchAdminPagingList(String searchPart, String searchString, String sort, int page) {
+	public Map<String, Object> searchAdminPagingList(String searchPart, String searchString, String approval, int page) {
 		log.info("searchAdminPagingList()");
 		
 		int pagingStart = (page - 1) * pageLimit;
@@ -196,7 +204,7 @@ public class AccountService {
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
-		pagingParams.put("sort", sort);
+		pagingParams.put("approval", approval);
 		pagingParams.put("searchPart", searchPart);
 		pagingParams.put("searchString", searchString);
 
@@ -259,6 +267,22 @@ public class AccountService {
 		String a_pw = "s" + adminAccountDto.getA_birth() + "!";
 		
 		return accountMapper.updateAdminPwReset(a_no, passwordEncoder.encode(a_pw));
+	}
+
+	// 비밀번호 확인
+	public AdminAccountDto modifyCheck(String a_id, String a_pw) {
+		log.info("modifyCheck()");
+		
+		AdminAccountDto loginedAdminDto = 
+				accountMapper.selectAdminAccountById(a_id);
+		
+		if (passwordEncoder.matches(a_pw, loginedAdminDto.getA_pw())) {
+			
+			return loginedAdminDto;
+			
+		}
+		
+		return null;
 	}
 
 }

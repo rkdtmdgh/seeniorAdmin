@@ -71,6 +71,20 @@
 	cursor: pointer;
 }
 
+/* textarea */
+.table_textarea {
+	width: 100%;
+	height: var(--tableTextareaHeight);
+    padding: var(--textPadding);
+    resize: none;
+    
+    &.small {
+    	height: auto;
+    	max-height: 70px;
+    }
+}
+
+/* border arrow */
 .arrow {
     &::after {
         content: '';
@@ -246,6 +260,7 @@
             gap: var(--ssize1);
             font-size: var(--titleFontSize);
             font-weight: var(--bold);
+            line-height: var(--titleLineHeight);
     
             &::before {
                 content: '';
@@ -277,7 +292,7 @@
     border-top: 1px solid var(--middleGrayColor);
     display: flex;
     flex-direction: column;
-    gap: var(--stepGap);
+    gap: var(--formGap);
 }
 
 .table_title {
@@ -336,16 +351,17 @@
 
 .select_option_list {
 	display: none;
-	width: max-content;
+	width: 100%;
 	max-height: 260px;
 	border-radius: var(--bdrs);
 	background-color: var(--whiteColor);
 	border: 1px solid var(--lightGrayColor);
 	box-shadow: var(--bxsh);
 	position: absolute;
-	top: 90%;
+	top: 100%;
 	left: 50%;
 	transform: translate(-50%);
+	z-index: 1;
 	
 	.option {
 		padding: var(--optionPadding);
@@ -356,11 +372,16 @@
 			color: var(--whiteColor);
 		}
 	}
+	
+	&.active {
+		display: block;
+	}
 }
 
 .table_info {
 	display: block;
     padding: var(--textPadding);
+    position: relative;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -375,12 +396,6 @@
             display: flex;
         }
     }
-}
-
-.table_flex_element {
-    display: flex;
-    align-items: center;
-    padding-right: 0.5em;
 }
 
 .content_edit_table {
@@ -403,8 +418,16 @@
     .cont_info {
        	position: relative;
        	
-       	.input_icon {
-       		top: var(--tableInputIconTop);
+       	.table_info {
+       		padding-right: 80px; 
+       	}
+       	
+       	.btns {
+       		position: absolute;
+       		top: 0.35em;
+       		right: 1.2em;
+       		font-size: var(--menuFontSize);
+       		padding: var(--tableBtnPadding);
        	}
 	}	
     

@@ -5,13 +5,9 @@
    
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 회원가입')}"></th:block>
-	
-	<script src="/js/api/api_sign.js"></script>
     <link rel="stylesheet" href="/css/account/sign_form.css">
-    
-    <script type="module">
-		import { postSignUpForm } from '/js/submitForm.js'; // 회원가입 폼 제출
-		window.postSignUpForm = postSignUpForm;
+	<script src="/js/api/api_utils.js"></script>
+    <script type="text/javascript">
 		document.addEventListener('DOMContentLoaded', () => {
             setInputFocus('a_id'); 
         });
@@ -41,7 +37,7 @@
 	                        <span class="input_title">비밀번호</span>
 	                        <input type="password" name="a_pw" id="pw" placeholder="비밀번호" class="input_txt" 
 	                        	oninput="validatePw(this)" onblur="validatePw(this)" autocomplete="off">
-	                        <span class="input_icon" onclick="setViewPw(this)">
+	                        <span class="input_icon" onclick="setPwViewToggle(this)">
 	                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
 	                        </span>
 	                    </label>
@@ -50,6 +46,12 @@
 	                        <span class="input_title">이름</span>
 	                        <input type="text" name="a_name" id="name" placeholder="이름" class="input_txt" 
 	                        	oninput="checkEmpty(this, '이름을')" onblur="checkEmpty(this, '이름을')">
+	                    </label>
+	                    
+	                    <label for="birth" class="border_input">
+	                        <span class="input_title">생년월일</span>
+	                        <input type="text" name="a_birth" id="birth" maxlength="10" placeholder="생년월일 8자 (YYYYMMDD)" class="input_txt" 
+	                        	onkeydown="setReplaceBirth(this)" onkeyup="validateBirth(this)" onblur="validateBirth(this)">
 	                    </label>
 						
 						<label for="tel" class="border_input">

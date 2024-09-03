@@ -3,15 +3,9 @@
    xmlns:th="http://www.thymeleaf.org"
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
-<head>
+<head>	
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 본인 확인')}"></th:block>
-	
 	<link rel="stylesheet" href="/css/account/sign_form.css">
-	
-	<script type="module">
-		import { modifyCheckForm } from '/js/submitForm.js'; // 검색폼 제출
-		window.modifyCheckForm = modifyCheckForm;
-	</script>
 </head>
 <body>
 	<main class="contents_wrap">
@@ -27,19 +21,17 @@
 					        <div class="content_top_info">
 					            <h2 class="title">본인 확인</h2>
 					        </div>
-					        
-					        <p class="sub_title">본인 확인을 위해 비밀번호를 입력해 주세요.</p>
+				            <p class="sub_title">본인 확인을 위해 비밀번호를 입력해 주세요.</p>
 					    </div>
 					    
 					    <div class="sign_form">
-						    <form name="modify_check" onsubmit="modifyCheckForm(event, 'modify_check')">
+					    	<form name="modify_check_form" onsubmit="postIdentityCheckForm(event, 'modify_check_form')">
 				            	<div class="input_list_container">
-					                <div class="input_list" id="input_list_info">				
-					                    <label for="password" class="border_input">
+					                <div class="input_list" id="input_list_info">					
+					                    <label for="pw" class="border_input">
 					                        <span class="input_title">비밀번호</span>
-					                        <input type="password" name="a_pw" id="pw" placeholder="비밀번호" class="input_txt" 
-				                        		onblur="checkEmpty(this, '비밀번호를')" autocomplete="off">
-					                        <span class="input_icon" onclick="setViewPw(this)">
+					                        <input type="password" name="a_pw" id="pw" placeholder="비밀번호" class="input_txt" autocomplete="off">
+					                        <span class="input_icon" onclick="setPwViewToggle(this)">
 					                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
 					                        </span>
 					                    </label>
@@ -51,7 +43,7 @@
 				                    </div>
 				                </div>
 				            </form>
-			            </div>
+					    </div>
 					</section>
                 </div>
             </div>

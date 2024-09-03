@@ -6,13 +6,7 @@
 
 	<resultMap type="DiseaseCategoryDto" id="DiseaseCategoryDto">
 		<result column="dc_no" property="dc_no" />
-		<result column="dc_name" property="dc_name" />
-		
-		<!-- 임의로 추가된 필드. 직렬화나 역직렬화 시에는 무시하게 설정하였음 -->
-		<!-- 
-		<result column="dc_name" property="dc_name" />
-		 -->
-		
+		<result column="dc_name" property="dc_name" />		
 		<result column="dc_is_deleted" property="dc_is_deleted" />
 		<result column="dc_reg_date" property="dc_reg_date" />
 		<result column="dc_mod_date" property="dc_mod_date" />
@@ -86,10 +80,10 @@
 				<when test="sort == 'all'">
 					ORDER BY DC_NO DESC				
 				</when>
-				<when test="sort == 'dc_name_asc'">
+				<when test="sort == 'asc'">
 					ORDER BY DC_NAME ASC				
 				</when>
-				<when test="sort == 'dc_name_desc'">
+				<when test="sort == 'desc'">
 					ORDER BY DC_NAME DESC				
 				</when>			
 			</choose>
@@ -219,16 +213,10 @@
 				<when test="sort == 'all'">
 					ORDER BY D.D_NO DESC				
 				</when>
-				<when test="sort == 'dc_name_asc'">
-					ORDER BY DC.DC_NAME ASC				
-				</when>
-				<when test="sort == 'dc_name_desc'">
-					ORDER BY DC.DC_NAME DESC				
-				</when>	
-				<when test="sort == 'd_name_asc'">
+				<when test="sort == 'asc'">
 					ORDER BY D.D_NAME ASC				
 				</when>
-				<when test="sort == 'd_name_desc'">
+				<when test="sort == 'desc'">
 					ORDER BY D.D_NAME DESC				
 				</when>			
 			</choose>    
@@ -265,18 +253,7 @@
 			WHERE 
 			    D.D_IS_DELETED = 1 
 			AND 
-				D.D_CATEGORY_NO = #{d_category_no} 
-			<choose>
-				<when test="sort == 'all'">
-					ORDER BY D.D_NO DESC				
-				</when>
-				<when test="sort == 'd_name_asc'">
-					ORDER BY D.D_NAME ASC				
-				</when>
-				<when test="sort == 'd_name_desc'">
-					ORDER BY D.D_NAME DESC				
-				</when>			
-			</choose>  
+				D.D_CATEGORY_NO = #{dc_no} 
 			ORDER BY 
 				D_NO DESC 
 			LIMIT 
@@ -294,7 +271,7 @@
 			WHERE 
 				D_IS_DELETED = 1 
 			AND 
-				D_CATEGORY_NO = #{d_category_no}
+				D_CATEGORY_NO = #{dc_no}
 	
 	</select>
 	
@@ -342,6 +319,7 @@
 	
 	<!-- 질환 검색 -->
 	<select id="getSearchDisease"
+			parameterType="map"
 			resultMap="DiseaseDto">
 			
 			SELECT 
@@ -356,40 +334,11 @@
 			AND 
 				D.D_IS_DELETED = 1 
 			<choose>
-				<when test="searchPart == 'dc_name">
-					AND 
-						DC.DC_NAME LIKE CONCAT('%', #{searchString}, '%')
-				</when>
 				<when test="searchPart == 'd_name'">
 					AND 
 						D.D_NAME LIKE CONCAT('%', #{searchString}, '%')
 				</when>
-				<when test="searchPart == 'd_good_food'">
-					AND 
-						D.D_GOOD_FOOD CONCAT('%', #{searchString}, '%')
-				</when>
-				<when test="searchPart == 'd_bad_food'">
-					AND 
-						D.D_BAD_FOOD LIKE CONCAT('%', #{searchString}, '%')
-				</when>
 			</choose>
-			<choose>
-				<when test="sort == 'all'">
-					ORDER BY D.D_NO DESC				
-				</when>
-				<when test="sort == 'dc_name_asc'">
-					ORDER BY DC.DC_NAME ASC				
-				</when>
-				<when test="sort == 'dc_name_desc'">
-					ORDER BY DC.DC_NAME DESC				
-				</when>	
-				<when test="sort == 'd_name_asc'">
-					ORDER BY D.D_NAME ASC				
-				</when>
-				<when test="sort == 'd_name_desc'">
-					ORDER BY D.D_NAME DESC				
-				</when>			
-			</choose> 
 	
 	</select>
 	
@@ -403,21 +352,9 @@
 			WHERE 
 				D_IS_DELETED = 1 
 			<choose>
-				<when test="searchPart == 'dc_name">
-					AND 
-						DC.DC_NAME LIKE CONCAT('%', #{searchString}, '%')
-				</when>
 				<when test="searchPart == 'd_name'">
 					AND 
-						D.D_NAME LIKE CONCAT('%', #{searchString}, '%')
-				</when>
-				<when test="searchPart == 'd_good_food'">
-					AND 
-						D.D_GOOD_FOOD CONCAT('%', #{searchString}, '%')
-				</when>
-				<when test="searchPart == 'd_bad_food'">
-					AND 
-						D.D_BAD_FOOD LIKE CONCAT('%', #{searchString}, '%')
+						D_NAME LIKE CONCAT('%', #{searchString}, '%')
 				</when>
 			</choose>
 	

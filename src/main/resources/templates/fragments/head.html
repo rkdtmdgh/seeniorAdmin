@@ -18,12 +18,17 @@
 	<!-- JS -->
 	<script src="/js/jquery-3.7.1.min.js"></script>
 	<script src="/js/createLogger.js"></script>
-	<script src="/js/handler.js"></script>
+	<script src="/js/utils.js"></script>
+	<script src="/js/api/api_utils.js"></script>
 	<script src="/js/validation.js"></script>
+	<script src="/js/api/api_post.js"></script>
 	
 	<th:block th:unless="${pageTitle == 'SEE-NIOR 로그인' or pageTitle == 'SEE-NIOR 회원가입'}">
-		<!-- 로그인, 회원가입 페이지 외 스크립트 추가 -->
+		<!-- 로그인, 회원가입 페이지 외 -->
 		<script src="/js/api/api_default.js"></script>
+		<script src="/js/api/api_get.js"></script>
+		<script src="/js/api/api_put.js"></script>
+		<script src="/js/api/api_delete.js"></script>
 	</th:block>
 	
 	<!-- CSS -->
