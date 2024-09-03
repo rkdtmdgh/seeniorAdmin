@@ -34,7 +34,7 @@ public class BoardService {
 	}
 
 	public int createConfirm(BoardCategoryDto boardCategoryDto) {
-		log.info("getList()");
+		log.info("createConfirm()");
 					
 		int bc_idx = boardCategoryDto.getBc_idx();
 		String bc_name = boardCategoryDto.getBc_name();
