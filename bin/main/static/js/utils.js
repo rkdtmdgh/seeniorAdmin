@@ -10,6 +10,62 @@ function setInputFocus(ele) {
 	}
 }
 
+// submit 이벤트 막기(form 에서 enter 작동 되지 않고 버튼으로 submit만 가능하도록)
+function setFormSendFalse(event) {
+	event.preventDefault(); // 폼의 기본 제출 동작 방지
+    return false; // 폼 제출 방지
+}
+
+// NAV 선택 표시 및 토글
+function setNavActiveToggle() {
+	const currentPath = window.location.pathname; // 현재 URL
+	const currentFirstPath = currentPath.split('/')[1] || ''; // 첫 번째 path
+	logger.info('URl:', currentPath);
+	logger.info('URl first path:', currentFirstPath);
+
+	const $navMenuBtns = $('.side_menu_list'); // 모든 nav 메뉴 버튼
+	$navMenuBtns.each(function(index) { // 화살표 함수에는 this가 포함되지 않아 function으로 대체
+		const $navMenu = $(this);
+		const $navMenuBtn = $navMenu.find('.side_menu_btn');
+		const href = $navMenuBtn.attr('href') || null; // 메뉴 버튼의 href
+		logger.info(index + '. href:', href);
+		
+		if (href && href === currentPath) { // 서브 메뉴가 없고 href가 현재 경로가 일치할 경우
+			$navMenu.addClass('select');
+		}
+		
+		const $navSubMenuList = $navMenu.find('.side_sub_menu_list'); // 서브 메뉴 리스트
+		if($navSubMenuList.length) { // 서브 메뉴가 있는 경우
+			const $navSubMenus = $navSubMenuList.find('.side_sub_menu_btn'); // 서브 메뉴 리스트 포함된 모든 서브 메뉴
+			$navSubMenus.each(function() {
+				const $navSubMenu = $(this);
+				const subHref = $navSubMenu.attr('href') || null;
+				const subHrefFirstPath = subHref ? subHref.split('/')[1] || null : null; // 첫 번째 path
+				
+				if (subHref && subHrefFirstPath === currentFirstPath) { // 첫 번째 path와 URL 첫 번째 path와 같을 경우
+					$navSubMenu.addClass('on'); // 네비 서브 메뉴 선택
+					$navMenu.addClass('select'); // 네비 버튼 선택
+				}
+				
+				logger.info(index + '. subHref:', subHrefFirstPath);
+			});
+		}
+		
+		// 서브 메뉴 토글
+		const $subMenuToggle = $navMenu.find('.arrow');
+		if ($subMenuToggle.length) {
+			$subMenuToggle.click(function() {
+				const $siblingsSubMenuList = $(this).siblings('.side_sub_menu_list');
+            
+                if (!$(this).parent().hasClass('select')) {
+                    $(this).toggleClass('on');
+                    $siblingsSubMenuList.toggleClass('open');
+                }
+			});
+		}
+	});
+}
+
 // all_check 체크박스 초기화
 function  setAllcheck() {
 	const $allCheckBox = $('input[type="checkbox"][name="all_check"]');
@@ -361,11 +417,35 @@ function setSelectOptionTopggle(event) {
 	$selectEle.toggleClass('active');
 }
 
-$(document).on('click', (event) => {
+// textarea 입력 시 자동으로 높이값 조정
+function setTextareaAutoHeight(ele) {
+	const $textarea = $(ele);
+	$textarea.height('auto'); // 요소의 높이를 초기화 하고 시작
+
+	const scrollHeight = $textarea[0].scrollHeight; // 자바스크립트로 이벤트가 일어난 DOM요소의 scrollHeight 원시 속성 값 가져오기
+	const clientHeight = $textarea[0].clientHeight; // 현재 textarea의 높이 (padding 포함, 스크롤 바 제외)
+	
+    if (scrollHeight <= clientHeight) { // 스크롤 높이가 클라이언트 높이와 작서나 같다면 내용이 한 줄임
+        return false; // 한 줄만 입력된 경우에는 높이를 auto로 유지하고 종료
+    }
+	
+	const maxHeight = parseInt($textarea.css('max-height')); // css로 설정한 max-height 속성 값 가져오기
+	const newHeight = Math.min(scrollHeight, maxHeight); // 스크롤 높이와 max-height 중 작은 값ㅇ르 높이로 설정	
+	$textarea.height(newHeight + 'px');
+}
+
+$(document).on('click', function(event) {
 	// 커스텀 셀렉트 open, close 기능
 	const $openSelectEle = $('.select_option_list.active'); // 열려 있는 셀렉트 옵션 요소
 	const isTriggerClick = event.target.closest('.table_title.select'); // 클릭한 요소가 커스텀 셀렉트 버튼인지 확인
 	if(!isTriggerClick) { // 클릭한 요소가 커스텀 셀렉트 버튼이 아닐 경우
 		$openSelectEle.removeClass('active'); // 열려 있는 셀렉트 옵션 닫기
 	}
+});
+
+$(document).ready(function() {
+	// textarea 입력된 값으로 높이값 조절
+	$('.table_textarea.small').each(function() {
+		setTextareaAutoHeight(this);
+	});
 });

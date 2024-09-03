@@ -48,13 +48,13 @@ function postSignInForm(event, formName) {
 	let input;
 	
 	input = form.a_id;
-	if(!checkEmpty(input, '이메일을', true)) {
+	if(!checkEmpty(input, '이메일을', true, true)) { // 요소, 텍스트, alert 여부, 메세지 요소 미노출 여부
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_pw;
-	if(!checkEmpty(input, '비밀번호를', true)) {
+	if(!checkEmpty(input, '비밀번호를', true, true)) {
 		input.focus();
 		return false;
 	}
@@ -95,6 +95,8 @@ async function postDiseaseCategoryCreateForm(event, formName) {
 		return false;
 	}
 	
+	const errorMessage = `"${input.value}" 분류 등록 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
 	try {
 		const response = await $.ajax({
 			url: '/disease/create_category_confirm',
@@ -107,15 +109,15 @@ async function postDiseaseCategoryCreateForm(event, formName) {
 		logger.info('/disease/create_category_confirm diseaseCategoryRegForm() response:', response);
 		
 		if(response) {
-			alert('"' + input.value + '" 분류가 등록되었습니다');
+			alert(`"${input.value}" 분류가 등록되었습니다.`);
 			
 		} else {
-			alert('분류 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
+			alert(errorMessage);
 		}
 		
 	} catch(error) {
 		logger.error('/disease/create_category_confirm diseaseCategoryRegForm() error:', error);
-		alert('분류 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
+		alert(errorMessage);
 		
 	} finally {
 		location.reload(true);
@@ -134,7 +136,7 @@ async function postDiseaseCreateForm(formName) {
 	}
 	
 	input = form.d_name;
-	if(!(await usedInputValueCheck(input, true, false, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+	if(!(await usedInputValueCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 		input.focus();
 		return false;
 	}
@@ -157,8 +159,32 @@ async function postDiseaseCreateForm(formName) {
 		return false;
 	}
 	
-	// 모든 유효성 검사가 통과되었을 때 폼 제출	
-	form.action = "/disease/create_confirm";
-    form.method = "post"; 
-    form.submit();
+	const formData = new FormData(form);
+	const errorMessage = `"${form.d_name.value}" 질환 / 질병 정보 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	try {
+		const response = await $.ajax({
+			url: '/disease/create_confirm',
+			method: 'POST',
+			data: formData,
+			processData: false,  // FormData가 자동으로 Content-Type 설정
+			contentType: false,  // FormData를 문자열로 변환하지 않음
+		});
+		
+		logger.info('/disease/create_confirm postDiseaseCreateForm() response:', response);
+		
+		if(response) {
+			alert(`"${form.d_name.value}" 질환/질병 정보가 등록되었습니다.`);
+			location.replace('/disease/disease_list_form');
+			
+		} else {
+			alert(errorMessage);
+			location.reload(true);
+		}
+		
+	} catch(error) {
+		logger.error('/disease/create_confirm postDiseaseCreateForm() error:', error);
+		alert(errorMessage);
+		location.reload(true);
+	}
 }

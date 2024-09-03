@@ -82,8 +82,7 @@ async function putDiseaseModifyForm(formName, d_nameDefaultValue) {
 	
 	input = form.d_name;
 	if(input.value.trim() !== d_nameDefaultValue) { // 수정이 되었을 경우
-		const isCheck = await usedInputValueCheck(input, true, null, true); // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
-		if(!isCheck) {
+		if(!(await usedInputValueCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 			input.focus();
 			return false;
 		}
@@ -108,6 +107,7 @@ async function putDiseaseModifyForm(formName, d_nameDefaultValue) {
 	}
 	
 	const formData = new FormData(form);
+	const errorMessage = `"${form.d_name.value}" 질환/질병 정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
 	try {
 		const response = await $.ajax({
@@ -121,15 +121,15 @@ async function putDiseaseModifyForm(formName, d_nameDefaultValue) {
 		logger.info('/disease/modify_confirm diseaseModifyForm() response:', response);
 		
 		if(response) {
-			alert('저장되었습니다');
+			alert(`"${form.d_name.value}" 질환/질병 정보가 수정되었습니다`);
 			
 		} else {
-			alert('저장에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
+			alert(errorMessage);
 		}
 		
 	} catch(error) {
 		logger.error('/disease/modify_confirm diseaseModifyForm() error:', error);
-		alert('저장에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
+		alert(errorMessage);
 		
 	} finally {
 		location.reload(true);
