@@ -15,6 +15,13 @@ import lombok.extern.log4j.Log4j2;
 @Component
 public class ApiExplorer {
 	
+	
+	// 파라미터값 없이 기본 호출 됐을 경우 => total_count 구하기 위함
+	public String getRecipe() throws IOException {
+		return getRecipe(1, 1);
+		
+	}
+	
 	// 사용 API : 식품 의약품 안전처 -> 조리식품의 레시피 DB
 	// 레시피 가져오기
 	public String getRecipe(int startIdx, int EndIdx) throws IOException {

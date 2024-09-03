@@ -18,6 +18,12 @@ public interface RecipeMapper {
 
 	// 식단의 총 리스트 개수 구하기 (모든 식단)
 	public int getAllRecipeCnt();
+
+	// 식단 테이블 DROP
+	public void dropRecipeTable();
+
+	// 식단 테이블 CREATE
+	public void createRecipeTable();
 	
 	
 
