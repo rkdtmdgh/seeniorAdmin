@@ -51,6 +51,7 @@ public class RecipeService {
 		
 		// 기존 레시피 테이블 drop
 		recipeMapper.dropRecipeTable();
+		
 		// 새로운 레시피 테이블 create
 		recipeMapper.createRecipeTable();
 		

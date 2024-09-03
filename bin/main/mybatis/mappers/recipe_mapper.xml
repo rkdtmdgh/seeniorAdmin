@@ -62,11 +62,22 @@
 		<result column="manual_img20" property="manual_img20" />
 		<result column="rcp_na_tip" property="rcp_na_tip" />
 	</resultMap>
+	
+	<!-- 리프레쉬 -->
+	<update id="refresh">
+		
+		<choose>
+			<when test="">
+				
+			</when>
+		</choose>
+	
+	</update>
 
 	<!-- 식단 테이블 DROP -->
 	<delete id="dropRecipeTable">
 	
-		DROP TABLE 
+		DROP TABLE IF EXISTS 
 			RECIPE
 	
 	</delete>
