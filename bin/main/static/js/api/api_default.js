@@ -43,7 +43,7 @@ $(document).ready(function() {
 			logger.error('getBoardList() error:', error);
 			
 		} finally {
-			setNavActiveToggle();
+			setNavActiveToggle(); // NAV 선택 표시 및 토글
 		}
 	}
 

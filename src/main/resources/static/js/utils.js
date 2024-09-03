@@ -19,18 +19,18 @@ function setFormSendFalse(event) {
 // NAV 선택 표시 및 토글
 function setNavActiveToggle() {
 	const currentPath = window.location.pathname; // 현재 URL
-	const currentFirstPath = currentPath.split('/')[1] || ''; // 첫 번째 path
+	const currentQueryParams = new URLSearchParams(window.location.search); // 쿼리 파라미터
 	logger.info('URl:', currentPath);
-	logger.info('URl first path:', currentFirstPath);
 
 	const $navMenuBtns = $('.side_menu_list'); // 모든 nav 메뉴 버튼
 	$navMenuBtns.each(function(index) { // 화살표 함수에는 this가 포함되지 않아 function으로 대체
 		const $navMenu = $(this);
 		const $navMenuBtn = $navMenu.find('.side_menu_btn');
 		const href = $navMenuBtn.attr('href') || null; // 메뉴 버튼의 href
-		logger.info(index + '. href:', href);
+		const hrefPath = href ? new URL(href, window.location.origin).pathname : ''; // 메뉴 href 경로에서 path 추출
+		logger.info(index + '. href:', hrefPath);
 		
-		if (href && href === currentPath) { // 서브 메뉴가 없고 href가 현재 경로가 일치할 경우
+		if (hrefPath && hrefPath === currentPath) { // 서브 메뉴가 없고 href가 현재 경로가 일치할 경우
 			$navMenu.addClass('select');
 		}
 		
@@ -40,14 +40,21 @@ function setNavActiveToggle() {
 			$navSubMenus.each(function() {
 				const $navSubMenu = $(this);
 				const subHref = $navSubMenu.attr('href') || null;
-				const subHrefFirstPath = subHref ? subHref.split('/')[1] || null : null; // 첫 번째 path
+				const subHrefPath = subHref ? new URL(subHref, window.location.origin).pathname : ''; // 서브메뉴 href 경로에서 path 추출
+				const subHrefQueryParams = new URLSearchParams(new URL(subHref, window.location.origin).search);
 				
-				if (subHref && subHrefFirstPath === currentFirstPath) { // 첫 번째 path와 URL 첫 번째 path와 같을 경우
-					$navSubMenu.addClass('on'); // 네비 서브 메뉴 선택
-					$navMenu.addClass('select'); // 네비 버튼 선택
+				if (subHrefPath && subHrefPath === currentPath) {
+					// 쿼리 스트링 확인(같은 카테고리에서 구분이 필요할 경우)
+					const subHerfParam = subHrefQueryParams.get('cate');
+					const currentParam = currentQueryParams.get('cate');
+					
+					if(subHerfParam === currentParam) {
+						$navSubMenu.addClass('on'); // 네비 서브 메뉴 선택
+						$navMenu.addClass('select'); // 네비 버튼 선택
+					}
 				}
 				
-				logger.info(index + '. subHref:', subHrefFirstPath);
+				logger.info(index + '. subHref:', subHrefPath);
 			});
 		}
 		
