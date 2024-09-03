@@ -179,16 +179,12 @@ public class DiseaseController {
 		
 	// 질환 등록 확인
 	@PostMapping("/create_confirm")
-	public String createConfirm(DiseaseDto diseaseDto, Model model) {
+	public boolean createConfirm(DiseaseDto diseaseDto) {
 		log.info("createConfirm()");
 		
-		boolean result = diseaseService.createConfirm(diseaseDto);
+		boolean createresult = diseaseService.createConfirm(diseaseDto);
 		
-		model.addAttribute("createResult", result);
-		
-		String nextPage = "disease/create_result";
-		
-		return nextPage;
+		return createresult;
 		
 	}
 		
