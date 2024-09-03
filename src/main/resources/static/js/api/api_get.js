@@ -117,11 +117,11 @@ async function getOptionList(apiUrl, ele, isForm, selectedValue) {
 			});
 			
 			switch(apiUrl) {
-				case '/disease/get_category_list': // 질환 / 질병 정보 관리 분류명 정렬
+				case '/disease/cate_info/get_category_list': // 질환 / 질병 정보 관리 분류명 정렬
 					getListDtos = response.diseaseCategoryDto;
 					dataNo = 'dc_no';
 					dataName = 'dc_name';
-					command = '/disease/get_disease_list_by_category_with_page';
+					command = '/disease/info/get_disease_list_by_category_with_page';
 					break;
 				
 				default:

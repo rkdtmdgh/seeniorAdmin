@@ -18,7 +18,7 @@ function setFormSendFalse(event) {
 
 // NAV 선택 표시 및 토글
 function setNavActiveToggle() {
-	const currentPath = window.location.pathname; // 현재 URL
+	const currentPath = window.location.pathname.split('/').slice(0,3).join('/'); // 현재 URL에서 첫 번째와 두 번째까지 path 
 	const currentQueryParams = new URLSearchParams(window.location.search); // 쿼리 파라미터
 	logger.info('URl:', currentPath);
 
@@ -27,7 +27,7 @@ function setNavActiveToggle() {
 		const $navMenu = $(this);
 		const $navMenuBtn = $navMenu.find('.side_menu_btn');
 		const href = $navMenuBtn.attr('href') || null; // 메뉴 버튼의 href
-		const hrefPath = href ? new URL(href, window.location.origin).pathname : ''; // 메뉴 href 경로에서 path 추출
+		const hrefPath = href ? new URL(href, window.location.origin).pathname.split('/').slice(0, 3).join('/') : ''; // href에서 첫 번째와 두 번째 path
 		logger.info(index + '. href:', hrefPath);
 		
 		if (hrefPath && hrefPath === currentPath) { // 서브 메뉴가 없고 href가 현재 경로가 일치할 경우
@@ -40,7 +40,7 @@ function setNavActiveToggle() {
 			$navSubMenus.each(function() {
 				const $navSubMenu = $(this);
 				const subHref = $navSubMenu.attr('href') || null;
-				const subHrefPath = subHref ? new URL(subHref, window.location.origin).pathname : ''; // 서브메뉴 href 경로에서 path 추출
+				const subHrefPath = subHref ? new URL(subHref, window.location.origin).pathname.split('/').slice(0, 3).join('/') : ''; // 서브메뉴 href에서 첫 번째와 두 번째 path
 				const subHrefQueryParams = new URLSearchParams(new URL(subHref, window.location.origin).search);
 				
 				if (subHrefPath && subHrefPath === currentPath) {
@@ -263,19 +263,19 @@ function setParseResponseByCommand(command, response) {
 			getListCnt = response.searchAdminListPage.searchAdminListCnt;
 			break;
 			
-		case '/disease/list/get_all_disease_list_with_page': // 질환 / 질병 정보 관리
+		case '/disease/info/get_all_disease_list_with_page': // 질환 / 질병 정보 관리
 			getListDtos = response.diseaseDtos;
 			getListPage = response.diseaseListPageNum;
 			getListCnt = response.diseaseListPageNum.diseaseListCnt;
 			break;
 			
-		case '/disease/list/search_disease_list': // 질환 / 질병 정보 관리 검색
+		case '/disease/info/search_disease_list': // 질환 / 질병 정보 관리 검색
 			getListDtos = response.diseaseDtos;
 			getListPage = response.searchDiseaseListPageNum;
 			getListCnt = response.searchDiseaseListPageNum.searchDiseaseListCnt;
 			break;
 		
-		case '/disease/list/get_disease_list_by_category_with_page': // 질환 / 질병 정보 관리 질환명 sort
+		case '/disease/info/get_disease_list_by_category_with_page': // 질환 / 질병 정보 관리 질환명 sort
 			getListDtos = response.diseaseDtos;
 			getListPage = response.diseaseListByCategoryPageNum;
 			getListCnt = response.diseaseListByCategoryPageNum.diseaseListCnt;
@@ -379,9 +379,9 @@ function setDataList(api, data, index) {
 			`;
 			break;
 			
-		case '/disease/list/get_all_disease_list_with_page':
-		case '/disease/list/search_disease_list':
-		case '/disease/list/get_disease_list_by_category_with_page':
+		case '/disease/info/get_all_disease_list_with_page':
+		case '/disease/info/search_disease_list':
+		case '/disease/info/get_disease_list_by_category_with_page':
 			innerContent = `
 				<tr>
 		            <td class="vam">
