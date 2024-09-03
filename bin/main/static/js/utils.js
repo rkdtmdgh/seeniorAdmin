@@ -251,31 +251,31 @@ function setParseResponseByCommand(command, response) {
 	let getListCnt;
 	
 	switch(command) {
-		case '/account/get_admin_list': // 관리자 계정 관리
+		case '/account/list/get_admin_list': // 관리자 계정 관리
 			getListDtos = response.adminAccountDtos;
 			getListPage = response.adminListPage;
 			getListCnt = response.adminListPage.accountListCnt;
 			break;
 			
-		case '/account/search_admin_list': // 관리자 계정 관리 검색
+		case '/account/list/search_admin_list': // 관리자 계정 관리 검색
 			getListDtos = response.adminAccountDtos;
 			getListPage = response.searchAdminListPage;
 			getListCnt = response.searchAdminListPage.searchAdminListCnt;
 			break;
 			
-		case '/disease/get_all_disease_list_with_page': // 질환 / 질병 정보 관리
+		case '/disease/list/get_all_disease_list_with_page': // 질환 / 질병 정보 관리
 			getListDtos = response.diseaseDtos;
 			getListPage = response.diseaseListPageNum;
 			getListCnt = response.diseaseListPageNum.diseaseListCnt;
 			break;
 			
-		case '/disease/search_disease_list': // 질환 / 질병 정보 관리 검색
+		case '/disease/list/search_disease_list': // 질환 / 질병 정보 관리 검색
 			getListDtos = response.diseaseDtos;
 			getListPage = response.searchDiseaseListPageNum;
 			getListCnt = response.searchDiseaseListPageNum.searchDiseaseListCnt;
 			break;
 		
-		case '/disease/get_disease_list_by_category_with_page': // 질환 / 질병 정보 관리 질환명 sort
+		case '/disease/list/get_disease_list_by_category_with_page': // 질환 / 질병 정보 관리 질환명 sort
 			getListDtos = response.diseaseDtos;
 			getListPage = response.diseaseListByCategoryPageNum;
 			getListCnt = response.diseaseListByCategoryPageNum.diseaseListCnt;
@@ -353,18 +353,18 @@ function setDataList(api, data, index) {
 	let innerContent = '';
 	
 	switch(api) {
-		case '/account/get_admin_list': 
-		case '/account/search_admin_list':
+		case '/account/list/get_admin_list': 
+		case '/account/list/search_admin_list':
 			innerContent = `
 				<tr>
 		            <td>
 		                <p class="table_info">${index}</p>
 		            </td>
 		            <td>
-		                <a href="/account/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_id || 'N/A'}</a>
+		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_id || 'N/A'}</a>
 		            </td>
 		            <td>
-		                <a href="/account/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_authority_role == 'SUB_ADMIN' ? '완료' : '대기'}</a>
+		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_authority_role == 'SUB_ADMIN' ? '완료' : '대기'}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${data.a_phone || 'N/A'}</p>
@@ -379,9 +379,9 @@ function setDataList(api, data, index) {
 			`;
 			break;
 			
-		case '/disease/get_all_disease_list_with_page':
-		case '/disease/search_disease_list':
-		case '/disease/get_disease_list_by_category_with_page':
+		case '/disease/list/get_all_disease_list_with_page':
+		case '/disease/list/search_disease_list':
+		case '/disease/list/get_disease_list_by_category_with_page':
 			innerContent = `
 				<tr>
 		            <td class="vam">
