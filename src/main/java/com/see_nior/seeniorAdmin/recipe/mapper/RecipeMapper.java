@@ -24,7 +24,6 @@ public interface RecipeMapper {
 
 	// 식단의 총 리스트 개수 구하기 (모든 식단)
 	public int getAllRecipeCnt();
-
 	
 
 }

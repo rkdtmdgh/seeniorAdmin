@@ -15,6 +15,10 @@
 			<th:block th:if="${option == '질환 / 질병 정보 관리'}">
 				<option value="d_name" selected>질환/질병명</option>
 			</th:block>
+			
+			<th:block th:if="${option == '질환 / 질병 분류 관리'}">
+				<option value="dc_name" selected>분류명</option>
+			</th:block>
 		</select>
 		
 		<label for="search_string" class="search_input">

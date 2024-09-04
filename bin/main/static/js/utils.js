@@ -11,6 +11,7 @@ function setInputFocus(ele) {
 }
 
 // submit 이벤트 막기(form 에서 enter 작동 되지 않고 버튼으로 submit만 가능하도록)
+// 예외 사항으로 form 내부에 disabled 되어 있는 인풋이 있는 경우에는 사용하지 않아도 됨
 function setFormSendFalse(event) {
 	event.preventDefault(); // 폼의 기본 제출 동작 방지
     return false; // 폼 제출 방지
@@ -228,12 +229,12 @@ function setWordAndCommand(inputName) {
 	switch(inputName) {
 		case 'dc_name':
 			word = '질환/질병 분류명';
-			apiUrl = '/disease/is_disease_category';
+			apiUrl = '/disease/cate_info/is_disease_category';
 			break;
 			
 		case 'd_name':
 			word = '질환/질병명';
-			apiUrl = '/disease/is_disease';
+			apiUrl = '/disease/info/is_disease';
 			break;
 			
 		default:
@@ -279,6 +280,12 @@ function setParseResponseByCommand(command, response) {
 			getListDtos = response.diseaseDtos;
 			getListPage = response.diseaseListByCategoryPageNum;
 			getListCnt = response.diseaseListByCategoryPageNum.diseaseListCnt;
+			break;
+			
+		case '/disease/cate_info/get_category_list_with_page': // 질환 / 질병 정보 분류 관리
+			getListDtos = response.diseaseCategoryDtos;
+			getListPage = response.diseaseCategoryListPageNum;
+			getListCnt = response.diseaseCategoryListPageNum.diseaseCategoryListCnt;
 			break;
 	}
 	
@@ -388,13 +395,13 @@ function setDataList(api, data, index) {
 		                <div class="table_info func_area"><input type="checkbox" name="d_no" class="d_no" value="${data.d_no}"></div>
 		            </td>
 		            <td>
-		                <a href="/disease/modify_form?d_no=${data.d_no}" class="table_info">${index}</a>
+		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${index}</a>
 		            </td>
 		            <td>
-		                <a href="/disease/modify_form?d_no=${data.d_no}" class="table_info">${data.diseaseCategoryDto.dc_name}</a>
+		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${data.diseaseCategoryDto.dc_name}</a>
 		            </td>
 		            <td>
-		                <a href="/disease/modify_form?d_no=${data.d_no}" class="table_info">${data.d_name || 'N/A'}</a>
+		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${data.d_name || 'N/A'}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.d_reg_date) || 'N/A'}</p>
@@ -402,6 +409,25 @@ function setDataList(api, data, index) {
 		        </tr>
 			`;
 			break;
+			
+			case '/disease/cate_info/get_category_list_with_page':
+				innerContent = `
+					<tr>
+			            <td>
+			                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${index}</a>
+			            </td>
+			            <td>
+			                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${data.dc_name}</a>
+			            </td>
+			            <td>
+			                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${data.d_name || 'N/A'}</a>
+			            </td>
+			            <td>
+			                <p class="table_info">${setFormatDate(data.dc_reg_date) || 'N/A'}</p>
+			            </td>
+			        </tr>
+				`;
+				break;
 		
 		default:
 			innerContent = '';

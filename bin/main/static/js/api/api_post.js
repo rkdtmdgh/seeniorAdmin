@@ -84,7 +84,7 @@ function postIdentityCheckForm(event, formName) {
 }
 
 // 질환/질병 분류 등록 폼
-async function postDiseaseCategoryCreateForm(event, formName) {
+async function postDiseaseCategoryCreateForm(event, formName, nextPage) {
 	if(event) event.preventDefault();
 	const form = document.forms[formName];
 	let input;
@@ -99,14 +99,14 @@ async function postDiseaseCategoryCreateForm(event, formName) {
 	
 	try {
 		const response = await $.ajax({
-			url: '/disease/create_category_confirm',
+			url: '/disease/cate_info/create_category_confirm',
 			method: 'POST',
 			data: {
 				dc_name: input.value.trim(),
 			},
 		});
 		
-		logger.info('/disease/create_category_confirm diseaseCategoryRegForm() response:', response);
+		logger.info('/disease/cate_info/create_category_confirm diseaseCategoryRegForm() response:', response);
 		
 		if(response) {
 			alert(`"${input.value}" 분류가 등록되었습니다.`);
@@ -116,11 +116,11 @@ async function postDiseaseCategoryCreateForm(event, formName) {
 		}
 		
 	} catch(error) {
-		logger.error('/disease/create_category_confirm diseaseCategoryRegForm() error:', error);
+		logger.error('/disease/cate_info/create_category_confirm diseaseCategoryRegForm() error:', error);
 		alert(errorMessage);
 		
 	} finally {
-		location.reload(true);
+		nextPage ? location.replace(nextPage) : location.reload(true);
 	}
 }
 
@@ -164,18 +164,18 @@ async function postDiseaseCreateForm(formName) {
 	
 	try {
 		const response = await $.ajax({
-			url: '/disease/create_confirm',
+			url: '/disease/info/create_confirm',
 			method: 'POST',
 			data: formData,
 			processData: false,  // FormData가 자동으로 Content-Type 설정
 			contentType: false,  // FormData를 문자열로 변환하지 않음
 		});
 		
-		logger.info('/disease/create_confirm postDiseaseCreateForm() response:', response);
+		logger.info('/disease/info/create_confirm postDiseaseCreateForm() response:', response);
 		
 		if(response) {
 			alert(`"${form.d_name.value}" 질환/질병 정보가 등록되었습니다.`);
-			location.replace('/disease/disease_list_form');
+			location.replace('/disease/info/disease_list_form');
 			
 		} else {
 			alert(errorMessage);
@@ -183,7 +183,7 @@ async function postDiseaseCreateForm(formName) {
 		}
 		
 	} catch(error) {
-		logger.error('/disease/create_confirm postDiseaseCreateForm() error:', error);
+		logger.error('/disease/info/create_confirm postDiseaseCreateForm() error:', error);
 		alert(errorMessage);
 		location.reload(true);
 	}

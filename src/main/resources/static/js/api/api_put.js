@@ -1,5 +1,34 @@
+// ajax 요청
+async function postSubmitForm(apiUrl, formData, successMessage, errorMessage) {
+	try {
+		const response = await $.ajax({
+			url: apiUrl,
+			method: 'POST',
+			data: formData,
+			processData: false,  // FormData가 자동으로 Content-Type 설정
+			contentType: false,  // FormData를 문자열로 변환하지 않음
+		});
+		
+		logger.info(`${apiUrl} postSubmitForm() response:`, response);
+		
+		if(response) {
+			alert(successMessage);
+			
+		} else {
+			alert(errorMessage);
+		}
+		
+	} catch(error) {
+		logger.error(`${apiUrl} postSubmitForm() error:`, error);
+		alert(errorMessage);
+		
+	} finally {
+		location.reload(true);
+	}
+}
+
 // 본인 계정 정보 수정 폼
-function putModifyForm(formName) {
+async function putModifyForm(formName) {
 	const form = document.forms[formName];
 	let input;
 	
@@ -34,14 +63,15 @@ function putModifyForm(formName) {
 		return false;
 	}
 	
-	// 모든 유효성 검사가 통과되었을 때 폼 제출	
-	form.action = "/account/modify_confirm";
-    form.method = "post"; 
-    form.submit();
+	const formData = new FormData(form);
+	const successMessage = '정보가 수정되었습니다';
+	const errorMessage = '정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
+	
+	await postSubmitForm('/account/info/modify_confirm', formData, successMessage, errorMessage);
 }
 
 // 관리자 계정 정보 수정(SUPER_ADMIN) 폼
-function putAdminModifyForm(formName) {
+async function putAdminModifyForm(formName) {
 	const form = document.forms[formName];
 	let input;
 	
@@ -63,10 +93,11 @@ function putAdminModifyForm(formName) {
 		return false;
 	}
 	
-	// 모든 유효성 검사가 통과되었을 때 폼 제출	
-	form.action = "/account/admin_modify_confirm";
-    form.method = "post"; 
-    form.submit();
+	const formData = new FormData(form);
+	const successMessage = `"${form.a_id}" 정보가 수정되었습니다`;
+	const errorMessage = `"${form.a_id}" 정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+
+	await postSubmitForm('/account/list/admin_modify_confirm', formData, successMessage, errorMessage);
 }
 
 // 질환 / 질병 수정
@@ -107,31 +138,32 @@ async function putDiseaseModifyForm(formName, d_nameDefaultValue) {
 	}
 	
 	const formData = new FormData(form);
+	const successMessage = `"${form.d_name.value}" 질환/질병 정보가 수정되었습니다`;
 	const errorMessage = `"${form.d_name.value}" 질환/질병 정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+
+	await postSubmitForm('/disease/info/modify_confirm', formData, successMessage, errorMessage);
+}
+
+// 질환 / 질병 분류 수정
+async function putDiseaseCategoryModifyForm(formName, dc_nameDefaultValue) {
+	const form = document.forms[formName];
+	let input;
 	
-	try {
-		const response = await $.ajax({
-			url: '/disease/modify_confirm',
-			method: 'POST',
-			data: formData,
-			processData: false,  // FormData가 자동으로 Content-Type 설정
-			contentType: false,  // FormData를 문자열로 변환하지 않음
-		});
-		
-		logger.info('/disease/modify_confirm diseaseModifyForm() response:', response);
-		
-		if(response) {
-			alert(`"${form.d_name.value}" 질환/질병 정보가 수정되었습니다`);
-			
-		} else {
-			alert(errorMessage);
+	input = form.dc_name;
+	if(input.value.trim() !== dc_nameDefaultValue) { // 수정이 되었을 경우
+		if(!(await usedInputValueCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+			input.focus();
+			return false;
 		}
 		
-	} catch(error) {
-		logger.error('/disease/modify_confirm diseaseModifyForm() error:', error);
-		alert(errorMessage);
-		
-	} finally {
-		location.reload(true);
+	} else {
+		alert('수정된 내용이 없습니다');
+		return false;
 	}
+	
+	const formData = new FormData(form);
+	const successMessage = `"${input.value}" 질환/질병 분류명이 수정되었습니다`;
+	const errorMessage = `"${input.value}" 질환/질병 분류명 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+
+	await postSubmitForm('/disease/cate_info/modify_category_confirm', formData, successMessage, errorMessage);
 }
