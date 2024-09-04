@@ -146,8 +146,7 @@
 	</update>
 	
 	<!-- 계정 탈퇴 is_deleted update -->
-	<update id="updateAdminIsDeletedByNo"
-			parameterType="String">
+	<update id="updateAdminIsDeletedByNo">
 			
 		UPDATE 
 			ADMIN_ACCOUNT 
