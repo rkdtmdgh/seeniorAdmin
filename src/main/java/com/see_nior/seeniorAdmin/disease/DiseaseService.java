@@ -8,6 +8,8 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.disease.mapper.DiseaseMapper;
 import com.see_nior.seeniorAdmin.dto.DiseaseCategoryDto;
 import com.see_nior.seeniorAdmin.dto.DiseaseDto;
@@ -91,34 +93,32 @@ public class DiseaseService {
 	}
 	
 	// 페이지에 따른 질환 카테고리 리스트 가져오기
-	public Map<String, Object> getCategoryListWithPage(int page, String sort) {
+	public List<Map<String, Object>> getCategoryListWithPage(int page, String sort) {
 		log.info("getCategoryListWithPage()");
 		
 		int pagingStart = (page - 1) * pageLimit;
 		
-		Map<String, Object> pagingList = new HashMap<>();
+		List<Map<String, Object>> pagingList = new ArrayList<>();
 		
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
 		pagingParams.put("sort", sort);
 		
-		List<Map<String, Object>> diseaseCategoryWithItemCntList = new ArrayList<>();
-		
 		List<DiseaseCategoryDto> diseaseCategoryDtos = diseaseMapper.getDiseaseCategoryListWithPage(pagingParams);
 		
-		for (int i = 0; i < diseaseCategoryDtos.size(); i++) {
-			int itemCnt = diseaseMapper.getCategoryItemCnt(diseaseCategoryDtos.get(i).getDc_no());
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		for (DiseaseCategoryDto diseaseCategoryDto : diseaseCategoryDtos) {
+			int itemCnt = diseaseMapper.getCategoryItemCnt(diseaseCategoryDto.getDc_no());
 			
-			Map<String, Object> mergeMap = new HashMap<>();
-			mergeMap.put("diseaseCategoryDto", diseaseCategoryDtos.get(i));
-			mergeMap.put("itemCnt", itemCnt);
+			Map<String, Object> diseaseCategoryMap = objectMapper.convertValue(diseaseCategoryDto, new TypeReference<Map<String, Object>>() {});
 			
-			diseaseCategoryWithItemCntList.add(mergeMap);
+			diseaseCategoryMap.put("itemCnt", itemCnt);
+			
+			pagingList.add(diseaseCategoryMap);
 			
 		}
-		
-		pagingList.put("diseaseCategoryWithItemCntList", diseaseCategoryWithItemCntList);
 		
 		return pagingList;
 	}
