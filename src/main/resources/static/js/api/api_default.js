@@ -7,6 +7,7 @@ function signOut() {
 		return false;	
 	}
 	
+	sessionStorage.clear();
 	location.replace('/account/sign_out_confirm');
 }
 
