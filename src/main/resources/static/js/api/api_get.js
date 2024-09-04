@@ -40,6 +40,7 @@ async function getList(command, sort, sortValue, page) {
 					$contentTable[0].insertAdjacentHTML('beforeend', setDataList(command, data, listIndex));
 					listIndex --;
 				});
+				
 			} else {
 				const maxCols = setTableColumnsNum();
 				$contentTable.html(`
@@ -50,6 +51,7 @@ async function getList(command, sort, sortValue, page) {
 	                </tr>
 				`);
 			}
+			
 		} else {
 			logger.info('데이터가 없거나 유효하지 않습니다.');
 			const maxCols = setTableColumnsNum();

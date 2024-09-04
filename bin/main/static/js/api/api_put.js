@@ -64,7 +64,7 @@ function putAdminModifyForm(formName) {
 	}
 	
 	// 모든 유효성 검사가 통과되었을 때 폼 제출	
-	form.action = "/account/admin_modify_confirm";
+	form.action = "/account/list/admin_modify_confirm";
     form.method = "post"; 
     form.submit();
 }
@@ -111,14 +111,14 @@ async function putDiseaseModifyForm(formName, d_nameDefaultValue) {
 	
 	try {
 		const response = await $.ajax({
-			url: '/disease/modify_confirm',
+			url: '/disease/info/modify_confirm',
 			method: 'POST',
 			data: formData,
 			processData: false,  // FormData가 자동으로 Content-Type 설정
 			contentType: false,  // FormData를 문자열로 변환하지 않음
 		});
 		
-		logger.info('/disease/modify_confirm diseaseModifyForm() response:', response);
+		logger.info('/disease/info/modify_confirm diseaseModifyForm() response:', response);
 		
 		if(response) {
 			alert(`"${form.d_name.value}" 질환/질병 정보가 수정되었습니다`);
@@ -128,7 +128,54 @@ async function putDiseaseModifyForm(formName, d_nameDefaultValue) {
 		}
 		
 	} catch(error) {
-		logger.error('/disease/modify_confirm diseaseModifyForm() error:', error);
+		logger.error('/disease/info/modify_confirm diseaseModifyForm() error:', error);
+		alert(errorMessage);
+		
+	} finally {
+		location.reload(true);
+	}
+}
+
+// 질환 / 질병 분류 수정
+async function putDiseaseCategoryModifyForm(formName, dc_nameDefaultValue) {
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.dc_name;
+	if(input.value.trim() !== dc_nameDefaultValue) { // 수정이 되었을 경우
+		if(!(await usedInputValueCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+			input.focus();
+			return false;
+		}
+		
+	} else {
+		alert('수정된 내용이 없습니다');
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	const errorMessage = `"${input.value}" 질환/질병 분류명 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	try {
+		const response = await $.ajax({
+			url: '/disease/cate_info/modify_category_confirm',
+			method: 'POST',
+			data: formData,
+			processData: false,  // FormData가 자동으로 Content-Type 설정
+			contentType: false,  // FormData를 문자열로 변환하지 않음
+		});
+		
+		logger.info('/disease/cate_info/modify_category_confirm putDiseaseCategoryModifyForm() response:', response);
+		
+		if(response) {
+			alert(`"${input.value}" 질환/질병 분류명이 수정되었습니다`);
+			
+		} else {
+			alert(errorMessage);
+		}
+		
+	} catch(error) {
+		logger.error('/disease/cate_info/modify_category_confirm putDiseaseCategoryModifyForm() error:', error);
 		alert(errorMessage);
 		
 	} finally {
