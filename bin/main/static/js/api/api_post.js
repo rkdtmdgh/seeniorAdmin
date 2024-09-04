@@ -66,7 +66,7 @@ function postSignInForm(event, formName) {
 }
 
 // 본인 확인 폼
-function postIdentityCheckForm(event, formName) {
+async function postIdentityCheckForm(event, formName) {
 	if(event) event.preventDefault();
 	const form = document.forms[formName];
 	let input;
@@ -77,10 +77,30 @@ function postIdentityCheckForm(event, formName) {
 		return false;
 	}
 	
-	// 모든 유효성 검사가 통과되었을 때 폼 제출	
-	form.action = "/account/modify_check";
-    form.method = "post"; 
-    form.submit();
+	try {
+		const response = await $.ajax({
+			url: '/account/info/modify_check',
+			method: 'POST',
+			data: {
+				a_pw: input.value.trim(),
+			},
+		});
+		
+		logger.info('/account/info/modify_check postIdentityCheckForm() response:', response);
+				
+		if(response) {
+			
+			
+		} else {
+			alert('비밀번호가 일치하지 않습니다. 확인 후 다시 시도해 주세요.');
+			return false;
+		}
+		
+	} catch(error) {
+		logger.error('/account/info/modify_check postIdentityCheckForm() error:', error);
+		alert('본인 확인 오류로 데이터를 불러오는데 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
+		location.replace('/account/info/modify_form');
+	}
 }
 
 // 질환/질병 분류 등록 폼

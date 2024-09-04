@@ -10,7 +10,7 @@ function setInputFocus(ele) {
 	}
 }
 
-// submit 이벤트 막기(form 에서 enter 작동 되지 않고 버튼으로 submit만 가능하도록)
+// submit 이벤트 막기(form 에서 enter키 입력 되지 않고 버튼으로 submit만 가능하도록)
 // 예외 사항으로 form 내부에 disabled 되어 있는 인풋이 있는 경우에는 사용하지 않아도 됨
 function setFormSendFalse(event) {
 	event.preventDefault(); // 폼의 기본 제출 동작 방지
@@ -283,7 +283,7 @@ function setParseResponseByCommand(command, response) {
 			break;
 			
 		case '/disease/cate_info/get_category_list_with_page': // 질환 / 질병 정보 분류 관리
-			getListDtos = response.diseaseCategoryDtos;
+			getListDtos = response.diseaseCategoryWithItemCntList.diseaseCategoryDtos;
 			getListPage = response.diseaseCategoryListPageNum;
 			getListCnt = response.diseaseCategoryListPageNum.diseaseCategoryListCnt;
 			break;
@@ -467,6 +467,8 @@ function setTextareaAutoHeight(ele) {
 	$textarea.height(newHeight + 'px');
 }
 
+
+// 문서 클릭 이벤트
 $(document).on('click', function(event) {
 	// 커스텀 셀렉트 open, close 기능
 	const $openSelectEle = $('.select_option_list.active'); // 열려 있는 셀렉트 옵션 요소
@@ -476,6 +478,7 @@ $(document).on('click', function(event) {
 	}
 });
 
+// 문서가 준비된 후 실행
 $(document).ready(function() {
 	// textarea 입력된 값으로 높이값 조절
 	$('.table_textarea.small').each(function() {
