@@ -5,6 +5,20 @@
    
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 질환 / 질병 분류 관리')}"></th:block>
+	
+	<script type="text/javascript">
+		document.addEventListener('DOMContentLoaded', () => {
+			const { sortType, sort, sortValue, page } = setFormValuesFromUrl('dc_name'); // 검색 파트 기본값
+			switch(sortType) {
+				case '2': // 검색
+					getSearchList(null, '/disease/info/search_disease_list', page);
+					break;
+					
+				default: // 기본
+					getList('/disease/cate_info/get_category_list_with_page', sort, sortValue, page);
+			}
+        });
+	</script>
 </head>
 <body>
 	<main class="contents_wrap">
@@ -21,12 +35,11 @@
 					            <h2 class="title">질환 / 질병 분류 관리</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/disease/search_disease_list')" th:insert="~{fragments/search.html :: search('질환 / 질병 정보 관리')}"></form>
+									<form name="search_form" onsubmit="getSearchList(event, '/disease/search_disease_list')" th:insert="~{fragments/search.html :: search('질환 / 질병 분류 관리')}"></form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/disease/get_all_disease_list_with_page', null, null, 1);">전체보기</div>
-						            	<div class="btns small delete" onclick="delCheckBoxList('/disease/delete_confirm', 'd_no')">삭제</div>
-						            	<a href="/disease/create_form" class="btns small">등록</a>
+						            	<div class="btns small" onclick="getList('/disease/cate_info/get_category_list_with_page', null, null, 1);">전체보기</div>
+						            	<a href="/disease/cate_info/create_category_form" class="btns small">등록</a>
 						            </div>
 					            </div>
 					        </div>
@@ -48,20 +61,17 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">분류명</p>
+	                                        <p data-sort="dc_name" data-current-sort="all" class="table_title sort"
+	                                        	onclick="getSortList(event, '/disease/cate_info/get_category_list_with_page', 'asc', 'desc')">
+	                                        	분류명
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
 	                                    </th>
 	                                    
 	                                    <th>
 	                                        <p class="table_title">질환 / 질병 등록 수</p>
 	                                    </th>
 	                                    
-	                                    <th>
-	                                        <p data-sort="d_name" data-current-sort="all" class="table_title sort"
-	                                        	onclick="getSortList(event, '/disease/get_all_disease_list_with_page', 'asc', 'desc')">
-	                                        	질환 / 질병명
-	                                        	<span class="sort_icon"></span>
-	                                        </p>
-	                                    </th>
 	                                    <th>
 	                                        <p class="table_title">등록일</p>
 	                                    </th>
