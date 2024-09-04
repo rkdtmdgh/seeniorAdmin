@@ -77,15 +77,17 @@ public class AccountController {
 	}
 	
 	// 로그인 결과 확인
-	@GetMapping("/sign_in_ng")
+	@GetMapping("/sign_in_result")
 	public String signInNg(
 			@RequestParam(value = "errMsg", required = false) String errMsg,
+			@RequestParam("result") boolean result,
 			Model model) {
 		log.info("signInNg()");
 		
-		String nextPage = "account/sign_in_ng";
+		String nextPage = "account/sign_in_result";
 		
 		model.addAttribute("errMsg", errMsg);
+		model.addAttribute("result", result);
 		
 		return nextPage;
 	}
