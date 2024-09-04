@@ -101,10 +101,24 @@ public class DiseaseService {
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
-		pagingParams.put("dc_name", sort);
+		pagingParams.put("sort", sort);
+		
+		List<Map<String, Object>> diseaseCategoryWithItemCntList = new ArrayList<>();
 		
 		List<DiseaseCategoryDto> diseaseCategoryDtos = diseaseMapper.getDiseaseCategoryListWithPage(pagingParams);
-		pagingList.put("diseaseCategoryDtos", diseaseCategoryDtos);
+		
+		for (int i = 0; i < diseaseCategoryDtos.size(); i++) {
+			int itemCnt = diseaseMapper.getCategoryItemCnt(diseaseCategoryDtos.get(i).getDc_no());
+			
+			Map<String, Object> mergeMap = new HashMap<>();
+			mergeMap.put("diseaseCategoryDto", diseaseCategoryDtos.get(i));
+			mergeMap.put("itemCnt", itemCnt);
+			
+			diseaseCategoryWithItemCntList.add(mergeMap);
+			
+		}
+		
+		pagingList.put("diseaseCategoryWithItemCntList", diseaseCategoryWithItemCntList);
 		
 		return pagingList;
 	}

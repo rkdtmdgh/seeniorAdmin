@@ -67,6 +67,20 @@
 	
 	</select>
 	
+	<!-- // 카테고리 별 질환의 개수 구하기 -->
+	<select id="getCategoryItemCnt">
+	
+			SELECT 
+				COUNT(*) 
+			FROM 
+				DISEASE 
+			WHERE 
+				D_IS_DELETED = 1 
+			AND 
+				D_CATEGORY_NO = #{dc_no}
+	
+	</select>
+	
 	<!-- 모든 질환 카테고리 가져오기(페이지네이션 => 질환 카테고리 관리용 => 비동기) -->
 	<select id="getDiseaseCategoryListWithPage">
 	
