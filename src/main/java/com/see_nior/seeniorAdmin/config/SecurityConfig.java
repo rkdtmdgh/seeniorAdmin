@@ -74,8 +74,6 @@ public class SecurityConfig {
 					.successHandler((request, response, authentication) -> {
 						log.info("admin sign in success handler");
 						
-						String targetURI = "/";
-						
 						/*
 						 * 로그인 전 URI 가져오기 
 						 * RequestCache requestCache = new HttpSessionRequestCache(); SavedRequest
@@ -89,7 +87,7 @@ public class SecurityConfig {
 						 * }
 						 */
 						
-						response.sendRedirect(targetURI);
+						response.sendRedirect("/account/sign_in_result?result=" + true);
 						
 					})
 					.failureHandler(new CustumAuthenticationFailureHandler()));

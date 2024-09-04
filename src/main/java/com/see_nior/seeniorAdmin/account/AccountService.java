@@ -141,6 +141,8 @@ public class AccountService {
 	public int deleteConfirm(int a_no) {
 		log.info("deleteConfirm()");
 		
+		log.info("a_no ---- {}", a_no);
+		
 		return accountMapper.updateAdminIsDeletedByNo(a_no);
 	}
 	

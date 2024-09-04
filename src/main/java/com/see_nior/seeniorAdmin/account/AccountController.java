@@ -77,15 +77,17 @@ public class AccountController {
 	}
 	
 	// 로그인 결과 확인
-	@GetMapping("/sign_in_ng")
+	@GetMapping("/sign_in_result")
 	public String signInNg(
 			@RequestParam(value = "errMsg", required = false) String errMsg,
+			@RequestParam("result") boolean result,
 			Model model) {
 		log.info("signInNg()");
 		
-		String nextPage = "account/sign_in_ng";
+		String nextPage = "account/sign_in_result";
 		
 		model.addAttribute("errMsg", errMsg);
+		model.addAttribute("result", result);
 		
 		return nextPage;
 	}
@@ -197,7 +199,7 @@ public class AccountController {
 	}
 	
 	// 회원 탈퇴 확인 
-	@GetMapping("/list/delete_confirm")
+	@PostMapping("/list/delete_confirm")
 	public String deleteConfirm(
 			@RequestParam("a_no") int a_no,
 			Model model) {
@@ -207,8 +209,11 @@ public class AccountController {
 		
 		int deleteResult = accountService.deleteConfirm(a_no);
 		
-		model.addAttribute("deleteResult", deleteResult);
-		
+		if (deleteResult >= 0) 
+			model.addAttribute("deleteResult", true);
+		else 
+			model.addAttribute("deleteResult", false);
+				
 		return nextPage;
 	}
 	
@@ -276,7 +281,7 @@ public class AccountController {
 	}
 	
 	// 비밀번호 초기화
-	@GetMapping("/list/reset_password")
+	@PostMapping("/list/reset_password")
 	public String resetPassword(@RequestParam("a_no") int a_no, Model model) {
 		log.info("resetPassword()");
 		

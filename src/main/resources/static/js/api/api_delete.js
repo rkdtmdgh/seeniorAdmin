@@ -18,7 +18,7 @@ async function delAccount(a_no, a_id) {
 			},
 		});
 		
-		logger.info('/account/list/delete_confirm deleteCheckBoxList() response:', response);
+		logger.info('/account/list/delete_confirm delAccount() response:', response);
 		
 		if(response) {
 			alert(`${a_id} 계정이 삭제되었습니다.`);
@@ -28,7 +28,7 @@ async function delAccount(a_no, a_id) {
 		}
 		
 	} catch(error) {
-		logger.error(`${apiUrl} error:`, error);
+		logger.error('/account/list/delete_confirm delAccount() error:', error);
 		alert(errorMessage);
 		
 	} finally {
