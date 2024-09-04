@@ -1,6 +1,7 @@
 package com.see_nior.seeniorAdmin.disease;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -100,15 +101,19 @@ public class DiseaseController {
 		log.info("getCategoryListWithPage()");
 		
 		// 페이지 번호에 따른 질환 카테고리 리스트들 가져오기
-		Map<String, Object> diseaseCategoryListWithPage = diseaseService.getCategoryListWithPage(page, sort);
+		List<Map<String, Object>> diseaseCategoryListWithPage = diseaseService.getCategoryListWithPage(page, sort);
 		
 		// 질환 카테고리 총 페이지 개수 가져오기
 		Map<String, Object> diseaseCategoryListPageNum = diseaseService.getDiseaseCategoryListPageNum(page);
 		
-		diseaseCategoryListWithPage.put("diseaseCategoryListPageNum", diseaseCategoryListPageNum);
-		diseaseCategoryListWithPage.put("dc_name", sort);
+		// 총 결과를 담을 객체 생성
+		Map<String, Object> diseaseCategoryResponse = new HashMap<>();
 		
-		return diseaseCategoryListWithPage;
+		diseaseCategoryResponse.put("diseaseCategoryDtos", diseaseCategoryListWithPage);
+		diseaseCategoryResponse.put("diseaseCategoryListPageNum", diseaseCategoryListPageNum);
+		diseaseCategoryResponse.put("dc_name", sort);
+		
+		return diseaseCategoryResponse;
 		
 	}
 	
