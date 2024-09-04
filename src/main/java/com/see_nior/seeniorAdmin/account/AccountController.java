@@ -190,12 +190,12 @@ public class AccountController {
 	
 	// SUPER_ADMIN - ADMIN 정보 수정 확인
 	@PostMapping("/list/admin_modify_confirm")
-	public String adminModifyConfirm(AdminAccountDto adminAccountDto) {
+	@ResponseBody
+	public Object adminModifyConfirm(AdminAccountDto adminAccountDto) {
 		log.info("adminModifyConfirm()");
 		
-		accountService.adminModifyConfirm(adminAccountDto);
+		return accountService.adminModifyConfirm(adminAccountDto);
 		
-		return "redirect:/account/admin_modify_form?a_no=" + adminAccountDto.getA_no();
 	}
 	
 	// 회원 탈퇴 확인 
@@ -282,14 +282,12 @@ public class AccountController {
 	
 	// 비밀번호 초기화
 	@PostMapping("/list/reset_password")
-	public String resetPassword(@RequestParam("a_no") int a_no, Model model) {
+	@ResponseBody
+	public Object resetPassword(@RequestParam("a_no") int a_no) {
 		log.info("resetPassword()");
 		
-		int resetResult = accountService.resetPassword(a_no);
+		return accountService.resetPassword(a_no);
 		
-		model.addAttribute("resetResult", resetResult);
-		
-		return "redirect:/account/admin_list_form";
 	}
 	
 	// AdminAccessDeniedHandler. 인가 실패 시 호출.

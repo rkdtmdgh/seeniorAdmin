@@ -130,10 +130,16 @@ public class AccountService {
 	}
 	
 	// SUPER_ADMIN - ADMIN 정보 수정 확인
-	public void adminModifyConfirm(AdminAccountDto adminAccountDto) {
+	public boolean adminModifyConfirm(AdminAccountDto adminAccountDto) {
 		log.info("adminModifyConfirm()");
 		
-		accountMapper.updateAdminInfoFromSuper(adminAccountDto);
+		int result = 
+				accountMapper.updateAdminInfoFromSuper(adminAccountDto);
+		
+		if (result >= 0)
+			return true;
+		else 
+			return false;
 		
 	}
 	
@@ -260,7 +266,7 @@ public class AccountService {
 
 	
 	// 비밀번호 초기화
-	public int resetPassword(int a_no) {
+	public boolean resetPassword(int a_no) {
 		log.info("resetPassword()");
 		
 		AdminAccountDto adminAccountDto = 
@@ -268,7 +274,14 @@ public class AccountService {
 		
 		String a_pw = "s" + adminAccountDto.getA_birth() + "!";
 		
-		return accountMapper.updateAdminPwReset(a_no, passwordEncoder.encode(a_pw));
+		int result = 
+				accountMapper.updateAdminPwReset(a_no, passwordEncoder.encode(a_pw));
+		
+		if (result >= 0)
+			return true;
+		else 
+			return false;
+		
 	}
 
 	// 비밀번호 확인
