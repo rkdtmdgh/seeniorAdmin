@@ -156,7 +156,7 @@
 		WHERE 
 			A_NO = #{a_no}
 			
-	</update>
+	</update> 
 	
 	<!-- 관리자 목록 페이징 -->
 	<select id="selectAdminList"
@@ -299,7 +299,8 @@
 	</select>
 	
 	<!-- 비밀번호 초기화 -->
-	<update id="updateAdminPwReset">
+	<update id="updateAdminPwReset"
+		parameterType="AdminAccountDto">
 	
 		UPDATE 
 			ADMIN_ACCOUNT 
