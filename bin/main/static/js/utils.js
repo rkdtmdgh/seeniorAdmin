@@ -535,7 +535,6 @@ function setIdentityCheckForm() {
 	                
                     <div class="btn_list col">
                         <button type="submit" class="btns">확인</button>
-                        <a href="javascript: history.back();" class="btns cancel">취소</a>
                     </div>
                 </div>
             </form>

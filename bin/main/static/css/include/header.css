@@ -14,7 +14,7 @@
         .header_menu_list {
             display: flex;
             align-items: center;
-            gap: var(--innerPadding);
+            gap: var(--stepGap);
             
             .user_name {
             	font-size: var(--menuFontSize);
