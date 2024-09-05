@@ -9,6 +9,12 @@ import com.see_nior.seeniorAdmin.dto.RecipeDto;
 
 @Mapper
 public interface RecipeMapper {
+	
+	// 식단 테이블 DROP
+	public void dropRecipeTable();
+	
+	// 식단 테이블 CREATE
+	public void createRecipeTable();
 
 	// 식단 API 데이터 DB에 입력하기
 	public void insertApiRecipeData(RecipeDto recipeDto);
@@ -18,7 +24,6 @@ public interface RecipeMapper {
 
 	// 식단의 총 리스트 개수 구하기 (모든 식단)
 	public int getAllRecipeCnt();
-	
 	
 
 }

@@ -66,25 +66,47 @@ function postSignInForm(event, formName) {
 }
 
 // 본인 확인 폼
-function postIdentityCheckForm(event, formName) {
+async function postIdentityCheckForm(event, formName) {
 	if(event) event.preventDefault();
 	const form = document.forms[formName];
 	let input;
 	
 	input = form.a_pw;
-	if(!checkEmpty(input, '비밀번호를', true)) {
+	if(!checkEmpty(input, '비밀번호를', true, true)) {
 		input.focus();
 		return false;
 	}
 	
-	// 모든 유효성 검사가 통과되었을 때 폼 제출	
-	form.action = "/account/modify_check";
-    form.method = "post"; 
-    form.submit();
+	try {
+		const response = await $.ajax({
+			url: '/account/info/modify_check',
+			method: 'POST',
+			data: {
+				a_pw: input.value.trim(),
+			},
+		});
+		
+		logger.info('/account/info/modify_check postIdentityCheckForm() response:', response);
+				
+		if(response) {
+			sessionStorage.setItem('loginedId', response.loginedId);
+			sessionStorage.setItem('checkDate', response.checkDate);
+			await getAccountInfo(); // get_account_info 요청, account modify form set
+			
+		} else {
+			alert('비밀번호가 일치하지 않습니다. 확인 후 다시 시도해 주세요.');
+			return false;
+		}
+		
+	} catch(error) {
+		logger.error('/account/info/modify_check postIdentityCheckForm() error:', error);
+		alert('본인 확인 오류로 데이터를 불러오는데 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
+		//location.replace('/account/info/modify_form');
+	}
 }
 
 // 질환/질병 분류 등록 폼
-async function postDiseaseCategoryCreateForm(event, formName) {
+async function postDiseaseCategoryCreateForm(event, formName, nextPage) {
 	if(event) event.preventDefault();
 	const form = document.forms[formName];
 	let input;
@@ -99,14 +121,14 @@ async function postDiseaseCategoryCreateForm(event, formName) {
 	
 	try {
 		const response = await $.ajax({
-			url: '/disease/create_category_confirm',
+			url: '/disease/cate_info/create_category_confirm',
 			method: 'POST',
 			data: {
 				dc_name: input.value.trim(),
 			},
 		});
 		
-		logger.info('/disease/create_category_confirm diseaseCategoryRegForm() response:', response);
+		logger.info('/disease/cate_info/create_category_confirm diseaseCategoryRegForm() response:', response);
 		
 		if(response) {
 			alert(`"${input.value}" 분류가 등록되었습니다.`);
@@ -116,11 +138,11 @@ async function postDiseaseCategoryCreateForm(event, formName) {
 		}
 		
 	} catch(error) {
-		logger.error('/disease/create_category_confirm diseaseCategoryRegForm() error:', error);
+		logger.error('/disease/cate_info/create_category_confirm diseaseCategoryRegForm() error:', error);
 		alert(errorMessage);
 		
 	} finally {
-		location.reload(true);
+		nextPage ? location.replace(nextPage) : location.reload(true);
 	}
 }
 
@@ -164,18 +186,18 @@ async function postDiseaseCreateForm(formName) {
 	
 	try {
 		const response = await $.ajax({
-			url: '/disease/create_confirm',
+			url: '/disease/info/create_confirm',
 			method: 'POST',
 			data: formData,
 			processData: false,  // FormData가 자동으로 Content-Type 설정
 			contentType: false,  // FormData를 문자열로 변환하지 않음
 		});
 		
-		logger.info('/disease/create_confirm postDiseaseCreateForm() response:', response);
+		logger.info('/disease/info/create_confirm postDiseaseCreateForm() response:', response);
 		
 		if(response) {
 			alert(`"${form.d_name.value}" 질환/질병 정보가 등록되었습니다.`);
-			location.replace('/disease/disease_list_form');
+			location.replace('/disease/info/disease_list_form');
 			
 		} else {
 			alert(errorMessage);
@@ -183,7 +205,7 @@ async function postDiseaseCreateForm(formName) {
 		}
 		
 	} catch(error) {
-		logger.error('/disease/create_confirm postDiseaseCreateForm() error:', error);
+		logger.error('/disease/info/create_confirm postDiseaseCreateForm() error:', error);
 		alert(errorMessage);
 		location.reload(true);
 	}

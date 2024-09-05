@@ -10,15 +10,49 @@ function setInputFocus(ele) {
 	}
 }
 
-// submit 이벤트 막기(form 에서 enter 작동 되지 않고 버튼으로 submit만 가능하도록)
+// submit 이벤트 막기(form 에서 enter키 입력 되지 않고 버튼으로 submit만 가능하도록)
+// 예외 사항으로 form 내부에 disabled 되어 있는 인풋이 있는 경우에는 사용하지 않아도 됨
 function setFormSendFalse(event) {
 	event.preventDefault(); // 폼의 기본 제출 동작 방지
     return false; // 폼 제출 방지
 }
 
+// 본인 확인 페이지 세션스토리지 저장 값 확인하여 요청 처리
+function setSessionIdentityCheck(loginUser) {
+	const sessionLogId = sessionStorage.getItem('loginedId') || '';
+	const sessionCheckDate = sessionStorage.getItem('checkDate') || '';
+	
+	logger.info('setSessionIdentityCheck() loginUser:', loginUser);
+	logger.info('setSessionIdentityCheck() sessionLogId:', sessionLogId);
+	logger.info('setSessionIdentityCheck() sessionCheckDate:', sessionCheckDate);
+	
+	if(!sessionLogId || !sessionCheckDate) {
+		return false;
+	}
+	
+	if(loginUser != sessionLogId) {
+		return false;
+	}
+	
+	// 현재 시간과 비교
+	const currentTime = new Date();
+	const checkTime = new Date(sessionCheckDate);
+	const sessionTime = 10 * 60 * 1000; // 10분
+	
+	if(currentTime - checkTime > sessionTime) { // sessionTime 경과
+		sessionStorage.removeItem('loginedId');
+		sessionStorage.removeItem('checkDate');
+		alert('세션이 만료되었습니다. 다시 확인해 주세요.');
+		return false;
+		
+	}
+	
+	return true;
+}
+
 // NAV 선택 표시 및 토글
 function setNavActiveToggle() {
-	const currentPath = window.location.pathname; // 현재 URL
+	const currentPath = window.location.pathname.split('/').slice(0,3).join('/'); // 현재 URL에서 첫 번째와 두 번째까지 path 
 	const currentQueryParams = new URLSearchParams(window.location.search); // 쿼리 파라미터
 	logger.info('URl:', currentPath);
 
@@ -27,7 +61,7 @@ function setNavActiveToggle() {
 		const $navMenu = $(this);
 		const $navMenuBtn = $navMenu.find('.side_menu_btn');
 		const href = $navMenuBtn.attr('href') || null; // 메뉴 버튼의 href
-		const hrefPath = href ? new URL(href, window.location.origin).pathname : ''; // 메뉴 href 경로에서 path 추출
+		const hrefPath = href ? new URL(href, window.location.origin).pathname.split('/').slice(0, 3).join('/') : ''; // href에서 첫 번째와 두 번째 path
 		logger.info(index + '. href:', hrefPath);
 		
 		if (hrefPath && hrefPath === currentPath) { // 서브 메뉴가 없고 href가 현재 경로가 일치할 경우
@@ -40,7 +74,7 @@ function setNavActiveToggle() {
 			$navSubMenus.each(function() {
 				const $navSubMenu = $(this);
 				const subHref = $navSubMenu.attr('href') || null;
-				const subHrefPath = subHref ? new URL(subHref, window.location.origin).pathname : ''; // 서브메뉴 href 경로에서 path 추출
+				const subHrefPath = subHref ? new URL(subHref, window.location.origin).pathname.split('/').slice(0, 3).join('/') : ''; // 서브메뉴 href에서 첫 번째와 두 번째 path
 				const subHrefQueryParams = new URLSearchParams(new URL(subHref, window.location.origin).search);
 				
 				if (subHrefPath && subHrefPath === currentPath) {
@@ -228,12 +262,12 @@ function setWordAndCommand(inputName) {
 	switch(inputName) {
 		case 'dc_name':
 			word = '질환/질병 분류명';
-			apiUrl = '/disease/is_disease_category';
+			apiUrl = '/disease/cate_info/is_disease_category';
 			break;
 			
 		case 'd_name':
 			word = '질환/질병명';
-			apiUrl = '/disease/is_disease';
+			apiUrl = '/disease/info/is_disease';
 			break;
 			
 		default:
@@ -251,34 +285,46 @@ function setParseResponseByCommand(command, response) {
 	let getListCnt;
 	
 	switch(command) {
-		case '/account/get_admin_list': // 관리자 계정 관리
+		case '/account/list/get_admin_list': // 관리자 계정 관리
 			getListDtos = response.adminAccountDtos;
 			getListPage = response.adminListPage;
 			getListCnt = response.adminListPage.accountListCnt;
 			break;
 			
-		case '/account/search_admin_list': // 관리자 계정 관리 검색
+		case '/account/list/search_admin_list': // 관리자 계정 관리 검색
 			getListDtos = response.adminAccountDtos;
 			getListPage = response.searchAdminListPage;
 			getListCnt = response.searchAdminListPage.searchAdminListCnt;
 			break;
 			
-		case '/disease/get_all_disease_list_with_page': // 질환 / 질병 정보 관리
+		case '/disease/info/get_all_disease_list_with_page': // 질환 / 질병 정보 관리
 			getListDtos = response.diseaseDtos;
 			getListPage = response.diseaseListPageNum;
 			getListCnt = response.diseaseListPageNum.diseaseListCnt;
 			break;
 			
-		case '/disease/search_disease_list': // 질환 / 질병 정보 관리 검색
+		case '/disease/info/search_disease_list': // 질환 / 질병 정보 관리 검색
 			getListDtos = response.diseaseDtos;
 			getListPage = response.searchDiseaseListPageNum;
 			getListCnt = response.searchDiseaseListPageNum.searchDiseaseListCnt;
-			break;
-		
-		case '/disease/get_disease_list_by_category_with_page': // 질환 / 질병 정보 관리 질환명 sort
+			break;	
+			
+		case '/disease/info/get_disease_list_by_category_with_page': // 질환 / 질병 정보 관리 분류별 sort
 			getListDtos = response.diseaseDtos;
 			getListPage = response.diseaseListByCategoryPageNum;
 			getListCnt = response.diseaseListByCategoryPageNum.diseaseListCnt;
+			break;	
+			
+		case '/disease/cate_info/get_category_list_with_page': // 질환 / 질병 정보 분류 관리
+			getListDtos = response.diseaseCategoryDtos;
+			getListPage = response.diseaseCategoryListPageNum;
+			getListCnt = response.diseaseCategoryListPageNum.diseaseCategoryListCnt;
+			break;
+			
+		case '/disease/cate_info/search_disease_category_list': // 질환 / 질병 정보 분류 검색
+			getListDtos = response.diseaseCategoryDtos;
+			getListPage = response.searchDiseaseCategoryListPageNum;
+			getListCnt = response.searchDiseaseCategoryListPageNum.searchDiseaseCategoryListCnt;
 			break;
 	}
 	
@@ -353,18 +399,18 @@ function setDataList(api, data, index) {
 	let innerContent = '';
 	
 	switch(api) {
-		case '/account/get_admin_list': 
-		case '/account/search_admin_list':
+		case '/account/list/get_admin_list': 
+		case '/account/list/search_admin_list':
 			innerContent = `
 				<tr>
 		            <td>
 		                <p class="table_info">${index}</p>
 		            </td>
 		            <td>
-		                <a href="/account/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_id || 'N/A'}</a>
+		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_id || 'N/A'}</a>
 		            </td>
 		            <td>
-		                <a href="/account/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_authority_role == 'SUB_ADMIN' ? '완료' : '대기'}</a>
+		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_authority_role == 'SUB_ADMIN' ? '완료' : '대기'}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${data.a_phone || 'N/A'}</p>
@@ -379,22 +425,22 @@ function setDataList(api, data, index) {
 			`;
 			break;
 			
-		case '/disease/get_all_disease_list_with_page':
-		case '/disease/search_disease_list':
-		case '/disease/get_disease_list_by_category_with_page':
+		case '/disease/info/get_all_disease_list_with_page':
+		case '/disease/info/search_disease_list':
+		case '/disease/info/get_disease_list_by_category_with_page':
 			innerContent = `
 				<tr>
 		            <td class="vam">
 		                <div class="table_info func_area"><input type="checkbox" name="d_no" class="d_no" value="${data.d_no}"></div>
 		            </td>
 		            <td>
-		                <a href="/disease/modify_form?d_no=${data.d_no}" class="table_info">${index}</a>
+		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${index}</a>
 		            </td>
 		            <td>
-		                <a href="/disease/modify_form?d_no=${data.d_no}" class="table_info">${data.diseaseCategoryDto.dc_name}</a>
+		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${data.diseaseCategoryDto.dc_name}</a>
 		            </td>
 		            <td>
-		                <a href="/disease/modify_form?d_no=${data.d_no}" class="table_info">${data.d_name || 'N/A'}</a>
+		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${data.d_name || 'N/A'}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.d_reg_date) || 'N/A'}</p>
@@ -402,6 +448,26 @@ function setDataList(api, data, index) {
 		        </tr>
 			`;
 			break;
+			
+			case '/disease/cate_info/get_category_list_with_page':
+			case '/disease/cate_info/search_disease_category_list':
+				innerContent = `
+					<tr>
+			            <td>
+			                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${index}</a>
+			            </td>
+			            <td>
+			                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${data.dc_name}</a>
+			            </td>
+			            <td>
+			                <a href="/disease/info/disease_list_form?sortType=1&sort=dc_no&dc_no=${data.dc_no}" class="table_info">${data.itemCnt}</a>
+			            </td>
+			            <td>
+			                <p class="table_info">${setFormatDate(data.dc_reg_date) || 'N/A'}</p>
+			            </td>
+			        </tr>
+				`;
+				break;
 		
 		default:
 			innerContent = '';
@@ -441,6 +507,146 @@ function setTextareaAutoHeight(ele) {
 	$textarea.height(newHeight + 'px');
 }
 
+// 본인 확인 전 account/modify_form SET 
+function setIdentityCheckForm() {
+	const $contentInfoWrap = $('.content_info_wrap');
+	
+	let dataFormContent;
+	dataFormContent = `
+		<div class="content_top">
+	        <div class="content_top_info">
+	            <h2 class="title">본인확인</h2>
+	        </div>
+            <p class="sub_title">본인확인을 위해 비밀번호를 입력해 주세요</p>
+	    </div>
+	    
+	    <div class="sign_form" id="password_check_form">
+	    	<form name="modify_check_form" onsubmit="postIdentityCheckForm(event, 'modify_check_form')">
+            	<div class="input_list_container">
+	                <div class="input_list" id="input_list_info">					
+	                    <label for="pw" class="border_input">
+	                        <span class="input_title">비밀번호</span>
+	                        <input type="password" name="a_pw" id="pw" placeholder="비밀번호" class="input_txt" autocomplete="off">
+	                        <span class="input_icon" onclick="setPwViewToggle(this)">
+	                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
+	                        </span>
+	                    </label>
+	                </div>
+	                
+                    <div class="btn_list col">
+                        <button type="submit" class="btns">확인</button>
+                    </div>
+                </div>
+            </form>
+	    </div>
+	`;
+	
+	$contentInfoWrap.html(dataFormContent); // account/modifyForm SET
+}
+
+// 본인 확인 후 account/modify_form SET
+function setAccountModifyForm(data) {
+	let dataFormContent;
+	dataFormContent = `
+		<div class="content_top">
+	        <div class="content_top_info">
+	            <h2 class="title">내 정보 관리</h2>
+	        </div>
+            <p class="sub_title">내 정보 수정</p>
+	    </div>
+							
+		<form name="modify_form">					    	
+		    <div class="table_wrap">
+                <table class="content_edit_table">
+                    <colgroup>
+                        <col class="col_row_title">
+                        <col>
+                        <col class="col_row_title">
+                        <col>
+                    </colgroup>
+
+                    <tbody>
+                        <tr>
+                        	<th><p class="table_title">아이디</p></th>
+                        	<td class="disabled">
+                        		<input type="hidden" name="a_no" value="${data.a_no}">
+                        		<input type="text" name="a_id" id="id" class="table_info disabled"
+                                	value="${data.a_id}" disabled>
+                            </td>
+
+                            <th><p class="table_title">비밀번호</p></th>
+                        	<td>
+                        		<label class="cont_info">
+                        			<input type="password" name="a_pw" id="pw" class="table_info" placeholder="변경 시 입력" autocomplete="off">
+                        			<span class="input_icon" onclick="setPwViewToggle(this)">
+			                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
+			                        </span>
+                        		</label>
+                            </td>
+                        </tr>
+
+                        <tr>
+                        	<th><p class="table_title">이름</p></th>
+                        	<td>
+                                <input type="text" name="a_name" id="name" class="table_info" placeholder="이름"
+                                	oninput="checkEmpty(this, '이름을')" onblur="checkEmpty(this, '이름을')"
+                                	value="${data.a_name}">
+                            </td>
+
+                        	<th><p class="table_title">생년월일</p></th>
+                        	<td>
+                                <input type="text" name="a_birth" id="birth" maxlength="10" class="table_info" placeholder="생년월일 8자 (YYYYMMDD)"
+                                	onkeydown="setReplaceBirth(this)" onkeyup="validateBirth(this)" onblur="validateBirth(this)"
+                                	value="${data.a_birth}">
+                            </td>
+                        </tr>
+
+                        <tr>
+                        	<th><p class="table_title">연락처</p></th>
+                        	<td>
+                                <input type="text" name="a_phone" id="phone" maxlength="13" class="table_info" placeholder="연락처"
+                                	onkeydown="setReplacePhone(this)" onkeyup="validatePhone(this)" onblur="validatePhone(this)"
+                                	value="${data.a_phone}">
+                            </td>
+                        	<th><p class="table_title">부서</p></th>
+                        	<td class="disabled">
+                                <input type="text" name="a_department" id="department" class="table_info" placeholder="부서"
+                                	value="${data.a_department || ''}"
+                                	${data.a_authority_role != 'SUPER_ADMIN' ? 'disabled' : ''}>
+                            </td>
+                        </tr>
+
+                        <tr>
+                        	<th><p class="table_title">직위</p></th>
+                        	<td class="disabled">
+                                <input type="text" name="a_level" id="level" class="table_info" placeholder="직위"
+                                	value="${data.a_level || ''}"
+                                	${data.a_authority_role != 'SUPER_ADMIN' ? 'disabled' : ''}>
+                            </td>
+                        	<th><p class="table_title">직책</p></th>
+                        	<td class="disabled">
+                                <input type="text" name="a_position" id="position" class="table_info" placeholder="직책"
+                                	value="${data.a_position || ''}"
+                                	${data.a_authority_role != 'SUPER_ADMIN' ? 'disabled' : ''}>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="btn_list right">
+                    <div class="btn_list">
+                        <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
+                        <div onclick="putModifyForm('modify_form')" class="btns">수정</div>
+                    </div>
+                </div>
+            </div>
+        </form>
+	`;
+	
+	return dataFormContent;
+}
+
+// 문서 클릭 이벤트
 $(document).on('click', function(event) {
 	// 커스텀 셀렉트 open, close 기능
 	const $openSelectEle = $('.select_option_list.active'); // 열려 있는 셀렉트 옵션 요소
@@ -450,6 +656,7 @@ $(document).on('click', function(event) {
 	}
 });
 
+// 문서가 준비된 후 실행
 $(document).ready(function() {
 	// textarea 입력된 값으로 높이값 조절
 	$('.table_textarea.small').each(function() {

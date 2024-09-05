@@ -7,9 +7,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-import org.springframework.security.web.savedrequest.RequestCache;
-import org.springframework.security.web.savedrequest.SavedRequest;
 
 import com.see_nior.seeniorAdmin.account.AdminAccessDeniedHandler;
 
@@ -74,8 +71,6 @@ public class SecurityConfig {
 					.successHandler((request, response, authentication) -> {
 						log.info("admin sign in success handler");
 						
-						String targetURI = "/";
-						
 						/*
 						 * 로그인 전 URI 가져오기 
 						 * RequestCache requestCache = new HttpSessionRequestCache(); SavedRequest
@@ -89,7 +84,7 @@ public class SecurityConfig {
 						 * }
 						 */
 						
-						response.sendRedirect(targetURI);
+						response.sendRedirect("/account/sign_in_result?result=" + true);
 						
 					})
 					.failureHandler(new CustumAuthenticationFailureHandler()));

@@ -214,7 +214,7 @@
     .contents_container {
         width: 100%;
         height: calc(100% - var(--headerHeight));
-        padding: var(--innerPadding);
+        padding: var(--contentInnerPadding);
         display: flex;
         gap: var(--innerPadding);
         position: fixed;
@@ -226,7 +226,7 @@
             .content_inner {
                 width: 100%;
                 height: 100%;
-                padding: var(--innerPadding);
+                padding: var(--contentInnerPadding);
                 border-radius: var(--bdrs);
                 box-shadow: var(--bxsh);
                 background-color: var(--subBgColor);

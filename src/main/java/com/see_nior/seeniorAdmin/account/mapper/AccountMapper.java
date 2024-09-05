@@ -33,9 +33,9 @@ public interface AccountMapper {
 
 	public int selectSearchAdminListCnt(Map<String, Object> searchParams);
 
-	public void updateAdminInfoFromSuper(AdminAccountDto adminAccountDto);
+	public int updateAdminInfoFromSuper(AdminAccountDto adminAccountDto);
 
-	public int updateAdminPwReset(int a_no, String a_pw);
+	public int updateAdminPwReset(AdminAccountDto adminAccountDto);
 
 
 }

@@ -40,14 +40,16 @@
 
     /* element property */
     --logoWidth: 160px;
-    --sideMenuWidth: 250px;
+    --sideMenuWidth: 270px;
     --headerHeight: 70px;
     --iconsWidth: 20px;
     --arrowWidth: 5px; /* X2 (5px = 10px) */
     --signFormWidth: 340px;
     --tableTextareaHeight: 200px;
 
-    --innerPadding: 30px;
+    --innerPadding: 50px;
+    --signFormInnerPadding: 30px;
+    --contentInnerPadding: 30px var(--innerPadding);
     --btnsPadding: 1em 1.5em;
     --smallBtnsPadding: 0.53em 1.1em;
     --tableBtnPadding: 0.3em;
