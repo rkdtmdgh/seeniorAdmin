@@ -34,10 +34,19 @@ public class BoardService {
 	}
 
 	public int createConfirm(BoardCategoryDto boardCategoryDto) {
-		log.info("getList()");
+		log.info("createConfirm()");
 					
-		int bc_idx = boardCategoryDto.getBc_idx();
+		int bc_idx = boardCategoryDto.getBc_idx(); // 프론트에서 입력값이 없으면 0으로 넘겨줌 
 		String bc_name = boardCategoryDto.getBc_name();
+		
+		if(bc_idx == 0) {
+			
+			// List<Integer> boardIdxs = boardMapper.getAllBoardIdx();
+			// int lastBoradIdx = boardIdxs.getFirst();
+			
+			// int result = boardMapper.createBoardCategory(lastBoradIdx+1,bc_name);
+			
+		}
 		
 		log.info("bc_idx --- {}", bc_idx);
 		log.info("bc_name --- {}", bc_name);
