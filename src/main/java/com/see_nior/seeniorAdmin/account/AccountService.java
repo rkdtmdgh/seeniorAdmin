@@ -144,12 +144,16 @@ public class AccountService {
 	}
 	
 	// 회원 탈퇴 확인 
-	public int deleteConfirm(int a_no) {
+	public boolean deleteConfirm(int a_no) {
 		log.info("deleteConfirm()");
 		
-		log.info("a_no ---- {}", a_no);
+		int result = 
+				accountMapper.updateAdminIsDeletedByNo(a_no);
 		
-		return accountMapper.updateAdminIsDeletedByNo(a_no);
+		if (result >= 0) 
+			return true;
+		else
+			return false;
 	}
 	
 	// 관리자 리스트 가져오기

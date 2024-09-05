@@ -200,21 +200,13 @@ public class AccountController {
 	
 	// 회원 탈퇴 확인 
 	@PostMapping("/list/delete_confirm")
-	public String deleteConfirm(
-			@RequestParam("a_no") int a_no,
-			Model model) {
+	@ResponseBody
+	public Object deleteConfirm(
+			@RequestParam("a_no") int a_no) {
 		log.info("deleteConfirm()");
 		
-		String nextPage = "account/delete_result";
+		return accountService.deleteConfirm(a_no);
 		
-		int deleteResult = accountService.deleteConfirm(a_no);
-		
-		if (deleteResult >= 0) 
-			model.addAttribute("deleteResult", true);
-		else 
-			model.addAttribute("deleteResult", false);
-				
-		return nextPage;
 	}
 	
 	// 관리자 리스트 바로가기 
