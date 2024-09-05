@@ -283,7 +283,7 @@ function setParseResponseByCommand(command, response) {
 			break;
 			
 		case '/disease/cate_info/get_category_list_with_page': // 질환 / 질병 정보 분류 관리
-			getListDtos = response.diseaseCategoryWithItemCntList.diseaseCategoryDtos;
+			getListDtos = response.diseaseCategoryDtos;
 			getListPage = response.diseaseCategoryListPageNum;
 			getListCnt = response.diseaseCategoryListPageNum.diseaseCategoryListCnt;
 			break;
