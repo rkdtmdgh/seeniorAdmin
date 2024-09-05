@@ -152,25 +152,20 @@ public class AccountController {
 	
 	// 내 정보 수정 확인
 	@PostMapping("/info/modify_confirm")
-	public String modifyConfirm(Model model, Principal principal, AdminAccountDto adminAccountDto) {
+	@ResponseBody
+	public Object modifyConfirm(Model model, Principal principal, AdminAccountDto adminAccountDto) {
 		log.info("modifyConfirm()");
-		
-		String nextPage = "account/modify_result_form";
-		
-		int modifyResult = -1;
 		
 		if (principal.getName().equals(adminAccountDto.getA_id())) {
 			
-			modifyResult = accountService.modifyConfirm(adminAccountDto);
-			model.addAttribute("modifyResult", modifyResult);
+			return accountService.modifyConfirm(adminAccountDto);
 			
 		} else {
 			
-			model.addAttribute("modifyResult", modifyResult);
+			return false;
 			
 		}
 		
-		return nextPage;
 	}
 	
 	// SUPER_ADMIN - ADMIN 정보 수정 양식
