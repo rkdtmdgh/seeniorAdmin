@@ -172,7 +172,7 @@ async function getSearchList(event, apiUrl, page) {
 	let input;
 	
 	input = form.search_string;
-	if(!checkEmpty(input, '검색어를', true)) { // true: alert으로 메세지 띄우기
+	if(!checkEmpty(input, '검색어를', true, true)) { // 요소, text, alert 여부, 에러메세지 미노출 여부
 		input.focus();
 		return false;
 	}

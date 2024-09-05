@@ -22,17 +22,17 @@ async function delAccount(a_no, a_id) {
 		
 		if(response) {
 			alert(`${a_id} 계정이 삭제되었습니다.`);
+			location.replace('/account/list/admin_list_form');
 			
 		} else {
 			alert(errorMessage);
+			location.reload(true);
 		}
 		
 	} catch(error) {
 		logger.error('/account/list/delete_confirm delAccount() error:', error);
 		alert(errorMessage);
-		
-	} finally {
-		location.replace('/account/list/admin_list_form');
+		location.reload(true);
 	}
 }
 
