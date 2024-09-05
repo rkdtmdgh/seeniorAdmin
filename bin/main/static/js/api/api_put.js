@@ -1,5 +1,9 @@
 // ajax 요청
 async function putSubmitForm(apiUrl, formData, successMessage, errorMessage) {
+	for (const [key, value] of formData.entries()) {
+		logger.info('putSubmitForm() formData:', key, value);
+	};
+	
 	try {
 		const response = await $.ajax({
 			url: apiUrl,
@@ -23,7 +27,7 @@ async function putSubmitForm(apiUrl, formData, successMessage, errorMessage) {
 		alert(errorMessage);
 		
 	} finally {
-		location.reload(true);
+		//location.reload(true);
 	}
 }
 
@@ -63,10 +67,20 @@ async function putModifyForm(formName) {
 		return false;
 	}
 	
-	const formData = new FormData(form);
+	const formData = new FormData(); // 비동기로 추가된 html로 폼 요소들이 DOM에 제대로 반영되지 않을 수 있어 append로 삽입
+	formData.append('a_no', form.a_no.value);
+	formData.append('a_id', form.a_id.value);
+	formData.append('a_pw', form.a_pw.value);
+	formData.append('a_name', form.a_name.value);
+	formData.append('a_birth', form.a_birth.value);
+	formData.append('a_phone', form.a_phone.value);
+	formData.append('a_department', form.a_department.value);
+	formData.append('a_level', form.a_level.value);
+	formData.append('a_position', form.a_position.value);
+	
 	const successMessage = '정보가 수정되었습니다';
 	const errorMessage = '정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
-	
+	logger.info('내 정보 관리 폼 데이터:', formData);
 	await putSubmitForm('/account/info/modify_confirm', formData, successMessage, errorMessage);
 }
 
