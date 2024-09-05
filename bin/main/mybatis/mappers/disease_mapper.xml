@@ -43,12 +43,12 @@
 			parameterType="String"
 			resultType="boolean">
 			
-			SELECT 
-				COUNT(*) 
-			FROM 
-				DISEASE_CATEGORY 
-			WHERE 
-				DC_NAME = #{dc_name}
+		SELECT 
+			COUNT(*) 
+		FROM 
+			DISEASE_CATEGORY 
+		WHERE 
+			DC_NAME = #{dc_name}
 	
 	</select>
 	
@@ -56,53 +56,53 @@
 	<select id="getDiseaseCategoryList"
 			resultMap="DiseaseCategoryDto">
 	
-			SELECT 
-				* 
-			FROM 
-				DISEASE_CATEGORY 
-			WHERE 
-				DC_IS_DELETED = 1 
-			ORDER BY 
-				DC_NAME ASC
-	
+		SELECT 
+			* 
+		FROM 
+			DISEASE_CATEGORY 
+		WHERE 
+			DC_IS_DELETED = 1 
+		ORDER BY 
+			DC_NAME ASC
+
 	</select>
 	
 	<!-- // 카테고리 별 질환의 개수 구하기 -->
 	<select id="getCategoryItemCnt">
 	
-			SELECT 
-				COUNT(*) 
-			FROM 
-				DISEASE 
-			WHERE 
-				D_IS_DELETED = 1 
-			AND 
-				D_CATEGORY_NO = #{dc_no}
+		SELECT 
+			COUNT(*) 
+		FROM 
+			DISEASE 
+		WHERE 
+			D_IS_DELETED = 1 
+		AND 
+			D_CATEGORY_NO = #{dc_no}
 	
 	</select>
 	
 	<!-- 모든 질환 카테고리 가져오기(페이지네이션 => 질환 카테고리 관리용 => 비동기) -->
 	<select id="getDiseaseCategoryListWithPage">
 	
-			SELECT 
-				* 
-			FROM 
-				DISEASE_CATEGORY 
-			WHERE 
-				DC_IS_DELETED = 1 
-			<choose>
-				<when test="sort == 'all'">
-					ORDER BY DC_NO DESC				
-				</when>
-				<when test="sort == 'asc'">
-					ORDER BY DC_NAME ASC				
-				</when>
-				<when test="sort == 'desc'">
-					ORDER BY DC_NAME DESC				
-				</when>			
-			</choose>
-			LIMIT 
-				#{start}, #{limit}
+		SELECT 
+			* 
+		FROM 
+			DISEASE_CATEGORY 
+		WHERE 
+			DC_IS_DELETED = 1 
+		<choose>
+			<when test="sort == 'all'">
+				ORDER BY DC_NO DESC				
+			</when>
+			<when test="sort == 'asc'">
+				ORDER BY DC_NAME ASC				
+			</when>
+			<when test="sort == 'desc'">
+				ORDER BY DC_NAME DESC				
+			</when>			
+		</choose>
+		LIMIT 
+			#{start}, #{limit}
 	
 	</select>
 	
@@ -110,12 +110,12 @@
 	<!-- 질환 카테고리의 총 리스트 개수 구하기 -->
 	<select id="getAllDiseaseCategoryCnt">
 	
-			SELECT 
-				COUNT(*) 
-			FROM 
-				DISEASE_CATEGORY 
-			WHERE 
-				DC_IS_DELETED = 1
+		SELECT 
+			COUNT(*) 
+		FROM 
+			DISEASE_CATEGORY 
+		WHERE 
+			DC_IS_DELETED = 1
 	
 	</select>
 	
@@ -123,25 +123,25 @@
 	<select id="getDiseaseCategory"
 			resultMap="DiseaseCategoryDto">
 			
-			SELECT 
-				* 
-			FROM 
-				DISEASE_CATEGORY 
-			WHERE 
-				DC_NO = #{dc_no} 
+		SELECT 
+			* 
+		FROM 
+			DISEASE_CATEGORY 
+		WHERE 
+			DC_NO = #{dc_no} 
 			
 	</select>
 	
 	<!-- 질환 카테고리 수정 -->
 	<update id="updateDiseaseCategory">
-	
-			UPDATE 
-				DISEASE_CATEGORY 
-			SET 
-				DC_NAME = #{dc_name}, 
-				DC_MOD_DATE = NOW() 
-			WHERE 
-				DC_NO = #{dc_no}
+
+		UPDATE 
+			DISEASE_CATEGORY 
+		SET 
+			DC_NAME = #{dc_name}, 
+			DC_MOD_DATE = NOW() 
+		WHERE 
+			DC_NO = #{dc_no}
 	
 	</update>
 	
@@ -161,6 +161,43 @@
 	
 	</update>
 	
+	
+	<!-- 페이지에 따른 질환 카테고리 가져오기(검색한 질환 카테고리) -->
+	<select id="getSearchDiseaseCategory">
+		
+		SELECT 
+			* 
+		FROM 
+			DISEASE_CATEGORY 
+		WHERE 
+			DC_IS_DELETED = 1 
+		<choose>
+			<when test="searchPart == 'dc_name'">
+				AND 
+					DC_NAME LIKE CONCAT('%', #{searchString}, '%')
+			</when>
+		</choose>
+	
+	</select>
+	
+	<!-- 질환 카테고리의 총 페이지 개수 구하기(검색한 질환 카테고리) -->
+	<select id="getSearchDiseaseCategoryListCnt">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			DISEASE_CATEGORY 
+		WHERE 
+			DC_IS_DELETED = 1 
+		<choose>
+			<when test="searchPart == 'dc_name'">
+				AND 
+					DC_NAME LIKE CONCAT('%', #{searchString}, '%')
+			</when>
+		</choose>
+	
+	</select>
+	
 	<!-- 질환  관련 -->
 	
 	<!-- 질환 등록 -->
@@ -179,12 +216,12 @@
 			parameterType="String"
 			resultType="boolean">
 			
-			SELECT 
-				COUNT(*) 
-			FROM 
-				DISEASE 
-			WHERE 
-				D_NAME = #{d_name}
+		SELECT 
+			COUNT(*) 
+		FROM 
+			DISEASE 
+		WHERE 
+			D_NAME = #{d_name}
 	
 	</select>
 	
@@ -192,62 +229,62 @@
 	<select id="getDiseaseList"
 			resultMap="DiseaseDto">
 		
-			SELECT 
-				D.*, 
-				DC.DC_NAME 
-			FROM 
-			    DISEASE D 
-			JOIN 
-			    DISEASE_CATEGORY DC 
-			ON 
-			    D.D_CATEGORY_NO = DC.DC_NO 
-			WHERE 
-			    D.D_IS_DELETED = 1 
-			ORDER BY 
-				D_NO DESC 
-	
+		SELECT 
+			D.*, 
+			DC.DC_NAME 
+		FROM 
+		    DISEASE D 
+		JOIN 
+		    DISEASE_CATEGORY DC 
+		ON 
+		    D.D_CATEGORY_NO = DC.DC_NO 
+		WHERE 
+		    D.D_IS_DELETED = 1 
+		ORDER BY 
+			D_NO DESC 
+
 	</select>
 	
 	<!-- 페이지에 따른 질환 가져오기(모든 질환) -->
 	<select id="getDiseaseListWithPage"
 			resultMap="DiseaseDto">
 			
-			SELECT 
-				D.*, 
-				DC.DC_NAME 
-			FROM 
-			    DISEASE D 
-			JOIN 
-			    DISEASE_CATEGORY DC 
-			ON 
-			    D.D_CATEGORY_NO = DC.DC_NO 
-			WHERE 
-			    D.D_IS_DELETED = 1 
-			<choose>
-				<when test="sort == 'all'">
-					ORDER BY D.D_NO DESC				
-				</when>
-				<when test="sort == 'asc'">
-					ORDER BY D.D_NAME ASC				
-				</when>
-				<when test="sort == 'desc'">
-					ORDER BY D.D_NAME DESC				
-				</when>			
-			</choose>    
-			LIMIT 
-				#{start}, #{limit}
+		SELECT 
+			D.*, 
+			DC.DC_NAME 
+		FROM 
+		    DISEASE D 
+		JOIN 
+		    DISEASE_CATEGORY DC 
+		ON 
+		    D.D_CATEGORY_NO = DC.DC_NO 
+		WHERE 
+		    D.D_IS_DELETED = 1 
+		<choose>
+			<when test="sort == 'all'">
+				ORDER BY D.D_NO DESC				
+			</when>
+			<when test="sort == 'asc'">
+				ORDER BY D.D_NAME ASC				
+			</when>
+			<when test="sort == 'desc'">
+				ORDER BY D.D_NAME DESC				
+			</when>			
+		</choose>    
+		LIMIT 
+			#{start}, #{limit}
 	
 	</select>
 	
 	<!-- 질환의 총 리스트 개수 구하기(모든 질환) -->
 	<select id="getAllDiseaseCnt">
 	
-			SELECT 
-				COUNT(*) 
-			FROM 
-				DISEASE 
-			WHERE 
-				D_IS_DELETED = 1
+		SELECT 
+			COUNT(*) 
+		FROM 
+			DISEASE 
+		WHERE 
+			D_IS_DELETED = 1
 	
 	</select>
 	
@@ -255,37 +292,37 @@
 	<select id="getDiseaseListByCategoryWithPage"
 			resultMap="DiseaseDto">
 			
-			SELECT 
-				D.*, 
-				DC.DC_NAME 
-			FROM 
-			    DISEASE D 
-			JOIN 
-			    DISEASE_CATEGORY DC 
-			ON 
-			    D.D_CATEGORY_NO = DC.DC_NO 
-			WHERE 
-			    D.D_IS_DELETED = 1 
-			AND 
-				D.D_CATEGORY_NO = #{dc_no} 
-			ORDER BY 
-				D_NO DESC 
-			LIMIT 
-				#{start}, #{limit}
+		SELECT 
+			D.*, 
+			DC.DC_NAME 
+		FROM 
+		    DISEASE D 
+		JOIN 
+		    DISEASE_CATEGORY DC 
+		ON 
+		    D.D_CATEGORY_NO = DC.DC_NO 
+		WHERE 
+		    D.D_IS_DELETED = 1 
+		AND 
+			D.D_CATEGORY_NO = #{dc_no} 
+		ORDER BY 
+			D_NO DESC 
+		LIMIT 
+			#{start}, #{limit}
 	
 	</select>
 	
 	<!-- 질환의 총 리스트 개수 구하기(카테고리별 질환) -->
 	<select id="getDiseaseByCategoryCnt">
 	
-			SELECT 
-				COUNT(*) 
-			FROM 
-				DISEASE 
-			WHERE 
-				D_IS_DELETED = 1 
-			AND 
-				D_CATEGORY_NO = #{dc_no}
+		SELECT 
+			COUNT(*) 
+		FROM 
+			DISEASE 
+		WHERE 
+			D_IS_DELETED = 1 
+		AND 
+			D_CATEGORY_NO = #{dc_no}
 	
 	</select>
 	
@@ -293,87 +330,86 @@
 	<select id="getDiseaseByNo"
 			resultMap="DiseaseDto">
 			
-			SELECT 
-				* 
-			FROM 
-				DISEASE 
-			WHERE 
-				D_NO = #{d_no}
+		SELECT 
+			* 
+		FROM 
+			DISEASE 
+		WHERE 
+			D_NO = #{d_no}
 	
 	</select>
 	
 	<!-- 질환 수정 -->
 	<update id="updateDisease">
 	
-			UPDATE 
-				DISEASE 
-			SET 
-				D_CATEGORY_NO = #{d_category_no}, 
-				D_NAME = #{d_name}, 
-				D_INFO = #{d_info}, 
-				D_GOOD_FOOD = #{d_good_food}, 
-				D_BAD_FOOD = #{d_bad_food}, 
-				D_MOD_DATE = NOW() 
-			WHERE 
-				D_NO = #{d_no}
-	
+		UPDATE 
+			DISEASE 
+		SET 
+			D_CATEGORY_NO = #{d_category_no}, 
+			D_NAME = #{d_name}, 
+			D_INFO = #{d_info}, 
+			D_GOOD_FOOD = #{d_good_food}, 
+			D_BAD_FOOD = #{d_bad_food}, 
+			D_MOD_DATE = NOW() 
+		WHERE 
+			D_NO = #{d_no}
+
 	</update>
 	
 	<!-- 질환 삭제 -->
 	<update id="deleteDisease">
 	
-			UPDATE 
-				DISEASE 
-			SET 
-				D_IS_DELETED = 0 
-			WHERE 
-				D_NO = #{d_no}
+		UPDATE 
+			DISEASE 
+		SET 
+			D_IS_DELETED = 0 
+		WHERE 
+			D_NO = #{d_no}
 	
 	</update>
 	
-	<!-- 질환 검색 -->
+	<!-- 페이지에 따른 질환 가져오기(검색한 질환) -->
 	<select id="getSearchDisease"
 			parameterType="map"
 			resultMap="DiseaseDto">
 			
-			SELECT 
-				D.*, 
-				DC.DC_NAME  
-			FROM 
-				DISEASE D  
-			JOIN 
-				DISEASE_CATEGORY DC 
-			WHERE 
-				D.D_CATEGORY_NO = DC.DC_NO 
-			AND 
-				D.D_IS_DELETED = 1 
-			<choose>
-				<when test="searchPart == 'd_name'">
-					AND 
-						D.D_NAME LIKE CONCAT('%', #{searchString}, '%')
-				</when>
-			</choose>
+		SELECT 
+			D.*, 
+			DC.DC_NAME  
+		FROM 
+			DISEASE D  
+		JOIN 
+			DISEASE_CATEGORY DC 
+		WHERE 
+			D.D_CATEGORY_NO = DC.DC_NO 
+		AND 
+			D.D_IS_DELETED = 1 
+		<choose>
+			<when test="searchPart == 'd_name'">
+				AND 
+					D.D_NAME LIKE CONCAT('%', #{searchString}, '%')
+			</when>
+		</choose>
 	
 	</select>
 	
 	<!-- 질환의 총 리스트 개수 구하기(검색한 질환) -->
 	<select id="getSearchDiseaseListCnt">
 	
-			SELECT 
-				COUNT(*) 
-			FROM 
-				DISEASE 
-			WHERE 
-				D_IS_DELETED = 1 
-			<choose>
-				<when test="searchPart == 'd_name'">
-					AND 
-						D_NAME LIKE CONCAT('%', #{searchString}, '%')
-				</when>
-			</choose>
+		SELECT 
+			COUNT(*) 
+		FROM 
+			DISEASE 
+		WHERE 
+			D_IS_DELETED = 1 
+		<choose>
+			<when test="searchPart == 'd_name'">
+				AND 
+					D_NAME LIKE CONCAT('%', #{searchString}, '%')
+			</when>
+		</choose>
 	
 	</select>
-
 
 
 </mapper>

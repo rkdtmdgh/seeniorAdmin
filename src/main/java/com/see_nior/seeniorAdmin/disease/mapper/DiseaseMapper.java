@@ -40,6 +40,12 @@ public interface DiseaseMapper {
 	// 질환 카테고리 삭제
 	public int deleteDiseaseCategory(int dc_no);
 	
+	// 페이지에 따른 질환 카테고리 가져오기(검색한 질환 카테고리)
+	public List<DiseaseCategoryDto> getSearchDiseaseCategory(Map<String, Object> pagingParams);
+	
+	// 질환 카테고리의 총 페이지 개수 구하기(검색한 질환 카테고리)
+	public int getSearchDiseaseCategoryListCnt(Map<String, Object> pagingParams);
+	
 	// -----------------------------------질환 -------------------------------------------------------------
 
 	// 질환 등록
@@ -77,6 +83,8 @@ public interface DiseaseMapper {
 
 	// 질환의 총 리스트 개수 구하기(검색한 질환)
 	public int getSearchDiseaseListCnt(Map<String, Object> pagingParams);
+
+
 
 
 

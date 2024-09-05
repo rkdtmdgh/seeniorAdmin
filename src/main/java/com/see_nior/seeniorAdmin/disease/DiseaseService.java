@@ -203,6 +203,74 @@ public class DiseaseService {
 		
 	}
 	
+	// 페이지에 따른 질환 카테고리 가져오기(검색한 질환 카테고리)
+		public List<Map<String, Object>> getSearchDiseaseCategoryListWithPage(String searchPart, String searchString, int page) {
+			log.info("getSearchDiseaseCategoryListWithPage()");
+			
+			int pagingStart = (page - 1) * pageLimit;
+			
+			List<Map<String, Object>> pagingList = new ArrayList<>();
+			
+			Map<String, Object> pagingParams = new HashMap<>();
+			pagingParams.put("start", pagingStart);
+			pagingParams.put("limit", pageLimit);
+			pagingParams.put("searchPart", searchPart);
+			pagingParams.put("searchString", searchString);
+			
+			List<DiseaseCategoryDto> searchDiseaseCategoryDtos = diseaseMapper.getSearchDiseaseCategory(pagingParams);
+			
+			ObjectMapper objectMapper = new ObjectMapper();
+			
+			for (DiseaseCategoryDto searchDiseaseCategoryDto : searchDiseaseCategoryDtos) {
+				int itemCnt = diseaseMapper.getCategoryItemCnt(searchDiseaseCategoryDto.getDc_no());
+				
+				Map<String, Object> searchDiseaseCategoryMap = objectMapper.convertValue(searchDiseaseCategoryDto, new TypeReference<Map<String, Object>>() {});
+				
+				searchDiseaseCategoryMap.put("itemCnt", itemCnt);
+				
+				pagingList.add(searchDiseaseCategoryMap);
+				
+			}
+			
+			return pagingList;
+			
+		}
+
+		// 질환 카테고리의 총 페이지 개수 구하기(검색한 질환 카테고리)
+		public Map<String, Object> getSearchDiseaseCategoryListPageNum(String searchPart, String searchString, int page) {
+			log.info("getSearchDiseaseCategoryListPageNum()");
+			
+			Map<String, Object> searchDiseaseCategoryListPageNum = new HashMap<>();
+			
+			Map<String, Object> pagingParams = new HashMap<>();
+			pagingParams.put("searchPart", searchPart);
+			pagingParams.put("searchString", searchString);
+			
+			// 전체 리스트 개수 조회
+			int searchDiseaseCategoryListCnt = diseaseMapper.getSearchDiseaseCategoryListCnt(pagingParams);
+			
+			// 전체 페이지 개수 계산
+			int maxPage = (int) (Math.ceil((double) searchDiseaseCategoryListCnt / pageLimit));
+			
+			// 시작 페이지 값 계산
+			int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
+			
+			// 마지막 페이지 값 계산
+			int endPage = startPage + blockLimit - 1;
+			if (endPage > maxPage) endPage = maxPage;
+			
+			searchDiseaseCategoryListPageNum.put("searchDiseaseCategoryListCnt", searchDiseaseCategoryListCnt);
+			searchDiseaseCategoryListPageNum.put("page", page);
+			searchDiseaseCategoryListPageNum.put("maxPage", maxPage);
+			searchDiseaseCategoryListPageNum.put("startPage", startPage);
+			searchDiseaseCategoryListPageNum.put("endPage", endPage);
+			searchDiseaseCategoryListPageNum.put("blockLimit", blockLimit);
+			searchDiseaseCategoryListPageNum.put("pageLimit", pageLimit);
+			
+			return searchDiseaseCategoryListPageNum;
+			
+		}
+	
 	
 	// --------------------------------------------- 질환
 	
