@@ -174,7 +174,7 @@ public class DiseaseController {
 		// 총 결과를 담을 객체 생성
 		Map<String, Object> searchDiseaseCategoryResponse = new HashMap<>();
 		
-		searchDiseaseCategoryResponse.put("searchDiseaseCategoryDtos", searchDiseaseCategoryListWithPage);
+		searchDiseaseCategoryResponse.put("diseaseCategoryDtos", searchDiseaseCategoryListWithPage);
 		searchDiseaseCategoryResponse.put("searchDiseaseCategoryListPageNum", searchDiseaseCategoryListPageNum);
 		searchDiseaseCategoryResponse.put("searchPart", searchPart);
 		searchDiseaseCategoryResponse.put("searchString", searchString);
