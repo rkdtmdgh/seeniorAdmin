@@ -152,25 +152,20 @@ public class AccountController {
 	
 	// 내 정보 수정 확인
 	@PostMapping("/info/modify_confirm")
-	public String modifyConfirm(Model model, Principal principal, AdminAccountDto adminAccountDto) {
+	@ResponseBody
+	public Object modifyConfirm(Model model, Principal principal, AdminAccountDto adminAccountDto) {
 		log.info("modifyConfirm()");
-		
-		String nextPage = "account/modify_result_form";
-		
-		int modifyResult = -1;
 		
 		if (principal.getName().equals(adminAccountDto.getA_id())) {
 			
-			modifyResult = accountService.modifyConfirm(adminAccountDto);
-			model.addAttribute("modifyResult", modifyResult);
+			return accountService.modifyConfirm(adminAccountDto);
 			
 		} else {
 			
-			model.addAttribute("modifyResult", modifyResult);
+			return false;
 			
 		}
 		
-		return nextPage;
 	}
 	
 	// SUPER_ADMIN - ADMIN 정보 수정 양식
@@ -200,21 +195,13 @@ public class AccountController {
 	
 	// 회원 탈퇴 확인 
 	@PostMapping("/list/delete_confirm")
-	public String deleteConfirm(
-			@RequestParam("a_no") int a_no,
-			Model model) {
+	@ResponseBody
+	public Object deleteConfirm(
+			@RequestParam("a_no") int a_no) {
 		log.info("deleteConfirm()");
 		
-		String nextPage = "account/delete_result";
+		return accountService.deleteConfirm(a_no);
 		
-		int deleteResult = accountService.deleteConfirm(a_no);
-		
-		if (deleteResult >= 0) 
-			model.addAttribute("deleteResult", true);
-		else 
-			model.addAttribute("deleteResult", false);
-				
-		return nextPage;
 	}
 	
 	// 관리자 리스트 바로가기 
