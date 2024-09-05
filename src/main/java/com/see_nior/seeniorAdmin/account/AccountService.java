@@ -108,7 +108,7 @@ public class AccountService {
 	public boolean modifyConfirm(AdminAccountDto adminAccountDto) {
 		log.info("modifyConfirm()");
 		
-		if (adminAccountDto.getA_pw() != "" && adminAccountDto.getA_pw() != null) {
+		if (adminAccountDto.getA_pw() != null && !adminAccountDto.getA_pw().equals("")) {
 			
 			adminAccountDto.setA_pw(passwordEncoder.encode(adminAccountDto.getA_pw()));
 			
@@ -116,7 +116,6 @@ public class AccountService {
 		
 		int modifyResult = 
 				accountMapper.updateMyAdminInfo(adminAccountDto);
-		
 		
 		if (modifyResult >= 0) {
 			
@@ -127,6 +126,7 @@ public class AccountService {
 			return ADMIN_MODIFY_FAIL;
 			
 		}
+		
 	}
 	
 	// SUPER_ADMIN - ADMIN 정보 수정 확인
@@ -276,10 +276,12 @@ public class AccountService {
 		AdminAccountDto adminAccountDto = 
 				accountMapper.selectAdminAccountByNo(a_no);
 		
-		String a_pw = "s" + adminAccountDto.getA_birth() + "!";
+		String a_pw = "s" + adminAccountDto.getA_birth().replace("-", "") + "!";
+		
+		adminAccountDto.setA_pw(passwordEncoder.encode(a_pw));
 		
 		int result = 
-				accountMapper.updateAdminPwReset(a_no, passwordEncoder.encode(a_pw));
+				accountMapper.updateAdminPwReset(adminAccountDto);
 		
 		if (result >= 0)
 			return true;

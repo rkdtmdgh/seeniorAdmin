@@ -35,7 +35,7 @@ public interface AccountMapper {
 
 	public int updateAdminInfoFromSuper(AdminAccountDto adminAccountDto);
 
-	public int updateAdminPwReset(int a_no, String a_pw);
+	public int updateAdminPwReset(AdminAccountDto adminAccountDto);
 
 
 }
