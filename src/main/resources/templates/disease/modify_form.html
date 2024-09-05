@@ -8,7 +8,7 @@
     <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', () => {
             // DISEASE_CATEGORY 가져오기
-            const selectedCategory = [[${diseaseDto.d_category_no}]]; // 기본값 설정
+            const selectedCategory = /*[[${diseaseDto.d_category_no}]]*/ // 기본값 설정
             logger.info('disease/modify_form selectedCategory:', selectedCategory);
             getOptionList('/disease/cate_info/get_category_list', 'd_category_no', true, selectedCategory); // command, element id, isForm
         });
