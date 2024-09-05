@@ -72,7 +72,7 @@ async function postIdentityCheckForm(event, formName) {
 	let input;
 	
 	input = form.a_pw;
-	if(!checkEmpty(input, '비밀번호를', true)) {
+	if(!checkEmpty(input, '비밀번호를', true, true)) {
 		input.focus();
 		return false;
 	}
@@ -89,7 +89,9 @@ async function postIdentityCheckForm(event, formName) {
 		logger.info('/account/info/modify_check postIdentityCheckForm() response:', response);
 				
 		if(response) {
-			
+			sessionStorage.setItem('loginedId', response.loginedId);
+			sessionStorage.setItem('checkDate', response.checkDate);
+			await getAccountInfo(); // get_account_info 요청, account modify form set
 			
 		} else {
 			alert('비밀번호가 일치하지 않습니다. 확인 후 다시 시도해 주세요.');
@@ -99,7 +101,7 @@ async function postIdentityCheckForm(event, formName) {
 	} catch(error) {
 		logger.error('/account/info/modify_check postIdentityCheckForm() error:', error);
 		alert('본인 확인 오류로 데이터를 불러오는데 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
-		location.replace('/account/info/modify_form');
+		//location.replace('/account/info/modify_form');
 	}
 }
 

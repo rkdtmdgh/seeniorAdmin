@@ -8,7 +8,7 @@
 .sign_form {
    	width: var(--signFormWidth);
 	margin: auto;
-	padding: var(--innerPadding);
+	padding: var(--signFormInnerPadding);
 	background-color: var(--subBgColor);
 	border-radius: var(--bdrs);
     box-shadow: var(--bxsh);

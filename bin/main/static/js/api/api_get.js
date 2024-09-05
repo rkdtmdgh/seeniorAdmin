@@ -17,7 +17,7 @@ async function getList(command, sort, sortValue, page) {
 			method: 'GET',
 		});
 		
-		logger.info(apiUrl + ' getList() response:', response);
+		logger.info(`${apiUrl} getList() response:`, response);
 		
 		const { getListDtos, getListPage, getListCnt } = setParseResponseByCommand(command, response);
 		const $contentTable = $('.content_table tbody'); // 데이터가 나열될 테이블 요소
@@ -131,19 +131,22 @@ async function getOptionList(apiUrl, ele, isForm, selectedValue) {
 					return;
 			}
 			
-			logger.info(apiUrl + ' getListDtos:', getListDtos);
+			logger.info(`${apiUrl} getListDtos:`, getListDtos);
 			
 			if(getListDtos && getListDtos.length > 0) {
 				if(isForm) {
 					getListDtos.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
 						let selected = selectedValue ? data[dataNo] === selectedValue ? 'selected' : '' : '';
 						let option = `<option value="${data[dataNo]}" ${selected}>${data[dataName]}</option>`;
+						
 						if(selected) {
 							selectEle.insertAdjacentHTML('afterbegin', option);
+							
 						} else {
 							selectEle.insertAdjacentHTML('beforeend', option);
 						}
 					});
+					
 				} else {
 					const ceateSelect = `<ul data-sort="${dataNo}" data-api="${command}" class="select_option_list sc"></ul>`;
 			        selectEle.insertAdjacentHTML('beforeend', ceateSelect);
@@ -201,7 +204,7 @@ async function getSearchList(event, apiUrl, page) {
 				},
 			});
 			
-			logger.info(apiUrl + ' searchForm() response:', response);
+			logger.info(`${apiUrl} searchForm() response:`, response);
 			
 			const { getListDtos, getListPage, getListCnt } = setParseResponseByCommand(apiUrl, response);
 			const $contentTable = $('.content_table tbody'); // 데이터가 나열될 테이블 요소
@@ -253,5 +256,26 @@ async function getSearchList(event, apiUrl, page) {
 		} catch(error) {
 			logger.error(apiUrl + ' searchForm() error:', error);
 		}
+	}
+}
+
+// 본인 확인 후 로그인 유저 데이터 요청
+async function getAccountInfo() {
+	try {
+		const response = await $.ajax({
+			url: '/account/info/get_account_info',
+			method: 'GET',
+		});
+		
+		logger.info('/account/info/get_account_info getAccountInfo() response:', response);
+		
+		if(response) {
+			const $contentInfoWrap = $('.content_info_wrap');
+			$contentInfoWrap.html(setAccountModifyForm(response)); // account/modifyForm SET
+		}
+	
+	} catch(error) {
+		logger.error('/account/info/get_account_info getAccountInfo() error:', error);
+		throw new error('계정 정보를 불러오는 중 오류가 발생했습니다.');
 	}
 }
