@@ -274,18 +274,24 @@ function setParseResponseByCommand(command, response) {
 			getListDtos = response.diseaseDtos;
 			getListPage = response.searchDiseaseListPageNum;
 			getListCnt = response.searchDiseaseListPageNum.searchDiseaseListCnt;
-			break;
-		
-		case '/disease/info/get_disease_list_by_category_with_page': // 질환 / 질병 정보 관리 질환명 sort
+			break;	
+			
+		case '/disease/info/get_disease_list_by_category_with_page': // 질환 / 질병 정보 관리 분류별 sort
 			getListDtos = response.diseaseDtos;
 			getListPage = response.diseaseListByCategoryPageNum;
 			getListCnt = response.diseaseListByCategoryPageNum.diseaseListCnt;
-			break;
+			break;	
 			
 		case '/disease/cate_info/get_category_list_with_page': // 질환 / 질병 정보 분류 관리
 			getListDtos = response.diseaseCategoryDtos;
 			getListPage = response.diseaseCategoryListPageNum;
 			getListCnt = response.diseaseCategoryListPageNum.diseaseCategoryListCnt;
+			break;
+			
+		case '/disease/cate_info/search_disease_category_list': // 질환 / 질병 정보 분류 검색
+			getListDtos = response.diseaseCategoryDtos;
+			getListPage = response.searchDiseaseCategoryListPageNum;
+			getListCnt = response.searchDiseaseCategoryListPageNum.searchDiseaseCategoryListCnt;
 			break;
 	}
 	
@@ -411,6 +417,7 @@ function setDataList(api, data, index) {
 			break;
 			
 			case '/disease/cate_info/get_category_list_with_page':
+			case '/disease/cate_info/search_disease_category_list':
 				innerContent = `
 					<tr>
 			            <td>
