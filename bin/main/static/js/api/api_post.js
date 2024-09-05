@@ -89,6 +89,8 @@ async function postIdentityCheckForm(event, formName) {
 		logger.info('/account/info/modify_check postIdentityCheckForm() response:', response);
 				
 		if(response) {
+			sessionStorage.setItem('loginedId', response.loginedId);
+			sessionStorage.setItem('checkDate', response.checkDate);
 			await getAccountInfo(); // get_account_info 요청, account modify form set
 			
 		} else {

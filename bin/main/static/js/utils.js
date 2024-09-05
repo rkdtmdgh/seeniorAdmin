@@ -17,6 +17,39 @@ function setFormSendFalse(event) {
     return false; // 폼 제출 방지
 }
 
+// 본인 확인 페이지 세션스토리지 저장 값 확인하여 요청 처리
+function setSessionIdentityCheck(loginUser) {
+	const sessionLogId = sessionStorage.getItem('loginedId') || '';
+	const sessionCheckDate = sessionStorage.getItem('checkDate') || '';
+	
+	logger.info('setSessionIdentityCheck() loginUser:', loginUser);
+	logger.info('setSessionIdentityCheck() sessionLogId:', sessionLogId);
+	logger.info('setSessionIdentityCheck() sessionCheckDate:', sessionCheckDate);
+	
+	if(!sessionLogId || !sessionCheckDate) {
+		return false;
+	}
+	
+	if(loginUser != sessionLogId) {
+		return false;
+	}
+	
+	// 현재 시간과 비교
+	const currentTime = new Date();
+	const checkTime = new Date(sessionCheckDate);
+	const sessionTime = 10 * 60 * 1000; // 10분
+	
+	if(currentTime - checkTime > sessionTime) { // sessionTime 경과
+		sessionStorage.removeItem('loginedId');
+		sessionStorage.removeItem('checkDate');
+		alert('세션이 만료되었습니다. 다시 확인해 주세요.');
+		return false;
+		
+	}
+	
+	return true;
+}
+
 // NAV 선택 표시 및 토글
 function setNavActiveToggle() {
 	const currentPath = window.location.pathname.split('/').slice(0,3).join('/'); // 현재 URL에서 첫 번째와 두 번째까지 path 
@@ -474,10 +507,55 @@ function setTextareaAutoHeight(ele) {
 	$textarea.height(newHeight + 'px');
 }
 
-// 본인 확인 후 account/modify_from SET
+// 본인 확인 전 account/modify_form SET 
+function setIdentityCheckForm() {
+	const $contentInfoWrap = $('.content_info_wrap');
+	
+	let dataFormContent;
+	dataFormContent = `
+		<div class="content_top">
+	        <div class="content_top_info">
+	            <h2 class="title">본인확인</h2>
+	        </div>
+            <p class="sub_title">본인확인을 위해 비밀번호를 입력해 주세요</p>
+	    </div>
+	    
+	    <div class="sign_form" id="password_check_form">
+	    	<form name="modify_check_form" onsubmit="postIdentityCheckForm(event, 'modify_check_form')">
+            	<div class="input_list_container">
+	                <div class="input_list" id="input_list_info">					
+	                    <label for="pw" class="border_input">
+	                        <span class="input_title">비밀번호</span>
+	                        <input type="password" name="a_pw" id="pw" placeholder="비밀번호" class="input_txt" autocomplete="off">
+	                        <span class="input_icon" onclick="setPwViewToggle(this)">
+	                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
+	                        </span>
+	                    </label>
+	                </div>
+	                
+                    <div class="btn_list col">
+                        <button type="submit" class="btns">확인</button>
+                        <a href="javascript: history.back();" class="btns cancel">취소</a>
+                    </div>
+                </div>
+            </form>
+	    </div>
+	`;
+	
+	$contentInfoWrap.html(dataFormContent); // account/modifyForm SET
+}
+
+// 본인 확인 후 account/modify_form SET
 function setAccountModifyForm(data) {
 	let dataFormContent;
 	dataFormContent = `
+		<div class="content_top">
+	        <div class="content_top_info">
+	            <h2 class="title">내 정보 관리</h2>
+	        </div>
+            <p class="sub_title">내 정보 수정</p>
+	    </div>
+							
 		<form name="modify_form">					    	
 		    <div class="table_wrap">
                 <table class="content_edit_table">
@@ -534,8 +612,8 @@ function setAccountModifyForm(data) {
                         	<th><p class="table_title">부서</p></th>
                         	<td class="disabled">
                                 <input type="text" name="a_department" id="department" class="table_info" placeholder="부서"
-                                	value="${data.a_department}"
-                                	${data.a_authority_role != 'SUPER_ADMIN' ? disabled : ''}>
+                                	value="${data.a_department || ''}"
+                                	${data.a_authority_role != 'SUPER_ADMIN' ? 'disabled' : ''}>
                             </td>
                         </tr>
 
@@ -543,14 +621,14 @@ function setAccountModifyForm(data) {
                         	<th><p class="table_title">직위</p></th>
                         	<td class="disabled">
                                 <input type="text" name="a_level" id="level" class="table_info" placeholder="직위"
-                                	value="${data.a_level}"
-                                	${data.a_authority_role != 'SUPER_ADMIN' ? disabled : ''}>
+                                	value="${data.a_level || ''}"
+                                	${data.a_authority_role != 'SUPER_ADMIN' ? 'disabled' : ''}>
                             </td>
                         	<th><p class="table_title">직책</p></th>
                         	<td class="disabled">
                                 <input type="text" name="a_position" id="position" class="table_info" placeholder="직책"
-                                	value="${data.a_position}"
-                                	${data.a_authority_role != 'SUPER_ADMIN' ? disabled : ''}>
+                                	value="${data.a_position || ''}"
+                                	${data.a_authority_role != 'SUPER_ADMIN' ? 'disabled' : ''}>
                             </td>
                         </tr>
                     </tbody>
@@ -559,7 +637,7 @@ function setAccountModifyForm(data) {
                 <div class="btn_list right">
                     <div class="btn_list">
                         <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-                        <div onclick="putModifyForm('modify_form')" class="btns">저장</div>
+                        <div onclick="putModifyForm('modify_form')" class="btns">수정</div>
                     </div>
                 </div>
             </div>

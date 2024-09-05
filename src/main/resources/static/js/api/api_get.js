@@ -270,12 +270,8 @@ async function getAccountInfo() {
 		logger.info('/account/info/get_account_info getAccountInfo() response:', response);
 		
 		if(response) {
-			$('#password_check_form').remove();
-			
 			const $contentInfoWrap = $('.content_info_wrap');
-			$contentInfoWrap.find('h2.title').text('내 정보 관리');
-			$contentInfoWrap.find('p.sub_title').text('내 정보 수정');
-			$contentInfoWrap[0].insertAdjacentHTML('beforeend', setAccountModifyForm(response.loginedAdminDto)); // account/modifyForm SET
+			$contentInfoWrap.html(setAccountModifyForm(response)); // account/modifyForm SET
 		}
 	
 	} catch(error) {
