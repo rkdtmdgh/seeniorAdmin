@@ -420,7 +420,7 @@ function setDataList(api, data, index) {
 			                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${data.dc_name}</a>
 			            </td>
 			            <td>
-			                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${data.d_name || 'N/A'}</a>
+			                <a href="/disease/info/disease_list_form?sortType=1&sort=dc_no&dc_no=${data.dc_no}" class="table_info">${data.itemCnt}</a>
 			            </td>
 			            <td>
 			                <p class="table_info">${setFormatDate(data.dc_reg_date) || 'N/A'}</p>

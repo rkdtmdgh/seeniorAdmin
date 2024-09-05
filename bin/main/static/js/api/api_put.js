@@ -1,5 +1,5 @@
 // ajax 요청
-async function postSubmitForm(apiUrl, formData, successMessage, errorMessage) {
+async function putSubmitForm(apiUrl, formData, successMessage, errorMessage) {
 	try {
 		const response = await $.ajax({
 			url: apiUrl,
@@ -67,7 +67,7 @@ async function putModifyForm(formName) {
 	const successMessage = '정보가 수정되었습니다';
 	const errorMessage = '정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 	
-	await postSubmitForm('/account/info/modify_confirm', formData, successMessage, errorMessage);
+	await putSubmitForm('/account/info/modify_confirm', formData, successMessage, errorMessage);
 }
 
 // 관리자 계정 정보 수정(SUPER_ADMIN) 폼
@@ -94,10 +94,28 @@ async function putAdminModifyForm(formName) {
 	}
 	
 	const formData = new FormData(form);
-	const successMessage = `"${form.a_id}" 정보가 수정되었습니다`;
-	const errorMessage = `"${form.a_id}" 정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const successMessage = `"${form.a_id.value}" 정보가 수정되었습니다`;
+	const errorMessage = `"${form.a_id.value}" 정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 
-	await postSubmitForm('/account/list/admin_modify_confirm', formData, successMessage, errorMessage);
+	await putSubmitForm('/account/list/admin_modify_confirm', formData, successMessage, errorMessage);
+}
+
+// 관리자 계정 비밀번호 초기화
+async function putResetPassword(a_no, a_id) {
+	logger.info('putResetPassword():', a_no, a_id);
+	
+	const isConfirm = confirm(`${a_id} 계정 비밀번호를 초기화하시겠습니까?`);
+	if(!isConfirm) {
+		return false;	
+	}
+		
+	const formData = new FormData();
+	formData.append('a_no', a_no);
+	
+	const successMessage = `"${a_id}" 비밀번호가 초기화되었습니다.`;
+	const errorMessage = `"${a_id}" 비밀번호 초기화에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	await putSubmitForm('/account/list/reset_password', formData, successMessage, errorMessage);
 }
 
 // 질환 / 질병 수정
@@ -141,7 +159,7 @@ async function putDiseaseModifyForm(formName, d_nameDefaultValue) {
 	const successMessage = `"${form.d_name.value}" 질환/질병 정보가 수정되었습니다`;
 	const errorMessage = `"${form.d_name.value}" 질환/질병 정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 
-	await postSubmitForm('/disease/info/modify_confirm', formData, successMessage, errorMessage);
+	await putSubmitForm('/disease/info/modify_confirm', formData, successMessage, errorMessage);
 }
 
 // 질환 / 질병 분류 수정
@@ -165,5 +183,5 @@ async function putDiseaseCategoryModifyForm(formName, dc_nameDefaultValue) {
 	const successMessage = `"${input.value}" 질환/질병 분류명이 수정되었습니다`;
 	const errorMessage = `"${input.value}" 질환/질병 분류명 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 
-	await postSubmitForm('/disease/cate_info/modify_category_confirm', formData, successMessage, errorMessage);
+	await putSubmitForm('/disease/cate_info/modify_category_confirm', formData, successMessage, errorMessage);
 }
