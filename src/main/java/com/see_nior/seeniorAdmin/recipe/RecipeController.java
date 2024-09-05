@@ -22,20 +22,21 @@ public class RecipeController {
 		this.recipeService = recipeService;
 		
 	}
-
-	// 레시피 API 불러온 후 json 으로 넘어온 API Data DB에 저장하기
+	
+	// 기존 레시피 테이블 삭제 후 테이블 생성 후 API 데이터 DB에 저장하기
 	@ResponseBody
-	@GetMapping("/save_api_recipe_data")
-	public String saveApiRecipeData() throws Exception {
-		log.info("saveApiRecipeData()");
+	@GetMapping("/refresh_api_recipe_data")
+	public String refreshApiRecipeData() throws Exception {
+		log.info("refreshApiRecipeData()");
 		
 		try {
-			recipeService.saveApiRecipeData();
-			return "{\"status\":\"Data successfully saved to the database\"}";
+			recipeService.refreshApiRecipeData();
+			return "레시피 API를 최신 정보로 업데이트 하는데 성공하였습니다.";
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "{\"error\":\"Failed to fetch and save data\"}";
+			return "레시피 API를 최신 정보로 업데이트 하는데 실패하였습니다.";
 		}
 		
 	}
@@ -70,6 +71,15 @@ public class RecipeController {
 		
 		return recipeListWithPage;
 		
+	}
+	
+	// 요리 종류에 따른 식단 가져오기(페이지네이션)
+	@ResponseBody
+	@GetMapping("/get_recipe_list_by_part_with_page")
+	public String getRecipeListByPartWithPage(@RequestParam String param) {
+		
+		
+		return null;
 	}
 	
 	

@@ -1,13 +1,39 @@
 // 계정 삭제
-function delAccount(a_no, a_id) {
+async function delAccount(a_no, a_id) {
 	logger.info('deleteAccount()', a_no, a_id);
 	
-	const isConfirm = confirm(a_id + ' 계정을 삭제하시겠습니까?');
+	const isConfirm = confirm(`${a_id} 계정을 삭제하시겠습니까?`);
 	if(!isConfirm) {
 		return false;	
 	}
 	
-	location.replace('/account/delete_confirm?a_no=' + a_no);
+	const errorMessage = `${a_id} 계정 삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	try {
+		const response = await $.ajax({
+			url: '/account/list/delete_confirm',
+			method: 'POST',
+			data: {
+				a_no: a_no,
+			},
+		});
+		
+		logger.info('/account/list/delete_confirm delAccount() response:', response);
+		
+		if(response) {
+			alert(`${a_id} 계정이 삭제되었습니다.`);
+			location.replace('/account/list/admin_list_form');
+			
+		} else {
+			alert(errorMessage);
+			location.reload(true);
+		}
+		
+	} catch(error) {
+		logger.error('/account/list/delete_confirm delAccount() error:', error);
+		alert(errorMessage);
+		location.reload(true);
+	}
 }
 
 // 체크 리스트 삭제
@@ -27,6 +53,8 @@ async function delCheckBoxList(apiUrl, checkName) {
 	const deleteData = Array.from($checkBoxs, checkbox => $(checkbox).val());
 	logger.info('deleteCheckBoxList() deleteData:', deleteData);
 	
+	const errorMessage = '삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
+	
 	try {
 		const response = await $.ajax({
 			url: apiUrl,
@@ -42,12 +70,12 @@ async function delCheckBoxList(apiUrl, checkName) {
 			alert('삭제되었습니다.');
 			
 		} else {
-			alert('삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
+			alert(errorMessage);
 		}
 		
 	} catch(error) {
-		logger.error(apiUrl + ' error:', error);
-		alert('삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
+		logger.error(`${apiUrl} error:`, error);
+		alert(errorMessage);
 		
 	} finally {
 		location.reload(true);

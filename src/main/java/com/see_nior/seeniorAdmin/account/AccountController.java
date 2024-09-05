@@ -77,21 +77,23 @@ public class AccountController {
 	}
 	
 	// 로그인 결과 확인
-	@GetMapping("/sign_in_ng")
+	@GetMapping("/sign_in_result")
 	public String signInNg(
 			@RequestParam(value = "errMsg", required = false) String errMsg,
+			@RequestParam("result") boolean result,
 			Model model) {
 		log.info("signInNg()");
 		
-		String nextPage = "account/sign_in_ng";
+		String nextPage = "account/sign_in_result";
 		
 		model.addAttribute("errMsg", errMsg);
+		model.addAttribute("result", result);
 		
 		return nextPage;
 	}
 	
 	// 내 정보 수정 양식
-	@GetMapping("/modify_form")
+	@GetMapping("/info/modify_form")
 	public String modifyForm(Model model, Principal principal) {
 		log.info("modifyForm()");
 		
@@ -101,7 +103,7 @@ public class AccountController {
 	}
 	
 	// 내 정보 가져오기
-	@GetMapping("/get_account_info")
+	@GetMapping("/info/get_account_info")
 	@ResponseBody
 	public Object getAccountInfo(Principal principal) {
 		
@@ -112,7 +114,7 @@ public class AccountController {
 	}
 	
 	// 내 정보 수정 양식 가기 전 비밀번호 확인
-	@PostMapping("/modify_check")
+	@PostMapping("/info/modify_check")
 	@ResponseBody
 	public Object modifyCheck(
 			Principal principal, 
@@ -149,30 +151,25 @@ public class AccountController {
 	}
 	
 	// 내 정보 수정 확인
-	@PostMapping("/modify_confirm")
-	public String modifyConfirm(Model model, Principal principal, AdminAccountDto adminAccountDto) {
+	@PostMapping("/info/modify_confirm")
+	@ResponseBody
+	public Object modifyConfirm(Model model, Principal principal, AdminAccountDto adminAccountDto) {
 		log.info("modifyConfirm()");
-		
-		String nextPage = "account/modify_result_form";
-		
-		int modifyResult = -1;
 		
 		if (principal.getName().equals(adminAccountDto.getA_id())) {
 			
-			modifyResult = accountService.modifyConfirm(adminAccountDto);
-			model.addAttribute("modifyResult", modifyResult);
+			return accountService.modifyConfirm(adminAccountDto);
 			
 		} else {
 			
-			model.addAttribute("modifyResult", modifyResult);
+			return false;
 			
 		}
 		
-		return nextPage;
 	}
 	
 	// SUPER_ADMIN - ADMIN 정보 수정 양식
-	@GetMapping("/admin_modify_form")
+	@GetMapping("/list/admin_modify_form")
 	public String adminModifyForm(@RequestParam("a_no") int a_no, Model model) {
 		log.info("adminModifyForm()");
 		
@@ -187,33 +184,28 @@ public class AccountController {
 	}
 	
 	// SUPER_ADMIN - ADMIN 정보 수정 확인
-	@PostMapping("/admin_modify_confirm")
-	public String adminModifyConfirm(AdminAccountDto adminAccountDto) {
+	@PostMapping("/list/admin_modify_confirm")
+	@ResponseBody
+	public Object adminModifyConfirm(AdminAccountDto adminAccountDto) {
 		log.info("adminModifyConfirm()");
 		
-		accountService.adminModifyConfirm(adminAccountDto);
+		return accountService.adminModifyConfirm(adminAccountDto);
 		
-		return "redirect:/account/admin_modify_form?a_no=" + adminAccountDto.getA_no();
 	}
 	
 	// 회원 탈퇴 확인 
-	@GetMapping("/delete_confirm")
-	public String deleteConfirm(
-			@RequestParam("a_no") int a_no,
-			Model model) {
+	@PostMapping("/list/delete_confirm")
+	@ResponseBody
+	public Object deleteConfirm(
+			@RequestParam("a_no") int a_no) {
 		log.info("deleteConfirm()");
 		
-		String nextPage = "account/delete_result";
+		return accountService.deleteConfirm(a_no);
 		
-		int deleteResult = accountService.deleteConfirm(a_no);
-		
-		model.addAttribute("deleteResult", deleteResult);
-		
-		return nextPage;
 	}
 	
 	// 관리자 리스트 바로가기 
-	@GetMapping("/admin_list_form")
+	@GetMapping("/list/admin_list_form")
 	public String adminListForm() {
 		log.info("adminListForm()");
 		
@@ -223,7 +215,7 @@ public class AccountController {
 	}
 	
 	// 관리자 리스트 가져오기
-	@GetMapping("/get_admin_list")
+	@GetMapping("/list/get_admin_list")
 	@ResponseBody
 	public Object getAdminList(
 			@RequestParam(value = "approval", required = false, defaultValue = "all") String approval,
@@ -240,7 +232,7 @@ public class AccountController {
 	}
 	
 	// 관리자 리스트 검색
-	@GetMapping("/search_admin_list")
+	@GetMapping("/list/search_admin_list")
 	@ResponseBody
 	public Object searchAdminList(
 			@RequestParam("searchPart") String searchPart,
@@ -263,7 +255,7 @@ public class AccountController {
 	}
 	
 	// 관리자 가입 승인
-	@GetMapping("/is_approval")
+	@GetMapping("/list/is_approval")
 	public String isApproval(@RequestParam("a_no") int a_no, Model model) {
 		log.info("isApproval()");
 		
@@ -273,6 +265,16 @@ public class AccountController {
 		
 		return nextPage;
 	
+	}
+	
+	// 비밀번호 초기화
+	@PostMapping("/list/reset_password")
+	@ResponseBody
+	public Object resetPassword(@RequestParam("a_no") int a_no) {
+		log.info("resetPassword()");
+		
+		return accountService.resetPassword(a_no);
+		
 	}
 	
 	// AdminAccessDeniedHandler. 인가 실패 시 호출.
@@ -288,18 +290,6 @@ public class AccountController {
 		
 		return nextPage;
 	
-	}
-	
-	// 비밀번호 초기화
-	@GetMapping("/reset_password")
-	public String resetPassword(@RequestParam("a_no") int a_no, Model model) {
-		log.info("resetPassword()");
-		
-		int resetResult = accountService.resetPassword(a_no);
-		
-		model.addAttribute("resetResult", resetResult);
-		
-		return "redirect:/account/admin_list_form";
 	}
 	
 }

@@ -1,6 +1,7 @@
 package com.see_nior.seeniorAdmin.disease;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ public class DiseaseController {
 	// ----------------------------------------------------------------질환 카테고리
 	
 	// 질환 카테고리 등록 양식
-	@GetMapping("/create_category_form")
+	@GetMapping("/cate_info/create_category_form")
 	public String createCategoryForm() {
 		log.info("createCategoryForm()");
 		
@@ -46,7 +47,7 @@ public class DiseaseController {
 	
 	// 질환 카테고리명 중복 확인
 	@ResponseBody
-	@GetMapping("/is_disease_category")
+	@GetMapping("/cate_info/is_disease_category")
 	public boolean isDiseaseCategory(@RequestParam(value = "dc_name") String dc_name) {
 		log.info("isDiseaseCategory()");
 		
@@ -58,19 +59,18 @@ public class DiseaseController {
 	
 	// 질환 카테고리 등록 확인
 	@ResponseBody
-	@PostMapping("/create_category_confirm")
-	public int createCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto) {
+	@PostMapping("/cate_info/create_category_confirm")
+	public boolean createCategoryConfirmW(DiseaseCategoryDto diseaseCategoryDto) {
 		log.info("createCategoryConfirm()");
 		
-		int createCategoryResult = diseaseService.createCategoryConfirm(diseaseCategoryDto);
+		boolean createCategoryResult = diseaseService.createCategoryConfirm(diseaseCategoryDto);
 		
 		return createCategoryResult;
 		
 	}
 	
-	
 	// 질환 카테고리 리스트 양식
-	@GetMapping("/category_list_form")
+	@GetMapping("/cate_info/category_list_form")
 	public String categoryListForm() {
 		log.info("categoryListForm()");
 		
@@ -82,7 +82,7 @@ public class DiseaseController {
 	
 	// 모든 질환 카테고리 가져오기 (질환 리스트에서 <select>박스 => 비동기)
 	@ResponseBody
-	@GetMapping("/get_category_list")
+	@GetMapping("/cate_info/get_category_list")
 	public Object getCategoryList() {
 		log.info("getCategoryList()");
 		
@@ -94,27 +94,31 @@ public class DiseaseController {
 	
 	// 모든 질환 카테고리 가져오기(페이지네이션 => 질환 카테고리 관리용 => 비동기)
 	@ResponseBody
-	@GetMapping("/get_category_list_with_page")
+	@GetMapping("/cate_info/get_category_list_with_page")
 	public Object getCategoryListWithPage(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
 			@RequestParam(value = "dc_name", required = false, defaultValue = "all") String sort) {
 		log.info("getCategoryListWithPage()");
 		
 		// 페이지 번호에 따른 질환 카테고리 리스트들 가져오기
-		Map<String, Object> diseaseCategoryListWithPage = diseaseService.getCategoryListWithPage(page, sort);
+		List<Map<String, Object>> diseaseCategoryListWithPage = diseaseService.getCategoryListWithPage(page, sort);
 		
 		// 질환 카테고리 총 페이지 개수 가져오기
 		Map<String, Object> diseaseCategoryListPageNum = diseaseService.getDiseaseCategoryListPageNum(page);
 		
-		diseaseCategoryListWithPage.put("diseaseCategoryListPageNum", diseaseCategoryListPageNum);
-		diseaseCategoryListWithPage.put("dc_name", sort);
+		// 총 결과를 담을 객체 생성
+		Map<String, Object> diseaseCategoryResponse = new HashMap<>();
 		
-		return diseaseCategoryListWithPage;
+		diseaseCategoryResponse.put("diseaseCategoryDtos", diseaseCategoryListWithPage);
+		diseaseCategoryResponse.put("diseaseCategoryListPageNum", diseaseCategoryListPageNum);
+		diseaseCategoryResponse.put("dc_name", sort);
+		
+		return diseaseCategoryResponse;
 		
 	}
 	
 	// 질환 카테고리 수정 양식
-	@GetMapping("/modify_category_form")
+	@GetMapping("/cate_info/modify_category_form")
 	public String modifyCategoryForm(@RequestParam(value = "dc_no") int dc_no, Model model) {
 		log.info("modifyCategoryForm()");
 		
@@ -128,26 +132,9 @@ public class DiseaseController {
 		
 	}
 	
-	// 질환 카테고리 수정 확인 (기존)
-	/*
-	@PostMapping("/modify_category_confirm")
-	public String modifyCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto, Model model) {
-		log.info("modifyCategoryConfirm()");
-		
-		int result = diseaseService.modifyCategoryConfirm(diseaseCategoryDto);
-		
-		model.addAttribute("modifyCategoryResult", result);
-		
-		String nextPage = "disease/modify_category_result";
-		
-		return nextPage;
-		
-	}
-	*/
-	
 	// 질환 카테고리 수정 확인 (비동기)
 	@ResponseBody
-	@PostMapping("/modify_category_confirm")
+	@PostMapping("/cate_info/modify_category_confirm")
 	public boolean modifyCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto) {
 		log.info("modifyCategoryConfirm()");
 		
@@ -157,26 +144,9 @@ public class DiseaseController {
 		
 	}
 	
-	// 질환 카테고리 삭제 확인(기존)
-	/*
-	@GetMapping("/delete_category_confirm")
-	public String deleteCategoryConfirm(@RequestParam(value = "dc_no") int dc_no, Model model) {
-		log.info("deleteCategoryConfirm()");
-		
-		int result = diseaseService.deleteCategoryConfirm(dc_no);
-		
-		model.addAttribute("deleteCategoryResult", result);
-		
-		String nextPage = "disease/delete_category_result";
-		
-		return nextPage;
-		
-	}
-	*/
-	
 	// 질환 카테고리 삭제 확인(비동기)
 	@ResponseBody
-	@GetMapping("/delete_category_confirm")
+	@GetMapping("/cate_info/delete_category_confirm")
 	public boolean deleteCategoryConfirm(@RequestParam(value = "dc_no") int dc_no) {
 		log.info("deleteCategoryConfirm()");
 		
@@ -186,11 +156,37 @@ public class DiseaseController {
 		
 	}
 	
+	// 질환 카테고리 검색(페이지네이션 => 비동기)
+	@ResponseBody
+	@GetMapping("/cate_info/search_disease_category_list")
+	public Object searchDiseaseCategoryList(
+			@RequestParam(value = "searchPart") String searchPart,
+			@RequestParam(value = "searchString") String searchString,
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("searchDiseaseCategoryList()");
+		
+		// 페이지 번호에 따른 검색 질환 카테고리 리스트들 가져오기
+		List<Map<String, Object>> searchDiseaseCategoryListWithPage = diseaseService.getSearchDiseaseCategoryListWithPage(searchPart, searchString, page);
+		
+		// 검색 질환 카테고리 총 페이지 개수 가져오기
+		Map<String, Object> searchDiseaseCategoryListPageNum = diseaseService.getSearchDiseaseCategoryListPageNum(searchPart, searchString, page);
+		
+		// 총 결과를 담을 객체 생성
+		Map<String, Object> searchDiseaseCategoryResponse = new HashMap<>();
+		
+		searchDiseaseCategoryResponse.put("diseaseCategoryDtos", searchDiseaseCategoryListWithPage);
+		searchDiseaseCategoryResponse.put("searchDiseaseCategoryListPageNum", searchDiseaseCategoryListPageNum);
+		searchDiseaseCategoryResponse.put("searchPart", searchPart);
+		searchDiseaseCategoryResponse.put("searchString", searchString);
+		
+		return searchDiseaseCategoryResponse;
+		
+	}
 	
 	// ----------------------------------------------------------------질환
 	
 	// 질환 등록 양식
-	@GetMapping("/create_form")
+	@GetMapping("/info/create_form")
 	public String createForm() {
 		log.info("createForm()");
 		
@@ -202,7 +198,7 @@ public class DiseaseController {
 	
 	// 질환명 중복 확인
 	@ResponseBody
-	@GetMapping("/is_disease")
+	@GetMapping("/info/is_disease")
 	public boolean isDisease(@RequestParam(value = "d_name") String d_name,
 							@RequestParam(value = "d_no", required = false, defaultValue = "0") int d_no) {
 		log.info("isDisease()");
@@ -214,22 +210,19 @@ public class DiseaseController {
 	}
 		
 	// 질환 등록 확인
-	@PostMapping("/create_confirm")
-	public String createConfirm(DiseaseDto diseaseDto, Model model) {
+	@ResponseBody
+	@PostMapping("/info/create_confirm")
+	public boolean createConfirm(DiseaseDto diseaseDto) {
 		log.info("createConfirm()");
 		
-		int result = diseaseService.createConfirm(diseaseDto);
+		boolean createresult = diseaseService.createConfirm(diseaseDto);
 		
-		model.addAttribute("createResult", result);
-		
-		String nextPage = "disease/create_result";
-		
-		return nextPage;
+		return createresult;
 		
 	}
 		
 	// 질환 리스트 양식
-	@GetMapping("/disease_list_form")
+	@GetMapping("/info/disease_list_form")
 	public String diseaseListForm() {
 		log.info("diseaseListForm()");
 		
@@ -241,7 +234,7 @@ public class DiseaseController {
 	
 	// 모든 질환 가져오기(페이지네이션 => 비동기)
 	@ResponseBody
-	@GetMapping("/get_all_disease_list_with_page")
+	@GetMapping("/info/get_all_disease_list_with_page")
 	public Object getAllDiseaseListWithPage(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "d_name", required = false, defaultValue = "all") String sort) {
@@ -262,7 +255,7 @@ public class DiseaseController {
 	
 	// 카테고리에 따른 질환 가져오기(페이지네이션 => 비동기)
 	@ResponseBody
-	@GetMapping("/get_disease_list_by_category_with_page")
+	@GetMapping("/info/get_disease_list_by_category_with_page")
 	public Object getDiseaseListByCategoryWithPage(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "dc_no") int dc_no) {
@@ -282,7 +275,7 @@ public class DiseaseController {
 	
 	// 질환 한개 가져오기
 	@ResponseBody
-	@GetMapping("/get_disease")
+	@GetMapping("/info/get_disease")
 	public Object getDisease(@RequestParam(value = "d_no") int d_no) {
 		log.info("getDisease()");
 		
@@ -293,7 +286,7 @@ public class DiseaseController {
 	}
 	
 	// 질환 수정 양식
-	@GetMapping("/modify_form")
+	@GetMapping("/info/modify_form")
 	public String modifyForm(@RequestParam(value = "d_no") int d_no, Model model) {
 		log.info("modifyForm()");
 		
@@ -309,7 +302,7 @@ public class DiseaseController {
 	
 	// 질환 수정 확인
 	@ResponseBody
-	@PostMapping("/modify_confirm")
+	@PostMapping("/info/modify_confirm")
 	public boolean modifyConfirm(DiseaseDto diseaseDto) {
 		log.info("modifyConfirm()");
 		
@@ -320,7 +313,7 @@ public class DiseaseController {
 	
 	// 질환 삭제 확인
 	@ResponseBody
-	@PostMapping("/delete_confirm")
+	@PostMapping("/info/delete_confirm")
 	public boolean deleteConfirm(@RequestParam(value = "deleteData") List<Integer> d_nos) {
 		log.info("deleteConfirm()");
 		
@@ -331,13 +324,12 @@ public class DiseaseController {
 	
 	// 질환 검색(페이지네이션 => 비동기)
 	@ResponseBody
-	@GetMapping("/search_disease_list")
+	@GetMapping("/info/search_disease_list")
 	public Object searchDiseaseList(
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("searchDiseaseList()");
-		
 		
 		// 페이지 번호에 따른 검색 질환 리스트들 가져오기
 		Map<String, Object> searchDiseaseListWithPage = diseaseService.getSearchDiseaseListWithPage(searchPart, searchString, page);

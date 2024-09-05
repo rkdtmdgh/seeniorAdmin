@@ -20,8 +20,8 @@ public class AccountService {
 	final static public int ADMIN_SIGN_UP_FAIL = 0;
 	final static public int ADMIN_SIGN_UP_SUCCESS = 1;
 	
-	final static public int ADMIN_MODIFY_SUCCESS = 1;
-	final static public int ADMIN_MODIFY_FAIL = 0;
+	final static public boolean ADMIN_MODIFY_SUCCESS = true;
+	final static public boolean ADMIN_MODIFY_FAIL = false;
 	
 	private int pageLimit = 10;		// 한 페이지당 보여줄 정보 수
 	private int blockLimit = 5;		// 하단에 보여질 페이지 번호 수
@@ -105,7 +105,7 @@ public class AccountService {
 	}
 	
 	// 내 정보 수정 확인
-	public int modifyConfirm(AdminAccountDto adminAccountDto) {
+	public boolean modifyConfirm(AdminAccountDto adminAccountDto) {
 		log.info("modifyConfirm()");
 		
 		if (adminAccountDto.getA_pw() != "" && adminAccountDto.getA_pw() != null) {
@@ -130,18 +130,30 @@ public class AccountService {
 	}
 	
 	// SUPER_ADMIN - ADMIN 정보 수정 확인
-	public void adminModifyConfirm(AdminAccountDto adminAccountDto) {
+	public boolean adminModifyConfirm(AdminAccountDto adminAccountDto) {
 		log.info("adminModifyConfirm()");
 		
-		accountMapper.updateAdminInfoFromSuper(adminAccountDto);
+		int result = 
+				accountMapper.updateAdminInfoFromSuper(adminAccountDto);
+		
+		if (result >= 0)
+			return true;
+		else 
+			return false;
 		
 	}
 	
 	// 회원 탈퇴 확인 
-	public int deleteConfirm(int a_no) {
+	public boolean deleteConfirm(int a_no) {
 		log.info("deleteConfirm()");
 		
-		return accountMapper.updateAdminIsDeletedByNo(a_no);
+		int result = 
+				accountMapper.updateAdminIsDeletedByNo(a_no);
+		
+		if (result >= 0) 
+			return true;
+		else
+			return false;
 	}
 	
 	// 관리자 리스트 가져오기
@@ -258,7 +270,7 @@ public class AccountService {
 
 	
 	// 비밀번호 초기화
-	public int resetPassword(int a_no) {
+	public boolean resetPassword(int a_no) {
 		log.info("resetPassword()");
 		
 		AdminAccountDto adminAccountDto = 
@@ -266,7 +278,14 @@ public class AccountService {
 		
 		String a_pw = "s" + adminAccountDto.getA_birth() + "!";
 		
-		return accountMapper.updateAdminPwReset(a_no, passwordEncoder.encode(a_pw));
+		int result = 
+				accountMapper.updateAdminPwReset(a_no, passwordEncoder.encode(a_pw));
+		
+		if (result >= 0)
+			return true;
+		else 
+			return false;
+		
 	}
 
 	// 비밀번호 확인

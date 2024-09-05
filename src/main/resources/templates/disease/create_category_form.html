@@ -1,36 +1,62 @@
 <!DOCTYPE html>
 <html
-	xmlns:th="http://www.thymeleaf.org" >
-	
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-
-<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-
-
+	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 질환 / 질병 분류 관리')}"></th:block>
+	<script src="/js/api/api_utils.js"></script>
 </head>
 <body>
-
-	<article>
+<main class="contents_wrap">
+		<header th:replace="~{fragments/header.html :: header}"></header>
 	
-		<p>create disease category form</p>
-		
-		<form th:action="@{/disease/create_category_confirm}" name="create_category_form" method="post">
+		<article class="contents_container">
+			<nav th:replace="~{fragments/nav.html :: nav}"></nav>
 			
-			<input type="text" name="dc_name" placeholder="INPUT DISEASE CATEGORY">
-			<br>
-			<input type="submit" value="질환 카테고리 생성" >
-			<input type="reset" value="초기화">
-		
-		</form>
-		
-		<br>
-		<a href="/disease/disease_list">질환 리스트</a>
-		<a href="/disease/category_list">질환 카테고리 리스트</a>
-	
-	</article>
-
-
+			<div class="content">
+                <div class="content_inner sc">
+					<section class="content_info_wrap">
+						<div class="content_top">
+					        <div class="content_top_info">
+					            <h2 class="title">질환 / 질병 분류 관리</h2>
+					        </div>
+				            <p class="sub_title">질환 / 질병 분류 등록</p>
+					    </div>
+					    
+					    <form name="disease_category_reg_form" onsubmit="return setFormSendFalse(event)">					    	
+						    <div class="table_wrap">
+		                        <table class="content_edit_table">
+		                            <colgroup>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                </colgroup>
+	                                
+		                            <tbody>
+		                                <tr>
+		                                	<th><p class="table_title">분류명</p></th>
+		                                	<td>
+		                                		<input type="text" name="dc_name" id="dc_name" class="table_info" placeholder="질환 / 질병 분류명"
+		                                			onblur="usedInputValueCheck(this, true);">
+	                                        </td>
+		                                </tr>
+		                            </tbody>
+		                        </table>
+		                        
+		                        <div class="btn_list right">
+	                                <div class="btn_list">
+	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
+	                                    <a href="javascript: postDiseaseCategoryCreateForm(null, 'disease_category_reg_form', '/disease/cate_info/category_list_form')" class="btns">등록</a>
+	                                </div>
+	                            </div>
+		                    </div>
+	                    </form>
+					</section>
+                </div>
+            </div>
+		</article>
+	</main>
 </body>
 </html>

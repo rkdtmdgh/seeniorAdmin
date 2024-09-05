@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 질환 / 질병 정보 관리')}"></th:block>
     <script src="/js/api/api_utils.js"></script>
     <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', () => {
             // DISEASE_CATEGORY 가져오기
-            const selectedCategory = /*[[${diseaseDto.d_category_no}]]*/ ''; // 기본값 설정
+            const selectedCategory = [[${diseaseDto.d_category_no}]]; // 기본값 설정
             logger.info('disease/modify_form selectedCategory:', selectedCategory);
-            getOptionList('/disease/get_category_list', 'd_category_no', true, selectedCategory); // command, element id, isForm
+            getOptionList('/disease/cate_info/get_category_list', 'd_category_no', true, selectedCategory); // command, element id, isForm
         });
     </script>
 </head>
@@ -26,10 +28,10 @@
 	                        <div class="content_top_info">
 	                            <h2 class="title">질환 / 질병 정보 관리</h2>
 	                        </div>
-	                        <p class="sub_title">질환 / 질병 정보</p>
+	                        <p class="sub_title">질환 / 질병 정보 수정</p>
 	                    </div>
 	
-	                    <form name="disease_modify_form">
+	                    <form name="disease_modify_form" onsubmit="return setFormSendFalse(event)">
 	                        <div class="table_wrap">
 	                            <table class="content_edit_table">
 	                                <colgroup>
@@ -58,17 +60,17 @@
 	                                <tr>
 	                                    <th><p class="table_title">추천 식단 재료</p></th>
 	                                    <td colspan="3">
-	                                        <input type="text" name="d_good_food" id="d_good_food" class="table_info" placeholder='","로 구분하여 입력하세요'
-	                                               onblur="checkEmpty(this, '추천 식단 재료를');"
-	                                               th:value="${diseaseDto.d_good_food}">
+	                                    	<textarea rows="1" name="d_good_food" id="d_good_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
+	                                    		oninput="setTextareaAutoHeight(this)" onblur="checkEmpty(this, '추천 식단 재료를')"
+	                                    		th:text="${diseaseDto.d_good_food}"></textarea>
 	                                    </td>
 	                                </tr>
 	                                <tr>
 	                                    <th><p class="table_title">비추천 식단 재료</p></th>
 	                                    <td colspan="3">
-	                                        <input type="text" name="d_bad_food" id="d_bad_food" class="table_info" placeholder='","로 구분하여 입력하세요'
-	                                               onblur="checkEmpty(this, '비추천 식단 재료를');"
-	                                               th:value="${diseaseDto.d_bad_food}">
+	                                    	<textarea rows="1" name="d_bad_food" id="d_bad_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
+	                                    		oninput="setTextareaAutoHeight(this)" onblur="checkEmpty(this, '추천 식단 재료를')"
+	                                    		th:text="${diseaseDto.d_bad_food}"></textarea>
 	                                    </td>
 	                                </tr>
 	                                <tr>
@@ -85,7 +87,7 @@
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
 	                                    <div th:onclick="putDiseaseModifyForm('disease_modify_form', [[${diseaseDto.d_name}]])"
-	                                       class="btns">저장</div>
+	                                       class="btns">수정</div>
 	                                </div>
 	                            </div>
 	                        </div>

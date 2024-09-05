@@ -17,7 +17,7 @@ async function getList(command, sort, sortValue, page) {
 			method: 'GET',
 		});
 		
-		logger.info(apiUrl + ' getList() response:', response);
+		logger.info(`${apiUrl} getList() response:`, response);
 		
 		const { getListDtos, getListPage, getListCnt } = setParseResponseByCommand(command, response);
 		const $contentTable = $('.content_table tbody'); // 데이터가 나열될 테이블 요소
@@ -40,6 +40,7 @@ async function getList(command, sort, sortValue, page) {
 					$contentTable[0].insertAdjacentHTML('beforeend', setDataList(command, data, listIndex));
 					listIndex --;
 				});
+				
 			} else {
 				const maxCols = setTableColumnsNum();
 				$contentTable.html(`
@@ -50,6 +51,7 @@ async function getList(command, sort, sortValue, page) {
 	                </tr>
 				`);
 			}
+			
 		} else {
 			logger.info('데이터가 없거나 유효하지 않습니다.');
 			const maxCols = setTableColumnsNum();
@@ -117,11 +119,11 @@ async function getOptionList(apiUrl, ele, isForm, selectedValue) {
 			});
 			
 			switch(apiUrl) {
-				case '/disease/get_category_list': // 질환 / 질병 정보 관리 분류명 정렬
+				case '/disease/cate_info/get_category_list': // 질환 / 질병 정보 관리 분류명 정렬
 					getListDtos = response.diseaseCategoryDto;
 					dataNo = 'dc_no';
 					dataName = 'dc_name';
-					command = '/disease/get_disease_list_by_category_with_page';
+					command = '/disease/info/get_disease_list_by_category_with_page';
 					break;
 				
 				default:
@@ -129,19 +131,22 @@ async function getOptionList(apiUrl, ele, isForm, selectedValue) {
 					return;
 			}
 			
-			logger.info(apiUrl + ' getListDtos:', getListDtos);
+			logger.info(`${apiUrl} getListDtos:`, getListDtos);
 			
 			if(getListDtos && getListDtos.length > 0) {
 				if(isForm) {
 					getListDtos.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
 						let selected = selectedValue ? data[dataNo] === selectedValue ? 'selected' : '' : '';
 						let option = `<option value="${data[dataNo]}" ${selected}>${data[dataName]}</option>`;
+						
 						if(selected) {
 							selectEle.insertAdjacentHTML('afterbegin', option);
+							
 						} else {
 							selectEle.insertAdjacentHTML('beforeend', option);
 						}
 					});
+					
 				} else {
 					const ceateSelect = `<ul data-sort="${dataNo}" data-api="${command}" class="select_option_list sc"></ul>`;
 			        selectEle.insertAdjacentHTML('beforeend', ceateSelect);
@@ -170,7 +175,7 @@ async function getSearchList(event, apiUrl, page) {
 	let input;
 	
 	input = form.search_string;
-	if(!checkEmpty(input, '검색어를', true)) { // true: alert으로 메세지 띄우기
+	if(!checkEmpty(input, '검색어를', true, true)) { // 요소, text, alert 여부, 에러메세지 미노출 여부
 		input.focus();
 		return false;
 	}
@@ -199,7 +204,7 @@ async function getSearchList(event, apiUrl, page) {
 				},
 			});
 			
-			logger.info(apiUrl + ' searchForm() response:', response);
+			logger.info(`${apiUrl} searchForm() response:`, response);
 			
 			const { getListDtos, getListPage, getListCnt } = setParseResponseByCommand(apiUrl, response);
 			const $contentTable = $('.content_table tbody'); // 데이터가 나열될 테이블 요소
@@ -251,5 +256,26 @@ async function getSearchList(event, apiUrl, page) {
 		} catch(error) {
 			logger.error(apiUrl + ' searchForm() error:', error);
 		}
+	}
+}
+
+// 본인 확인 후 로그인 유저 데이터 요청
+async function getAccountInfo() {
+	try {
+		const response = await $.ajax({
+			url: '/account/info/get_account_info',
+			method: 'GET',
+		});
+		
+		logger.info('/account/info/get_account_info getAccountInfo() response:', response);
+		
+		if(response) {
+			const $contentInfoWrap = $('.content_info_wrap');
+			$contentInfoWrap.html(setAccountModifyForm(response)); // account/modifyForm SET
+		}
+	
+	} catch(error) {
+		logger.error('/account/info/get_account_info getAccountInfo() error:', error);
+		throw new error('계정 정보를 불러오는 중 오류가 발생했습니다.');
 	}
 }

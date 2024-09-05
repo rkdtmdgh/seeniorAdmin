@@ -8,6 +8,8 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.disease.mapper.DiseaseMapper;
 import com.see_nior.seeniorAdmin.dto.DiseaseCategoryDto;
 import com.see_nior.seeniorAdmin.dto.DiseaseDto;
@@ -19,18 +21,16 @@ import lombok.extern.log4j.Log4j2;
 public class DiseaseService {
 	
 	// 질환 카테고리
-	final static public int DISEASE_CATEGORY_ALREADY = -1;				// 질환 카테고리가 이미 있음
-	final static public int DISEASE_CATEGORY_CREATE_FAIL = 0;			// 질환 카테고리 생성 실패
-	final static public int DISEASE_CATEGORY_CREATE_SUCCESS = 1;		// 질환 카테고리 생성 성공
+	final static public boolean DISEASE_CATEGORY_CREATE_FAIL = false;	// 질환 카테고리 생성 실패
+	final static public boolean DISEASE_CATEGORY_CREATE_SUCCESS = true;	// 질환 카테고리 생성 성공
 	final static public boolean DISEASE_CATEGORY_MODIFY_FAIL = false;	// 질환 카테고리 수정 실패
 	final static public boolean DISEASE_CATEGORY_MODIFY_SUCCESS = true;	// 질환 카테고리 수정 성공
 	final static public boolean DISEASE_CATEGORY_DELETE_FAIL = false;	// 질환 카테고리 삭제 실패
 	final static public boolean DISEASE_CATEGORY_DELETE_SUCCESS = true;	// 질환 카테고리 삭제 성공
 	
 	// 질환
-	final static public int DISEASE_ALREADY = -1;						// 질환이 이미 있음
-	final static public int DISEASE_CREATE_FAIL = 0;					// 질환 생성 실패
-	final static public int DISEASE_CREATE_SUCCESS = 1;					// 질환 생성 성공
+	final static public boolean DISEASE_CREATE_FAIL = false;			// 질환 생성 실패
+	final static public boolean DISEASE_CREATE_SUCCESS = true;			// 질환 생성 성공
 	final static public boolean DISEASE_MODIFY_FAIL = false;			// 질환 수정 실패
 	final static public boolean DISEASE_MODIFY_SUCCESS = true;			// 질환 수정 성공
 	final static public boolean DISEASE_DELETE_FAIL = false;			// 질환 삭제 실패
@@ -59,7 +59,7 @@ public class DiseaseService {
 	}
 	
 	// 질환 카테고리 추가 확인
-	public int createCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto) {
+	public boolean createCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto) {
 		log.info("createCategoryConfirm()");
 		
 		int result = diseaseMapper.insertNewDiseaseCategory(diseaseCategoryDto);
@@ -93,20 +93,32 @@ public class DiseaseService {
 	}
 	
 	// 페이지에 따른 질환 카테고리 리스트 가져오기
-	public Map<String, Object> getCategoryListWithPage(int page, String sort) {
+	public List<Map<String, Object>> getCategoryListWithPage(int page, String sort) {
 		log.info("getCategoryListWithPage()");
 		
 		int pagingStart = (page - 1) * pageLimit;
 		
-		Map<String, Object> pagingList = new HashMap<>();
+		List<Map<String, Object>> pagingList = new ArrayList<>();
 		
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
-		pagingParams.put("dc_name", sort);
+		pagingParams.put("sort", sort);
 		
 		List<DiseaseCategoryDto> diseaseCategoryDtos = diseaseMapper.getDiseaseCategoryListWithPage(pagingParams);
-		pagingList.put("diseaseCategoryDtos", diseaseCategoryDtos);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		for (DiseaseCategoryDto diseaseCategoryDto : diseaseCategoryDtos) {
+			int itemCnt = diseaseMapper.getCategoryItemCnt(diseaseCategoryDto.getDc_no());
+			
+			Map<String, Object> diseaseCategoryMap = objectMapper.convertValue(diseaseCategoryDto, new TypeReference<Map<String, Object>>() {});
+			
+			diseaseCategoryMap.put("itemCnt", itemCnt);
+			
+			pagingList.add(diseaseCategoryMap);
+			
+		}
 		
 		return pagingList;
 	}
@@ -191,6 +203,74 @@ public class DiseaseService {
 		
 	}
 	
+	// 페이지에 따른 질환 카테고리 가져오기(검색한 질환 카테고리)
+		public List<Map<String, Object>> getSearchDiseaseCategoryListWithPage(String searchPart, String searchString, int page) {
+			log.info("getSearchDiseaseCategoryListWithPage()");
+			
+			int pagingStart = (page - 1) * pageLimit;
+			
+			List<Map<String, Object>> pagingList = new ArrayList<>();
+			
+			Map<String, Object> pagingParams = new HashMap<>();
+			pagingParams.put("start", pagingStart);
+			pagingParams.put("limit", pageLimit);
+			pagingParams.put("searchPart", searchPart);
+			pagingParams.put("searchString", searchString);
+			
+			List<DiseaseCategoryDto> searchDiseaseCategoryDtos = diseaseMapper.getSearchDiseaseCategory(pagingParams);
+			
+			ObjectMapper objectMapper = new ObjectMapper();
+			
+			for (DiseaseCategoryDto searchDiseaseCategoryDto : searchDiseaseCategoryDtos) {
+				int itemCnt = diseaseMapper.getCategoryItemCnt(searchDiseaseCategoryDto.getDc_no());
+				
+				Map<String, Object> searchDiseaseCategoryMap = objectMapper.convertValue(searchDiseaseCategoryDto, new TypeReference<Map<String, Object>>() {});
+				
+				searchDiseaseCategoryMap.put("itemCnt", itemCnt);
+				
+				pagingList.add(searchDiseaseCategoryMap);
+				
+			}
+			
+			return pagingList;
+			
+		}
+
+		// 질환 카테고리의 총 페이지 개수 구하기(검색한 질환 카테고리)
+		public Map<String, Object> getSearchDiseaseCategoryListPageNum(String searchPart, String searchString, int page) {
+			log.info("getSearchDiseaseCategoryListPageNum()");
+			
+			Map<String, Object> searchDiseaseCategoryListPageNum = new HashMap<>();
+			
+			Map<String, Object> pagingParams = new HashMap<>();
+			pagingParams.put("searchPart", searchPart);
+			pagingParams.put("searchString", searchString);
+			
+			// 전체 리스트 개수 조회
+			int searchDiseaseCategoryListCnt = diseaseMapper.getSearchDiseaseCategoryListCnt(pagingParams);
+			
+			// 전체 페이지 개수 계산
+			int maxPage = (int) (Math.ceil((double) searchDiseaseCategoryListCnt / pageLimit));
+			
+			// 시작 페이지 값 계산
+			int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
+			
+			// 마지막 페이지 값 계산
+			int endPage = startPage + blockLimit - 1;
+			if (endPage > maxPage) endPage = maxPage;
+			
+			searchDiseaseCategoryListPageNum.put("searchDiseaseCategoryListCnt", searchDiseaseCategoryListCnt);
+			searchDiseaseCategoryListPageNum.put("page", page);
+			searchDiseaseCategoryListPageNum.put("maxPage", maxPage);
+			searchDiseaseCategoryListPageNum.put("startPage", startPage);
+			searchDiseaseCategoryListPageNum.put("endPage", endPage);
+			searchDiseaseCategoryListPageNum.put("blockLimit", blockLimit);
+			searchDiseaseCategoryListPageNum.put("pageLimit", pageLimit);
+			
+			return searchDiseaseCategoryListPageNum;
+			
+		}
+	
 	
 	// --------------------------------------------- 질환
 	
@@ -228,7 +308,7 @@ public class DiseaseService {
 		}
 	
 	// 질환 추가 확인
-	public int createConfirm(DiseaseDto diseaseDto) {
+	public boolean createConfirm(DiseaseDto diseaseDto) {
 		log.info("createConfirm()");
 			
 		int result = diseaseMapper.insertNewDisease(diseaseDto);
