@@ -16,7 +16,7 @@ $(document).ready(function() {
 	async function getBoardList() {
 		try {
 			const response = await $.ajax({
-				url: '/board/get_list',
+				url: '/board/cate_info/get_list',
 				method: 'GET',
 			});
 
@@ -27,7 +27,7 @@ $(document).ready(function() {
 			if (response && response.boardCategoryDtos) {
 				response.boardCategoryDtos.forEach((data) => { 
 					let innerContent = `
-						<a href="/board/board_list?${data.bc_no}" class="side_sub_menu_btn">
+						<a href="${data.bc_no}" class="side_sub_menu_btn">
 							<span class="side_sub_menu">${data.bc_name}</span>
 						</a>
 					`;
