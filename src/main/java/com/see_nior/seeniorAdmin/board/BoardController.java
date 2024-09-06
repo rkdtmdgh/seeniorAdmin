@@ -23,7 +23,7 @@ public class BoardController {
 	}
 	
 	//모든 게시판 항목 가져오기
-	@GetMapping("/get_list")
+	@GetMapping("/cate_info/get_list")
 	@ResponseBody
 	public Object getList() {		
 		log.info("getList()");
@@ -31,22 +31,32 @@ public class BoardController {
 		return boardService.getList();
 	}
 	
-	//게시판 생성 양식으로 이동
-	@GetMapping("/create_form")
-	public String createForm() {
-		log.info("createForm()");
+	//게시판 관리 양식으로 이동
+	@GetMapping("/cate_info/board_list_form")
+	public String boardListForm() {
+		log.info("boardListForm()");
 		
-		String nextPage = "board/create_form";
+		String nextPage = "board/board_list_form";
+		
+		return nextPage;
+	}
+	
+	//게시판 생성 양식으로 이동
+	@GetMapping("/cate_info/create_category_form")
+	public String createCategoryForm() {
+		log.info("createCategoryForm()");
+		
+		String nextPage = "board/create_category_form";
 		
 		return nextPage;
 	}
 	
 	//게시판 생성 요청 처리
-	@PostMapping("/create_confirm")
-	public String createConfirm(BoardCategoryDto boardCategoryDto) {
-		log.info("createConfirm()");
+	@PostMapping("/cate_info/create_category_confirm")
+	public String createCategoryConfirm(BoardCategoryDto boardCategoryDto) {
+		log.info("createCategoryConfirm()");
 		
-		int result = boardService.createConfirm(boardCategoryDto);
+		int result = boardService.createCategoryConfirm(boardCategoryDto);
 		
 		return null;
 	}
