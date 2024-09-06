@@ -40,12 +40,14 @@ public class BoardService {
 		String bc_name = boardCategoryDto.getBc_name();
 		
 		if(bc_idx == 0) {
-			
+			log.info("bc_idx: ",bc_idx);
 			// List<Integer> boardIdxs = boardMapper.getAllBoardIdx();
 			// int lastBoradIdx = boardIdxs.getFirst();
 			
 			// int result = boardMapper.createBoardCategory(lastBoradIdx+1,bc_name);
 			
+		}else {
+			log.info("bc_idx: ",bc_idx);
 		}
 		
 		log.info("bc_idx --- {}", bc_idx);
