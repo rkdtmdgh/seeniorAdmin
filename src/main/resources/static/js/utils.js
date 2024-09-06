@@ -331,7 +331,20 @@ function setParseResponseByCommand(command, response) {
 			getListPage = response.searchDiseaseCategoryListPageNum;
 			getListCnt = response.searchDiseaseCategoryListPageNum.searchDiseaseCategoryListCnt;
 			break;
-	}
+			
+		case '/board/cate_info/get_list': // 게시판 관리
+			getListDtos = response.boardCategoryDtos;
+			getListPage = response.boardCategoryListPageNum;
+			getListCnt = response.boardCategoryListPageNum.boardCategoryListCnt;
+			break;
+			
+		case '/board/cate_info/search_board_list': // 게시판 관리 검색
+			getListDtos = response.boardCategoryDtos;
+			getListPage = response.searchBoardCategoryListPageNum;
+			getListCnt = response.searchBoardCategoryListPageNum.searchBoardCategoryListCnt;
+			break;	
+						
+}
 	
 	return { getListDtos, getListPage, getListCnt }
 }
@@ -404,8 +417,8 @@ function setDataList(api, data, index) {
 	let innerContent = '';
 	
 	switch(api) {
-		case '/account/list/get_admin_list': 
-		case '/account/list/search_admin_list':
+		case '/account/list/get_admin_list':  // 관리자 계정 리스트 테이블
+		case '/account/list/search_admin_list': // 관리자 계정 검색 리스트 테이블
 			innerContent = `
 				<tr>
 		            <td>
@@ -430,9 +443,9 @@ function setDataList(api, data, index) {
 			`;
 			break;
 			
-		case '/disease/info/get_all_disease_list_with_page':
-		case '/disease/info/search_disease_list':
-		case '/disease/info/get_disease_list_by_category_with_page':
+		case '/disease/info/get_all_disease_list_with_page': // 질환/질병 관리 리스트 테이블
+		case '/disease/info/search_disease_list':            // 질환/질병 관리 검색 리스트 테이블
+		case '/disease/info/get_disease_list_by_category_with_page': // 질환/질병 관리 분류선택 리스트 테이블
 			innerContent = `
 				<tr>
 		            <td class="vam">
@@ -454,25 +467,45 @@ function setDataList(api, data, index) {
 			`;
 			break;
 			
-			case '/disease/cate_info/get_category_list_with_page':
-			case '/disease/cate_info/search_disease_category_list':
-				innerContent = `
-					<tr>
-			            <td>
-			                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${index}</a>
-			            </td>
-			            <td>
-			                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${data.dc_name}</a>
-			            </td>
-			            <td>
-			                <a href="/disease/info/disease_list_form?sortType=1&sort=dc_no&dc_no=${data.dc_no}" class="table_info">${data.itemCnt}</a>
-			            </td>
-			            <td>
-			                <p class="table_info">${setFormatDate(data.dc_reg_date) || 'N/A'}</p>
-			            </td>
-			        </tr>
-				`;
-				break;
+		case '/disease/cate_info/get_category_list_with_page': // 질환/질병 분류 관리 리스트 테이블
+		case '/disease/cate_info/search_disease_category_list': // 질환/질병 분류 관리 검색 리스트 테이블
+			innerContent = `
+				<tr>
+		            <td>
+		                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${index}</a>
+		            </td>
+		            <td>
+		                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${data.dc_name}</a>
+		            </td>
+		            <td>
+		                <a href="/disease/info/disease_list_form?sortType=1&sort=dc_no&dc_no=${data.dc_no}" class="table_info">${data.itemCnt}</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.dc_reg_date) || 'N/A'}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/board/cate_info/get_list': // 게시판 관리 리스트 테이블
+		case '/board/cate_info/search_board_category_list': // 게시판 관리 검색 리스트 테이블
+			innerContent = `
+				<tr>
+		            <td>
+		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${index}</a>
+		            </td>
+		            <td>
+		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${data.bc_name}</a>
+		            </td>
+		            <td>
+		                <a href="" class="table_info">${data.itemCnt}</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.bc_reg_date) || 'N/A'}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
 		
 		default:
 			innerContent = '';
