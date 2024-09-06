@@ -33,7 +33,7 @@ public class BoardService {
 		return cateDtos;
 	}
 
-	public int createConfirm(BoardCategoryDto boardCategoryDto) {
+	public int createCategoryConfirm(BoardCategoryDto boardCategoryDto) {
 		log.info("createConfirm()");
 					
 		int bc_idx = boardCategoryDto.getBc_idx(); // 프론트에서 입력값이 없으면 0으로 넘겨줌 
