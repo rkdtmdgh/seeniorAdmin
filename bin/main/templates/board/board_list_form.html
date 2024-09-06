@@ -1,10 +1,97 @@
 <!DOCTYPE html>
-<html>
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 게시판 관리')}"></th:block>
+	
+	<script type="text/javascript">
+		document.addEventListener('DOMContentLoaded', () => {
+			const { sortType, sort, sortValue, page } = setFormValuesFromUrl('dc_name'); // 검색 파트 기본값
+			switch(sortType) {
+				case '2': // 검색
+					getSearchList(null, '/board/cate_info/search_board_list', page);
+					break;
+
+				case '0':  // 정렬
+					getList('/board/cate_info/get_list', sort, sortValue, page);
+					break;
+					
+				default: // 기본
+					getList('/board/cate_info/get_list', sort, sortValue, page);
+			}
+        });
+	</script>
 </head>
 <body>
-
+	<main class="contents_wrap">
+		<header th:replace="~{fragments/header.html :: header}"></header>
+	
+		<article class="contents_container">
+			<nav th:replace="~{fragments/nav.html :: nav}"></nav>
+			
+			<div class="content">
+                <div class="content_inner sc">
+					<section class="content_info_wrap">
+					    <div class="content_top">
+					        <div class="content_top_info">
+					            <h2 class="title">게시판 관리</h2>
+					            
+					            <div class="content_top_right">
+									<form name="search_form" onsubmit="getSearchList(event, '/board/cate_info/search_board_list')" th:insert="~{fragments/search.html :: search('게시판 관리')}"></form>
+						            
+						            <div class="btn_list">
+						            	<div class="btns small" onclick="getList('/board/cate_info/get_list', null, null, 1);">전체보기</div>
+						            	<a href="/board/cate_info/create_form" class="btns small">등록</a>
+						            </div>
+					            </div>
+					        </div>
+					    </div>
+					    
+					    <div class="table_wrap">
+	                        <table class="content_table disease_list_table">
+	                            <colgroup>
+	                                <col class="col_no">
+	                                <col>
+	                                <col>
+	                                <col>
+	                            </colgroup>
+	
+	                            <thead>
+	                                <tr>
+	                                    <th>
+	                                        <p class="table_title">No</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p data-sort="bc_name" data-current-sort="all" class="table_title sort"
+	                                        	onclick="getSortList(event, '/board/cate_info/get_list', 'asc', 'desc')">
+	                                        	게시판
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">게시글 등록 수</p>
+	                                    </th>
+	                                    <th>
+	                                        <p class="table_title">등록일</p>
+	                                    </th>
+	                                </tr>
+	                            </thead>
+	
+	                            <tbody>
+	                                <!-- 리스트 테이블 -->
+	                            </tbody>
+	                        </table>
+	                        
+	                        <div class="pagination_wrap"></div>
+	                    </div>
+					</section>
+                </div>
+            </div>
+		</article>
+	</main>
 </body>
 </html>

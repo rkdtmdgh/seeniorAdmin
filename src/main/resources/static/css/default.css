@@ -27,7 +27,6 @@
     }
     
     .input_txt {
-		padding-right: var(--baseGap);
     	font-size: var(--subFontSize);
     }
     
@@ -420,6 +419,10 @@
        	
        	.table_info {
        		padding-right: 80px; 
+       	}
+       	
+       	.input_icon {
+       		top: var(--tableInputIconTop);
        	}
        	
        	.btns {

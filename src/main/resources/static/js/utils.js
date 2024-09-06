@@ -212,7 +212,7 @@ function setFormValuesFromUrl(part) {
 	const sort = urlParams.get('sort') || undefined;
 	const sortValue = urlParams.get(`${sort}`) || undefined;
 	
-	$sForm.find('select[name="search_part"]').val(searchPart);
+	if(searchPart) $sForm.find('select[name="search_part"]').val(searchPart);
 	
 	// 검색어가 있을 경우 검색 폼 사용으로 새로고침 시 재적용
 	if(sortType === '2') { // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
@@ -595,8 +595,8 @@ function setAccountModifyForm(data) {
 
                         	<th><p class="table_title">생년월일</p></th>
                         	<td>
-                                <input type="text" name="a_birth" id="birth" maxlength="10" class="table_info" placeholder="생년월일 8자 (YYYYMMDD)"
-                                	onkeydown="setReplaceBirth(this)" onkeyup="validateBirth(this)" onblur="validateBirth(this)"
+                                <input type="date" name="a_birth" id="birth" max="9999-12-31" min="1900-01-01" class="table_info"
+                                	onchange="checkEmpty(this, '생년월일을')" onblur="checkEmpty(this, '생년월일을')"
                                 	value="${data.a_birth}">
                             </td>
                         </tr>
