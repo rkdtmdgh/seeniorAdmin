@@ -16,7 +16,7 @@ $(document).ready(function() {
 	async function getBoardList() {
 		try {
 			const response = await $.ajax({
-				url: '/board/get_list',
+				url: '/board/cate_info/get_list',
 				method: 'GET',
 			});
 
@@ -25,10 +25,9 @@ $(document).ready(function() {
 			const $sideBoardSubMenu = $('#side_board_sub_menu');
 
 			if (response && response.boardCategoryDtos) {
-				let filterData = response.boardCategoryDtos.filter(data => data.bc_is_deleted === true);
-				filterData.forEach((data) => { 
+				response.boardCategoryDtos.forEach((data) => { 
 					let innerContent = `
-						<a href="/board/board_list?${data.bc_no}" class="side_sub_menu_btn">
+						<a href="${data.bc_no}" class="side_sub_menu_btn">
 							<span class="side_sub_menu">${data.bc_name}</span>
 						</a>
 					`;
