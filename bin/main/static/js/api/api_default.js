@@ -25,8 +25,7 @@ $(document).ready(function() {
 			const $sideBoardSubMenu = $('#side_board_sub_menu');
 
 			if (response && response.boardCategoryDtos) {
-				let filterData = response.boardCategoryDtos.filter(data => data.bc_is_deleted === true);
-				filterData.forEach((data) => { 
+				response.boardCategoryDtos.forEach((data) => { 
 					let innerContent = `
 						<a href="/board/board_list?${data.bc_no}" class="side_sub_menu_btn">
 							<span class="side_sub_menu">${data.bc_name}</span>

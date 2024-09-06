@@ -270,6 +270,11 @@ function setWordAndCommand(inputName) {
 			apiUrl = '/disease/info/is_disease';
 			break;
 			
+		case 'bc_name':
+			word = '게시판명';
+			apiUrl = '/board/cate_info/is_board_category';
+			break;
+			
 		default:
 			logger.error('usedInputValueCheck() inputName:', inputName);
 			return false;
