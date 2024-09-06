@@ -35,7 +35,7 @@
 	
 	                    <label for="password" class="border_input">
 	                        <span class="input_title">비밀번호</span>
-	                        <input type="password" name="a_pw" id="pw" placeholder="비밀번호" class="input_txt" 
+	                        <input type="password" name="a_pw" id="pw" placeholder="비밀번호" class="input_txt pr_baseGap" 
 	                        	oninput="validatePw(this)" onblur="validatePw(this)" autocomplete="off">
 	                        <span class="input_icon" onclick="setPwViewToggle(this)">
 	                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
@@ -50,8 +50,8 @@
 	                    
 	                    <label for="birth" class="border_input">
 	                        <span class="input_title">생년월일</span>
-	                        <input type="text" name="a_birth" id="birth" maxlength="10" placeholder="생년월일 8자 (YYYYMMDD)" class="input_txt" 
-	                        	onkeydown="setReplaceBirth(this)" onkeyup="validateBirth(this)" onblur="validateBirth(this)">
+	                        <input type="date" name="a_birth" id="birth" max="9999-12-31" min="1900-01-01" class="input_txt" 
+	                        	onchange="checkEmpty(this, '생년월일을')" onblur="checkEmpty(this, '생년월일을')">
 	                    </label>
 						
 						<label for="tel" class="border_input">

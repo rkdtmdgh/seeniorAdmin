@@ -80,17 +80,17 @@ function validatePw(input, alertMsg) {
 }
 
 // 생년월일 유효성 검사
-function validateBirth(input, alertMsg) {
-	const regEx = 	/^(19[0-9]{2}|20[0-9]{2})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/; // 현재 입력 가능 연도 기준으로 date 형식에 맞게 입력
-	const errorMessage = "생년월일을 정확히 입력해 주세요.";
-	const isValid = validateInput(input, regEx, errorMessage);
-	if(alertMsg && !isValid) {
-		alert(errorMessage);
-		return false;
-	}
+//function validateBirth(input, alertMsg) {
+//	const regEx = 	/^(19[0-9]{2}|20[0-9]{2})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/; // 현재 입력 가능 연도 기준으로 date 형식에 맞게 입력
+//	const errorMessage = "생년월일을 정확히 입력해 주세요.";
+//	const isValid = validateInput(input, regEx, errorMessage);
+//	if(alertMsg && !isValid) {
+//		alert(errorMessage);
+//		return false;
+//	}
 	
-	return isValid;
-}
+//	return isValid;
+//}
 
 // 연락처 유효성 검사   
 function validatePhone(input, alertMsg) {
@@ -107,6 +107,7 @@ function validatePhone(input, alertMsg) {
 
 // 데이터 값 유효 확인
 function checkEmpty(input, txt, alertMsg,  notViewMsg = false) { // 요소, 텍스트, alert 여부, 에러메세지 요소 표기 여부(false = 노출, ture = 노출X)
+	logger.info('checkEmpty() input value:', input.value);
 	const errorMessage = txt + " 입력해 주세요.";
 	if(alertMsg) {
 		if(!notViewMsg && !validateInput(input, null, errorMessage)) {

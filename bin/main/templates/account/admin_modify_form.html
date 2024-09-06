@@ -67,8 +67,8 @@
 	                                        
 	                                        <th><p class="table_title">생년월일</p></th>
 		                                	<td>
-	                                            <input type="text" name="a_birth" id="a_birth" maxlength="10" class="table_info" placeholder="생년월일 8자 (YYYYMMDD)"
-	                                            	onkeydown="setReplaceBirth(this)" onkeyup="validateBirth(this)" onblur="validateBirth(this)"
+	                                            <input type="date" name="a_birth" id="a_birth" max="9999-12-31" min="1900-01-01" class="table_info"
+	                                            	onchange="checkEmpty(this, '생년월일을')" onblur="checkEmpty(this, '생년월일을')"
 	                                            	th:value="${selectedAdminDto.a_birth}">
 	                                        </td>
 		                                </tr>

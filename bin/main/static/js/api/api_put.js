@@ -43,7 +43,7 @@ async function putModifyForm(formName) {
 	}
 	
 	input = form.a_birth;
-	if(!validateBirth(input, true)) {
+	if(!checkEmpty(input, '생년월일을', true)) {
 		input.focus();
 		return false;
 	}
@@ -96,7 +96,7 @@ async function putAdminModifyForm(formName) {
 	}
 	
 	input = form.a_birth;
-	if(!validateBirth(input, true)) {
+	if(!checkEmpty(input, '생년월일을', true)) {
 		input.focus();
 		return false;
 	}
