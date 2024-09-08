@@ -10,6 +10,7 @@
 			// 세션 만료 확인
 			if(!setSessionIdentityCheck(/*[[${#authentication.name}]]*/)) { // 만료
 				setIdentityCheckForm(); // 본인 확인 폼 SET
+				setInputFocus('a_pw');
 				
 			} else {
 				getAccountInfo(); // 정보 수정 폼 SET

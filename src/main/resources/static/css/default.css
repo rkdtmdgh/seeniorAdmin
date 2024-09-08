@@ -407,7 +407,8 @@
     }
 
     .table_title {
-        justify-content: flex-start;
+        display: block;
+        text-align: left;
     }
 
     .table_info {

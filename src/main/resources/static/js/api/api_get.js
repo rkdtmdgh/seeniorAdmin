@@ -1,25 +1,28 @@
 // 콘텐츠 리스트 요청
-async function getList(command, sort, sortValue, page) {
+async function getList(apiUrl, sort, sortValue, page) {
 	setAllcheck(); // all_check 체크박스 초기화
 	
 	// 검색 인풋 벨류 삭제
 	const searchStringInput = document.forms['search_form'].search_string;
 	if(searchStringInput.value.trim().length > 0) searchStringInput.value = ''; // 검색 이력이 남았을 경우에만 삭제
 	
-	const intPage = page || 1;
-	let queryParams = `?page=${intPage}`;
-	if(sort) queryParams = queryParams + `&${sort}=${sortValue}`;
-	const apiUrl = command + queryParams;
+	const urlParams = new URLSearchParams(window.location.search);
+	const infoNo = urlParams.get('infoNo') || undefined;
+	
+	const intPage = page || 1
+	let params = `?page=${intPage}`;
+	if(sort) params = `${params}&${sort}=${sortValue}`;
+	if(infoNo) params = `${params}&infoNo=${infoNo}`;
 	
 	try {
 		const response = await $.ajax({
-			url: apiUrl,
+			url: apiUrl + params,
 			method: 'GET',
 		});
 		
 		logger.info(`${apiUrl} getList() response:`, response);
 		
-		const { getListDtos, getListPage, getListCnt } = setParseResponseByCommand(command, response);
+		const { getListDtos, getListPage, getListCnt } = setParseResponseByCommand(apiUrl, response);
 		const $contentTable = $('.content_table tbody'); // 데이터가 나열될 테이블 요소
 		const $pagination = $('.pagination_wrap'); // 페이지 네이션 요소
 		$contentTable.html('');
@@ -27,9 +30,9 @@ async function getList(command, sort, sortValue, page) {
 		
 		if(response && getListDtos) {
 			// 쿼리스트링 조건 추가
-			setListQueryString(getListPage.page, sort, sortValue); // page, sort, sortValue
+			setListQueryString(sort, sortValue, getListPage.page); // page, sort, sortValue
 					
-			const paging = setPagination(getListPage, sort, sortValue, command); // 페이징벨류값, sort, sortValue, 커맨드, isSearch
+			const paging = setPagination(getListPage, sort, sortValue, apiUrl, false); // 페이징벨류값, sort, sortValue, 커맨드, isSearch
 			$pagination.html(paging);
 			
 			let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
@@ -37,7 +40,7 @@ async function getList(command, sort, sortValue, page) {
 			
 			if(listIndex > 0) {
 				getListDtos.forEach((data) => { 
-					$contentTable[0].insertAdjacentHTML('beforeend', setDataList(command, data, listIndex));
+					$contentTable[0].insertAdjacentHTML('beforeend', setDataList(apiUrl, data, listIndex));
 					listIndex --;
 				});
 				
@@ -65,12 +68,12 @@ async function getList(command, sort, sortValue, page) {
 		}
 		
 	} catch(error) {
-		logger.error(command + ' error:', error);
+		logger.error(apiUrl + ' error:', error);
 	}
 }
 
 // 버튼으로 정렬된 리스트 요청
-function getSortList(event, command, defaultSort, changeSort) {
+function getSortList(event, apiUrl, defaultSort, changeSort) {
 	if(event) event.preventDefault();
     const sortBtn = event.currentTarget.closest('.sort'); // 클릭된 요소가 가장 가까운 부모 요소 중 클래스가 "sort"인 요소를 찾음
 	if(!sortBtn) return; // 만약 sort 요소가 없다면 아무 작업도 하지 않음
@@ -85,13 +88,13 @@ function getSortList(event, command, defaultSort, changeSort) {
 	const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 	window.history.replaceState({}, '', newUrl);
 	
-    getList(command, sort, newSort, 1); // 변경된 정렬 값으로 getList 호출
+    getList(apiUrl, sort, newSort, 1); // 변경된 정렬 값으로 getList 호출
 }
 
 // 셀렉트로 정렬된 리스트 요청
 function getSelectList(event) {
 	const sortBtn = event.target; // 클릭된 버튼 요소
-	const command = sortBtn.parentElement.getAttribute('data-api'); // 커맨드 가져오기
+	const apiUrl = sortBtn.parentElement.getAttribute('data-api'); // 커맨드 가져오기
 	const sort = sortBtn.parentElement.getAttribute('data-sort'); // 정렬 종류 가져오기
 	const sortValue = sortBtn.getAttribute('data-sort-value'); // 정렬할 값
 
@@ -100,7 +103,7 @@ function getSelectList(event) {
 	const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 	window.history.replaceState({}, '', newUrl);
 	
-	getList(command, sort, sortValue, 1);
+	getList(apiUrl, sort, sortValue, 1);
 }
 
 // 콘텐츠 정렬 셀렉트 옵션 리스트 요청
@@ -189,19 +192,20 @@ async function getSearchList(event, apiUrl, page) {
 	if(apiUrl) {		
 		setAllcheck(); // all_check 체크박스 초기화
 		
+		const urlParams = new URLSearchParams(window.location.search);
+		const infoNo = urlParams.get('infoNo') || undefined;
+	
 		let intPage = page || 1;
 		logger.info('searchForm() searchPart:', form.search_part.value);
 		logger.info('searchForm() searchString:', input.value.trim());
+		
+		let params = `?searchPart=${form.search_part.value}&searchString=${input.value.trim()}&page=${intPage}`;
+		if(infoNo) params = `${params}&infoNo=${infoNo}`;
 				
 		try {
 			const response = await $.ajax({
-				url: apiUrl,
+				url: apiUrl + params,
 				method: 'GET',
-				data: {
-					searchPart: form.search_part.value, // 검색 분류 select
-					searchString: input.value.trim(), // 검색 입력값
-					page: intPage,
-				},
 			});
 			
 			logger.info(`${apiUrl} searchForm() response:`, response);
