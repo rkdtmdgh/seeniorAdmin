@@ -4,30 +4,27 @@
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
 <head>
-	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 질환 / 질병 정보 관리')}"></th:block>
+	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 게시판')}"></th:block>
 	
 	<script type="text/javascript">
 		document.addEventListener('DOMContentLoaded', () => {
-			const { sortType, sort, sortValue, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
+			const { sortType, sort, sortValue, page } = setFormValuesFromUrl(); 
 			switch(sortType) {
 				case '2': // 검색
-					getSearchList(null, '/disease/info/search_disease_list', page);
+					getSearchList(null, '/board/info/search_board_info_list', page);
 					break;
 
 				case '1': // 카테고리 셀렉트
-					getList('/disease/info/get_disease_list_by_category_with_page', sort, sortValue, page);
+					getList('/board/info/get_board_info_list_by_category_with_page', sort, sortValue, page);
 					break;
 
 				case '0':  // 정렬
-					getList('/disease/info/get_all_disease_list_with_page', sort, sortValue, page);
+					getList('/board/info/get_all_board_info_list_with_page', sort, sortValue, page);
 					break;
 					
 				default: // 기본
-					getList('/disease/info/get_all_disease_list_with_page', sort, sortValue, page);
+					getList('/board/info/get_all_board_info_list_with_page', sort, sortValue, page);
 			}
-
-			// DISEASE_CATEGORY 가져오기
-			getOptionList('/disease/cate_info/get_category_list', 'dc_name');
         });
 	</script>
 </head>
@@ -46,22 +43,24 @@
 					            <h2 class="title">질환 / 질병 정보 관리</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/disease/info/search_disease_list')" th:insert="~{fragments/search.html :: search('질환 / 질병 정보 관리')}"></form>
+									<form name="search_form" onsubmit="getSearchList(event, '/board/info/search_board_info_list')" th:insert="~{fragments/search.html :: search('게시판')}"></form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/disease/info/get_all_disease_list_with_page', null, null, 1);">전체보기</div>
-						            	<div class="btns small delete" onclick="delCheckBoxList('/disease/info/delete_confirm', 'd_no')">삭제</div>
-						            	<a href="/disease/info/create_form" class="btns small">등록</a>
+						            	<div class="btns small" onclick="getList('/board/info/get_all_board_info_list_with_page', null, null, 1);">전체보기</div>
+						            	<div class="btns small delete" onclick="delCheckBoxList('/board/info/delete_confirm', 'bp_no')">삭제</div>
+						            	<div th:onclick="/board/info/write_form?infoNo=[[${boardInfoDtos.infoNo}]]" class="btns small">등록</div>
 						            </div>
 					            </div>
 					        </div>
 					    </div>
 					    
 					    <div class="table_wrap">
-	                        <table class="content_table disease_list_table">
+	                        <table class="content_table board_info_list_table">
 	                            <colgroup>
 	                                <col class="col_checkBox">
 	                                <col class="col_no">
+	                                <col>
+	                                <col>
 	                                <col>
 	                                <col>
 	                                <col>
@@ -71,25 +70,31 @@
 	                                <tr>
 	                                	<th>
 	                                		<div class="table_title"><input type="checkbox" name="all_check" id="all_check" 
-	                                			onchange="setAllCheckBox(this)" value="d_no" ></div>	                                        
+	                                			onchange="setAllCheckBox(this)" value="bp_no" ></div>	                                        
 	                                    </th>
+	                                    
 	                                    <th>
 	                                        <p class="table_title">No</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <div class="table_title select" id="dc_name" onclick="setSelectOptionTopggle(event)">분류명</div>
+	                                        <p class="table_title">제목(댓글 수)</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p data-sort="d_name" data-current-sort="all" class="table_title sort"
-	                                        	onclick="getSortList(event, '/disease/info/get_all_disease_list_with_page', 'asc', 'desc')">
-	                                        	질환 / 질병명
-	                                        	<span class="sort_icon"></span>
-	                                        </p>
+	                                        <p class="table_title">조회수</p>
 	                                    </th>
+	                                    
 	                                    <th>
-	                                        <p class="table_title">등록일</p>
+	                                        <p class="table_title">상태</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">작성자</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">(mod_date)</p>
 	                                    </th>
 	                                </tr>
 	                            </thead>

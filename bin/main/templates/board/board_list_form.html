@@ -8,7 +8,7 @@
 	
 	<script type="text/javascript">
 		document.addEventListener('DOMContentLoaded', () => {
-			const { sortType, sort, sortValue, page } = setFormValuesFromUrl('bc_name'); // 검색 파트 기본값
+			const { sortType, sort, sortValue, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // 검색
 					getSearchList(null, '/board/cate_info/search_board_list', page);
@@ -50,7 +50,7 @@
 					    </div>
 					    
 					    <div class="table_wrap">
-	                        <table class="content_table disease_list_table">
+	                        <table class="content_table board_list_table">
 	                            <colgroup>
 	                                <col class="col_no">
 	                                <col>
