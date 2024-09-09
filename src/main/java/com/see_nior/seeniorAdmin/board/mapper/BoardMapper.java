@@ -13,4 +13,6 @@ public interface BoardMapper {
 
 	boolean isBoardCategory(String bc_name);
 
+	List<BoardCategoryDto> getBoardCategoryIdxMaxNum();
+
 }

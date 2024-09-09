@@ -45,6 +45,18 @@ public class BoardService {
 		return result;
 	}
 	
+	//일반 게시판 마지막 순서(idx) 번호 가져오기
+	public int getBoardCategoryIdxMaxNum() {
+		log.info("getBoardCategoryIdxMaxNum()");
+		
+		List<BoardCategoryDto> boardCategoryDtos = boardMapper.getBoardCategoryIdxMaxNum();
+		
+//		int IdxMaxNum = boardCategoryDtos.getFirst().getBc_idx();
+		int IdxMaxNum = boardCategoryDtos.get(0).getBc_idx();
+		
+		return IdxMaxNum;
+	}
+	
 	//게시판 생성 요청 처리
 	public int createCategoryConfirm(BoardCategoryDto boardCategoryDto) {
 		log.info("createConfirm()");
@@ -67,7 +79,9 @@ public class BoardService {
 		log.info("bc_name --- {}", bc_name);
 				
 		return 0;
-	}	
+	}
+
+		
 
 	
 

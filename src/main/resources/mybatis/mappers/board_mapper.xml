@@ -18,6 +18,21 @@
 	
 	</select>
 	
+	<select id="getBoardCategoryIdxMaxNum" resultType="com.see_nior.seeniorAdmin.dto.BoardCategoryDto">
+	
+		SELECT 
+			* 
+		FROM 
+			BOARD_CATEGORY 
+		WHERE 
+			BC_IS_DELETED = 1 
+		ORDER BY 
+			BC_IDX DESC 
+		LIMIT 
+			0,1
+	
+	</select>
+	
 	<select id="isBoardCategory" parameterType="String" resultType="boolean">
 	
 		SELECT 
