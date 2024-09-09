@@ -3,6 +3,7 @@ package com.see_nior.seeniorAdmin.board;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,8 +46,12 @@ public class BoardController {
 	
 	//게시판 생성 양식으로 이동
 	@GetMapping("/cate_info/create_category_form")
-	public String createCategoryForm() {
+	public String createCategoryForm(Model model) {
 		log.info("createCategoryForm()");
+		
+		int boardCategoryIdxMaxNum = boardService.getBoardCategoryIdxMaxNum();
+		
+		model.addAttribute("boardCategoryIdxMaxNum", boardCategoryIdxMaxNum);
 		
 		String nextPage = "board/create_category_form";
 		
