@@ -17,5 +17,18 @@
 		ASC
 	
 	</select>
+	
+	<select id="isBoardCategory" parameterType="String" resultType="boolean">
+	
+		SELECT 
+			count(*) 
+		FROM 
+			BOARD_CATEGORY 
+		WHERE 
+			BC_NAME = #{bc_name} 
+		AND 
+			BC_IS_DELETED = 1
+		
+	</select>
 
 </mapper>
