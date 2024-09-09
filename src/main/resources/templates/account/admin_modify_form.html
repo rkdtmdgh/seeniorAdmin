@@ -106,7 +106,7 @@
 		                        
 		                        <div class="btn_list">
 		                        	<div th:if="${selectedAdminDto.a_no} != null and ${selectedAdminDto.a_id} != null"
-		                        		 th:onclick="delAccount([[${selectedAdminDto.a_no}]], [[${selectedAdminDto.a_id}]])" class="btns delete">삭제</div>
+		                        		 th:onclick="delSingleData('a_no', [[${selectedAdminDto.a_no}]], [[${selectedAdminDto.a_id}]])" class="btns delete">삭제</div>
 		                        	
 	                                <div class="btn_list">
 	                                	<div th:onclick="putResetPassword([[${selectedAdminDto.a_no}]], [[${selectedAdminDto.a_id}]])"

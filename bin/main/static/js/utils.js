@@ -287,6 +287,40 @@ function setWordAndCommand(inputName) {
 	return { word, apiUrl };
 }
 
+// 삭제 커맨드, 메세지 설정
+function setDelCommand(name) {
+	let apiUrl;
+	let replace;
+	
+	switch(name) {
+		case 'a_no': // 관리자 계정
+			apiUrl = '/account/list/delete_confirm';
+			replace = '/account/list/admin_list_form';
+			break;
+			
+		case 'dc_no': // 질환/질병 분류
+			apiUrl = '/disease/cate_info/delete_category_confirm';
+			replace = '/disease/cate_info/category_list_form';
+			break;
+			
+		case 'd_no': // 질환/질병
+			apiUrl = '/disease/info/delete_confirm';
+			replace = '/disease/info/disease_list_form';
+			break;
+		
+		case 'bc_no': // 게시판
+			apiUrl = '/board/cate_info/delete_category_confirm';
+			replace = '/board/cate_info/category_list_form';
+			break;
+			
+		default:
+			logger.error('usedInputValueCheck() inputName:', name);
+			return false;
+	}
+	
+	return { apiUrl, replace };
+}
+
 // 카테고리에 맞도록 객체 선택 
 function setParseResponseByCommand(command, response) {
 	let getListDtos;
