@@ -5,6 +5,7 @@
    
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 게시판')}"></th:block>
+	
 </head>
 <body>
 <main class="contents_wrap">
@@ -18,7 +19,7 @@
 					<section class="content_info_wrap">
 						<div class="content_top">
 					        <div class="content_top_info">
-					            <h2 class="title" th:text="${postsDtos.bp_category_no}">게시판명</h2>
+					            <h2 class="title" th:text="${postsDtos.bc_name}">게시판명</h2>
 					        </div>
 				            <p class="sub_title">게시물 등록</p>
 					    </div>
@@ -65,8 +66,7 @@
 		                                <tr>
 		                                	<th><p class="table_title">내용</p></th>
 		                                	<td colspan="3">
-	                                			<textarea name="" id="" class="table_textarea" placeholder="내용을 입력하세요"
-	                                				onblur="checkEmpty(this, '내용을')"></textarea>
+	                                			<div id="editor"></div>
 	                                        </td>
 		                                </tr>
 		                            </tbody>
