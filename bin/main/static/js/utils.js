@@ -626,6 +626,19 @@ function setTextareaAutoHeight(ele) {
 	$textarea.height(newHeight + 'px');
 }
 
+// ","구분이 필요한 textarea에서 enter입력 시 자동으로 "," 추가
+function setTextareaAddCommaBeforeEnter(ele, event) {
+	if(event.key === 'Enter') { // enter 키를 누를 때 동작
+		let currentValue = ele.value;
+		
+		if(currentValue.trim() !== "" && !currentValue.trim().endsWith(',')) { // 빈값이 아니면서 마지막 글자가 ','가 아닐 경우 ','추가
+			ele.value = currentValue.trim() + ',\n';
+		}	
+		
+		event.preventDefault();	// 기본 enter 동작 방지
+	}
+}
+
 // 본인 확인 전 account/modify_form SET 
 function setIdentityCheckForm() {
 	const $contentInfoWrap = $('.content_info_wrap');
