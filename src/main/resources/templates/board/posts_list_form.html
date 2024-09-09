@@ -36,7 +36,7 @@
 					<section class="content_info_wrap">
 					    <div class="content_top">
 					        <div class="content_top_info">
-					            <h2 class="title">질환 / 질병 정보 관리</h2>
+					            <h2 class="title" th:text="${postsDtos.bc_name}">게시판명</h2>
 					            
 					            <div class="content_top_right">
 									<form name="search_form" onsubmit="getSearchList(event, '/board/info/search_posts_list')" th:insert="~{fragments/search.html :: search('게시판')}"></form>

@@ -108,6 +108,7 @@ public class AccountService {
 	public boolean modifyConfirm(AdminAccountDto adminAccountDto) {
 		log.info("modifyConfirm()");
 		
+		// 비밀번호가 null &b 빈값이 아닐 경우에만 암호화.
 		if (adminAccountDto.getA_pw() != null && !adminAccountDto.getA_pw().equals("")) {
 			
 			adminAccountDto.setA_pw(passwordEncoder.encode(adminAccountDto.getA_pw()));
