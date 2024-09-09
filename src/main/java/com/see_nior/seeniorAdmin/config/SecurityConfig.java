@@ -37,6 +37,7 @@ public class SecurityConfig {
 							"/css/**",
 							"/image/**",
 							"/js/**",
+							"/quillEditor/**",
 							"/error/**",
 							"/account/sign_up_form",
 							"/account/sign_up_confirm",
