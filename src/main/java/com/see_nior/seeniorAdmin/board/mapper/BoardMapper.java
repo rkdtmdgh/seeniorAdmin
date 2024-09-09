@@ -11,4 +11,6 @@ public interface BoardMapper {
 
 	List<BoardCategoryDto> getList();
 
+	boolean isBoardCategory(String bc_name);
+
 }
