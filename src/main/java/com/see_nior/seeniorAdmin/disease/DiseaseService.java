@@ -203,6 +203,7 @@ public class DiseaseService {
 		
 	}
 	
+	
 	// 페이지에 따른 질환 카테고리 가져오기(검색한 질환 카테고리)
 		public List<Map<String, Object>> getSearchDiseaseCategoryListWithPage(String searchPart, String searchString, int page) {
 			log.info("getSearchDiseaseCategoryListWithPage()");

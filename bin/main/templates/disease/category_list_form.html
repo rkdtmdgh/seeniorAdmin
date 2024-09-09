@@ -14,6 +14,10 @@
 					getSearchList(null, '/disease/cate_info/search_disease_category_list', page);
 					break;
 					
+				case '0':  // 정렬
+					getList('/disease/cate_info/get_category_list_with_page', sort, sortValue, page);
+					break;
+					
 				default: // 기본
 					getList('/disease/cate_info/get_category_list_with_page', sort, sortValue, page);
 			}

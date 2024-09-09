@@ -21,6 +21,7 @@ public class BoardService {
 		this.boardMapper = boardMapper;
 	}
 	
+	//모든 게시판 항목 가져오기
 	public Object getList() {
 		log.info("getList()");
 		
@@ -32,7 +33,19 @@ public class BoardService {
 						
 		return cateDtos;
 	}
-
+	
+	//게시판명 중복 확인
+	public boolean isBoardCategory(BoardCategoryDto boardCategoryDto) {
+		log.info("isBoardCategory()");
+		
+		String bc_name = boardCategoryDto.getBc_name();
+		
+		boolean result = boardMapper.isBoardCategory(bc_name);
+		
+		return result;
+	}
+	
+	//게시판 생성 요청 처리
 	public int createCategoryConfirm(BoardCategoryDto boardCategoryDto) {
 		log.info("createConfirm()");
 					
@@ -54,7 +67,7 @@ public class BoardService {
 		log.info("bc_name --- {}", bc_name);
 				
 		return 0;
-	}
+	}	
 
 	
 

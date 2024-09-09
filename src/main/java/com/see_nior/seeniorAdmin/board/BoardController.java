@@ -1,5 +1,7 @@
 package com.see_nior.seeniorAdmin.board;
 
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,16 +29,16 @@ public class BoardController {
 	@ResponseBody
 	public Object getList() {		
 		log.info("getList()");
-		
+				
 		return boardService.getList();
 	}
 	
 	//게시판 관리 양식으로 이동
-	@GetMapping("/cate_info/board_list_form")
-	public String boardListForm() {
-		log.info("boardListForm()");
+	@GetMapping("/cate_info/category_list_form")
+	public String categoryListForm() {
+		log.info("categoryListForm()");
 		
-		String nextPage = "board/board_list_form";
+		String nextPage = "board/category_list_form";
 		
 		return nextPage;
 	}
@@ -50,6 +52,18 @@ public class BoardController {
 		
 		return nextPage;
 	}
+	
+	//게시판명 중복 확인
+	@GetMapping("/cate_info/is_board_category")
+	@ResponseBody
+	public boolean isBoardCategory(BoardCategoryDto boardCategoryDto) {
+		log.info("isBoardCategory()");
+		
+		boolean result = boardService.isBoardCategory(boardCategoryDto);
+		
+		return result;
+	}
+	
 	
 	//게시판 생성 요청 처리
 	@PostMapping("/cate_info/create_category_confirm")

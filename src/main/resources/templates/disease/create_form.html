@@ -12,6 +12,7 @@
 			getOptionList('/disease/cate_info/get_category_list', 'd_category_no', true); // command, element id, isForm
         });
 	</script>
+	<script src="/quillEditor/quillEditor.js"></script>
 </head>
 <body>
 <main class="contents_wrap">
@@ -30,7 +31,7 @@
 				            <p class="sub_title">질환 / 질병 분류 등록</p>
 					    </div>
 					    
-						<form name="disease_category_reg_form" onsubmit="postDiseaseCategoryCreateForm(event, 'disease_category_reg_form')">					    	
+						<form name="disease_reg_form" onsubmit="postDiseaseCategoryCreateForm(event, 'disease_category_reg_form')">					    	
 						    <div class="table_wrap mb_stepGap">
 		                        <table class="content_edit_table">
 		                            <colgroup>
@@ -90,21 +91,34 @@
 		                                	<th><p class="table_title">추천 식단 재료</p></th>
 		                                	<td colspan="3">
 		                                		<textarea rows="1" name="d_good_food" id="d_good_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
-		                                			oninput="setTextareaAutoHeight(this)" onblur="checkEmpty(this, '추천 식단 재료를')"></textarea>
+		                                			onkeydown="setTextareaAddCommaBeforeEnter(this, event)" 
+		                                			oninput="setTextareaAutoHeight(this)" 
+		                                			onblur="checkEmpty(this, '추천 식단 재료를')"></textarea>
 	                                        </td>
 		                                </tr>
+		                                
 		                                <tr>
 		                                	<th><p class="table_title">비추천 식단 재료</p></th>
 		                                	<td colspan="3">
 		                                		<textarea rows="1" name="d_bad_food" id="d_bad_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
-		                                			oninput="setTextareaAutoHeight(this)" onblur="checkEmpty(this, '비추천 식단 재료를')"></textarea>
+		                                			onkeydown="setTextareaAddCommaBeforeEnter(this, event)" 
+		                                			oninput="setTextareaAutoHeight(this)" 
+		                                			onblur="checkEmpty(this, '비추천 식단 재료를')"></textarea>
 	                                        </td>
 		                                </tr>
+		                                
 		                                <tr>
 		                                	<th><p class="table_title">질환 / 질병 정보</p></th>
 		                                	<td colspan="3">
 	                                			<textarea name="d_info" id="d_info" class="table_textarea" placeholder="내용을 입력하세요"
 	                                				onblur="checkEmpty(this, '질환 / 질병 정보를')"></textarea>
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">내용</p></th>
+		                                	<td colspan="3">
+	                                			<div id="editor"></div>
 	                                        </td>
 		                                </tr>
 		                            </tbody>
