@@ -146,11 +146,11 @@ public class DiseaseController {
 	
 	// 질환 카테고리 삭제 확인(비동기)
 	@ResponseBody
-	@GetMapping("/cate_info/delete_category_confirm")
-	public boolean deleteCategoryConfirm(@RequestParam(value = "dc_no") int dc_no) {
+	@PostMapping("/cate_info/delete_category_confirm")
+	public boolean deleteCategoryConfirm(@RequestParam(value = "deleteData") List<Integer> dc_nos) {
 		log.info("deleteCategoryConfirm()");
 		
-		boolean deleteCategoryResult = diseaseService.deleteCategoryConfirm(dc_no);
+		boolean deleteCategoryResult = diseaseService.deleteCategoryConfirm(dc_nos);
 		
 		return deleteCategoryResult;
 		

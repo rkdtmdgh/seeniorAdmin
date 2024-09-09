@@ -184,22 +184,23 @@ public class DiseaseService {
 	}
 	
 	// 질환 카테고리 삭제 확인
-	public boolean deleteCategoryConfirm(int dc_no) {
+	@Transactional
+	public boolean deleteCategoryConfirm(List<Integer> dc_nos) {
 		log.info("deleteCategoryConfirm()");
 		
-		int result = diseaseMapper.deleteDiseaseCategory(dc_no);
-		
-		// DB에 입력 실패
-		if (result <= 0) {
+		try {
+			
+			for (int dc_no : dc_nos)
+				diseaseMapper.deleteDiseaseCategory(dc_no);
+			
+		} catch (Exception e) {
+			log.info("Error =============>", e);
 			
 			return DISEASE_CATEGORY_DELETE_FAIL;
-		
-		// DB에 입력 성공
-		} else {
-			
-			return DISEASE_CATEGORY_DELETE_SUCCESS;
 			
 		}
+		
+		return DISEASE_CATEGORY_DELETE_SUCCESS;
 		
 	}
 	
