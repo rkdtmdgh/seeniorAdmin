@@ -380,10 +380,22 @@ function setParseResponseByCommand(command, response) {
 			getListDtos = response.boardCategoryDtos;
 			getListPage = response.searchBoardCategoryListPageNum;
 			getListCnt = response.searchBoardCategoryListPageNum.searchBoardCategoryListCnt;
-			break;	
+			break;
+			
+		case '/board/info/get_all_posts_list_with_page': // 게시물
+			getListDtos = response.postsDtos;
+			getListPage = response.postsListPageNum;
+			getListCnt = response.postsListPageNum.postsListCnt;
+			break;
+			
+		case '/board/info/search_posts_list': // 게시물 검색
+			getListDtos = response.postsDtos;
+			getListPage = response.searchPostsListPageNum;
+			getListCnt = response.searchPostsListPageNum.searchPostsListCnt;
+			break;		
 						
-}
-	
+	}
+		
 	return { getListDtos, getListPage, getListCnt }
 }
 
@@ -540,6 +552,37 @@ function setDataList(apiUrl, data, index) {
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.bc_reg_date) || 'N/A'}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/board/info/get_all_posts_list_with_page': // 게시물 리스트 테이블
+		case '/board/info/search_posts_list': // 게시물 검색 리스트 테이블
+			innerContent = `
+				<tr>
+					<td class="vam">
+		                <div class="table_info func_area"><input type="checkbox" name="bp_no" class="d_no" value="${data.bp_no}"></div>
+		            </td>
+		            <td>
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${index}</a>
+		            </td>
+		            <td>
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_title}(댓글 수)</a>
+		            </td>
+		            <td>
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_view_cnt}</a>
+		            </td>
+					<td>
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">
+							${data.bp_report_state === 0 ? '처리완료' : data.bp_report_state === 1 ? '정상' : data.bp_report_state === 2 ? '처리중' : 'N/A'}
+						</a>
+		            </td>
+					<td>
+		                <a href="" class="table_info">${data.bp_writer_no} 회원 이름, href 회원 정보 페이지</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.bp_mod_date) || 'N/A'}</p>
 		            </td>
 		        </tr>
 			`;

@@ -11,19 +11,15 @@
 			const { sortType, sort, sortValue, page } = setFormValuesFromUrl(); 
 			switch(sortType) {
 				case '2': // 검색
-					getSearchList(null, '/board/info/search_board_info_list', page);
-					break;
-
-				case '1': // 카테고리 셀렉트
-					getList('/board/info/get_board_info_list_by_category_with_page', sort, sortValue, page);
+					getSearchList(null, '/board/info/search_posts_list', page);
 					break;
 
 				case '0':  // 정렬
-					getList('/board/info/get_all_board_info_list_with_page', sort, sortValue, page);
+					getList('/board/info/get_all_posts_list_with_page', sort, sortValue, page);
 					break;
 					
 				default: // 기본
-					getList('/board/info/get_all_board_info_list_with_page', sort, sortValue, page);
+					getList('/board/info/get_all_posts_list_with_page', sort, sortValue, page);
 			}
         });
 	</script>
@@ -43,12 +39,12 @@
 					            <h2 class="title">질환 / 질병 정보 관리</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/board/info/search_board_info_list')" th:insert="~{fragments/search.html :: search('게시판')}"></form>
+									<form name="search_form" onsubmit="getSearchList(event, '/board/info/search_posts_list')" th:insert="~{fragments/search.html :: search('게시판')}"></form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/board/info/get_all_board_info_list_with_page', null, null, 1);">전체보기</div>
+						            	<div class="btns small" onclick="getList('/board/info/get_all_posts_list_with_page', null, null, 1);">전체보기</div>
 						            	<div class="btns small delete" onclick="delListData('bp_no', true)">삭제</div>
-						            	<div th:onclick="/board/info/write_form?infoNo=[[${boardInfoDtos.infoNo}]]" class="btns small">등록</div>
+						            	<div th:onclick="/board/info/create_form?infoNo=[[${postsDtos.infoNo}]]" class="btns small">게시물 등록</div>
 						            </div>
 					            </div>
 					        </div>
@@ -94,7 +90,7 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">(mod_date)</p>
+	                                        <p class="table_title">등록일(mod_date)</p>
 	                                    </th>
 	                                </tr>
 	                            </thead>
