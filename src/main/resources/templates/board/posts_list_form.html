@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
+<head>
+	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 게시판')}"></th:block>
+	
+	<script type="text/javascript">
+		document.addEventListener('DOMContentLoaded', () => {
+			const { sortType, sort, sortValue, page } = setFormValuesFromUrl(); 
+			switch(sortType) {
+				case '2': // 검색
+					getSearchList(null, '/board/info/search_posts_list', page);
+					break;
+
+				case '0':  // 정렬
+					getList('/board/info/get_all_posts_list_with_page', sort, sortValue, page);
+					break;
+					
+				default: // 기본
+					getList('/board/info/get_all_posts_list_with_page', sort, sortValue, page);
+			}
+        });
+	</script>
+</head>
+<body>
+	<main class="contents_wrap">
+		<header th:replace="~{fragments/header.html :: header}"></header>
+	
+		<article class="contents_container">
+			<nav th:replace="~{fragments/nav.html :: nav}"></nav>
+			
+			<div class="content">
+                <div class="content_inner sc">
+					<section class="content_info_wrap">
+					    <div class="content_top">
+					        <div class="content_top_info">
+					            <h2 class="title" th:text="${postsDtos.bc_name}">게시판명</h2>
+					            
+					            <div class="content_top_right">
+									<form name="search_form" onsubmit="getSearchList(event, '/board/info/search_posts_list')" th:insert="~{fragments/search.html :: search('게시판')}"></form>
+						            
+						            <div class="btn_list">
+						            	<div class="btns small" onclick="getList('/board/info/get_all_posts_list_with_page', null, null, 1);">전체보기</div>
+						            	<div class="btns small delete" onclick="delListData('bp_no', true)">삭제</div>
+						            	<div th:onclick="/board/info/create_form?infoNo=[[${postsDtos.infoNo}]]" class="btns small">게시물 등록</div>
+						            </div>
+					            </div>
+					        </div>
+					    </div>
+					    
+					    <div class="table_wrap">
+	                        <table class="content_table board_info_list_table">
+	                            <colgroup>
+	                                <col class="col_checkBox">
+	                                <col class="col_no">
+	                                <col>
+	                                <col>
+	                                <col>
+	                                <col>
+	                                <col>
+	                            </colgroup>
+	
+	                            <thead>
+	                                <tr>
+	                                	<th>
+	                                		<div class="table_title"><input type="checkbox" name="all_check" id="all_check" 
+	                                			onchange="setAllCheckBox(this)" value="bp_no" ></div>	                                        
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">No</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">제목(댓글 수)</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">조회수</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">상태</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">작성자</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">등록일(mod_date)</p>
+	                                    </th>
+	                                </tr>
+	                            </thead>
+	
+	                            <tbody>
+	                                <!-- 리스트 테이블 -->
+	                            </tbody>
+	                        </table>
+	                        
+	                        <div class="pagination_wrap"></div>
+	                    </div>
+					</section>
+                </div>
+            </div>
+		</article>
+	</main>
+</body>
+</html>

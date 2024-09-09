@@ -8,8 +8,9 @@
 	<script th:inline="javascript">
 		document.addEventListener('DOMContentLoaded', () => {
 			// 세션 만료 확인
-			if(!setSessionIdentityCheck([[${#authentication.name}]])) { // 만료
+			if(!setSessionIdentityCheck(/*[[${#authentication.name}]]*/)) { // 만료
 				setIdentityCheckForm(); // 본인 확인 폼 SET
+				setInputFocus('a_pw');
 				
 			} else {
 				getAccountInfo(); // 정보 수정 폼 SET
@@ -27,7 +28,7 @@
 			<div class="content">
                 <div class="content_inner sc">
 					<section class="content_info_wrap">
-					
+						<!-- 컨텐츠 -->
 					</section>
                 </div>
             </div>

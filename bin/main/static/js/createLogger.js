@@ -56,7 +56,7 @@ function createLogger(environment) {
 // 환경 설정 및 로거 생성
 const logger = createLogger('development'); // 개발 환경에서는 'development', 배포 환경에서는 'production'
 
-// 예제 로그 출력
+// 예시 로그 출력
 // logger.debug("Debugging data", { key: "value" });
 // logger.info("User login", { username: "johndoe" });
 // logger.warn("API response", response);

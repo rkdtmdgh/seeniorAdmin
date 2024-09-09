@@ -8,10 +8,14 @@
 	
 	<script type="text/javascript">
 		document.addEventListener('DOMContentLoaded', () => {
-			const { sortType, sort, sortValue, page } = setFormValuesFromUrl('dc_name'); // 검색 파트 기본값
+			const { sortType, sort, sortValue, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // 검색
 					getSearchList(null, '/disease/cate_info/search_disease_category_list', page);
+					break;
+					
+				case '0':  // 정렬
+					getList('/disease/cate_info/get_category_list_with_page', sort, sortValue, page);
 					break;
 					
 				default: // 기본
@@ -46,7 +50,7 @@
 					    </div>
 					    
 					    <div class="table_wrap">
-	                        <table class="content_table disease_list_table">
+	                        <table class="content_table disease_category_list_table">
 	                            <colgroup>
 	                                <col class="col_no">
 	                                <col>
@@ -79,7 +83,7 @@
 	                            </thead>
 	
 	                            <tbody>
-	                                
+	                                <!-- 리스트 테이블 -->
 	                            </tbody>
 	                        </table>
 	                        

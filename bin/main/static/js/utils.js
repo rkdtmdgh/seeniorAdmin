@@ -176,21 +176,21 @@ function setReplacePhone(input) {
 }
 
 // 숫자만 입력 가능하도록 변환 및 YYYY-MM-DD 형식으로 변환
-function setReplaceBirth(input) {
-    let birthValue = input.value.replace(/[^0-9]/g, ""); // 입력 값에서 숫자 이외의 모든 문자를 제거
-
-    // 자동으로 하이픈 삽입: 5번째와 8번째 자리에 삽입
-    if (birthValue.length > 4) {
-        birthValue = birthValue.slice(0, 4) + '-' + birthValue.slice(4);
-    }
+//function setReplaceBirth(input) {
+//    let birthValue = input.value.replace(/[^0-9]/g, ""); // 입력 값에서 숫자 이외의 모든 문자를 제거
+//
+//    // 자동으로 하이픈 삽입: 5번째와 8번째 자리에 삽입
+//    if (birthValue.length > 4) {
+//        birthValue = birthValue.slice(0, 4) + '-' + birthValue.slice(4);
+//    }
     
-    if (birthValue.length > 7) {
-        birthValue = birthValue.slice(0, 7) + '-' + birthValue.slice(7);
-    }
+//    if (birthValue.length > 7) {
+//        birthValue = birthValue.slice(0, 7) + '-' + birthValue.slice(7);
+//    }
 
-    input.value = birthValue;
-    return birthValue;
-}
+//    input.value = birthValue;
+//    return birthValue;
+//}
 
 // 날짜 포맷팅
 function setFormatDate(dateString) { // yyyy-mm-dd 형식
@@ -202,20 +202,19 @@ function setFormatDate(dateString) { // yyyy-mm-dd 형식
 }
 
 // 검색 폼 데이터인지, 정렬된 데이터인지 확인하여 초기화
-function setFormValuesFromUrl(part) {
+function setFormValuesFromUrl() {
 	const urlParams = new URLSearchParams(window.location.search);
     const $sForm = $('form[name="search_form"]');
-	const searchPart = urlParams.get('searchPart') || part;
+	const searchPart = urlParams.get('searchPart') || undefined;
     const searchString = urlParams.get('searchString') || '';
-    const page = urlParams.get('page') || 1;
 	const sortType = urlParams.get('sortType') || undefined;
 	const sort = urlParams.get('sort') || undefined;
 	const sortValue = urlParams.get(`${sort}`) || undefined;
-	
-	$sForm.find('select[name="search_part"]').val(searchPart);
+    const page = urlParams.get('page') || 1;
 	
 	// 검색어가 있을 경우 검색 폼 사용으로 새로고침 시 재적용
 	if(sortType === '2') { // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
+		$sForm.find('select[name="search_part"]').val(searchPart)
 		$sForm.find('input[name="search_string"]').val(searchString);
 	}
 	
@@ -223,14 +222,14 @@ function setFormValuesFromUrl(part) {
 }
 
 // 페이지 유지를 위한 쿼리 스트링 제어(검색 이력 제거)
-function setListQueryString(page, sort, sortValue) {
+function setListQueryString(sort, sortValue, page) {
 	const url = new URL(window.location); // 현재 url
+	const infoNo = url.searchParams.get('infoNo') || undefined; // cateNor가 있을 경우 값 가지고 있기
 	const sortType = url.searchParams.get('sortType') || undefined; // sortType이 있을 경우 값 가지고 있기
     url.search = ''; // 파라미터 비우기
 	
 	// 파라미터 추가
-	url.searchParams.set('page', page); 
-	 
+	if(infoNo) url.searchParams.set('infoNo', infoNo); 
     if (sort) {
 		if(sortType) url.searchParams.set('sortType', sortType); 
 		url.searchParams.set('sort', sort); 
@@ -240,17 +239,22 @@ function setListQueryString(page, sort, sortValue) {
 		// sort 버튼 기본값으로 초기화
 		$('.sort').attr('data-current-sort', 'all');
 	}
+	
+	url.searchParams.set('page', page);
+	
 	window.history.replaceState({}, '', url); // 현재 url 변경 및 리로드 제어
 }
 
 // 검색 후 페이지 유지를 위한 쿼리 스트링 제어(검색 파트, 스트링 재입력)
 function setSearchQueryString(page, searchPart, searchString) {
 	const url = new URL(window.location);
+	const infoNo = url.searchParams.get('infoNo') || undefined; // cateNor가 있을 경우 값 가지고 있기
     url.search = '';
+    if(infoNo) url.searchParams.set('infoNo', infoNo); 
 	url.searchParams.set('sortType', 2); // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
-	url.searchParams.set('page', page); 
     url.searchParams.set('searchPart', searchPart);
     url.searchParams.set('searchString', searchString);
+	url.searchParams.set('page', page); 
 	window.history.replaceState({}, '', url); // 현재 url 변경 및 리로드 제어
 }
 
@@ -270,12 +274,51 @@ function setWordAndCommand(inputName) {
 			apiUrl = '/disease/info/is_disease';
 			break;
 			
+		case 'bc_name':
+			word = '게시판명';
+			apiUrl = '/board/cate_info/is_board_category';
+			break;
+			
 		default:
 			logger.error('usedInputValueCheck() inputName:', inputName);
 			return false;
 	}
 	
 	return { word, apiUrl };
+}
+
+// 삭제 커맨드, 메세지 설정
+function setDelCommand(name) {
+	let apiUrl;
+	let replace;
+	
+	switch(name) {
+		case 'a_no': // 관리자 계정
+			apiUrl = '/account/list/delete_confirm';
+			replace = '/account/list/admin_list_form';
+			break;
+			
+		case 'dc_no': // 질환/질병 분류
+			apiUrl = '/disease/cate_info/delete_category_confirm';
+			replace = '/disease/cate_info/category_list_form';
+			break;
+			
+		case 'd_no': // 질환/질병
+			apiUrl = '/disease/info/delete_confirm';
+			replace = '/disease/info/disease_list_form';
+			break;
+		
+		case 'bc_no': // 게시판
+			apiUrl = '/board/cate_info/delete_category_confirm';
+			replace = '/board/cate_info/category_list_form';
+			break;
+			
+		default:
+			logger.error('usedInputValueCheck() inputName:', name);
+			return false;
+	}
+	
+	return { apiUrl, replace };
 }
 
 // 카테고리에 맞도록 객체 선택 
@@ -326,8 +369,33 @@ function setParseResponseByCommand(command, response) {
 			getListPage = response.searchDiseaseCategoryListPageNum;
 			getListCnt = response.searchDiseaseCategoryListPageNum.searchDiseaseCategoryListCnt;
 			break;
+			
+		case '/board/cate_info/get_list': // 게시판 관리
+			getListDtos = response.boardCategoryDtos;
+			getListPage = response.boardCategoryListPageNum;
+			getListCnt = response.boardCategoryListPageNum.boardCategoryListCnt;
+			break;
+			
+		case '/board/cate_info/search_board_list': // 게시판 관리 검색
+			getListDtos = response.boardCategoryDtos;
+			getListPage = response.searchBoardCategoryListPageNum;
+			getListCnt = response.searchBoardCategoryListPageNum.searchBoardCategoryListCnt;
+			break;
+			
+		case '/board/info/get_all_posts_list_with_page': // 게시물
+			getListDtos = response.postsDtos;
+			getListPage = response.postsListPageNum;
+			getListCnt = response.postsListPageNum.postsListCnt;
+			break;
+			
+		case '/board/info/search_posts_list': // 게시물 검색
+			getListDtos = response.postsDtos;
+			getListPage = response.searchPostsListPageNum;
+			getListCnt = response.searchPostsListPageNum.searchPostsListCnt;
+			break;		
+						
 	}
-	
+		
 	return { getListDtos, getListPage, getListCnt }
 }
 
@@ -395,12 +463,12 @@ function setPagination(pagingValues, sort, sortValue, command, isSearch) { // �
 }
 
 // 콘텐츠 리스트 오브젝트 생성
-function setDataList(api, data, index) {
+function setDataList(apiUrl, data, index) {
 	let innerContent = '';
 	
-	switch(api) {
-		case '/account/list/get_admin_list': 
-		case '/account/list/search_admin_list':
+	switch(apiUrl) {
+		case '/account/list/get_admin_list':  // 관리자 계정 리스트 테이블
+		case '/account/list/search_admin_list': // 관리자 계정 검색 리스트 테이블
 			innerContent = `
 				<tr>
 		            <td>
@@ -425,9 +493,9 @@ function setDataList(api, data, index) {
 			`;
 			break;
 			
-		case '/disease/info/get_all_disease_list_with_page':
-		case '/disease/info/search_disease_list':
-		case '/disease/info/get_disease_list_by_category_with_page':
+		case '/disease/info/get_all_disease_list_with_page': // 질환/질병 관리 리스트 테이블
+		case '/disease/info/search_disease_list':            // 질환/질병 관리 검색 리스트 테이블
+		case '/disease/info/get_disease_list_by_category_with_page': // 질환/질병 관리 분류선택 리스트 테이블
 			innerContent = `
 				<tr>
 		            <td class="vam">
@@ -449,25 +517,76 @@ function setDataList(api, data, index) {
 			`;
 			break;
 			
-			case '/disease/cate_info/get_category_list_with_page':
-			case '/disease/cate_info/search_disease_category_list':
-				innerContent = `
-					<tr>
-			            <td>
-			                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${index}</a>
-			            </td>
-			            <td>
-			                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${data.dc_name}</a>
-			            </td>
-			            <td>
-			                <a href="/disease/info/disease_list_form?sortType=1&sort=dc_no&dc_no=${data.dc_no}" class="table_info">${data.itemCnt}</a>
-			            </td>
-			            <td>
-			                <p class="table_info">${setFormatDate(data.dc_reg_date) || 'N/A'}</p>
-			            </td>
-			        </tr>
-				`;
-				break;
+		case '/disease/cate_info/get_category_list_with_page': // 질환/질병 분류 관리 리스트 테이블
+		case '/disease/cate_info/search_disease_category_list': // 질환/질병 분류 관리 검색 리스트 테이블
+			innerContent = `
+				<tr>
+		            <td>
+		                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${index}</a>
+		            </td>
+		            <td>
+		                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${data.dc_name}</a>
+		            </td>
+		            <td>
+		                <a href="/disease/info/disease_list_form?sortType=1&sort=dc_no&dc_no=${data.dc_no}" class="table_info">${data.itemCnt}</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.dc_reg_date) || 'N/A'}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/board/cate_info/get_list': // 게시판 관리 리스트 테이블
+		case '/board/cate_info/search_board_category_list': // 게시판 관리 검색 리스트 테이블
+			innerContent = `
+				<tr>
+		            <td>
+		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${index}</a>
+		            </td>
+		            <td>
+		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${data.bc_name}</a>
+		            </td>
+		            <td>
+		                <a href="" class="table_info">${data.itemCnt}</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.bc_reg_date) || 'N/A'}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/board/info/get_all_posts_list_with_page': // 게시물 리스트 테이블
+		case '/board/info/search_posts_list': // 게시물 검색 리스트 테이블
+			innerContent = `
+				<tr>
+					<td class="vam">
+		                <div class="table_info func_area"><input type="checkbox" name="bp_no" class="d_no" value="${data.bp_no}"></div>
+		            </td>
+		            <td>
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${index}</a>
+		            </td>
+		            <td>
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_title}(댓글 수)</a>
+		            </td>
+		            <td>
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_view_cnt}</a>
+		            </td>
+					<td>
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">
+							${data.bp_report_state === 0 ? '처리완료' : data.bp_report_state === 1 ? '정상' : data.bp_report_state === 2 ? '처리중' : 'N/A'}
+						</a>
+		            </td>
+					<td>
+		                <a href="" class="table_info">${data.bp_writer_no} 회원 이름, href 회원 정보 페이지</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.bp_mod_date) || 'N/A'}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
 		
 		default:
 			innerContent = '';
@@ -507,6 +626,19 @@ function setTextareaAutoHeight(ele) {
 	$textarea.height(newHeight + 'px');
 }
 
+// ","구분이 필요한 textarea에서 enter입력 시 자동으로 "," 추가
+function setTextareaAddCommaBeforeEnter(ele, event) {
+	if(event.key === 'Enter') { // enter 키를 누를 때 동작
+		let currentValue = ele.value;
+		
+		if(currentValue.trim() !== "" && !currentValue.trim().endsWith(',')) { // 빈값이 아니면서 마지막 글자가 ','가 아닐 경우 ','추가
+			ele.value = currentValue.trim() + ',\n';
+		}	
+		
+		event.preventDefault();	// 기본 enter 동작 방지
+	}
+}
+
 // 본인 확인 전 account/modify_form SET 
 function setIdentityCheckForm() {
 	const $contentInfoWrap = $('.content_info_wrap');
@@ -535,7 +667,6 @@ function setIdentityCheckForm() {
 	                
                     <div class="btn_list col">
                         <button type="submit" class="btns">확인</button>
-                        <a href="javascript: history.back();" class="btns cancel">취소</a>
                     </div>
                 </div>
             </form>
@@ -596,8 +727,8 @@ function setAccountModifyForm(data) {
 
                         	<th><p class="table_title">생년월일</p></th>
                         	<td>
-                                <input type="text" name="a_birth" id="birth" maxlength="10" class="table_info" placeholder="생년월일 8자 (YYYYMMDD)"
-                                	onkeydown="setReplaceBirth(this)" onkeyup="validateBirth(this)" onblur="validateBirth(this)"
+                                <input type="date" name="a_birth" id="birth" max="9999-12-31" min="1900-01-01" class="table_info"
+                                	onchange="checkEmpty(this, '생년월일을')" onblur="checkEmpty(this, '생년월일을')"
                                 	value="${data.a_birth}">
                             </td>
                         </tr>
@@ -636,7 +767,6 @@ function setAccountModifyForm(data) {
 
                 <div class="btn_list right">
                     <div class="btn_list">
-                        <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
                         <div onclick="putModifyForm('modify_form')" class="btns">수정</div>
                     </div>
                 </div>

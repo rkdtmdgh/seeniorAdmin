@@ -7,7 +7,7 @@
 	<div class="search_input_inner">
 		<select name="search_part" class="search_part">
 			<th:block th:if="${option == '관리자 계정 관리'}">
-				<option value="a_id">아이디</option>
+				<option value="a_id" selected>아이디</option>
 				<option value="a_name">이름</option>
 				<option value="a_phone">연락처</option>
 			</th:block>
@@ -18,6 +18,15 @@
 			
 			<th:block th:if="${option == '질환 / 질병 분류 관리'}">
 				<option value="dc_name" selected>분류명</option>
+			</th:block>
+			
+			<th:block th:if="${option == '게시판 관리'}">
+				<option value="bc_name" selected>게시판명</option>
+			</th:block>
+			
+			<th:block th:if="${option == '게시판'}">
+				<option value="bp_title" selected>제목</option>
+				<option value="bp_writer_no">작성자</option>
 			</th:block>
 		</select>
 		

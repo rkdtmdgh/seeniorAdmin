@@ -45,7 +45,7 @@
     --iconsWidth: 20px;
     --arrowWidth: 5px; /* X2 (5px = 10px) */
     --signFormWidth: 340px;
-    --tableTextareaHeight: 200px;
+    --tableTextareaHeight: 400px;
 
     --innerPadding: 50px;
     --signFormInnerPadding: 30px;
@@ -76,6 +76,7 @@
     /* position */
     --trslC: -50%, -50%; /*translate center*/
     --inputIconTop: 1em;
+    --tableInputIconTop: 0.65em;
 
     /* small size */
     --ssize1: 0.3em;
@@ -114,7 +115,7 @@ a, button {
     background: none;
 }
 
-input[type="text"], input[type="password"], textarea, select, form {
+input[type="text"], input[type="password"], input[type="date"], textarea, select, form {
 	width: 100%;
     font-family: inherit;
     font-size: inherit;
@@ -122,6 +123,10 @@ input[type="text"], input[type="password"], textarea, select, form {
     border: none;
     color: var(--grayColor);
     outline: none;
+}
+
+input[type="date"] {
+	line-height: 0.9;
 }
 
 input::placeholder, textarea::placeholder {
@@ -212,6 +217,10 @@ table {
 /* margin, padding */
 .mb_stepGap {
 	margin-bottom: var(--stepGap);
+}
+
+.pr_baseGap {
+	padding-right: var(--baseGap);
 }
 
 /* accessibility */

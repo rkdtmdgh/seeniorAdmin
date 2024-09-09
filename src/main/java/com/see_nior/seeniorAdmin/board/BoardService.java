@@ -21,6 +21,7 @@ public class BoardService {
 		this.boardMapper = boardMapper;
 	}
 	
+	//모든 게시판 항목 가져오기
 	public Object getList() {
 		log.info("getList()");
 		
@@ -32,18 +33,41 @@ public class BoardService {
 						
 		return cateDtos;
 	}
-
-	public int createConfirm(BoardCategoryDto boardCategoryDto) {
-		log.info("getList()");
-					
-		int bc_idx = boardCategoryDto.getBc_idx();
+	
+	//게시판명 중복 확인
+	public boolean isBoardCategory(BoardCategoryDto boardCategoryDto) {
+		log.info("isBoardCategory()");
+		
 		String bc_name = boardCategoryDto.getBc_name();
+		
+		boolean result = boardMapper.isBoardCategory(bc_name);
+		
+		return result;
+	}
+	
+	//게시판 생성 요청 처리
+	public int createCategoryConfirm(BoardCategoryDto boardCategoryDto) {
+		log.info("createConfirm()");
+					
+		int bc_idx = boardCategoryDto.getBc_idx(); // 프론트에서 입력값이 없으면 0으로 넘겨줌 
+		String bc_name = boardCategoryDto.getBc_name();
+		
+		if(bc_idx == 0) {
+			log.info("bc_idx: ",bc_idx);
+			// List<Integer> boardIdxs = boardMapper.getAllBoardIdx();
+			// int lastBoradIdx = boardIdxs.getFirst();
+			
+			// int result = boardMapper.createBoardCategory(lastBoradIdx+1,bc_name);
+			
+		}else {
+			log.info("bc_idx: ",bc_idx);
+		}
 		
 		log.info("bc_idx --- {}", bc_idx);
 		log.info("bc_name --- {}", bc_name);
 				
 		return 0;
-	}
+	}	
 
 	
 

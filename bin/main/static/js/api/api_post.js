@@ -24,7 +24,7 @@ async function postSignUpForm(event, formName) {
 	}
 	
 	input = form.a_birth;
-	if(!validateBirth(input, true)) {
+	if(!checkEmpty(input, '생년월일을', true)) {
 		input.focus();
 		return false;
 	}
@@ -208,5 +208,49 @@ async function postDiseaseCreateForm(formName) {
 		logger.error('/disease/info/create_confirm postDiseaseCreateForm() error:', error);
 		alert(errorMessage);
 		location.reload(true);
+	}
+}
+
+// 게시판 등록 
+async function postBoardCategoryCreateForm(event, formName, nextPage) {
+	if(event) event.preventDefault();
+	const form = document.forms[formName];
+	const bc_name = form.bc_name;
+	const bc_idx = form.bc_idx;
+	
+	if(!(await usedInputValueCheck(bc_name, true, false, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+		bc_name.focus();
+		return false;
+	}
+	
+	const bc_idxFix = bc_idx.value.trim() || 0;
+	
+	const errorMessage = `"${bc_name.value}" 게시판 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	try {
+		const response = await $.ajax({
+			url: '/board/cate_info/create_category_confirm',
+			method: 'POST',
+			data: {
+				bc_name: bc_name.value.trim(),
+				bc_idx: bc_idxFix,
+			},
+		});
+		
+		logger.info('/board/cate_info/create_board_confirm postBoardCategoryCreateForm() response:', response);
+		
+		if(response) {
+			alert(`"${bc_name.value}" 게시판이 등록되었습니다.`);
+			
+		} else {
+			alert(errorMessage);
+		}
+		
+	} catch(error) {
+		logger.error('/board/cate_info/create_board_confirm postBoardCategoryCreateForm() error:', error);
+		alert(errorMessage);
+		
+	} finally {
+		nextPage ? location.replace(nextPage) : location.reload(true);
 	}
 }

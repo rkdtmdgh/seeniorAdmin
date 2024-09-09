@@ -27,7 +27,6 @@
     }
     
     .input_txt {
-		padding-right: var(--baseGap);
     	font-size: var(--subFontSize);
     }
     
@@ -408,7 +407,8 @@
     }
 
     .table_title {
-        justify-content: flex-start;
+        display: block;
+        text-align: left;
     }
 
     .table_info {
@@ -420,6 +420,10 @@
        	
        	.table_info {
        		padding-right: 80px; 
+       	}
+       	
+       	.input_icon {
+       		top: var(--tableInputIconTop);
        	}
        	
        	.btns {

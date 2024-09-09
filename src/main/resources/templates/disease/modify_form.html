@@ -8,9 +8,9 @@
     <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', () => {
             // DISEASE_CATEGORY 가져오기
-            const selectedCategory = [[${diseaseDto.d_category_no}]]; // 기본값 설정
+            const selectedCategory = /*[[${diseaseDto.d_category_no}]]*/ // 기본값 설정
             logger.info('disease/modify_form selectedCategory:', selectedCategory);
-            getOptionList('/disease/cate_info/get_category_list', 'd_category_no', true, selectedCategory); // command, element id, isForm
+            getOptionList('/disease/cate_info/get_category_list', 'd_category_no', true, selectedCategory); // command, element id, isForm, 현재 선택된 카테고리
         });
     </script>
 </head>
@@ -52,8 +52,8 @@
 	                                    <td>
 	                                        <input type="hidden" name="d_no" th:value="${diseaseDto.d_no}">
 	                                        <input type="text" name="d_name" id="d_name" class="table_info" placeholder="질환 / 질병명"
-	                                               th:onblur="usedInputValueCheck(this, true, [[${diseaseDto.d_name}]], null);"
-	                                               th:value="${diseaseDto.d_name}">
+	                                            th:onblur="usedInputValueCheck(this, true, [[${diseaseDto.d_name}]], null);"
+	                                            th:value="${diseaseDto.d_name}">
 	                                    </td>
 	                                </tr>
 	
@@ -61,7 +61,9 @@
 	                                    <th><p class="table_title">추천 식단 재료</p></th>
 	                                    <td colspan="3">
 	                                    	<textarea rows="1" name="d_good_food" id="d_good_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
-	                                    		oninput="setTextareaAutoHeight(this)" onblur="checkEmpty(this, '추천 식단 재료를')"
+	                                    		onkeydown="setTextareaAddCommaBeforeEnter(this, event)" 
+	                                    		oninput="setTextareaAutoHeight(this)" 
+	                                    		onblur="checkEmpty(this, '추천 식단 재료를')"
 	                                    		th:text="${diseaseDto.d_good_food}"></textarea>
 	                                    </td>
 	                                </tr>
@@ -69,7 +71,9 @@
 	                                    <th><p class="table_title">비추천 식단 재료</p></th>
 	                                    <td colspan="3">
 	                                    	<textarea rows="1" name="d_bad_food" id="d_bad_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
-	                                    		oninput="setTextareaAutoHeight(this)" onblur="checkEmpty(this, '추천 식단 재료를')"
+	                                    		onkeydown="setTextareaAddCommaBeforeEnter(this, event)" 
+	                                    		oninput="setTextareaAutoHeight(this)" 
+	                                    		onblur="checkEmpty(this, '추천 식단 재료를')"
 	                                    		th:text="${diseaseDto.d_bad_food}"></textarea>
 	                                    </td>
 	                                </tr>
@@ -77,13 +81,16 @@
 	                                    <th><p class="table_title">질환 / 질병 정보</p></th>
 	                                    <td colspan="3">
 	                                        <textarea name="d_info" id="d_info" class="table_textarea" placeholder="내용을 입력하세요"
-	                                                  th:text="${diseaseDto.d_info}"></textarea>
+                                            	th:text="${diseaseDto.d_info}"></textarea>
 	                                    </td>
 	                                </tr>
 	                                </tbody>
 	                            </table>
 	
-	                            <div class="btn_list right">
+	                            <div class="btn_list">
+	                            	<div th:if="${diseaseDto.d_no} != null"
+		                        		 th:onclick="delListData('d_no')" class="btns delete">삭제</div>
+		                        		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
 	                                    <div th:onclick="putDiseaseModifyForm('disease_modify_form', [[${diseaseDto.d_name}]])"
