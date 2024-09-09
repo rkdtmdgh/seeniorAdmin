@@ -30,7 +30,7 @@
 				            <p class="sub_title">질환 / 질병 분류 등록</p>
 					    </div>
 					    
-						<form name="disease_category_reg_form" onsubmit="postDiseaseCategoryCreateForm(event, 'disease_category_reg_form')">					    	
+						<form name="disease_reg_form" onsubmit="postDiseaseCategoryCreateForm(event, 'disease_category_reg_form')">					    	
 						    <div class="table_wrap mb_stepGap">
 		                        <table class="content_edit_table">
 		                            <colgroup>
@@ -93,6 +93,7 @@
 		                                			oninput="setTextareaAutoHeight(this)" onblur="checkEmpty(this, '추천 식단 재료를')"></textarea>
 	                                        </td>
 		                                </tr>
+		                                
 		                                <tr>
 		                                	<th><p class="table_title">비추천 식단 재료</p></th>
 		                                	<td colspan="3">
@@ -100,6 +101,7 @@
 		                                			oninput="setTextareaAutoHeight(this)" onblur="checkEmpty(this, '비추천 식단 재료를')"></textarea>
 	                                        </td>
 		                                </tr>
+		                                
 		                                <tr>
 		                                	<th><p class="table_title">질환 / 질병 정보</p></th>
 		                                	<td colspan="3">

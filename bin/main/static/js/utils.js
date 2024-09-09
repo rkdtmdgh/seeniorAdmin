@@ -176,21 +176,21 @@ function setReplacePhone(input) {
 }
 
 // 숫자만 입력 가능하도록 변환 및 YYYY-MM-DD 형식으로 변환
-function setReplaceBirth(input) {
-    let birthValue = input.value.replace(/[^0-9]/g, ""); // 입력 값에서 숫자 이외의 모든 문자를 제거
-
-    // 자동으로 하이픈 삽입: 5번째와 8번째 자리에 삽입
-    if (birthValue.length > 4) {
-        birthValue = birthValue.slice(0, 4) + '-' + birthValue.slice(4);
-    }
+//function setReplaceBirth(input) {
+//    let birthValue = input.value.replace(/[^0-9]/g, ""); // 입력 값에서 숫자 이외의 모든 문자를 제거
+//
+//    // 자동으로 하이픈 삽입: 5번째와 8번째 자리에 삽입
+//    if (birthValue.length > 4) {
+//        birthValue = birthValue.slice(0, 4) + '-' + birthValue.slice(4);
+//    }
     
-    if (birthValue.length > 7) {
-        birthValue = birthValue.slice(0, 7) + '-' + birthValue.slice(7);
-    }
+//    if (birthValue.length > 7) {
+//        birthValue = birthValue.slice(0, 7) + '-' + birthValue.slice(7);
+//    }
 
-    input.value = birthValue;
-    return birthValue;
-}
+//    input.value = birthValue;
+//    return birthValue;
+//}
 
 // 날짜 포맷팅
 function setFormatDate(dateString) { // yyyy-mm-dd 형식
@@ -380,10 +380,22 @@ function setParseResponseByCommand(command, response) {
 			getListDtos = response.boardCategoryDtos;
 			getListPage = response.searchBoardCategoryListPageNum;
 			getListCnt = response.searchBoardCategoryListPageNum.searchBoardCategoryListCnt;
-			break;	
+			break;
+			
+		case '/board/info/get_all_posts_list_with_page': // 게시물
+			getListDtos = response.postsDtos;
+			getListPage = response.postsListPageNum;
+			getListCnt = response.postsListPageNum.postsListCnt;
+			break;
+			
+		case '/board/info/search_posts_list': // 게시물 검색
+			getListDtos = response.postsDtos;
+			getListPage = response.searchPostsListPageNum;
+			getListCnt = response.searchPostsListPageNum.searchPostsListCnt;
+			break;		
 						
-}
-	
+	}
+		
 	return { getListDtos, getListPage, getListCnt }
 }
 
@@ -540,6 +552,37 @@ function setDataList(apiUrl, data, index) {
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.bc_reg_date) || 'N/A'}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/board/info/get_all_posts_list_with_page': // 게시물 리스트 테이블
+		case '/board/info/search_posts_list': // 게시물 검색 리스트 테이블
+			innerContent = `
+				<tr>
+					<td class="vam">
+		                <div class="table_info func_area"><input type="checkbox" name="bp_no" class="d_no" value="${data.bp_no}"></div>
+		            </td>
+		            <td>
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${index}</a>
+		            </td>
+		            <td>
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_title}(댓글 수)</a>
+		            </td>
+		            <td>
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_view_cnt}</a>
+		            </td>
+					<td>
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">
+							${data.bp_report_state === 0 ? '처리완료' : data.bp_report_state === 1 ? '정상' : data.bp_report_state === 2 ? '처리중' : 'N/A'}
+						</a>
+		            </td>
+					<td>
+		                <a href="" class="table_info">${data.bp_writer_no} 회원 이름, href 회원 정보 페이지</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.bp_mod_date) || 'N/A'}</p>
 		            </td>
 		        </tr>
 			`;
