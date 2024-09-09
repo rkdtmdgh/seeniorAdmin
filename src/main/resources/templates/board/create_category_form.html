@@ -44,7 +44,7 @@
 	                                        
 	                                        <th><p class="table_title">순번</p></th>
 		                                	<td>
-		                                		<input type="number" name="bc_idx" id="bc_idx" class="table_info" placeholder="순번">
+		                                		<input type="number" name="bc_idx" id="bc_idx" class="table_info" min="0" th:max="${boardCategoryDtos.maxIdx} + 1" placeholder="순번">
 	                                        </td>
 		                                </tr>
 		                            </tbody>
