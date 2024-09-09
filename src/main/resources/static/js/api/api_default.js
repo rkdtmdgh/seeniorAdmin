@@ -27,7 +27,7 @@ $(document).ready(function() {
 			if (response && response.boardCategoryDtos) {
 				response.boardCategoryDtos.forEach((data) => { 
 					let innerContent = `
-						<a href="/board/info/board_info_list_form?infoNo=${data.bc_no}" class="side_sub_menu_btn">
+						<a href="/board/info/posts_list_form?infoNo=${data.bc_no}" class="side_sub_menu_btn">
 							<span class="side_sub_menu">${data.bc_name}</span>
 						</a>
 					`;
