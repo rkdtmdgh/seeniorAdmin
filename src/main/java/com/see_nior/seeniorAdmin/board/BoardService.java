@@ -58,7 +58,7 @@ public class BoardService {
 	}
 	
 	//게시판 생성 요청 처리
-	public int createCategoryConfirm(BoardCategoryDto boardCategoryDto) {
+	public boolean createCategoryConfirm(BoardCategoryDto boardCategoryDto) {
 		log.info("createCategoryConfirm()");
 					
 		int bc_idx = boardCategoryDto.getBc_idx();
@@ -71,21 +71,22 @@ public class BoardService {
 			
 			log.info("updateBoardCategoryIdx() fail !!");
 			
+			return false;
+			
 		}else {
 			
 			result = boardMapper.createBoardCategory(boardCategoryDto);
 			
 			if(result > 0) {
 				log.info("createBoardCategory succuss!!");
+				return true;
 			}else {
 				log.info("createBoardCategory fail!!");
+				return false;
 			}
 			
 		}
-							
-		
-				
-		return 0;
+						
 	}
 
 		
