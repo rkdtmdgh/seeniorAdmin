@@ -65,6 +65,7 @@ public class BoardService {
 					
 		log.info("bc_idx: ",bc_idx);
 		
+		//DB에서 board category 마지막 idx값 꺼내오기
 		int result = boardMapper.updateBoardCategoryIdx(bc_idx);
 		
 		if(result < 0) {
@@ -75,6 +76,7 @@ public class BoardService {
 			
 		}else {
 			
+			//새로운 게시판 DB에 insert
 			result = boardMapper.createBoardCategory(boardCategoryDto);
 			
 			if(result > 0) {
@@ -87,6 +89,17 @@ public class BoardService {
 			
 		}
 						
+	}
+	
+	//게시판 name,idx 수정을 위한 dto 요청
+	public List<BoardCategoryDto> getBoardCategoryForModify(BoardCategoryDto boardCategoryDto) {
+		log.info("getBoardCategoryForModify()");
+		
+		int bc_no = boardCategoryDto.getBc_no();
+		
+		List<BoardCategoryDto> boardCategoryDtos = boardMapper.getBoardCategoryForModify(bc_no);
+						
+		return boardCategoryDtos;
 	}
 
 		
