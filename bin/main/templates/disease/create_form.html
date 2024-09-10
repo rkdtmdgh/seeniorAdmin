@@ -4,7 +4,7 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
 <head>
-	<th:block th:insert="~{fragments/head.html :: head('질환 / 질병 정보 관리')}"></th:block>
+	<th:block th:insert="~{fragments/head.html :: head('질환 / 질병 정보 등록')}"></th:block>
 	<script src="/js/api/api_utils.js"></script>
 	<script type="text/javascript">
 		document.addEventListener('DOMContentLoaded', () => {
@@ -118,6 +118,7 @@
 		                                	<th><p class="table_title">내용</p></th>
 		                                	<td colspan="3">
 	                                			<div id="editor"></div>
+	                                			<textarea name="n_body" class="a11y-hidden"></textarea>
 	                                        </td>
 		                                </tr>
 		                            </tbody>

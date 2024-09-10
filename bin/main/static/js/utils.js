@@ -2,7 +2,6 @@
 function setInputFocus(ele) {
 	const $input = $(`input[name="${ele}"]`);
 	if ($input.length) {
-		logger.info('focus input:', $input.attr('name'));
 		$input.focus();
 		
 	} else {
@@ -21,10 +20,6 @@ function setFormSendFalse(event) {
 function setSessionIdentityCheck(loginUser) {
 	const sessionLogId = sessionStorage.getItem('loginedId') || '';
 	const sessionCheckDate = sessionStorage.getItem('checkDate') || '';
-	
-	logger.info('setSessionIdentityCheck() loginUser:', loginUser);
-	logger.info('setSessionIdentityCheck() sessionLogId:', sessionLogId);
-	logger.info('setSessionIdentityCheck() sessionCheckDate:', sessionCheckDate);
 	
 	if(!sessionLogId || !sessionCheckDate) {
 		return false;
@@ -54,7 +49,6 @@ function setSessionIdentityCheck(loginUser) {
 function setNavActiveToggle() {
 	const currentPath = window.location.pathname.split('/').slice(0,3).join('/'); // 현재 URL에서 첫 번째와 두 번째까지 path 
 	const currentQueryParams = new URLSearchParams(window.location.search); // 쿼리 파라미터
-	logger.info('URl:', currentPath);
 
 	const $navMenuBtns = $('.side_menu_list'); // 모든 nav 메뉴 버튼
 	$navMenuBtns.each(function(index) { // 화살표 함수에는 this가 포함되지 않아 function으로 대체
@@ -62,7 +56,6 @@ function setNavActiveToggle() {
 		const $navMenuBtn = $navMenu.find('.side_menu_btn');
 		const href = $navMenuBtn.attr('href') || null; // 메뉴 버튼의 href
 		const hrefPath = href ? new URL(href, window.location.origin).pathname.split('/').slice(0, 3).join('/') : ''; // href에서 첫 번째와 두 번째 path
-		logger.info(index + '. href:', hrefPath);
 		
 		if (hrefPath && hrefPath === currentPath) { // 서브 메뉴가 없고 href가 현재 경로가 일치할 경우
 			$navMenu.addClass('select');
@@ -87,8 +80,6 @@ function setNavActiveToggle() {
 						$navMenu.addClass('select'); // 네비 버튼 선택
 					}
 				}
-				
-				logger.info(index + '. subHref:', subHrefPath);
 			});
 		}
 		
@@ -340,6 +331,11 @@ function setDelCommand(name) {
 			replace = '/board/cate_info/category_list_form';
 			break;
 			
+		case 'n_no': // 공지사항
+			apiUrl = '/notice/info/delete_confirm';
+			replace = '/notice/info/notice_list_form';
+			break;
+			
 		default:
 			logger.error('usedInputValueCheck() inputName:', name);
 			return false;
@@ -379,7 +375,7 @@ function setParseResponseByCommand(command, response) {
 			getListCnt = response.searchDiseaseListPageNum.searchDiseaseListCnt;
 			break;	
 			
-		case '/disease/info/get_disease_list_by_category_with_page': // 질환 / 질병 정보 관리 분류별 sort
+		case '/disease/info/get_disease_list_by_category_with_page': // 질환 / 질병 정보 관리 분류별 데이터
 			getListDtos = response.diseaseDtos;
 			getListPage = response.diseaseListByCategoryPageNum;
 			getListCnt = response.diseaseListByCategoryPageNum.diseaseListCnt;
@@ -419,6 +415,18 @@ function setParseResponseByCommand(command, response) {
 			getListDtos = response.postsDtos;
 			getListPage = response.searchPostsListPageNum;
 			getListCnt = response.searchPostsListPageNum.searchPostsListCnt;
+			break;	
+			
+		case '/notice/info/get_all_notice_list_with_page': // 공지 사항
+			getListDtos = response.noticeDtos;
+			getListPage = response.noticeListPageNum;
+			getListCnt = response.noticeListPageNum.noticeListCnt;
+			break;
+			
+		case '/notice/info/search_notice_list': // 공지 사항 검색
+			getListDtos = response.noticeDtos;
+			getListPage = response.searchNoticeListPageNum;
+			getListCnt = response.searchNoticeListPageNum.searchNoticeListCnt;
 			break;		
 						
 	}
@@ -610,6 +618,32 @@ function setDataList(apiUrl, data, index) {
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.bp_mod_date) || 'N/A'}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/notice/info/get_notice_list_with_page': // 공지 사항 리스트 테이블
+		case '/notice/info/search_notice_category_list': // 공지 사항 검색 리스트 테이블
+			innerContent = `
+				<tr>
+					<td class="vam">
+		                <div class="table_info func_area"><input type="checkbox" name="d_no" class="d_no" value="${data.n_no}"></div>
+		            </td>
+		            <td>
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${index}</a>
+		            </td>
+		            <td>
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_title}(댓글 수)</a>
+		            </td>
+					<td>
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_view_cnt}(댓글 수)</a>
+		            </td>
+					<td>
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_writer_no} 작성자 아이디</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.n_mod_date) || 'N/A'}</p>
 		            </td>
 		        </tr>
 			`;

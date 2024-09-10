@@ -5,7 +5,7 @@
    
 <th:block th:fragment="head(pageTitle)">
 	<meta charset="UTF-8">
-	<title th:text="'SEE-NIOR '+ ${pageTitle}">Title</title>
+	<title th:text="'SEE-NIOR ' + ${pageTitle}">Title</title>
 	
 	<link rel="apple-touch-icon" sizes="180x180" href="/image/logo/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="/image/logo/favicon-32x32.png">
@@ -37,7 +37,7 @@
 		<script src="/js/api/api_delete.js"></script>
 	</th:block>
 	
-	<th:block th:if="${pageTitle == '게시물 등록' or pageTitle == '질환 / 질병 정보 관리'}">
+	<th:block th:if="${pageTitle == '게시물 등록' or pageTitle == '공지 사항 등록' or pageTitle == '질환 / 질병 정보 등록'}">
 		<!-- quill editor -->
 		<link rel="stylesheet" href="/quillEditor/1.3.7/quill.snow.css">
 	    <link rel="stylesheet" href="/css/quillEditor/quillEditor.css">
