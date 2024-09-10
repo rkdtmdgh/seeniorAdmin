@@ -72,12 +72,13 @@ public class BoardController {
 	
 	//게시판 생성 요청 처리
 	@PostMapping("/cate_info/create_category_confirm")
-	public String createCategoryConfirm(BoardCategoryDto boardCategoryDto) {
+	@ResponseBody
+	public boolean createCategoryConfirm(BoardCategoryDto boardCategoryDto) {
 		log.info("createCategoryConfirm()");
 		
-		int result = boardService.createCategoryConfirm(boardCategoryDto);
+		boolean result = boardService.createCategoryConfirm(boardCategoryDto);
 		
-		return null;
+		return result;
 	}
 	
 	
