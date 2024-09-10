@@ -1,9 +1,3 @@
-// Quill 관련 스타일시트 및 스크립트 로드
-document.write('<link rel="stylesheet" href="/quillEditor/quill.snow.css">');
-document.write('<script src="/quillEditor/1.3.6.quill.min.js"></' + 'script>'); // HTML 파서가 닫는 태그를 읽을 경우 잘못 인식 방지
-document.write('<script src="/quillEditor/image-resize.min.js"></' + 'script>');
-document.write('<script src="/quillEditor/image-drop.min.js"></' + 'script>');
-
 $(document).ready(function() {
 	const quill = new Quill('#editor', {
 		modules: {
@@ -14,76 +8,80 @@ $(document).ready(function() {
 					{ 'align': [] }, 
 					{ 'color': [] }, 
 					{ 'background': [] }, 
-					{ 'list': 'ordered' }, 
-					{ 'list': 'bullet' }, 
-					'link', 'image', 'video'
+					'link', 'image', 'video',
 				],
 			],
 			imageResize: {},
 			imageDrop: false,
 		},
-		placeholder: '내용을 입력하세요.',
+		placeholder: '내용을 입력하세요',
 		theme: 'snow',
 	});
 	
 	// 이미지 버튼 이벤트 처리
-	quill.getModule('toolbar').addHandler('image', function () {
+	quill.getModule('toolbar').addHandler('image', function () { // 해당 모듈에 접근하여 image 버튼에 커스텀 이벤트 연결
         selectLocalImage();
     });
 
-	function selectLocalImage() {
-		const fileInput = document.createElement('input');
-		fileInput.setAttribute('type', 'file');
-		fileInput.accept = "image/*";
-
-		fileInput.click();
-
-		fileInput.addEventListener("change", function () {
-			if (quill) {
-				uploadImage(fileInput.files[0]);
+	function selectLocalImage() { // input type=file 생성하여 실행
+		const $fileInput = $('<input type="file" accept="image/*">');
+		
+		$fileInput.trigger('click'); // 파일 선택창 열기
+		
+		$fileInput.on('change', function() { // 파일이 선택이 되었을 때
+			const file = this.files[0]; 
+			if(quill && file) {
+				uploadImage(file);
 			}
 		});
 	}
 
 	// 이미지 드롭 이벤트 핸들러 등록
-	quill.root.addEventListener('drop', function (event) {
+	$(quill.root).on('drop', function(event) {
 		event.preventDefault();
-		if (quill) {
-			const file = event.dataTransfer.files[0];
+		const file = event.originalEvent.dataTransfer.files[0]; // jQuery 객체로 감싸졌을 경우 직접 dataTransfer가 접근되지 않을 수 있음(originalEvent 사용)
+		if(quill && file) {
 			uploadImage(file);
 		}
 	});
 
 	// 이미지 업로드 함수
-	function uploadImage(file) {
+	async function uploadImage(file) {
 		if (!quill) {
+			return;
+		}
+		
+		// 이미지 파일인지 체크
+		if (!file.type.startsWith('image/')) {
+			alert('이미지 파일만 업로드할 수 있습니다.');
 			return;
 		}
 		
 		const formData = new FormData();
 		formData.append('uploadFile', file);
 
-		$.ajax({
-			type: 'post',
-			enctype: 'multipart/form-data',
-			url: '/quillEditor/upimg_ok.asp',
-			data: formData,
-			processData: false,
-			contentType: false,
-			dataType: 'json',
-			success: function (data) {
-				if (data.errorNum === 0) {
-					// 이미지 삽입을 제어
-					const range = quill.getSelection();
-					quill.clipboard.dangerouslyPasteHTML(range ? range.index : 0, `<img src="${data.imageUrl}" alt="Image" />`);
-				} else {
-					alert(data.errorMessage);
-				}
-			},
-			error: function (err) {
-				console.log('ERROR!! ::');
-				console.log(err);
+		try {
+			const response = await $.ajax({
+				url: '/quillEditor/upimg_ok',
+				method: 'POST',
+				data: formData,
+				processData: false,  // FormData가 자동으로 Content-Type 설정
+				contentType: false,  // FormData를 문자열로 변환하지 않음
+			});
+			
+			logger.info('uploadImage() response:', response);
+
+			if(response && response.imageUrl) {
+				// 이미지 삽입을 제어
+				const range = quill.getSelection();
+				quill.clipboard.dangerouslyPasteHTML(range ? range.index : 0, `<img src="${response.imageUrl}" alt="image">`);
+				
+			} else {
+				alert(response.errorMessage || '이미지 업로드에 실패했습니다.');
 			}
-		});
+			
+		} catch(error) {
+			logger.error(error);
+		}
 	}
 });
