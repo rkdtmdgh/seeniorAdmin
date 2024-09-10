@@ -59,24 +59,31 @@ public class BoardService {
 	
 	//게시판 생성 요청 처리
 	public int createCategoryConfirm(BoardCategoryDto boardCategoryDto) {
-		log.info("createConfirm()");
+		log.info("createCategoryConfirm()");
 					
-		int bc_idx = boardCategoryDto.getBc_idx(); // 프론트에서 입력값이 없으면 0으로 넘겨줌 
-		String bc_name = boardCategoryDto.getBc_name();
+		int bc_idx = boardCategoryDto.getBc_idx();
+					
+		log.info("bc_idx: ",bc_idx);
 		
-		if(bc_idx == 0) {
-			log.info("bc_idx: ",bc_idx);
-			// List<Integer> boardIdxs = boardMapper.getAllBoardIdx();
-			// int lastBoradIdx = boardIdxs.getFirst();
+		int result = boardMapper.updateBoardCategoryIdx(bc_idx);
+		
+		if(result < 0) {
 			
-			// int result = boardMapper.createBoardCategory(lastBoradIdx+1,bc_name);
+			log.info("updateBoardCategoryIdx() fail !!");
 			
 		}else {
-			log.info("bc_idx: ",bc_idx);
+			
+			result = boardMapper.createBoardCategory(boardCategoryDto);
+			
+			if(result > 0) {
+				log.info("createBoardCategory succuss!!");
+			}else {
+				log.info("createBoardCategory fail!!");
+			}
+			
 		}
+							
 		
-		log.info("bc_idx --- {}", bc_idx);
-		log.info("bc_name --- {}", bc_name);
 				
 		return 0;
 	}

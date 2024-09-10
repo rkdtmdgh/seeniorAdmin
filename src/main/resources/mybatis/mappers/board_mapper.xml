@@ -4,6 +4,15 @@
 
 <mapper namespace="com.see_nior.seeniorAdmin.board.mapper.BoardMapper">
 
+	<resultMap type="BoardCategoryDto" id="BoardCategoryDto">
+		<result column="bc_no" property="bc_no" />
+		<result column="bc_name" property="bc_name" />		
+		<result column="bc_idx" property="bc_idx" />
+		<result column="bc_is_deleted" property="bc_is_deleted" />
+		<result column="bc_reg_date" property="bc_reg_date" />
+		<result column="bc_mod_date" property="bc_mod_date" />
+	</resultMap>
+
 	<select id="getList" resultType="com.see_nior.seeniorAdmin.dto.BoardCategoryDto">
 	
 		SELECT 
@@ -45,5 +54,21 @@
 			BC_IS_DELETED = 1
 		
 	</select>
+	
+	<update id="updateBoardCategoryIdx" parameterType="int">
+        UPDATE 
+        	BOARD_CATEGORY
+        SET 
+        	BC_IDX = BC_IDX + 1
+        WHERE 
+        	BC_IDX >= #{bc_idx}
+    </update>
+    
+    <insert id="createBoardCategory" >
+        INSERT INTO 
+        	BOARD_CATEGORY (BC_IDX, BC_NAME)
+        VALUES 
+        	(#{bc_idx}, #{bc_name})
+    </insert>
 
 </mapper>
