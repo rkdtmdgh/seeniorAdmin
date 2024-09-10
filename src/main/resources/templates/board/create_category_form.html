@@ -44,7 +44,11 @@
 	                                        
 	                                        <th><p class="table_title">순번</p></th>
 		                                	<td>
-		                                		<input type="number" name="bc_idx" id="bc_idx" class="table_info" min="0" th:max="${boardCategoryDtos.maxIdx} + 1" placeholder="순번">
+		                                		<input type="number" name="bc_idx" id="bc_idx" class="table_info" 
+		                                			min="1" th:max="${boardCategoryIdxMaxNum + 1000}" 
+		                                			onkeydown="blockEKey(event)"
+		                                			oninput="setReplaceNumber(this)"
+		                                			th:value="${boardCategoryIdxMaxNum + 1}">
 	                                        </td>
 		                                </tr>
 		                            </tbody>
@@ -53,7 +57,7 @@
 		                        <div class="btn_list right">
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <div onclick="postBoardCategoryCreateForm(null, 'board_category_reg_form', '/board/cate_info/board_list_form')" class="btns">등록</div>
+	                                    <div onclick="postBoardCategoryCreateForm(null, 'board_category_reg_form', '/board/cate_info/category_list_form')" class="btns">등록</div>
 	                                </div>
 	                            </div>
 		                    </div>
