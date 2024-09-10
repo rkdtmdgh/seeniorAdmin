@@ -15,4 +15,9 @@ public interface BoardMapper {
 
 	List<BoardCategoryDto> getBoardCategoryIdxMaxNum();
 
+	int updateBoardCategoryIdx(int bc_idx);
+
+	int createBoardCategory(BoardCategoryDto boardCategoryDto);
+
+
 }
