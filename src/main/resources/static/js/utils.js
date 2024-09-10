@@ -175,6 +175,33 @@ function setReplacePhone(input) {
 	return phoneValue;
 }
 
+// input number에 min, max기반 입력값 제어
+function setReplaceNumber(input) {
+	const cleanNumberValue = input.value.replace(/[^0-9.]/g, ""); // 문자값이 입력이 되었을 경우 숫자를 제외한 값 제거	
+	const min = parseFloat(input.min); // 예외 적인 오류 사항 대비 후미열에 문자값 입력이 되었을 시 처리가능한 메소드 사용
+	const max = parseFloat(input.max);
+	let number = cleanNumberValue;
+	
+	if(cleanNumberValue < min) { // min 보다 작으면 min으로 설정
+		number = min;
+	}
+	
+	if(cleanNumberValue > max) { // max 보다 크면 max으로 설정
+		number = max;
+	}
+	
+	input.value = number;
+	
+	return number;
+}
+
+// input number "E,e,-,+,."키(Exponential Notation) 입력 제어 / input type="number"는 기본적으로 지수 표기법을 지원하기 때문
+function blockEKey(event) {
+	if (event.key === 'E' || event.key === 'e' || event.key === '-' || event.key === '+' || event.key === '.') {
+        event.preventDefault(); // 기본 동작 차단
+    }
+}
+
 // 숫자만 입력 가능하도록 변환 및 YYYY-MM-DD 형식으로 변환
 //function setReplaceBirth(input) {
 //    let birthValue = input.value.replace(/[^0-9]/g, ""); // 입력 값에서 숫자 이외의 모든 문자를 제거

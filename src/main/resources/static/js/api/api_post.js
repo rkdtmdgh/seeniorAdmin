@@ -223,7 +223,7 @@ async function postBoardCategoryCreateForm(event, formName, nextPage) {
 		return false;
 	}
 	
-	const bc_idxFix = bc_idx.value.trim() || 0;
+	const bc_idxFix = setReplaceNumber(bc_idx); // 문자열 제외 및 min, max 체크하여 입력값 설정
 	
 	const errorMessage = `"${bc_name.value}" 게시판 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
@@ -237,7 +237,7 @@ async function postBoardCategoryCreateForm(event, formName, nextPage) {
 			},
 		});
 		
-		logger.info('/board/cate_info/create_board_confirm postBoardCategoryCreateForm() response:', response);
+		logger.info('/board/cate_info/create_category_confirm postBoardCategoryCreateForm() response:', response);
 		
 		if(response) {
 			alert(`"${bc_name.value}" 게시판이 등록되었습니다.`);
@@ -247,7 +247,7 @@ async function postBoardCategoryCreateForm(event, formName, nextPage) {
 		}
 		
 	} catch(error) {
-		logger.error('/board/cate_info/create_board_confirm postBoardCategoryCreateForm() error:', error);
+		logger.error('/board/cate_info/create_category_confirm postBoardCategoryCreateForm() error:', error);
 		alert(errorMessage);
 		
 	} finally {
