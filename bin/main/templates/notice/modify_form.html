@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <th:block th:insert="~{fragments/head.html :: head('공지 사항 수정')}"></th:block>
+</head>
+<body>
+	<main class="contents_wrap">
+	    <header th:replace="~{fragments/header.html :: header}"></header>
+	
+	    <article class="contents_container">
+	        <nav th:replace="~{fragments/nav.html :: nav}"></nav>
+	
+	        <div class="content">
+	            <div class="content_inner sc">
+	                <section class="content_info_wrap">
+	                    <div class="content_top">
+	                        <div class="content_top_info">
+	                            <h2 class="title">공지 사항</h2>
+	                        </div>
+	                        <p class="sub_title">공지 사항 수정</p>
+	                    </div>
+	
+	                    <form name="notice_modify_form">
+	                        <div class="table_wrap">
+	                            <table class="content_edit_table">
+	                                <colgroup>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                </colgroup>
+	
+	                                <tbody>
+	                                	<tr>
+		                                	<th><p class="table_title">제목</p></th>
+		                                	<td>
+		                                		<input type="text" name="n_title" id="n_title" class="table_info" placeholder="제목"
+		                                			onblur="checkEmpty(this, '제목을')"
+		                                			th:value="${noticeDto.n_title}">
+	                                        </td>
+	                                        
+	                                        <th><p class="table_title">작성자</p></th>
+		                                	<td class="disabled">
+		                                		<input type="text" name="n_writer_no" id="n_writer_no" class="table_info" disabled
+		                                			th:value="${noticeDto.n_writer_no} 작성자 아이디가 입력되어야 함">
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">내용</p></th>
+		                                	<td colspan="3">
+	                                			<div id="editor" th:utext="${noticeDto.n_body}"></div>
+		                                        <textarea name="n_body" class="a11y-hidden"></textarea>
+	                                        </td>
+		                                </tr>
+	                                </tbody>
+	                            </table>
+	
+	                            <div class="btn_list">
+	                            	<div th:if="${noticeDto.n_no} != null"
+		                        		 th:onclick="delListData('n_no')" class="btns delete">삭제</div>
+		                        		 
+	                                <div class="btn_list">
+	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
+	                                    <div th:onclick="putNoticeModifyForm('notice_modify_form')"
+	                                       class="btns">수정</div>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </form>
+	                </section>
+	            </div>
+	        </div>
+	    </article>
+	</main>
+</body>
+</html>

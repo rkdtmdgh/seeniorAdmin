@@ -2,10 +2,8 @@
 <html
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-   
 <head>
-	<th:block th:insert="~{fragments/head.html :: head('공지 사항')}"></th:block>
-	<script src="/quillEditor/quillEditor.js"></script>
+	<th:block th:insert="~{fragments/head.html :: head('공지 사항 등록')}"></th:block>
 </head>
 <body>
 <main class="contents_wrap">
@@ -38,7 +36,7 @@
 		                                <tr>
 		                                	<th><p class="table_title">제목</p></th>
 		                                	<td>
-		                                		<input type="text" name="n_name" id="n_name" class="table_info" placeholder="제목"
+		                                		<input type="text" name="n_title" id="n_title" class="table_info" placeholder="제목"
 		                                			onblur="checkEmpty(this, '제목을')">
 	                                        </td>
 	                                        
@@ -53,6 +51,7 @@
 		                                	<th><p class="table_title">내용</p></th>
 		                                	<td colspan="3">
 	                                			<div id="editor"></div>
+		                                        <textarea name="n_body a11y-hidden"></textarea>
 	                                        </td>
 		                                </tr>
 		                            </tbody>
