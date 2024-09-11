@@ -323,8 +323,6 @@
 		WHERE 
 			D_IS_DELETED = 1 
 		AND 
-			DC.DC_IS_DELETED = 1 
-		AND 
 			D_CATEGORY_NO = #{dc_no}
 	
 	</select>
