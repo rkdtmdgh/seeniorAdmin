@@ -89,7 +89,10 @@ public class BoardController {
 		
 		List<BoardCategoryDto> boardCategoryDtosForModify = boardService.getBoardCategoryForModify(boardCategoryDto);
 		
+		int boardCategoryIdxMaxNum = boardService.getBoardCategoryIdxMaxNum();
+		
 		model.addAttribute("boardCategoryDtoForModify",boardCategoryDtosForModify.get(0));
+		model.addAttribute("boardCategoryIdxMaxNum", boardCategoryIdxMaxNum);
 		
 		String nextPage = "board/modify_category_form";
 		
