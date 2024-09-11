@@ -70,5 +70,18 @@
         VALUES 
         	(#{bc_idx}, #{bc_name})
     </insert>
+    
+    <select id="getBoardCategoryForModify" parameterType="int" resultType="com.see_nior.seeniorAdmin.dto.BoardCategoryDto">
+    
+    	SELECT 
+    		* 
+    	FROM 
+    		BOARD_CATEGORY 
+    	WHERE 
+    		BC_NO = #{bc_no} 
+    	AND 
+    		BC_IS_DELETED = 1
+    
+    </select>
 
 </mapper>

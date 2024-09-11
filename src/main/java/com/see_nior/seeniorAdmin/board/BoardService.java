@@ -58,34 +58,48 @@ public class BoardService {
 	}
 	
 	//게시판 생성 요청 처리
-	public int createCategoryConfirm(BoardCategoryDto boardCategoryDto) {
+	public boolean createCategoryConfirm(BoardCategoryDto boardCategoryDto) {
 		log.info("createCategoryConfirm()");
 					
 		int bc_idx = boardCategoryDto.getBc_idx();
 					
 		log.info("bc_idx: ",bc_idx);
 		
+		//DB에서 board category 마지막 idx값 꺼내오기
 		int result = boardMapper.updateBoardCategoryIdx(bc_idx);
 		
 		if(result < 0) {
 			
 			log.info("updateBoardCategoryIdx() fail !!");
 			
+			return false;
+			
 		}else {
 			
+			//새로운 게시판 DB에 insert
 			result = boardMapper.createBoardCategory(boardCategoryDto);
 			
 			if(result > 0) {
 				log.info("createBoardCategory succuss!!");
+				return true;
 			}else {
 				log.info("createBoardCategory fail!!");
+				return false;
 			}
 			
 		}
-							
+						
+	}
+	
+	//게시판 name,idx 수정을 위한 dto 요청
+	public List<BoardCategoryDto> getBoardCategoryForModify(BoardCategoryDto boardCategoryDto) {
+		log.info("getBoardCategoryForModify()");
 		
-				
-		return 0;
+		int bc_no = boardCategoryDto.getBc_no();
+		
+		List<BoardCategoryDto> boardCategoryDtos = boardMapper.getBoardCategoryForModify(bc_no);
+						
+		return boardCategoryDtos;
 	}
 
 		

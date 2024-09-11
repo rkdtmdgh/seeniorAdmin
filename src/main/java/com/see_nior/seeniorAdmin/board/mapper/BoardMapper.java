@@ -19,5 +19,7 @@ public interface BoardMapper {
 
 	int createBoardCategory(BoardCategoryDto boardCategoryDto);
 
+	List<BoardCategoryDto> getBoardCategoryForModify(int bc_no);
+
 
 }
