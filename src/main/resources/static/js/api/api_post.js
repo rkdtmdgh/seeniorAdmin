@@ -244,7 +244,7 @@ async function postBoardCategoryCreateForm(formName) {
 async function postNoticeCreateForm(formName) {
 	const form = document.forms[formName];
 
-	const formData = new FormData(form));
+	const formData = new FormData(form);
 	const successMessage = '공지사항이 등록되었습니다.';
 	const errorMessage = '공지사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 	
@@ -261,7 +261,7 @@ async function postNoticeCreateForm(formName) {
 async function postQnaNoticeCreateForm(formName) {
 	const form = document.forms[formName];
 
-	const formData = new FormData(form));
+	const formData = new FormData(form);
 	const successMessage = '질문과 답변 공지사항이 등록되었습니다.';
 	const errorMessage = '질문과 답변 공지사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 	
