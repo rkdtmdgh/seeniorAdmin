@@ -101,7 +101,40 @@ async function postIdentityCheckForm(event, formName) {
 	} catch(error) {
 		logger.error('/account/info/modify_check postIdentityCheckForm() error:', error);
 		alert('본인 확인 오류로 데이터를 불러오는데 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
-		//location.replace('/account/info/modify_form');
+		location.replace('/account/info/modify_form');
+	}
+}
+
+// post ajax 요청
+async function postSubmitForm(apiUrl, formData, successMessage, errorMessage, redirectUrl = null) {
+	for (const [key, value] of formData.entries()) {
+		logger.info('postSubmitForm() formData:', key, value);
+	};
+	
+	try {
+		const response = await $.ajax({
+			url: apiUrl,
+			method: 'POST',
+			data: formData,
+			processData: false,  // FormData가 자동으로 Content-Type 설정
+			contentType: false,  // FormData를 문자열로 변환하지 않음
+		});
+		
+		logger.info(`${apiUrl} postSubmitForm() response:`, response);
+		
+		if(response) {
+			alert(successMessage);
+			redirectUrl ? location.replace(redirectUrl) : location.reload(true);
+			
+		} else {
+			alert(errorMessage);
+			location.reload(true);
+		}
+		
+	} catch(error) {
+		logger.error(`${apiUrl} postSubmitForm() error:`, error);
+		alert(errorMessage);
+		location.reload(true);
 	}
 }
 
@@ -117,36 +150,22 @@ async function postDiseaseCategoryCreateForm(event, formName, nextPage) {
 		return false;
 	}
 	
+	const formData = new FormData();
+	formData.append('dc_name', input.value.trim());
+	
+	const successMessage = `"${input.value}" 분류가 등록되었습니다.`;
 	const errorMessage = `"${input.value}" 분류 등록 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
-	try {
-		const response = await $.ajax({
-			url: '/disease/cate_info/create_category_confirm',
-			method: 'POST',
-			data: {
-				dc_name: input.value.trim(),
-			},
-		});
-		
-		logger.info('/disease/cate_info/create_category_confirm diseaseCategoryRegForm() response:', response);
-		
-		if(response) {
-			alert(`"${input.value}" 분류가 등록되었습니다.`);
-			
-		} else {
-			alert(errorMessage);
-		}
-		
-	} catch(error) {
-		logger.error('/disease/cate_info/create_category_confirm diseaseCategoryRegForm() error:', error);
-		alert(errorMessage);
-		
-	} finally {
-		nextPage ? location.replace(nextPage) : location.reload(true);
-	}
+	await postSubmitForm(
+		'/disease/cate_info/create_category_confirm', 				// apiUrl
+		formData, 													// data
+		successMessage, 											// 성공 메세지
+		errorMessage,												// 실패 메세지 																
+		nextPage ? '/disease/cate_info/category_list_form' : null	// 다음 페이지
+	);
 }
 
-// 질환 / 질병 등록
+// 질환 / 질병 등록 폼
 async function postDiseaseCreateForm(formName) {
 	const form = document.forms[formName];
 	let input;
@@ -182,38 +201,20 @@ async function postDiseaseCreateForm(formName) {
 	}
 	
 	const formData = new FormData(form);
+	const successMessage = `"${form.d_name.value}" 질환/질병 정보가 등록되었습니다.`;
 	const errorMessage = `"${form.d_name.value}" 질환 / 질병 정보 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
-	try {
-		const response = await $.ajax({
-			url: '/disease/info/create_confirm',
-			method: 'POST',
-			data: formData,
-			processData: false,  // FormData가 자동으로 Content-Type 설정
-			contentType: false,  // FormData를 문자열로 변환하지 않음
-		});
-		
-		logger.info('/disease/info/create_confirm postDiseaseCreateForm() response:', response);
-		
-		if(response) {
-			alert(`"${form.d_name.value}" 질환/질병 정보가 등록되었습니다.`);
-			location.replace('/disease/info/disease_list_form');
-			
-		} else {
-			alert(errorMessage);
-			location.reload(true);
-		}
-		
-	} catch(error) {
-		logger.error('/disease/info/create_confirm postDiseaseCreateForm() error:', error);
-		alert(errorMessage);
-		location.reload(true);
-	}
+	await postSubmitForm(
+		'/disease/info/create_confirm', 
+		formData, 
+		successMessage, 
+		errorMessage, 
+		'/disease/info/disease_list_form'
+	);
 }
 
-// 게시판 등록 
-async function postBoardCategoryCreateForm(event, formName, nextPage) {
-	if(event) event.preventDefault();
+// 게시판 등록 폼
+async function postBoardCategoryCreateForm(formName) {
 	const form = document.forms[formName];
 	const bc_name = form.bc_name;
 	const bc_idx = form.bc_idx;
@@ -223,34 +224,52 @@ async function postBoardCategoryCreateForm(event, formName, nextPage) {
 		return false;
 	}
 	
-	const bc_idxFix = setReplaceNumber(bc_idx); // 문자열 제외 및 min, max 체크하여 입력값 설정
+	const formData = new FormData();
+	formData.append('bc_name', bc_name.value.trim());
+	formData.append('bc_idx', setReplaceNumber(bc_idx)); // 문자열 제외 및 min, max 체크하여 입력값 설정
 	
+	const successMessage = `"${bc_name.value}" 게시판이 등록되었습니다.`;
 	const errorMessage = `"${bc_name.value}" 게시판 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
-	try {
-		const response = await $.ajax({
-			url: '/board/cate_info/create_category_confirm',
-			method: 'POST',
-			data: {
-				bc_name: bc_name.value.trim(),
-				bc_idx: bc_idxFix,
-			},
-		});
-		
-		logger.info('/board/cate_info/create_category_confirm postBoardCategoryCreateForm() response:', response);
-		
-		if(response) {
-			alert(`"${bc_name.value}" 게시판이 등록되었습니다.`);
-			
-		} else {
-			alert(errorMessage);
-		}
-		
-	} catch(error) {
-		logger.error('/board/cate_info/create_category_confirm postBoardCategoryCreateForm() error:', error);
-		alert(errorMessage);
-		
-	} finally {
-		nextPage ? location.replace(nextPage) : location.reload(true);
-	}
+	await postSubmitForm(
+		'/board/cate_info/create_category_confirm', 
+		formData, 
+		successMessage, 
+		errorMessage, 
+		'/board/cate_info/category_list_form'
+	);
+}
+
+// 공지사항 등록 폼
+async function postNoticeCreateForm(formName) {
+	const form = document.forms[formName];
+
+	const formData = new FormData(form));
+	const successMessage = '공지사항이 등록되었습니다.';
+	const errorMessage = '공지사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
+	
+	await postSubmitForm(
+		'/notice/info/create_confirm', 
+		formData, 
+		successMessage, 
+		errorMessage, 
+		'/notice/info/notice_list_form'
+	);
+}
+
+// QNA 공지사항 등록 폼
+async function postQnaNoticeCreateForm(formName) {
+	const form = document.forms[formName];
+
+	const formData = new FormData(form));
+	const successMessage = '질문과 답변 공지사항이 등록되었습니다.';
+	const errorMessage = '질문과 답변 공지사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
+	
+	await postSubmitForm(
+		'/qna/info/qna_notice_create_confirm', 
+		formData, 
+		successMessage, 
+		errorMessage, 
+		'/qna/info/qna_list_form'
+	);
 }
