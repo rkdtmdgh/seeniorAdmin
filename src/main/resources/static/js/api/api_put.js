@@ -200,36 +200,6 @@ async function putDiseaseCategoryModifyForm(formName, dc_nameDefaultValue) {
 	await putSubmitForm('/disease/cate_info/modify_category_confirm', formData, successMessage, errorMessage);
 }
 
-// 게시판 정보(게시판명, 순번) 수정
-async function putBoardCategoryModifyForm(formName, bc_nameDefaultValue) {
-	const form = document.forms[formName];
-	let input;
-	let bc_idx;
-	
-	input = form.bc_name;
-	if(input.value.trim() !== bc_nameDefaultValue) { // 수정이 되었을 경우
-		if(!(await usedInputValueCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
-			input.focus();
-			return false;
-		}
-		
-	} else {
-		alert('수정된 내용이 없습니다');
-		return false;
-	}
-	
-	bc_idx = form.bc_idx.value !== "" ? form.bc_idx.value : 0; 
-	
-	const formData = new FormData();
-	formData.append('bc_name', input.value);
-	formData.append('bc_idx', bc_idx);
-	
-	const successMessage = `"${input.value}" 게시판 정보가 수정되었습니다`;
-	const errorMessage = `"${input.value}" 게시판 정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
-
-	await putSubmitForm('/board/cate_info/modify_category_confirm', formData, successMessage, errorMessage);
-}
-
 // 게시판 수정
 async function putBoardCategoryModifyForm(formName, bc_nameDefaultValue, bc_idxDefaultValue) {
 	const form = document.forms[formName];
