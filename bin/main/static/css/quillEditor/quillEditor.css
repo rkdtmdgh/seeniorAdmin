@@ -1,0 +1,36 @@
+/* quill editor */
+.ql-toolbar.ql-snow {
+	display: flex;
+	justify-content: flex-start;
+	padding: var(--textPadding);
+	background-color: #FAFAFA;
+	border: none;
+	border-bottom: 1px solid var(--lightGrayColor);
+}
+
+.ql-toolbar.ql-snow .ql-formats {
+	margin: 0;
+}
+
+.ql-snow .ql-formats {
+	display: flex;
+	align-items: center;
+	gap: var(--smallGap);
+}
+
+.ql-snow .ql-formats:after {
+	display: none;
+}
+
+.ql-container.ql-snow {
+	border: none;
+}
+
+.ql-editor {
+	min-height: var(--tableTextareaHeight);
+	max-height: calc(var(--tableTextareaHeight) * 1.5);
+}
+
+.ql-editor.ql-blank::before {
+	color: var(--middleGrayColor);
+}

@@ -1,4 +1,4 @@
-// 이메일 중복 검사(정규표현식 검사도 필요한 경우)
+// 이메일 중복 검사(정규표현식 검사가 필요한 경우)
 async function usedEmailCheck(email) {
 	logger.info('usedEmailChekc():', email);
 
