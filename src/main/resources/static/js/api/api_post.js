@@ -240,6 +240,31 @@ async function postBoardCategoryCreateForm(formName) {
 	);
 }
 
+// 게시물 등록 폼
+async function postPostsCreateForm(formName) {
+	const form = document.forms[formName];
+	const notice = form.notice.value; // 1=공지, 0=일반
+	const prefix = notice == 1 ? 'bn_' : 'bp_';
+	const apiUrl = notice == 1 ? '/board/info/create_notice_confirm' : '/board/info/create_confirm';
+	
+	const formData = new FormData();
+	formData.append(`${prefix}category_no`, category_no.value);
+	formData.append(`${prefix}title`, title.value.trim());
+	formData.append(`${prefix}writer_no`, writer_no.value);
+	formData.append(`${prefix}body`, quill.root.innerHTML);
+	
+	const successMessage = `"${title.value.trim()}" ${notice == 1 ? '공지' : '일반'} 게시물이 등록되었습니다.`;
+	const errorMessage = `"${title.value.trim()}" ${notice == 1 ? '공지' : '일반'} 게시물 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	await postSubmitForm(
+		apiUrl, 
+		formData, 
+		successMessage, 
+		errorMessage, 
+		'/board/info/posts_list_form'
+	);
+}
+
 // 공지사항 등록 폼
 async function postNoticeCreateForm(formName) {
 	const form = document.forms[formName];

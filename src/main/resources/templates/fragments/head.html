@@ -27,15 +27,6 @@
 	<script src="/js/utils.js"></script>
 	<script src="/js/api/api_utils.js"></script>
 	<script src="/js/validation.js"></script>
-	<script src="/js/api/api_post.js"></script>
-	
-	<th:block th:unless="${pageTitle == '로그인' or pageTitle == '회원가입'}">
-		<!-- 로그인, 회원가입 페이지 외 -->
-		<script src="/js/api/api_default.js"></script>
-		<script src="/js/api/api_get.js"></script>
-		<script src="/js/api/api_put.js"></script>
-		<script src="/js/api/api_delete.js"></script>
-	</th:block>
 	
 	<th:block th:if="${pageTitle == '게시물 등록' or pageTitle == '공지 사항 등록' or pageTitle == '질환 / 질병 정보 등록'}">
 		<!-- quill editor -->
@@ -47,5 +38,13 @@
 	    <script src="/quillEditor/quillEditor.js"></script>
 	</th:block>
 	
+	<script src="/js/api/api_post.js"></script>
+	<th:block th:unless="${pageTitle == '로그인' or pageTitle == '회원가입'}">
+		<!-- 로그인, 회원가입 페이지 외 -->
+		<script src="/js/api/api_default.js"></script>
+		<script src="/js/api/api_get.js"></script>
+		<script src="/js/api/api_put.js"></script>
+		<script src="/js/api/api_delete.js"></script>
+	</th:block>	
 </th:block>
 </html>
