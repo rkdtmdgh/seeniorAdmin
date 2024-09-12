@@ -427,6 +427,18 @@ function setParseResponseByCommand(command, response) {
 			getListDtos = response.noticeDtos;
 			getListPage = response.searchNoticeListPageNum;
 			getListCnt = response.searchNoticeListPageNum.searchNoticeListCnt;
+			break;	
+			
+		case '/qna/info/get_all_qna_list_with_page': // 질문과 답변
+			getListDtos = response.qnaDtos;
+			getListPage = response.qnaListPageNum;
+			getListCnt = response.qnaListPageNum.qnaListCnt;
+			break;
+			
+		case '/qna/info/search_qna_list': // 질문과 답변 검색
+			getListDtos = response.qnaDtos;
+			getListPage = response.searchQnaListPageNum;
+			getListCnt = response.searchQnaListPageNum.searchQnaListCnt;
 			break;		
 						
 	}
@@ -644,6 +656,35 @@ function setDataList(apiUrl, data, index) {
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.n_mod_date) || 'N/A'}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/qna/info/get_all_qna_list_with_page': // 질문과 답변 리스트 테이블
+		case '/qna/info/search_qna_list': // 질문과 답변 검색 리스트 테이블
+			innerContent = `
+				<tr>
+					<td class="vam">
+		                <div class="table_info func_area"><input type="checkbox" name="bq_no" class="bq_no" value="${data.bq_no}"></div>
+		            </td>
+		            <td>
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${index}</a>
+		            </td>
+		            <td>
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.n_title}(댓글 수)</a>
+		            </td>
+					<td>
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.n_writer_no} 작성자 아이디</a>
+		            </td>
+					<td>
+		                <a href="" class="table_info">${data.bq_user_no}(작성자 아이디)</a>
+		            </td>
+					<td>
+		                <p class="table_info">${setFormatDate(data.bq_reg_date) || 'N/A'}</p>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.bq_mod_date) || 'N/A'}</p>
 		            </td>
 		        </tr>
 			`;
