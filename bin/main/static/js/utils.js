@@ -277,11 +277,11 @@ function setSearchQueryString(page, searchPart, searchString) {
 }
 
 // 중복 확인 커맨드, 메세지 설정
-function setWordAndCommand(inputName) {
+function setWordAndCommand(value) {
 	let word;
 	let apiUrl;
 	
-	switch(inputName) {
+	switch(value) {
 		case 'dc_name':
 			word = '질환/질병 분류명';
 			apiUrl = '/disease/cate_info/is_disease_category';
@@ -298,19 +298,65 @@ function setWordAndCommand(inputName) {
 			break;
 			
 		default:
-			logger.error('usedInputValueCheck() inputName:', inputName);
+			logger.error('setWordAndCommand() value:', value);
 			return false;
 	}
 	
 	return { word, apiUrl };
 }
 
+// 분류별 리스트 요청 커맨드 설정
+function setSelectCommand(value) {
+	let apiUrl;
+	
+	switch(value) {
+		case 'dc_no': // 질환/질병 정보 리스트 페이지 분류명별 필터
+			apiUrl = '/disease/info/get_disease_list_by_category_with_page';
+			break;
+			
+		default:
+			logger.error('setSelectCommand() value:', value);
+			return false;
+	}
+	
+	return apiUrl;
+}
+
+// 정렬 리스트 요청 커맨드 설정
+function setSortCommand(value) {
+	let apiUrl;
+	
+	switch(value) {
+		case 'a_authorty_role': // 관리자 리스트 페이지 승인 정렬
+			apiUrl = '/account/list/get_admin_list';
+			break;
+			
+		case 'dc_name': // 질환/질병 분류 리스트 페이지 분류명 정렬
+			apiUrl = '/disease/cate_info/get_category_list_with_page';
+			break;
+			
+		case 'd_name': // 질환/질병 정보 리스트 페이지 질환/질병명 정렬
+			apiUrl = '/disease/info/get_all_disease_list_with_page';
+			break;
+			
+		case 'bc_name': // 게시판 관리 페이지 게시판명 정렬
+			apiUrl = '/board/cate_info/get_list';
+			break;
+			
+		default:
+			logger.error('setSortCommand() value:', value);
+			return false;
+	}
+	
+	return apiUrl;
+}
+
 // 삭제 커맨드, 메세지 설정
-function setDelCommand(name) {
+function setDelCommand(value) {
 	let apiUrl;
 	let replace;
 	
-	switch(name) {
+	switch(value) {
 		case 'a_no': // 관리자 계정
 			apiUrl = '/account/list/delete_confirm';
 			replace = '/account/list/admin_list_form';
@@ -337,7 +383,7 @@ function setDelCommand(name) {
 			break;
 			
 		default:
-			logger.error('usedInputValueCheck() inputName:', name);
+			logger.error('setDelCommand() value:', value);
 			return false;
 	}
 	
