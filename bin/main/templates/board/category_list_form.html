@@ -8,18 +8,18 @@
 	
 	<script type="text/javascript">
 		document.addEventListener('DOMContentLoaded', () => {
-			const { sortType, sort, sortValue, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
+			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // 검색
 					getSearchList(null, '/board/cate_info/search_board_list', page);
 					break;
 
 				case '0':  // 정렬
-					getList('/board/cate_info/get_list', sort, sortValue, page);
+					getList('/board/cate_info/get_list', sortValue, order, page);
 					break;
 					
 				default: // 기본
-					getList('/board/cate_info/get_list', sort, sortValue, page);
+					getList('/board/cate_info/get_list', sortValue, order, page);
 			}
         });
 	</script>
@@ -65,7 +65,7 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p data-sort="bc_name" data-current-sort="all" class="table_title sort"
+	                                        <p data-sort-value="bc_name" data-current-sort-value="all" class="table_title sort"
 	                                        	onclick="getSortList(event, '/board/cate_info/get_list', 'asc', 'desc')">
 	                                        	게시판명
 	                                        	<span class="sort_icon"></span>
