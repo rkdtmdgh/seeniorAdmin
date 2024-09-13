@@ -7,7 +7,7 @@
 	<th:block th:insert="~{fragments/head.html :: head('질환 / 질병 정보 등록')}"></th:block>
 	<script src="/js/api/api_utils.js"></script>
 	<script type="text/javascript">
-		document.addEventListener('DOMContentLoaded', () => {
+		$(function() {
 			// DISEASE_CATEGORY 가져오기
 			getOptionList('/disease/cate_info/get_category_list', 'd_category_no', true); // command, element id, isForm
         });

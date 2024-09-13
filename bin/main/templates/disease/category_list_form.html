@@ -7,7 +7,7 @@
 	<th:block th:insert="~{fragments/head.html :: head('질환 / 질병 분류 관리')}"></th:block>
 	
 	<script type="text/javascript">
-		document.addEventListener('DOMContentLoaded', () => {
+		$(function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // 검색

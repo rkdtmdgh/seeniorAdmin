@@ -5,6 +5,11 @@
    
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('게시물 등록')}"></th:block>
+	<script type="text/javascript">
+		$(function() {
+			setLoginUserInfoInputValue("writer_no", a_no);
+		});
+	</script>
 </head>
 <body>
 <main class="contents_wrap">
@@ -58,8 +63,8 @@
 		                                <tr>
 		                                	<th><p class="table_title">작성자</p></th>
 		                                	<td class="disabled">
-		                                		<input type="hidden" name="writer_no" th:value="${authentication.no}">
-	                                			<p class="table_info disabled" th:text="${authentication.name}">로그인 어드민</p>
+		                                		<input type="hidden" name="writer_no">
+	                                			<p class="table_info disabled" th:text="${authentication.name}">작성자 아이디</p>
 	                                        </td>
 		                                </tr>
 		                                

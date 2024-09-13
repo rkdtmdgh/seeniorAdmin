@@ -9,6 +9,19 @@ function setInputFocus(ele) {
 	}
 }
 
+// input value set
+async function setLoginUserInfoInputValue(name, key) {
+	const loginUserInfo = await getAccountInfo();
+	const $input = $(`input[name="${name}"]`);
+	
+	if($input.length > 0) {
+		$input.val(loginUserInfo[key]);
+		
+	} else {
+		logger.error(`Input with name "${name}" not found`);	
+	}
+}
+
 // submit 이벤트 막기(form 에서 enter키 입력 되지 않고 버튼으로 submit만 가능하도록)
 // 예외 사항으로 form 내부에 disabled 되어 있는 인풋이 있는 경우에는 사용하지 않아도 됨
 function setFormSendFalse(event) {
@@ -51,7 +64,7 @@ function setNavActiveToggle() {
 	const currentQueryParams = new URLSearchParams(window.location.search); // 쿼리 파라미터
 
 	const $navMenuBtns = $('.side_menu_list'); // 모든 nav 메뉴 버튼
-	$navMenuBtns.each(function(index) { // 화살표 함수에는 this가 포함되지 않아 function으로 대체
+	$navMenuBtns.each(function() { // 화살표 함수에는 this가 포함되지 않아 function으로 대체
 		const $navMenu = $(this);
 		const $navMenuBtn = $navMenu.find('.side_menu_btn');
 		const href = $navMenuBtn.attr('href') || null; // 메뉴 버튼의 href
@@ -99,7 +112,7 @@ function setNavActiveToggle() {
 }
 
 // all_check 체크박스 초기화
-function  setAllcheck() {
+function setAllcheck() {
 	const $allCheckBox = $('input[type="checkbox"][name="all_check"]');
 	if($allCheckBox && $allCheckBox.prop('checked')) $allCheckBox.prop('checked', false);
 }
@@ -391,12 +404,12 @@ function setDelCommand(value) {
 }
 
 // 카테고리에 맞도록 객체 선택 
-function setParseResponseByCommand(command, response) {
+function setParseResponseByCommand(apiUrl, response) {
 	let getListDtos;
 	let getListPage;
 	let getListCnt;
 	
-	switch(command) {
+	switch(apiUrl) {
 		case '/account/list/get_admin_list': // 관리자 계정 관리
 			getListDtos = response.adminAccountDtos;
 			getListPage = response.adminListPage;
@@ -936,7 +949,7 @@ $(document).on('click', function(event) {
 });
 
 // 문서가 준비된 후 실행
-$(document).ready(function() {
+$(function() {
 	// textarea 입력된 값으로 높이값 조절
 	$('.table_textarea.small').each(function() {
 		setTextareaAutoHeight(this);

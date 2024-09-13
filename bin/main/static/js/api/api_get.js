@@ -267,7 +267,7 @@ async function getSearchList(event, apiUrl, page) {
 }
 
 // 본인 확인 후 로그인 유저 데이터 요청
-async function getAccountInfo() {
+async function getAccountInfo(modify=false) {
 	try {
 		const response = await $.ajax({
 			url: '/account/info/get_account_info',
@@ -276,10 +276,12 @@ async function getAccountInfo() {
 		
 		logger.info('/account/info/get_account_info getAccountInfo() response:', response);
 		
-		if(response) {
+		if(response && modify) {
 			const $contentInfoWrap = $('.content_info_wrap');
 			$contentInfoWrap.html(setAccountModifyForm(response)); // account/modifyForm SET
 		}
+		
+		return response;
 	
 	} catch(error) {
 		logger.error('/account/info/get_account_info getAccountInfo() error:', error);
