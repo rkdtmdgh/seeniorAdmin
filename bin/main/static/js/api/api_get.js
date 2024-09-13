@@ -75,14 +75,13 @@ async function getList(apiUrl, sortValue, order, page) {
 }
 
 // 버튼으로 정렬된 리스트 요청
-function getSortList(event, apiUrl, defaultSortValue, changeSortValue) {
-	if(event) event.preventDefault();
+function getSortList(event, sortValue) {
     const sortBtn = event.currentTarget.closest('.sort'); // 클릭된 요소가 가장 가까운 부모 요소 중 클래스가 "sort"인 요소를 찾음
 	if(!sortBtn) return; // 만약 sort 요소가 없다면 아무 작업도 하지 않음
 	
-    const sortValue = sortBtn.getAttribute('data-sort-value'); // 정렬 종류 가져오기
-    const currentSortValue = sortBtn.getAttribute('data-current-sort-value'); // 현재 정렬 값 가져오기
-    const order = currentSortValue === defaultSortValue ? changeSortValue : defaultSortValue; // 정렬 값 토글
+    const apiUrl = setSortCommand(sortValue); // 커맨드 가져오기
+    const currentSortValue = sortBtn.getAttribute('data-current-sort-value'); // 현재 정렬 값 가져오기 default all
+    const order = currentSortValue === 'asc' ? 'desc' : 'asc'; // 정렬 값 토글
     sortBtn.setAttribute('data-current-sort-value', order); // 버튼의 data-sort-value 속성 값 업데이트
 	
 	const urlParams = new URLSearchParams(window.location.search);
@@ -96,9 +95,9 @@ function getSortList(event, apiUrl, defaultSortValue, changeSortValue) {
 // 셀렉트로 정렬된 리스트 요청
 function getSelectList(event) {
 	const sortBtn = event.target; // 클릭된 버튼 요소
-	const apiUrl = sortBtn.parentElement.getAttribute('data-api'); // 커맨드 가져오기
 	const sortValue = sortBtn.parentElement.getAttribute('data-sort-value'); // 정렬 종류 가져오기
 	const order = sortBtn.getAttribute('data-order'); // 정렬할 값
+	const apiUrl = setSelectCommand(sortValue);
 	
 	logger.info('getSelectList() apiUrl:', apiUrl);
 	logger.info('getSelectList() sortValue:', sortValue);
@@ -118,7 +117,6 @@ async function getOptionList(apiUrl, ele, isForm, selectedValue) {
 	let getListDtos;
 	let dataNo;
 	let dataName;
-	let command;
 	
 	if(selectEle) {
 		try {
@@ -132,7 +130,6 @@ async function getOptionList(apiUrl, ele, isForm, selectedValue) {
 					getListDtos = response.diseaseCategoryDto;
 					dataNo = 'dc_no';
 					dataName = 'dc_name';
-					command = '/disease/info/get_disease_list_by_category_with_page';
 					break;
 				
 				default:
@@ -157,7 +154,7 @@ async function getOptionList(apiUrl, ele, isForm, selectedValue) {
 					});
 					
 				} else {
-					const ceateSelect = `<ul data-sort-value="${dataNo}" data-api="${command}" class="select_option_list sc"></ul>`;
+					const ceateSelect = `<ul data-sort-value="${dataNo}" class="select_option_list sc"></ul>`;
 			        selectEle.insertAdjacentHTML('beforeend', ceateSelect);
 			        const $selectOptionlist = $('ul.select_option_list');
 					
