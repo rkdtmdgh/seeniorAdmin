@@ -412,7 +412,8 @@ CREATE TABLE DISEASE_CATEGORY (
 	DC_NO			INT	AUTO_INCREMENT COMMENT "질환 분류 NO(PK)", 						-- 질환 분류 NO(PK)
 	DC_NAME			VARCHAR(100) NOT NULL COMMENT "질환 분류 명",							-- 질환 분류 명
 	DC_IS_DELETED	TINYINT DEFAULT 1 COMMENT "질환 분류 삭제 여부(기본값 = 0, 삭제 시 = 1)",	-- 질환 분류 삭제 여부(기본값 = 0, 삭제 시 = 1)
-	DC_REG_DATE		DATETIME DEFAULT NOW() COMMENT "질환 분류 등록일",						-- 질환 분류 등록일
+	DC_ITEM_CNT		INT DEFAULT 0 COMMENT "질환 분류에 포함된 질환 개수",						-- 질환 분류에 포함된 질환 개수
+    DC_REG_DATE		DATETIME DEFAULT NOW() COMMENT "질환 분류 등록일",						-- 질환 분류 등록일
 	DC_MOD_DATE		DATETIME DEFAULT NOW() COMMENT "질환 분류 수정일",						-- 질환 분류 수정일
     PRIMARY KEY(DC_NO)
 );

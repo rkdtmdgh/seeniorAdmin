@@ -93,32 +93,33 @@ public class DiseaseService {
 	}
 	
 	// 페이지에 따른 질환 카테고리 리스트 가져오기
-	public List<Map<String, Object>> getCategoryListWithPage(int page, String sort) {
+	public Map<String, Object> getCategoryListWithPage(int page, String sortValue, String order) {
 		log.info("getCategoryListWithPage()");
 		
 		int pagingStart = (page - 1) * pageLimit;
 		
-		List<Map<String, Object>> pagingList = new ArrayList<>();
+		Map<String, Object> pagingList = new HashMap<>();
 		
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
-		pagingParams.put("sort", sort);
+		pagingParams.put("sortValue", sortValue);
+		pagingParams.put("order", order);
 		
 		List<DiseaseCategoryDto> diseaseCategoryDtos = diseaseMapper.getDiseaseCategoryListWithPage(pagingParams);
 		
-		ObjectMapper objectMapper = new ObjectMapper();
-		
 		for (DiseaseCategoryDto diseaseCategoryDto : diseaseCategoryDtos) {
-			int itemCnt = diseaseMapper.getCategoryItemCnt(diseaseCategoryDto.getDc_no());
-			
-			Map<String, Object> diseaseCategoryMap = objectMapper.convertValue(diseaseCategoryDto, new TypeReference<Map<String, Object>>() {});
-			
-			diseaseCategoryMap.put("itemCnt", itemCnt);
-			
-			pagingList.add(diseaseCategoryMap);
+			Map<String, Object> itemCntParam = new HashMap<>();
+			int dc_no = diseaseCategoryDto.getDc_no();
+			int item_cnt = diseaseMapper.getCategoryItemCnt(dc_no);
+			itemCntParam.put("dc_no", dc_no);
+			itemCntParam.put("item_cnt", item_cnt);
+			diseaseMapper.updateDiseaseCategoryItemCnt(itemCntParam);
+			diseaseCategoryDto.setDc_item_cnt(item_cnt);
 			
 		}
+		
+		pagingList.put("diseaseCategoryDtos", diseaseCategoryDtos);
 		
 		return pagingList;
 	}
@@ -205,12 +206,12 @@ public class DiseaseService {
 	
 	
 	// 페이지에 따른 질환 카테고리 가져오기(검색한 질환 카테고리)
-		public List<Map<String, Object>> getSearchDiseaseCategoryListWithPage(String searchPart, String searchString, int page) {
+		public Map<String, Object> getSearchDiseaseCategoryListWithPage(String searchPart, String searchString, int page) {
 			log.info("getSearchDiseaseCategoryListWithPage()");
 			
 			int pagingStart = (page - 1) * pageLimit;
 			
-			List<Map<String, Object>> pagingList = new ArrayList<>();
+			Map<String, Object> pagingList = new HashMap<>();
 			
 			Map<String, Object> pagingParams = new HashMap<>();
 			pagingParams.put("start", pagingStart);
@@ -220,18 +221,18 @@ public class DiseaseService {
 			
 			List<DiseaseCategoryDto> searchDiseaseCategoryDtos = diseaseMapper.getSearchDiseaseCategory(pagingParams);
 			
-			ObjectMapper objectMapper = new ObjectMapper();
-			
-			for (DiseaseCategoryDto searchDiseaseCategoryDto : searchDiseaseCategoryDtos) {
-				int itemCnt = diseaseMapper.getCategoryItemCnt(searchDiseaseCategoryDto.getDc_no());
-				
-				Map<String, Object> searchDiseaseCategoryMap = objectMapper.convertValue(searchDiseaseCategoryDto, new TypeReference<Map<String, Object>>() {});
-				
-				searchDiseaseCategoryMap.put("itemCnt", itemCnt);
-				
-				pagingList.add(searchDiseaseCategoryMap);
+			for (DiseaseCategoryDto diseaseCategoryDto : searchDiseaseCategoryDtos) {
+				Map<String, Object> itemCntParam = new HashMap<>();
+				int dc_no = diseaseCategoryDto.getDc_no();
+				int item_cnt = diseaseMapper.getCategoryItemCnt(dc_no);
+				itemCntParam.put("dc_no", dc_no);
+				itemCntParam.put("item_cnt", item_cnt);
+				diseaseMapper.updateDiseaseCategoryItemCnt(itemCntParam);
+				diseaseCategoryDto.setDc_item_cnt(item_cnt);
 				
 			}
+			
+			pagingList.put("diseaseCategoryDtos", searchDiseaseCategoryDtos);
 			
 			return pagingList;
 			
@@ -341,7 +342,7 @@ public class DiseaseService {
 	}
 	
 	// 페이지에 따른 질환 가져오기(모든 질환)
-	public Map<String, Object> getDiseaseListWithPage(int page, String sort) {
+	public Map<String, Object> getDiseaseListWithPage(int page, String sortValue, String order) {
 		log.info("getDiseaseListWithPage()");
 		
 		int pagingStart = (page - 1) * pageLimit;
@@ -351,7 +352,8 @@ public class DiseaseService {
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
-		pagingParams.put("sort", sort);
+		pagingParams.put("sortValue", sortValue);
+		pagingParams.put("order", order);
 		
 		List<DiseaseDto> diseaseDtos = diseaseMapper.getDiseaseListWithPage(pagingParams);
 		pagingList.put("diseaseDtos", diseaseDtos);
