@@ -11,7 +11,7 @@ async function getList(apiUrl, sort, sortValue, page) {
 	
 	const intPage = page || 1
 	let params = `?page=${intPage}`;
-	if(sort) params = `${params}&${sort}=${sortValue}`;
+	if(sort) params = `${params}&${sort}=${sortValue}`; // sortValue = 파트 , order = 정렬값
 	if(infoNo) params = `${params}&infoNo=${infoNo}`;
 	
 	try {
