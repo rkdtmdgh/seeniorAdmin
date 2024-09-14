@@ -91,7 +91,7 @@ async function postIdentityCheckForm(event, formName) {
 		if(response) {
 			sessionStorage.setItem('loginedId', response.loginedId);
 			sessionStorage.setItem('checkDate', response.checkDate);
-			await getAccountInfo(); // get_account_info 요청, account modify form set
+			await getAccountInfo(true); // get_account_info 요청, account modify form set
 			
 		} else {
 			alert('비밀번호가 일치하지 않습니다. 확인 후 다시 시도해 주세요.');
@@ -270,6 +270,8 @@ async function postNoticeCreateForm(formName) {
 	const form = document.forms[formName];
 
 	const formData = new FormData(form);
+	formData.append(`n_body`, quill.root.innerHTML);
+	
 	const successMessage = '공지사항이 등록되었습니다.';
 	const errorMessage = '공지사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 	
@@ -287,6 +289,8 @@ async function postQnaNoticeCreateForm(formName) {
 	const form = document.forms[formName];
 
 	const formData = new FormData(form);
+	formData.append(`bqn_body`, quill.root.innerHTML);
+	
 	const successMessage = '질문과 답변 공지사항이 등록되었습니다.';
 	const errorMessage = '질문과 답변 공지사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 	
