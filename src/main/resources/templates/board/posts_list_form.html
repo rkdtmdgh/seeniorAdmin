@@ -7,7 +7,7 @@
 	<th:block th:insert="~{fragments/head.html :: head('게시판')}"></th:block>
 	
 	<script type="text/javascript">
-		document.addEventListener('DOMContentLoaded', () => {
+		$(function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); 
 			switch(sortType) {
 				case '2': // 검색
@@ -19,7 +19,7 @@
 					break;
 					
 				default: // 기본
-					getList('/board/info/get_all_posts_list_with_page', sortValue, order, page);
+					getList('/board/info/get_all_posts_list_with_page', null, null, page);
 			}
         });
 	</script>

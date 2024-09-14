@@ -6,6 +6,11 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('질환 / 질병 분류 등록')}"></th:block>
 	<script src="/js/api/api_utils.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			setInputFocus('dc_name');
+        });
+    </script>
 </head>
 <body>
 <main class="contents_wrap">

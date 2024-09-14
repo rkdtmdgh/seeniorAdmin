@@ -6,7 +6,7 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('관리자 계정 관리')}"></th:block>
 	<script type="text/javascript">
-		document.addEventListener('DOMContentLoaded', () => {
+		$(function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // 검색
@@ -18,7 +18,7 @@
 					break;
 					
 				default:  // 기본
-					getList('/account/list/get_admin_list', sortValue, order, page);
+					getList('/account/list/get_admin_list', null, null, page);
 			}
         });
 	</script>
