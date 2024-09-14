@@ -45,29 +45,64 @@ public class BoardService {
 		return result;
 	}
 	
-	//게시판 생성 요청 처리
-	public int createCategoryConfirm(BoardCategoryDto boardCategoryDto) {
-		log.info("createConfirm()");
-					
-		int bc_idx = boardCategoryDto.getBc_idx(); // 프론트에서 입력값이 없으면 0으로 넘겨줌 
-		String bc_name = boardCategoryDto.getBc_name();
+	//일반 게시판 마지막 순서(idx) 번호 가져오기
+	public int getBoardCategoryIdxMaxNum() {
+		log.info("getBoardCategoryIdxMaxNum()");
 		
-		if(bc_idx == 0) {
-			log.info("bc_idx: ",bc_idx);
-			// List<Integer> boardIdxs = boardMapper.getAllBoardIdx();
-			// int lastBoradIdx = boardIdxs.getFirst();
+		List<BoardCategoryDto> boardCategoryDtos = boardMapper.getBoardCategoryIdxMaxNum();
+		
+//		int IdxMaxNum = boardCategoryDtos.getFirst().getBc_idx();
+		int IdxMaxNum = boardCategoryDtos.get(0).getBc_idx();
+		
+		return IdxMaxNum;
+	}
+	
+	//게시판 생성 요청 처리
+	public boolean createCategoryConfirm(BoardCategoryDto boardCategoryDto) {
+		log.info("createCategoryConfirm()");
+					
+		int bc_idx = boardCategoryDto.getBc_idx();
+					
+		log.info("bc_idx: ",bc_idx);
+		
+		//DB에서 board category 마지막 idx값 꺼내오기
+		int result = boardMapper.updateBoardCategoryIdx(bc_idx);
+		
+		if(result < 0) {
 			
-			// int result = boardMapper.createBoardCategory(lastBoradIdx+1,bc_name);
+			log.info("updateBoardCategoryIdx() fail !!");
+			
+			return false;
 			
 		}else {
-			log.info("bc_idx: ",bc_idx);
+			
+			//새로운 게시판 DB에 insert
+			result = boardMapper.createBoardCategory(boardCategoryDto);
+			
+			if(result > 0) {
+				log.info("createBoardCategory succuss!!");
+				return true;
+			}else {
+				log.info("createBoardCategory fail!!");
+				return false;
+			}
+			
 		}
+						
+	}
+	
+	//게시판 name,idx 수정을 위한 dto 요청
+	public List<BoardCategoryDto> getBoardCategoryForModify(BoardCategoryDto boardCategoryDto) {
+		log.info("getBoardCategoryForModify()");
 		
-		log.info("bc_idx --- {}", bc_idx);
-		log.info("bc_name --- {}", bc_name);
-				
-		return 0;
-	}	
+		int bc_no = boardCategoryDto.getBc_no();
+		
+		List<BoardCategoryDto> boardCategoryDtos = boardMapper.getBoardCategoryForModify(bc_no);
+						
+		return boardCategoryDtos;
+	}
+
+		
 
 	
 

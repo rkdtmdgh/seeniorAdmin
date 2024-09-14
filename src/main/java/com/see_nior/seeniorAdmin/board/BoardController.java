@@ -1,8 +1,10 @@
 package com.see_nior.seeniorAdmin.board;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,8 +47,12 @@ public class BoardController {
 	
 	//게시판 생성 양식으로 이동
 	@GetMapping("/cate_info/create_category_form")
-	public String createCategoryForm() {
+	public String createCategoryForm(Model model) {
 		log.info("createCategoryForm()");
+		
+		int boardCategoryIdxMaxNum = boardService.getBoardCategoryIdxMaxNum();
+		
+		model.addAttribute("boardCategoryIdxMaxNum", boardCategoryIdxMaxNum);
 		
 		String nextPage = "board/create_category_form";
 		
@@ -67,14 +73,31 @@ public class BoardController {
 	
 	//게시판 생성 요청 처리
 	@PostMapping("/cate_info/create_category_confirm")
-	public String createCategoryConfirm(BoardCategoryDto boardCategoryDto) {
+	@ResponseBody
+	public boolean createCategoryConfirm(BoardCategoryDto boardCategoryDto) {
 		log.info("createCategoryConfirm()");
 		
-		int result = boardService.createCategoryConfirm(boardCategoryDto);
+		boolean result = boardService.createCategoryConfirm(boardCategoryDto);
 		
-		return null;
+		return result;
 	}
 	
+	//게시판 name,idx 수정 양식으로 이동
+	@GetMapping("/cate_info/modify_category_form")
+	public String modifyCategoryForm(BoardCategoryDto boardCategoryDto, Model model) {
+		log.info("modifyCategoryForm()");
+		
+		List<BoardCategoryDto> boardCategoryDtosForModify = boardService.getBoardCategoryForModify(boardCategoryDto);
+		
+		int boardCategoryIdxMaxNum = boardService.getBoardCategoryIdxMaxNum();
+		
+		model.addAttribute("boardCategoryDtoForModify",boardCategoryDtosForModify.get(0));
+		model.addAttribute("boardCategoryIdxMaxNum", boardCategoryIdxMaxNum);
+		
+		String nextPage = "board/modify_category_form";
+		
+		return nextPage;
+	}
 	
 	
 

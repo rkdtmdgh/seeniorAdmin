@@ -97,6 +97,10 @@ function getSelectList(event) {
 	const apiUrl = sortBtn.parentElement.getAttribute('data-api'); // 커맨드 가져오기
 	const sort = sortBtn.parentElement.getAttribute('data-sort'); // 정렬 종류 가져오기
 	const sortValue = sortBtn.getAttribute('data-sort-value'); // 정렬할 값
+	
+	logger.info('getSelectList() apiUrl:', apiUrl);
+	logger.info('getSelectList() sort:', sort);
+	logger.info('getSelectList() sortValue:', sortValue);
 
 	const urlParams = new URLSearchParams(window.location.search);
 	urlParams.set('sortType', 1); // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색

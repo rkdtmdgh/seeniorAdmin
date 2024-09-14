@@ -33,7 +33,7 @@
 		INSERT INTO 
 			DISEASE_CATEGORY 
 			(DC_NAME) 
-		VALUES
+		VALUES 
 			(#{dc_name})
 	
 	</insert>
@@ -149,18 +149,13 @@
 	<update id="deleteDiseaseCategory">
 	
 		UPDATE 
-			DISEASE_CATEGORY DC 
-		LEFT JOIN 
-			DISEASE D 
-		ON 
-			DC.DC_NO = D.D_CATEGORY_NO 
+			DISEASE_CATEGORY 
 		SET 
-			DC.DC_IS_DELETED = 0, D.D_IS_DELETED = 0 
+			DC_IS_DELETED = 0 
 		WHERE 
-			DC.DC_NO = #{dc_no}
+			DC_NO = #{dc_no}
 	
 	</update>
-	
 	
 	<!-- 페이지에 따른 질환 카테고리 가져오기(검색한 질환 카테고리) -->
 	<select id="getSearchDiseaseCategory">
@@ -240,6 +235,8 @@
 		    D.D_CATEGORY_NO = DC.DC_NO 
 		WHERE 
 		    D.D_IS_DELETED = 1 
+		AND 
+			DC.DC_IS_DELETED = 1 
 		ORDER BY 
 			D_NO DESC 
 
@@ -260,6 +257,8 @@
 		    D.D_CATEGORY_NO = DC.DC_NO 
 		WHERE 
 		    D.D_IS_DELETED = 1 
+		AND 
+			DC.DC_IS_DELETED = 1 
 		<choose>
 			<when test="sort == 'all'">
 				ORDER BY D.D_NO DESC				
@@ -303,6 +302,8 @@
 		    D.D_CATEGORY_NO = DC.DC_NO 
 		WHERE 
 		    D.D_IS_DELETED = 1 
+		AND 
+			DC.DC_IS_DELETED = 1 
 		AND 
 			D.D_CATEGORY_NO = #{dc_no} 
 		ORDER BY 
@@ -384,6 +385,8 @@
 			D.D_CATEGORY_NO = DC.DC_NO 
 		AND 
 			D.D_IS_DELETED = 1 
+		AND 
+			DC.DC_IS_DELETED = 1 
 		<choose>
 			<when test="searchPart == 'd_name'">
 				AND 
@@ -402,6 +405,8 @@
 			DISEASE 
 		WHERE 
 			D_IS_DELETED = 1 
+		AND 
+			DC.DC_IS_DELETED = 1 
 		<choose>
 			<when test="searchPart == 'd_name'">
 				AND 

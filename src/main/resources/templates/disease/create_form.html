@@ -4,7 +4,7 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
 <head>
-	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 질환 / 질병 정보 관리')}"></th:block>
+	<th:block th:insert="~{fragments/head.html :: head('질환 / 질병 정보 등록')}"></th:block>
 	<script src="/js/api/api_utils.js"></script>
 	<script type="text/javascript">
 		document.addEventListener('DOMContentLoaded', () => {
@@ -12,7 +12,6 @@
 			getOptionList('/disease/cate_info/get_category_list', 'd_category_no', true); // command, element id, isForm
         });
 	</script>
-	<script src="/quillEditor/quillEditor.js"></script>
 </head>
 <body>
 <main class="contents_wrap">
@@ -31,7 +30,7 @@
 				            <p class="sub_title">질환 / 질병 분류 등록</p>
 					    </div>
 					    
-						<form name="disease_reg_form" onsubmit="postDiseaseCategoryCreateForm(event, 'disease_category_reg_form')">					    	
+						<form name="disease_category_reg_form" onsubmit="postDiseaseCategoryCreateForm(event, 'disease_category_reg_form')">					    	
 						    <div class="table_wrap mb_stepGap">
 		                        <table class="content_edit_table">
 		                            <colgroup>
@@ -119,7 +118,7 @@
 		                                	<th><p class="table_title">내용</p></th>
 		                                	<td colspan="3">
 	                                			<div id="editor"></div>
-	                                        </td>
+	                                		</td>
 		                                </tr>
 		                            </tbody>
 		                        </table>
