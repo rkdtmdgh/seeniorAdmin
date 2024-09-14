@@ -12,6 +12,7 @@ public class DiseaseCategoryDto {
 	private int dc_no;
 	private String dc_name;
 	private boolean dc_is_deleted;
+	private int dc_item_cnt;
 	private String dc_reg_date;
 	private String dc_mod_date;
 	

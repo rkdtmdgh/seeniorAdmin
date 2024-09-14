@@ -107,7 +107,6 @@ function validatePhone(input, alertMsg) {
 
 // 데이터 값 유효 확인
 function checkEmpty(input, txt, alertMsg,  notViewMsg = false) { // 요소, 텍스트, alert 여부, 에러메세지 요소 표기 여부(false = 노출, ture = 노출X)
-	logger.info('checkEmpty() input value:', input.value);
 	const errorMessage = txt + " 입력해 주세요.";
 	if(alertMsg) {
 		if(!notViewMsg && !validateInput(input, null, errorMessage)) {

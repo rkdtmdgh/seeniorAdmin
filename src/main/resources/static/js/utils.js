@@ -226,8 +226,8 @@ function setFormValuesFromUrl() {
 	const searchPart = urlParams.get('searchPart') || undefined;
     const searchString = urlParams.get('searchString') || '';
 	const sortType = urlParams.get('sortType') || undefined;
-	const sort = urlParams.get('sort') || undefined;
-	const sortValue = urlParams.get(`${sort}`) || undefined;
+	const sortValue = urlParams.get('sortValue') || undefined;
+	const order = urlParams.get('order') || undefined;
     const page = urlParams.get('page') || 1;
 	
 	// 검색어가 있을 경우 검색 폼 사용으로 새로고침 시 재적용
@@ -236,11 +236,11 @@ function setFormValuesFromUrl() {
 		$sForm.find('input[name="search_string"]').val(searchString);
 	}
 	
-	return { sortType, sort, sortValue, page };
+	return { sortType, sortValue, order, page };
 }
 
 // 페이지 유지를 위한 쿼리 스트링 제어(검색 이력 제거)
-function setListQueryString(sort, sortValue, page) {
+function setListQueryString(sortValue, order, page) {
 	const url = new URL(window.location); // 현재 url
 	const infoNo = url.searchParams.get('infoNo') || undefined; // cateNor가 있을 경우 값 가지고 있기
 	const sortType = url.searchParams.get('sortType') || undefined; // sortType이 있을 경우 값 가지고 있기
@@ -248,14 +248,14 @@ function setListQueryString(sort, sortValue, page) {
 	
 	// 파라미터 추가
 	if(infoNo) url.searchParams.set('infoNo', infoNo); 
-    if (sort) {
+    if (sortValue) {
 		if(sortType) url.searchParams.set('sortType', sortType); 
-		url.searchParams.set('sort', sort); 
-		url.searchParams.set(`${sort}`, sortValue); 
+		url.searchParams.set('sortValue', sortValue); 
+		url.searchParams.set('order', order); 
 		
     } else {
 		// sort 버튼 기본값으로 초기화
-		$('.sort').attr('data-current-sort', 'all');
+		$('.sort').attr('data-current-sort-value', 'all');
 	}
 	
 	url.searchParams.set('page', page);
@@ -277,11 +277,11 @@ function setSearchQueryString(page, searchPart, searchString) {
 }
 
 // 중복 확인 커맨드, 메세지 설정
-function setWordAndCommand(inputName) {
+function setWordAndCommand(value) {
 	let word;
 	let apiUrl;
 	
-	switch(inputName) {
+	switch(value) {
 		case 'dc_name':
 			word = '질환/질병 분류명';
 			apiUrl = '/disease/cate_info/is_disease_category';
@@ -298,19 +298,65 @@ function setWordAndCommand(inputName) {
 			break;
 			
 		default:
-			logger.error('usedInputValueCheck() inputName:', inputName);
+			logger.error('setWordAndCommand() value:', value);
 			return false;
 	}
 	
 	return { word, apiUrl };
 }
 
+// 분류별 리스트 요청 커맨드 설정
+function setSelectCommand(value) {
+	let apiUrl;
+	
+	switch(value) {
+		case 'dc_no': // 질환/질병 정보 리스트 페이지 분류명별 필터
+			apiUrl = '/disease/info/get_disease_list_by_category_with_page';
+			break;
+			
+		default:
+			logger.error('setSelectCommand() value:', value);
+			return false;
+	}
+	
+	return apiUrl;
+}
+
+// 정렬 리스트 요청 커맨드 설정
+function setSortCommand(value) {
+	let apiUrl;
+	
+	switch(value) {
+		case 'a_authorty_role': // 관리자 리스트 페이지 승인 정렬
+			apiUrl = '/account/list/get_admin_list';
+			break;
+			
+		case 'dc_name': // 질환/질병 분류 리스트 페이지 분류명 정렬
+			apiUrl = '/disease/cate_info/get_category_list_with_page';
+			break;
+			
+		case 'd_name': // 질환/질병 정보 리스트 페이지 질환/질병명 정렬
+			apiUrl = '/disease/info/get_all_disease_list_with_page';
+			break;
+			
+		case 'bc_name': // 게시판 관리 페이지 게시판명 정렬
+			apiUrl = '/board/cate_info/get_list';
+			break;
+			
+		default:
+			logger.error('setSortCommand() value:', value);
+			return false;
+	}
+	
+	return apiUrl;
+}
+
 // 삭제 커맨드, 메세지 설정
-function setDelCommand(name) {
+function setDelCommand(value) {
 	let apiUrl;
 	let replace;
 	
-	switch(name) {
+	switch(value) {
 		case 'a_no': // 관리자 계정
 			apiUrl = '/account/list/delete_confirm';
 			replace = '/account/list/admin_list_form';
@@ -337,7 +383,7 @@ function setDelCommand(name) {
 			break;
 			
 		default:
-			logger.error('usedInputValueCheck() inputName:', name);
+			logger.error('setDelCommand() value:', value);
 			return false;
 	}
 	
@@ -447,7 +493,7 @@ function setParseResponseByCommand(command, response) {
 }
 
 // 페이지네이션 생성
-function setPagination(pagingValues, sort, sortValue, command, isSearch) { // 페이징벨류값, 핸들러,  sort, sortValue, 커맨드, isSearch
+function setPagination(pagingValues, sortValue, order, apiUrl, isSearch) { // 페이징벨류값, sortValue, order, 커맨드, isSearch
 	const blockLimit = pagingValues.blockLimit; // 한 블럭에 포함되는 페이지 수
 	const startPage = pagingValues.startPage; // 현재 블럭의 시작 페이지
 	const endPage = pagingValues.endPage; // 현재 블럭의 마지막 페이지
@@ -457,11 +503,11 @@ function setPagination(pagingValues, sort, sortValue, command, isSearch) { // �
 	const currentBlock = Math.ceil(currentPage / blockLimit); // 현재 블록
 	const handlerFunction = isSearch ? 'searchForm' : 'getList';
 	// 검색폼일 경우 event 값 null 적용 검색폼이 아닐 경우 getList 커맨드
-	const params1 = isSearch ? null : `'${command}'`; 
-	// 검색폼일 경우 커맨드 검색폼이 아닐 경우 sort, sortValue 값 입력
-	const isSort = sort ? sort : '';
-	const isSortValue = sortValue ? sortValue : '';
-	const params2 = isSearch ? `'${command}'` : `'${isSort}', '${isSortValue}'`;
+	const params1 = isSearch ? null : `'${apiUrl}'`; 
+	// 검색폼일 경우 커맨드 검색폼이 아닐 경우 sortValue, order 값 입력
+	const isSortValue = sortValue || '';
+	const isOrder = order || '';
+	const params2 = isSearch ? `'${apiUrl}'` : `'${isSortValue}', '${isOrder}'`;
 	let paging = '';
 	
 	if(totalBlocks > 1 && currentBlock > 1) { // 블럭이 1개 이상일 경우 2번째 블럭 부터 노출
@@ -575,7 +621,7 @@ function setDataList(apiUrl, data, index) {
 		                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${data.dc_name}</a>
 		            </td>
 		            <td>
-		                <a href="/disease/info/disease_list_form?sortType=1&sort=dc_no&dc_no=${data.dc_no}" class="table_info">${data.itemCnt}</a>
+		                <a href="/disease/info/disease_list_form?sortType=1&sortValue=dc_no&order=${data.dc_no}" class="table_info">${data.itemCnt}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.dc_reg_date) || 'N/A'}</p>
