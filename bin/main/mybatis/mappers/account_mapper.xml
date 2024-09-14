@@ -183,14 +183,25 @@
 		AND 
 			A_IS_DELETED = 1
 		<choose>
-			<when test="approval == 'all'">
-				ORDER BY A_NO DESC 
+			<when test="sortValue == 'a_no'">
+				<choose>
+					<when test="order == 'asc'">
+						ORDER BY A_NO ASC
+					</when>
+					<when test="order == 'desc'">
+						ORDER BY A_NO DESC
+					</when>
+				</choose>
 			</when>
-			<when test="approval == 'approval'">
-				ORDER BY A_AUTHORITY_ROLE DESC, A_NO DESC 
-			</when>
-			<when test="approval == 'notApproval'">
-				ORDER BY A_AUTHORITY_ROLE ASC, A_NO DESC 
+			<when test="sortValue == 'a_authority_role'">
+				<choose>
+					<when test="order == 'asc'">
+						ORDER BY A_AUTHORITY_ROLE ASC, A_NO DESC
+					</when>
+					<when test="order == 'desc'">
+						ORDER BY A_AUTHORITY_ROLE DESC, A_NO DESC
+					</when>
+				</choose>
 			</when>
 		</choose>
 		LIMIT 
@@ -253,14 +264,25 @@
 			</choose>
 		</if>
 		<choose>
-			<when test="approval == 'all'">
-				ORDER BY A_NO DESC 
+			<when test="sortValue == 'a_no'">
+				<choose>
+					<when test="order == 'asc'">
+						ORDER BY A_NO ASC
+					</when>
+					<when test="order == 'desc'">
+						ORDER BY A_NO DESC
+					</when>
+				</choose>
 			</when>
-			<when test="approval == 'approval'">
-				ORDER BY A_AUTHORITY_ROLE DESC, A_NO DESC 
-			</when>
-			<when test="approval == 'notApproval'">
-				ORDER BY A_AUTHORITY_ROLE ASC, A_NO DESC 
+			<when test="sortValue == 'a_authority_role'">
+				<choose>
+					<when test="order == 'asc'">
+						ORDER BY A_AUTHORITY_ROLE ASC, A_NO DESC
+					</when>
+					<when test="order == 'desc'">
+						ORDER BY A_AUTHORITY_ROLE DESC, A_NO DESC
+					</when>
+				</choose>
 			</when>
 		</choose>
 		LIMIT 
