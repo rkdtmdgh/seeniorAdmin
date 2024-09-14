@@ -8,18 +8,18 @@
 	
 	<script type="text/javascript">
 		document.addEventListener('DOMContentLoaded', () => {
-			const { sortType, sort, sortValue, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
+			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // 검색
 					getSearchList(null, '/qna/info/search_qna_list', page);
 					break;
 
 				case '0':  // 정렬
-					getList('/qna/info/get_all_qna_list_with_page', sort, sortValue, page);
+					getList('/qna/info/get_all_qna_list_with_page', sortValue, order, page);
 					break;
 					
 				default: // 기본
-					getList('/qna/info/get_all_qna_list_with_page', sort, sortValue, page);
+					getList('/qna/info/get_all_qna_list_with_page', sortValue, order, page);
 			}
         });
 	</script>

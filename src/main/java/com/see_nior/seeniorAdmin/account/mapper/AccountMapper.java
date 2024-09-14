@@ -1,6 +1,5 @@
 package com.see_nior.seeniorAdmin.account.mapper;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +22,7 @@ public interface AccountMapper {
 
 	public int updateAdminIsDeletedByNo(int a_no);
 
-	public ArrayList<AdminAccountDto> selectAdminList(Map<String, Object> pagingParams);
+	public List<AdminAccountDto> selectAdminList(Map<String, Object> pagingParams);
 
 	public void updateAdminRoleByNo(int a_no);
 

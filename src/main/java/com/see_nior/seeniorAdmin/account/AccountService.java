@@ -158,7 +158,7 @@ public class AccountService {
 	}
 	
 	// 관리자 리스트 가져오기
-	public Map<String, Object> getAdminPagingList(String approval, int page) {
+	public Map<String, Object> getAdminPagingList(String sortValue, String order, int page) {
 		log.info("getAdminList()");
 		
 		int pagingStart = (page - 1) * pageLimit;	
@@ -168,7 +168,8 @@ public class AccountService {
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
-		pagingParams.put("approval", approval);
+		pagingParams.put("sortValue", sortValue);
+		pagingParams.put("order", order);
 
 		List<AdminAccountDto> adminAccountDtos = accountMapper.selectAdminList(pagingParams);
 		pagingList.put("adminAccountDtos", adminAccountDtos);
@@ -207,7 +208,7 @@ public class AccountService {
 	}
 	
 	// 관리자 검색 리스트 가져오기
-	public Map<String, Object> searchAdminPagingList(String searchPart, String searchString, String approval, int page) {
+	public Map<String, Object> searchAdminPagingList(String searchPart, String searchString, String sortValue, String order, int page) {
 		log.info("searchAdminPagingList()");
 		
 		int pagingStart = (page - 1) * pageLimit;
@@ -217,7 +218,8 @@ public class AccountService {
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
-		pagingParams.put("approval", approval);
+		pagingParams.put("sortValue", sortValue);
+		pagingParams.put("order", order);
 		pagingParams.put("searchPart", searchPart);
 		pagingParams.put("searchString", searchString);
 

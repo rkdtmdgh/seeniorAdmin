@@ -25,6 +25,9 @@ public interface DiseaseMapper {
 	// 카테고리 별 질환의 개수 구하기
 	public int getCategoryItemCnt(int dc_no);
 	
+	// 카테고리 별 질환의 개수 질환 분류 테이블에 update
+	public void updateDiseaseCategoryItemCnt(Map<String, Object> itemCntParam);
+	
 	// 페이지에 따른 질환 카테고리 가져오기
 	public List<DiseaseCategoryDto> getDiseaseCategoryListWithPage(Map<String, Object> pagingParams);
 	
@@ -83,6 +86,7 @@ public interface DiseaseMapper {
 
 	// 질환의 총 리스트 개수 구하기(검색한 질환)
 	public int getSearchDiseaseListCnt(Map<String, Object> pagingParams);
+
 
 
 
