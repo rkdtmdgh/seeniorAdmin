@@ -6,6 +6,11 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('게시판 등록')}"></th:block>
 	<script src="/js/api/api_utils.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			setInputFocus('bc_name');
+        });
+    </script>
 </head>
 <body>
 <main class="contents_wrap">
