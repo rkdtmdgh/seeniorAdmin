@@ -39,15 +39,17 @@ public class VideoController {
 	@GetMapping("/get_video_list")
 	@ResponseBody
 	public Object getVideoList(
-		@RequestParam(value = "d_name", required = false, defaultValue = "all") String d_name,
-		@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+			@RequestParam(value = "sortValue", required = false, defaultValue = "v_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("getVideoList()");
 		
-		Map<String, Object> videoList = videoService.getVideoPagingList(d_name, page);
+		Map<String, Object> videoList = videoService.getVideoPagingList(sortValue, order, page);
 		
 		Map<String, Object> videoListPage = videoService.getVideoListPageNum(page);
 		videoList.put("videoListPage", videoListPage);
-		videoList.put("d_name", d_name);
+		videoList.put("sortValue", sortValue);
+		videoList.put("sortMethod", order);
 		
 		return videoList;
 	

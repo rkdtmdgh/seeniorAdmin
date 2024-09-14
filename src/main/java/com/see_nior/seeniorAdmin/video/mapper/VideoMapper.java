@@ -11,5 +11,7 @@ import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 public interface VideoMapper {
 
 	public List<AdminAccountDto> selectVideoList(Map<String, Object> pagingParams);
+
+	public int selectAllVideoListCnt();
 	
 }

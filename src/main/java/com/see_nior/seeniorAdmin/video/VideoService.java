@@ -26,7 +26,7 @@ public class VideoService {
 	}
 	
 	// 비디오 리스트 가져오기
-	public Map<String, Object> getVideoPagingList(String d_name, int page) {
+	public Map<String, Object> getVideoPagingList(String sortValue, String order, int page) {
 		log.info("getVideoPagingList()");
 		
 		int pagingStart = (page - 1) * pageLimit;	
@@ -36,7 +36,8 @@ public class VideoService {
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
-		pagingParams.put("d_name", d_name);
+		pagingParams.put("sortValue", sortValue);
+		pagingParams.put("order", order);
 
 		List<AdminAccountDto> videoDtos = videoMapper.selectVideoList(pagingParams);
 		pagingList.put("videoDtos", videoDtos);
@@ -48,8 +49,31 @@ public class VideoService {
 	public Map<String, Object> getVideoListPageNum(int page) {
 		log.info("getVideoListPageNum()");
 		
+		Map<String, Object> videoListPageNum = new HashMap<>();
 		
-		return null;
+		// 전체 리스트 개수 조회 
+		int videoListCnt = videoMapper.selectAllVideoListCnt();
+
+		// 전체 페이지 개수 계산
+		int maxPage = (int) (Math.ceil((double) videoListCnt / pageLimit));
+		
+		// 시작 페이지 값 계산
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
+		
+		// 마지막 페이지 값 계산
+		int endPage = startPage + blockLimit - 1;
+		if (endPage > maxPage) endPage = maxPage;
+		
+		videoListPageNum.put("videoListCnt", videoListCnt);
+		videoListPageNum.put("page", page);
+		videoListPageNum.put("maxPage", maxPage);
+		videoListPageNum.put("startPage", startPage);
+		videoListPageNum.put("endPage", endPage);
+		videoListPageNum.put("blockLimit", blockLimit);
+		videoListPageNum.put("pageLimit", pageLimit);
+		
+		return videoListPageNum;
+		
 	}
 	
 }

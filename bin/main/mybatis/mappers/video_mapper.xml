@@ -48,12 +48,45 @@
 			V.V_DISEASE_NO = D.D_NO 
 		WHERE 
 			V.V_IS_DELETED = 1
-		ORDER BY 
-			D_NO DESC
+		<choose>
+			<when test="sortValue == 'v_no'">
+				ORDER BY V.V_NO 
+				<choose>
+					<when test="order == 'asc'">
+						ASC
+					</when>
+					<otherwise>
+						DESC
+					</otherwise>
+				</choose>
+			</when>
+			<when test="sortValue == 'v_disease_no'">
+				ORDER BY V.V_DISEASE_NO 
+				<choose>
+					<when test="order == 'asc'">
+						ASC
+					</when>
+					<otherwise>
+						DESC
+					</otherwise>
+				</choose>
+			</when>
+		</choose>
 		LIMIT 
 			#{start}, #{limit}
 		
-		
+	</select>
+	
+	<select id="selectAllVideoListCnt"
+			resultType="Integer">
+	
+		SELECT 
+			COUNT(V_NO) 
+		FROM 
+			VIDEO 
+		WHERE 
+			V_IS_DELETED = 1
+	
 	</select>
 	
 </mapper>
