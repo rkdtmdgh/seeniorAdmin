@@ -338,7 +338,7 @@ function setSortCommand(value) {
 	let apiUrl;
 	
 	switch(value) {
-		case 'a_authorty_role': // 관리자 리스트 페이지 승인 정렬
+		case 'a_authority_role': // 관리자 리스트 페이지 승인 정렬
 			apiUrl = '/account/list/get_admin_list';
 			break;
 			
