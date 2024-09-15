@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @Log4j2
@@ -98,6 +100,19 @@ public class BoardController {
 		
 		return nextPage;
 	}
+	
+	//게시판 게시물 리스트 양식
+	@GetMapping("/info/posts_list_form")
+	public String postsListForm(@RequestParam("infoNo") int bc_no, Model model) {
+		log.info("postsListForm()");
+		
+		model.addAttribute("infoNo", bc_no);
+		
+		String nextPage = "board/posts_list_form";
+		
+		return nextPage;
+	}
+	
 	
 	
 

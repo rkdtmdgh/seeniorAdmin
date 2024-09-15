@@ -27,7 +27,7 @@ public class BoardService {
 		
 		Map<String, Object> cateDtos = new HashMap<>();
 		
-		List<BoardCategoryDto> boardCategoryDtos = (List<BoardCategoryDto>) boardMapper.getList();
+		List<BoardCategoryDto> boardCategoryDtos = boardMapper.getList();
 		
 		cateDtos.put("boardCategoryDtos", boardCategoryDtos);
 						
