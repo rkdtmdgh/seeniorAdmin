@@ -8,6 +8,9 @@
 	
 	<script type="text/javascript">
 		$(function() {
+			// 타이틀 설정
+			setContentTitle();
+			
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); 
 			switch(sortType) {
 				case '2': // 검색
@@ -44,7 +47,7 @@
 						            <div class="btn_list">
 						            	<div class="btns small" onclick="getList('/board/info/get_all_posts_list_with_page', null, null, 1);">전체보기</div>
 						            	<div class="btns small delete" onclick="delListData('bp_no', true)">삭제</div>
-						            	<div th:onclick="/board/info/create_form?infoNo=[[${infoNo}]]" class="btns small">게시물 등록</div>
+						            	<div th:onclick="/board/info/create_form?bp_category_no=[[${infoNo}]]" class="btns small">게시물 등록</div>
 						            </div>
 					            </div>
 					        </div>

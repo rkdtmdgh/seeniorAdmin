@@ -30,15 +30,20 @@ async function setLoginUserInfoInputValue(name, key) {
 }
 
 // 콘텐츠 타이틀 설정
-async function setContentTitle(infoNo) {
-	const info = await getBoardInfo(infoNo);
+async function setContentTitle() {
+	const url = new URL(window.location); // 현재 url
+	const infoNo = url.searchParams.get('infoNo') || undefined;
 	
-	if(info) {
-		const $title = $('.categoty_title');
-		$title.text(info.boardCategoryDto.bc_name);
+	if(infoNo) {
+		const info = await getBoardInfo(infoNo);
+		
+		if(info) {
+			const $title = $('.categoty_title');
+			$title.text(info.boardCategoryDto.bc_name);
+		}
 		
 	} else {
-		logger.error(`Not found with setContentTitle() info: ${infoNo}`);
+		logger.error('Not found params infoNo');
 	}
 }
 
@@ -77,7 +82,7 @@ function setNavActiveToggle() {
 	const currentQueryParams = new URLSearchParams(window.location.search); // 쿼리 파라미터
 
 	const $navMenuBtns = $('.side_menu_list'); // 모든 nav 메뉴 버튼
-	$navMenuBtns.each(function(index) { // 화살표 함수에는 this가 포함되지 않아 function으로 대체
+	$navMenuBtns.each(function() { // 화살표 함수에는 this가 포함되지 않아 function으로 대체
 		const $navMenu = $(this);
 		const $navMenuBtn = $navMenu.find('.side_menu_btn');
 		const href = $navMenuBtn.attr('href') || null; // 메뉴 버튼의 href
