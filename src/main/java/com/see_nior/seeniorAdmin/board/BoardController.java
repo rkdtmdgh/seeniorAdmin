@@ -113,6 +113,16 @@ public class BoardController {
 		return nextPage;
 	}
 	
+	//특정 게시판 카테고리 정보 가져오기
+	@GetMapping("/info/get_board_info")
+	@ResponseBody
+	public Object getBoardInfo(@RequestParam("infoNo") int bc_no) {
+		log.info("getBoardInfo()");
+				
+		return boardService.getBoardInfo(bc_no);
+	}
+	
+	
 	
 	
 
