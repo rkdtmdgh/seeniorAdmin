@@ -106,6 +106,7 @@ public class BoardService {
 	public Object getBoardInfo(int bc_no) {
 		log.info("getBoardInfo()");
 		
+		//no값으로 dto가져오는 코드 재사용
 		List<BoardCategoryDto> boardCategoryDtos = boardMapper.getBoardCategoryForModify(bc_no);
 		
 		Map<String, Object> boardCategoryDto = new HashMap<>();
