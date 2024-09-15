@@ -7,19 +7,19 @@
 	<th:block th:insert="~{fragments/head.html :: head('게시판')}"></th:block>
 	
 	<script type="text/javascript">
-		document.addEventListener('DOMContentLoaded', () => {
-			const { sortType, sort, sortValue, page } = setFormValuesFromUrl(); 
+		$(function() {
+			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); 
 			switch(sortType) {
 				case '2': // 검색
 					getSearchList(null, '/board/info/search_posts_list', page);
 					break;
 
 				case '0':  // 정렬
-					getList('/board/info/get_all_posts_list_with_page', sort, sortValue, page);
+					getList('/board/info/get_all_posts_list_with_page', sortValue, order, page);
 					break;
 					
 				default: // 기본
-					getList('/board/info/get_all_posts_list_with_page', sort, sortValue, page);
+					getList('/board/info/get_all_posts_list_with_page', null, null, page);
 			}
         });
 	</script>

@@ -8,6 +8,7 @@
 		<result column="dc_no" property="dc_no" />
 		<result column="dc_name" property="dc_name" />		
 		<result column="dc_is_deleted" property="dc_is_deleted" />
+		<result column="dc_item_cnt" property="dc_item_cnt" />
 		<result column="dc_reg_date" property="dc_reg_date" />
 		<result column="dc_mod_date" property="dc_mod_date" />
 	</resultMap>
@@ -81,6 +82,18 @@
 	
 	</select>
 	
+	<!-- 카테고리 별 질환의 개수 질환 분류 테이블에 update -->
+	<update id="updateDiseaseCategoryItemCnt">
+	
+			UPDATE 
+				DISEASE_CATEGORY 
+			SET 
+				DC_ITEM_CNT = #{item_cnt} 
+			WHERE 
+				DC_NO = #{dc_no}
+	
+	</update>
+	
 	<!-- 모든 질환 카테고리 가져오기(페이지네이션 => 질환 카테고리 관리용 => 비동기) -->
 	<select id="getDiseaseCategoryListWithPage">
 	
@@ -91,14 +104,18 @@
 		WHERE 
 			DC_IS_DELETED = 1 
 		<choose>
-			<when test="sort == 'all'">
+			<when test="sortValue == 'all'">
 				ORDER BY DC_NO DESC				
 			</when>
-			<when test="sort == 'asc'">
-				ORDER BY DC_NAME ASC				
-			</when>
-			<when test="sort == 'desc'">
-				ORDER BY DC_NAME DESC				
+			<when test="sortValue == 'dc_name'">
+				<choose>
+					<when test="order == 'asc'">
+						ORDER BY DC_NAME ASC	
+					</when>
+					<when test="order == 'desc'">
+						ORDER BY DC_NAME DESC	
+					</when>
+				</choose>
 			</when>			
 		</choose>
 		LIMIT 
@@ -263,12 +280,16 @@
 			<when test="sort == 'all'">
 				ORDER BY D.D_NO DESC				
 			</when>
-			<when test="sort == 'asc'">
-				ORDER BY D.D_NAME ASC				
-			</when>
-			<when test="sort == 'desc'">
-				ORDER BY D.D_NAME DESC				
-			</when>			
+			<when test="sortValue == 'd_name'">
+				<choose>
+					<when test="order == 'asc'">
+						ORDER BY D_NAME ASC	
+					</when>
+					<when test="order == 'desc'">
+						ORDER BY D_NAME DESC	
+					</when>
+				</choose>
+			</when>					
 		</choose>    
 		LIMIT 
 			#{start}, #{limit}
@@ -322,8 +343,6 @@
 			DISEASE 
 		WHERE 
 			D_IS_DELETED = 1 
-		AND 
-			DC.DC_IS_DELETED = 1 
 		AND 
 			D_CATEGORY_NO = #{dc_no}
 	
@@ -407,8 +426,6 @@
 			DISEASE 
 		WHERE 
 			D_IS_DELETED = 1 
-		AND 
-			DC.DC_IS_DELETED = 1 
 		<choose>
 			<when test="searchPart == 'd_name'">
 				AND 

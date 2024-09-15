@@ -6,6 +6,11 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('게시판 등록')}"></th:block>
 	<script src="/js/api/api_utils.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			setInputFocus('bc_name');
+        });
+    </script>
 </head>
 <body>
 <main class="contents_wrap">
@@ -45,7 +50,7 @@
 	                                        <th><p class="table_title">순번</p></th>
 		                                	<td>
 		                                		<input type="number" name="bc_idx" id="bc_idx" class="table_info" 
-		                                			min="1" th:max="${boardCategoryIdxMaxNum + 1000}" 
+		                                			min="1" th:max="${boardCategoryIdxMaxNum + 1}" 
 		                                			onkeydown="blockEKey(event)"
 		                                			oninput="setReplaceNumber(this)"
 		                                			th:value="${boardCategoryIdxMaxNum + 1}">
@@ -57,7 +62,7 @@
 		                        <div class="btn_list right">
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <div onclick="postBoardCategoryCreateForm(null, 'board_category_reg_form', '/board/cate_info/category_list_form')" class="btns">등록</div>
+	                                    <div onclick="postBoardCategoryCreateForm('board_category_reg_form')" class="btns">등록</div>
 	                                </div>
 	                            </div>
 		                    </div>

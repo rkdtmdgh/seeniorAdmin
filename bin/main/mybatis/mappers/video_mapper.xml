@@ -3,6 +3,90 @@
 
 <mapper namespace="com.see_nior.seeniorAdmin.video.mapper.VideoMapper">
 
+	<resultMap type="DiseaseCategoryDto" id="DiseaseCategoryDto">
+		<result column="dc_no" property="dc_no" />
+		<result column="dc_name" property="dc_name" />		
+		<result column="dc_is_deleted" property="dc_is_deleted" />
+		<result column="dc_reg_date" property="dc_reg_date" />
+		<result column="dc_mod_date" property="dc_mod_date" />
+	</resultMap>
+
+	<resultMap type="DiseaseDto" id="DiseaseDto">
+		<result column="d_no" property="d_no" />
+		<result column="d_category_no" property="d_category_no" />
+		<result column="d_name" property="d_name" />
+		<result column="d_info" property="d_info" />
+		<result column="d_good_food" property="d_good_food" />
+		<result column="d_bad_food" property="d_bad_food" />
+		<result column="d_is_deleted" property="d_is_deleted" />
+		<result column="d_reg_date" property="d_reg_date" />
+		<result column="d_mod_date" property="d_mod_date" />
+		<collection property="diseaseCategoryDto" resultMap="DiseaseCategoryDto" />
+	</resultMap>
+
+	<resultMap type="VideoDto" id="VideoDto">
+		<result column="v_no" property="v_no"/>
+		<result column="v_title" property="v_title"/>
+		<result column="v_text" property="v_text"/>
+		<result column="v_link" property="v_link"/>
+		<result column="v_is_deleted" property="v_is_deleted"/>
+		<result column="v_reg_date" property="v_reg_date"/>
+		<result column="v_mod_date" property="v_mod_date"/>
+		<collection property="DiseaseDto" resultMap="DiseaseDto" />
+	</resultMap>
 	
+	<select id="selectVideoList"
+			resultMap="VideoDto">
+			
+		SELECT 
+			* 
+		FROM 
+			VIDEO V 
+		JOIN 
+			DISEASE D 
+		ON 
+			V.V_DISEASE_NO = D.D_NO 
+		WHERE 
+			V.V_IS_DELETED = 1
+		<choose>
+			<when test="sortValue == 'v_no'">
+				ORDER BY V.V_NO 
+				<choose>
+					<when test="order == 'asc'">
+						ASC
+					</when>
+					<otherwise>
+						DESC
+					</otherwise>
+				</choose>
+			</when>
+			<when test="sortValue == 'v_disease_no'">
+				ORDER BY V.V_DISEASE_NO 
+				<choose>
+					<when test="order == 'asc'">
+						ASC
+					</when>
+					<otherwise>
+						DESC
+					</otherwise>
+				</choose>
+			</when>
+		</choose>
+		LIMIT 
+			#{start}, #{limit}
+		
+	</select>
+	
+	<select id="selectAllVideoListCnt"
+			resultType="Integer">
+	
+		SELECT 
+			COUNT(V_NO) 
+		FROM 
+			VIDEO 
+		WHERE 
+			V_IS_DELETED = 1
+	
+	</select>
 	
 </mapper>

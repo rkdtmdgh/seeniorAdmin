@@ -2,9 +2,13 @@
 <html
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-   
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('게시물 등록')}"></th:block>
+	<script type="text/javascript">
+		$(function() {
+			setLoginUserInfoInputValue('writer_no', 'a_no');
+		});
+	</script>
 </head>
 <body>
 <main class="contents_wrap">
@@ -23,7 +27,7 @@
 				            <p class="sub_title">게시물 등록</p>
 					    </div>
 					    
-						<form name="posts_reg_form" onsubmit="return setFormSendFalse(event)">					    	
+						<form name="posts_reg_form">					    	
 						    <div class="table_wrap mb_stepGap">
 		                        <table class="content_edit_table">
 		                            <colgroup>
@@ -37,7 +41,8 @@
 		                                <tr>
 	                                        <th><p class="table_title">제목</p></th>
 		                                	<td>
-		                                		<input type="text" name="" id="" class="table_info" placeholder="제목"
+		                                		<input type="hidden" name="category_no" th:value="${postsDtos.bc_no}">
+		                                		<input type="text" name="title" id="title" class="table_info" placeholder="제목"
 		                                			onblur="checkEmpty(this, '제목을')">
 	                                        </td>
 	                                        
@@ -57,8 +62,8 @@
 		                                <tr>
 		                                	<th><p class="table_title">작성자</p></th>
 		                                	<td class="disabled">
-		                                		<input type="text" name="" id="" class="table_info" disabled
-		                                			th:value="${authentication.name}">
+		                                		<input type="hidden" name="writer_no">
+	                                			<p class="table_info disabled" th:text="${authentication.name}">로그인 아이디</p>
 	                                        </td>
 		                                </tr>
 		                                
@@ -74,7 +79,7 @@
 		                        <div class="btn_list right">
 	                                <div class="btn_list">
 	                                    <div onclick="history.back();" class="btns cancel">뒤로가기</div>
-	                                    <div onclick="postDiseaseCreateForm('disease_reg_form')" class="btns">등록</div>
+	                                    <div onclick="postPostsCreateForm('posts_reg_form')" class="btns">등록</div>
 	                                </div>
 	                            </div>
 		                    </div>

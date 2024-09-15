@@ -7,19 +7,19 @@
 	<th:block th:insert="~{fragments/head.html :: head('질환 / 질병 분류 관리')}"></th:block>
 	
 	<script type="text/javascript">
-		document.addEventListener('DOMContentLoaded', () => {
-			const { sortType, sort, sortValue, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
+		$(function() {
+			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // 검색
 					getSearchList(null, '/disease/cate_info/search_disease_category_list', page);
 					break;
 					
 				case '0':  // 정렬
-					getList('/disease/cate_info/get_category_list_with_page', sort, sortValue, page);
+					getList('/disease/cate_info/get_category_list_with_page', sortValue, order, page);
 					break;
 					
 				default: // 기본
-					getList('/disease/cate_info/get_category_list_with_page', sort, sortValue, page);
+					getList('/disease/cate_info/get_category_list_with_page', null, null, page);
 			}
         });
 	</script>
@@ -65,8 +65,8 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p data-sort="dc_name" data-current-sort="all" class="table_title sort"
-	                                        	onclick="getSortList(event, '/disease/cate_info/get_category_list_with_page', 'asc', 'desc')">
+	                                        <p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'dc_name')">
 	                                        	분류명
 	                                        	<span class="sort_icon"></span>
 	                                        </p>
