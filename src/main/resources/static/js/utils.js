@@ -19,11 +19,26 @@ function setFormSendFalse(event) {
 // login user info input value set
 async function setLoginUserInfoInputValue(name, key) {
 	const $input = $(`input[name="${name}"]`);
+	
 	if($input) {
 		const loginUserInfo = await getAccountInfo();
 		$input.val(loginUserInfo[key]);
+		
 	} else {
 		logger.error(`No input found with name: ${ele}`);
+	}
+}
+
+// 콘텐츠 타이틀 설정
+async function setContentTitle(infoNo) {
+	const info = await getBoardInfo(infoNo);
+	
+	if(info) {
+		const $title = $('.categoty_title');
+		$title.text(info.boardCategoryDto.bc_name);
+		
+	} else {
+		logger.error(`Not found with setContentTitle() info: ${infoNo}`);
 	}
 }
 
@@ -83,8 +98,8 @@ function setNavActiveToggle() {
 				
 				if (subHrefPath && subHrefPath === currentPath) {
 					// 쿼리 스트링 확인(같은 카테고리에서 구분이 필요할 경우)
-					const subHerfParam = subHrefQueryParams.get('cate');
-					const currentParam = currentQueryParams.get('cate');
+					const subHerfParam = subHrefQueryParams.get('infoNo');
+					const currentParam = currentQueryParams.get('infoNo');
 					
 					if(subHerfParam === currentParam) {
 						$navSubMenu.addClass('on'); // 네비 서브 메뉴 선택
@@ -652,7 +667,7 @@ function setDataList(apiUrl, data, index) {
 		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${data.bc_name}</a>
 		            </td>
 		            <td>
-		                <a href="" class="table_info">${data.itemCnt}</a>
+		                <a href="" class="table_info">${data.bc_item_cnt}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.bc_reg_date) || 'N/A'}</p>
