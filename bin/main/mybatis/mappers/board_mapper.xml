@@ -83,5 +83,6 @@
     		BC_IS_DELETED = 1
     
     </select>
+    
 
 </mapper>

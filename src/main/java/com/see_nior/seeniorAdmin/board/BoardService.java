@@ -101,6 +101,18 @@ public class BoardService {
 						
 		return boardCategoryDtos;
 	}
+	
+	//특정 게시판 카테고리 정보 가져오기
+	public Object getBoardInfo(int bc_no) {
+		log.info("getBoardInfo()");
+		
+		List<BoardCategoryDto> boardCategoryDtos = boardMapper.getBoardCategoryForModify(bc_no);
+		
+		Map<String, Object> boardCategoryDto = new HashMap<>();
+		boardCategoryDto.put("boardCategoryDto", boardCategoryDtos.get(0));				;
+		
+		return boardCategoryDto;
+	}
 
 		
 
