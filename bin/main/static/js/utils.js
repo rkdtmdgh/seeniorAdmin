@@ -30,10 +30,7 @@ async function setLoginUserInfoInputValue(name, key) {
 }
 
 // 콘텐츠 타이틀 설정
-async function setContentTitle() {
-	const url = new URL(window.location); // 현재 url
-	const infoNo = url.searchParams.get('infoNo') || undefined;
-	
+async function setContentTitle(infoNo) {
 	if(infoNo) {
 		const info = await getBoardInfo(infoNo);
 		
@@ -43,7 +40,7 @@ async function setContentTitle() {
 		}
 		
 	} else {
-		logger.error('Not found params infoNo');
+		logger.error('Not found infoNo');
 	}
 }
 
