@@ -266,7 +266,7 @@ async function getSearchList(event, apiUrl, page) {
 	}
 }
 
-// 본인 확인 후 로그인 유저 데이터 요청
+// 로그인 유저 데이터 요청
 async function getAccountInfo(modify=false) {
 	try {
 		const response = await $.ajax({
@@ -286,5 +286,25 @@ async function getAccountInfo(modify=false) {
 	} catch(error) {
 		logger.error('/account/info/get_account_info getAccountInfo() error:', error);
 		throw new error('계정 정보를 불러오는 중 오류가 발생했습니다.');
+	}
+}
+
+// 특정 게시판 데이터 요청
+async function getBoardInfo(infoNo) {
+	try {
+		const response = await $.ajax({
+			url: `/board/info/get_board_info?infoNo=${infoNo}`,
+			method: 'GET',
+		});
+		
+		logger.info(' getBoardInfo() response:', response);
+		
+		if(response) {
+			return response;
+		}
+		
+	} catch(error) {
+		logger.error(' getBoardInfo() error:', error);
+		throw new error('게시판 정보를 불러오는 중 오류가 발생했습니다.');
 	}
 }

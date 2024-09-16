@@ -5,8 +5,9 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('공지 사항 등록')}"></th:block>
 	<script type="text/javascript">
-		$(async function() {
-			await setLoginUserInfoInputValue('bqn_writer_no', 'a_no');
+		$(function() {
+			// 작성자 no 값 설정
+			setLoginUserInfoInputValue('bqn_writer_no', 'a_no');
 		});
 	</script>
 </head>
