@@ -214,6 +214,7 @@ CREATE TABLE BOARD_CATEGORY (
 	BC_NO			INT AUTO_INCREMENT COMMENT "게시판 NO(PK)",						-- 게시판 NO(PK)
 	BC_NAME			VARCHAR(100) NOT NULL UNIQUE COMMENT "게시판 명",					-- 게시판 명
 	BC_IDX			INT COMMENT "게시판 정렬 순서",										-- 게시판 정렬 순서
+    BC_ITEM_CNT 	INT DEFAULT 0 COMMENT "게시물 갯수",								-- 게시판 안에 게시물 갯수
 	BC_IS_DELETED	TINYINT DEFAULT 1 COMMENT "게시판 삭제 여부 (기본값 = 1, 삭제 시 = 0)",	-- 게시판 삭제 여부 (기본값 = 1, 삭제시 = 0)
 	BC_REG_DATE		DATETIME DEFAULT NOW() COMMENT "게시판 등록일",						-- 게시판 등록일
 	BC_MOD_DATE		DATETIME DEFAULT NOW() COMMENT "게시판 수정일",						-- 게시판 수정일
@@ -412,7 +413,8 @@ CREATE TABLE DISEASE_CATEGORY (
 	DC_NO			INT	AUTO_INCREMENT COMMENT "질환 분류 NO(PK)", 						-- 질환 분류 NO(PK)
 	DC_NAME			VARCHAR(100) NOT NULL COMMENT "질환 분류 명",							-- 질환 분류 명
 	DC_IS_DELETED	TINYINT DEFAULT 1 COMMENT "질환 분류 삭제 여부(기본값 = 0, 삭제 시 = 1)",	-- 질환 분류 삭제 여부(기본값 = 0, 삭제 시 = 1)
-	DC_REG_DATE		DATETIME DEFAULT NOW() COMMENT "질환 분류 등록일",						-- 질환 분류 등록일
+	DC_ITEM_CNT		INT DEFAULT 0 COMMENT "질환 분류에 포함된 질환 개수",						-- 질환 분류에 포함된 질환 개수
+    DC_REG_DATE		DATETIME DEFAULT NOW() COMMENT "질환 분류 등록일",						-- 질환 분류 등록일
 	DC_MOD_DATE		DATETIME DEFAULT NOW() COMMENT "질환 분류 수정일",						-- 질환 분류 수정일
     PRIMARY KEY(DC_NO)
 );

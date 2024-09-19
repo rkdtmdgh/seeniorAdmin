@@ -27,7 +27,7 @@ public class BoardService {
 		
 		Map<String, Object> cateDtos = new HashMap<>();
 		
-		List<BoardCategoryDto> boardCategoryDtos = (List<BoardCategoryDto>) boardMapper.getList();
+		List<BoardCategoryDto> boardCategoryDtos = boardMapper.getList();
 		
 		cateDtos.put("boardCategoryDtos", boardCategoryDtos);
 						
@@ -100,6 +100,19 @@ public class BoardService {
 		List<BoardCategoryDto> boardCategoryDtos = boardMapper.getBoardCategoryForModify(bc_no);
 						
 		return boardCategoryDtos;
+	}
+	
+	//특정 게시판 카테고리 정보 가져오기
+	public Object getBoardInfo(int bc_no) {
+		log.info("getBoardInfo()");
+		
+		//no값으로 dto가져오는 코드 재사용
+		List<BoardCategoryDto> boardCategoryDtos = boardMapper.getBoardCategoryForModify(bc_no);
+		
+		Map<String, Object> boardCategoryDto = new HashMap<>();
+		boardCategoryDto.put("boardCategoryDto", boardCategoryDtos.get(0));				;
+		
+		return boardCategoryDto;
 	}
 
 		

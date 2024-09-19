@@ -218,15 +218,17 @@ public class AccountController {
 	@GetMapping("/list/get_admin_list")
 	@ResponseBody
 	public Object getAdminList(
-			@RequestParam(value = "approval", required = false, defaultValue = "all") String approval,
+			@RequestParam(value = "sortValue", required = false, defaultValue = "a_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("getAdminList()");
 		
-		Map<String, Object> adminList = accountService.getAdminPagingList(approval, page);
+		Map<String, Object> adminList = accountService.getAdminPagingList(sortValue, order, page);
 		
 		Map<String, Object> adminListPage = accountService.getAdminListPageNum(page);
 		adminList.put("adminListPage", adminListPage);
-		adminList.put("approval", approval);
+		adminList.put("approval", sortValue);
+		adminList.put("order", order);
 		
 		return adminList;
 	}
@@ -237,17 +239,19 @@ public class AccountController {
 	public Object searchAdminList(
 			@RequestParam("searchPart") String searchPart,
 			@RequestParam("searchString") String searchString,
-			@RequestParam(value = "approval", required = false, defaultValue = "all") String approval,
+			@RequestParam(value = "sortValue", required = false, defaultValue = "a_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("searchAdminList()");
 		
 		Map<String, Object> searchAdminList = 
-				accountService.searchAdminPagingList(searchPart, searchString, approval, page);
+				accountService.searchAdminPagingList(searchPart, searchString, sortValue, order, page);
 		
 		Map<String, Object> searchAdminListPage = 
 				accountService.searchAdminListPageNum(searchPart, searchString, page);
 		searchAdminList.put("searchAdminListPage", searchAdminListPage);
-		searchAdminList.put("approval", approval);
+		searchAdminList.put("approval", sortValue);
+		searchAdminList.put("order", order);
 		searchAdminList.put("searchPart", searchPart);
 		searchAdminList.put("searchString", searchString);
 		

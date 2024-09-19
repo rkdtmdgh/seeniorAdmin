@@ -5,9 +5,11 @@
    
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('게시판')}"></th:block>
-	
-	<script type="text/javascript">
+	<script th:inline="javascript">
 		$(function() {
+			// 타이틀 설정
+			setContentTitle(/*[[${infoNo}]]*/);
+			
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); 
 			switch(sortType) {
 				case '2': // 검색
@@ -19,7 +21,7 @@
 					break;
 					
 				default: // 기본
-					getList('/board/info/get_all_posts_list_with_page', sortValue, order, page);
+					getList('/board/info/get_all_posts_list_with_page', null, null, page);
 			}
         });
 	</script>
@@ -36,7 +38,7 @@
 					<section class="content_info_wrap">
 					    <div class="content_top">
 					        <div class="content_top_info">
-					            <h2 class="title" th:text="${postsDtos.bc_name}">게시판명</h2>
+					            <h2 class="title categoty_title">게시판명</h2>
 					            
 					            <div class="content_top_right">
 									<form name="search_form" onsubmit="getSearchList(event, '/board/info/search_posts_list')" th:insert="~{fragments/search.html :: search('게시판')}"></form>
@@ -44,7 +46,7 @@
 						            <div class="btn_list">
 						            	<div class="btns small" onclick="getList('/board/info/get_all_posts_list_with_page', null, null, 1);">전체보기</div>
 						            	<div class="btns small delete" onclick="delListData('bp_no', true)">삭제</div>
-						            	<div th:onclick="/board/info/create_form?infoNo=[[${postsDtos.infoNo}]]" class="btns small">게시물 등록</div>
+						            	<a th:href="@{'/board/info/create_form?bp_category_no=' + ${infoNo}}" class="btns small">게시물 등록</a>
 						            </div>
 					            </div>
 					        </div>

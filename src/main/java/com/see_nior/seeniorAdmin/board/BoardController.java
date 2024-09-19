@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @Log4j2
@@ -96,6 +98,39 @@ public class BoardController {
 		
 		String nextPage = "board/modify_category_form";
 		
+		return nextPage;
+	}
+	
+	//게시판 게시물 리스트 양식
+	@GetMapping("/info/posts_list_form")
+	public String postsListForm(@RequestParam("infoNo") int bc_no, Model model) {
+		log.info("postsListForm()");
+		
+		model.addAttribute("infoNo", bc_no);
+		
+		String nextPage = "board/posts_list_form";
+		
+		return nextPage;
+	}
+	
+	//특정 게시판 카테고리 정보 가져오기
+	@GetMapping("/info/get_board_info")
+	@ResponseBody
+	public Object getBoardInfo(@RequestParam("infoNo") int bc_no) {
+		log.info("getBoardInfo()");
+				
+		return boardService.getBoardInfo(bc_no);
+	}
+	
+	//게시판 게시물 작성 양식
+	@GetMapping("/info/create_form")
+	public String createForm(@RequestParam("bp_category_no") int bp_category_no, Model model) {
+		log.info("createForm()");
+			
+		model.addAttribute("bp_category_no", bp_category_no);
+			
+		String nextPage = "board/create_form";
+			
 		return nextPage;
 	}
 	

@@ -29,6 +29,34 @@ function setFormSendFalse(event) {
     return false; // 폼 제출 방지
 }
 
+// login user info input value set
+async function setLoginUserInfoInputValue(name, key) {
+	const $input = $(`input[name="${name}"]`);
+	
+	if($input) {
+		const loginUserInfo = await getAccountInfo();
+		$input.val(loginUserInfo[key]);
+		
+	} else {
+		logger.error(`No input found with name: ${ele}`);
+	}
+}
+
+// 콘텐츠 타이틀 설정
+async function setContentTitle(infoNo) {
+	if(infoNo) {
+		const info = await getBoardInfo(infoNo);
+		
+		if(info) {
+			const $title = $('.categoty_title');
+			$title.text(info.boardCategoryDto.bc_name);
+		}
+		
+	} else {
+		logger.error('Not found infoNo');
+	}
+}
+
 // 본인 확인 페이지 세션스토리지 저장 값 확인하여 요청 처리
 function setSessionIdentityCheck(loginUser) {
 	const sessionLogId = sessionStorage.getItem('loginedId') || '';
@@ -85,8 +113,8 @@ function setNavActiveToggle() {
 				
 				if (subHrefPath && subHrefPath === currentPath) {
 					// 쿼리 스트링 확인(같은 카테고리에서 구분이 필요할 경우)
-					const subHerfParam = subHrefQueryParams.get('cate');
-					const currentParam = currentQueryParams.get('cate');
+					const subHerfParam = subHrefQueryParams.get('infoNo');
+					const currentParam = currentQueryParams.get('infoNo');
 					
 					if(subHerfParam === currentParam) {
 						$navSubMenu.addClass('on'); // 네비 서브 메뉴 선택
@@ -179,7 +207,7 @@ function setReplacePhone(input) {
 	return phoneValue;
 }
 
-// input number에 min, max기반 입력값 제어
+// input number에 min, max 기반 입력값 제어
 function setReplaceNumber(input) {
 	const cleanNumberValue = input.value.replace(/[^0-9.]/g, ""); // 문자값이 입력이 되었을 경우 숫자를 제외한 값 제거	
 	const min = parseFloat(input.min); // 예외 적인 오류 사항 대비 후미열에 문자값 입력이 되었을 시 처리가능한 메소드 사용
@@ -323,7 +351,7 @@ function setSortCommand(value) {
 	let apiUrl;
 	
 	switch(value) {
-		case 'a_authorty_role': // 관리자 리스트 페이지 승인 정렬
+		case 'a_authority_role': // 관리자 리스트 페이지 승인 정렬
 			apiUrl = '/account/list/get_admin_list';
 			break;
 			
@@ -617,7 +645,7 @@ function setDataList(apiUrl, data, index) {
 		                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${data.dc_name}</a>
 		            </td>
 		            <td>
-		                <a href="/disease/info/disease_list_form?sortType=1&sortValue=dc_no&order=${data.dc_no}" class="table_info">${data.itemCnt}</a>
+		                <a href="/disease/info/disease_list_form?sortType=1&sortValue=dc_no&order=${data.dc_no}" class="table_info">${data.dc_item_cnt}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.dc_reg_date) || 'N/A'}</p>
@@ -637,7 +665,7 @@ function setDataList(apiUrl, data, index) {
 		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${data.bc_name}</a>
 		            </td>
 		            <td>
-		                <a href="" class="table_info">${data.itemCnt}</a>
+		                <a href="" class="table_info">${data.bc_item_cnt}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.bc_reg_date) || 'N/A'}</p>
@@ -660,7 +688,7 @@ function setDataList(apiUrl, data, index) {
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_title}(댓글 수)</a>
 		            </td>
 		            <td>
-		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_view_cnt}</a>
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_view_cnt}(조회수)</a>
 		            </td>
 					<td>
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">
@@ -691,7 +719,7 @@ function setDataList(apiUrl, data, index) {
 		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_title}(댓글 수)</a>
 		            </td>
 					<td>
-		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_view_cnt}(댓글 수)</a>
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_view_cnt}(조회수)</a>
 		            </td>
 					<td>
 		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_writer_no} 작성자 아이디</a>

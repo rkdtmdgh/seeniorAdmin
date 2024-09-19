@@ -47,6 +47,6 @@ async function getBoardList() {
 }
 
 $(function() {
-	// 게시판 리스트 요청
-	getBoardList(); // 게시판 리스트 요청 후 NAV SET
+	// 게시판 리스트 요청 후 NAV SET
+	getBoardList(); 
 });

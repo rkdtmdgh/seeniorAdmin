@@ -2,12 +2,18 @@
 <html
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-   
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('게시물 등록')}"></th:block>
-	<script type="text/javascript">
+	<script th:inline="javascript">
 		$(function() {
-			setLoginUserInfoInputValue("writer_no", a_no);
+			// 타이틀 설정
+			setContentTitle(/*[[${bp_category_no}]]*/);
+			
+			// 작성자 no 값 설정
+			setLoginUserInfoInputValue('writer_no', 'a_no');
+			
+			// 포커스 설정
+			setInputFocus('title');
 		});
 	</script>
 </head>
@@ -23,7 +29,7 @@
 					<section class="content_info_wrap">
 						<div class="content_top">
 					        <div class="content_top_info">
-					            <h2 class="title" th:text="${postsDtos.bc_name}">게시판명</h2>
+					            <h2 class="title categoty_title">게시판명</h2>
 					        </div>
 				            <p class="sub_title">게시물 등록</p>
 					    </div>
@@ -42,7 +48,7 @@
 		                                <tr>
 	                                        <th><p class="table_title">제목</p></th>
 		                                	<td>
-		                                		<input type="hidden" name="category_no" th:value="${postsDtos.bc_no}">
+		                                		<input type="hidden" name="category_no" th:value="${bp_category_no}">
 		                                		<input type="text" name="title" id="title" class="table_info" placeholder="제목"
 		                                			onblur="checkEmpty(this, '제목을')">
 	                                        </td>
@@ -64,7 +70,7 @@
 		                                	<th><p class="table_title">작성자</p></th>
 		                                	<td class="disabled">
 		                                		<input type="hidden" name="writer_no">
-	                                			<p class="table_info disabled" th:text="${authentication.name}">작성자 아이디</p>
+	                                			<input type="text" class="table_info" th:value="${#authentication.name}" disabled>
 	                                        </td>
 		                                </tr>
 		                                

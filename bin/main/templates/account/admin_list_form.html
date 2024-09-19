@@ -18,7 +18,7 @@
 					break;
 					
 				default:  // 기본
-					getList('/account/list/get_admin_list', sortValue, order, page);
+					getList('/account/list/get_admin_list', null, null, page);
 			}
         });
 	</script>
@@ -70,7 +70,7 @@
 	                                    
 	                                    <th>
 	                                        <p data-current-sort-value="all" class="table_title sort"
-	                                        	onclick="getSortList(event, 'a_authorty_role')">
+	                                        	onclick="getSortList(event, 'a_authority_role')">
 	                                        	관리자 승인
 	                                        	<span class="sort_icon"></span>
 	                                        </p>

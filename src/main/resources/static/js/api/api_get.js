@@ -113,12 +113,12 @@ function getSelectList(event) {
 
 // 콘텐츠 정렬 셀렉트 옵션 리스트 요청
 async function getOptionList(apiUrl, ele, isForm, selectedValue) {
-	const selectEle = document.getElementById(ele); // 셀렉트 요소가 생성될 table th
+	const $selectEle = $(`#${ele}`); // 셀렉트 요소가 생성될 table th
 	let getListDtos;
 	let dataNo;
 	let dataName;
 	
-	if(selectEle) {
+	if($selectEle.length > 0) {
 		try {
 			const response = await $.ajax({
 				url: apiUrl,
@@ -146,16 +146,16 @@ async function getOptionList(apiUrl, ele, isForm, selectedValue) {
 						let option = `<option value="${data[dataNo]}" ${selected}>${data[dataName]}</option>`;
 						
 						if(selected) {
-							selectEle.insertAdjacentHTML('afterbegin', option);
+							$selectEle[0].insertAdjacentHTML('afterbegin', option);
 							
 						} else {
-							selectEle.insertAdjacentHTML('beforeend', option);
+							$selectEle[0].insertAdjacentHTML('beforeend', option);
 						}
 					});
 					
 				} else {
 					const ceateSelect = `<ul data-sort-value="${dataNo}" class="select_option_list sc"></ul>`;
-			        selectEle.insertAdjacentHTML('beforeend', ceateSelect);
+			        $selectEle[0].insertAdjacentHTML('beforeend', ceateSelect);
 			        const $selectOptionlist = $('ul.select_option_list');
 					
 					getListDtos.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
@@ -165,7 +165,7 @@ async function getOptionList(apiUrl, ele, isForm, selectedValue) {
 				}
 				
 			} else {
-				selectEle.classList.remove('select');
+				$selectEle.removeClass('select');
 			}
 			
 		} catch(error) {
@@ -266,7 +266,7 @@ async function getSearchList(event, apiUrl, page) {
 	}
 }
 
-// 본인 확인 후 로그인 유저 데이터 요청
+// 로그인 유저 데이터 요청
 async function getAccountInfo(modify=false) {
 	try {
 		const response = await $.ajax({
@@ -286,5 +286,25 @@ async function getAccountInfo(modify=false) {
 	} catch(error) {
 		logger.error('/account/info/get_account_info getAccountInfo() error:', error);
 		throw new error('계정 정보를 불러오는 중 오류가 발생했습니다.');
+	}
+}
+
+// 특정 게시판 데이터 요청
+async function getBoardInfo(infoNo) {
+	try {
+		const response = await $.ajax({
+			url: `/board/info/get_board_info?infoNo=${infoNo}`,
+			method: 'GET',
+		});
+		
+		logger.info(' getBoardInfo() response:', response);
+		
+		if(response) {
+			return response;
+		}
+		
+	} catch(error) {
+		logger.error(' getBoardInfo() error:', error);
+		throw new error('게시판 정보를 불러오는 중 오류가 발생했습니다.');
 	}
 }

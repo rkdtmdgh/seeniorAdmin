@@ -36,7 +36,7 @@ $(document).ready(function() {
 		});
 	}
 
-	// 이미지 드롭 이벤트 핸들러 등록
+	// 파일 드롭 이벤트 핸들러 등록
 	$(quill.root).on('drop', function(event) {
 		event.preventDefault();
 		const file = event.originalEvent.dataTransfer.files[0]; // jQuery 객체로 감싸졌을 경우 직접 dataTransfer가 접근되지 않을 수 있음(originalEvent 사용)
@@ -45,7 +45,7 @@ $(document).ready(function() {
 		}
 	});
 
-	// 이미지 업로드 함수
+	// 파일 업로드 함수
 	async function uploadImage(file) {
 		if (!quill) {
 			return;
@@ -58,12 +58,13 @@ $(document).ready(function() {
 		}
 		
 		const formData = new FormData();
-		formData.append('uploadFile', file);
+		formData.append('file', file);
 
 		try {
 			const response = await $.ajax({
-				url: '/quillEditor/upimg_ok',
+				url: '/upload/upload_file',
 				method: 'POST',
+				enctype: 'multipart/form-data',
 				data: formData,
 				processData: false,  // FormData가 자동으로 Content-Type 설정
 				contentType: false,  // FormData를 문자열로 변환하지 않음
