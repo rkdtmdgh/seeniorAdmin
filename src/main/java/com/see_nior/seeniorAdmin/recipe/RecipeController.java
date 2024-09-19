@@ -75,7 +75,7 @@ public class RecipeController {
 	
 	// 요리 종류에 따른 식단 가져오기(페이지네이션)
 	@ResponseBody
-	@GetMapping("info/get_recipe_list_by_part_with_page")
+	@GetMapping("info/get_recipe_list_by_category_with_page")
 	public String getRecipeListByPartWithPage(@RequestParam String param) {
 		
 		
