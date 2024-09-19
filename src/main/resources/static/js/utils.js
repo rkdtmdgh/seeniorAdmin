@@ -9,16 +9,16 @@ function setInputFocus(ele) {
 	}
 }
 
-// input value set
+// login user info input value set
 async function setLoginUserInfoInputValue(name, key) {
-	const loginUserInfo = await getAccountInfo();
 	const $input = $(`input[name="${name}"]`);
 	
 	if($input.length > 0) {
+		const loginUserInfo = await getAccountInfo();
 		$input.val(loginUserInfo[key]);
 		
 	} else {
-		logger.error(`Input with name "${name}" not found`);	
+		logger.error(`No input found with name: ${name}`);
 	}
 }
 
@@ -27,19 +27,6 @@ async function setLoginUserInfoInputValue(name, key) {
 function setFormSendFalse(event) {
 	event.preventDefault(); // 폼의 기본 제출 동작 방지
     return false; // 폼 제출 방지
-}
-
-// login user info input value set
-async function setLoginUserInfoInputValue(name, key) {
-	const $input = $(`input[name="${name}"]`);
-	
-	if($input) {
-		const loginUserInfo = await getAccountInfo();
-		$input.val(loginUserInfo[key]);
-		
-	} else {
-		logger.error(`No input found with name: ${ele}`);
-	}
 }
 
 // 콘텐츠 타이틀 설정
