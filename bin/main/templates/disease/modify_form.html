@@ -6,10 +6,11 @@
     <th:block th:insert="~{fragments/head.html :: head('질환 / 질병 정보 수정')}"></th:block>
     <script src="/js/api/api_utils.js"></script>
     <script th:inline="javascript">
-        $(function() {
+		$(function() {
             // DISEASE_CATEGORY 가져오기
             const selectedCategory = /*[[${diseaseDto.d_category_no}]]*/ // 기본값 설정
-            logger.info('disease/modify_form selectedCategory:', selectedCategory);
+
+         	// 분류 리스트 가져오기
             getOptionList('/disease/cate_info/get_category_list', 'd_category_no', true, selectedCategory); // apiUrl, element id, isForm, 현재 선택된 카테고리
         });
     </script>
