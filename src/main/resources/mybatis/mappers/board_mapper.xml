@@ -84,7 +84,7 @@
     
     </select>
     
-    <select id="selectCountBoardPosts" parameterType="int" resultType="int">
+    <select id="selectCountBoardPostsByBcNo" parameterType="int" resultType="int">
     	
     	SELECT 
     		COUNT(*) 

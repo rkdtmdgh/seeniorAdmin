@@ -21,7 +21,7 @@ public interface BoardMapper {
 
 	List<BoardCategoryDto> getBoardCategoryForModify(int bc_no);
 
-	int selectCountBoardPosts(int bc_no);
+	int selectCountBoardPostsByBcNo(int bc_no);
 
 	int updateBoardCategoryForBcItemCntByBcNo(int bc_no, int bc_item_cnt);
 	
