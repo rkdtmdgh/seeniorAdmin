@@ -84,5 +84,26 @@
     
     </select>
     
+    <select id="selectCountBoardPostsByBcNo" parameterType="int" resultType="int">
+    	
+    	SELECT 
+    		COUNT(*) 
+    	FROM 
+    		BOARD_POSTS 
+    	WHERE 
+    		BP_CATEGORY_NO = #{bc_no} 
+    	AND 
+    		BP_IS_DELETED = 1
+    	
+    </select>
+    
+    <update id="updateBoardCategoryForBcItemCntByBcNo" parameterType="int" >
+    	UPDATE 
+    		BOARD_CATEGORY 
+    	SET 
+    		BC_ITEM_CNT = #{bc_item_cnt} 
+    	WHERE 
+    		BC_NO = #{bc_no}
+    </update>
 
 </mapper>
