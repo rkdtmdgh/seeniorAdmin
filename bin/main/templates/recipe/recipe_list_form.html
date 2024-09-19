@@ -1,12 +1,104 @@
 <!DOCTYPE html>
-<html>
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+	<th:block th:insert="~{fragments/head.html :: head('식단 정보 관리')}"></th:block>
+	<script type="text/javascript">
+		$(function() {
+			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
+			switch(sortType) {
+				case '2': // 검색
+					getSearchList(null, '/recipe/info/search_recipe_list', page);
+					break;
+
+				case '1': // 카테고리 셀렉트
+					getList('/recipe/info/get_recipe_list_by_category_with_page', sortValue, order, page);
+					break;
+
+				case '0':  // 정렬
+					getList('/recipe/info/get_all_recipe_list_with_page', sortValue, order, page);
+					break;
+					
+				default: // 기본
+					getList('/recipe/info/get_all_recipe_list_with_page', null, null, page);
+			}
+
+			// recipe_CATEGORY 가져오기
+			getOptionList('rcp_pat2'); // element id, isForm, selectedValue
+        });
+	</script>
 </head>
+
 <body>
-
-레시피 리스트 폼
-
+	<main class="contents_wrap">
+		<header th:replace="~{fragments/header.html :: header}"></header>
+	
+		<article class="contents_container">
+			<nav th:replace="~{fragments/nav.html :: nav}"></nav>
+			
+			<div class="content">
+                <div class="content_inner sc">
+					<section class="content_info_wrap">
+					    <div class="content_top">
+					        <div class="content_top_info">
+					            <h2 class="title">식단 정보 관리</h2>
+					            
+					            <div class="content_top_right">
+									<form name="search_form" onsubmit="getSearchList(event, '/recipe/info/search_recipe_list')" th:insert="~{fragments/search.html :: search('식단 정보 관리')}"></form>
+						            
+						            <div class="btn_list">
+						            	<div class="btns small" onclick="getList('/recipe/info/get_all_recipe_list_with_page', null, null, 1);">전체보기</div>
+						            	<div onclick="postRecipeUpdate(this)" class="btns small">정보 업데이트</div>
+						            </div>
+					            </div>
+					        </div>
+					    </div>
+					    
+					    <div class="table_wrap">
+	                        <table class="content_table recipe_list_table">
+	                            <colgroup>
+	                                <col class="col_no">
+	                                <col>
+	                                <col>
+	                                <col>
+	                            </colgroup>
+	
+	                            <thead>
+	                                <tr>
+	                                    <th>
+	                                        <p class="table_title">No</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <div class="table_title select" id="rcp_pat2" onclick="setSelectOptionTopggle(event)">분류명</div>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'rcp_nm')">
+	                                        	메뉴명
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
+	                                    </th>
+	                                    <th>
+	                                        <p class="table_title">등록일</p>
+	                                    </th>
+	                                </tr>
+	                            </thead>
+	
+	                            <tbody>
+	                                <!-- 리스트 테이블 -->
+	                            </tbody>
+	                        </table>
+	                        
+	                        <div class="pagination_wrap"></div>
+	                    </div>
+					</section>
+                </div>
+            </div>
+		</article>
+	</main>
 </body>
 </html>

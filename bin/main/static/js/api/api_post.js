@@ -105,6 +105,36 @@ async function postIdentityCheckForm(event, formName) {
 	}
 }
 
+// 식단 정보 업데이트
+async function postRecipeUpdate(ele) {
+	const isConfirm = confirm('업데이트는 약 10~30초 정도가 소요됩니다. 업데이트하시겠습니까?');
+	if(!isConfirm) return false;
+	
+	$(ele).css('pointer-events', 'none'); // 버튼 비활성화(중복 클릭 방지)
+	setAddLoading(ele); // 로딩 표시
+	
+	try {
+		const response = await $.ajax({
+			url: '/recipe/info/refresh_api_recipe_data',
+		});
+		
+		logger.info('postRecipeUpdate() response:', response);	
+		
+		if(response) {
+			alert('최신 정보로 업데이트하였습니다.');
+			
+		} else {
+			alert('최신 정보 업데이트에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
+		}
+		
+	} catch(error) {
+		logger.error('postRecipeUpdate() error:', error);
+		
+	} finally {
+		location.reload(true);
+	}
+}
+
 // post ajax 요청
 async function postSubmitForm(apiUrl, formData, successMessage, errorMessage, redirectUrl = null) {
 	for (const [key, value] of formData.entries()) {

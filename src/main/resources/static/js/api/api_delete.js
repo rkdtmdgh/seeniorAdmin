@@ -3,9 +3,7 @@ async function delSingleData(key, noValue, dataName) {
 	logger.info('deleteAccount()', key, noValue, dataName);
 	
 	const isConfirm = confirm(`${dataName} 을(를) 삭제하시겠습니까?`);
-	if(!isConfirm) {
-		return false;	
-	}
+	if(!isConfirm) return false;
 	
 	const { apiUrl, replace } = setDelCommand(key); // 커맨드와 경로 설정
 	const errorMessage = `${dataName} 삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;

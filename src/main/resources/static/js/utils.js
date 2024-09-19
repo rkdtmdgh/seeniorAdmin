@@ -9,6 +9,12 @@ function setInputFocus(ele) {
 	}
 }
 
+// loading set
+function setAddLoading(ele) {
+	const $loadingElement = $('<span class="loading_wrap"></span>');
+	$(ele).append($loadingElement); // 클릭된 버튼에 로딩 요소 추가
+}
+
 // login user info input value set
 async function setLoginUserInfoInputValue(name, key) {
 	const $input = $(`input[name="${name}"]`);
@@ -316,8 +322,39 @@ function setWordAndCommand(value) {
 	return { word, apiUrl };
 }
 
+// 분류 리스트 요청 커맨드 설정
+function setSelectCategoryCommand(value) {
+	let apiUrl;
+	let getListDtos;
+	let dataNo;
+	let dataName;
+	
+	switch(value) {
+		case 'dc_name':
+		case 'd_category_no':
+			apiUrl = '/disease/cate_info/get_category_list';
+			getListDtos = 'diseaseCategoryDto';
+			dataNo = 'dc_no';
+			dataName = 'dc_name';
+			break;
+			
+		case 'rcp_pat2':
+			apiUrl = '/recipe/info/get_all_recipe_list_with_page';
+			getListDtos = 'recipeDtos';
+			dataNo = 'rcp_pat2';
+			dataName = 'rcp_pat2';
+			break;
+		
+		default:
+			logger.error('setSelectCategoryCommand() value:', value);
+			return false;
+	}
+	
+	return { apiUrl, getListDtos, dataNo, dataName };
+}
+
 // 분류별 리스트 요청 커맨드 설정
-function setSelectCommand(value) {
+function setSelectGetListCommand(value) {
 	let apiUrl;
 	
 	switch(value) {
@@ -348,6 +385,10 @@ function setSortCommand(value) {
 			
 		case 'd_name': // 질환/질병 정보 리스트 페이지 질환/질병명 정렬
 			apiUrl = '/disease/info/get_all_disease_list_with_page';
+			break;
+			
+		case 'rcp_nm': // 식단 정보 리스트 페이지 메뉴명 정렬
+			apiUrl = '/recipe/info/get_all_recipe_list_with_page';
 			break;
 			
 		case 'bc_name': // 게시판 관리 페이지 게시판명 정렬
@@ -448,6 +489,24 @@ function setParseResponseByCommand(apiUrl, response) {
 			getListDtos = response.diseaseCategoryDtos;
 			getListPage = response.searchDiseaseCategoryListPageNum;
 			getListCnt = response.searchDiseaseCategoryListPageNum.searchDiseaseCategoryListCnt;
+			break;
+			
+		case '/recipe/info/get_all_recipe_list_with_page': // 식단 정보 관리
+			getListDtos = response.recipeDtos;
+			getListPage = response.recipeListPageNum;
+			getListCnt = response.recipeListPageNum.recipeListCnt;
+			break;
+			
+		case '/recipe/info/search_recipe_list': // 식단 정보 관리 검색
+			getListDtos = response.recipeDtos;
+			getListPage = response.searchRecipeListPageNum;
+			getListCnt = response.searchRecipeListPageNum.searchRecipeListCnt;
+			break;	
+			
+		case '/recipe/info/get_recipe_list_by_category_with_page': // 식단 정보 관리 분류별 데이터
+			getListDtos = response.recipeDtos;
+			getListPage = response.recipeListByCategoryPageNum;
+			getListCnt = response.recipeListByCategoryPageNum.recipeListCnt;
 			break;
 			
 		case '/board/cate_info/get_list': // 게시판 관리
@@ -597,9 +656,9 @@ function setDataList(apiUrl, data, index) {
 			`;
 			break;
 			
-		case '/disease/info/get_all_disease_list_with_page': // 질환/질병 관리 리스트 테이블
-		case '/disease/info/search_disease_list':            // 질환/질병 관리 검색 리스트 테이블
-		case '/disease/info/get_disease_list_by_category_with_page': // 질환/질병 관리 분류선택 리스트 테이블
+		case '/disease/info/get_all_disease_list_with_page': // 질환/질병 정보 관리 리스트 테이블
+		case '/disease/info/search_disease_list':            // 질환/질병 정보 관리 검색 리스트 테이블
+		case '/disease/info/get_disease_list_by_category_with_page': // 질환/질병 정보 관리 분류선택 리스트 테이블
 			innerContent = `
 				<tr>
 		            <td class="vam">
@@ -636,6 +695,27 @@ function setDataList(apiUrl, data, index) {
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.dc_reg_date) || 'N/A'}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/recipe/info/get_all_recipe_list_with_page': // 식단 정보 관리 리스트 테이블
+		case '/recipe/info/search_recipe_list':            // 식단 정보 관리 검색 리스트 테이블
+		case '/recipe/info/get_recipe_list_by_category_with_page': // 식단 정보 관리 분류선택 리스트 테이블
+			innerContent = `
+				<tr>
+		            <td>
+		                <a href="/recipe/info/detail_form?rcp_seq=${data.rcp_seq}" class="table_info">${index}</a>
+		            </td>
+		            <td>
+		                <a href="/recipe/info/detail_form?rcp_seq=${data.rcp_seq}" class="table_info">${data.rcp_pat2}</a>
+		            </td>
+		            <td>
+		                <a href="/recipe/info/detail_form?rcp_seq=${data.rcp_seq}" class="table_info">${data.rcp_nm || 'N/A'}</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.rcp_reg_date) || 'N/A'}</p>
 		            </td>
 		        </tr>
 			`;
