@@ -316,8 +316,39 @@ function setWordAndCommand(value) {
 	return { word, apiUrl };
 }
 
+// 분류 리스트 요청 커맨드 설정
+function setSelectCategoryCommand(value) {
+	let apiUrl;
+	let getListDtos;
+	let dataNo;
+	let dataName;
+	
+	switch(value) {
+		case 'dc_name':
+		case 'd_category_no':
+			apiUrl = '/disease/cate_info/get_category_list';
+			getListDtos = 'diseaseCategoryDto';
+			dataNo = 'dc_no';
+			dataName = 'dc_name';
+			break;
+			
+		case 'rcp_pat2':
+			apiUrl = '/recipe/info/get_category_list';
+			getListDtos = 'recipeCategoryDto';
+			dataNo = 'rcp_pat2';
+			dataName = 'rcp_pat2';
+			break;
+		
+		default:
+			logger.error('setSelectCategoryCommand() value:', value);
+			return false;
+	}
+	
+	return { apiUrl, getListDtos, dataNo, dataName };
+}
+
 // 분류별 리스트 요청 커맨드 설정
-function setSelectCommand(value) {
+function setSelectGetListCommand(value) {
 	let apiUrl;
 	
 	switch(value) {
@@ -348,6 +379,10 @@ function setSortCommand(value) {
 			
 		case 'd_name': // 질환/질병 정보 리스트 페이지 질환/질병명 정렬
 			apiUrl = '/disease/info/get_all_disease_list_with_page';
+			break;
+			
+		case 'rcp_nm': // 식단 정보 리스트 페이지 메뉴명 정렬
+			apiUrl = '/recipe/info/get_all_recipe_list_with_page';
 			break;
 			
 		case 'bc_name': // 게시판 관리 페이지 게시판명 정렬

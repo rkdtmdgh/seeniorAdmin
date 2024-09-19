@@ -2,6 +2,7 @@
 <html
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('게시물 등록')}"></th:block>
 	<script th:inline="javascript">
@@ -17,6 +18,7 @@
 		});
 	</script>
 </head>
+
 <body>
 <main class="contents_wrap">
 		<header th:replace="~{fragments/header.html :: header}"></header>
