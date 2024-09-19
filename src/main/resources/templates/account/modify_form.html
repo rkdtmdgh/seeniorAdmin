@@ -7,14 +7,14 @@
 	<th:block th:insert="~{fragments/head.html :: head('내 정보 관리')}"></th:block>
 	<link rel="stylesheet" href="/css/account/sign_form.css">
 	<script th:inline="javascript">
-		$(async function() {
+		$(function() {
 			// 세션 만료 확인
 			if(!setSessionIdentityCheck(/*[[${#authentication.name}]]*/)) { // 만료
 				setIdentityCheckForm(); // 본인 확인 폼 SET
 				setInputFocus('a_pw');
 				
 			} else {
-				await getAccountInfo(true); // 정보 수정 폼 SET
+				getAccountInfo(true); // 정보 수정 폼 SET
 			}
         });
     </script>

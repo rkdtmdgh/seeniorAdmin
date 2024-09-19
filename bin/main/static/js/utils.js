@@ -9,24 +9,24 @@ function setInputFocus(ele) {
 	}
 }
 
+// login user info input value set
+async function setLoginUserInfoInputValue(name, key) {
+	const $input = $(`input[name="${name}"]`);
+	
+	if($input.length > 0) {
+		const loginUserInfo = await getAccountInfo();
+		$input.val(loginUserInfo[key]);
+		
+	} else {
+		logger.error(`No input found with name: ${name}`);
+	}
+}
+
 // submit 이벤트 막기(form 에서 enter키 입력 되지 않고 버튼으로 submit만 가능하도록)
 // 예외 사항으로 form 내부에 disabled 되어 있는 인풋이 있는 경우에는 사용하지 않아도 됨
 function setFormSendFalse(event) {
 	event.preventDefault(); // 폼의 기본 제출 동작 방지
     return false; // 폼 제출 방지
-}
-
-// login user info input value set
-async function setLoginUserInfoInputValue(name, key) {
-	const $input = $(`input[name="${name}"]`);
-	
-	if($input) {
-		const loginUserInfo = await getAccountInfo();
-		$input.val(loginUserInfo[key]);
-		
-	} else {
-		logger.error(`No input found with name: ${ele}`);
-	}
 }
 
 // 콘텐츠 타이틀 설정
@@ -127,7 +127,7 @@ function setNavActiveToggle() {
 }
 
 // all_check 체크박스 초기화
-function  setAllcheck() {
+function setAllcheck() {
 	const $allCheckBox = $('input[type="checkbox"][name="all_check"]');
 	if($allCheckBox && $allCheckBox.prop('checked')) $allCheckBox.prop('checked', false);
 }
@@ -220,23 +220,6 @@ function blockEKey(event) {
         event.preventDefault(); // 기본 동작 차단
     }
 }
-
-// 숫자만 입력 가능하도록 변환 및 YYYY-MM-DD 형식으로 변환
-//function setReplaceBirth(input) {
-//    let birthValue = input.value.replace(/[^0-9]/g, ""); // 입력 값에서 숫자 이외의 모든 문자를 제거
-//
-//    // 자동으로 하이픈 삽입: 5번째와 8번째 자리에 삽입
-//    if (birthValue.length > 4) {
-//        birthValue = birthValue.slice(0, 4) + '-' + birthValue.slice(4);
-//    }
-    
-//    if (birthValue.length > 7) {
-//        birthValue = birthValue.slice(0, 7) + '-' + birthValue.slice(7);
-//    }
-
-//    input.value = birthValue;
-//    return birthValue;
-//}
 
 // 날짜 포맷팅
 function setFormatDate(dateString) { // yyyy-mm-dd 형식
@@ -419,12 +402,12 @@ function setDelCommand(value) {
 }
 
 // 카테고리에 맞도록 객체 선택 
-function setParseResponseByCommand(command, response) {
+function setParseResponseByCommand(apiUrl, response) {
 	let getListDtos;
 	let getListPage;
 	let getListCnt;
 	
-	switch(command) {
+	switch(apiUrl) {
 		case '/account/list/get_admin_list': // 관리자 계정 관리
 			getListDtos = response.adminAccountDtos;
 			getListPage = response.adminListPage;
