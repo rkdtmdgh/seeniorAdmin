@@ -29,7 +29,7 @@
 					<section class="content_info_wrap">
 						<div class="content_top">
 					        <div class="content_top_info">
-					            <h2 class="title categoty_title">게시판명</h2>
+					            <h2 class="title categoty_title"></h2>
 					        </div>
 				            <p class="sub_title">게시물 등록</p>
 					    </div>
@@ -68,7 +68,7 @@
 		                                
 		                                <tr>
 		                                	<th><p class="table_title">작성자</p></th>
-		                                	<td class="disabled">
+		                                	<td colspan="3" class="disabled">
 		                                		<input type="hidden" name="writer_no">
 	                                			<input type="text" class="table_info" th:value="${#authentication.name}" disabled>
 	                                        </td>

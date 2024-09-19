@@ -46,7 +46,7 @@
 						            <div class="btn_list">
 						            	<div class="btns small" onclick="getList('/board/info/get_all_posts_list_with_page', null, null, 1);">전체보기</div>
 						            	<div class="btns small delete" onclick="delListData('bp_no', true)">삭제</div>
-						            	<a th:href="@{'/board/info/create_form?bp_category_no=' + ${infoNo}}" class="btns small">게시물 등록</a>
+						            	<a th:href="@{'/board/info/create_form?infoNo=' + ${infoNo}}" class="btns small">게시물 등록</a>
 						            </div>
 					            </div>
 					        </div>

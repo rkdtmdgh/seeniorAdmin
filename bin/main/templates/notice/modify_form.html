@@ -44,7 +44,7 @@
 	                                        <th><p class="table_title">작성자</p></th>
 		                                	<td class="disabled">
 		                                		<input type="hidden" name="n_writer_no" th:value="${noticeDto.n_writer_no}">
-	                                			<p class="table_info disabled" th:value="${authentication.name}">로그인 아이디</p>	
+	                                			<input type="text" class="table_info disabled" th:value="${authentication.name}" disabled>	
 	                                        </td>
 		                                </tr>
 		                                
