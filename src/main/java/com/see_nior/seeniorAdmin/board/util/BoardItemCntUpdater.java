@@ -17,13 +17,13 @@ final private BoardMapper boardMapper;
 	}
 	
 	//BOARD_POSTS 테이블에서 bc_no값으로 게시판에 게시물 갯수 가져오기
-	public int selectCountBoardPosts(int bc_no) {
-		log.info("selectCountBoardPosts()");
+	public int selectCountBoardPostsByBcNo(int bc_no) {
+		log.info("selectCountBoardPostsByBcNo()");
 		
-		int bc_item_cnt = boardMapper.selectCountBoardPosts(bc_no);
+		int bc_item_cnt = boardMapper.selectCountBoardPostsByBcNo(bc_no);
 		
 		if(bc_item_cnt < 0) {
-			log.info("selectCountBoardPosts() Error!!");
+			log.info("selectCountBoardPostsByBcNo() Error!!");
 			bc_item_cnt = -1;
 		}
 		
