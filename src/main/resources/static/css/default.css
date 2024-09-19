@@ -136,6 +136,7 @@
     background-color: var(--primaryColor);
     border: 1px solid var(--primaryColor);
     border-radius: var(--bdrs);
+    position: relative;
     cursor: pointer;
     transition: background-color var(--transition), border-color var(--transition), color var(--transition);
 
@@ -229,6 +230,7 @@
                 border-radius: var(--bdrs);
                 box-shadow: var(--bxsh);
                 background-color: var(--subBgColor);
+                position: relative;
             }
         }
     }
@@ -477,8 +479,9 @@
 	
     .num {
     	font-size: var(--subFontSize);
-        width: var(--iconsWidth);
+        min-width: var(--iconsWidth);
         height: var(--iconsWidth);
+        padding: var(--ssize1);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -492,8 +495,9 @@
 
     .current {
     	font-size: var(--subFontSize);
-        width: var(--iconsWidth);
+        min-width: var(--iconsWidth);
         height: var(--iconsWidth);
+ 	    padding: var(--ssize1);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -545,4 +549,37 @@
             stroke: var(--primaryColor);
         }
     }
+}
+
+/* loading */
+.loading_wrap {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+   	width: 100%;
+   	height: 100%;
+   	background-color: var(--whiteColor);
+   	border-radius: var(--bdrs);
+   	position: absolute;
+   	top: 0;
+   	left: 0;
+   	z-index: 1;
+   	
+   	&::after {
+   		content: '';
+   		width: var(--iconsWidth);
+   		height: var(--iconsWidth);
+   		background: url(/image/icons/loading.png) center no-repeat;
+   		background-size: var(--iconsWidth);
+   		animation: rotateAnimation 0.8s steps(8) infinite;
+   	}
+}
+
+@keyframes rotateAnimation {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
 }
