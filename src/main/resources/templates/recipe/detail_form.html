@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	
+<head>
+    <th:block th:insert="~{fragments/head.html :: head('식단 정보 관리')}"></th:block>
+</head>
+
+<body>
+	<main class="contents_wrap">
+	    <header th:replace="~{fragments/header.html :: header}"></header>
+	
+	    <article class="contents_container">
+	        <nav th:replace="~{fragments/nav.html :: nav}"></nav>
+	
+	        <div class="content">
+	            <div class="content_inner sc">
+	                <section class="content_info_wrap">
+	                    <div class="content_top">
+	                        <div class="content_top_info">
+	                            <h2 class="title">식단 정보 관리</h2>
+	                        </div>
+	                        <p class="sub_title">식단 정보</p>
+	                    </div>
+	
+                        <div class="table_wrap">
+                            <table class="content_edit_table">
+                                <colgroup>
+                                    <col class="col_row_title">
+                                    <col>
+                                    <col class="col_row_title">
+                                    <col>
+                                </colgroup>
+
+                                <tbody>
+	                                <tr>
+	                                    <th><p class="table_title">분류</p></th>
+	                                    <td>
+	                                    	<p class="table_info" th:text="${recipeDto.rcp_pat2}"></p>
+	                                    </td>
+	
+										<th><p class="table_title">조리 방법</p></th>
+	                                    <td>
+	                                    	<p class="table_info" th:text="${recipeDto.rcp_way2}"></p>
+	                                    </td>
+	                                </tr>
+	
+	                                <tr>
+	                                    <th><p class="table_title">메뉴명</p></th>
+	                                    <td>
+	                                        <p class="table_info" th:text="${recipeDto.rcp_nm}"></p>
+	                                    </td>
+	                                </tr>
+	                                
+	                                <tr>
+	                                    <th><p class="table_title">영양정보</p></th>
+	                                    <td colspan="3">
+	                                        <p class="table_info" th:text="
+	                                        		'중량(' + ${recipeDto.info_wgt} + '),
+	                                        		열량(' + ${recipeDto.info_eng} + '),
+	                                        		탄수화물(' + ${recipeDto.info_car} + '),
+	                                        		단백질(' + ${recipeDto.info_pro} + '),
+	                                        		지방(' + ${recipeDto.info_fat} + '),
+	                                        		나트륨(' + ${recipeDto.info_na} + ')'
+	                                        	">
+	                                        </p>
+	                                    </td>
+	                                </tr>
+	                                
+	                                <tr th:if="${recipeDto.hash_tag}">
+	                                    <th><p class="table_title">주요 재료</p></th>
+	                                    <td colspan="3">
+	                                        <p class="table_info" th:text="${recipeDto.hash_tag}"></p>
+	                                    </td>
+	                                </tr>
+                                
+                                	<tr>
+	                                    <th><p class="table_title">정보</p></th>
+	                                    <td colspan="3" class="ta_c">
+	                                        <img th:if="${recipeDto.att_file_no_mk}" th:src="${recipeDto.att_file_no_mk}" alt="음식 사진">
+	                                        <p th:if="${recipeDto.rcp_parts_dtls}" th:text="${recipeDto.rcp_parts_dtls}"></p>
+	                                        
+	                                    </td>
+	                                </tr>
+                                </tbody>
+                            </table>
+                        		 
+                            <div class="btn_list right">
+                                <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
+                            </div>
+                        </div>
+	                </section>
+	            </div>
+	        </div>
+	    </article>
+	</main>
+</body>
+</html>

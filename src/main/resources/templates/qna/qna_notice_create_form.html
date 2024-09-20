@@ -2,6 +2,7 @@
 <html
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('공지 사항 등록')}"></th:block>
 	<script type="text/javascript">
@@ -11,6 +12,7 @@
 		});
 	</script>
 </head>
+
 <body>
 <main class="contents_wrap">
 		<header th:replace="~{fragments/header.html :: header}"></header>
@@ -49,7 +51,7 @@
 	                                        <th><p class="table_title">작성자</p></th>
 		                                	<td class="disabled">
 		                                		<input type="hidden" name="bqn_writer_no">
-		                                		<input type="text" class="table_info disabled" th:value="${#authentication.name}">
+		                                		<input type="text" class="table_info disabled" th:value="${#authentication.name}" disabled>
 	                                        </td>
 		                                </tr>
 		                                

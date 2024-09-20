@@ -25,7 +25,7 @@ public class RecipeController {
 	
 	// 기존 레시피 테이블 삭제 후 테이블 생성 후 API 데이터 DB에 저장하기
 	@ResponseBody
-	@GetMapping("/refresh_api_recipe_data")
+	@GetMapping("info/refresh_api_recipe_data")
 	public String refreshApiRecipeData() throws Exception {
 		log.info("refreshApiRecipeData()");
 		
@@ -42,11 +42,11 @@ public class RecipeController {
 	}
 	
 	// 식단 리스트 양식
-	@GetMapping("/recipe_list")
-	public String recipeList() {
+	@GetMapping("info/recipe_list_form")
+	public String recipeListForm() {
 		log.info("recipeList()");
 		
-		String nextPage = "recipe/recipe_list";
+		String nextPage = "recipe/recipe_list_form";
 		
 		return nextPage;
 		
@@ -54,7 +54,7 @@ public class RecipeController {
 	
 	// 모든 식단 가져오기 (페이지네이션)
 	@ResponseBody
-	@GetMapping("/get_all_recipe_list_with_page")
+	@GetMapping("info/get_all_recipe_list_with_page")
 	public Object getAllRecipeListWithPage(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "sort", required = false, defaultValue = "all") String sort) {
@@ -75,8 +75,8 @@ public class RecipeController {
 	
 	// 요리 종류에 따른 식단 가져오기(페이지네이션)
 	@ResponseBody
-	@GetMapping("/get_recipe_list_by_part_with_page")
-	public String getRecipeListByPartWithPage(@RequestParam String param) {
+	@GetMapping("info/get_recipe_list_by_category_with_page")
+	public String getRecipeListByCategoryWithPage(@RequestParam String param) {
 		
 		
 		return null;

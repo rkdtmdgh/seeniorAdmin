@@ -97,7 +97,7 @@ function getSelectList(event) {
 	const sortBtn = event.target; // 클릭된 버튼 요소
 	const sortValue = sortBtn.parentElement.getAttribute('data-sort-value'); // 정렬 종류 가져오기
 	const order = sortBtn.getAttribute('data-order'); // 정렬할 값
-	const apiUrl = setSelectCommand(sortValue);
+	const apiUrl = setSelectGetListCommand(sortValue);
 	
 	logger.info('getSelectList() apiUrl:', apiUrl);
 	logger.info('getSelectList() sortValue:', sortValue);
@@ -112,11 +112,9 @@ function getSelectList(event) {
 }
 
 // 콘텐츠 정렬 셀렉트 옵션 리스트 요청
-async function getOptionList(apiUrl, ele, isForm, selectedValue) {
+async function getOptionList(ele, isForm, selectedValue) {
 	const $selectEle = $(`#${ele}`); // 셀렉트 요소가 생성될 table th
-	let getListDtos;
-	let dataNo;
-	let dataName;
+	const { apiUrl, getListDtos, dataNo, dataName } = setSelectCategoryCommand(ele);
 	
 	if($selectEle.length > 0) {
 		try {
@@ -125,23 +123,12 @@ async function getOptionList(apiUrl, ele, isForm, selectedValue) {
 				method: 'GET',
 			});
 			
-			switch(apiUrl) {
-				case '/disease/cate_info/get_category_list': // 질환 / 질병 정보 관리 분류명 정렬
-					getListDtos = response.diseaseCategoryDto;
-					dataNo = 'dc_no';
-					dataName = 'dc_name';
-					break;
-				
-				default:
-					logger.error('Unknown API URL:', apiUrl);
-					return;
-			}
+			const categoryDto = response[getListDtos];
+			logger.info(`${apiUrl} categoryDto:`, categoryDto);
 			
-			logger.info(`${apiUrl} getListDtos:`, getListDtos);
-			
-			if(getListDtos && getListDtos.length > 0) {
+			if(categoryDto && categoryDto.length > 0) {
 				if(isForm) {
-					getListDtos.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
+					categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
 						let selected = selectedValue ? data[dataNo] === selectedValue ? 'selected' : '' : '';
 						let option = `<option value="${data[dataNo]}" ${selected}>${data[dataName]}</option>`;
 						
@@ -158,7 +145,7 @@ async function getOptionList(apiUrl, ele, isForm, selectedValue) {
 			        $selectEle[0].insertAdjacentHTML('beforeend', ceateSelect);
 			        const $selectOptionlist = $('ul.select_option_list');
 					
-					getListDtos.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
+					categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
 						let option = `<li data-order="${data[dataNo]}" class="option" onclick="getSelectList(event);">${data[dataName]}</li>`;
 						$selectOptionlist[0].insertAdjacentHTML('beforeend', option);
 					});

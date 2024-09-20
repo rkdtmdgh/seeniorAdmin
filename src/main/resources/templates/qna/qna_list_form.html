@@ -5,7 +5,6 @@
    
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('질문과 답변')}"></th:block>
-	
 	<script type="text/javascript">
 		$(function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
@@ -24,6 +23,7 @@
         });
 	</script>
 </head>
+
 <body>
 	<main class="contents_wrap">
 		<header th:replace="~{fragments/header.html :: header}"></header>

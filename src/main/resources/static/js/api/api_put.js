@@ -51,9 +51,7 @@ async function putModifyForm(formName) {
 	input = form.a_pw;
 	if(input.value.trim().length > 0) {
 		const isConfirm = confirm('비밀번호를 변경하시겠습니까?\n변경하지 않을 경우 입력한 값을 삭제 후 다시 저장해 주세요.');
-		if(!isConfirm) {
-			return false;	
-		}
+		if(!isConfirm) return false;	
 		
 		if(!validatePw(input, true)) { 
 			input.focus();
@@ -129,9 +127,7 @@ async function putResetPassword(a_no, a_id) {
 	logger.info('putResetPassword():', a_no, a_id);
 	
 	const isConfirm = confirm(`${a_id} 계정 비밀번호를 초기화하시겠습니까?`);
-	if(!isConfirm) {
-		return false;	
-	}
+	if(!isConfirm) return false;	
 		
 	const formData = new FormData();
 	formData.append('a_no', a_no);
