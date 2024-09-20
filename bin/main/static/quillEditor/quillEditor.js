@@ -1,5 +1,8 @@
+// 전역 변수로 선언
+let quill;
+
 $(document).ready(function() {
-	const quill = new Quill('#editor', {
+	quill = new Quill('#editor', {
 		modules: {
 			toolbar: [
 				[
@@ -59,12 +62,31 @@ $(document).ready(function() {
 	}
 
 	// Blob Url 생성하여 미리보기 처리 
+	//function previewImage(file) {
+	//	const blobUrl = URL.createObjectURL(file); // 실제 파일 Blob을 포함한 Blob Url 생성	
+	//	logger.info(`Inserting image with Blob URL: ${blobUrl}`);
+	//	
+	//	const range = quill.getSelection(); // 현재 커서 위치
+	//	quill.clipboard.dangerouslyPasteHTML(range ? range.index : 0, `<img src="${blobUrl}" alt="image">`);
+	//}
+	
+	// Base64 URL 생성하여 미리보기 처리 
 	function previewImage(file) {
-		const blobUrl = URL.createObjectURL(file); // 실제 파일 Blob을 포함한 Blob Url 생성	
-		logger.info(`Inserting image with Blob URL: ${blobUrl}`);
-		
-		const range = quill.getSelection(); // 현재 커서 위치
-		quill.clipboard.dangerouslyPasteHTML(range ? range.index : 0, `<img src="${blobUrl}" alt="image">`);
+	    const reader = new FileReader(); // FileReader 객체 생성
+	    
+	    reader.readAsDataURL(file); // 파일을 Base64 데이터 URL로 읽기
+	    
+	    reader.onload = function(event) {
+	        const base64Url = event.target.result; // Base64 문자열을 가져옴
+	        logger.info(`Inserting image with Base64 URL: ${base64Url}`);
+	        
+	        const range = quill.getSelection(); // 현재 커서 위치
+	        quill.clipboard.dangerouslyPasteHTML(range ? range.index : 0, `<img src="${base64Url}" alt="image">`);
+	    };
+	    
+	    reader.onerror = function(error) {
+	        logger.error('Error reading file:', error);
+	    };
 	}
 	
 	// 이미지 리사이즈(리사이즈 시간 소요로 인한 비동기 처리 / 사용하는 곳에서 await 처리)
