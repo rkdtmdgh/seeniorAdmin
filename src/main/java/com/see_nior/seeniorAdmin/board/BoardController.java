@@ -124,7 +124,7 @@ public class BoardController {
 	
 	//게시판 게시물 작성 양식
 	@GetMapping("/info/create_form")
-	public String createForm(@RequestParam("bp_category_no") int bp_category_no, Model model) {
+	public String createForm(@RequestParam("infoNo") int bp_category_no, Model model) {
 		log.info("createForm()");
 			
 		model.addAttribute("bp_category_no", bp_category_no);
