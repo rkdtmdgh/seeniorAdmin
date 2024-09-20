@@ -26,6 +26,17 @@
 	border: none;
 }
 
+.ql-snow .ql-picker.ql-header {
+	.ql-picker-label {
+		text-align: left;
+		padding-left: 0;
+	}
+}
+
+.ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-label {
+	border: none;
+}
+
 .ql-editor {
 	min-height: var(--tableTextareaHeight);
 	max-height: calc(var(--tableTextareaHeight) * 1.5);

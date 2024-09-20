@@ -60,48 +60,52 @@ $(document).ready(function() {
 
 	// Blob Url 생성하여 미리보기 처리 
 	function previewImage(file) {
-		const blobUrl = URL.createObjectURL(file); // 실제 파일 Blob을 포함한 Blob Url 생성
+		const blobUrl = URL.createObjectURL(file); // 실제 파일 Blob을 포함한 Blob Url 생성	
+		logger.info(`Inserting image with Blob URL: ${blobUrl}`);
+		
 		const range = quill.getSelection(); // 현재 커서 위치
-		quill.clipboard.insertEmbed(range ? range.index : 0, `<img src="${blobUrl}" alt="image">`);
+		quill.clipboard.dangerouslyPasteHTML(range ? range.index : 0, `<img src="${blobUrl}" alt="image">`);
 	}
 	
 	// 이미지 리사이즈(리사이즈 시간 소요로 인한 비동기 처리 / 사용하는 곳에서 await 처리)
 	async function resizeImage(blob, targetWidth, quality = 0.8) {
 	    return new Promise((resolve, reject) => {
-	        // jQuery를 사용하여 img 요소를 생성
-	        const $img = $('<img>')[0]; // jQuery에서 HTML 요소를 가져오기 위해 [0]으로 DOM 요소로 변환
-	        const reader = new FileReader();
+	        const $img = $('<img>')[0]; // img 태그 생성
+	        
+	        // blob을 url로 변환하면 src에 입력
+	        const blobURL = URL.createObjectURL(blob); 
+	        $img.src = blobURL;
 	
-	        // 파일을 읽어서 이미지 객체로 만듦
-	        reader.onload = function(event) {
-	            $img.src = event.target.result; // 읽은 데이터 URL을 img의 src 속성에 설정
-	            
-	            // 이미지가 로드되면 리사이즈 시작
-	            $img.onload = function() {
-	                const canvas = document.createElement('canvas'); // 새로운 캔버스 요소 생성
-	                const ctx = canvas.getContext('2d'); // 2D 컨텍스트 가져오기
+            // 이미지가 로드되면 리사이즈 시작
+            $img.onload = function() {
+                const $canvas = $('<canvas>')[0]; // 새로운 캔버스 요소 생성
+                const ctx = $canvas.getContext('2d'); // 2D 컨텍스트 가져오기
+
+                // 비율에 맞게 새로운 크기 설정
+                const scaleFactor = targetWidth / $img.width; // 크기 비율 계산
+                const targetHeight = $img.height * scaleFactor;
+                
+                $canvas.width = targetWidth; // 타겟 너비 설정
+            	$canvas.height = targetHeight; // 타겟 높이 설정
+
+                // 이미지를 캔버스에 그려서 리사이즈된 이미지로 복사본 생성
+                ctx.drawImage($img, 0, 0, targetWidth, targetHeight); // 이미지를 캔버스에 그림(이미지 소스, x축, y축, 이미지 너비, 이미지 높이)
+                
+                // Blob으로 변환
+                $canvas.toBlob((resizedBlob) => {
+                    if (resizedBlob) {
+                        resolve(resizedBlob); // Blob을 성공적으로 반환
+                        
+                    } else {
+                        reject(new Error("Blob 생성에 실패했습니다.")); // Blob 생성 실패 시 에러 반환
+                    }
+                    
+               		URL.revokeObjectURL(blobURL); // Blob URL을 브라우저 메모리에서 해제
+                
+                }, 'image/wepb', quality); // jpeg보다 높은 압축률, 손실, 무손실, 투명, 애니메이션 지원으로 wepb으로 변환
+            };
 	
-	                // 비율에 맞게 새로운 크기 설정
-	                const scaleFactor = targetWidth / $img.width; // 크기 비율 계산
-	                canvas.width = targetWidth; // 타겟 너비 설정
-	                canvas.height = $img.height * scaleFactor; // 타겟 높이 설정
-	
-	                // 이미지를 캔버스에 그린 후 Blob으로 변환
-	                ctx.drawImage($img, 0, 0, canvas.width, canvas.height); // 이미지를 캔버스에 그림
-	                canvas.toBlob((blob) => {
-	                    // Blob을 반환 (퀄리티 설정 가능)
-	                    if (blob) {
-	                        resolve(blob); // Blob을 성공적으로 반환
-	                    } else {
-	                        reject(new Error("Blob 생성에 실패했습니다.")); // Blob 생성 실패 시 에러 반환
-	                    }
-	                }, 'image/jpeg', quality); // MIME 타입과 퀄리티 설정
-	            };
-	        };
-	
-	        // 파일을 읽는 과정에서 에러 발생 시 reject
-	        reader.onerror = reject;
-	        reader.readAsArrayBuffer(blob); // 파일을 base64 데이터 URL로 읽기
+	        $img.onerror = reject; // 파일을 읽는 과정에서 에러 발생 시 reject
 	    });
 	}
 
