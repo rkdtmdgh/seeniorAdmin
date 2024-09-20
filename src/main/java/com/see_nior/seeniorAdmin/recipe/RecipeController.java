@@ -26,19 +26,13 @@ public class RecipeController {
 	// 기존 레시피 테이블 삭제 후 테이블 생성 후 API 데이터 DB에 저장하기
 	@ResponseBody
 	@GetMapping("info/refresh_api_recipe_data")
-	public String refreshApiRecipeData() throws Exception {
+	public boolean refreshApiRecipeData() throws Exception {
 		log.info("refreshApiRecipeData()");
 		
-		try {
-			recipeService.refreshApiRecipeData();
-			return "레시피 API를 최신 정보로 업데이트 하는데 성공하였습니다.";
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "레시피 API를 최신 정보로 업데이트 하는데 실패하였습니다.";
-		}
+		boolean refreshApiRecipeData = recipeService.refreshApiRecipeData();
 		
+		return refreshApiRecipeData;	
+			
 	}
 	
 	// 식단 리스트 양식
@@ -52,34 +46,51 @@ public class RecipeController {
 		
 	}
 	
+	// 모든 식단 분류 가져오기 (식단 리스트에서 <select>박스 => 비동기)
+	@ResponseBody
+	@GetMapping("cate_info/get_category_list")
+	public Object getCategorylist() {
+		log.info("getCategoryList()");
+		
+		Map<String, Object> recipeCategoryDtos = recipeService.getCategoryList();
+		
+		return recipeCategoryDtos;
+	}
+	
 	// 모든 식단 가져오기 (페이지네이션)
 	@ResponseBody
 	@GetMapping("info/get_all_recipe_list_with_page")
 	public Object getAllRecipeListWithPage(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-			@RequestParam(value = "sort", required = false, defaultValue = "all") String sort) {
+			@RequestParam(value = "sortValue", required = false, defaultValue = "all") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "all") String order) {
 		log.info("getAllRecipeListWithPage()");
 		
 		// 페이지 번호에 따른 식단 리스트들 가져오기
-		Map<String, Object> recipeListWithPage = recipeService.getRecipeListWithPage(page, sort);
+		Map<String, Object> recipeListWithPage = recipeService.getRecipeListWithPage(page, sortValue, order);
 		
 		// 식단 총 페이지 개수 가져오기
 		Map<String, Object> recipeListPageNum = recipeService.getRecipeListPageNum(page);
 		
 		recipeListWithPage.put("recipeListPageNum", recipeListPageNum);
-		recipeListWithPage.put("sort", sort);
+		recipeListWithPage.put("sortValue", sortValue);
+		recipeListWithPage.put("order", order);
 		
 		return recipeListWithPage;
 		
 	}
 	
-	// 요리 종류에 따른 식단 가져오기(페이지네이션)
+	// 카테고리에 따른 식단 가져오기(페이지네이션)
 	@ResponseBody
 	@GetMapping("info/get_recipe_list_by_category_with_page")
-	public String getRecipeListByCategoryWithPage(@RequestParam String param) {
-		
+	public String getRecipeListByCategoryWithPage(
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+			@RequestParam(value = "sortValue", required = false, defaultValue = "all") String SortValue,
+			@RequestParam(value = "order") int rcp_pat2) {
+		log.info("getRecipeListByCategoryWithPage()");
 		
 		return null;
+		
 	}
 	
 	
