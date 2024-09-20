@@ -105,7 +105,7 @@ function validatePhone(input, alertMsg) {
 	return isValid; 
 }
 
-// 데이터 값 유효 확인
+// 데이터 유효값 확인
 function checkEmpty(input, txt, alertMsg,  notViewMsg = false) { // 요소, 텍스트, alert 여부, 에러메세지 요소 표기 여부(false = 노출, ture = 노출X)
 	const errorMessage = txt + " 입력해 주세요.";
 	if(alertMsg) {
@@ -125,4 +125,18 @@ function checkEmpty(input, txt, alertMsg,  notViewMsg = false) { // 요소, 텍�
 	} else {
 		return validateInput(input, null, errorMessage); // 정규 표현식 대신 값의 길이만 확인
 	}
+}
+
+// quill 에디터 유효값 확인
+function checkQuillEmpty(content) {
+	const emptyTagPattern = /<p><br><\/p>/g; // quill 에디터에서 빈값일 경우 기본값
+	const trimmedContent = content.replace(emptyTagPattern, "").trim(); // 빈 태그 패턴을 제거한 결과 값
+	const isValid = trimmedContent !== "";
+	
+	if(!isValid) {
+		alert('내용을 입력해 주세요.');
+		return false;
+	}
+	
+	return true;
 }

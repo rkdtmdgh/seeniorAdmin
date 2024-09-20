@@ -135,6 +135,70 @@ async function postRecipeUpdate(ele) {
 	}
 }
 
+// 게시물 등록 폼
+async function postPostsCreateForm(formName) {
+	const form = document.forms[formName];
+	
+	input = form.title;
+	if(!checkEmpty(input, '제목을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(!checkQuillEmpty(quill.root.innerHTML)) {
+		quill.focus();
+		return false;
+	}
+	
+	const notice = form.notice.value; // 1=공지, 0=일반
+	const prefix = notice == 1 ? 'bn_' : 'bp_';
+	const apiUrl = notice == 1 ? '/board/info/create_notice_confirm' : '/board/info/create_confirm';
+	const successMessage = `"${title.value.trim()}" ${notice == 1 ? '공지' : '일반'} 게시물이 등록되었습니다.`;
+	const errorMessage = `"${title.value.trim()}" ${notice == 1 ? '공지' : '일반'} 게시물 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	const formData = new FormData();
+	formData.append(`${prefix}category_no`, category_no.value);
+	formData.append(`${prefix}title`, title.value.trim());
+	formData.append(`${prefix}writer_no`, writer_no.value);
+	formData.append(`${prefix}body`, quill.root.innerHTML);
+	
+	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
+	for(let img of $imgTags) {
+		const blobUrl = $(img)[0].src; // src 속성에 입력된 Blob Url 가져오기
+		const blobUrlData = await fetch(blobUrl); // Blob Url을 통해 실제 Blob 데이터 요청
+		const blob = await blobUrlData.blob(); // Blob 객체로 변환
+		const resizedBlob = await resizeImage(blob, $(img)[0].width); // 설정된 width 크기로 리사이즈 및 압축
+		formData.append('images', resizedBlob);
+	}
+	
+	try {
+		const response = await $.ajax({
+			url: apiUrl,
+			method: 'POST',
+			enctype: 'multipart/form-data',
+			data: formData,
+			processData: false,  // FormData가 자동으로 Content-Type 설정
+			contentType: false,  // FormData를 문자열로 변환하지 않음
+		});
+		
+		logger.info('postPostsCreateForm() response:', response);
+		
+		if(response) {
+			alert(successMessage);
+			location.replace('/board/info/posts_list_form')
+			
+		} else {
+			alert(errorMessage);
+			location.reload(true);
+		}
+		
+	} catch(error) {
+		logger.error(`${apiUrl} postPostsCreateForm() form submit error:`, error);
+		alert(errorMessage);
+		location.reload(true);
+	}
+}
+
 // post ajax 요청
 async function postSubmitForm(apiUrl, formData, successMessage, errorMessage, redirectUrl = null) {
 	for (const [key, value] of formData.entries()) {
@@ -267,31 +331,6 @@ async function postBoardCategoryCreateForm(formName) {
 		successMessage, 
 		errorMessage, 
 		'/board/cate_info/category_list_form'
-	);
-}
-
-// 게시물 등록 폼
-async function postPostsCreateForm(formName) {
-	const form = document.forms[formName];
-	const notice = form.notice.value; // 1=공지, 0=일반
-	const prefix = notice == 1 ? 'bn_' : 'bp_';
-	const apiUrl = notice == 1 ? '/board/info/create_notice_confirm' : '/board/info/create_confirm';
-	
-	const formData = new FormData();
-	formData.append(`${prefix}category_no`, category_no.value);
-	formData.append(`${prefix}title`, title.value.trim());
-	formData.append(`${prefix}writer_no`, writer_no.value);
-	formData.append(`${prefix}body`, quill.root.innerHTML);
-	
-	const successMessage = `"${title.value.trim()}" ${notice == 1 ? '공지' : '일반'} 게시물이 등록되었습니다.`;
-	const errorMessage = `"${title.value.trim()}" ${notice == 1 ? '공지' : '일반'} 게시물 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
-	
-	await postSubmitForm(
-		apiUrl, 
-		formData, 
-		successMessage, 
-		errorMessage, 
-		'/board/info/posts_list_form'
 	);
 }
 
