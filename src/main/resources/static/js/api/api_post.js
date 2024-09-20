@@ -138,6 +138,18 @@ async function postRecipeUpdate(ele) {
 // 게시물 등록 폼
 async function postPostsCreateForm(formName) {
 	const form = document.forms[formName];
+	
+	input = form.title;
+	if(!checkEmpty(input, '제목을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(!checkQuillEmpty(quill.root.innerHTML)) {
+		quill.focus();
+		return false;
+	}
+	
 	const notice = form.notice.value; // 1=공지, 0=일반
 	const prefix = notice == 1 ? 'bn_' : 'bp_';
 	const apiUrl = notice == 1 ? '/board/info/create_notice_confirm' : '/board/info/create_confirm';
