@@ -3,10 +3,13 @@ package com.see_nior.seeniorAdmin.recipe;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.see_nior.seeniorAdmin.dto.RecipeDto;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -83,16 +86,74 @@ public class RecipeController {
 	// 카테고리에 따른 식단 가져오기(페이지네이션)
 	@ResponseBody
 	@GetMapping("info/get_recipe_list_by_category_with_page")
-	public String getRecipeListByCategoryWithPage(
+	public Object getRecipeListByCategoryWithPage(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-			@RequestParam(value = "sortValue", required = false, defaultValue = "all") String SortValue,
-			@RequestParam(value = "order") int rcp_pat2) {
+			@RequestParam(value = "sortValue", required = false, defaultValue = "all") String sortValue,
+			@RequestParam(value = "order") String rcp_pat2) {
 		log.info("getRecipeListByCategoryWithPage()");
 		
-		return null;
+		// 페이지 번호에 따른 카테고리별 식단 리스트들 가져오기
+		Map<String, Object> recipeListByCategoryWithPage = recipeService.getRecipeListByCategoryWithPage(page, rcp_pat2);
+		
+		// 카테고리별 식단 총 페이지 개수 가져오기
+		Map<String, Object> recipeListByCategoryPageNum = recipeService.getRecipeListByCategoryPageNum(page, rcp_pat2);
+		
+		recipeListByCategoryWithPage.put("recipeListByCategoryPageNum", recipeListByCategoryPageNum);
+		recipeListByCategoryWithPage.put("sortValue", sortValue);
+		recipeListByCategoryWithPage.put("order", rcp_pat2);
+		
+		return recipeListByCategoryWithPage;
 		
 	}
 	
+	// 식단 검색(페이지네이션)
+	@ResponseBody
+	@GetMapping("info/search_recipe_list")
+	public Object searchRecipeList(
+			@RequestParam(value = "searchPart") String searchPart,
+			@RequestParam(value = "searchString") String searchString,
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("searchRecipeList()");
+		
+		// 페이지 번호에 따른 검색 식단 리스트들 가져오기
+		Map<String, Object> searchRecipeListWithPage = recipeService.getSearchRecipeListWithPage(searchPart, searchString, page);
+
+		// 검색 식단 총 페이지 개수 가져오기
+		Map<String, Object> searchRecipeListPageNum = recipeService.getSearchRecipeListPageNum(searchPart, searchString, page);
+		
+		searchRecipeListWithPage.put("searchRecipeListPageNum", searchRecipeListPageNum);
+		searchRecipeListWithPage.put("searchPart", searchPart);
+		searchRecipeListWithPage.put("searchString", searchString);
+		
+		return searchRecipeListWithPage;
 	
+	}
+	
+	// 식단 디테일 뷰 양식
+	@GetMapping("info/detail_form")
+	public String detailForm(@RequestParam(value = "rcp_seq") int rcp_seq, Model model) {
+		log.info("detailForm()");
+		
+		String nextPage = "recipe/detail_form";
+		
+		RecipeDto recipeDto = recipeService.getRecipe(rcp_seq);
+		
+		model.addAttribute("recipeDto", recipeDto);
+		
+		return nextPage;
+		
+	}
+	
+	// 식단 한개 가져오기
+	@ResponseBody
+	@GetMapping("info/get_recipe")
+	public Object getRecipe(@RequestParam(value = "rcp_seq") int rcp_seq) {
+		log.info("getRecipe()");
+		
+		RecipeDto recipeDto = recipeService.getRecipe(rcp_seq);		
+		
+		return recipeDto;
+		
+	}
 
 }

@@ -193,8 +193,9 @@
 
 	</insert>
 	
-	<!-- 모든 식단 분류 가져오기(식단 리스트에서 <select>박스 => 비동기) -->
-	<select id="getRecipeCategoryList">
+	<!-- 모든 식단 카테고리 가져오기(식단 리스트에서 <select>박스 => 비동기) -->
+	<select id="getRecipeCategoryList"
+			resultMap="RecipeDto">
 	
 		SELECT DISTINCT 
 			RCP_PAT2 
@@ -243,5 +244,82 @@
 	
 	</select>
 	
+	<!-- 페이지에 따른 식단 가져오기(카테고리별 식단) -->
+	<select id="getRecipeListByCategoryWithPage"
+			resultMap="RecipeDto">
+	
+		SELECT 
+			* 
+		FROM 
+			RECIPE 
+		WHERE 
+			RCP_PAT2 = #{rcp_pat2} 
+		ORDER BY 
+			RCP_SEQ DESC 
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>
+	
+	<!-- 식단의 총 리스트 개수 구하기(카테고리별 식단) -->
+	<select id="getRecipeByCategoryCnt">
+		
+		SELECT 
+			COUNT(*) 
+		FROM 
+			RECIPE 
+		WHERE 
+			RCP_PAT2 = #{rcp_pat2}
+	
+	</select>
+	
+	<!-- 페이지에 따른 식단 가져오기(검색한 식단) -->
+	<select id="getSearchRecipe"
+			resultMap="RecipeDto">
+			
+		SELECT 
+			* 
+		FROM 
+			RECIPE 
+		<choose>
+			<when test="searchPart == 'rcp_nm'">
+				WHERE 
+					RCP_NM LIKE CONCAT('%', #{searchString}, '%')
+			</when>
+		</choose>
+		ORDER BY 
+			RCP_SEQ DESC 
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>
+	
+	<!-- 식단의 총 리스트 개수 구하기(검색한 식단) -->
+	<select id="getSearchRecipeListCnt">
+		
+		SELECT 
+			COUNT(*) 
+		FROM 
+			RECIPE 
+		<choose>
+			<when test="searchPart == 'rcp_nm'">
+				WHERE 
+					RCP_NM LIKE CONCAT('%', #{searchString}, '%')
+			</when>
+		</choose>
+	
+	</select>
+	
+	<!-- 식단 한 개 가져오기 -->
+	<select id="getRecipe">
+	
+		SELECT 
+			* 
+		FROM 
+			RECIPE 
+		WHERE 
+			RCP_SEQ = #{rcp_seq}
+	
+	</select>
 
 </mapper>

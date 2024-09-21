@@ -35,6 +35,22 @@ public interface RecipeMapper {
 	// 식단의 총 리스트 개수 구하기 (모든 식단)
 	public int getAllRecipeCnt();
 
+	// 페이지에 따른 식단 가져오기(카테고리별 식단)
+	public List<RecipeDto> getRecipeListByCategoryWithPage(Map<String, Object> pagingParams);
+
+	// 식단의 총 리스트 개수 구하기(카테고리별 식단)
+	public int getRecipeByCategoryCnt(String rcp_pat2);
+
+	// 페이지에 따른 식단 가져오기(검색한 식단)
+	public List<RecipeDto> getSearchRecipe(Map<String, Object> pagingParams);
+	
+	// 식단의 총 리스트 개수 구하기(검색한 식단)
+	public int getSearchRecipeListCnt(Map<String, Object> pagingParams);
+	
+	// 식단 한 개 가져오기
+	public RecipeDto getRecipe(int rcp_seq);
+
+
 
 
 	

@@ -189,6 +189,10 @@
 					DC_NAME LIKE CONCAT('%', #{searchString}, '%')
 			</when>
 		</choose>
+		ORDER BY 
+			DC_NAME DESC 
+		LIMIT 
+			#{start}, #{limit}
 	
 	</select>
 	
@@ -235,28 +239,6 @@
 		WHERE 
 			D_NAME = #{d_name}
 	
-	</select>
-	
-	<!-- 모든 질환 가져오기 -->
-	<select id="getDiseaseList"
-			resultMap="DiseaseDto">
-		
-		SELECT 
-			D.*, 
-			DC.DC_NAME 
-		FROM 
-		    DISEASE D 
-		JOIN 
-		    DISEASE_CATEGORY DC 
-		ON 
-		    D.D_CATEGORY_NO = DC.DC_NO 
-		WHERE 
-		    D.D_IS_DELETED = 1 
-		AND 
-			DC.DC_IS_DELETED = 1 
-		ORDER BY 
-			D_NO DESC 
-
 	</select>
 	
 	<!-- 페이지에 따른 질환 가져오기(모든 질환) -->
@@ -414,6 +396,10 @@
 					D.D_NAME LIKE CONCAT('%', #{searchString}, '%')
 			</when>
 		</choose>
+		ORDER BY 
+			D_NO DESC 
+		LIMIT 
+			#{start}, #{limit}
 	
 	</select>
 	

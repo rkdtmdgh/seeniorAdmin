@@ -57,9 +57,6 @@ public interface DiseaseMapper {
 	// 질환 중복체크
 	public boolean isDisease(String d_name);
 	
-	// 모든 질환 가져오기
-	public List<DiseaseDto> getDiseaseList();
-	
 	// 페이지에 따른 질환 가져오기(모든 질환)
 	public List<DiseaseDto> getDiseaseListWithPage(Map<String, Object> pagingParms);
 	
