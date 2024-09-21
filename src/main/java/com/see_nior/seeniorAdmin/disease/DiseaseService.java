@@ -326,19 +326,6 @@ public class DiseaseService {
 		
 	}
 	
-	// 모든 질환 가져오기 -> 페이지네이션 안 한 기존
-	public Map<String, Object> getDiseaseList() {
-		log.info("getDiseaseList()");
-		
-		Map<String, Object> diseaseDtos = new HashMap<>();
-		
-		List<DiseaseDto> diseaseDto = (List<DiseaseDto>) diseaseMapper.getDiseaseList();
-		
-		diseaseDtos.put("diseaseDto", diseaseDto);
-		
-		return diseaseDtos;
-	}
-	
 	// 페이지에 따른 질환 가져오기(모든 질환)
 	public Map<String, Object> getDiseaseListWithPage(int page, String sortValue, String order) {
 		log.info("getDiseaseListWithPage()");
