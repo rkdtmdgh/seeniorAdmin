@@ -262,6 +262,12 @@
             font-size: var(--titleFontSize);
             font-weight: var(--bold);
             line-height: var(--titleLineHeight);
+            
+            .title_other_info_text {
+            	display: inline-block;
+            	padding: var(--textPadding);
+            	font-size: var(--smallFontSize);
+            }
     
             &::before {
                 content: '';
