@@ -43,7 +43,10 @@
 					<section class="content_info_wrap">
 					    <div class="content_top">
 					        <div class="content_top_info">
-					            <h2 class="title">식단 정보 관리</h2>
+					            <h2 class="title">
+					            	식단 정보 관리
+					            	<span class="title_other_info_text" th:if="${reg_date}" th:text="${reg_date}">부가정보</span>
+				            	</h2>
 					            
 					            <div class="content_top_right">
 									<form name="search_form" onsubmit="getSearchList(event, '/recipe/info/search_recipe_list')" th:insert="~{fragments/search.html :: search('식단 정보 관리')}"></form>

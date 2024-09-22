@@ -339,8 +339,8 @@ function setSelectCategoryCommand(value) {
 			break;
 			
 		case 'rcp_pat2':
-			apiUrl = '/recipe/info/get_all_recipe_list_with_page';
-			getListDtos = 'recipeDtos';
+			apiUrl = '/recipe/cate_info/get_category_list';
+			getListDtos = 'recipeCategoryDto';
 			dataNo = 'rcp_pat2';
 			dataName = 'rcp_pat2';
 			break;
@@ -360,6 +360,10 @@ function setSelectGetListCommand(value) {
 	switch(value) {
 		case 'dc_no': // 질환/질병 정보 리스트 페이지 분류명별 필터
 			apiUrl = '/disease/info/get_disease_list_by_category_with_page';
+			break;
+			
+		case 'rcp_pat2': // 식단 정보 리스트 페이지 분류명별 필터
+			apiUrl = '/recipe/info/get_recipe_list_by_category_with_page';
 			break;
 			
 		default:
@@ -506,7 +510,7 @@ function setParseResponseByCommand(apiUrl, response) {
 		case '/recipe/info/get_recipe_list_by_category_with_page': // 식단 정보 관리 분류별 데이터
 			getListDtos = response.recipeDtos;
 			getListPage = response.recipeListByCategoryPageNum;
-			getListCnt = response.recipeListByCategoryPageNum.recipeListCnt;
+			getListCnt = response.recipeListByCategoryPageNum.recipeListByCategoryCnt;
 			break;
 			
 		case '/board/cate_info/get_list': // 게시판 관리
@@ -571,7 +575,7 @@ function setPagination(pagingValues, sortValue, order, apiUrl, isSearch) { // �
 	const maxPage = pagingValues.maxPage; // 마지막 페이지
 	const totalBlocks = Math.ceil(maxPage / blockLimit); // 전체 블록 수
 	const currentBlock = Math.ceil(currentPage / blockLimit); // 현재 블록
-	const handlerFunction = isSearch ? 'searchForm' : 'getList';
+	const handlerFunction = isSearch ? 'getSearchList' : 'getList';
 	// 검색폼일 경우 event 값 null 적용 검색폼이 아닐 경우 getList 커맨드
 	const params1 = isSearch ? null : `'${apiUrl}'`; 
 	// 검색폼일 경우 커맨드 검색폼이 아닐 경우 sortValue, order 값 입력
