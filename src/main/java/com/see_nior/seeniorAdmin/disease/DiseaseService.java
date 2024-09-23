@@ -8,8 +8,6 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.disease.mapper.DiseaseMapper;
 import com.see_nior.seeniorAdmin.dto.DiseaseCategoryDto;
 import com.see_nior.seeniorAdmin.dto.DiseaseDto;
@@ -326,19 +324,6 @@ public class DiseaseService {
 		}
 	
 		
-	}
-	
-	// 모든 질환 가져오기 -> 페이지네이션 안 한 기존
-	public Map<String, Object> getDiseaseList() {
-		log.info("getDiseaseList()");
-		
-		Map<String, Object> diseaseDtos = new HashMap<>();
-		
-		List<DiseaseDto> diseaseDto = (List<DiseaseDto>) diseaseMapper.getDiseaseList();
-		
-		diseaseDtos.put("diseaseDto", diseaseDto);
-		
-		return diseaseDtos;
 	}
 	
 	// 페이지에 따른 질환 가져오기(모든 질환)
