@@ -16,6 +16,7 @@
     --titleFontSize: 1.3em;
     --tableTextSize: 0.8em;
     --titleLineHeight: 1.7;
+    --etcFontSize: 11px;
     --bold: 600;
     --thin: 300;
 
@@ -41,11 +42,14 @@
     /* element property */
     --logoWidth: 160px;
     --sideMenuWidth: 270px;
-    --headerHeight: 70px;
+    --signFormWidth: 340px;
     --iconsWidth: 20px;
     --arrowWidth: 5px; /* X2 (5px = 10px) */
-    --signFormWidth: 340px;
+    
+    --headerHeight: 70px;
     --tableTextareaHeight: 400px;
+    --contentThumbHeight: 350px;
+    --contentSubThumbWidth: 200px;
 
     --innerPadding: 50px;
     --signFormInnerPadding: 30px;

@@ -164,9 +164,25 @@ async function postPostsCreateForm(formName) {
 	
 	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
 	for(let img of $imgTags) {
-		const blobUrl = $(img)[0].src; // src 속성에 입력된 Blob Url 가져오기
-		const blobUrlData = await fetch(blobUrl); // Blob Url을 통해 실제 Blob 데이터 요청
-		const blob = await blobUrlData.blob(); // Blob 객체로 변환
+		const src= $(img)[0].src; // src 속성에 입력된 Blob Url 가져오기
+		
+		let blob;
+		if(src.startsWith('blobk:')) { // Blob Url일 경우
+			const blobUrlData = await fetch(src); // Blob Url을 통해 실제 Blob 데이터 요청
+			blob = await blobUrlData.blob(); // Blob 객체로 변환
+			
+		} else if (src.startsWith('data:image/:')) { // Base64 Url일 경우
+			const base64Data = src.split(',')[1]; // Base64 데이터 부분 추출
+			const byteCharacters = atob(base64Data); // Base64를 디코딩 반대 메소드 btoa() 
+			const byteNumbers = new Array(byteCharacters.length);
+			for(let i = 0; i < byteCharacters.length; i++) {
+				byteNumbers[i] = byteCharacters.charCodeAt(i); // 각 문자를 바이트 배열로 변환
+			}
+			const byteArray = new Uint8Array(byteNumbers);
+			const mimeType = src.match(/data:(.*?);base64/)[1]; // MIME 타입 추출
+			blob = new Blob([byteArray], {type: mimeType}); // Blob 객체로 변환			
+		}
+		
 		const resizedBlob = await resizeImage(blob, $(img)[0].width); // 설정된 width 크기로 리사이즈 및 압축
 		formData.append('images', resizedBlob);
 	}

@@ -33,6 +33,8 @@ async function getList(apiUrl, sortValue, order, page) {
 		if(response && getListDtos) {
 			// 쿼리스트링 조건 추가
 			setListQueryString(sortValue, order, getListPage.page); // page, sortValue, order
+			
+			if(response.reg_date) setContentSubInfo(response.reg_date); // 타이틀 옆 서브내용 표시(예: 업데이트 날짜 등)
 					
 			const paging = setPagination(getListPage, sortValue, order, apiUrl, false); // 페이징벨류값, sortValue, order, 커맨드, isSearch
 			$pagination.html(paging);

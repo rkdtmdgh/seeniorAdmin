@@ -50,6 +50,17 @@ async function setContentTitle(infoNo) {
 	}
 }
 
+// 콘텐츠 서브 내용 설정
+async function setContentSubInfo(txt) {
+	logger.info('setContentSubInfo():', txt);
+	if(txt) {
+		const $title = $('.categoty_title');
+		const $subInfo = $('<span class="title_other_info_text">');
+		$subInfo.text(`마지막 업데이트 ${txt}`);		
+		$title.append($subInfo);	
+	}
+}
+
 // 본인 확인 페이지 세션스토리지 저장 값 확인하여 요청 처리
 function setSessionIdentityCheck(loginUser) {
 	const sessionLogId = sessionStorage.getItem('loginedId') || '';
@@ -719,7 +730,17 @@ function setDataList(apiUrl, data, index) {
 		                <a href="/recipe/info/detail_form?rcp_seq=${data.rcp_seq}" class="table_info">${data.rcp_nm || 'N/A'}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.rcp_reg_date) || 'N/A'}</p>
+		                <a href="/recipe/info/detail_form?rcp_seq=${data.rcp_seq}" class="table_info">${data.rcp_way2 || 'N/A'}</a>
+		            </td>
+		            <td class="ta_l">
+		                <a href="/recipe/info/detail_form?rcp_seq=${data.rcp_seq}" class="table_info info_data_list">
+		                	${data.info_wgt ? `<span>중량(${data.info_wgt})</span>` : ''}
+		                	${data.info_eng ? `<span>열량(${data.info_eng})</span>` : ''}
+		                	${data.info_car ? `<span>탄수화물(${data.info_car})</span>` : ''}
+		                	${data.info_pro ? `<span>단백질(${data.info_pro})</span>` : ''}
+		                	${data.info_fat ? `<span>지방(${data.info_fat})</span>` : ''}
+		                	${data.info_na ? `<span>나트륨(${data.info_na})</span>` : ''}
+		                </a>
 		            </td>
 		        </tr>
 			`;
