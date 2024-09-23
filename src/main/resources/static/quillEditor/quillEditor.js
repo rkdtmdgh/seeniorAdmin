@@ -36,7 +36,7 @@ async function resizeImage(blob, targetWidth, quality = 0.8) {
                 
            		URL.revokeObjectURL(blobURL); // Blob URL을 브라우저 메모리에서 해제
             
-            }, 'image/wepb', quality); // jpeg보다 높은 압축률, 손실, 무손실, 투명, 애니메이션 지원으로 wepb으로 변환
+            }, 'image/webp', quality); // jpeg보다 높은 압축률, 손실, 무손실, 투명, 애니메이션 지원으로 webp으로 변환
         };
 
         $img.onerror = reject; // 파일을 읽는 과정에서 에러 발생 시 reject

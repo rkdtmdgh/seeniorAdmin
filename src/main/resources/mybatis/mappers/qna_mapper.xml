@@ -23,7 +23,7 @@
 		<result column="a_reg_date" property="a_reg_date" />
 	</resultMap>
 
-	<resultMap type="UserAccountDto" id="UserAccountDto">
+	<resultMap type="UserAccountDto" id="userAccountDto">
 		<id column="u_no" property="u_no"/>
 		<result column="u_id" property="u_id"/>
 		<result column="u_pw" property="u_pw"/>
@@ -55,7 +55,7 @@
 		<result column="bq_is_deleted" property="bq_is_deleted"/>
 		<result column="bq_reg_date" property="bq_reg_date"/>
 		<result column="bq_mod_date" property="bq_mod_date"/>
-		<collection property="UserAccountDto" resultMap="UserAccountDto"/>
+		<collection property="userAccountDto" resultMap="userAccountDto"/>
 	</resultMap>
 	
 	<resultMap type="QnaAnswerDto" id="QnaAnswerDto">

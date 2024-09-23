@@ -3,6 +3,13 @@
    xmlns:th="http://www.thymeleaf.org" 
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
+<!-- 	<script>
+		const eventSource = new EventSource('/notifications');
+		eventSource.onmessege = function() {
+			document.getElementById('notification').innerText = event.data;		
+		};
+	</script> -->
+   
 <header th:fragment="header" id="header">
 	<div class="header_container">
 	    <div class="logo_info">
@@ -13,6 +20,8 @@
 	    </div>
 	
 	    <div class="header_menu_list">
+	    	<!-- <div id="notifications"></div> -->
+	    
 	        <a href="/account/info/modify_form" sec:authentication="name" class="header_menu user_name">userName</a>
 	
 	        <div class="header_menu func_icon">

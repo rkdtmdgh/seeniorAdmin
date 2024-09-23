@@ -19,15 +19,19 @@ final private BoardMapper boardMapper;
 	//BOARD_POSTS 테이블에서 bc_no값으로 게시판에 게시물 갯수 가져오기
 	public int selectCountBoardPostsByBcNo(int bc_no) {
 		log.info("selectCountBoardPostsByBcNo()");
+						
+		try {
+			
+			int bc_item_cnt = boardMapper.selectCountBoardPostsByBcNo(bc_no);
+			
+            return bc_item_cnt;
+            
+        } catch (Exception e) {
+            // 예외 발생 시 처리 로직
+            log.error("게시판에 게시물 갯수 가져오기 중 오류 발생: {}", e.getMessage());
+            throw new RuntimeException("게시판에 게시물 갯수 가져오기 조회 실패");
+        }
 		
-		int bc_item_cnt = boardMapper.selectCountBoardPostsByBcNo(bc_no);
-		
-		if(bc_item_cnt < 0) {
-			log.info("selectCountBoardPostsByBcNo() Error!!");
-			bc_item_cnt = -1;
-		}
-		
-		return bc_item_cnt;
 	}
 	
 	//BOARD_CATEGORY 테이블에 bc_no 값으로 bc_item_cnt 컬럼 업데이트 하기

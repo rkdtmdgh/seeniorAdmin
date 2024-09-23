@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.see_nior.seeniorAdmin.board.mapper.BoardMapper;
+import com.see_nior.seeniorAdmin.board.util.BoardItemCntUpdater;
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
 
 import lombok.extern.log4j.Log4j2;
@@ -16,15 +17,17 @@ import lombok.extern.log4j.Log4j2;
 public class BoardService {
 	
 	final private BoardMapper boardMapper;
+	final private BoardItemCntUpdater boardItemCntUpdater;
 	
-	public BoardService( BoardMapper boardMapper ) {
+	public BoardService( BoardMapper boardMapper, BoardItemCntUpdater boardItemCntUpdater ) {
 		this.boardMapper = boardMapper;
+		this.boardItemCntUpdater = boardItemCntUpdater;
 	}
 	
 	//모든 게시판 항목 가져오기
 	public Object getList() {
 		log.info("getList()");
-		
+				
 		Map<String, Object> cateDtos = new HashMap<>();
 		
 		List<BoardCategoryDto> boardCategoryDtos = boardMapper.getList();
