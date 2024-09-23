@@ -35,40 +35,32 @@
 
                                 <tbody>
 	                                <tr>
-	                                    <th><p class="table_title">분류</p></th>
-	                                    <td>
-	                                    	<p class="table_info" th:text="${recipeDto.rcp_pat2}"></p>
-	                                    </td>
-	
-										<th><p class="table_title">조리 방법</p></th>
-	                                    <td>
-	                                    	<p class="table_info" th:text="${recipeDto.rcp_way2}"></p>
-	                                    </td>
-	                                </tr>
-	
-	                                <tr>
-	                                    <th><p class="table_title">메뉴명</p></th>
+	                                	<th><p class="table_title">메뉴명</p></th>
 	                                    <td>
 	                                        <p class="table_info" th:text="${recipeDto.rcp_nm}"></p>
+	                                    </td>
+	                                    
+	                                    <th><p class="table_title">분류 (방식)</p></th>
+	                                    <td>
+	                                    	<p class="table_info" th:text="${recipeDto.rcp_pat2} + ' (' + ${recipeDto.rcp_way2} + ')'"></p>
 	                                    </td>
 	                                </tr>
 	                                
 	                                <tr>
 	                                    <th><p class="table_title">영양정보</p></th>
 	                                    <td colspan="3">
-	                                        <p class="table_info" th:text="
-	                                        		'중량(' + ${recipeDto.info_wgt} + '),
-	                                        		열량(' + ${recipeDto.info_eng} + '),
-	                                        		탄수화물(' + ${recipeDto.info_car} + '),
-	                                        		단백질(' + ${recipeDto.info_pro} + '),
-	                                        		지방(' + ${recipeDto.info_fat} + '),
-	                                        		나트륨(' + ${recipeDto.info_na} + ')'
-	                                        	">
-	                                        </p>
+	                                    	<p class="table_info info_data_list">
+	                                    		<span th:if="${recipeDto.info_wgt} != ''" th:text="'중량(' + ${recipeDto.info_wgt} + 'g)'"></span>
+	                                    		<span th:if="${recipeDto.info_eng} != ''" th:text="'열량(' + ${recipeDto.info_eng} + 'kcal)'"></span>
+	                                    		<span th:if="${recipeDto.info_car} != ''" th:text="'탄수화물(' + ${recipeDto.info_car} + 'g)'"></span>
+	                                    		<span th:if="${recipeDto.info_pro} != ''" th:text="'단백질(' + ${recipeDto.info_pro} + 'g)'"></span>
+	                                    		<span th:if="${recipeDto.info_fat} != ''" th:text="'지방(' + ${recipeDto.info_fat} + 'g)'"></span>
+	                                    		<span th:if="${recipeDto.info_na} != ''" th:text="'나트륨(' + ${recipeDto.info_na} + 'mg)'"></span>
+	                                    	</p>
 	                                    </td>
 	                                </tr>
 	                                
-	                                <tr th:if="${recipeDto.hash_tag}">
+	                                <tr th:if="${recipeDto.hash_tag} != ''">
 	                                    <th><p class="table_title">주요 재료</p></th>
 	                                    <td colspan="3">
 	                                        <p class="table_info" th:text="${recipeDto.hash_tag}"></p>
@@ -77,10 +69,127 @@
                                 
                                 	<tr>
 	                                    <th><p class="table_title">정보</p></th>
-	                                    <td colspan="3" class="ta_c">
-	                                        <img th:if="${recipeDto.att_file_no_mk}" th:src="${recipeDto.att_file_no_mk}" alt="음식 사진">
-	                                        <p th:if="${recipeDto.rcp_parts_dtls}" th:text="${recipeDto.rcp_parts_dtls}"></p>
-	                                        
+	                                    <td colspan="3">
+	                                    	<div class="content_view_wrap sc">
+		                                        <div class="content_view_main_thumbnail ta_c" th:if="${recipeDto.att_file_no_mk} != ''"><img th:src="${recipeDto.att_file_no_mk}" class="thumbnail" alt="음식 사진"></div>
+		                                        
+		                                        <div class="content_view_table">
+		                                        	<div class="content_view_tr" th:if="${recipeDto.rcp_parts_dtls} != ''">
+			                                        	<div class="content_view_th">재료</div>
+			                                        	<div class="content_view_td" th:utext="${recipeDto.rcp_parts_dtls}"></div>
+		                                        	</div>
+		                                        	
+		                                        	<div class="content_view_tr" th:if="${recipeDto.rcp_na_tip} != ''">
+			                                        	<div class="content_view_th">TIP</div>
+			                                        	<div class="content_view_td" th:utext="${recipeDto.rcp_na_tip}"></div>
+		                                        	</div>
+		                                        	
+		                                        	<div class="content_view_tr">
+			                                        	<div class="content_view_th">조리 방법</div>
+			                                        	<div class="content_view_td grid">
+			                                        		<div class="manual_info" th:if="${recipeDto.manual_img01} != '' OR ${recipeDto.manual01} != ''">
+			                                        			<img th:src="${recipeDto.manual_img01}" class="sub_thumbnail" alt="조리방법">
+			                                        			<p th:utext="${recipeDto.manual01}" class="manual_info_text"></p>
+			                                        		</div>
+			                                        		
+			                                        		<div class="manual_info" th:if="${recipeDto.manual_img02} != '' OR ${recipeDto.manual02} != ''">
+			                                        			<img th:src="${recipeDto.manual_img02}" class="sub_thumbnail" alt="조리방법">
+			                                        			<p th:utext="${recipeDto.manual02}" class="manual_info_text"></p>
+			                                        		</div>
+			                                        		
+			                                        		<div class="manual_info" th:if="${recipeDto.manual_img03} != '' OR ${recipeDto.manual03} != ''">
+			                                        			<img th:src="${recipeDto.manual_img03}" class="sub_thumbnail" alt="조리방법">
+			                                        			<p th:utext="${recipeDto.manual03}" class="manual_info_text"></p>
+			                                        		</div>
+			                                        		
+			                                        		<div class="manual_info" th:if="${recipeDto.manual_img04} != '' OR ${recipeDto.manual04} != ''">
+			                                        			<img th:src="${recipeDto.manual_img04}" class="sub_thumbnail" alt="조리방법">
+			                                        			<p th:utext="${recipeDto.manual04}" class="manual_info_text"></p>
+			                                        		</div>
+			                                        		
+			                                        		<div class="manual_info" th:if="${recipeDto.manual_img05} != '' OR ${recipeDto.manual05} != ''">
+			                                        			<img th:src="${recipeDto.manual_img05}" class="sub_thumbnail" alt="조리방법">
+			                                        			<p th:utext="${recipeDto.manual05}" class="manual_info_text"></p>
+			                                        		</div>
+			                                        		
+			                                        		<div class="manual_info" th:if="${recipeDto.manual_img06} != '' OR ${recipeDto.manual06} != ''">
+			                                        			<img th:src="${recipeDto.manual_img06}" class="sub_thumbnail" alt="조리방법">
+			                                        			<p th:utext="${recipeDto.manual06}" class="manual_info_text"></p>
+			                                        		</div>
+			                                        		
+			                                        		<div class="manual_info" th:if="${recipeDto.manual_img07} != '' OR ${recipeDto.manual07} != ''">
+			                                        			<img th:src="${recipeDto.manual_img07}" class="sub_thumbnail" alt="조리방법">
+			                                        			<p th:utext="${recipeDto.manual07}" class="manual_info_text"></p>
+			                                        		</div>
+			                                        		
+			                                        		<div class="manual_info" th:if="${recipeDto.manual_img08} != '' OR ${recipeDto.manual08} != ''">
+			                                        			<img th:src="${recipeDto.manual_img08}" class="sub_thumbnail" alt="조리방법">
+			                                        			<p th:utext="${recipeDto.manual08}" class="manual_info_text"></p>
+			                                        		</div>
+			                                        		
+			                                        		<div class="manual_info" th:if="${recipeDto.manual_img09} != '' OR ${recipeDto.manual09} != ''">
+			                                        			<img th:src="${recipeDto.manual_img09}" class="sub_thumbnail" alt="조리방법">
+			                                        			<p th:utext="${recipeDto.manual09}" class="manual_info_text"></p>
+			                                        		</div>
+			                                        		
+			                                        		<div class="manual_info" th:if="${recipeDto.manual_img10} != '' OR ${recipeDto.manual10} != ''">
+			                                        			<img th:src="${recipeDto.manual_img10}" class="sub_thumbnail" alt="조리방법">
+			                                        			<p th:utext="${recipeDto.manual10}" class="manual_info_text"></p>
+			                                        		</div>
+			                                        		
+			                                        		<div class="manual_info" th:if="${recipeDto.manual_img11} != '' OR ${recipeDto.manual11} != ''">
+			                                        			<img th:src="${recipeDto.manual_img11}" class="sub_thumbnail" alt="조리방법">
+			                                        			<p th:utext="${recipeDto.manual11}" class="manual_info_text"></p>
+			                                        		</div>
+			                                        		
+			                                        		<div class="manual_info" th:if="${recipeDto.manual_img12} != '' OR ${recipeDto.manual12} != ''">
+			                                        			<img th:src="${recipeDto.manual_img12}" class="sub_thumbnail" alt="조리방법">
+			                                        			<p th:utext="${recipeDto.manual12}" class="manual_info_text"></p>
+			                                        		</div>
+			                                        		
+			                                        		<div class="manual_info" th:if="${recipeDto.manual_img13} != '' OR ${recipeDto.manual13} != ''">
+			                                        			<img th:src="${recipeDto.manual_img13}" class="sub_thumbnail" alt="조리방법">
+			                                        			<p th:utext="${recipeDto.manual13}" class="manual_info_text"></p>
+			                                        		</div>
+			                                        		
+			                                        		<div class="manual_info" th:if="${recipeDto.manual_img14} != '' OR ${recipeDto.manual14} != ''">
+			                                        			<img th:src="${recipeDto.manual_img14}" class="sub_thumbnail" alt="조리방법">
+			                                        			<p th:utext="${recipeDto.manual14}" class="manual_info_text"></p>
+			                                        		</div>
+			                                        		
+			                                        		<div class="manual_info" th:if="${recipeDto.manual_img15} != '' OR ${recipeDto.manual15} != ''">
+			                                        			<img th:src="${recipeDto.manual_img15}" class="sub_thumbnail" alt="조리방법">
+			                                        			<p th:utext="${recipeDto.manual15}" class="manual_info_text"></p>
+			                                        		</div>
+			                                        		
+			                                        		<div class="manual_info" th:if="${recipeDto.manual_img16} != '' OR ${recipeDto.manual16} != ''">
+			                                        			<img th:src="${recipeDto.manual_img16}" class="sub_thumbnail" alt="조리방법">
+			                                        			<p th:utext="${recipeDto.manual16}" class="manual_info_text"></p>
+			                                        		</div>
+			                                        		
+			                                        		<div class="manual_info" th:if="${recipeDto.manual_img17} != '' OR ${recipeDto.manual17} != ''">
+			                                        			<img th:src="${recipeDto.manual_img17}" class="sub_thumbnail" alt="조리방법">
+			                                        			<p th:utext="${recipeDto.manual17}" class="manual_info_text"></p>
+			                                        		</div>
+			                                        		
+			                                        		<div class="manual_info" th:if="${recipeDto.manual_img18} != '' OR ${recipeDto.manual18} != ''">
+			                                        			<img th:src="${recipeDto.manual_img18}" class="sub_thumbnail" alt="조리방법">
+			                                        			<p th:utext="${recipeDto.manual18}" class="manual_info_text"></p>
+			                                        		</div>
+			                                        		
+			                                        		<div class="manual_info" th:if="${recipeDto.manual_img19} != '' OR ${recipeDto.manual19} != ''">
+			                                        			<img th:src="${recipeDto.manual_img19}" class="sub_thumbnail" alt="조리방법">
+			                                        			<p th:utext="${recipeDto.manual19}" class="manual_info_text"></p>
+			                                        		</div>
+			                                        		
+			                                        		<div class="manual_info" th:if="${recipeDto.manual_img20} != '' OR ${recipeDto.manual20} != ''">
+			                                        			<img th:src="${recipeDto.manual_img20}" class="sub_thumbnail" alt="조리방법">
+			                                        			<p th:utext="${recipeDto.manual20}" class="manual_info_text"></p>
+			                                        		</div>
+			                                        	</div>
+		                                        	</div>
+		                                        </div>
+	                                        </div>
 	                                    </td>
 	                                </tr>
                                 </tbody>

@@ -265,8 +265,11 @@
             
             .title_other_info_text {
             	display: inline-block;
-            	padding: var(--textPadding);
-            	font-size: var(--smallFontSize);
+            	padding: var(--smallBtnsPadding);
+            	font-size: var(--etcFontSize);
+            	font-weight: normal;
+            	border-radius: var(--bdrs);
+            	background-color: var(--bgColor);
             }
     
             &::before {
@@ -403,6 +406,18 @@
             display: flex;
         }
     }
+    
+    &.info_data_list {
+    	span {
+    		&::after {
+    			content: ',';
+    		}
+    		
+    		&:last-child::after {
+    			display: none;
+    		}
+    	}
+    }
 }
 
 .content_edit_table {
@@ -455,6 +470,76 @@
     .error {
     	.input_error {
     		display: block;
+    	}
+    }
+}
+
+.content_view_wrap {
+	min-height: var(--tableTextareaHeight);
+    max-height: calc(var(--tableTextareaHeight)* 1.5);
+	display: flex;
+	flex-direction: column;
+	gap: var(--baseGap);
+    padding: var(--textPadding);
+    
+    .content_view_main_thumbnail {
+    	display: flex;
+    	justify-content: center;
+    	
+    	.thumbnail {
+    		max-height: var(--contentThumbHeight);
+    	}    	 
+    }
+    
+    .content_view_table {
+    	width: 100%;
+    	display: table;
+    	table-layout: fixed;
+    	border: 1px solid var(--lightGrayColor);
+    	
+    	.content_view_tr {
+    		display: flex;
+    		border-bottom: 1px solid var(--lightGrayColor);
+    		text-align: left;
+    		
+    		&:last-child {
+    			border: none;
+    		}
+    		
+    		.content_view_th {
+    			width: 15%;
+    			min-width: 15%;
+    			padding: var(--textPadding);
+    			font-weight: 600;
+    			background-color: var(--tableTitleBgColor);
+    		}
+    		
+    		.content_view_td {
+    			padding: var(--textPadding);
+    			word-break: keep-all;
+    			
+    			&.grid {
+    				display: grid;
+    				grid-template-columns: 1fr 1fr 1fr;
+    				gap: var(--baseGap);
+    				
+    				.manual_info {
+	    				display: flex;
+	    				flex-direction: column;
+	    				gap: var(--smallGap);
+	    				
+	    				.sub_thumbnail {
+	    					width: 100%;
+	    					height: var(--contentSubThumbWidth);
+	    					object-fit: cover;
+	    				}
+	    				
+	    				.manual_info_text {
+	    					font-weight: 500;
+	    				}
+    				}
+    			}
+    		}
     	}
     }
 }
