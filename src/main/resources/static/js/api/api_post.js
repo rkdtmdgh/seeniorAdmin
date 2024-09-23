@@ -184,7 +184,7 @@ async function postPostsCreateForm(formName) {
 		}
 		
 		const resizedBlob = await resizeImage(blob, $(img)[0].width); // 설정된 width 크기로 리사이즈 및 압축
-		formData.append('images', resizedBlob);
+		formData.append('files', resizedBlob);
 	}
 	
 	try {
