@@ -167,7 +167,7 @@ async function postPostsCreateForm(formName) {
 		const src= $(img)[0].src; // src 속성에 입력된 Blob Url 가져오기
 		
 		let blob;
-		if(src.startsWith('blobk:')) { // Blob Url일 경우
+		if(src.startsWith('blob:')) { // Blob Url일 경우
 			const blobUrlData = await fetch(src); // Blob Url을 통해 실제 Blob 데이터 요청
 			blob = await blobUrlData.blob(); // Blob 객체로 변환
 			
