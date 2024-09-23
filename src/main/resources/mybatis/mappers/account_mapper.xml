@@ -4,7 +4,7 @@
 <mapper namespace="com.see_nior.seeniorAdmin.account.mapper.AccountMapper">
 
 	<resultMap type="AdminAccountDto" id="AdminAccountDto">
-		<result column="a_no" property="a_no" />
+		<id column="a_no" property="a_no" />
 		<result column="a_id" property="a_id" />
 		<result column="a_pw" property="a_pw" />
 		<result column="a_name" property="a_name" />

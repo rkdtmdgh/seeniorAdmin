@@ -7,22 +7,21 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
+import com.see_nior.seeniorAdmin.dto.QnaDto;
 import com.see_nior.seeniorAdmin.qna.mapper.QnaMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
+@RequiredArgsConstructor
 @Service
 public class QnaService {
 
 	private int pageLimit = 10;		// 한 페이지당 보여줄 정보 수
 	private int blockLimit = 5;		// 하단에 보여질 페이지 번호 수
 	
-	public QnaMapper qnaMapper;
-	
-	public QnaService(QnaMapper qnaMapper) {
-		this.qnaMapper = qnaMapper;
-	}
+	final private QnaMapper qnaMapper;
 	
 	// qna 리스트 가져오기
 	public Map<String, Object> getQnaPagingList(String sortValue, String order, int page) {
@@ -76,6 +75,14 @@ public class QnaService {
 		
 	}
 	
+	// 질문 등록 여부 확인하기
+	public List<QnaDto> getUnansweredQuestions() {
+		log.info("getUnansweredQuestions()");
+		
+		List<QnaDto> unansweredQnaDtos = qnaMapper.selectUnansweredQuestions();
+		
+		return unansweredQnaDtos;
+	}
 	
 	
 }

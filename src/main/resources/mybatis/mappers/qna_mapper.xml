@@ -4,7 +4,7 @@
 <mapper namespace="com.see_nior.seeniorAdmin.qna.mapper.QnaMapper">
 
 	<resultMap type="AdminAccountDto" id="AdminAccountDto">
-		<result column="a_no" property="a_no" />
+		<id column="a_no" property="a_no" />
 		<result column="a_id" property="a_id" />
 		<result column="a_pw" property="a_pw" />
 		<result column="a_name" property="a_name" />
@@ -23,8 +23,8 @@
 		<result column="a_reg_date" property="a_reg_date" />
 	</resultMap>
 
-	<resultMap type="UserAccountDto" id="UserAccountDto">
-		<result column="u_no" property="u_no"/>
+	<resultMap type="UserAccountDto" id="userAccountDto">
+		<id column="u_no" property="u_no"/>
 		<result column="u_id" property="u_id"/>
 		<result column="u_pw" property="u_pw"/>
 		<result column="u_name" property="u_name"/>
@@ -34,6 +34,7 @@
 		<result column="u_birth" property="u_birth"/>
 		<result column="u_address" property="u_address"/>
 		<result column="u_profile_img" property="u_profile_img"/>
+		<result column="u_company" property="u_company"/>
 		<result column="u_is_personal" property="u_is_personal"/>
 		<result column="u_social_id" property="u_social_id"/>
 		<result column="u_is_blocked" property="u_is_blocked"/>
@@ -47,18 +48,18 @@
 	</resultMap>
 	
 	<resultMap type="QnaDto" id="QnaDto">
-		<result column="bq_no" property="bq_no"/>
+		<id column="bq_no" property="bq_no"/>
 		<result column="bq_title" property="bq_title"/>
 		<result column="bq_body" property="bq_body"/>
 		<result column="bq_state" property="bq_state"/>
 		<result column="bq_is_deleted" property="bq_is_deleted"/>
 		<result column="bq_reg_date" property="bq_reg_date"/>
 		<result column="bq_mod_date" property="bq_mod_date"/>
-		<collection property="UserAccountDto" resultMap="UserAccountDto"/>
+		<collection property="userAccountDto" resultMap="userAccountDto"/>
 	</resultMap>
 	
 	<resultMap type="QnaAnswerDto" id="QnaAnswerDto">
-		<result column="bqa_no" property="bqa_no"/>
+		<id column="bqa_no" property="bqa_no"/>
 		<result column="bqa_answer" property="bqa_answer"/>
 		<result column="bqa_is_deleted" property="bqa_is_deleted"/>
 		<result column="bqa_reg_date" property="bqa_reg_date"/>
@@ -82,13 +83,12 @@
 			BQ.BQ_IS_DELETED = 1 
 		<choose>
 			<when test="sortValue == 'bq_no'">
-				ORDER BY BQ.BQ_NO 
 				<choose>
 					<when test="order == 'asc'">
-						ASC
+						ORDER BY BQ.BQ_NO ASC
 					</when>
 					<when test="order == 'desc'">
-						DESC
+						ORDER BY BQ.BQ_NO DESC
 					</when>
 				</choose>
 			</when>
@@ -101,8 +101,27 @@
 	<select id="selectAllQnaListCnt"
 			resultType="Integer">
 		
+		SELECT 
+			COUNT(Q_NO) 
+		FROM 
+			BOARD_QNA 
+		WHERE 
+			Q_IS_DELETED = 1 
 		
-		
+	</select>
+	
+	<select id="selectUnansweredQuestions"
+			resultMap="QnaDto">
+	
+		SELECT 
+			* 
+		FROM 
+			BOARD_QNA 
+		WHERE 
+			BQ_STATE = 1 
+		AND 
+			BQ_IS_DELETED = 1
+	
 	</select>
 	
 </mapper>

@@ -16,19 +16,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+
+//@RequiredArgsConstructor --- 초기화 되지않은 final 필드나, @NonNull 이 붙은 필드에 대해 생성자를 생성해 줍니다.
 
 @Log4j2
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/account")
 public class AccountController {
 	
 	final private AccountService accountService;
-	
-	public AccountController(AccountService accountService) {
-		this.accountService = accountService;
-		
-	}
 
 	// 회원 가입 양식
 	@GetMapping("/sign_up_form")

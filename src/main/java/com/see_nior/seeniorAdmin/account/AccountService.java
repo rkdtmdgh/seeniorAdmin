@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 import com.see_nior.seeniorAdmin.account.mapper.AccountMapper;
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
+@RequiredArgsConstructor
 @Service
 public class AccountService {
 	
@@ -28,12 +30,6 @@ public class AccountService {
 	
 	final private AccountMapper accountMapper;
 	final private PasswordEncoder passwordEncoder;
-	
-	public AccountService(AccountMapper accountMapper, PasswordEncoder passwordEncoder) {
-		this.accountMapper = accountMapper;
-		this.passwordEncoder = passwordEncoder;
-		
-	}
 	
 	// 아이디 중복 확인
 	public boolean isAccount(String a_id) {
