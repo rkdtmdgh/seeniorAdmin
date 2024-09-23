@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
+import com.see_nior.seeniorAdmin.dto.VideoDto;
 import com.see_nior.seeniorAdmin.video.mapper.VideoMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,9 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 @Service
 public class VideoService {
+	
+	final static public boolean CREATE_VIDEO_SUCCESS = true;
+	final static public boolean CREATE_VIDEO_FAIL = false;
 	
 	private int pageLimit = 10;		// 한 페이지당 보여줄 정보 수
 	private int blockLimit = 5;		// 하단에 보여질 페이지 번호 수
@@ -71,6 +75,18 @@ public class VideoService {
 		
 		return videoListPageNum;
 		
+	}
+
+	public Object createConfirm(VideoDto videoDto) {
+		log.info("createConfirm()");
+		
+		int createRsult = videoMapper.insertNewVideo(videoDto);
+		
+		if (createRsult < 0) {
+			return CREATE_VIDEO_SUCCESS;
+		} 
+		
+		return CREATE_VIDEO_FAIL;
 	}
 	
 }

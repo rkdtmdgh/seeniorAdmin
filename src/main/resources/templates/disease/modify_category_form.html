@@ -43,6 +43,11 @@
 		                                			th:onblur="usedInputValueCheck(this, true, [[${diseaseCategoryDto.dc_name}]], null);"
 		                                			th:value="${diseaseCategoryDto.dc_name}">
 	                                        </td>
+	                                        
+	                                        <th><p class="table_title">질환 / 질병 수</p></th>
+	                                        <td>
+	                                        	<input type="text" class="table_info" th:value="${diseaseCategoryDto.dc_item_cnt}" disabled>
+	                                        </td>
 		                                </tr>
 		                            </tbody>
 		                        </table>

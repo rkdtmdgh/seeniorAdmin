@@ -5,6 +5,14 @@
 	
 <head>
     <th:block th:insert="~{fragments/head.html :: head('식단 정보 관리')}"></th:block>
+    
+    <script th:inline="javascript">
+		$(function() {
+	   		// 레시피 내용 추가
+	   		const contentInfo = /*[[${recipeDto}]]*/ '';
+    		setRecipeContentInfo(contentInfo);
+    	});
+    </script>
 </head>
 
 <body>
@@ -35,40 +43,32 @@
 
                                 <tbody>
 	                                <tr>
-	                                    <th><p class="table_title">분류</p></th>
-	                                    <td>
-	                                    	<p class="table_info" th:text="${recipeDto.rcp_pat2}"></p>
-	                                    </td>
-	
-										<th><p class="table_title">조리 방법</p></th>
-	                                    <td>
-	                                    	<p class="table_info" th:text="${recipeDto.rcp_way2}"></p>
-	                                    </td>
-	                                </tr>
-	
-	                                <tr>
-	                                    <th><p class="table_title">메뉴명</p></th>
+	                                	<th><p class="table_title">메뉴명</p></th>
 	                                    <td>
 	                                        <p class="table_info" th:text="${recipeDto.rcp_nm}"></p>
+	                                    </td>
+	                                    
+	                                    <th><p class="table_title">분류 (방식)</p></th>
+	                                    <td>
+	                                    	<p class="table_info" th:text="${recipeDto.rcp_pat2} + ' (' + ${recipeDto.rcp_way2} + ')'"></p>
 	                                    </td>
 	                                </tr>
 	                                
 	                                <tr>
 	                                    <th><p class="table_title">영양정보</p></th>
 	                                    <td colspan="3">
-	                                        <p class="table_info" th:text="
-	                                        		'중량(' + ${recipeDto.info_wgt} + '),
-	                                        		열량(' + ${recipeDto.info_eng} + '),
-	                                        		탄수화물(' + ${recipeDto.info_car} + '),
-	                                        		단백질(' + ${recipeDto.info_pro} + '),
-	                                        		지방(' + ${recipeDto.info_fat} + '),
-	                                        		나트륨(' + ${recipeDto.info_na} + ')'
-	                                        	">
-	                                        </p>
+	                                    	<p class="table_info info_data_list">
+	                                    		<span th:if="${recipeDto.info_wgt} != ''" th:text="'중량(' + ${recipeDto.info_wgt} + 'g)'"></span>
+	                                    		<span th:if="${recipeDto.info_eng} != ''" th:text="'열량(' + ${recipeDto.info_eng} + 'kcal)'"></span>
+	                                    		<span th:if="${recipeDto.info_car} != ''" th:text="'탄수화물(' + ${recipeDto.info_car} + 'g)'"></span>
+	                                    		<span th:if="${recipeDto.info_pro} != ''" th:text="'단백질(' + ${recipeDto.info_pro} + 'g)'"></span>
+	                                    		<span th:if="${recipeDto.info_fat} != ''" th:text="'지방(' + ${recipeDto.info_fat} + 'g)'"></span>
+	                                    		<span th:if="${recipeDto.info_na} != ''" th:text="'나트륨(' + ${recipeDto.info_na} + 'mg)'"></span>
+	                                    	</p>
 	                                    </td>
 	                                </tr>
 	                                
-	                                <tr th:if="${recipeDto.hash_tag}">
+	                                <tr th:if="${recipeDto.hash_tag} != ''">
 	                                    <th><p class="table_title">주요 재료</p></th>
 	                                    <td colspan="3">
 	                                        <p class="table_info" th:text="${recipeDto.hash_tag}"></p>
@@ -77,10 +77,27 @@
                                 
                                 	<tr>
 	                                    <th><p class="table_title">정보</p></th>
-	                                    <td colspan="3" class="ta_c">
-	                                        <img th:if="${recipeDto.att_file_no_mk}" th:src="${recipeDto.att_file_no_mk}" alt="음식 사진">
-	                                        <p th:if="${recipeDto.rcp_parts_dtls}" th:text="${recipeDto.rcp_parts_dtls}"></p>
-	                                        
+	                                    <td colspan="3">
+	                                    	<div class="content_view_wrap sc">
+		                                        <div class="content_view_main_thumbnail ta_c" th:if="${recipeDto.att_file_no_mk} != ''"><img th:src="${recipeDto.att_file_no_mk}" class="thumbnail" alt="음식 사진"></div>
+		                                        
+		                                        <div class="content_view_table">
+		                                        	<div class="content_view_tr" th:if="${recipeDto.rcp_parts_dtls} != ''">
+			                                        	<div class="content_view_th">재료</div>
+			                                        	<div class="content_view_td" th:utext="${recipeDto.rcp_parts_dtls}"></div>
+		                                        	</div>
+		                                        	
+		                                        	<div class="content_view_tr" th:if="${recipeDto.rcp_na_tip} != ''">
+			                                        	<div class="content_view_th">TIP</div>
+			                                        	<div class="content_view_td" th:utext="${recipeDto.rcp_na_tip}"></div>
+		                                        	</div>
+		                                        	
+		                                        	<div class="content_view_tr">
+			                                        	<div class="content_view_th">조리 방법</div>
+			                                        	<div class="content_view_td grid recipe_content"></div>
+		                                        	</div>
+		                                        </div>
+	                                        </div>
 	                                    </td>
 	                                </tr>
                                 </tbody>

@@ -83,13 +83,12 @@
 			BQ.BQ_IS_DELETED = 1 
 		<choose>
 			<when test="sortValue == 'bq_no'">
-				ORDER BY BQ.BQ_NO 
 				<choose>
 					<when test="order == 'asc'">
-						ASC
+						ORDER BY BQ.BQ_NO ASC
 					</when>
 					<when test="order == 'desc'">
-						DESC
+						ORDER BY BQ.BQ_NO DESC
 					</when>
 				</choose>
 			</when>
@@ -102,7 +101,12 @@
 	<select id="selectAllQnaListCnt"
 			resultType="Integer">
 		
-		
+		SELECT 
+			COUNT(Q_NO) 
+		FROM 
+			BOARD_QNA 
+		WHERE 
+			Q_IS_DELETED = 1 
 		
 	</select>
 	

@@ -50,25 +50,23 @@
 			V.V_IS_DELETED = 1
 		<choose>
 			<when test="sortValue == 'v_no'">
-				ORDER BY V.V_NO 
 				<choose>
 					<when test="order == 'asc'">
-						ASC
+						ORDER BY V.V_NO ASC
 					</when>
-					<otherwise>
-						DESC
-					</otherwise>
+					<when test="order == 'desc'">
+						ORDER BY V.V_NO DESC
+					</when>
 				</choose>
 			</when>
 			<when test="sortValue == 'v_disease_no'">
-				ORDER BY V.V_DISEASE_NO 
 				<choose>
 					<when test="order == 'asc'">
-						ASC
+						ORDER BY V.V_DISEASE_NO ASC
 					</when>
-					<otherwise>
-						DESC
-					</otherwise>
+					<when test="order == 'desc'">
+						ORDER BY V.V_DISEASE_NO DESC
+					</when>
 				</choose>
 			</when>
 		</choose>
@@ -88,5 +86,24 @@
 			V_IS_DELETED = 1
 	
 	</select>
+	
+	<insert id="insertNewVideo">
+	
+		INSERT INTO 
+			VIDEO(
+				V_DISEASE_NO,
+				V_TITLE, 
+				V_TEXT, 
+				V_LINK
+				) 
+		VALUES(
+			#{v_disease_no}, 
+			#{v_title}, 
+			#{v_text}, 
+			#{v_link}
+			)
+	
+	</insert>
+	
 	
 </mapper>

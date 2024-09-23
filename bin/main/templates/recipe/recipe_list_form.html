@@ -43,10 +43,7 @@
 					<section class="content_info_wrap">
 					    <div class="content_top">
 					        <div class="content_top_info">
-					            <h2 class="title">
-					            	식단 정보 관리
-					            	<span class="title_other_info_text" th:if="${reg_date}" th:text="${reg_date}">부가정보</span>
-				            	</h2>
+					            <h2 class="title categoty_title">식단 정보 관리</h2>
 					            
 					            <div class="content_top_right">
 									<form name="search_form" onsubmit="getSearchList(event, '/recipe/info/search_recipe_list')" th:insert="~{fragments/search.html :: search('식단 정보 관리')}"></form>
@@ -63,8 +60,9 @@
 	                        <table class="content_table recipe_list_table">
 	                            <colgroup>
 	                                <col class="col_no">
-	                                <col>
-	                                <col>
+	                                <col class="col_default">
+	                                <col class="col_default">
+	                                <col class="col_short">
 	                                <col>
 	                            </colgroup>
 	
@@ -85,8 +83,13 @@
 	                                        	<span class="sort_icon"></span>
 	                                        </p>
 	                                    </th>
+	                                    
 	                                    <th>
-	                                        <p class="table_title">등록일</p>
+	                                        <p class="table_title">조리 방식</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">영양 정보</p>
 	                                    </th>
 	                                </tr>
 	                            </thead>

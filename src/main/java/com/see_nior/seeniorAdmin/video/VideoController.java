@@ -24,7 +24,7 @@ public class VideoController {
 	final private VideoService videoService;
 	
 	// 비디오 리스트 양식
-	@GetMapping("/list_form")
+	@GetMapping("/info/list_form")
 	public String listForm() {
 		log.info("listForm()");
 		
@@ -34,7 +34,7 @@ public class VideoController {
 	}
 	
 	// 비디오 리스트 가져오기 (비동기)
-	@GetMapping("/get_video_list")
+	@GetMapping("/info/get_video_list")
 	@ResponseBody
 	public Object getVideoList(
 			@RequestParam(value = "sortValue", required = false, defaultValue = "v_no") String sortValue,
@@ -54,7 +54,7 @@ public class VideoController {
 	}
 	
 	// 비디오 등록 양식
-	@GetMapping("/create_form")
+	@GetMapping("/info/create_form")
 	public String createForm() {
 		log.info("createForm()");
 		
@@ -64,17 +64,17 @@ public class VideoController {
 	}
 	
 	// 비디오 등록 확인 (비동기)
-	@PostMapping("/create_confirm")
+	@PostMapping("/info/create_confirm")
 	@ResponseBody
 	public Object createConfirm(VideoDto videoDto) {
 		log.info("createConfirm()");
 		
-		return null;
+		return videoService.createConfirm(videoDto);
 	}
 	
 	
 	// 비디오 수정 양식
-	@GetMapping("/modify_form")
+	@GetMapping("/info/modify_form")
 	public String modifyForm(@RequestParam("v_no") int v_no) {
 		log.info("modifyForm()");
 		
@@ -84,7 +84,7 @@ public class VideoController {
 	}
 	
 	// 비디오 수정 확인 (비동기)
-	@PostMapping("/modify_confirm")
+	@PostMapping("/info/modify_confirm")
 	@ResponseBody
 	public Object modifyConfirm(VideoDto videoDto) {
 		log.info("modifyConfirm()");
@@ -93,7 +93,7 @@ public class VideoController {
 	}
 	
 	// 비디오 삭제 확인 (비동기)
-	@PostMapping("/delete_confirm")
+	@PostMapping("/info/delete_confirm")
 	@ResponseBody
 	public Object deleteConfirm(@RequestParam("v_no") int v_no) {
 		log.info("deleteConfirm()");
@@ -102,7 +102,7 @@ public class VideoController {
 	}
 	
 	// 비디오 리스트 검색 (비동기)
-	@GetMapping("search_video")
+	@GetMapping("/info/search_video")
 	@ResponseBody
 	public Object searchVideo() {
 		log.info("searchVideo()");

@@ -50,6 +50,41 @@ async function setContentTitle(infoNo) {
 	}
 }
 
+// 콘텐츠 서브 내용 설정
+async function setContentSubInfo(txt) {
+	const $title = $('.categoty_title');
+	let $subInfo = $('.title_other_info_text');
+	
+	if($subInfo.length === 0) {
+		$subInfo = $('<span class="title_other_info_text">');
+	}
+	
+	$subInfo.text(`마지막 업데이트 ${txt}`);		
+	$title.append($subInfo);	
+}
+
+// 레시피 레이아웃 설정
+function setRecipeContentInfo(recipeDto) {
+	logger.info('setRecipeContentInfo():', recipeDto);
+	
+ 	if(recipeDto) {
+		for (let i = 1; i <= 20; i++) {
+	        let imgField = recipeDto['manual_img' + (i < 10 ? '0' + i : i)];
+	        let manualField = recipeDto['manual' + (i < 10 ? '0' + i : i)];
+
+		    if (imgField || manualField) { // 둘 중 하나라도 존재할 경우
+		        const $manualInfoDiv = $('<div class="manual_info">');
+	            const $imgTag = $(`<img src="${imgField}" alt="조리방법" class="sub_thumbnail">`);
+	            const $pTag = $(`<p class="manual_info_text">${manualField}</p>`);
+	            $manualInfoDiv.append($imgTag);
+	            $manualInfoDiv.append($pTag);
+		
+		        $('.recipe_content').append($manualInfoDiv); // 필요한 위치에 삽입
+		    }
+		}
+	}   
+}
+
 // 본인 확인 페이지 세션스토리지 저장 값 확인하여 요청 처리
 function setSessionIdentityCheck(loginUser) {
 	const sessionLogId = sessionStorage.getItem('loginedId') || '';
@@ -719,7 +754,17 @@ function setDataList(apiUrl, data, index) {
 		                <a href="/recipe/info/detail_form?rcp_seq=${data.rcp_seq}" class="table_info">${data.rcp_nm || 'N/A'}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.rcp_reg_date) || 'N/A'}</p>
+		                <a href="/recipe/info/detail_form?rcp_seq=${data.rcp_seq}" class="table_info">${data.rcp_way2 || 'N/A'}</a>
+		            </td>
+		            <td class="ta_l">
+		                <a href="/recipe/info/detail_form?rcp_seq=${data.rcp_seq}" class="table_info info_data_list">
+		                	${data.info_wgt ? `<span>중량(${data.info_wgt}g)</span>` : ''}
+		                	${data.info_eng ? `<span>열량(${data.info_eng}kcal)</span>` : ''}
+		                	${data.info_car ? `<span>탄수화물(${data.info_car}g)</span>` : ''}
+		                	${data.info_pro ? `<span>단백질(${data.info_pro}g)</span>` : ''}
+		                	${data.info_fat ? `<span>지방(${data.info_fat}g)</span>` : ''}
+		                	${data.info_na ? `<span>나트륨(${data.info_na}mg)</span>` : ''}
+		                </a>
 		            </td>
 		        </tr>
 			`;
