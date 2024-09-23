@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
+import com.see_nior.seeniorAdmin.dto.QnaDto;
 
 @Mapper
 public interface QnaMapper {
@@ -14,6 +15,7 @@ public interface QnaMapper {
 
 	public int selectAllQnaListCnt();
 
-	
+	public List<QnaDto> selectUnansweredQuestions();
+
 	
 }

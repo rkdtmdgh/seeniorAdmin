@@ -63,6 +63,20 @@
 		<result column="rcp_na_tip" property="rcp_na_tip" />
 	</resultMap>
 
+	<!-- 식단 테이블이 있는지 확인하기 -->
+	<select id="checkTableExists">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			information_schema.tables 
+		WHERE 
+			table_schema = 'DB_SEENIOR' 
+		AND 
+			table_name = 'RECIPE'
+	
+	</select>
+
 	<!-- 식단 테이블 DROP -->
 	<delete id="dropRecipeTable">
 	
@@ -135,6 +149,20 @@
 			)
 	
 	</insert>
+	
+	<!-- 식단 테이블이 생성된 날짜값 가져오기 -->
+	<select id="getRecipeTableCreateTime">
+	
+		SELECT 
+			CREATE_TIME 
+		FROM 
+			information_schema.tables 
+		WHERE 
+			table_schema = 'DB_SEENIOR' 
+		AND 
+			table_name = 'RECIPE'
+	
+	</select>
 
 	<!-- 식단 API 데이터 DB에 입력하기 -->
 	<insert id="insertApiRecipeData">
@@ -165,6 +193,18 @@
 
 	</insert>
 	
+	<!-- 모든 식단 분류 가져오기(식단 리스트에서 <select>박스 => 비동기) -->
+	<select id="getRecipeCategoryList">
+	
+		SELECT DISTINCT 
+			RCP_PAT2 
+		FROM 
+			RECIPE 
+		ORDER BY 
+			RCP_PAT2 DESC
+	
+	</select>
+	
 	<!-- 페이지에 따른 식단 가져오기(모든 식단) -->
 	<select id="getRecipeListWithPage"
 			resultMap="RecipeDto">
@@ -174,14 +214,18 @@
 		FROM 
 			RECIPE 
 		<choose>
-			<when test="sort == 'all'">
+			<when test="sortValue == 'all'">
 				ORDER BY RCP_SEQ DESC 
 			</when>
-			<when test="sort == 'asc'">
-				ORDER BY RCP_NM ASC 
-			</when>
-			<when test="sort == 'desc'">
-				ORDER BY RCP_NM DESC 
+			<when test="sortValue == 'rcp_nm'">
+				<choose>
+					<when test="order == 'asc'">
+						ORDER BY RCP_NM ASC 
+					</when>
+					<when test="order == 'desc'">
+						ORDER BY RCP_NM DESC 
+					</when>
+				</choose>
 			</when>
 		</choose>
 		LIMIT 

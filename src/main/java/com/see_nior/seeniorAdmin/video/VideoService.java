@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 import com.see_nior.seeniorAdmin.video.mapper.VideoMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
+@RequiredArgsConstructor
 @Service
 public class VideoService {
 	
@@ -19,11 +21,6 @@ public class VideoService {
 	private int blockLimit = 5;		// 하단에 보여질 페이지 번호 수
 
 	final private VideoMapper videoMapper;
-	
-	public VideoService(VideoMapper videoMapper) {
-		this.videoMapper = videoMapper;
-		
-	}
 	
 	// 비디오 리스트 가져오기
 	public Map<String, Object> getVideoPagingList(String sortValue, String order, int page) {

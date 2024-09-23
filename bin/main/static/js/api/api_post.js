@@ -138,6 +138,18 @@ async function postRecipeUpdate(ele) {
 // 게시물 등록 폼
 async function postPostsCreateForm(formName) {
 	const form = document.forms[formName];
+	
+	input = form.title;
+	if(!checkEmpty(input, '제목을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(!checkQuillEmpty(quill.root.innerHTML)) {
+		quill.focus();
+		return false;
+	}
+	
 	const notice = form.notice.value; // 1=공지, 0=일반
 	const prefix = notice == 1 ? 'bn_' : 'bp_';
 	const apiUrl = notice == 1 ? '/board/info/create_notice_confirm' : '/board/info/create_confirm';
@@ -152,10 +164,10 @@ async function postPostsCreateForm(formName) {
 	
 	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
 	for(let img of $imgTags) {
-		const blobUrl = $(img).attr('src'); // src 속성에 입력된 Blob Url 가져오기
+		const blobUrl = $(img)[0].src; // src 속성에 입력된 Blob Url 가져오기
 		const blobUrlData = await fetch(blobUrl); // Blob Url을 통해 실제 Blob 데이터 요청
 		const blob = await blobUrlData.blob(); // Blob 객체로 변환
-		const resizedBlob = await resizeImage(blob, $(img).width()); // 설정된 width 크기로 리사이즈 및 압축
+		const resizedBlob = await resizeImage(blob, $(img)[0].width); // 설정된 width 크기로 리사이즈 및 압축
 		formData.append('images', resizedBlob);
 	}
 	

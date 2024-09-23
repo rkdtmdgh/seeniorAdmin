@@ -24,17 +24,13 @@ public class SecurityConfig {
 		return new BCryptPasswordEncoder();
 		
 	}
-
+	
 	@Bean SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		
 		http
 			.cors(cors -> cors.disable())
 			.csrf(csrf -> csrf.disable());
-		
-		/*
-		 * http .headers(headers -> headers .contentSecurityPolicy(csp -> csp
-		 * .policyDirectives("default-src 'self'; img-src 'self' data: blob:;")));
-		 */
+
 		http
 			.authorizeHttpRequests(auth -> auth
 					.requestMatchers(

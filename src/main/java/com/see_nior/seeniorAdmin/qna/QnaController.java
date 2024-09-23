@@ -8,21 +8,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/qna")
 public class QnaController {
 
-	public QnaService qnaService;
-	
-	public QnaController(QnaService qnaService) {
-		this.qnaService = qnaService;
-	}
+	final private QnaService qnaService;
 	
 	// qna 리스트 양식 
-	@GetMapping("/qna_list_form")
+	@GetMapping("/info/qna_list_form")
 	public String qnaListForm() {
 		log.info("qnaListForm()");
 		
@@ -32,7 +30,7 @@ public class QnaController {
 	}
 	
 	// qna 리스트 가져오기 (비동기)
-	@GetMapping("/get_qna_list")
+	@GetMapping("/info/get_qna_list")
 	@ResponseBody
 	public Object getQnaList(
 			@RequestParam(value = "sortValue", required = false, defaultValue = "q_no") String sortValue,
@@ -52,5 +50,6 @@ public class QnaController {
 	}
 	
 	// qna 상세보기 양식
+	
 	
 }

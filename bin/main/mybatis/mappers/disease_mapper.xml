@@ -277,7 +277,7 @@
 		AND 
 			DC.DC_IS_DELETED = 1 
 		<choose>
-			<when test="sort == 'all'">
+			<when test="sortValue == 'all'">
 				ORDER BY D.D_NO DESC				
 			</when>
 			<when test="sortValue == 'd_name'">

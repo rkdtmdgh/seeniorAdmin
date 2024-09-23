@@ -11,19 +11,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.see_nior.seeniorAdmin.dto.VideoDto;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 
 @Log4j2
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/video")
 public class VideoController {
 
 	final private VideoService videoService;
-	
-	public VideoController(VideoService videoService) {
-		this.videoService = videoService;
-	}
 	
 	// 비디오 리스트 양식
 	@GetMapping("/list_form")

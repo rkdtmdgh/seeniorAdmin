@@ -4,7 +4,7 @@
 <mapper namespace="com.see_nior.seeniorAdmin.video.mapper.VideoMapper">
 
 	<resultMap type="DiseaseCategoryDto" id="DiseaseCategoryDto">
-		<result column="dc_no" property="dc_no" />
+		<id column="dc_no" property="dc_no" />
 		<result column="dc_name" property="dc_name" />		
 		<result column="dc_is_deleted" property="dc_is_deleted" />
 		<result column="dc_reg_date" property="dc_reg_date" />
@@ -12,7 +12,7 @@
 	</resultMap>
 
 	<resultMap type="DiseaseDto" id="DiseaseDto">
-		<result column="d_no" property="d_no" />
+		<id column="d_no" property="d_no" />
 		<result column="d_category_no" property="d_category_no" />
 		<result column="d_name" property="d_name" />
 		<result column="d_info" property="d_info" />
@@ -25,7 +25,7 @@
 	</resultMap>
 
 	<resultMap type="VideoDto" id="VideoDto">
-		<result column="v_no" property="v_no"/>
+		<id column="v_no" property="v_no"/>
 		<result column="v_title" property="v_title"/>
 		<result column="v_text" property="v_text"/>
 		<result column="v_link" property="v_link"/>
