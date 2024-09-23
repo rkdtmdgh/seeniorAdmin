@@ -63,6 +63,28 @@ async function setContentSubInfo(txt) {
 	$title.append($subInfo);	
 }
 
+// 레시피 레이아웃 설정
+function setRecipeContentInfo(recipeDto) {
+	logger.info('setRecipeContentInfo():', recipeDto);
+	
+ 	if(recipeDto) {
+		for (let i = 1; i <= 20; i++) {
+	        let imgField = recipeDto['manual_img' + (i < 10 ? '0' + i : i)];
+	        let manualField = recipeDto['manual' + (i < 10 ? '0' + i : i)];
+
+		    if (imgField || manualField) { // 둘 중 하나라도 존재할 경우
+		        const $manualInfoDiv = $('<div class="manual_info">');
+	            const $imgTag = $(`<img src="${imgField}" alt="조리방법" class="sub_thumbnail">`);
+	            const $pTag = $(`<p class="manual_info_text">${manualField}</p>`);
+	            $manualInfoDiv.append($imgTag);
+	            $manualInfoDiv.append($pTag);
+		
+		        $('.recipe_content').append($manualInfoDiv); // 필요한 위치에 삽입
+		    }
+		}
+	}   
+}
+
 // 본인 확인 페이지 세션스토리지 저장 값 확인하여 요청 처리
 function setSessionIdentityCheck(loginUser) {
 	const sessionLogId = sessionStorage.getItem('loginedId') || '';
