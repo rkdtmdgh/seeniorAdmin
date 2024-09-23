@@ -50,12 +50,12 @@
 	                                    <th><p class="table_title">영양정보</p></th>
 	                                    <td colspan="3">
 	                                    	<p class="table_info info_data_list">
-	                                    		<span th:if="${recipeDto.info_wgt} != ''" th:text="'중량(' + ${recipeDto.info_wgt} + ')'"></span>
-	                                    		<span th:if="${recipeDto.info_eng} != ''" th:text="'열량(' + ${recipeDto.info_eng} + ')'"></span>
-	                                    		<span th:if="${recipeDto.info_car} != ''" th:text="'탄수화물(' + ${recipeDto.info_car} + ')'"></span>
-	                                    		<span th:if="${recipeDto.info_pro} != ''" th:text="'단백질(' + ${recipeDto.info_pro} + ')'"></span>
-	                                    		<span th:if="${recipeDto.info_fat} != ''" th:text="'지방(' + ${recipeDto.info_fat} + ')'"></span>
-	                                    		<span th:if="${recipeDto.info_na} != ''" th:text="'나트륨(' + ${recipeDto.info_na} + ')'"></span>
+	                                    		<span th:if="${recipeDto.info_wgt} != ''" th:text="'중량(' + ${recipeDto.info_wgt} + 'g)'"></span>
+	                                    		<span th:if="${recipeDto.info_eng} != ''" th:text="'열량(' + ${recipeDto.info_eng} + 'kcal)'"></span>
+	                                    		<span th:if="${recipeDto.info_car} != ''" th:text="'탄수화물(' + ${recipeDto.info_car} + 'g)'"></span>
+	                                    		<span th:if="${recipeDto.info_pro} != ''" th:text="'단백질(' + ${recipeDto.info_pro} + 'g)'"></span>
+	                                    		<span th:if="${recipeDto.info_fat} != ''" th:text="'지방(' + ${recipeDto.info_fat} + 'g)'"></span>
+	                                    		<span th:if="${recipeDto.info_na} != ''" th:text="'나트륨(' + ${recipeDto.info_na} + 'mg)'"></span>
 	                                    	</p>
 	                                    </td>
 	                                </tr>
