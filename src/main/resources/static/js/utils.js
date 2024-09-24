@@ -12,7 +12,7 @@ function setInputFocus(ele) {
 // loading set
 function setAddLoading(ele) {
 	const $loadingElement = $('<span class="loading_wrap"></span>');
-	$(ele).append($loadingElement); // 클릭된 버튼에 로딩 요소 추가
+	$('.content_info_wrap').html($loadingElement); // 해당 컨텐츠에 로딩 요소로 변경
 }
 
 // login user info input value set
@@ -365,7 +365,7 @@ function setSelectCategoryCommand(value) {
 	let dataName;
 	
 	switch(value) {
-		case 'dc_name':
+		case 'dc_name': // 질환/질병 관련 페이지
 		case 'd_category_no':
 			apiUrl = '/disease/cate_info/get_category_list';
 			getListDtos = 'diseaseCategoryDto';
@@ -373,7 +373,7 @@ function setSelectCategoryCommand(value) {
 			dataName = 'dc_name';
 			break;
 			
-		case 'rcp_pat2':
+		case 'rcp_pat2': // 식단 관련 페이지
 			apiUrl = '/recipe/cate_info/get_category_list';
 			getListDtos = 'recipeCategoryDto';
 			dataNo = 'rcp_pat2';
