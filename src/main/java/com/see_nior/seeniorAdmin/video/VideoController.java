@@ -24,11 +24,11 @@ public class VideoController {
 	final private VideoService videoService;
 	
 	// 비디오 리스트 양식
-	@GetMapping("/info/list_form")
-	public String listForm() {
-		log.info("listForm()");
+	@GetMapping("/info/video_list_form")
+	public String videoListForm() {
+		log.info("videoListForm()");
 		
-		String nextPage = "video/list_form";
+		String nextPage = "video/video_list_form";
 		
 		return nextPage;
 	}
