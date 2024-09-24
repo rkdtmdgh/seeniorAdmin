@@ -9,11 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 
@@ -132,6 +135,36 @@ public class BoardController {
 		String nextPage = "board/create_form";
 			
 		return nextPage;
+	}
+	
+	//작성한 일반 게시물 등록 요청
+	@PostMapping("/info/create_confirm")
+	@ResponseBody
+	public String createConfirm(@RequestParam("files") List<MultipartFile> files, 
+								@RequestParam("bp_category_no") int bp_category_no, 
+								@RequestParam("bp_writer_no") int bp_writer_no) {
+		log.info("createConfirm()");
+		
+		log.info("files: {}",files.size());
+		log.info("bp_category_no: {}",bp_category_no);
+		log.info("bp_writer_no: {}",bp_writer_no);
+		
+		return null;
+	}
+	
+	//작성한 공지 게시물 등록 요청
+	@PostMapping("/info/create_notice_confirm")
+	@ResponseBody
+	public String createNoticeConfirm(@RequestParam("files") List<MultipartFile> files, 
+									@RequestParam("bp_category_no") int bp_category_no, 
+									@RequestParam("bp_writer_no") int bp_writer_no) {
+		log.info("createNoticeConfirm()");
+		
+		log.info("files: {}",files.size());
+		log.info("bp_category_no: {}",bp_category_no);
+		log.info("bp_writer_no: {}",bp_writer_no);
+		
+		return null;
 	}
 	
 	
