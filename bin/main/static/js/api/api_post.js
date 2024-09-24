@@ -184,8 +184,10 @@ async function postPostsCreateForm(formName) {
 		files.push(resizedImageFile); // 리사이즈된 File객체를 배열에 추가
 	}
 	
-	//formData.append('files', files); // 배열로 추가
-	formData.append('files', files[0]); // 단일로 추가
+	//formData.append('files', files); // 무조건 배열로 전송
+	files.forEach((file) => {
+        formData.append('files', file); // append로 추가해서 1개 이상 시 배열로 전송 (테스트용)
+    });
 	
 	logger.info('postPostsCreateForm() files[]:', files); // files 배열 확인
 	for (const [key, value] of formData.entries()) { // formData의 모든 데이터 확인
