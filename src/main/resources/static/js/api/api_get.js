@@ -126,7 +126,7 @@ async function getOptionList(ele, isForm, selectedValue) {
 			});
 			
 			const categoryDto = response[getListDtos];
-			logger.info(`${apiUrl} categoryDto:`, categoryDto);
+			logger.info(`${apiUrl} categoryDto:`, response);
 			
 			if(categoryDto && categoryDto.length > 0) {
 				if(isForm) {

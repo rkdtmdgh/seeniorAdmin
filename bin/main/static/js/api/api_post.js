@@ -189,7 +189,7 @@ async function postPostsCreateForm(formName) {
         formData.append('files', file); // append로 추가해서 1개 이상 시 배열로 전송 (테스트용)
     });
 	
-	logger.info('postPostsCreateForm() files[]:', files); // files 배열 확인
+	logger.info('postPostsCreateForm() files[]:', files, apiUrl); // files 배열 확인
 	for (const [key, value] of formData.entries()) { // formData의 모든 데이터 확인
 		logger.info('postPostsCreateForm() formData:', key, value);
 	};
