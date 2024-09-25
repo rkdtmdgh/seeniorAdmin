@@ -4,25 +4,39 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.see_nior.seeniorAdmin.board.mapper.BoardMapper;
 import com.see_nior.seeniorAdmin.board.util.BoardItemCntUpdater;
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
+@RequiredArgsConstructor
 @Service
 public class BoardService {
 	
 	final private BoardMapper boardMapper;
+	final private RestTemplate restTemplate;
 	final private BoardItemCntUpdater boardItemCntUpdater;
 	
-	public BoardService( BoardMapper boardMapper, BoardItemCntUpdater boardItemCntUpdater ) {
-		this.boardMapper = boardMapper;
-		this.boardItemCntUpdater = boardItemCntUpdater;
-	}
+//	public BoardService( BoardMapper boardMapper, 
+//						BoardItemCntUpdater boardItemCntUpdater, 
+//						RestTemplate restTemplate ) {
+//		this.boardMapper = boardMapper;
+//		this.boardItemCntUpdater = boardItemCntUpdater;
+//		this.restTemplate = restTemplate;
+//	}
 	
 	//모든 게시판 항목 가져오기
 	public Object getList() {
@@ -118,8 +132,29 @@ public class BoardService {
 		return boardCategoryDto;
 	}
 
-		
+	public ResponseEntity<String> uploadFiles(List<MultipartFile> files) {
+		log.info("uploadFiles()");
+		log.info("files: {}", files);
 
-	
+		// Request Header 설정
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+		// Request body 설정
+		MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
+		requestBody.add("files", files);
+//		requestBody.add("file", file.getResource());
+
+		// Request Entity
+		HttpEntity<MultiValueMap<String, Object>> responseEntity = new HttpEntity<>(requestBody, headers);
+
+		// API 호출
+//		String severURL = "http://14.42.124.93:8091/upload_file";
+		String severURL = "http://localhost:8091/upload_file"; //local
+		ResponseEntity<String> response = restTemplate.postForEntity(severURL, responseEntity, String.class);
+//		Object response = restTemplate.postForEntity(severURL, responseEntity, String.class);
+		
+		return response;
+	}
 
 }
