@@ -4,12 +4,7 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
 <head>
-	<th:block th:insert="~{fragments/head.html :: head('게시판 등록')}"></th:block>
-	<script type="text/javascript">
-		$(function() {
-			setInputFocus('bc_name');
-        });
-    </script>
+	<th:block th:insert="~{fragments/head.html :: head('영상 정보 등록')}"></th:block>
 </head>
 
 <body>
@@ -24,12 +19,12 @@
 					<section class="content_info_wrap">
 						<div class="content_top">
 					        <div class="content_top_info">
-					            <h2 class="title">게시판 관리</h2>
+					            <h2 class="title">영상 정보 관리</h2>
 					        </div>
-				            <p class="sub_title">게시판 등록</p>
+				            <p class="sub_title">영상 정보 등록</p>
 					    </div>
 					    
-					    <form name="board_category_reg_form" onsubmit="return setFormSendFalse(event)">					    	
+					    <form name="video_reg_form" onsubmit="return setFormSendFalse(event)">
 						    <div class="table_wrap">
 		                        <table class="content_edit_table">
 		                            <colgroup>
@@ -40,20 +35,18 @@
 	                                </colgroup>
 	                                
 		                            <tbody>
+		                            	<tr>
+		                                	<th><p class="table_title">제목</p></th>
+		                                	<td>
+		                                		<input type="text" name="title" id="title" class="table_info" placeholder="제목"
+		                                			onblur="validateEmpty(this, '제목을')">
+		                                	</td>
+	                                	</tr>
+		                                
 		                                <tr>
-		                                	<th><p class="table_title">게시판명</p></th>
-		                                	<td>
-		                                		<input type="text" name="bc_name" id="bc_name" class="table_info" placeholder="게시판명"
-		                                			onblur="requestDuplicateCheck(this, true);">
-	                                        </td>
-	                                        
-	                                        <th><p class="table_title">순번</p></th>
-		                                	<td>
-		                                		<input type="number" name="bc_idx" id="bc_idx" class="table_info" 
-		                                			min="1" th:max="${boardCategoryIdxMaxNum + 1}" 
-		                                			onkeydown="blockEKey(event)"
-		                                			oninput="replaceNumber(this)"
-		                                			th:value="${boardCategoryIdxMaxNum + 1}">
+		                                	<th><p class="table_title">내용</p></th>
+		                                	<td colspan="3">
+	                                			<div id="editor"></div>
 	                                        </td>
 		                                </tr>
 		                            </tbody>
@@ -61,8 +54,8 @@
 		                        
 		                        <div class="btn_list right">
 	                                <div class="btn_list">
-	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <div onclick="postBoardCategoryCreateForm('board_category_reg_form')" class="btns">등록</div>
+	                                    <div onclick="history.back();" class="btns cancel">뒤로가기</div>
+	                                    <div onclick="postDiseaseCreateForm('disease_reg_form')" class="btns">등록</div>
 	                                </div>
 	                            </div>
 		                    </div>

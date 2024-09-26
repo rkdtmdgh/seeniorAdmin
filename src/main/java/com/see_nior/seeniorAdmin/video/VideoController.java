@@ -14,7 +14,6 @@ import com.see_nior.seeniorAdmin.dto.VideoDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
-
 @Log4j2
 @Controller
 @RequiredArgsConstructor
@@ -80,17 +79,17 @@ public class VideoController {
 	}
 	
 	// 비디오 등록 양식
-	@GetMapping("/info/create_video_form")
+	@GetMapping("/info/create_form")
 	public String createForm() {
 		log.info("createForm()");
 		
-		String nextPage = "video/create_video_form";
+		String nextPage = "video/create_form";
 		
 		return nextPage;
 	}
 	
 	// 비디오 등록 확인 (비동기)
-	@PostMapping("/info/create_video_confirm")
+	@PostMapping("/info/create_confirm")
 	@ResponseBody
 	public Object createConfirm(VideoDto videoDto) {
 		log.info("createConfirm()");
@@ -100,17 +99,17 @@ public class VideoController {
 	
 	
 	// 비디오 수정 양식
-	@GetMapping("/info/modify_video_form")
+	@GetMapping("/info/modify_form")
 	public String modifyForm(@RequestParam("v_no") int v_no) {
 		log.info("modifyForm()");
 		
-		String nextPage = "video/modify_video_form";
+		String nextPage = "video/modify_form";
 		
 		return nextPage;
 	}
 	
 	// 비디오 수정 확인 (비동기)
-	@PostMapping("/info/modify_video_confirm")
+	@PostMapping("/info/modify_confirm")
 	@ResponseBody
 	public Object modifyConfirm(VideoDto videoDto) {
 		log.info("modifyConfirm()");
@@ -119,7 +118,7 @@ public class VideoController {
 	}
 	
 	// 비디오 삭제 확인 (비동기)
-	@PostMapping("/info/delete_video_confirm")
+	@PostMapping("/info/delete_confirm")
 	@ResponseBody
 	public Object deleteConfirm(@RequestParam("v_no") int v_no) {
 		log.info("deleteConfirm()");

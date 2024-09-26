@@ -17,7 +17,7 @@
 </head>
 
 <body>
-<main class="contents_wrap">
+	<main class="contents_wrap">
 		<header th:replace="~{fragments/header.html :: header}"></header>
 	
 		<article class="contents_container">
@@ -46,13 +46,15 @@
 		                            <tbody>
 		                                <tr>
 	                                        <th><p class="table_title">제목</p></th>
-		                                	<td>
+		                                	<td colspan="3">
 		                                		<input type="hidden" name="category_no" th:value="${bp_category_no}">
 		                                		<input type="text" name="title" id="title" class="table_info" placeholder="제목"
-		                                			onblur="checkEmpty(this, '제목을')">
+		                                			onblur="validateEmpty(this, '제목을')">
 	                                        </td>
-	                                        
-	                                        <th><p class="table_title">구분</p></th>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">구분</p></th>
 		                                	<td>
 	                                            <div class="table_info cont_info">
 	                                            	<label class="radio">
@@ -69,7 +71,7 @@
 		                                	<th><p class="table_title">작성자</p></th>
 		                                	<td colspan="3" class="disabled">
 		                                		<input type="hidden" name="writer_no">
-	                                			<input type="text" class="table_info" th:value="${#authentication.name}" disabled>
+	                                			<input type="text" name="writer_id" class="table_info" th:value="${#authentication.name}" disabled>
 	                                        </td>
 		                                </tr>
 		                                
