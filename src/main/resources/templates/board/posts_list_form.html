@@ -10,7 +10,7 @@
 			// 타이틀 설정
 			setContentTitle(/*[[${infoNo}]]*/);
 			
-			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); 
+			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // 검색
 					getSearchList(null, '/board/info/search_posts_list', page);

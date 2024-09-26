@@ -26,7 +26,7 @@
 			}
 
 			// RECIPE_CATEGORY 가져오기
-			getOptionList('rcp_pat2'); // element id, isForm, selectedValue
+			getCategoryList('rcp_pat2'); // element id, isForm, selectedValue
         });
 	</script>
 </head>
@@ -50,7 +50,7 @@
 						            
 						            <div class="btn_list">
 						            	<div class="btns small" onclick="getList('/recipe/info/get_all_recipe_list_with_page', null, null, 1);">전체보기</div>
-						            	<div onclick="postRecipeUpdate(this)" class="btns small">정보 업데이트</div>
+						            	<div onclick="postRecipeUpdate()" class="btns small">정보 업데이트</div>
 						            </div>
 					            </div>
 					        </div>
