@@ -8,7 +8,7 @@
 	<script type="text/javascript">
 		$(function() {
 			// DISEASE_CATEGORY 가져오기
-			getOptionList('d_category_no', true); // element id, isForm, selectedValue
+			getCategoryList('d_category_no', true); // element id, isForm, selectedValue
         });
 	</script>
 </head>
@@ -46,7 +46,7 @@
 		                                	<td>
 		                                		<div class="cont_info">
 			                                		<input type="text" name="dc_name" id="dc_name" class="table_info" placeholder="신규 분류 등록 시 입력해 주세요"
-			                                			onblur="usedInputValueCheck(this)">
+			                                			onblur="requestDuplicateCheck(this)">
 			                                		<button type="submit" class="btns small">등록</button>
 		                                		</div>
 	                                        </td>
@@ -82,7 +82,7 @@
 	                                        <th><p class="table_title">질환 / 질병명</p></th>
 		                                	<td>
 		                                		<input type="text" name="d_name" id="d_name" class="table_info" placeholder="질환 / 질병명"
-		                                			onblur="usedInputValueCheck(this, true);">
+		                                			onblur="requestDuplicateCheck(this, true);">
 	                                        </td>
 		                                </tr>
 		                                
@@ -92,7 +92,7 @@
 		                                		<textarea rows="1" name="d_good_food" id="d_good_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
 		                                			onkeydown="setTextareaAddCommaBeforeEnter(this, event)" 
 		                                			oninput="setTextareaAutoHeight(this)" 
-		                                			onblur="checkEmpty(this, '추천 식단 재료를')"></textarea>
+		                                			onblur="validateEmpty(this, '추천 식단 재료를')"></textarea>
 	                                        </td>
 		                                </tr>
 		                                
@@ -102,7 +102,7 @@
 		                                		<textarea rows="1" name="d_bad_food" id="d_bad_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
 		                                			onkeydown="setTextareaAddCommaBeforeEnter(this, event)" 
 		                                			oninput="setTextareaAutoHeight(this)" 
-		                                			onblur="checkEmpty(this, '비추천 식단 재료를')"></textarea>
+		                                			onblur="validateEmpty(this, '비추천 식단 재료를')"></textarea>
 	                                        </td>
 		                                </tr>
 		                                
@@ -110,7 +110,7 @@
 		                                	<th><p class="table_title">질환 / 질병 정보</p></th>
 		                                	<td colspan="3">
 	                                			<textarea name="d_info" id="d_info" class="table_textarea" placeholder="내용을 입력하세요"
-	                                				onblur="checkEmpty(this, '질환 / 질병 정보를')"></textarea>
+	                                				onblur="validateEmpty(this, '질환 / 질병 정보를')"></textarea>
 	                                        </td>
 		                                </tr>
 		                            </tbody>

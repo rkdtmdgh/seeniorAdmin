@@ -37,13 +37,13 @@ async function putModifyForm(formName) {
 	let input;
 	
 	input = form.a_name;
-	if(!checkEmpty(input, '이름을', true)) {
+	if(!validateEmpty(input, '이름을', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_birth;
-	if(!checkEmpty(input, '생년월일을', true)) {
+	if(!validateEmpty(input, '생년월일을', true)) {
 		input.focus();
 		return false;
 	}
@@ -93,13 +93,13 @@ async function putAdminModifyForm(formName) {
 	let input;
 	
 	input = form.a_name;
-	if(!checkEmpty(input, '이름을', true)) {
+	if(!validateEmpty(input, '이름을', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_birth;
-	if(!checkEmpty(input, '생년월일을', true)) {
+	if(!validateEmpty(input, '생년월일을', true)) {
 		input.focus();
 		return false;
 	}
@@ -156,26 +156,26 @@ async function putDiseaseModifyForm(formName, d_nameDefaultValue) {
 	
 	input = form.d_name;
 	if(input.value.trim() !== d_nameDefaultValue) { // 수정이 되었을 경우
-		if(!(await usedInputValueCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+		if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 			input.focus();
 			return false;
 		}
 	}
 	
 	input = form.d_good_food;
-	if(!checkEmpty(input, '추천 식단 재료를', true)) {
+	if(!validateEmpty(input, '추천 식단 재료를', true)) {
 		input.focus();
 		return false;
 	}
 		
 	input = form.d_bad_food;
-	if(!checkEmpty(input, '비추천 식단 재료를', true)) {
+	if(!validateEmpty(input, '비추천 식단 재료를', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.d_info;
-	if(!checkEmpty(input, '질환 / 질병 정보를', true)) {
+	if(!validateEmpty(input, '질환 / 질병 정보를', true)) {
 		input.focus();
 		return false;
 	}
@@ -199,7 +199,7 @@ async function putDiseaseCategoryModifyForm(formName, dc_nameDefaultValue) {
 	
 	input = form.dc_name;
 	if(input.value.trim() !== dc_nameDefaultValue) { // 수정이 되었을 경우
-		if(!(await usedInputValueCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+		if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 			input.focus();
 			return false;
 		}
@@ -233,7 +233,7 @@ async function putBoardCategoryModifyForm(formName, bc_nameDefaultValue, bc_idxD
 	}
 	
 	if(bc_name.value.trim() !== bc_nameDefaultValue) { // 수정이 되었을 경우
-		if(!(await usedInputValueCheck(bc_name, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+		if(!(await requestDuplicateCheck(bc_name, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 			bc_name.focus();
 			return false;
 		}
@@ -262,13 +262,13 @@ async function putNoticeModifyForm(formName) {
 	let input;
 		
 	input = form.n_title;
-	if(!checkEmpty(input, '제목을', true)) {
+	if(!validateEmpty(input, '제목을', true)) {
 		input.focus();
 		return false;
 	}
 		
 	input = form.n_body;
-	if(!checkEmpty(input, '내용을', true)) {
+	if(!validateEmpty(input, '내용을', true)) {
 		return false;
 	}
 	

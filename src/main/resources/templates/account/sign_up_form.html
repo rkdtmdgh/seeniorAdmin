@@ -44,19 +44,19 @@
 	                    <label for="name" class="border_input">
 	                        <span class="input_title">이름</span>
 	                        <input type="text" name="a_name" id="name" placeholder="이름" class="input_txt" 
-	                        	oninput="checkEmpty(this, '이름을')" onblur="checkEmpty(this, '이름을')">
+	                        	oninput="validateEmpty(this, '이름을')" onblur="validateEmpty(this, '이름을')">
 	                    </label>
 	                    
 	                    <label for="birth" class="border_input">
 	                        <span class="input_title">생년월일</span>
 	                        <input type="date" name="a_birth" id="birth" max="9999-12-31" min="1900-01-01" class="input_txt" 
-	                        	onchange="checkEmpty(this, '생년월일을')" onblur="checkEmpty(this, '생년월일을')">
+	                        	onchange="validateEmpty(this, '생년월일을')" onblur="validateEmpty(this, '생년월일을')">
 	                    </label>
 						
 						<label for="tel" class="border_input">
 	                        <span class="input_title">연락처</span>
 	                        <input type="text" name="a_phone" id="phone" maxlength="13" placeholder='"-" 없이 입력하세요' class="input_txt" 
-	                        	onkeydown="setReplacePhone(this)" onkeyup="validatePhone(this)" onblur="validatePhone(this)">
+	                        	onkeydown="replacePhone(this)" onkeyup="validatePhone(this)" onblur="validatePhone(this)">
 	                    </label>
 	                </div>
 	                

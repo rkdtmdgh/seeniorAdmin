@@ -5,7 +5,7 @@ async function delSingleData(key, noValue, dataName) {
 	const isConfirm = confirm(`${dataName} 을(를) 삭제하시겠습니까?`);
 	if(!isConfirm) return false;
 	
-	const { apiUrl, replace } = setDelCommand(key); // 커맨드와 경로 설정
+	const { apiUrl, replace } = mapDeleteObject(key); // 커맨드와 경로 설정
 	const errorMessage = `${dataName} 삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
 	try {
@@ -61,7 +61,7 @@ async function delListData(name, isCheckList) {
 	
 	logger.info('delListData() deleteData:', deleteData);
 	
-	const { apiUrl, replace } = setDelCommand(name); // 커맨드와 경로 설정
+	const { apiUrl, replace } = mapDeleteObject(name); // 커맨드와 경로 설정
 	const errorMessage = '삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 	
 	try {
@@ -89,4 +89,43 @@ async function delListData(name, isCheckList) {
 	} finally {
 		isCheckList ? location.reload(true) : location.replace(replace);
 	}
+}
+
+// 삭제 요청에 필요한 객체 설정
+function mapDeleteObject(value) { 
+	let apiUrl;
+	let replace;
+	
+	switch(value) {
+		case 'a_no': // 관리자 계정
+			apiUrl = '/account/list/delete_confirm';
+			replace = '/account/list/admin_list_form';
+			break;
+			
+		case 'dc_no': // 질환/질병 분류
+			apiUrl = '/disease/cate_info/delete_category_confirm';
+			replace = '/disease/cate_info/category_list_form';
+			break;
+			
+		case 'd_no': // 질환/질병
+			apiUrl = '/disease/info/delete_confirm';
+			replace = '/disease/info/disease_list_form';
+			break;
+		
+		case 'bc_no': // 게시판
+			apiUrl = '/board/cate_info/delete_category_confirm';
+			replace = '/board/cate_info/category_list_form';
+			break;
+			
+		case 'n_no': // 공지사항
+			apiUrl = '/notice/info/delete_confirm';
+			replace = '/notice/info/notice_list_form';
+			break;
+			
+		default:
+			logger.error('mapDeleteObject() value:', value);
+			return false;
+	}
+	
+	return { apiUrl, replace };
 }

@@ -40,7 +40,7 @@
 		                                	<td>
 		                                		<input type="hidden" name="bc_no" th:value="${boardCategoryDtoForModify.bc_no}">
 		                                		<input type="text" name="bc_name" id="bc_name" class="table_info" placeholder="게시판명"
-		                                			th:onblur="usedInputValueCheck(this, true, [[${boardCategoryDtoForModify.bc_name}]], null);"
+		                                			th:onblur="requestDuplicateCheck(this, true, [[${boardCategoryDtoForModify.bc_name}]], null);"
 		                                			th:value="${boardCategoryDtoForModify.bc_name}">
 	                                        </td>
 	                                        
@@ -49,7 +49,7 @@
 		                                		<input type="number" name="bc_idx" id="bc_idx" class="table_info" placeholder="순번"
 		                                			min="1" th:max="${boardCategoryIdxMaxNum + 1}" 
 		                                			onkeydown="blockEKey(event)"
-		                                			oninput="setReplaceNumber(this)"
+		                                			oninput="replaceNumber(this)"
 		                                			th:value="${boardCategoryDtoForModify.bc_idx}">
 	                                        </td>
 		                                </tr>
