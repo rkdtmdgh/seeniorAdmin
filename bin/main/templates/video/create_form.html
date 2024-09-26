@@ -21,7 +21,7 @@
 					        <div class="content_top_info">
 					            <h2 class="title">영상 정보 관리</h2>
 					        </div>
-				            <p class="sub_title">영상 분류 등록</p>
+				            <p class="sub_title">영상 정보 등록</p>
 					    </div>
 					    
 					    <form name="video_reg_form" onsubmit="return setFormSendFalse(event)">
@@ -35,46 +35,18 @@
 	                                </colgroup>
 	                                
 		                            <tbody>
-		                                <tr>
-		                                	<th><p class="table_title">분류 선택</p></th>
+		                            	<tr>
+		                                	<th><p class="table_title">제목</p></th>
 		                                	<td>
-		                                		<select class="table_info select" name="d_category_no" id="d_category_no">
-		                                			<option value="" selected disabled>선택하세요</option>
-		                                		</select>
-	                                        </td>
-	                                        
-	                                        <th><p class="table_title">질환 / 질병명</p></th>
-		                                	<td>
-		                                		<input type="text" name="d_name" id="d_name" class="table_info" placeholder="질환 / 질병명"
-		                                			onblur="usedInputValueCheck(this, true);">
-	                                        </td>
-		                                </tr>
+		                                		<input type="text" name="title" id="title" class="table_info" placeholder="제목"
+		                                			onblur="checkEmpty(this, '제목을')">
+		                                	</td>
+	                                	</tr>
 		                                
 		                                <tr>
-		                                	<th><p class="table_title">추천 식단 재료</p></th>
+		                                	<th><p class="table_title">내용</p></th>
 		                                	<td colspan="3">
-		                                		<textarea rows="1" name="d_good_food" id="d_good_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
-		                                			onkeydown="setTextareaAddCommaBeforeEnter(this, event)" 
-		                                			oninput="setTextareaAutoHeight(this)" 
-		                                			onblur="checkEmpty(this, '추천 식단 재료를')"></textarea>
-	                                        </td>
-		                                </tr>
-		                                
-		                                <tr>
-		                                	<th><p class="table_title">비추천 식단 재료</p></th>
-		                                	<td colspan="3">
-		                                		<textarea rows="1" name="d_bad_food" id="d_bad_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
-		                                			onkeydown="setTextareaAddCommaBeforeEnter(this, event)" 
-		                                			oninput="setTextareaAutoHeight(this)" 
-		                                			onblur="checkEmpty(this, '비추천 식단 재료를')"></textarea>
-	                                        </td>
-		                                </tr>
-		                                
-		                                <tr>
-		                                	<th><p class="table_title">질환 / 질병 정보</p></th>
-		                                	<td colspan="3">
-	                                			<textarea name="d_info" id="d_info" class="table_textarea" placeholder="내용을 입력하세요"
-	                                				onblur="checkEmpty(this, '질환 / 질병 정보를')"></textarea>
+	                                			<div id="editor"></div>
 	                                        </td>
 		                                </tr>
 		                            </tbody>

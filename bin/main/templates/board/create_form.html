@@ -46,13 +46,15 @@
 		                            <tbody>
 		                                <tr>
 	                                        <th><p class="table_title">제목</p></th>
-		                                	<td>
+		                                	<td colspan="3">
 		                                		<input type="hidden" name="category_no" th:value="${bp_category_no}">
 		                                		<input type="text" name="title" id="title" class="table_info" placeholder="제목"
 		                                			onblur="checkEmpty(this, '제목을')">
 	                                        </td>
-	                                        
-	                                        <th><p class="table_title">구분</p></th>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">구분</p></th>
 		                                	<td>
 	                                            <div class="table_info cont_info">
 	                                            	<label class="radio">

@@ -11,7 +11,7 @@ async function getList(apiUrl, sortValue, order, page) {
 	
 	const intPage = page || 1
 	let params = `?page=${intPage}`;
-	if(sortValue) params = `${params}&sortValue=${sortValue}&order=${order}`;
+	if(sortValue) params = `${params}&sortValue=${encodeURIComponent(sortValue)}&order=${encodeURIComponent(order)}`;
 	if(infoNo) params = `${params}&infoNo=${infoNo}`;
 	
 	logger.info('apiUrl:', apiUrl + params);
