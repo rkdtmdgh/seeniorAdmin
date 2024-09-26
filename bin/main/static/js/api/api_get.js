@@ -74,7 +74,7 @@ async function getList(apiUrl, sortValue, order, page) {
 		$contentTable.html('');
 		$pagination.html('');
 		
-		if(response && getListDtos) {
+		if(response && getListDtos.length > 0) {
 			// 쿼리스트링 조건 추가
 			setListQueryString(sortValue, order, getListPage.page); // page, sortValue, order
 			
@@ -83,22 +83,10 @@ async function getList(apiUrl, sortValue, order, page) {
 			let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
 			let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
 			
-			if(listIndex > 0) {
-				getListDtos.forEach((data) => { 
-					$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, listIndex));
-					listIndex --;
-				});
-				
-			} else {
-				const maxCols = setTableColumnsNum();
-				$contentTable.html(`
-					<tr>
-	                    <td colspan="${maxCols}">
-	                        <p class="table_info">목록이 없습니다.</p>
-	                    </td>
-	                </tr>
-				`);
-			}
+			getListDtos.forEach((data) => { 
+				$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, listIndex));
+				listIndex --;
+			});
 			
 			// 페이지네이션 생성	
 			const paging = generatePagination(getListPage, sortValue, order, apiUrl, false); // 페이징벨류값, sortValue, order, 커맨드, isSearch
@@ -170,30 +158,17 @@ async function getSearchList(event, apiUrl, page) {
 			$contentTable.html('');
 			$pagination.html('');
 			
-			if(response && getListDtos) {
+			if(response && getListDtos.length > 0) {
 				// 쿼리스트링 조건 추가
 				setSearchQueryString(getListPage.page, response.searchPart, response.searchString); // page, searchPart, searchString
 				
 				let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
 				let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
-											
-				if(listIndex > 0) {
-					getListDtos.forEach((data) => { 
-						$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, listIndex)); // jQuery 선택자에서 DOM 요소가져오기[0]
-						listIndex --;
-					});
-					
-				} else {
-		            // 테이블의 전체 열 수 계산하기
-					const maxCols = setTableColumnsNum();
-					$contentTable.html(`
-						<tr>
-	                        <td colspan="${maxCols}">
-	                            <p class="table_info">검색된 내용이 없습니다.</p>
-	                        </td>
-	                    </tr>
-					`);
-				}
+						
+				getListDtos.forEach((data) => { 
+					$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, listIndex)); // jQuery 선택자에서 DOM 요소가져오기[0]
+					listIndex --;
+				});
 				
 				// 페이지네이션 생성			
 				const paging = generatePagination(getListPage, null, null, apiUrl, true); // 페이징벨류값, sortValue, order, 커맨드, isSearch
@@ -779,4 +754,3 @@ function mapCategorylistObject(ele) {
 	
 	return { apiUrl, getListDtos, dataNo, dataName };
 }
-
