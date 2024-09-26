@@ -1,5 +1,12 @@
 // 콘텐츠 리스트 요청
 async function getList(apiUrl, sortValue, order, page) {
+	let loadingTimeout; // 로딩 타이머
+	
+	// 로딩 표시를 위한 타이머 설정
+    loadingTimeout = setTimeout(() => {
+        setAddLoading(true); 
+    }, 300); // 짧은 통신의 경우 로딩 표시하지 않기 위해 딜레이 설정 
+    
 	setAllcheck(); // all_check 체크박스 초기화
 	
 	// 검색 인풋 벨류 삭제
@@ -73,6 +80,10 @@ async function getList(apiUrl, sortValue, order, page) {
 		
 	} catch(error) {
 		logger.error(apiUrl + ' error:', error);
+		
+	} finally {
+		clearTimeout(loadingTimeout); // 딜레이 시간 안에 통신 완료 시 로딩 타이머 취소
+		setAddLoading(false); // 로딩 제거
 	}
 }
 
@@ -170,7 +181,7 @@ async function getSearchList(event, apiUrl, page) {
 	let input;
 	
 	input = form.search_string;
-	if(!checkEmpty(input, '검색어를', true, true)) { // 요소, text, alert 여부, 에러메세지 미노출 여부
+	if(!validateEmpty(input, '검색어를', true, true)) { // 요소, text, alert 여부, 에러메세지 미노출 여부
 		input.focus();
 		return false;
 	}
@@ -181,7 +192,14 @@ async function getSearchList(event, apiUrl, page) {
 		return false;
 	}
 	
-	if(apiUrl) {		
+	if(apiUrl) {
+		let loadingTimeout; // 로딩 타이머
+	
+		// 로딩 표시를 위한 타이머 설정
+	    loadingTimeout = setTimeout(() => {
+	        setAddLoading(true); 
+	    }, 300); // 짧은 통신의 경우 로딩 표시하지 않기 위해 딜레이 설정 
+    	
 		setAllcheck(); // all_check 체크박스 초기화
 		
 		const urlParams = new URLSearchParams(window.location.search);
@@ -251,6 +269,10 @@ async function getSearchList(event, apiUrl, page) {
 			
 		} catch(error) {
 			logger.error(apiUrl + ' searchForm() error:', error);
+			
+		} finally {
+			clearTimeout(loadingTimeout); // 딜레이 시간 안에 통신 완료 시 로딩 타이머 취소
+			setAddLoading(false); // 로딩 제거
 		}
 	}
 }

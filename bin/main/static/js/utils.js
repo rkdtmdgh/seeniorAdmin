@@ -10,9 +10,14 @@ function setInputFocus(ele) {
 }
 
 // loading set
-function setAddLoading(ele) {
+function setAddLoading(loading) {
 	const $loadingElement = $('<span class="loading_wrap"></span>');
-	$('.content_info_wrap').html($loadingElement); // 해당 컨텐츠에 로딩 요소로 변경
+	if(loading) {
+		$('.content_info_wrap').append($loadingElement); // 해당 컨텐츠에 로딩 요소로 변경
+		
+	} else {
+		$('.loading_wrap').remove();
+	}
 }
 
 // login user info input value set
@@ -114,59 +119,6 @@ function setSessionIdentityCheck(loginUser) {
 	return true;
 }
 
-// NAV 선택 표시 및 토글
-function setNavActiveToggle() {
-	const currentPath = window.location.pathname.split('/').slice(0,3).join('/'); // 현재 URL에서 첫 번째와 두 번째까지 path 
-	const currentQueryParams = new URLSearchParams(window.location.search); // 쿼리 파라미터
-
-	const $navMenuBtns = $('.side_menu_list'); // 모든 nav 메뉴 버튼
-	$navMenuBtns.each(function() { // 화살표 함수에는 this가 포함되지 않아 function으로 대체
-		const $navMenu = $(this);
-		const $navMenuBtn = $navMenu.find('.side_menu_btn');
-		const href = $navMenuBtn.attr('href') || null; // 메뉴 버튼의 href
-		const hrefPath = href ? new URL(href, window.location.origin).pathname.split('/').slice(0, 3).join('/') : ''; // href에서 첫 번째와 두 번째 path
-		
-		if (hrefPath && hrefPath === currentPath) { // 서브 메뉴가 없고 href가 현재 경로가 일치할 경우
-			$navMenu.addClass('select');
-		}
-		
-		const $navSubMenuList = $navMenu.find('.side_sub_menu_list'); // 서브 메뉴 리스트
-		if($navSubMenuList.length) { // 서브 메뉴가 있는 경우
-			const $navSubMenus = $navSubMenuList.find('.side_sub_menu_btn'); // 서브 메뉴 리스트 포함된 모든 서브 메뉴
-			$navSubMenus.each(function() {
-				const $navSubMenu = $(this);
-				const subHref = $navSubMenu.attr('href') || null;
-				const subHrefPath = subHref ? new URL(subHref, window.location.origin).pathname.split('/').slice(0, 3).join('/') : ''; // 서브메뉴 href에서 첫 번째와 두 번째 path
-				const subHrefQueryParams = new URLSearchParams(new URL(subHref, window.location.origin).search);
-				
-				if (subHrefPath && subHrefPath === currentPath) {
-					// 쿼리 스트링 확인(같은 카테고리에서 구분이 필요할 경우)
-					const subHerfParam = subHrefQueryParams.get('infoNo');
-					const currentParam = currentQueryParams.get('infoNo');
-					
-					if(subHerfParam === currentParam) {
-						$navSubMenu.addClass('on'); // 네비 서브 메뉴 선택
-						$navMenu.addClass('select'); // 네비 버튼 선택
-					}
-				}
-			});
-		}
-		
-		// 서브 메뉴 토글
-		const $subMenuToggle = $navMenu.find('.arrow');
-		if ($subMenuToggle.length) {
-			$subMenuToggle.click(function() {
-				const $siblingsSubMenuList = $(this).siblings('.side_sub_menu_list');
-            
-                if (!$(this).parent().hasClass('select')) {
-                    $(this).toggleClass('on');
-                    $siblingsSubMenuList.toggleClass('open');
-                }
-			});
-		}
-	});
-}
-
 // all_check 체크박스 초기화
 function setAllcheck() {
 	const $allCheckBox = $('input[type="checkbox"][name="all_check"]');
@@ -226,40 +178,6 @@ function setClearErrorMessage(input) {
 	const $errorEle = setCreateErrorElement($input);
 	$errorEle.remove();
 	$input.parent().removeClass('error');
-}
-
-// 휴대폰 번호 형식으로 변환
-function setReplacePhone(input) {
-	const phoneValue = input.value.replace(/[^0-9]/g, "").replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(-{1,2})$/g, ""); // (01x-xxxx-xxxx)
-	input.value = phoneValue;
-	return phoneValue;
-}
-
-// input number에 min, max 기반 입력값 제어
-function setReplaceNumber(input) {
-	const cleanNumberValue = input.value.replace(/[^0-9.]/g, ""); // 문자값이 입력이 되었을 경우 숫자를 제외한 값 제거	
-	const min = parseFloat(input.min); // 예외 적인 오류 사항 대비 후미열에 문자값 입력이 되었을 시 처리가능한 메소드 사용
-	const max = parseFloat(input.max);
-	let number = cleanNumberValue;
-	
-	if(cleanNumberValue < min) { // min 보다 작으면 min으로 설정
-		number = min;
-	}
-	
-	if(cleanNumberValue > max) { // max 보다 크면 max으로 설정
-		number = max;
-	}
-	
-	input.value = number;
-	
-	return number;
-}
-
-// input number "E,e,-,+,."키(Exponential Notation) 입력 제어 / input type="number"는 기본적으로 지수 표기법을 지원하기 때문
-function blockEKey(event) {
-	if (event.key === 'E' || event.key === 'e' || event.key === '-' || event.key === '+' || event.key === '.') {
-        event.preventDefault(); // 기본 동작 차단
-    }
 }
 
 // 날짜 포맷팅
@@ -1009,14 +927,14 @@ function setAccountModifyForm(data) {
                         	<th><p class="table_title">이름</p></th>
                         	<td>
                                 <input type="text" name="a_name" id="name" class="table_info" placeholder="이름"
-                                	oninput="checkEmpty(this, '이름을')" onblur="checkEmpty(this, '이름을')"
+                                	oninput="validateEmpty(this, '이름을')" onblur="validateEmpty(this, '이름을')"
                                 	value="${data.a_name}">
                             </td>
 
                         	<th><p class="table_title">생년월일</p></th>
                         	<td>
                                 <input type="date" name="a_birth" id="birth" max="9999-12-31" min="1900-01-01" class="table_info"
-                                	onchange="checkEmpty(this, '생년월일을')" onblur="checkEmpty(this, '생년월일을')"
+                                	onchange="validateEmpty(this, '생년월일을')" onblur="validateEmpty(this, '생년월일을')"
                                 	value="${data.a_birth}">
                             </td>
                         </tr>
@@ -1025,7 +943,7 @@ function setAccountModifyForm(data) {
                         	<th><p class="table_title">연락처</p></th>
                         	<td>
                                 <input type="text" name="a_phone" id="phone" maxlength="13" class="table_info" placeholder="연락처"
-                                	onkeydown="setReplacePhone(this)" onkeyup="validatePhone(this)" onblur="validatePhone(this)"
+                                	onkeydown="replacePhone(this)" onkeyup="validatePhone(this)" onblur="validatePhone(this)"
                                 	value="${data.a_phone}">
                             </td>
                         	<th><p class="table_title">부서</p></th>

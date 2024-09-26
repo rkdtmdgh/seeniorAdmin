@@ -65,7 +65,7 @@
 	                                    	<textarea rows="1" name="d_good_food" id="d_good_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
 	                                    		onkeydown="setTextareaAddCommaBeforeEnter(this, event)" 
 	                                    		oninput="setTextareaAutoHeight(this)" 
-	                                    		onblur="checkEmpty(this, '추천 식단 재료를')"
+	                                    		onblur="validateEmpty(this, '추천 식단 재료를')"
 	                                    		th:text="${diseaseDto.d_good_food}"></textarea>
 	                                    </td>
 	                                </tr>
@@ -75,7 +75,7 @@
 	                                    	<textarea rows="1" name="d_bad_food" id="d_bad_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
 	                                    		onkeydown="setTextareaAddCommaBeforeEnter(this, event)" 
 	                                    		oninput="setTextareaAutoHeight(this)" 
-	                                    		onblur="checkEmpty(this, '추천 식단 재료를')"
+	                                    		onblur="validateEmpty(this, '추천 식단 재료를')"
 	                                    		th:text="${diseaseDto.d_bad_food}"></textarea>
 	                                    </td>
 	                                </tr>

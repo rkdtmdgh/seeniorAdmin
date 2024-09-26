@@ -37,13 +37,13 @@ async function putModifyForm(formName) {
 	let input;
 	
 	input = form.a_name;
-	if(!checkEmpty(input, '이름을', true)) {
+	if(!validateEmpty(input, '이름을', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_birth;
-	if(!checkEmpty(input, '생년월일을', true)) {
+	if(!validateEmpty(input, '생년월일을', true)) {
 		input.focus();
 		return false;
 	}
@@ -93,13 +93,13 @@ async function putAdminModifyForm(formName) {
 	let input;
 	
 	input = form.a_name;
-	if(!checkEmpty(input, '이름을', true)) {
+	if(!validateEmpty(input, '이름을', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_birth;
-	if(!checkEmpty(input, '생년월일을', true)) {
+	if(!validateEmpty(input, '생년월일을', true)) {
 		input.focus();
 		return false;
 	}
@@ -163,19 +163,19 @@ async function putDiseaseModifyForm(formName, d_nameDefaultValue) {
 	}
 	
 	input = form.d_good_food;
-	if(!checkEmpty(input, '추천 식단 재료를', true)) {
+	if(!validateEmpty(input, '추천 식단 재료를', true)) {
 		input.focus();
 		return false;
 	}
 		
 	input = form.d_bad_food;
-	if(!checkEmpty(input, '비추천 식단 재료를', true)) {
+	if(!validateEmpty(input, '비추천 식단 재료를', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.d_info;
-	if(!checkEmpty(input, '질환 / 질병 정보를', true)) {
+	if(!validateEmpty(input, '질환 / 질병 정보를', true)) {
 		input.focus();
 		return false;
 	}
@@ -262,13 +262,13 @@ async function putNoticeModifyForm(formName) {
 	let input;
 		
 	input = form.n_title;
-	if(!checkEmpty(input, '제목을', true)) {
+	if(!validateEmpty(input, '제목을', true)) {
 		input.focus();
 		return false;
 	}
 		
 	input = form.n_body;
-	if(!checkEmpty(input, '내용을', true)) {
+	if(!validateEmpty(input, '내용을', true)) {
 		return false;
 	}
 	

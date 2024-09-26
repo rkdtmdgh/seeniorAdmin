@@ -49,7 +49,7 @@
 		                                		<input type="number" name="bc_idx" id="bc_idx" class="table_info" placeholder="순번"
 		                                			min="1" th:max="${boardCategoryIdxMaxNum + 1}" 
 		                                			onkeydown="blockEKey(event)"
-		                                			oninput="setReplaceNumber(this)"
+		                                			oninput="replaceNumber(this)"
 		                                			th:value="${boardCategoryDtoForModify.bc_idx}">
 	                                        </td>
 		                                </tr>
