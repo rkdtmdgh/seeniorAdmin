@@ -1,21 +1,20 @@
 package com.see_nior.seeniorAdmin.board;
 
 import java.util.List;
-import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 
@@ -140,7 +139,7 @@ public class BoardController {
 	//작성한 일반 게시물 등록 요청
 	@PostMapping("/info/create_confirm")
 	@ResponseBody
-	public String createConfirm(@RequestParam("files") List<MultipartFile> files, 
+	public boolean createConfirm(@RequestParam("files") List<MultipartFile> files, 
 								@RequestParam("bp_category_no") int bp_category_no, 
 								@RequestParam("bp_writer_no") int bp_writer_no) {
 		log.info("createConfirm()");
@@ -149,7 +148,22 @@ public class BoardController {
 		log.info("bp_category_no: {}",bp_category_no);
 		log.info("bp_writer_no: {}",bp_writer_no);
 		
-		return null;
+//		ResponseEntity<String> savedFileNames = boardService.uploadFiles(files);
+//		Object savedFileNames = boardService.uploadFiles(files);
+//		
+//		log.info("savedFileNames: {}",savedFileNames);
+//		
+//		if(savedFileNames != null) {
+//			log.info("uploadFiles succuess!");
+//			
+//			return true;
+//		}else {
+//			log.info("uploadFiles fail!");
+//			
+//			return false;
+//		}
+		
+		return false;
 	}
 	
 	//작성한 공지 게시물 등록 요청
