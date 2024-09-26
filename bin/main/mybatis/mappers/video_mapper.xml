@@ -32,7 +32,7 @@
 		<result column="v_is_deleted" property="v_is_deleted"/>
 		<result column="v_reg_date" property="v_reg_date"/>
 		<result column="v_mod_date" property="v_mod_date"/>
-		<collection property="DiseaseDto" resultMap="DiseaseDto" />
+		<collection property="diseaseDto" resultMap="DiseaseDto" />
 	</resultMap>
 	
 	<select id="selectVideoList"
@@ -105,5 +105,30 @@
 	
 	</insert>
 	
+	<select id="selectSearchVideoListCnt"
+			resultType="Integer">
+	
+		SELECT 
+			COUNT(V.V_NO) 
+		FROM 
+			VIDEO V 
+		JOIN 
+			DISEASE D 
+		ON 
+			V.V_DISEASE_NO = D.D_NO 
+		WHERE 
+			V_IS_DELETED = 1 
+		<if test="searchPart != null and searchString != null">
+			<choose>
+				<when test="searchPart == 'v_title'">
+					AND V.V_TITLE LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'd_name'">
+					AND D.D_NAME LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+			</choose>
+		</if>
+	
+	</select>
 	
 </mapper>

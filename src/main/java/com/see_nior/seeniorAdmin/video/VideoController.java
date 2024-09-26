@@ -53,18 +53,44 @@ public class VideoController {
 	
 	}
 	
+	// 비디오 리스트 검색 (비동기)
+	@GetMapping("/info/search_video_list")
+	@ResponseBody
+	public Object searchVideo(
+			@RequestParam("searchPart") String searchPart,
+			@RequestParam("searchString") String searchString,
+			@RequestParam(value = "sortValue", required = false, defaultValue = "v_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("searchVideoList()");
+		
+		Map<String, Object> searchVideoList =
+				videoService.searchVideoPagingList(searchPart, searchString, sortValue, order, page);
+		
+		Map<String, Object> searchAdminListPage = 
+				videoService.searchVideoListPageNum(searchPart, searchString, page);
+		
+		searchVideoList.put("searchAdminListPage", searchAdminListPage);
+		searchVideoList.put("approval", sortValue);
+		searchVideoList.put("order", order);
+		searchVideoList.put("searchPart", searchPart);
+		searchVideoList.put("searchString", searchString);
+		
+		return searchVideoList;
+	}
+	
 	// 비디오 등록 양식
-	@GetMapping("/info/create_form")
+	@GetMapping("/info/create_video_form")
 	public String createForm() {
 		log.info("createForm()");
 		
-		String nextPage = "video/create_form";
+		String nextPage = "video/create_video_form";
 		
 		return nextPage;
 	}
 	
 	// 비디오 등록 확인 (비동기)
-	@PostMapping("/info/create_confirm")
+	@PostMapping("/info/create_video_confirm")
 	@ResponseBody
 	public Object createConfirm(VideoDto videoDto) {
 		log.info("createConfirm()");
@@ -74,17 +100,17 @@ public class VideoController {
 	
 	
 	// 비디오 수정 양식
-	@GetMapping("/info/modify_form")
+	@GetMapping("/info/modify_video_form")
 	public String modifyForm(@RequestParam("v_no") int v_no) {
 		log.info("modifyForm()");
 		
-		String nextPage = "video/modify_form";
+		String nextPage = "video/modify_video_form";
 		
 		return nextPage;
 	}
 	
 	// 비디오 수정 확인 (비동기)
-	@PostMapping("/info/modify_confirm")
+	@PostMapping("/info/modify_video_confirm")
 	@ResponseBody
 	public Object modifyConfirm(VideoDto videoDto) {
 		log.info("modifyConfirm()");
@@ -93,22 +119,12 @@ public class VideoController {
 	}
 	
 	// 비디오 삭제 확인 (비동기)
-	@PostMapping("/info/delete_confirm")
+	@PostMapping("/info/delete_video_confirm")
 	@ResponseBody
 	public Object deleteConfirm(@RequestParam("v_no") int v_no) {
 		log.info("deleteConfirm()");
 		
 		return null;
 	}
-	
-	// 비디오 리스트 검색 (비동기)
-	@GetMapping("/info/search_video")
-	@ResponseBody
-	public Object searchVideo() {
-		log.info("searchVideo()");
-		
-		return null;
-	}
-	
 	
 }
