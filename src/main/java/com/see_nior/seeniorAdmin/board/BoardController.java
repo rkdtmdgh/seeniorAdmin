@@ -148,22 +148,21 @@ public class BoardController {
 		log.info("bp_category_no: {}",bp_category_no);
 		log.info("bp_writer_no: {}",bp_writer_no);
 		
-//		ResponseEntity<String> savedFileNames = boardService.uploadFiles(files);
+		ResponseEntity<String> savedFileNames = boardService.uploadFiles(files);
 //		Object savedFileNames = boardService.uploadFiles(files);
-//		
-//		log.info("savedFileNames: {}",savedFileNames);
-//		
-//		if(savedFileNames != null) {
-//			log.info("uploadFiles succuess!");
-//			
-//			return true;
-//		}else {
-//			log.info("uploadFiles fail!");
-//			
-//			return false;
-//		}
 		
-		return false;
+		log.info("savedFileNames: {}",savedFileNames);
+		
+		if(savedFileNames != null) {
+			log.info("uploadFiles succuess!");
+			
+			return true;
+		}else {
+			log.info("uploadFiles fail!");
+			
+			return false;
+		}
+		
 	}
 	
 	//작성한 공지 게시물 등록 요청

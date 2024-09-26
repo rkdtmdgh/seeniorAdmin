@@ -1,9 +1,12 @@
 package com.see_nior.seeniorAdmin.board;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -132,29 +135,81 @@ public class BoardService {
 		return boardCategoryDto;
 	}
 
-	public ResponseEntity<String> uploadFiles(List<MultipartFile> files) {
-		log.info("uploadFiles()");
-		log.info("files: {}", files);
+//	public ResponseEntity<String> uploadFiles(List<MultipartFile> files) {
+//		log.info("uploadFiles()");
+//		log.info("files: {}", files);
+//
+//		// Request Header 설정
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+//
+//		// Request body 설정	
+//		MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
+//		
+////	requestBody.add("file", file.getResource());
+//		
+//		// Request Entity
+//		HttpEntity<MultiValueMap<String, Object>> responseEntity = new HttpEntity<>(requestBody, headers);
+//
+//		// API 호출
+////		String severURL = "http://14.42.124.93:8091/upload_file";
+//		String severURL = "http://localhost:8091/upload_file"; //local
+//		ResponseEntity<String> response = restTemplate.postForEntity(severURL, responseEntity, String.class);
+////		Object response = restTemplate.postForEntity(severURL, responseEntity, String.class);
+//		
+//		return response;
+//	}
+	
+    public ResponseEntity<String> uploadFiles(List<MultipartFile> files) {
+        
+    	try {
+    		
+    		log.info("uploadFiles()");
+    		log.info("files: {}", files);
+    		
+    		// Request Header 설정
+    		HttpHeaders headers = new HttpHeaders();
+    		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+    		
+    		// Request body 설정	(파일 1개만 보낼 때)
+//    		MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
+//		
+//    		requestBody.add("file", file.getResource());
+    		
+    		// Request body 설정 (파일 배열을 보낼 때)
+    		MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
+    		
+    		for (MultipartFile file : files) {
+    			// 파일 이름 가져오기
+    			String fileName = file.getOriginalFilename();
+    			
+    			// 파일을 ByteArrayResource로 변환
+    			Resource fileResource = new ByteArrayResource(file.getBytes()) {
+    				@Override
+    				public String getFilename() {
+    					return fileName;
+    				}
+    			};
+    			
+    			// 파일을 requestBody에 추가
+    			requestBody.add("files", fileResource);
+    		}
+    		
+    		// Request Entity
+            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
 
-		// Request Header 설정
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+            // API 호출
+            String serverURL = "http://localhost:8091/upload_file"; //local
+            ResponseEntity<String> response = restTemplate.postForEntity(serverURL, requestEntity, String.class);
 
-		// Request body 설정
-		MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
-		requestBody.add("files", files);
-//		requestBody.add("file", file.getResource());
-
-		// Request Entity
-		HttpEntity<MultiValueMap<String, Object>> responseEntity = new HttpEntity<>(requestBody, headers);
-
-		// API 호출
-//		String severURL = "http://14.42.124.93:8091/upload_file";
-		String severURL = "http://localhost:8091/upload_file"; //local
-		ResponseEntity<String> response = restTemplate.postForEntity(severURL, responseEntity, String.class);
-//		Object response = restTemplate.postForEntity(severURL, responseEntity, String.class);
-		
-		return response;
-	}
+            return response;
+			
+		} catch (IOException e) {
+			log.error("파일 업로드 중 오류 발생: {}", e.getMessage());
+			
+			return null;
+		}
+  	        
+    }
 
 }
