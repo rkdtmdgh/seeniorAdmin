@@ -38,7 +38,7 @@ async function validateEmail(input, usedCheck, alertMsg) {
 	
 	if(isValid && usedCheck) {
 		try {
-			const isUsed = await usedEmailCheck(input.value); // true=중복, false=정상 반환
+			const isUsed = await requestEmailDuplicateCheck(input.value); // true=중복, false=정상 반환
 			if(!isUsed) { 
 				setClearErrorMessage(input);
 				return true;

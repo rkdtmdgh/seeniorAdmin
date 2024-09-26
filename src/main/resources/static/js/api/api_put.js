@@ -156,7 +156,7 @@ async function putDiseaseModifyForm(formName, d_nameDefaultValue) {
 	
 	input = form.d_name;
 	if(input.value.trim() !== d_nameDefaultValue) { // 수정이 되었을 경우
-		if(!(await usedInputValueCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+		if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 			input.focus();
 			return false;
 		}
@@ -199,7 +199,7 @@ async function putDiseaseCategoryModifyForm(formName, dc_nameDefaultValue) {
 	
 	input = form.dc_name;
 	if(input.value.trim() !== dc_nameDefaultValue) { // 수정이 되었을 경우
-		if(!(await usedInputValueCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+		if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 			input.focus();
 			return false;
 		}
@@ -233,7 +233,7 @@ async function putBoardCategoryModifyForm(formName, bc_nameDefaultValue, bc_idxD
 	}
 	
 	if(bc_name.value.trim() !== bc_nameDefaultValue) { // 수정이 되었을 경우
-		if(!(await usedInputValueCheck(bc_name, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+		if(!(await requestDuplicateCheck(bc_name, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 			bc_name.focus();
 			return false;
 		}

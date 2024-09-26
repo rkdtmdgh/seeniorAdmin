@@ -40,7 +40,7 @@
 		                                	<td>
 		                                		<input type="hidden" name="bc_no" th:value="${boardCategoryDtoForModify.bc_no}">
 		                                		<input type="text" name="bc_name" id="bc_name" class="table_info" placeholder="게시판명"
-		                                			th:onblur="usedInputValueCheck(this, true, [[${boardCategoryDtoForModify.bc_name}]], null);"
+		                                			th:onblur="requestDuplicateCheck(this, true, [[${boardCategoryDtoForModify.bc_name}]], null);"
 		                                			th:value="${boardCategoryDtoForModify.bc_name}">
 	                                        </td>
 	                                        

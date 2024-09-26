@@ -231,7 +231,7 @@ async function postDiseaseCategoryCreateForm(event, formName, nextPage) {
 	let input;
 	
 	input = form.dc_name;
-	if(!(await usedInputValueCheck(input, true, false, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+	if(!(await requestDuplicateCheck(input, true, false, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 		input.focus();
 		return false;
 	}
@@ -263,7 +263,7 @@ async function postDiseaseCreateForm(formName) {
 	}
 	
 	input = form.d_name;
-	if(!(await usedInputValueCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+	if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 		input.focus();
 		return false;
 	}
@@ -305,7 +305,7 @@ async function postBoardCategoryCreateForm(formName) {
 	const bc_name = form.bc_name;
 	const bc_idx = form.bc_idx;
 	
-	if(!(await usedInputValueCheck(bc_name, true, false, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+	if(!(await requestDuplicateCheck(bc_name, true, false, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 		bc_name.focus();
 		return false;
 	}
@@ -369,9 +369,7 @@ async function postRecipeUpdate() {
 	const isConfirm = confirm('업데이트는 약 10~30초 정도가 소요됩니다. 업데이트하시겠습니까?');
 	if(!isConfirm) return false;
 	
-	setTimeout(() => {
-        setAddLoading(true); 
-    }, 300); // 짧은 통신의 경우 로딩 표시하지 않기 위해 딜레이 설정 
+    setAddLoading(true); // 로딩 시작
 	
 	try {
 		const response = await $.ajax({

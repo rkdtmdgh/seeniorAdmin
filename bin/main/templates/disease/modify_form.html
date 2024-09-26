@@ -11,7 +11,7 @@
             const selectedCategory = /*[[${diseaseDto.d_category_no}]]*/ // 기본값 설정
 
          	// DISEASE_CATEGORY 가져오기
-            getOptionList('d_category_no', true, selectedCategory); // element id, isForm, selectedValue
+            getCategoryList('d_category_no', true, selectedCategory); // element id, isForm, selectedValue
         });
     </script>
 </head>
@@ -54,7 +54,7 @@
 	                                    <td>
 	                                        <input type="hidden" name="d_no" th:value="${diseaseDto.d_no}">
 	                                        <input type="text" name="d_name" id="d_name" class="table_info" placeholder="질환 / 질병명"
-	                                            th:onblur="usedInputValueCheck(this, true, [[${diseaseDto.d_name}]], null);"
+	                                            th:onblur="requestDuplicateCheck(this, true, [[${diseaseDto.d_name}]], null);"
 	                                            th:value="${diseaseDto.d_name}">
 	                                    </td>
 	                                </tr>

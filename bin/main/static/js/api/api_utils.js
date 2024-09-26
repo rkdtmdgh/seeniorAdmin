@@ -1,5 +1,5 @@
 // 이메일 중복 검사(정규표현식 검사가 필요한 경우)
-async function usedEmailCheck(email) {
+async function requestEmailDuplicateCheck(email) {
 	logger.info('usedEmailChekc():', email);
 
 	try {
@@ -11,7 +11,7 @@ async function usedEmailCheck(email) {
 			},
 		});
 		
-		logger.info('usedEmailCheck() result:', response);
+		logger.info('requestEmailDuplicateCheck() result:', response);
 		return response;
 		
 	} catch (error) {
@@ -21,13 +21,13 @@ async function usedEmailCheck(email) {
 }
 
 // 정규표현식 검사가 필요없는 중복 검사(즉시 에러 메세지 노출)
-async function usedInputValueCheck(input, nullCheck, defaultValue,  alertMsg) { // 요소, 기본값, alert 여부, 빈값 체크 여부
+async function requestDuplicateCheck(input, nullCheck, defaultValue,  alertMsg) { // 요소, 기본값, alert 여부, 빈값 체크 여부
 	const inputName = input.name;
 	const inputValue = input.value.trim();
 	let errorMessage;
-	logger.info('usedInputValueCheck() input:', inputName, inputValue);
+	logger.info('requestDuplicateCheck() input:', inputName, inputValue);
 	
-	const { word, apiUrl } = setWordAndCommand(inputName);
+	const { word, apiUrl } = mapDuplicateCheckObject(inputName);
 	
 	if(inputValue.length === 0) {
 		if(!nullCheck) {
@@ -78,4 +78,33 @@ async function usedInputValueCheck(input, nullCheck, defaultValue,  alertMsg) { 
 		alert(`${word} 중복 확인 중 오류가 발생했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`);
 		location.reload(true);
 	}
+}
+
+// 중복 확인에 필요한 객체 설정
+function mapDuplicateCheckObject(value) {
+	let word;
+	let apiUrl;
+	
+	switch(value) {
+		case 'dc_name':
+			word = '질환/질병 분류명';
+			apiUrl = '/disease/cate_info/is_disease_category';
+			break;
+			
+		case 'd_name':
+			word = '질환/질병명';
+			apiUrl = '/disease/info/is_disease';
+			break;
+			
+		case 'bc_name':
+			word = '게시판명';
+			apiUrl = '/board/cate_info/is_board_category';
+			break;
+			
+		default:
+			logger.error('setWordAndCommand() value:', value);
+			return false;
+	}
+	
+	return { word, apiUrl };
 }

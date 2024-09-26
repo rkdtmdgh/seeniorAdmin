@@ -40,7 +40,7 @@
 		                                	<td>
 		                                		<input type="hidden" name="dc_no" th:value="${diseaseCategoryDto.dc_no}">
 		                                		<input type="text" name="dc_name" id="dc_name" class="table_info" placeholder="질환 / 질병 분류명"
-		                                			th:onblur="usedInputValueCheck(this, true, [[${diseaseCategoryDto.dc_name}]], null);"
+		                                			th:onblur="requestDuplicateCheck(this, true, [[${diseaseCategoryDto.dc_name}]], null);"
 		                                			th:value="${diseaseCategoryDto.dc_name}">
 	                                        </td>
 	                                        
