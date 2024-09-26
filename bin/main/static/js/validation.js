@@ -78,19 +78,6 @@ function validatePw(input, alertMsg) {
 	return isValid;
 }
 
-// 생년월일 유효성 검사
-//function validateBirth(input, alertMsg) {
-//	const regEx = 	/^(19[0-9]{2}|20[0-9]{2})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/; // 현재 입력 가능 연도 기준으로 date 형식에 맞게 입력
-//	const errorMessage = "생년월일을 정확히 입력해 주세요.";
-//	const isValid = validateInput(input, regEx, errorMessage);
-//	if(alertMsg && !isValid) {
-//		alert(errorMessage);
-//		return false;
-//	}
-	
-//	return isValid;
-//}
-
 // 연락처 유효성 검사   
 function validatePhone(input, alertMsg) {
 	const regEx = /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/; // 휴대폰 번호 정규 표현식
@@ -166,6 +153,13 @@ function profanityFilter(value) {
     return { found: false };
 }
 
+// input number "E,e,-,+,."키(Exponential Notation) 입력 제어 / input type="number"는 기본적으로 지수 표기법을 지원하기 때문
+function blockEKey(event) {
+	if (event.key === 'E' || event.key === 'e' || event.key === '-' || event.key === '+' || event.key === '.') {
+        event.preventDefault(); // 기본 동작 차단
+    }
+}
+
 // 휴대폰 번호 형식으로 변환
 function replacePhone(input) {
 	const phoneValue = input.value.replace(/[^0-9]/g, "").replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(-{1,2})$/g, ""); // (01x-xxxx-xxxx)
@@ -195,9 +189,31 @@ function replaceNumber(input) {
 	return number;
 }
 
-// input number "E,e,-,+,."키(Exponential Notation) 입력 제어 / input type="number"는 기본적으로 지수 표기법을 지원하기 때문
-function blockEKey(event) {
-	if (event.key === 'E' || event.key === 'e' || event.key === '-' || event.key === '+' || event.key === '.') {
-        event.preventDefault(); // 기본 동작 차단
+function replaceDate(input) {
+	validateEmpty(input, '생년월일을')
+	
+	if (input.value.length < 8) {
+		return false;
+	}
+	
+    const inputDate = new Date(input.value);
+    
+    if (input.min) { // min 값이 존재할 때만 처리
+        const minDate = new Date(input.min);
+        if (inputDate.getFullYear() < minDate.getFullYear()) { // 입력한 연도가 minDate보다 이전일 때
+            // 연도를 minDate로 변경하고 월과 일은 유지
+            inputDate.setFullYear(minDate.getFullYear());
+            input.value = inputDate.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
+            alert();
+        }
+    }
+
+    if (input.max) { // max 값이 존재할 때만 처리
+        const maxDate = new Date(input.max);
+        if (inputDate.getFullYear() > maxDate.getFullYear()) { // 입력한 연도가 maxDate보다 이후일 때
+            // 연도를 maxDate로 변경하고 월과 일은 유지
+            inputDate.setFullYear(maxDate.getFullYear());
+            input.value = inputDate.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
+        }
     }
 }

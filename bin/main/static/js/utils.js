@@ -14,17 +14,13 @@ let loadingTimeout; // 타이머 변수를 전역으로 선언
 function setAddLoading(loading) {
 	const $loadingElement = $('<span class="loading_wrap"></span>');
 	if(loading) {
-		logger.info('loading...');
-		
 		loadingTimeout = setTimeout(() => {
 			$('.content_info_wrap').append($loadingElement); // 해당 컨텐츠에 로딩 요소로 변경		
-		}, 300);
+		}, 100);
 		
 	} else {
 		clearTimeout(loadingTimeout); // 딜레이 시간 안에 통신 완료 시 로딩 타이머 취소
 		$('.loading_wrap').remove();
-		
-		logger.info('load success');
 	}
 }
 
@@ -385,8 +381,8 @@ function setAccountModifyForm(data) {
 
                         	<th><p class="table_title">생년월일</p></th>
                         	<td>
-                                <input type="date" name="a_birth" id="birth" max="9999-12-31" min="1900-01-01" class="table_info"
-                                	onchange="validateEmpty(this, '생년월일을')" onblur="validateEmpty(this, '생년월일을')"
+                                <input type="date" name="a_birth" id="birth" min="1900-01-01" max="9999-12-31" class="table_info"
+                                	onblur="replaceDate(this)"
                                 	value="${data.a_birth}">
                             </td>
                         </tr>
