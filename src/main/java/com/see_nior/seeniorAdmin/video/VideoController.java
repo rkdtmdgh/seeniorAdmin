@@ -46,7 +46,7 @@ public class VideoController {
 		Map<String, Object> videoListPage = videoService.getVideoListPageNum(page);
 		videoList.put("videoListPage", videoListPage);
 		videoList.put("sortValue", sortValue);
-		videoList.put("sortMethod", order);
+		videoList.put("order", order);
 		
 		return videoList;
 	
@@ -70,7 +70,7 @@ public class VideoController {
 				videoService.searchVideoListPageNum(searchPart, searchString, page);
 		
 		searchVideoList.put("searchAdminListPage", searchAdminListPage);
-		searchVideoList.put("approval", sortValue);
+		searchVideoList.put("sortValue", sortValue);
 		searchVideoList.put("order", order);
 		searchVideoList.put("searchPart", searchPart);
 		searchVideoList.put("searchString", searchString);
