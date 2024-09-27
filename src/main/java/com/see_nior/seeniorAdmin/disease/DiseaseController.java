@@ -96,8 +96,8 @@ public class DiseaseController {
 	@GetMapping("/cate_info/get_category_list_with_page")
 	public Object getCategoryListWithPage(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
-			@RequestParam(value = "sortValue", required = false, defaultValue = "all") String sortValue,
-			@RequestParam(value = "order", required = false, defaultValue = "all") String order) {
+			@RequestParam(value = "sortValue", required = false, defaultValue = "dc_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		log.info("getCategoryListWithPage()");
 		
 		// 페이지 번호에 따른 질환 카테고리 리스트들 가져오기
@@ -230,8 +230,8 @@ public class DiseaseController {
 	@GetMapping("/info/get_all_disease_list_with_page")
 	public Object getAllDiseaseListWithPage(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-			@RequestParam(value = "sortValue", required = false, defaultValue = "all") String sortValue,
-			@RequestParam(value = "order", required = false, defaultValue = "all") String order) {
+			@RequestParam(value = "sortValue", required = false, defaultValue = "d_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		log.info("getAllDiseaseListWithPage");
 		
 		// 페이지 번호에 따른 질환 리스트들 가져오기
