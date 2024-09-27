@@ -44,28 +44,8 @@
 			VIDEO 
 		WHERE 
 			V_IS_DELETED = 1
-		<choose>
-			<when test="sortValue == 'v_no'">
-				<choose>
-					<when test="order == 'asc'">
-						ORDER BY V_NO ASC
-					</when>
-					<when test="order == 'desc'">
-						ORDER BY V_NO DESC
-					</when>
-				</choose>
-			</when>
-			<when test="sortValue == 'v_title'">
-				<choose>
-					<when test="order == 'asc'">
-						ORDER BY V_TITLE ASC
-					</when>
-					<when test="order == 'desc'">
-						ORDER BY V_TITLE DESC
-					</when>
-				</choose>
-			</when>
-		</choose>
+		ORDER BY 
+			${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 		
@@ -109,30 +89,10 @@
 		WHERE 
 			V_IS_DELETED = 1
 		<if test="searchPart != null and searchString != null">
-			AND #{searchPart} LIKE CONCAT('%', #{serachString}, '%')
+			AND ${searchPart} LIKE CONCAT('%', #{serachString}, '%')
 		</if>
-		<choose>
-			<when test="sortValue == 'v_no'">
-				<choose>
-					<when test="order == 'asc'">
-						ORDER BY V_NO ASC 
-					</when>
-					<when test="order == 'desc'">
-						ORDER BY V_NO DESC 
-					</when>
-				</choose>
-			</when>
-			<when test="sortValue == 'v_title'">
-				<choose>
-					<when test="order == 'asc'">
-						ORDER BY V_TITLE ASC 
-					</when>
-					<when test="order == 'desc'">
-						ORDER BY V_TITLE DESC 
-					</when>
-				</choose>
-			</when>
-		</choose>
+		ORDER BY 
+			${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 		
@@ -148,14 +108,7 @@
 		WHERE 
 			V_IS_DELETED = 1 
 		<if test="searchPart != null and searchString != null">
-			<choose>
-				<when test="searchPart == 'v_title'">
-					AND V_TITLE LIKE CONCAT('%', #{searchString}, '%')
-				</when>
-				<when test="searchPart == 'v_text'">
-					AND V_TEXT LIKE CONCAT('%', #{searchString}, '%')
-				</when>
-			</choose>
+			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 		</if>
 	
 	</select>
