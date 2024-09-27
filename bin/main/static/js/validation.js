@@ -159,8 +159,8 @@ function validateVideo(input, alertMsg) {
     	
 	} else { // 유효한 URl이 아니거나 지원되지 않은 플랫폼일 경우
 		if ($previewEle.length) $previewEle.remove(); // 잘못된 URL 입력 시 미리보기 삭제
-		if(alertMsg) alert('지원되지 않은 플랫폼이거나 올바른 URL을 입력해 주세요.');
-		setAddErrorMessage(input, '지원되지 않은 플랫폼이거나 올바른 URL을 입력해 주세요.');
+		if(alertMsg) alert('지원되지 않은 플랫폼이거나 유효하지 않은 URL입니다. 올바른 URL을 입력해 주세요.');
+		setAddErrorMessage(input, '지원되지 않은 플랫폼이거나 유효하지 않은 URL입니다. 올바른 URL을 입력해 주세요.');
 		return false;
 	}
 	
