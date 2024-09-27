@@ -20,5 +20,7 @@ public interface VideoMapper {
 	public List<AdminAccountDto> selectSearchVideoList(Map<String, Object> pagingParams);
 
 	public int selectSearchVideoListCnt();
+
+	public int updateVideoInfo(VideoDto videoDto);
 	
 }

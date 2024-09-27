@@ -21,6 +21,9 @@ public class VideoService {
 	final static public boolean CREATE_VIDEO_SUCCESS = true;
 	final static public boolean CREATE_VIDEO_FAIL = false;
 	
+	final static public boolean MODIFY_VIDEO_SUCCESS = true;
+	final static public boolean MODIFY_VIDEO_FAIL = false;
+	
 	private int pageLimit = 10;		// 한 페이지당 보여줄 정보 수
 	private int blockLimit = 5;		// 하단에 보여질 페이지 번호 수
 
@@ -146,6 +149,19 @@ public class VideoService {
 		} 
 		
 		return CREATE_VIDEO_FAIL;
+	}
+
+	// 비디오 수정 확인
+	public Object modifyConfirm(VideoDto videoDto) {
+		log.info("modifyConfirm()");
+		
+		int updateResult =  videoMapper.updateVideoInfo(videoDto);
+		
+		if (updateResult > 0) {
+			return MODIFY_VIDEO_SUCCESS;
+		}
+		
+		return MODIFY_VIDEO_FAIL;
 	}
 	
 }
