@@ -94,12 +94,6 @@ function setRecipeContentInfo(recipeDto) {
 	}   
 }
 
-// 영상 정보 URL 미리 보기 설정
-function setVideoPreview(input) {
-	const $input = $(input);
-	const $previewEle = $('<div class="table_info preview_container">');
-}
-
 // 본인 확인 페이지 세션스토리지 저장 값 확인하여 요청 처리
 function setSessionIdentityCheck(loginUser) {
 	const sessionLogId = sessionStorage.getItem('loginedId') || '';
