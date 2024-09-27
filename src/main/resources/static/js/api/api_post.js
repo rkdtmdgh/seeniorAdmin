@@ -116,6 +116,7 @@ async function postPostsCreateForm(formName) {
 	}
 	
 	if(!validateQuill(quill)) { // 내용 유효성 및 비속어 검사
+		quill.focus();
 		return false;
 	}
 	

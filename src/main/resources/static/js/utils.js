@@ -15,12 +15,12 @@ function setAddLoading(loading) {
 	const $loadingElement = $('<span class="loading_wrap"></span>');
 	if(loading) {
 		loadingTimeout = setTimeout(() => {
-			$('.content_info_wrap').append($loadingElement); // 해당 컨텐츠에 로딩 요소로 변경		
+			$('.content_info_wrap').append($loadingElement); // 해당 컨텐츠에 로딩 요소 추가		
 		}, 100);
 		
 	} else {
 		clearTimeout(loadingTimeout); // 딜레이 시간 안에 통신 완료 시 로딩 타이머 취소
-		$('.loading_wrap').remove();
+		$('.loading_wrap').remove(); // 로딩 요소 제거
 	}
 }
 
@@ -92,6 +92,12 @@ function setRecipeContentInfo(recipeDto) {
 		    }
 		}
 	}   
+}
+
+// 영상 정보 URL 미리 보기 설정
+function setVideoPreview(input) {
+	const $input = $(input);
+	const $previewEle = $('<div class="table_info preview_container">');
 }
 
 // 본인 확인 페이지 세션스토리지 저장 값 확인하여 요청 처리
