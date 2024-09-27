@@ -78,19 +78,6 @@ function validatePw(input, alertMsg) {
 	return isValid;
 }
 
-// 생년월일 유효성 검사
-//function validateBirth(input, alertMsg) {
-//	const regEx = 	/^(19[0-9]{2}|20[0-9]{2})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/; // 현재 입력 가능 연도 기준으로 date 형식에 맞게 입력
-//	const errorMessage = "생년월일을 정확히 입력해 주세요.";
-//	const isValid = validateInput(input, regEx, errorMessage);
-//	if(alertMsg && !isValid) {
-//		alert(errorMessage);
-//		return false;
-//	}
-	
-//	return isValid;
-//}
-
 // 연락처 유효성 검사   
 function validatePhone(input, alertMsg) {
 	const regEx = /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/; // 휴대폰 번호 정규 표현식
@@ -142,13 +129,84 @@ function validateQuill(quill) {
     const profanityResult = profanityFilter(plainText);
    
 	if(profanityResult.found) { // 비속어가 있을 경우
-		quill.focus();
 		quill.setSelection(profanityResult.position, profanityResult.length);
 		alert('금지된 단어가 포함되어 있습니다.');
 		return false;
 	}
 	
 	return true;
+}
+
+// 영상 정보 URL 미리 보기 설정
+function validateVideo(input, alertMsg) {
+	const $input = $(input); // DOM 요소를 jQuery 객체로 변환
+	if(!validateEmpty(input, 'URL 주소를', alertMsg)) return false; // 빈값 확인
+	
+    //동영상 URL을 임베디드 URL로 변환
+	const url = $input.val().trim();
+    const platformInfo = extractPlatformInfo(url); // 플랫폼 정보 추출    
+    let $previewEle = $input.parent().find('.preview_container'); // 부모 요소 내에 미리보기 요소를 찾음
+    
+    if(platformInfo) {	    
+		// 미리보기 요소가 없으면 생성
+    	if (!$previewEle.length) $previewEle = $('<div class="table_info preview_container">'); // 요소 생성 및 클래스 추가
+    	
+    	// iframe 태그에 플랫폼에 맞는 임베디드 URL 삽입하여 preview_container 요소 추가
+    	$previewEle.html(`<iframe frameborder="0" allowfullscreen="true" src="${platformInfo.embedUrl}">)</iframe>`);
+    	$input.val(platformInfo.embedUrl); // 임베드된 주소로 변경
+    	$input.parent().append($previewEle);
+    	setClearErrorMessage(input);
+    	
+	} else { // 유효한 URl이 아니거나 지원되지 않은 플랫폼일 경우
+		if ($previewEle.length) $previewEle.remove(); // 잘못된 URL 입력 시 미리보기 삭제
+		if(alertMsg) alert('지원되지 않은 플랫폼이거나 유효하지 않은 URL입니다. 올바른 URL을 입력해 주세요.');
+		setAddErrorMessage(input, '지원되지 않은 플랫폼이거나 유효하지 않은 URL입니다. 올바른 URL을 입력해 주세요.');
+		return false;
+	}
+	
+	return true; // 검증을 통과한 경우
+}
+
+// URL에서 플랫폼 및 영상 ID를 추출하고 임베드 링크를 반환
+function extractPlatformInfo(url) {
+	// Youtube, Vimeo, Dailymotion, Facebook Reel, Instagram Reel 플랫폼 확인
+    
+    const platforms = [ // 플렛폼 추가시 해당 플랫폼에 맞는 정규표현식, 임베디드 URL 추가
+		{
+			name: 'youtube',
+			regEx: /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+			embedUrl: (id) => `https://www.youtube.com/embed/${id}`
+		},
+		{
+            name: 'vimeo',
+            regEx: /(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(\d+)/,
+            embedUrl: (id) => `https://player.vimeo.com/video/${id}`
+        },
+        {
+            name: 'dailymotion',
+            regEx: /(?:https?:\/\/)?(?:www\.)?dailymotion\.com\/video\/([a-zA-Z0-9]+)/,
+            embedUrl: (id) => `https://www.dailymotion.com/embed/video/${id}`
+        },
+        {
+            name: 'facebook_reels',
+            regEx: /(?:https?:\/\/)?(?:www\.)?facebook\.com\/reel\/([a-zA-Z0-9_-]+)/,
+            embedUrl: (id) => `https://www.facebook.com/reel/${id}/embed`
+        },
+        {
+            name: 'instagram_reels',
+            regEx: /(?:https?:\/\/)?(?:www\.)?instagram\.com\/reel\/([a-zA-Z0-9_-]+)/,
+            embedUrl: (id) => `https://www.instagram.com/reel/${id}/embed`
+        }
+	];
+	
+	for(const platform of platforms) { // URL을 각 플렛폼의 정규표현식과 비교하여 매칭된 플랫폼 반환
+		const match = url.match(platform.regEx);
+		if(match) {
+			return { platform: platform.name, embedUrl: platform.embedUrl(match[1]) };
+		}
+	}
+	
+	return null; // 지원되지 않는 플랫폼일 경우 null 반환
 }
 
 // 욕설 및 비속어 필터링
@@ -164,6 +222,13 @@ function profanityFilter(value) {
 		}
 	}
     return { found: false };
+}
+
+// input number "E,e,-,+,."키(Exponential Notation) 입력 제어 / input type="number"는 기본적으로 지수 표기법을 지원하기 때문
+function blockEKey(event) {
+	if (event.key === 'E' || event.key === 'e' || event.key === '-' || event.key === '+' || event.key === '.') {
+        event.preventDefault(); // 기본 동작 차단
+    }
 }
 
 // 휴대폰 번호 형식으로 변환
@@ -195,9 +260,32 @@ function replaceNumber(input) {
 	return number;
 }
 
-// input number "E,e,-,+,."키(Exponential Notation) 입력 제어 / input type="number"는 기본적으로 지수 표기법을 지원하기 때문
-function blockEKey(event) {
-	if (event.key === 'E' || event.key === 'e' || event.key === '-' || event.key === '+' || event.key === '.') {
-        event.preventDefault(); // 기본 동작 차단
+// input date에 min, max 기반 입력값 제어하여 변환
+function replaceDate(input) {
+	validateEmpty(input, '생년월일을')
+	
+	if (input.value.length < 8) {
+		return false;
+	}
+	
+    const inputDate = new Date(input.value);
+    
+    if (input.min) { // min 값이 존재할 때만 처리
+        const minDate = new Date(input.min);
+        if (inputDate.getFullYear() < minDate.getFullYear()) { // 입력한 연도가 minDate보다 이전일 때
+            // 연도를 minDate로 변경하고 월과 일은 유지
+            inputDate.setFullYear(minDate.getFullYear());
+            input.value = inputDate.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
+            alert();
+        }
+    }
+
+    if (input.max) { // max 값이 존재할 때만 처리
+        const maxDate = new Date(input.max);
+        if (inputDate.getFullYear() > maxDate.getFullYear()) { // 입력한 연도가 maxDate보다 이후일 때
+            // 연도를 maxDate로 변경하고 월과 일은 유지
+            inputDate.setFullYear(maxDate.getFullYear());
+            input.value = inputDate.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
+        }
     }
 }

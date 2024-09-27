@@ -209,26 +209,13 @@
 	<!-- 페이지에 따른 식단 가져오기(모든 식단) -->
 	<select id="getRecipeListWithPage"
 			resultMap="RecipeDto">
-		
+			
 		SELECT 
 			* 
 		FROM 
 			RECIPE 
-		<choose>
-			<when test="sortValue == 'all'">
-				ORDER BY RCP_SEQ DESC 
-			</when>
-			<when test="sortValue == 'rcp_nm'">
-				<choose>
-					<when test="order == 'asc'">
-						ORDER BY RCP_NM ASC 
-					</when>
-					<when test="order == 'desc'">
-						ORDER BY RCP_NM DESC 
-					</when>
-				</choose>
-			</when>
-		</choose>
+		ORDER BY 
+			${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}		
 	
@@ -281,12 +268,8 @@
 			* 
 		FROM 
 			RECIPE 
-		<choose>
-			<when test="searchPart == 'rcp_nm'">
-				WHERE 
-					RCP_NM LIKE CONCAT('%', #{searchString}, '%')
-			</when>
-		</choose>
+		WHERE 
+			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 		ORDER BY 
 			RCP_SEQ DESC 
 		LIMIT 
@@ -301,12 +284,8 @@
 			COUNT(*) 
 		FROM 
 			RECIPE 
-		<choose>
-			<when test="searchPart == 'rcp_nm'">
-				WHERE 
-					RCP_NM LIKE CONCAT('%', #{searchString}, '%')
-			</when>
-		</choose>
+		WHERE 
+			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 	
 	</select>
 	

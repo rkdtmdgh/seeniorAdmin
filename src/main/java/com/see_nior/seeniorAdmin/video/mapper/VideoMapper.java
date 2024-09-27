@@ -16,5 +16,11 @@ public interface VideoMapper {
 	public int selectAllVideoListCnt();
 
 	public int insertNewVideo(VideoDto videoDto);
+
+	public List<AdminAccountDto> selectSearchVideoList(Map<String, Object> pagingParams);
+
+	public int selectSearchVideoListCnt();
+
+	public int updateVideoInfo(VideoDto videoDto);
 	
 }
