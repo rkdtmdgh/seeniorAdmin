@@ -37,7 +37,7 @@
 	                                <tbody>
 		                                <tr>
 		                                    <th><p class="table_title">제목</p></th>
-		                                    <td>
+		                                    <td colspan="3">
 		                                        <input type="hidden" name="v_no" th:value="${videoDto.v_no}">
 		                                        <input type="text" name="v_title" id="v_title" class="table_info" placeholder="제목"
 		                                            onblur="validateEmpty(this, '제목을');"
@@ -47,12 +47,14 @@
 		
 		                                <tr>
 		                                    <th><p class="table_title">URL</p></th>
-		                                    <td>
+		                                    <td colspan="3">
 		                                    	<div class="cont_info">
 			                                		<input type="text" name="v_link" id="v_link" class="table_info" placeholder="URL"
-		                                				onblur="validateEmpty(this, 'URL 주소를')"
+		                                				onblur="validateVideo(this)"
 		                                				th:value="${videoDto.v_link}">
-			                                		<div class="btns small">미리보기</div>
+	                                				<div class="table_info preview_container">
+	                                					<iframe frameborder="0" allowfullscreen="true" th:src="${videoDto.v_link}">)</iframe>
+	                                				</div>
 		                                		</div>
 		                                    </td>
 		                                </tr>
