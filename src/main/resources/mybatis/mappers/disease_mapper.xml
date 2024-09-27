@@ -103,21 +103,8 @@
 			DISEASE_CATEGORY 
 		WHERE 
 			DC_IS_DELETED = 1 
-		<choose>
-			<when test="sortValue == 'all'">
-				ORDER BY DC_NO DESC				
-			</when>
-			<when test="sortValue == 'dc_name'">
-				<choose>
-					<when test="order == 'asc'">
-						ORDER BY DC_NAME ASC	
-					</when>
-					<when test="order == 'desc'">
-						ORDER BY DC_NAME DESC	
-					</when>
-				</choose>
-			</when>			
-		</choose>
+		ORDER BY 
+			${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 	
@@ -258,21 +245,8 @@
 		    D.D_IS_DELETED = 1 
 		AND 
 			DC.DC_IS_DELETED = 1 
-		<choose>
-			<when test="sortValue == 'all'">
-				ORDER BY D.D_NO DESC				
-			</when>
-			<when test="sortValue == 'd_name'">
-				<choose>
-					<when test="order == 'asc'">
-						ORDER BY D_NAME ASC	
-					</when>
-					<when test="order == 'desc'">
-						ORDER BY D_NAME DESC	
-					</when>
-				</choose>
-			</when>					
-		</choose>    
+    	ORDER BY 
+     		D.${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 	
