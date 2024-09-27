@@ -81,18 +81,8 @@
 			BQ.BQ_USER_NO = U.U_NO 
 		WHERE 
 			BQ.BQ_IS_DELETED = 1 
-		<choose>
-			<when test="sortValue == 'bq_no'">
-				<choose>
-					<when test="order == 'asc'">
-						ORDER BY BQ.BQ_NO ASC
-					</when>
-					<when test="order == 'desc'">
-						ORDER BY BQ.BQ_NO DESC
-					</when>
-				</choose>
-			</when>
-		</choose>
+		ORDER BY 
+			${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 	

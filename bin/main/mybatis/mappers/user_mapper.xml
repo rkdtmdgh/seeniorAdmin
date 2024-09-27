@@ -68,17 +68,7 @@
 		WHERE 
 			U_IS_DELETED = 1
 		<if test="searchPart != null and searchString != null">
-			<choose>
-				<when test="searchPart == 'u_id'">
-					AND U_ID LIKE CONCAT('%', #{searchString}, '%')
-				</when>
-				<when test="searchPart == 'u_name'">
-					AND U_NAME LIKE CONCAT('%', #{searchString}, '%')
-				</when>
-				<when test="searchPart == 'u_phone'">
-					AND U_PHONE LIKE CONCAT('%', #{searchString}, '%')
-				</when>
-			</choose>
+			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 		</if>
 	
 	</select>
@@ -94,17 +84,7 @@
 		WHERE 
 			U_IS_DELETED = 1
 		<if test="searchPart != null and searchString != null">
-			<choose>
-				<when test="searchPart == 'u_id'">
-					AND U_ID LIKE CONCAT('%', #{searchString}, '%')
-				</when>
-				<when test="searchPart == 'u_name'">
-					AND U_NAME LIKE CONCAT('%', #{searchString}, '%')
-				</when>
-				<when test="searchPart == 'u_phone'">
-					AND U_PHONE LIKE CONCAT('%', #{searchString}, '%')
-				</when>
-			</choose>
+			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 		</if>
 		ORDER BY U_NO DESC 
 		LIMIT 
