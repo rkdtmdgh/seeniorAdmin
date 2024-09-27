@@ -4,21 +4,25 @@
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
 <head>
-	<th:block th:insert="~{fragments/head.html :: head('게시판 관리')}"></th:block>
+	<th:block th:insert="~{fragments/head.html :: head('영상 정보 관리')}"></th:block>
 	<script type="text/javascript">
 		$(function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // 검색
-					getSearchList(null, '/board/cate_info/search_board_list', page);
+					getSearchList(null, '/video/info/search_video_list', page);
+					break;
+
+				case '1': // 카테고리 셀렉트
+					getList('/video/info/get_video_list_by_category_with_page', sortValue, order, page);
 					break;
 
 				case '0':  // 정렬
-					getList('/board/cate_info/get_list', sortValue, order, page);
+					getList('/video/info/get_video_list', sortValue, order, page);
 					break;
 					
 				default: // 기본
-					getList('/board/cate_info/get_list', null, null, page);
+					getList('/video/info/get_video_list', null, null, page);
 			}
         });
 	</script>
@@ -36,47 +40,55 @@
 					<section class="content_info_wrap">
 					    <div class="content_top">
 					        <div class="content_top_info">
-					            <h2 class="title">게시판 관리</h2>
+					            <h2 class="title">영상 정보 관리</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/board/cate_info/search_board_category_list')" th:insert="~{fragments/search.html :: search('게시판 관리')}"></form>
+									<form name="search_form" onsubmit="getSearchList(event, '/video/info/search_video_list')" th:insert="~{fragments/search.html :: search('영상 정보 관리')}"></form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/board/cate_info/get_list', null, null, 1);">전체보기</div>
-						            	<a href="/board/cate_info/create_category_form" class="btns small">등록</a>
+						            	<div class="btns small" onclick="getList('/video/info/get_video_list', null, null, 1);">전체보기</div>
+						            	<div class="btns small delete" onclick="delListData('d_no', true)">삭제</div>
+						            	<a href="/video/info/create_form" class="btns small">등록</a>
 						            </div>
 					            </div>
 					        </div>
 					    </div>
 					    
 					    <div class="table_wrap">
-	                        <table class="content_table board_list_table">
+	                        <table class="content_table video_list_table">
 	                            <colgroup>
+	                                <col class="col_checkBox">
 	                                <col class="col_no">
 	                                <col>
-	                                <col>
-	                                <col>
+	                                <col class="col_default">
+	                                <col class="col_default">
 	                            </colgroup>
 	
 	                            <thead>
 	                                <tr>
+	                                	<th>
+	                                		<div class="table_title"><input type="checkbox" name="all_check" id="all_check" 
+	                                			onchange="setAllCheckBox(this)" value="v_no" ></div>
+	                                    </th>
+	                                    
 	                                    <th>
 	                                        <p class="table_title">No</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p data-current-sort-value="all" class="table_title sort"
-	                                        	onclick="getSortList(event, 'board_category', 'bc_name')">
-	                                        	게시판명
-	                                        	<span class="sort_icon"></span>
-	                                        </p>
+                                   			<p class="table_title">제목</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">게시물 수</p>
+	                                        <p class="table_title">URL</p>
 	                                    </th>
+	                                    
 	                                    <th>
-	                                        <p class="table_title">등록일</p>
+	                                   		<p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'v_mod_date')">
+	                                        	등록일
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
 	                                    </th>
 	                                </tr>
 	                            </thead>

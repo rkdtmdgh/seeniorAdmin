@@ -66,7 +66,7 @@
 	                                    
 	                                    <th>
 	                                        <p data-current-sort-value="all" class="table_title sort"
-	                                        	onclick="getSortList(event, 'dc_name')">
+	                                        	onclick="getSortList(event, 'disease_category', 'dc_name')">
 	                                        	분류명
 	                                        	<span class="sort_icon"></span>
 	                                        </p>
@@ -77,7 +77,11 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">등록일</p>
+	                                    	<p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'disease_category', 'dc_mod_date')">
+	                                        	등록일
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
 	                                    </th>
 	                                </tr>
 	                            </thead>

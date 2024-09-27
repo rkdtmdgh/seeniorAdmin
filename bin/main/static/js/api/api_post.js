@@ -18,13 +18,13 @@ async function postSignUpForm(event, formName) {
 	}
 	
 	input = form.a_name;
-	if(!checkEmpty(input, '이름을', true)) {
+	if(!validateEmpty(input, '이름을', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_birth;
-	if(!checkEmpty(input, '생년월일을', true)) {
+	if(!validateEmpty(input, '생년월일을', true)) {
 		input.focus();
 		return false;
 	}
@@ -48,13 +48,13 @@ function postSignInForm(event, formName) {
 	let input;
 	
 	input = form.a_id;
-	if(!checkEmpty(input, '이메일을', true, true)) { // 요소, 텍스트, alert 여부, 메세지 요소 미노출 여부
+	if(!validateEmpty(input, '이메일을', true, true)) { // 요소, 텍스트, alert 여부, 메세지 요소 미노출 여부
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_pw;
-	if(!checkEmpty(input, '비밀번호를', true, true)) {
+	if(!validateEmpty(input, '비밀번호를', true, true)) {
 		input.focus();
 		return false;
 	}
@@ -72,7 +72,7 @@ async function postIdentityCheckForm(event, formName) {
 	let input;
 	
 	input = form.a_pw;
-	if(!checkEmpty(input, '비밀번호를', true, true)) {
+	if(!validateEmpty(input, '비밀번호를', true, true)) {
 		input.focus();
 		return false;
 	}
@@ -105,48 +105,17 @@ async function postIdentityCheckForm(event, formName) {
 	}
 }
 
-// 식단 정보 업데이트
-async function postRecipeUpdate(ele) {
-	const isConfirm = confirm('업데이트는 약 10~30초 정도가 소요됩니다. 업데이트하시겠습니까?');
-	if(!isConfirm) return false;
-	
-	$(ele).css('pointer-events', 'none'); // 버튼 비활성화(중복 클릭 방지)
-	setAddLoading(ele); // 로딩 표시
-	
-	try {
-		const response = await $.ajax({
-			url: '/recipe/info/refresh_api_recipe_data',
-		});
-		
-		logger.info('postRecipeUpdate() response:', response);	
-		
-		if(response) {
-			alert('최신 정보로 업데이트하였습니다.');
-			
-		} else {
-			alert('최신 정보 업데이트에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
-		}
-		
-	} catch(error) {
-		logger.error('postRecipeUpdate() error:', error);
-		
-	} finally {
-		location.reload(true);
-	}
-}
-
 // 게시물 등록 폼
 async function postPostsCreateForm(formName) {
 	const form = document.forms[formName];
 	
 	input = form.title;
-	if(!checkEmpty(input, '제목을', true)) {
+	if(!validateEmpty(input, '제목을', true)) {
 		input.focus();
 		return false;
 	}
 	
-	if(!checkQuillEmpty(quill.root.innerHTML)) {
-		quill.focus();
+	if(!validateQuill(quill)) { // 내용 유효성 및 비속어 검사
 		return false;
 	}
 	
@@ -157,35 +126,42 @@ async function postPostsCreateForm(formName) {
 	const errorMessage = `"${title.value.trim()}" ${notice == 1 ? '공지' : '일반'} 게시물 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
 	const formData = new FormData();
-	formData.append(`${prefix}category_no`, category_no.value);
-	formData.append(`${prefix}title`, title.value.trim());
-	formData.append(`${prefix}writer_no`, writer_no.value);
-	formData.append(`${prefix}body`, quill.root.innerHTML);
+	formData.append(`${prefix}title`, input.value.trim()); // 제목
+	formData.append(`${prefix}category_no`, form.category_no.value); // 게시판 no
+	formData.append(`${prefix}writer_no`, form.writer_no.value); // 작성자 no
+	formData.append(`${prefix}body`, quill.root.innerHTML); // quill 에디터 내용
 	
 	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
+	let files = []; // 최종적으로 서버로 전송할 File 객체를 담을 배열
+	
 	for(let img of $imgTags) {
-		const src= $(img)[0].src; // src 속성에 입력된 Blob Url 가져오기
+		const src= $(img)[0].src; // src 속성에 입력된 base64 Url 가져오기
+		const base64Data = src.split(',')[1]; // base64 데이터 부분 추출
+		const byteCharacters = atob(base64Data); // base64를 디코딩 반대 메소드 btoa() 
+		const byteNumbers = new Array(byteCharacters.length);
 		
-		let blob;
-		if(src.startsWith('blob:')) { // Blob Url일 경우
-			const blobUrlData = await fetch(src); // Blob Url을 통해 실제 Blob 데이터 요청
-			blob = await blobUrlData.blob(); // Blob 객체로 변환
-			
-		} else if (src.startsWith('data:image/:')) { // Base64 Url일 경우
-			const base64Data = src.split(',')[1]; // Base64 데이터 부분 추출
-			const byteCharacters = atob(base64Data); // Base64를 디코딩 반대 메소드 btoa() 
-			const byteNumbers = new Array(byteCharacters.length);
-			for(let i = 0; i < byteCharacters.length; i++) {
-				byteNumbers[i] = byteCharacters.charCodeAt(i); // 각 문자를 바이트 배열로 변환
-			}
-			const byteArray = new Uint8Array(byteNumbers);
-			const mimeType = src.match(/data:(.*?);base64/)[1]; // MIME 타입 추출
-			blob = new Blob([byteArray], {type: mimeType}); // Blob 객체로 변환			
+		for(let i = 0; i < byteCharacters.length; i++) {
+			byteNumbers[i] = byteCharacters.charCodeAt(i); // 각 문자를 바이트 배열로 변환
 		}
 		
-		const resizedBlob = await resizeImage(blob, $(img)[0].width); // 설정된 width 크기로 리사이즈 및 압축
-		formData.append('files', resizedBlob);
+		const byteArray = new Uint8Array(byteNumbers); // 8비트 부호 없는 정수(0-255) 저장 배열
+		const mimeType = 'image/webp'; // src.match(/data:(.*?);base64/)[1]; // MIME 타입 추출
+		const blob = new Blob([byteArray], {type: mimeType}); // 이진 데이터로 blob 객체로 변환	
+		
+		// 설정된 width 크기로 리사이즈 압축 후 flle 객체로 변환
+		const resizedImageFile = await resizeImage(blob, $(img)[0].width, mimeType);
+		files.push(resizedImageFile); // 리사이즈된 File객체를 배열에 추가
 	}
+	
+	//formData.append('files', files); // 무조건 배열로 전송
+	files.forEach((file) => {
+        formData.append('files', file); // append로 추가해서 1개 이상 시 배열로 전송 (테스트용)
+    });
+	
+	logger.info('postPostsCreateForm() files[]:', files, apiUrl); // files 배열 확인
+	for (const [key, value] of formData.entries()) { // formData의 모든 데이터 확인
+		logger.info('postPostsCreateForm() formData:', key, value);
+	};
 	
 	try {
 		const response = await $.ajax({
@@ -255,7 +231,7 @@ async function postDiseaseCategoryCreateForm(event, formName, nextPage) {
 	let input;
 	
 	input = form.dc_name;
-	if(!(await usedInputValueCheck(input, true, false, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+	if(!(await requestDuplicateCheck(input, true, false, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 		input.focus();
 		return false;
 	}
@@ -287,25 +263,25 @@ async function postDiseaseCreateForm(formName) {
 	}
 	
 	input = form.d_name;
-	if(!(await usedInputValueCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+	if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 		input.focus();
 		return false;
 	}
 	
 	input = form.d_good_food;
-	if(!checkEmpty(input, '추천 식단 재료를', true)) {
+	if(!validateEmpty(input, '추천 식단 재료를', true)) {
 		input.focus();
 		return false;
 	}
 		
 	input = form.d_bad_food;
-	if(!checkEmpty(input, '비추천 식단 재료를', true)) {
+	if(!validateEmpty(input, '비추천 식단 재료를', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.d_info;
-	if(!checkEmpty(input, '질환 / 질병 정보를', true)) {
+	if(!validateEmpty(input, '질환 / 질병 정보를', true)) {
 		input.focus();
 		return false;
 	}
@@ -323,20 +299,56 @@ async function postDiseaseCreateForm(formName) {
 	);
 }
 
+// 영상 정보 등록 폼
+async function postVideoCreateForm(formName) {
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.v_title;
+	if(!validateEmpty(input, '제목을', true)) {
+		input.focus();
+		return false;
+	}
+		
+	input = form.v_link;
+	if(!validateEmpty(input, 'URL 주소를', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.v_text;
+	if(!validateEmpty(input, '내용을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	const successMessage = `"${form.v_title.value}"\n영상 정보가 등록되었습니다.`;
+	const errorMessage = `"${form.v_title.value}"\n영상 정보 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	await postSubmitForm(
+		'/video/info/create_confirm', 
+		formData, 
+		successMessage, 
+		errorMessage, 
+		'/video/info/video_list_form'
+	);
+}
+
 // 게시판 등록 폼
 async function postBoardCategoryCreateForm(formName) {
 	const form = document.forms[formName];
 	const bc_name = form.bc_name;
 	const bc_idx = form.bc_idx;
 	
-	if(!(await usedInputValueCheck(bc_name, true, false, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+	if(!(await requestDuplicateCheck(bc_name, true, false, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 		bc_name.focus();
 		return false;
 	}
 	
 	const formData = new FormData();
 	formData.append('bc_name', bc_name.value.trim());
-	formData.append('bc_idx', setReplaceNumber(bc_idx)); // 문자열 제외 및 min, max 체크하여 입력값 설정
+	formData.append('bc_idx', replaceNumber(bc_idx)); // 문자열 제외 및 min, max 체크하여 입력값 설정
 	
 	const successMessage = `"${bc_name.value}" 게시판이 등록되었습니다.`;
 	const errorMessage = `"${bc_name.value}" 게시판 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
@@ -386,4 +398,34 @@ async function postQnaNoticeCreateForm(formName) {
 		errorMessage, 
 		'/qna/info/qna_list_form'
 	);
+}
+
+// 식단 정보 업데이트
+async function postRecipeUpdate() {
+	const isConfirm = confirm('업데이트는 약 10~30초 정도가 소요됩니다. 업데이트하시겠습니까?');
+	if(!isConfirm) return false;
+	
+    setAddLoading(true); // 로딩 시작
+	
+	try {
+		const response = await $.ajax({
+			url: '/recipe/info/refresh_api_recipe_data',
+			method: 'GET',
+		});
+		
+		logger.info('postRecipeUpdate() response:', response);	
+		
+		if(response) {
+			alert('최신 정보로 업데이트하였습니다.');
+			
+		} else {
+			alert('최신 정보 업데이트에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
+		}
+		
+	} catch(error) {
+		logger.error('postRecipeUpdate() error:', error);
+		
+	} finally {
+		location.reload(true);
+	}
 }

@@ -14,7 +14,6 @@ import com.see_nior.seeniorAdmin.dto.VideoDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
-
 @Log4j2
 @Controller
 @RequiredArgsConstructor
@@ -24,11 +23,11 @@ public class VideoController {
 	final private VideoService videoService;
 	
 	// 비디오 리스트 양식
-	@GetMapping("/info/list_form")
-	public String listForm() {
-		log.info("listForm()");
+	@GetMapping("/info/video_list_form")
+	public String videoListForm() {
+		log.info("videoListForm()");
 		
-		String nextPage = "video/list_form";
+		String nextPage = "video/video_list_form";
 		
 		return nextPage;
 	}
@@ -51,6 +50,32 @@ public class VideoController {
 		
 		return videoList;
 	
+	}
+	
+	// 비디오 리스트 검색 (비동기)
+	@GetMapping("/info/search_video_list")
+	@ResponseBody
+	public Object searchVideo(
+			@RequestParam("searchPart") String searchPart,
+			@RequestParam("searchString") String searchString,
+			@RequestParam(value = "sortValue", required = false, defaultValue = "v_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("searchVideoList()");
+		
+		Map<String, Object> searchVideoList =
+				videoService.searchVideoPagingList(searchPart, searchString, sortValue, order, page);
+		
+		Map<String, Object> searchAdminListPage = 
+				videoService.searchVideoListPageNum(searchPart, searchString, page);
+		
+		searchVideoList.put("searchAdminListPage", searchAdminListPage);
+		searchVideoList.put("approval", sortValue);
+		searchVideoList.put("order", order);
+		searchVideoList.put("searchPart", searchPart);
+		searchVideoList.put("searchString", searchString);
+		
+		return searchVideoList;
 	}
 	
 	// 비디오 등록 양식
@@ -100,15 +125,5 @@ public class VideoController {
 		
 		return null;
 	}
-	
-	// 비디오 리스트 검색 (비동기)
-	@GetMapping("/info/search_video")
-	@ResponseBody
-	public Object searchVideo() {
-		log.info("searchVideo()");
-		
-		return null;
-	}
-	
 	
 }

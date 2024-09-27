@@ -515,6 +515,7 @@
     		}
     		
     		.content_view_td {
+    			width: 100%;
     			padding: var(--textPadding);
     			word-break: keep-all;
     			
