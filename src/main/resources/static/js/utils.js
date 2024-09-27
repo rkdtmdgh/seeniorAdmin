@@ -94,10 +94,11 @@ function setRecipeContentInfo(recipeDto) {
 	}   
 }
 
-// 영상 정보 URL 미리 보기 설정
-function setVideoPreview(input) {
-	const $input = $(input);
-	const $previewEle = $('<div class="table_info preview_container">');
+// 새창 열기 중앙 설정
+function setWindowOpenPosition(url, width, height) {
+	const left = Math.ceil((window.screen.width - width)/2);
+	const top = Math.ceil((window.screen.height - height)/2);
+	window.open(url,'','width='+width+',height='+height+',left='+left+',top='+top+',scrollbars=yes,resizable=no,toolbar=no,titlebar=no,menubar=no,location=no')
 }
 
 // 본인 확인 페이지 세션스토리지 저장 값 확인하여 요청 처리

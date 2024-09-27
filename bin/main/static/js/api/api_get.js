@@ -263,6 +263,18 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.recipeListByCategoryPageNum.recipeListByCategoryCnt;
 			break;
 			
+		case '/video/info/get_video_list': // 영상 정보 관리
+			getListDtos = response.videoDtos;
+			getListPage = response.videoListPage;
+			getListCnt = response.videoListPage.videoListCnt;
+			break;
+			
+		case '/video/info/search_video_list': // 영상 정보 관리 검색
+			getListDtos = response.videoDtos;
+			getListPage = response.searchVideoListPage;
+			getListCnt = response.searchVideoListPageNum.searchVideoListCnt;
+			break;	
+			
 		case '/board/cate_info/get_list': // 게시판 관리
 			getListDtos = response.boardCategoryDtos;
 			getListPage = response.boardCategoryListPageNum;
@@ -417,6 +429,29 @@ function generateTableList(apiUrl, data, listIndex) {
 		                	${data.info_fat ? `<span>지방(${data.info_fat}g)</span>` : ''}
 		                	${data.info_na ? `<span>나트륨(${data.info_na}mg)</span>` : ''}
 		                </a>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/video/info/get_video_list': // 영상 정보 관리 리스트 테이블
+		case '/video/info/search_video_list': // 영상 정보 관리 검색 리스트 테이블
+			tableTrContent = `
+				<tr>
+		            <td class="vam">
+		                <div class="table_info func_area"><input type="checkbox" name="v_no" class="d_no" value="${data.v_no}"></div>
+		            </td>
+		            <td>
+		                <a href="/video/info/modify_form?v_no=${data.v_no}" class="table_info">${listIndex}</a>
+		            </td>
+		            <td class="ta_l">
+		                <a href="/video/info/modify_form?v_no=${data.v_no}" class="table_info">${data.v_title}</a>
+		            </td>
+		            <td class="ta_l">
+		                <a href="${data.v_link}" onclick="setWindowOpenPosition(this.href, '640', '360'); return false;" class="table_info">${data.v_link}</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.v_mod_date) || 'N/A'}</p>
 		            </td>
 		        </tr>
 			`;
@@ -637,6 +672,10 @@ function mapSortListApiObject(dbTable) {
 			
 		case 'recipe': // 식단 정보 관리 페이지
 			apiUrl = '/recipe/info/get_all_recipe_list_with_page';
+			break;
+			
+		case 'video': // 영상 정보 관리 페이지
+			apiUrl = '/video/info/get_video_list';
 			break;
 			
 		case 'board_category': // 게시판 관리 페이지

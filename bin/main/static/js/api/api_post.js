@@ -312,7 +312,7 @@ async function postVideoCreateForm(formName) {
 	}
 		
 	input = form.v_link;
-	if(!validateEmpty(input, 'URL 주소를', true)) {
+	if(!validateVideo(input, true)) {
 		input.focus();
 		return false;
 	}
