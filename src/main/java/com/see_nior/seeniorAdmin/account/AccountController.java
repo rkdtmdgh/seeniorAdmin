@@ -226,7 +226,7 @@ public class AccountController {
 		
 		Map<String, Object> adminListPage = accountService.getAdminListPageNum(page);
 		adminList.put("adminListPage", adminListPage);
-		adminList.put("approval", sortValue);
+		adminList.put("sortValue", sortValue);
 		adminList.put("order", order);
 		
 		return adminList;
@@ -250,7 +250,7 @@ public class AccountController {
 				accountService.searchAdminListPageNum(searchPart, searchString, page);
 		
 		searchAdminList.put("searchAdminListPage", searchAdminListPage);
-		searchAdminList.put("approval", sortValue);
+		searchAdminList.put("sortValue", sortValue);
 		searchAdminList.put("order", order);
 		searchAdminList.put("searchPart", searchPart);
 		searchAdminList.put("searchString", searchString);

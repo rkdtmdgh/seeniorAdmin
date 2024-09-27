@@ -65,8 +65,8 @@ public class RecipeController {
 	@GetMapping("info/get_all_recipe_list_with_page")
 	public Object getAllRecipeListWithPage(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-			@RequestParam(value = "sortValue", required = false, defaultValue = "all") String sortValue,
-			@RequestParam(value = "order", required = false, defaultValue = "all") String order) {
+			@RequestParam(value = "sortValue", required = false, defaultValue = "rcp_seq") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		log.info("getAllRecipeListWithPage()");
 		
 		// 페이지 번호에 따른 식단 리스트들 가져오기

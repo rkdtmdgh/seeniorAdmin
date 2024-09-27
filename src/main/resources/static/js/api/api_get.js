@@ -365,7 +365,7 @@ function generateTableList(apiUrl, data, listIndex) {
 		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${data.d_name || 'N/A'}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.d_reg_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.d_mod_date) || 'N/A'}</p>
 		            </td>
 		        </tr>
 			`;
@@ -601,11 +601,11 @@ function generatePagination(pagingValues, sortValue, order, apiUrl, isSearch) { 
 }
 
 // 버튼으로 정렬된 리스트 요청
-function getSortList(event, sortValue) {
+function getSortList(event, dbTable, sortValue) {
     const sortBtn = event.currentTarget.closest('.sort'); // 클릭된 요소가 가장 가까운 부모 요소 중 클래스가 "sort"인 요소를 찾음
 	if(!sortBtn) return; // 만약 sort 요소가 없다면 아무 작업도 하지 않음
 	
-    const apiUrl = mapSpecificApiObjec(sortValue); // 커맨드 가져오기
+    const apiUrl = mapSortListApiObject(dbTable); // 커맨드 가져오기
     const currentSortValue = sortBtn.getAttribute('data-current-sort-value'); // 현재 정렬 값 가져오기 default all
     const order = currentSortValue === 'asc' ? 'desc' : 'asc'; // 정렬 값 토글
     sortBtn.setAttribute('data-current-sort-value', order); // 버튼의 data-sort-value 속성 값 업데이트
@@ -618,12 +618,45 @@ function getSortList(event, sortValue) {
     getList(apiUrl, sortValue, order, 1); // 변경된 정렬 값으로 getList 호출
 }
 
+// sort getList() 요청에 필요한 객체 설정
+function mapSortListApiObject(dbTable) {
+	let apiUrl;
+	
+	switch(dbTable) {
+		case 'disease': // 질환/질병 정보 관리 페이지
+			apiUrl = '/disease/info/get_all_disease_list_with_page';
+			break;
+		
+		case 'disease_category': // 질환/질병 분류 관리 페이지
+			apiUrl = '/disease/cate_info/get_category_list_with_page';
+			break;
+			
+		case 'admin_account': // 관리자 계정 관리 페이지
+			apiUrl = '/account/list/get_admin_list';
+			break;
+			
+		case 'recipe': // 식단 정보 관리 페이지
+			apiUrl = '/recipe/info/get_all_recipe_list_with_page';
+			break;
+			
+		case 'board_category': // 게시판 관리 페이지
+			apiUrl = '/board/cate_info/get_list';
+			break;
+			
+		default:
+			logger.error('mapSortListApiObject() dbTable:', value);
+			return false;
+	}
+	
+	return apiUrl;
+}
+
 // 선택된 카테고리의 리스트 요청
 function getSelectList(event) {
 	const sortBtn = event.target; // 클릭된 버튼 요소
 	const sortValue = sortBtn.parentElement.getAttribute('data-sort-value'); // 정렬 종류 가져오기
 	const order = sortBtn.getAttribute('data-order'); // 정렬할 값
-	const apiUrl = mapSpecificApiObjec(sortValue); // 커맨드 가져오기
+	const apiUrl = mapSelectListApiObject(sortValue); // 커맨드 가져오기
 	
 	const urlParams = new URLSearchParams(window.location.search);
 	urlParams.set('sortType', 1); // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
@@ -634,30 +667,10 @@ function getSelectList(event) {
 }
 
 // getList() 요청에 필요한 객체 설정
-function mapSpecificApiObjec(value) {
+function mapSelectListApiObject(sortValue) {
 	let apiUrl;
 	
-	switch(value) {
-		case 'a_authority_role': // 관리자 리스트 페이지 승인 정렬
-			apiUrl = '/account/list/get_admin_list';
-			break;
-			
-		case 'dc_name': // 질환/질병 분류 리스트 페이지 분류명 정렬
-			apiUrl = '/disease/cate_info/get_category_list_with_page';
-			break;
-			
-		case 'd_name': // 질환/질병 정보 리스트 페이지 질환/질병명 정렬
-			apiUrl = '/disease/info/get_all_disease_list_with_page';
-			break;
-			
-		case 'rcp_nm': // 식단 정보 리스트 페이지 메뉴명 정렬
-			apiUrl = '/recipe/info/get_all_recipe_list_with_page';
-			break;
-			
-		case 'bc_name': // 게시판 관리 페이지 게시판명 정렬
-			apiUrl = '/board/cate_info/get_list';
-			break;
-			
+	switch(sortValue) {				
 		case 'dc_no': // 질환/질병 정보 리스트 페이지 분류명별 필터
 			apiUrl = '/disease/info/get_disease_list_by_category_with_page';
 			break;
@@ -667,7 +680,7 @@ function mapSpecificApiObjec(value) {
 			break;
 			
 		default:
-			logger.error('setSelectCommand() value:', value);
+			logger.error('mapSelectListApiObject() sortValue:', value);
 			return false;
 	}
 	

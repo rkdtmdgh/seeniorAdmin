@@ -139,7 +139,9 @@ public class VideoService {
 		
 		int createRsult = videoMapper.insertNewVideo(videoDto);
 		
-		if (createRsult < 0) {
+		log.info("createRsult --- {}", createRsult);
+		
+		if (createRsult > 0) {
 			return CREATE_VIDEO_SUCCESS;
 		} 
 		

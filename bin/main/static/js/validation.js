@@ -129,7 +129,7 @@ function validateQuill(quill) {
     const profanityResult = profanityFilter(plainText);
    
 	if(profanityResult.found) { // 비속어가 있을 경우
-		quill.focus();
+		//quill.focus();
 		quill.setSelection(profanityResult.position, profanityResult.length);
 		alert('금지된 단어가 포함되어 있습니다.');
 		return false;
