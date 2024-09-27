@@ -114,7 +114,8 @@ public class VideoController {
 	public Object modifyConfirm(VideoDto videoDto) {
 		log.info("modifyConfirm()");
 		
-		return null;
+		return videoService.modifyConfirm(videoDto);
+		
 	}
 	
 	// 비디오 삭제 확인 (비동기)

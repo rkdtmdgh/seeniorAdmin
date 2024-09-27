@@ -113,4 +113,18 @@
 	
 	</select>
 	
+	<update id="updateVideoInfo">
+		
+		UPDATE 
+			VIDEO 
+		SET 
+			V_TITLE = #{v_title}, 
+			V_TEXT = #{v_text}, 
+			V_LINK = #{v_link}, 
+			V_MOD_DATE = NOW() 
+		WHERE 
+			V_NO = #{v_no} 
+	
+	</update>
+	
 </mapper>
