@@ -268,12 +268,8 @@
 			* 
 		FROM 
 			RECIPE 
-		<choose>
-			<when test="searchPart == 'rcp_nm'">
-				WHERE 
-					RCP_NM LIKE CONCAT('%', #{searchString}, '%')
-			</when>
-		</choose>
+		WHERE 
+			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 		ORDER BY 
 			RCP_SEQ DESC 
 		LIMIT 
@@ -288,12 +284,8 @@
 			COUNT(*) 
 		FROM 
 			RECIPE 
-		<choose>
-			<when test="searchPart == 'rcp_nm'">
-				WHERE 
-					RCP_NM LIKE CONCAT('%', #{searchString}, '%')
-			</when>
-		</choose>
+		WHERE 
+			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 	
 	</select>
 	

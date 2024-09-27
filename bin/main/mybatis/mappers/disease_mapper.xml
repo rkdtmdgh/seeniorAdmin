@@ -170,12 +170,8 @@
 			DISEASE_CATEGORY 
 		WHERE 
 			DC_IS_DELETED = 1 
-		<choose>
-			<when test="searchPart == 'dc_name'">
-				AND 
-					DC_NAME LIKE CONCAT('%', #{searchString}, '%')
-			</when>
-		</choose>
+		AND 
+			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 		ORDER BY 
 			DC_NAME DESC 
 		LIMIT 
@@ -192,13 +188,9 @@
 			DISEASE_CATEGORY 
 		WHERE 
 			DC_IS_DELETED = 1 
-		<choose>
-			<when test="searchPart == 'dc_name'">
-				AND 
-					DC_NAME LIKE CONCAT('%', #{searchString}, '%')
-			</when>
-		</choose>
-	
+			AND 
+				${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+
 	</select>
 	
 	<!-- 질환  관련 -->
@@ -364,12 +356,8 @@
 			D.D_IS_DELETED = 1 
 		AND 
 			DC.DC_IS_DELETED = 1 
-		<choose>
-			<when test="searchPart == 'd_name'">
-				AND 
-					D.D_NAME LIKE CONCAT('%', #{searchString}, '%')
-			</when>
-		</choose>
+		AND 
+			D.${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 		ORDER BY 
 			D_NO DESC 
 		LIMIT 
@@ -386,12 +374,8 @@
 			DISEASE 
 		WHERE 
 			D_IS_DELETED = 1 
-		<choose>
-			<when test="searchPart == 'd_name'">
-				AND 
-					D_NAME LIKE CONCAT('%', #{searchString}, '%')
-			</when>
-		</choose>
+		AND 
+			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 	
 	</select>
 
