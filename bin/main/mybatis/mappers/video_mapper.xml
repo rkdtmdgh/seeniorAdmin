@@ -109,14 +109,7 @@
 		WHERE 
 			V_IS_DELETED = 1
 		<if test="searchPart != null and searchString != null">
-			<choose>
-				<when test="searchPart == 'v_title'">
-					AND V_TITLE LIKE CONCAT('%', #{serachString}, '%')
-				</when>
-				<when test="searchPart == 'v_text'">
-					AND V_TEXT LIKE CONCAT('%', #{serachString}, '%')
-				</when>
-			</choose>		
+			AND #{searchPart} LIKE CONCAT('%', #{serachString}, '%')
 		</if>
 		<choose>
 			<when test="sortValue == 'v_no'">

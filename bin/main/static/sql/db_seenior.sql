@@ -1069,7 +1069,6 @@ VALUES(
 -- 추천 영상 테이블 --------------------------------------------------------------------------------------------------------------
 CREATE TABLE VIDEO (
 	V_NO			INT	AUTO_INCREMENT COMMENT "추천 영상 NO(PK)", 						-- 추천 영상 NO(PK)
-	V_DISEASE_NO	INT	NOT NULL COMMENT "추천 영상 질환 NO(DISEASE TABLE PK)",				-- 추천 영상 질환 NO(DISEASE TABLE PK)
 	V_TITLE			VARCHAR(100) NOT NULL COMMENT "추천 영상 제목",							-- 추천 영상 제목
 	V_TEXT			VARCHAR(255) NOT NULL COMMENT "추천 영상 설명",							-- 추천 영상 설명
 	V_LINK			VARCHAR(255) NOT NULL COMMENT "추천 영상 URL",						-- 추천 영상 URL
