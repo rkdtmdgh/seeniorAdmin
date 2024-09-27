@@ -96,11 +96,9 @@ function setRecipeContentInfo(recipeDto) {
 
 // 새창 열기 중앙 설정
 function setWindowOpenPosition(url, width, height) {
-	const popupW = width;
-	const popupH = height;
-	const left = Math.ceil((window.screen.width - popupW)/2);
-	const top = Math.ceil((window.screen.height - popupH)/2);
-	window.open(url,'','width='+popupW+',height='+popupH+',left='+left+',top='+top+',scrollbars=yes,resizable=no,toolbar=no,titlebar=no,menubar=no,location=no')
+	const left = Math.ceil((window.screen.width - width)/2);
+	const top = Math.ceil((window.screen.height - height)/2);
+	window.open(url,'','width='+width+',height='+height+',left='+left+',top='+top+',scrollbars=yes,resizable=no,toolbar=no,titlebar=no,menubar=no,location=no')
 }
 
 // 본인 확인 페이지 세션스토리지 저장 값 확인하여 요청 처리
