@@ -276,7 +276,7 @@ function replaceDate(input) {
             // 연도를 minDate로 변경하고 월과 일은 유지
             inputDate.setFullYear(minDate.getFullYear());
             input.value = inputDate.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
-            alert();
+            alert(`${minDate.getFullYear()}년도 이후로 입력해 주세요.`);
         }
     }
 
@@ -286,6 +286,7 @@ function replaceDate(input) {
             // 연도를 maxDate로 변경하고 월과 일은 유지
             inputDate.setFullYear(maxDate.getFullYear());
             input.value = inputDate.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
+            alert(`${maxDate.getFullYear()}년도 이전으로 입력해 주세요.`);
         }
     }
 }
