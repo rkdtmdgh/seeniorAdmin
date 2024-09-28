@@ -160,7 +160,7 @@ public class BoardService {
 //		return response;
 //	}
 	
-    public ResponseEntity<String> uploadFiles(List<MultipartFile> files) {
+    public ResponseEntity<String> uploadFiles(List<MultipartFile> files, int bp_category_no, int bp_writer_no) {
         
     	try {
     		
@@ -194,6 +194,9 @@ public class BoardService {
     			// 파일을 requestBody에 추가
     			requestBody.add("files", fileResource);
     		}
+    		
+    		requestBody.add("bp_category_no", bp_category_no);
+    		requestBody.add("bp_writer_no", bp_writer_no);
     		
     		// Request Entity
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
