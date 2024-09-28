@@ -171,6 +171,7 @@ async function postPostsCreateForm(formName) {
 	//if(!isTrue) return false;
 	
 	try {
+		logger.info('api start');
 		const response = await $.ajax({
 			url: apiUrl,
 			method: 'POST',
