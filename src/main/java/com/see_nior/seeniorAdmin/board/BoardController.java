@@ -144,27 +144,34 @@ public class BoardController {
 								@RequestParam("bp_writer_no") int bp_writer_no) {
 		log.info("createConfirm()");
 		
-		log.info("files: {}",files.size());
-		log.info("bp_category_no: {}",bp_category_no);
-		log.info("bp_writer_no: {}",bp_writer_no);
-		
-		ResponseEntity<String> savedFileNames = 
-				boardService.uploadFiles(files,bp_category_no,bp_writer_no);
-//		Object savedFileNames = boardService.uploadFiles(files);
-		
-		log.info("savedFileNames: {}",savedFileNames.getBody());
-		
-		if(savedFileNames.getBody() != null) {
-			log.info("uploadFiles succuess!");
+		if(files.size() != 0) {
+			log.info("files in value!");
+									
+			ResponseEntity<String> savedFileNames = 
+					boardService.uploadFiles(files,bp_category_no,bp_writer_no);
 			
-			log.info("uploadFiles succuess!");
+			String fileNames = savedFileNames.getBody();
 			
-			return true;
+			
+			
+			if(savedFileNames.getBody() != null) {
+				log.info("uploadFiles succuess!");
+				
+				log.info("savedFileNames: "+fileNames);
+				
+				return true;
+			}else {
+				log.info("uploadFiles fail!");
+				
+				return false;
+			}
+			
 		}else {
-			log.info("uploadFiles fail!");
+			log.info("files empty!");
+			return true;
 			
-			return false;
 		}
+			
 		
 	}
 	
