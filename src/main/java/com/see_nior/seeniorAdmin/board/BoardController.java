@@ -139,12 +139,14 @@ public class BoardController {
 	//작성한 일반 게시물 등록 요청
 	@PostMapping("/info/create_confirm")
 	@ResponseBody
-	public boolean createConfirm(@RequestParam("files") List<MultipartFile> files, 
+	public boolean createConfirm(@RequestParam(value = "files" , required = false) List<MultipartFile> files, 
 								@RequestParam("bp_category_no") int bp_category_no, 
-								@RequestParam("bp_writer_no") int bp_writer_no) {
+								@RequestParam("bp_writer_no") int bp_writer_no,
+								@RequestParam("bp_title") String bp_title,
+								@RequestParam("bp_body") String bp_body) {
 		log.info("createConfirm()");
 		
-		if(files.size() != 0) {
+		if( files != null || files.size() != 0) {
 			log.info("files in value!");
 									
 			ResponseEntity<String> savedFileNames = 
