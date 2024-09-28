@@ -151,9 +151,9 @@ public class BoardController {
 		ResponseEntity<String> savedFileNames = boardService.uploadFiles(files);
 //		Object savedFileNames = boardService.uploadFiles(files);
 		
-		log.info("savedFileNames: {}",savedFileNames);
+		log.info("savedFileNames: {}",savedFileNames.getBody());
 		
-		if(savedFileNames != null) {
+		if(savedFileNames.getBody() != null) {
 			log.info("uploadFiles succuess!");
 			
 			return true;

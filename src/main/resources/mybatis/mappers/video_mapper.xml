@@ -32,7 +32,7 @@
 		<result column="v_is_deleted" property="v_is_deleted"/>
 		<result column="v_reg_date" property="v_reg_date"/>
 		<result column="v_mod_date" property="v_mod_date"/>
-		<collection property="DiseaseDto" resultMap="DiseaseDto" />
+		<collection property="diseaseDto" resultMap="DiseaseDto" />
 	</resultMap>
 	
 	<select id="selectVideoList"
@@ -41,35 +41,11 @@
 		SELECT 
 			* 
 		FROM 
-			VIDEO V 
-		JOIN 
-			DISEASE D 
-		ON 
-			V.V_DISEASE_NO = D.D_NO 
+			VIDEO 
 		WHERE 
-			V.V_IS_DELETED = 1
-		<choose>
-			<when test="sortValue == 'v_no'">
-				<choose>
-					<when test="order == 'asc'">
-						ORDER BY V.V_NO ASC
-					</when>
-					<when test="order == 'desc'">
-						ORDER BY V.V_NO DESC
-					</when>
-				</choose>
-			</when>
-			<when test="sortValue == 'v_disease_no'">
-				<choose>
-					<when test="order == 'asc'">
-						ORDER BY V.V_DISEASE_NO ASC
-					</when>
-					<when test="order == 'desc'">
-						ORDER BY V.V_DISEASE_NO DESC
-					</when>
-				</choose>
-			</when>
-		</choose>
+			V_IS_DELETED = 1
+		ORDER BY 
+			${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 		
@@ -91,13 +67,11 @@
 	
 		INSERT INTO 
 			VIDEO(
-				V_DISEASE_NO,
 				V_TITLE, 
 				V_TEXT, 
 				V_LINK
 				) 
 		VALUES(
-			#{v_disease_no}, 
 			#{v_title}, 
 			#{v_text}, 
 			#{v_link}
@@ -105,5 +79,52 @@
 	
 	</insert>
 	
+	<select id="selectSearchVideoList"
+			resultMap="VideoDto">
+			
+		SELECT 
+			* 
+		FROM 
+			VIDEO 
+		WHERE 
+			V_IS_DELETED = 1
+		<if test="searchPart != null and searchString != null">
+			AND ${searchPart} LIKE CONCAT('%', #{serachString}, '%')
+		</if>
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit}
+		
+	</select>
+	
+	<select id="selectSearchVideoListCnt"
+			resultType="Integer">
+	
+		SELECT 
+			COUNT(V_NO) 
+		FROM 
+			VIDEO 
+		WHERE 
+			V_IS_DELETED = 1 
+		<if test="searchPart != null and searchString != null">
+			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+		</if>
+	
+	</select>
+	
+	<update id="updateVideoInfo">
+		
+		UPDATE 
+			VIDEO 
+		SET 
+			V_TITLE = #{v_title}, 
+			V_TEXT = #{v_text}, 
+			V_LINK = #{v_link}, 
+			V_MOD_DATE = NOW() 
+		WHERE 
+			V_NO = #{v_no} 
+	
+	</update>
 	
 </mapper>

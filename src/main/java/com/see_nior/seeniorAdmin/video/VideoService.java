@@ -21,6 +21,9 @@ public class VideoService {
 	final static public boolean CREATE_VIDEO_SUCCESS = true;
 	final static public boolean CREATE_VIDEO_FAIL = false;
 	
+	final static public boolean MODIFY_VIDEO_SUCCESS = true;
+	final static public boolean MODIFY_VIDEO_FAIL = false;
+	
 	private int pageLimit = 10;		// 한 페이지당 보여줄 정보 수
 	private int blockLimit = 5;		// 하단에 보여질 페이지 번호 수
 
@@ -76,17 +79,89 @@ public class VideoService {
 		return videoListPageNum;
 		
 	}
+	
+	// 비디오 검색 리스트 가져오기
+	public Map<String, Object> searchVideoPagingList(String searchPart, String searchString, String sortValue,
+			String order, int page) {
+		log.info("searchVideoPagingList()");
+		
+		int pagingStart = (page - 1) * pageLimit;	
+		
+		Map<String, Object> pagingSearchList = new HashMap<>();
+		
+		Map<String, Object> pagingParams = new HashMap<>();
+		pagingParams.put("start", pagingStart);
+		pagingParams.put("limit", pageLimit);
+		pagingParams.put("sortValue", sortValue);
+		pagingParams.put("order", order);
 
+		List<AdminAccountDto> videoDtos = videoMapper.selectSearchVideoList(pagingParams);
+		pagingSearchList.put("videoDtos", videoDtos);
+		
+		return pagingSearchList;
+	}
+
+	// 비디오 검색 리스트 총 개수
+	public Map<String, Object> searchVideoListPageNum(String searchPart, String searchString, int page) {
+		log.info("searchVideoPagingList()");
+		
+		Map<String, Object> searchVideoListPageNum = new HashMap<>();
+		
+		Map<String, Object> searchParams = new HashMap<>();
+		searchParams.put("searchPart", searchPart);
+		searchParams.put("searchString", searchString);
+		
+		// 전체 리스트 개수 조회 
+		int searchVideoListCnt = videoMapper.selectSearchVideoListCnt();
+
+		// 전체 페이지 개수 계산
+		int maxPage = (int) (Math.ceil((double) searchVideoListCnt / pageLimit));
+		
+		// 시작 페이지 값 계산
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
+		
+		// 마지막 페이지 값 계산
+		int endPage = startPage + blockLimit - 1;
+		if (endPage > maxPage) endPage = maxPage;
+		
+		searchVideoListPageNum.put("searchVideoListCnt", searchVideoListCnt);
+		searchVideoListPageNum.put("page", page);
+		searchVideoListPageNum.put("maxPage", maxPage);
+		searchVideoListPageNum.put("startPage", startPage);
+		searchVideoListPageNum.put("endPage", endPage);
+		searchVideoListPageNum.put("blockLimit", blockLimit);
+		searchVideoListPageNum.put("pageLimit", pageLimit);
+		
+		return searchVideoListPageNum;
+		
+	}
+	
+	// 비디오 등록 확인
 	public Object createConfirm(VideoDto videoDto) {
 		log.info("createConfirm()");
 		
 		int createRsult = videoMapper.insertNewVideo(videoDto);
 		
-		if (createRsult < 0) {
+		log.info("createRsult --- {}", createRsult);
+		
+		if (createRsult > 0) {
 			return CREATE_VIDEO_SUCCESS;
 		} 
 		
 		return CREATE_VIDEO_FAIL;
+	}
+
+	// 비디오 수정 확인
+	public Object modifyConfirm(VideoDto videoDto) {
+		log.info("modifyConfirm()");
+		
+		int updateResult =  videoMapper.updateVideoInfo(videoDto);
+		
+		if (updateResult > 0) {
+			return MODIFY_VIDEO_SUCCESS;
+		}
+		
+		return MODIFY_VIDEO_FAIL;
 	}
 	
 }

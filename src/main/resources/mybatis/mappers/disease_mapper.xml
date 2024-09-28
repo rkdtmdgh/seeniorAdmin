@@ -103,21 +103,8 @@
 			DISEASE_CATEGORY 
 		WHERE 
 			DC_IS_DELETED = 1 
-		<choose>
-			<when test="sortValue == 'all'">
-				ORDER BY DC_NO DESC				
-			</when>
-			<when test="sortValue == 'dc_name'">
-				<choose>
-					<when test="order == 'asc'">
-						ORDER BY DC_NAME ASC	
-					</when>
-					<when test="order == 'desc'">
-						ORDER BY DC_NAME DESC	
-					</when>
-				</choose>
-			</when>			
-		</choose>
+		ORDER BY 
+			${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 	
@@ -183,12 +170,8 @@
 			DISEASE_CATEGORY 
 		WHERE 
 			DC_IS_DELETED = 1 
-		<choose>
-			<when test="searchPart == 'dc_name'">
-				AND 
-					DC_NAME LIKE CONCAT('%', #{searchString}, '%')
-			</when>
-		</choose>
+		AND 
+			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 		ORDER BY 
 			DC_NAME DESC 
 		LIMIT 
@@ -205,13 +188,9 @@
 			DISEASE_CATEGORY 
 		WHERE 
 			DC_IS_DELETED = 1 
-		<choose>
-			<when test="searchPart == 'dc_name'">
-				AND 
-					DC_NAME LIKE CONCAT('%', #{searchString}, '%')
-			</when>
-		</choose>
-	
+			AND 
+				${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+
 	</select>
 	
 	<!-- 질환  관련 -->
@@ -258,21 +237,8 @@
 		    D.D_IS_DELETED = 1 
 		AND 
 			DC.DC_IS_DELETED = 1 
-		<choose>
-			<when test="sortValue == 'all'">
-				ORDER BY D.D_NO DESC				
-			</when>
-			<when test="sortValue == 'd_name'">
-				<choose>
-					<when test="order == 'asc'">
-						ORDER BY D_NAME ASC	
-					</when>
-					<when test="order == 'desc'">
-						ORDER BY D_NAME DESC	
-					</when>
-				</choose>
-			</when>					
-		</choose>    
+    	ORDER BY 
+     		D.${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 	
@@ -390,12 +356,8 @@
 			D.D_IS_DELETED = 1 
 		AND 
 			DC.DC_IS_DELETED = 1 
-		<choose>
-			<when test="searchPart == 'd_name'">
-				AND 
-					D.D_NAME LIKE CONCAT('%', #{searchString}, '%')
-			</when>
-		</choose>
+		AND 
+			D.${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 		ORDER BY 
 			D_NO DESC 
 		LIMIT 
@@ -412,12 +374,8 @@
 			DISEASE 
 		WHERE 
 			D_IS_DELETED = 1 
-		<choose>
-			<when test="searchPart == 'd_name'">
-				AND 
-					D_NAME LIKE CONCAT('%', #{searchString}, '%')
-			</when>
-		</choose>
+		AND 
+			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 	
 	</select>
 

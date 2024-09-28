@@ -178,32 +178,12 @@
 			ADMIN_ACCOUNT 
 		WHERE 
 			(A_AUTHORITY_ROLE = "SUB_ADMIN" 
-			OR 
+		OR 
 			A_AUTHORITY_ROLE = "NOT_APPROVED")
 		AND 
 			A_IS_DELETED = 1
-		<choose>
-			<when test="sortValue == 'a_no'">
-				<choose>
-					<when test="order == 'asc'">
-						ORDER BY A_NO ASC
-					</when>
-					<when test="order == 'desc'">
-						ORDER BY A_NO DESC
-					</when>
-				</choose>
-			</when>
-			<when test="sortValue == 'a_authority_role'">
-				<choose>
-					<when test="order == 'asc'">
-						ORDER BY A_AUTHORITY_ROLE ASC, A_NO DESC
-					</when>
-					<when test="order == 'desc'">
-						ORDER BY A_AUTHORITY_ROLE DESC, A_NO DESC
-					</when>
-				</choose>
-			</when>
-		</choose>
+		ORDER BY 
+			${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 	
@@ -251,40 +231,9 @@
 		AND 
 			A_IS_DELETED = 1
 		<if test="searchPart != null and searchString != null">
-			<choose>
-				<when test="searchPart == 'a_id'">
-					AND A_ID LIKE CONCAT('%', #{searchString}, '%')
-				</when>
-				<when test="searchPart == 'a_name'">
-					AND A_NAME LIKE CONCAT('%', #{searchString}, '%')
-				</when>
-				<when test="searchPart == 'a_phone'">
-					AND A_PHONE LIKE CONCAT('%', #{searchString}, '%')
-				</when>
-			</choose>
+			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 		</if>
-		<choose>
-			<when test="sortValue == 'a_no'">
-				<choose>
-					<when test="order == 'asc'">
-						ORDER BY A_NO ASC
-					</when>
-					<when test="order == 'desc'">
-						ORDER BY A_NO DESC
-					</when>
-				</choose>
-			</when>
-			<when test="sortValue == 'a_authority_role'">
-				<choose>
-					<when test="order == 'asc'">
-						ORDER BY A_AUTHORITY_ROLE ASC, A_NO DESC
-					</when>
-					<when test="order == 'desc'">
-						ORDER BY A_AUTHORITY_ROLE DESC, A_NO DESC
-					</when>
-				</choose>
-			</when>
-		</choose>
+		ORDER BY ${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 	
@@ -305,17 +254,7 @@
 		AND 
 			A_IS_DELETED = 1
 		<if test="searchPart != null and searchString != null">
-			<choose>
-				<when test="searchPart == 'a_id'">
-					AND A_ID LIKE CONCAT('%', #{searchString}, '%')
-				</when>
-				<when test="searchPart == 'a_name'">
-					AND A_NAME LIKE CONCAT('%', #{searchString}, '%')
-				</when>
-				<when test="searchPart == 'a_phone'">
-					AND A_PHONE LIKE CONCAT('%', #{searchString}, '%')
-				</when>
-			</choose>
+			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 		</if>
 	
 	</select>
