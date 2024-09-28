@@ -148,12 +148,15 @@ public class BoardController {
 		log.info("bp_category_no: {}",bp_category_no);
 		log.info("bp_writer_no: {}",bp_writer_no);
 		
-		ResponseEntity<String> savedFileNames = boardService.uploadFiles(files);
+		ResponseEntity<String> savedFileNames = 
+				boardService.uploadFiles(files,bp_category_no,bp_writer_no);
 //		Object savedFileNames = boardService.uploadFiles(files);
 		
 		log.info("savedFileNames: {}",savedFileNames.getBody());
 		
 		if(savedFileNames.getBody() != null) {
+			log.info("uploadFiles succuess!");
+			
 			log.info("uploadFiles succuess!");
 			
 			return true;
