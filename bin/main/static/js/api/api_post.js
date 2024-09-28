@@ -165,8 +165,8 @@ async function postPostsCreateForm(formName) {
 		logger.info('postPostsCreateForm() formData:', key, value);
 	};
 	
-	const isTrue = false;
-	if(!isTrue) return false;
+	//const isTrue = false;
+	//if(!isTrue) return false;
 	
 	try {
 		const response = await $.ajax({
