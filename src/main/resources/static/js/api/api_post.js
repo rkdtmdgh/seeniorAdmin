@@ -126,15 +126,14 @@ async function postPostsCreateForm(formName) {
 	const successMessage = `"${title.value.trim()}" ${notice == 1 ? '공지' : '일반'} 게시물이 등록되었습니다.`;
 	const errorMessage = `"${title.value.trim()}" ${notice == 1 ? '공지' : '일반'} 게시물 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
-	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
-	let data;
-	if($imgTags.length > 0) {
-		data = new FormData();
-		data.append(`${prefix}title`, input.value.trim()); // 제목
-		data.append(`${prefix}category_no`, form.category_no.value); // 게시판 no
-		data.append(`${prefix}writer_no`, form.writer_no.value); // 작성자 no
-		data.append(`${prefix}body`, quill.root.innerHTML); // quill 에디터 내용
+	const formData = new FormData();
+	formData.append(`${prefix}title`, input.value.trim()); // 제목
+	formData.append(`${prefix}category_no`, form.category_no.value); // 게시판 no
+	formData.append(`${prefix}writer_no`, form.writer_no.value); // 작성자 no
+	formData.append(`${prefix}body`, quill.root.innerHTML); // quill 에디터 내용
 	
+	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
+	if($imgTags.length > 0) {
 		logger.info('이미지 태그 있음');
 		
 		for(let img of $imgTags) {
@@ -153,30 +152,29 @@ async function postPostsCreateForm(formName) {
 			
 			// 설정된 width 크기로 리사이즈 압축 후 flle 객체로 변환
 			const resizedImageFile = await resizeImage(blob, $(img)[0].width, mimeType);
-			data.append('files', resizedImageFile); // 리사이즈된 File객체를 formData에 추가
+			formData.append('files', resizedImageFile); // 리사이즈된 File객체를 formData에 추가
 		}
 		
 	} else {
-		data = {
-			[`${prefix}title`]: input.value.trim(), // 제목
-			[`${prefix}category_no`]: form.category_no.value, // 게시판 no
-			[`${prefix}writer_no`]: form.writer_no.value, // 작성자 no
-			[`${prefix}body`]: quill.root.innerHTML, // quill 에디터 내용
-		}
+		logger.info('이미지 태그 없음');
+		const emptyBlob = new Blob([], { type: 'application/octet-stream' }); // 빈 Blob 생성
+		formData.append('files', emptyBlob); 
 	}
 	
-	logger.info('postPostsCreateForm() data:', data);
+	for (const [key, value] of formData.entries()) { // formData의 모든 데이터 확인
+		logger.info('postPostsCreateForm() formData:', key, value);
+	};
 	
-	//const isTrue = false;
-	//if(!isTrue) return false;
+	const isTrue = false;
+	if(!isTrue) return false;
 	
 	try {
 		const response = await $.ajax({
 			url: apiUrl,
 			method: 'POST',
-			data: $imgTags.length > 0 ? data : JSON.stringify(data),
-			contentType: $imgTags.length > 0 ? false : 'application/json', // 이미지가 있는 경우 contentType false
-			processData: $imgTags.length > 0,  // FormData가 아닌 경우
+			data: formData,
+			processData: false,  // FormData가 자동으로 Content-Type 설정
+			contentType: false,  // FormData를 문자열로 변환하지 않음
 		});
 		
 		logger.info('postPostsCreateForm() response:', response);
