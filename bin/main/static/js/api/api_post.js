@@ -132,7 +132,6 @@ async function postPostsCreateForm(formName) {
 	formData.append(`${prefix}body`, quill.root.innerHTML); // quill 에디터 내용
 	
 	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
-	let files = []; // 최종적으로 서버로 전송할 File 객체를 담을 배열
 	
 	for(let img of $imgTags) {
 		const src= $(img)[0].src; // src 속성에 입력된 base64 Url 가져오기
@@ -150,18 +149,15 @@ async function postPostsCreateForm(formName) {
 		
 		// 설정된 width 크기로 리사이즈 압축 후 flle 객체로 변환
 		const resizedImageFile = await resizeImage(blob, $(img)[0].width, mimeType);
-		files.push(resizedImageFile); // 리사이즈된 File객체를 배열에 추가
+		formData.append('files', resizedImageFile); // 리사이즈된 File객체를 formData에 추가
 	}
 	
-	//formData.append('files', files); // 무조건 배열로 전송
-	files.forEach((file) => {
-        formData.append('files', file); // append로 추가해서 1개 이상 시 배열로 전송 (테스트용)
-    });
-	
-	logger.info('postPostsCreateForm() files[]:', files, apiUrl); // files 배열 확인
 	for (const [key, value] of formData.entries()) { // formData의 모든 데이터 확인
 		logger.info('postPostsCreateForm() formData:', key, value);
 	};
+	
+	const isTrue = false;
+	if(!isTrue) return false;
 	
 	try {
 		const response = await $.ajax({
