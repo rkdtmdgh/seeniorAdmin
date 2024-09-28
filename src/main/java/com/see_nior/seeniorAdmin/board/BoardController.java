@@ -111,7 +111,7 @@ public class BoardController {
 	@GetMapping("/info/posts_list_form")
 	public String postsListForm(@RequestParam("infoNo") int bc_no, Model model) {
 		log.info("postsListForm()");
-		
+		log.info("infoNo: {}",bc_no);
 		model.addAttribute("infoNo", bc_no);
 		
 		String nextPage = "board/posts_list_form";
@@ -150,37 +150,35 @@ public class BoardController {
 								@RequestParam("bp_body") String bp_body) {
 		log.info("createConfirm()");
 		
-		log.info("files?: {}",files);
+		Boolean result = false;
 		
+		//file 첨부가 되어 있는지 확인
 		if( files != null && files.size() != 0 && files.get(0).getSize() != 0 ) {
 			log.info("files in value!");
 									
 			ResponseEntity<String> savedFiles = 
 					boardService.uploadFiles(files,bp_category_no,bp_writer_no);
-			
-			
-			//String fileNames = savedFileNames.getBody();
-					
+								
 			if(savedFiles != null) {
-				log.info("uploadFiles succuess!");				
+				log.info("uploadFiles succuess!");					
 				
 				ObjectMapper objectMapper = new ObjectMapper();
 				
 				try {
 					List<String> savedFileNames = objectMapper.readValue(savedFiles.getBody(), new TypeReference<List<String>>() {});
-					log.info("savedFiles(string) to savedFileNames(array)");
+					log.info("savedFiles(string) to savedFileNames(array) success!");
 					
-					Boolean result = boardService.createConfirm(savedFileNames,bp_category_no,bp_writer_no,bp_title,bp_body);
+					result = boardService.createConfirm(savedFileNames,bp_category_no,bp_writer_no,bp_title,bp_body);
 					
 				} catch (JsonMappingException e) {
-					// TODO Auto-generated catch block
+					log.info("savedFiles(string) to savedFileNames(array) fail!");
 					e.printStackTrace();
 				} catch (JsonProcessingException e) {
-					// TODO Auto-generated catch block
+					log.info("savedFiles(string) to savedFileNames(array) fail!");
 					e.printStackTrace();
 				}
-				
-				return true;
+								
+				return result;
 			}else {
 				log.info("uploadFiles fail!");
 				
@@ -190,12 +188,11 @@ public class BoardController {
 		}else {
 			log.info("files empty!");
 			
-			boardService.createConfirm(null, bp_category_no, bp_writer_no, bp_title, bp_body);
+			result = boardService.createConfirm(null, bp_category_no, bp_writer_no, bp_title, bp_body);
 			
-			return true;
+			return result;
 			
-		}
-			
+		}			
 		
 	}
 	
