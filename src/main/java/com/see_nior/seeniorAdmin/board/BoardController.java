@@ -140,22 +140,22 @@ public class BoardController {
 	@PostMapping("/info/create_confirm")
 	@ResponseBody
 	public boolean createConfirm(@RequestParam(value = "files" , required = false) List<MultipartFile> files, 
-								@RequestParam("bp_category_no") int bp_category_no, 
-								@RequestParam("bp_writer_no") int bp_writer_no,
+								@RequestParam("bp_category_no") String bp_category_no, 
+								@RequestParam("bp_writer_no") String bp_writer_no,
 								@RequestParam("bp_title") String bp_title,
 								@RequestParam("bp_body") String bp_body) {
 		log.info("createConfirm()");
 		
-		if( files != null || files.size() != 0) {
+		log.info("files?: {}",files);
+		
+		if( files != null && files.size() != 0 && files.get(0).getSize() != 0 ) {
 			log.info("files in value!");
 									
 			ResponseEntity<String> savedFileNames = 
-					boardService.uploadFiles(files,bp_category_no,bp_writer_no);
+					boardService.uploadFiles(files,Integer.parseInt(bp_category_no) ,Integer.parseInt(bp_writer_no));
 			
 			String fileNames = savedFileNames.getBody();
-			
-			
-			
+					
 			if(savedFileNames.getBody() != null) {
 				log.info("uploadFiles succuess!");
 				
