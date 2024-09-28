@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
 
 import lombok.extern.log4j.Log4j2;
@@ -140,8 +144,8 @@ public class BoardController {
 	@PostMapping("/info/create_confirm")
 	@ResponseBody
 	public boolean createConfirm(@RequestParam(value = "files" , required = false) List<MultipartFile> files, 
-								@RequestParam("bp_category_no") String bp_category_no, 
-								@RequestParam("bp_writer_no") String bp_writer_no,
+								@RequestParam("bp_category_no") int bp_category_no, 
+								@RequestParam("bp_writer_no") int bp_writer_no,
 								@RequestParam("bp_title") String bp_title,
 								@RequestParam("bp_body") String bp_body) {
 		log.info("createConfirm()");
@@ -151,15 +155,30 @@ public class BoardController {
 		if( files != null && files.size() != 0 && files.get(0).getSize() != 0 ) {
 			log.info("files in value!");
 									
-			ResponseEntity<String> savedFileNames = 
-					boardService.uploadFiles(files,Integer.parseInt(bp_category_no) ,Integer.parseInt(bp_writer_no));
+			ResponseEntity<String> savedFiles = 
+					boardService.uploadFiles(files,bp_category_no,bp_writer_no);
 			
-			String fileNames = savedFileNames.getBody();
+			
+			//String fileNames = savedFileNames.getBody();
 					
-			if(savedFileNames.getBody() != null) {
-				log.info("uploadFiles succuess!");
+			if(savedFiles != null) {
+				log.info("uploadFiles succuess!");				
 				
-				log.info("savedFileNames: "+fileNames);
+				ObjectMapper objectMapper = new ObjectMapper();
+				
+				try {
+					List<String> savedFileNames = objectMapper.readValue(savedFiles.getBody(), new TypeReference<List<String>>() {});
+					log.info("savedFiles(string) to savedFileNames(array)");
+					
+					Boolean result = boardService.createConfirm(savedFileNames,bp_category_no,bp_writer_no,bp_title,bp_body);
+					
+				} catch (JsonMappingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JsonProcessingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 				return true;
 			}else {
@@ -170,6 +189,9 @@ public class BoardController {
 			
 		}else {
 			log.info("files empty!");
+			
+			boardService.createConfirm(null, bp_category_no, bp_writer_no, bp_title, bp_body);
+			
 			return true;
 			
 		}

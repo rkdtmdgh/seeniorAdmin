@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
+import com.see_nior.seeniorAdmin.dto.BoardPostsDto;
 
 @Mapper
 public interface BoardMapper {
@@ -24,6 +25,8 @@ public interface BoardMapper {
 	int selectCountBoardPostsByBcNo(int bc_no);
 
 	int updateBoardCategoryForBcItemCntByBcNo(int bc_no, int bc_item_cnt);
+
+	int createConfirm(BoardPostsDto boardPostsDto);
 	
 
 }
