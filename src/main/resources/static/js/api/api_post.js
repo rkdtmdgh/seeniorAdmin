@@ -181,7 +181,7 @@ async function postPostsCreateForm(formName) {
 		
 		if(response) {
 			alert(successMessage);
-			location.replace(`/board/info/posts_list_form?$infoNo=${form.category_no.value}`)
+			location.replace(`/board/info/posts_list_form?infoNo=${form.category_no.value}`)
 			
 		} else {
 			alert(errorMessage);
