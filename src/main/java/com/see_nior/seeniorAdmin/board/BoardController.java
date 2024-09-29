@@ -1,6 +1,7 @@
 package com.see_nior.seeniorAdmin.board;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -165,8 +166,13 @@ public class BoardController {
 				ObjectMapper objectMapper = new ObjectMapper();
 				
 				try {
-					List<String> savedFileNames = objectMapper.readValue(savedFiles.getBody(), new TypeReference<List<String>>() {});
-					log.info("savedFiles(string) to savedFileNames(array) success!");
+					Map<String,Object> savedFileObj = objectMapper.readValue(savedFiles.getBody(), new TypeReference<Map<String,Object>>() {});
+					log.info("savedFiles(string) to savedFileNames(object) success!");
+					
+					List<String> savedFileNames = (List<String>) savedFileObj.get("savedFileNames");
+					
+					log.info("dir_name : {}",savedFileObj.get("dir_name"));
+					log.info("savedFileNames : {}",savedFileNames);
 					
 					result = boardService.createConfirm(savedFileNames,bp_category_no,bp_writer_no,bp_title,bp_body);
 					
