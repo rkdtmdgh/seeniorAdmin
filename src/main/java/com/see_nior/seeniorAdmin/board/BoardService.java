@@ -163,6 +163,7 @@ public class BoardService {
 //		return response;
 //	}
 	
+	//게시글 이미지 저장 후 이미지 이름 가져오기
     public ResponseEntity<String> uploadFiles(List<MultipartFile> files, int bp_category_no, int bp_writer_no) {
         
     	try {
@@ -217,7 +218,8 @@ public class BoardService {
 		}
   	        
     }
-
+    
+    // 게시글 DB에 저장 후 결과 값 가져오기
 	public Boolean createConfirm(List<String> savedFileNames, int bp_category_no, int bp_writer_no, String bp_title,
 			String old_bp_body) {
 		log.info("createConfirm()");
@@ -253,7 +255,14 @@ public class BoardService {
 		
 		int result = boardMapper.createConfirm(boardPostsDto);
         
-		return true;
+		if(result <= 0) {
+			log.info("createConfirm() insert fail!!");
+			return false;
+		}else {
+			log.info("createConfirm() insert success!!");
+			return true;
+		}
+				
 	}
 
 }
