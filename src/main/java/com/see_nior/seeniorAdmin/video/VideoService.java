@@ -191,7 +191,7 @@ public class VideoService {
 				if (deleteResult <= 0) {
 					log.info("삭제 실패 : v_no -- {}", v_no);
 					
-					throw new RuntimeException();
+					throw new RuntimeException("삭제 실패 : v_no -- " + v_no);
 				}
 				
 			}
