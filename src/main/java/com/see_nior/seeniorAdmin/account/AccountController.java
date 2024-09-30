@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -223,9 +224,6 @@ public class AccountController {
 		log.info("getAdminList()");
 		
 		Map<String, Object> adminList = accountService.getAdminPagingList(sortValue, order, page);
-		
-		log.info("sortValue --- {}", sortValue);
-		log.info("order --- {}", order);
 		
 		Map<String, Object> adminListPage = accountService.getAdminListPageNum(page);
 		adminList.put("adminListPage", adminListPage);
