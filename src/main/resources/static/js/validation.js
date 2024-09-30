@@ -155,6 +155,18 @@ function validateVideo(input, alertMsg) {
     	$previewEle.html(`<iframe frameborder="0" allowfullscreen="true" src="${platformInfo.embedUrl}">)</iframe>`);
     	$input.val(platformInfo.embedUrl); // 임베드된 주소로 변경
     	$input.parent().append($previewEle);
+    	
+    	// 플랫폼 input hidden 생성해서 값 추가
+    	let $platformInput = $('input[name="v_platform"]');
+    	
+    	if(!$platformInput.length) {
+			$platformInput = $('<input type="hidden" name="v_platform">');
+		}
+		
+		$platformInput.val(platformInfo.platform);
+		$input.parent().append($platformInput)
+		logger.info('input v_platform:', $platformInput.val());
+		
     	setClearErrorMessage(input);
     	
 	} else { // 유효한 URl이 아니거나 지원되지 않은 플랫폼일 경우
