@@ -24,5 +24,7 @@ public interface VideoMapper {
 	public int updateVideoInfo(VideoDto videoDto);
 
 	public VideoDto selectVideoInfoByNo(int v_no);
+
+	public int deleteConfirmByNo(int v_no);
 	
 }

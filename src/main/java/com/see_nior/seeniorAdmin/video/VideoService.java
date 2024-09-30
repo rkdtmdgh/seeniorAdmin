@@ -172,5 +172,14 @@ public class VideoService {
 		
 		return videoDto;
 	}
+
+	// 비디오 삭제 확인
+	public Object deleteConfirm(int v_no) {
+		log.info("deleteConfirm()");
+		
+		int deleteResult = videoMapper.deleteConfirmByNo(v_no);
+		
+		return null;
+	}
 	
 }
