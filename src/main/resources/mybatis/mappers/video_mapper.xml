@@ -121,4 +121,16 @@
 		
 	</select>
 	
+	<update id="deleteConfirmByNo">
+	
+		UPDATE 
+			VIDEO 
+		SET 
+			V_IS_DELETED = 1, 
+			V_MOD_DATE = NOW() 
+		WHERE 
+			V_NO = #{v_no}			
+		
+	</update>
+	
 </mapper>

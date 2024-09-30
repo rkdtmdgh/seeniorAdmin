@@ -128,7 +128,8 @@ public class VideoController {
 	public Object deleteConfirm(@RequestParam("v_no") int v_no) {
 		log.info("deleteConfirm()");
 		
-		return null;
+		return videoService.deleteConfirm(v_no);
+		
 	}
 	
 }
