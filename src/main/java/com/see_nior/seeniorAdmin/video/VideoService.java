@@ -24,6 +24,9 @@ public class VideoService {
 	final static public boolean MODIFY_VIDEO_SUCCESS = true;
 	final static public boolean MODIFY_VIDEO_FAIL = false;
 	
+	final static public boolean DELETE_VIDEO_SUCCESS = true;
+	final static public boolean DELETE_VIDEO_FAIL = false;
+	
 	private int pageLimit = 10;		// 한 페이지당 보여줄 정보 수
 	private int blockLimit = 5;		// 하단에 보여질 페이지 번호 수
 
@@ -179,7 +182,11 @@ public class VideoService {
 		
 		int deleteResult = videoMapper.deleteConfirmByNo(v_no);
 		
-		return null;
+		if (deleteResult > 0) {
+			return DELETE_VIDEO_SUCCESS;
+		}
+		
+		return DELETE_VIDEO_FAIL;
 	}
 	
 }
