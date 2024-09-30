@@ -82,9 +82,13 @@
 		                                <tr>
 		                                    <th><p class="table_title">질환 / 질병 정보</p></th>
 		                                    <td colspan="3">
-		                                        <textarea name="d_info" id="d_info" class="table_textarea" placeholder="내용을 입력하세요"
+		                                        <textarea name="d_info" id="d_info" class="table_textarea" data-current-size="textarea" placeholder="내용을 입력하세요"
+		                                        	oninput="setTextLimit(this, 'info')"
 		                                        	onblur="validateEmpty(this, '내용을')"
 	                                            	th:text="${diseaseDto.d_info}"></textarea>
+                                            	<div id="text_limit">
+	                                				<span id="current_size"></span> / <span id="max_size"></span>
+	                                			</div>
 		                                    </td>
 		                                </tr>
 	                                </tbody>

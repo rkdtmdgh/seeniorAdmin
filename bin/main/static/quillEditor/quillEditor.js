@@ -66,7 +66,7 @@ $(document).ready(function() {
 	
 	// 제한 설정
 	const maxFileSize = 1024 * 1024 * 5; // 파일 사이즈 byte
-	const maxTextSize = 100000; // 최대 텍스트 입력 설정 byte
+	const maxTextSize = 1000000; // 최대 텍스트 입력 설정 byte
 	const maxImageCount = 10; // 최대 이미지 삽입 개수
 	const maxVideoCount = 5; // 최대 영상 삽입 개수
 	
@@ -136,8 +136,13 @@ $(document).ready(function() {
 		return true;
 	}
 	
+	// 텍스트 리미스 표시 초기화
+	const initialText = quill.getText(); // 에디터 초기 순수 텍스트 가져오기
+    const initialTextSize = new Blob([initialText]).size; // 텍스트 크기 계산 (byte)
+	$('#current_size').text(initialTextSize.toLocaleString()); // 기본값 설정
+	$('#max_size').text(`${maxTextSize.toLocaleString()} byte`);
+	
 	// quill 텍스트, 영상 입력 제한
-	setTextLimitInit(maxTextSize); // text limit init
 	quill.on('text-change', function(delta, oldDelta, source) { // 변경된 내용, 변경 전 내용, 변경의 출처
 		const text = quill.getText(); // 에디터의 순수 텍스트 가져오기
 		const textSize = new Blob([text]).size; // 텍스트 크기 계산 (byte)
@@ -145,7 +150,7 @@ $(document).ready(function() {
 		$('#current_size').text(textSize.toLocaleString()); // 입력된 값 변경
 		
 		if(textSize > maxTextSize) {
-			alert(`입력 가능한 최대 텍스트 용량은 ${maxTextSize.toLocaleString()}byte 입니다.`);
+			alert(`입력 가능한 최대 텍스트 용량은 ${maxTextSize.toLocaleString()} byte 입니다.`);
 			quill.history.undo(); // 최근 입력된 내용을 되돌려 제한 초과 방지
 		}
 		
