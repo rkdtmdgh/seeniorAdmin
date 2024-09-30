@@ -64,23 +64,30 @@ $(document).ready(function() {
 		theme: 'snow',
 	});
 	
-	// 첨부 파일 최대 허용 용량 설정
-	const maxFileSize = 1024 * 1024 * 5; // 5MB
+	// 제한 설정
+	const maxFileSize = 1024 * 1024 * 5; // 파일 사이즈 byte
+	const maxTextSize = 100000; // 최대 텍스트 입력 설정 byte
+	const maxImageCount = 10; // 최대 이미지 삽입 개수
+	const maxVideoCount = 5; // 최대 영상 삽입 개수
 	
-	// 이미지 버튼 클릭 이벤트 처리
+	// 이미지 삽입 버튼 클릭 이벤트 처리
 	quill.getModule('toolbar').addHandler('image', function () { // 해당 모듈에 접근하여 image 버튼에 커스텀 이벤트 연결
-        const $fileInput = $('<input type="file" accept="image/*">'); // 같은 파일 삽입시 중복 적용을 위해 재사용하지 않음
-        $fileInput.trigger('click'); // 파일 선택창 열기
-	    $fileInput.on('change', function() { // 파일이 선택되었을 때
-			validationImage(this.files[0]);
-		});
+        if(insertImageConfirm()) { // 이미지 삽입 제한 체크
+			const $fileInput = $('<input type="file" accept="image/*">'); // 같은 파일 삽입시 중복 적용을 위해 재사용하지 않음
+	        $fileInput.trigger('click'); // 파일 선택창 열기
+		    $fileInput.on('change', function() { // 파일이 선택되었을 때
+				validationImage(this.files[0]);
+			});
+		}
     });
 	
 	// 파일이 드롭될 때
 	$(quill.root).on('drop', function(event) {
 		event.preventDefault();
-		const file = event.originalEvent.dataTransfer.files[0]; // jQuery 객체로 감싸졌을 경우 직접 dataTransfer가 접근되지 않을 수 있음(originalEvent 사용)
-		validationImage(file);
+		if(insertImageConfirm()) { // 이미지 삽입 제한 체크
+			const file = event.originalEvent.dataTransfer.files[0]; // jQuery 객체로 감싸졌을 경우 직접 dataTransfer가 접근되지 않을 수 있음(originalEvent 사용)
+			validationImage(file);
+		}
 	});
 	
 	// 이미지 파일 첨부 핸들러
@@ -116,4 +123,38 @@ $(document).ready(function() {
 	        logger.error('Error reading file:', error);
 	    };
 	}
+	
+	// 이미지 개수 제한 체크	
+	function insertImageConfirm() {
+		const imageCount = $(quill.root).find('img').length; // 현재 삽입된 이미지 개수
+				
+		if(imageCount >= maxImageCount) {
+			alert(`이미지는 최대 ${maxImageCount}개까지만 삽입할 수 있습니다.`);
+			return false;
+		}
+		
+		return true;
+	}
+	
+	// quill 텍스트, 영상 입력 제한
+	$('#current_size').text(0); // 기본값 설정
+	$('#max_size').text(`${maxTextSize.toLocaleString()} byte`);
+	
+	quill.on('text-change', function(delta, oldDelta, source) { // 변경된 내용, 변경 전 내용, 변경의 출처
+		const text = quill.getText(); // 에디터의 순수 텍스트 가져오기
+		const textSize = new Blob([text]).size; // 텍스트 크기 계산 (byte)
+		
+		$('#current_size').text(textSize.toLocaleString()); // 입력된 값 변경
+		
+		if(textSize > maxTextSize) {
+			alert(`입력 가능한 최대 텍스트 용량은 ${textSize.toLocaleString()}byte 입니다.`);
+			quill.history.undo(); // 최근 입력된 내용을 되돌려 제한 초과 방지
+		}
+		
+		const videoCount = $(quill.root).find('iframe').length; // 현재 삽입된 영상 개수
+		if(videoCount > maxVideoCount) {
+			alert(`영상은 최대 ${maxVideoCount}개까지만 삽입할 수 있습니다.`);
+			quill.history.undo(); // 최근 입력된 내용을 되돌려 제한 초과 방지
+		}
+	});
 });
