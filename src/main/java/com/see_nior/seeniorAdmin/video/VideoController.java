@@ -1,5 +1,6 @@
 package com.see_nior.seeniorAdmin.video;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -125,10 +126,10 @@ public class VideoController {
 	// 비디오 삭제 확인 (비동기)
 	@PostMapping("/info/delete_confirm")
 	@ResponseBody
-	public Object deleteConfirm(@RequestParam("v_no") int v_no) {
+	public Object deleteConfirm(@RequestParam("v_no") List<Integer> v_nos) {
 		log.info("deleteConfirm()");
 		
-		return videoService.deleteConfirm(v_no);
+		return videoService.deleteConfirm(v_nos);
 		
 	}
 	
