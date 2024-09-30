@@ -192,6 +192,41 @@ async function putDiseaseModifyForm(formName, d_nameDefaultValue) {
 	);
 }
 
+// 영상 정보 수정
+async function putVideoModifyForm(formName) {
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.v_title;
+	if(!validateEmpty(input, '제목을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.v_link;
+	if(!validateEmpty(input, 'URL 주소를', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.v_text;
+	if(!validateEmpty(input, '내용을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	const successMessage = `"${form.v_title.value}" 영상 정보가 수정되었습니다`;
+	const errorMessage = `"${form.v_title.value}" 영상 정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+
+	await putSubmitForm(
+		'/video/info/modify_confirm', 
+		formData, 
+		successMessage, 
+		errorMessage
+	);
+}
+
 // 질환 / 질병 분류 수정
 async function putDiseaseCategoryModifyForm(formName, dc_nameDefaultValue) {
 	const form = document.forms[formName];
