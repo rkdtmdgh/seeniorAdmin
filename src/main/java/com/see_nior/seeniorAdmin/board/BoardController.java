@@ -1,6 +1,7 @@
 package com.see_nior.seeniorAdmin.board;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
 
 import lombok.extern.log4j.Log4j2;
@@ -107,7 +112,7 @@ public class BoardController {
 	@GetMapping("/info/posts_list_form")
 	public String postsListForm(@RequestParam("infoNo") int bc_no, Model model) {
 		log.info("postsListForm()");
-		
+		log.info("infoNo: {}",bc_no);
 		model.addAttribute("infoNo", bc_no);
 		
 		String nextPage = "board/posts_list_form";
@@ -139,29 +144,61 @@ public class BoardController {
 	//작성한 일반 게시물 등록 요청
 	@PostMapping("/info/create_confirm")
 	@ResponseBody
-	public boolean createConfirm(@RequestParam("files") List<MultipartFile> files, 
+	public boolean createConfirm(@RequestParam(value = "files" , required = false) List<MultipartFile> files, 
 								@RequestParam("bp_category_no") int bp_category_no, 
-								@RequestParam("bp_writer_no") int bp_writer_no) {
+								@RequestParam("bp_writer_no") int bp_writer_no,
+								@RequestParam("bp_title") String bp_title,
+								@RequestParam("bp_body") String bp_body) {
 		log.info("createConfirm()");
 		
-		log.info("files: {}",files.size());
-		log.info("bp_category_no: {}",bp_category_no);
-		log.info("bp_writer_no: {}",bp_writer_no);
+		Boolean result = false;
 		
-		ResponseEntity<String> savedFileNames = boardService.uploadFiles(files);
-//		Object savedFileNames = boardService.uploadFiles(files);
-		
-		log.info("savedFileNames: {}",savedFileNames);
-		
-		if(savedFileNames != null) {
-			log.info("uploadFiles succuess!");
+		//file 첨부가 되어 있는지 확인
+		if( files != null && files.size() != 0 && files.get(0).getSize() != 0 ) {
+			log.info("files in value!");
+									
+			ResponseEntity<String> savedFiles = 
+					boardService.uploadFiles(files,bp_category_no,bp_writer_no);
+								
+			if(savedFiles != null) {
+				log.info("uploadFiles succuess!");					
+				
+				ObjectMapper objectMapper = new ObjectMapper();
+				
+				try {
+					Map<String,Object> savedFileObj = objectMapper.readValue(savedFiles.getBody(), new TypeReference<Map<String,Object>>() {});
+					log.info("savedFiles(string) to savedFileNames(object) success!");
+					
+					List<String> savedFileNames = (List<String>) savedFileObj.get("savedFileNames");
+					
+					log.info("dir_name : {}",savedFileObj.get("dir_name"));
+					log.info("savedFileNames : {}",savedFileNames);
+					
+					result = boardService.createConfirm(savedFileNames,bp_category_no,bp_writer_no,bp_title,bp_body);
+					
+				} catch (JsonMappingException e) {
+					log.info("savedFiles(string) to savedFileNames(array) fail!");
+					e.printStackTrace();
+				} catch (JsonProcessingException e) {
+					log.info("savedFiles(string) to savedFileNames(array) fail!");
+					e.printStackTrace();
+				}
+								
+				return result;
+			}else {
+				log.info("uploadFiles fail!");
+				
+				return false;
+			}
 			
-			return true;
 		}else {
-			log.info("uploadFiles fail!");
+			log.info("files empty!");
 			
-			return false;
-		}
+			result = boardService.createConfirm(null, bp_category_no, bp_writer_no, bp_title, bp_body);
+			
+			return result;
+			
+		}			
 		
 	}
 	

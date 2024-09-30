@@ -105,5 +105,15 @@
     	WHERE 
     		BC_NO = #{bc_no}
     </update>
+    
+    <insert id="createConfirm" parameterType="com.see_nior.seeniorAdmin.dto.BoardPostsDto">
+    	
+    	INSERT INTO
+    		BOARD_POSTS(BP_CATEGORY_NO,BP_TITLE,BP_BODY,BP_WRITER_NO) 
+    	VALUES
+    		(#{bp_category_no},#{bp_title},#{bp_body},#{bp_writer_no})
+    	
+    </insert>
+    
 
 </mapper>

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -20,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.see_nior.seeniorAdmin.board.mapper.BoardMapper;
 import com.see_nior.seeniorAdmin.board.util.BoardItemCntUpdater;
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
+import com.see_nior.seeniorAdmin.dto.BoardPostsDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -160,7 +163,8 @@ public class BoardService {
 //		return response;
 //	}
 	
-    public ResponseEntity<String> uploadFiles(List<MultipartFile> files) {
+	//게시글 이미지 저장 후 이미지 이름 가져오기
+    public ResponseEntity<String> uploadFiles(List<MultipartFile> files, int bp_category_no, int bp_writer_no) {
         
     	try {
     		
@@ -195,6 +199,9 @@ public class BoardService {
     			requestBody.add("files", fileResource);
     		}
     		
+    		requestBody.add("bp_category_no", bp_category_no);
+    		requestBody.add("bp_writer_no", bp_writer_no);
+    		
     		// Request Entity
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
 
@@ -211,5 +218,51 @@ public class BoardService {
 		}
   	        
     }
+    
+    // 게시글 DB에 저장 후 결과 값 가져오기
+	public Boolean createConfirm(List<String> savedFileNames, int bp_category_no, int bp_writer_no, String bp_title,
+			String old_bp_body) {
+		log.info("createConfirm()");
+		
+		String bp_body = old_bp_body;
+		
+		if(savedFileNames != null) {
+			
+			// 정규 표현식 패턴
+			Pattern pattern = Pattern.compile("img src=\"[^\"]*\"");
+			Matcher matcher = pattern.matcher(old_bp_body);
+			
+			StringBuilder new_bp_body = new StringBuilder();
+			int index = 0;
+			
+			while (matcher.find()) {
+				String oldSrc = matcher.group();
+				String newSrc = "img src=\"" + savedFileNames.get(index++) + "\"";
+				matcher.appendReplacement(new_bp_body, newSrc);
+			}
+			matcher.appendTail(new_bp_body);
+			
+			bp_body = new_bp_body.toString();
+			
+		}
+		
+ 		BoardPostsDto boardPostsDto = new BoardPostsDto();
+ 		
+ 		boardPostsDto.setBp_category_no(bp_category_no);
+ 		boardPostsDto.setBp_writer_no(bp_writer_no);
+ 		boardPostsDto.setBp_title(bp_title);
+ 		boardPostsDto.setBp_body(bp_body);
+		
+		int result = boardMapper.createConfirm(boardPostsDto);
+        
+		if(result <= 0) {
+			log.info("createConfirm() insert fail!!");
+			return false;
+		}else {
+			log.info("createConfirm() insert success!!");
+			return true;
+		}
+				
+	}
 
 }

@@ -163,5 +163,14 @@ public class VideoService {
 		
 		return MODIFY_VIDEO_FAIL;
 	}
+
+	// 비디오 정보 가져오기
+	public VideoDto getVideoInfo(int v_no) {
+		log.info("getVideoInfo()");
+		
+		VideoDto videoDto = videoMapper.selectVideoInfoByNo(v_no);
+		
+		return videoDto;
+	}
 	
 }
