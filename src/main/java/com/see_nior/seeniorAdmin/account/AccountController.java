@@ -224,9 +224,6 @@ public class AccountController {
 		
 		Map<String, Object> adminList = accountService.getAdminPagingList(sortValue, order, page);
 		
-		log.info("sortValue --- {}", sortValue);
-		log.info("order --- {}", order);
-		
 		Map<String, Object> adminListPage = accountService.getAdminListPageNum(page);
 		adminList.put("adminListPage", adminListPage);
 		adminList.put("sortValue", sortValue);
