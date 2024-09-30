@@ -13,10 +13,9 @@ public class VideoDto {
 	private String v_title;
 	private String v_text;
 	private String v_link;
+	private String v_platform;
 	private boolean v_is_deleted;
 	private String v_reg_date;
 	private String v_mod_date;
 	
-	private DiseaseDto diseaseDto; 
-
 }

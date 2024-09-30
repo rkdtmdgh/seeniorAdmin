@@ -3,36 +3,15 @@
 
 <mapper namespace="com.see_nior.seeniorAdmin.video.mapper.VideoMapper">
 
-	<resultMap type="DiseaseCategoryDto" id="DiseaseCategoryDto">
-		<id column="dc_no" property="dc_no" />
-		<result column="dc_name" property="dc_name" />		
-		<result column="dc_is_deleted" property="dc_is_deleted" />
-		<result column="dc_reg_date" property="dc_reg_date" />
-		<result column="dc_mod_date" property="dc_mod_date" />
-	</resultMap>
-
-	<resultMap type="DiseaseDto" id="DiseaseDto">
-		<id column="d_no" property="d_no" />
-		<result column="d_category_no" property="d_category_no" />
-		<result column="d_name" property="d_name" />
-		<result column="d_info" property="d_info" />
-		<result column="d_good_food" property="d_good_food" />
-		<result column="d_bad_food" property="d_bad_food" />
-		<result column="d_is_deleted" property="d_is_deleted" />
-		<result column="d_reg_date" property="d_reg_date" />
-		<result column="d_mod_date" property="d_mod_date" />
-		<collection property="diseaseCategoryDto" resultMap="DiseaseCategoryDto" />
-	</resultMap>
-
 	<resultMap type="VideoDto" id="VideoDto">
 		<id column="v_no" property="v_no"/>
 		<result column="v_title" property="v_title"/>
 		<result column="v_text" property="v_text"/>
 		<result column="v_link" property="v_link"/>
+		<result column="v_platform" property="v_platform"/>
 		<result column="v_is_deleted" property="v_is_deleted"/>
 		<result column="v_reg_date" property="v_reg_date"/>
 		<result column="v_mod_date" property="v_mod_date"/>
-		<collection property="diseaseDto" resultMap="DiseaseDto" />
 	</resultMap>
 	
 	<select id="selectVideoList"
@@ -69,12 +48,14 @@
 			VIDEO(
 				V_TITLE, 
 				V_TEXT, 
-				V_LINK
+				V_LINK, 
+				V_PLATFORM 
 				) 
 		VALUES(
 			#{v_title}, 
 			#{v_text}, 
-			#{v_link}
+			#{v_link}, 
+			#{v_platform}
 			)
 	
 	</insert>
@@ -121,10 +102,35 @@
 			V_TITLE = #{v_title}, 
 			V_TEXT = #{v_text}, 
 			V_LINK = #{v_link}, 
+			V_PLATFORM = #{v_platform}, 
 			V_MOD_DATE = NOW() 
 		WHERE 
 			V_NO = #{v_no} 
 	
+	</update>
+	
+	<select id="selectVideoInfoByNo"
+			parameterType="Integer">
+	
+		SELECT 
+			* 
+		FROM 
+			VIDEO 
+		WHERE 
+			V_NO = #{v_no} 
+		
+	</select>
+	
+	<update id="deleteConfirmByNo">
+	
+		UPDATE 
+			VIDEO 
+		SET 
+			V_IS_DELETED = 1, 
+			V_MOD_DATE = NOW() 
+		WHERE 
+			V_NO = #{v_no}			
+		
 	</update>
 	
 </mapper>

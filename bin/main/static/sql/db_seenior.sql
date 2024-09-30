@@ -1072,6 +1072,7 @@ CREATE TABLE VIDEO (
 	V_TITLE			VARCHAR(100) NOT NULL COMMENT "추천 영상 제목",							-- 추천 영상 제목
 	V_TEXT			VARCHAR(255) NOT NULL COMMENT "추천 영상 설명",							-- 추천 영상 설명
 	V_LINK			VARCHAR(255) NOT NULL COMMENT "추천 영상 URL",						-- 추천 영상 URL
+    V_PLATFORM		VARCHAR(255) NOT NULL COMMENT "추천 영상 플랫폼",						-- 추천 영상 플랫폼
 	V_IS_DELETED	TINYINT DEFAULT 1 COMMENT "추천 영상 삭제 여부(기본값 = 1, 삭제 시 = 0)",	-- 추천 영상 삭제 여부(기본값 = 1, 삭제 시 = 0)
 	V_REG_DATE		DATETIME DEFAULT NOW() COMMENT "추천 영상 등록일",						-- 추천 영상 등록일
 	V_MOD_DATE		DATETIME DEFAULT NOW() COMMENT "추천 영상 수정일",						-- 추천 영상 수정일

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 import com.see_nior.seeniorAdmin.dto.VideoDto;
@@ -23,6 +24,9 @@ public class VideoService {
 	
 	final static public boolean MODIFY_VIDEO_SUCCESS = true;
 	final static public boolean MODIFY_VIDEO_FAIL = false;
+	
+	final static public boolean DELETE_VIDEO_SUCCESS = true;
+	final static public boolean DELETE_VIDEO_FAIL = false;
 	
 	private int pageLimit = 10;		// 한 페이지당 보여줄 정보 수
 	private int blockLimit = 5;		// 하단에 보여질 페이지 번호 수
@@ -162,6 +166,44 @@ public class VideoService {
 		}
 		
 		return MODIFY_VIDEO_FAIL;
+	}
+
+	// 비디오 정보 가져오기
+	public VideoDto getVideoInfo(int v_no) {
+		log.info("getVideoInfo()");
+		
+		VideoDto videoDto = videoMapper.selectVideoInfoByNo(v_no);
+		
+		return videoDto;
+	}
+
+	// 비디오 삭제 확인
+	@Transactional
+	public Object deleteConfirm(List<Integer> v_nos) {
+		log.info("deleteConfirm()");
+		
+		try {
+			
+			for (int v_no : v_nos) {
+				
+				int deleteResult = videoMapper.deleteConfirmByNo(v_no);
+				
+				if (deleteResult <= 0) {
+					log.info("삭제 실패 : v_no -- {}", v_no);
+					
+					throw new RuntimeException();
+				}
+				
+			}
+			
+			return DELETE_VIDEO_SUCCESS;
+			
+		} catch (Exception e) {
+			log.info("deleteConfirm error : {}", e);
+			
+			return DELETE_VIDEO_FAIL;
+		}
+		
 	}
 	
 }

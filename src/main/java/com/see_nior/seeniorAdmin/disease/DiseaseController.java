@@ -315,7 +315,7 @@ public class DiseaseController {
 	public boolean deleteConfirm(@RequestParam(value = "deleteData") List<Integer> d_nos) {
 		log.info("deleteConfirm()");
 		
-		boolean deleteResult = diseaseService.deleteConfirm(new ArrayList<>(d_nos));
+		boolean deleteResult = diseaseService.deleteConfirm(d_nos);
 		
 		return deleteResult;
 	}
