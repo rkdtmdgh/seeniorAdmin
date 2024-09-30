@@ -49,6 +49,7 @@
 .ql-snow .ql-tooltip {
 	top: 0 !important;
 	left: 0 !important;
+	margin-top: 0 !important;
 }
 
 .ql-editor iframe {

@@ -54,8 +54,12 @@
 		                                <tr>
 		                                	<th><p class="table_title">내용</p></th>
 		                                	<td colspan="3">
-	                                			<textarea name="v_text" id="v_text" class="table_textarea" placeholder="내용을 입력하세요"
+	                                			<textarea name="v_text" id="v_text" class="table_textarea" data-current-size="textarea" placeholder="내용을 입력하세요"
+	                                				oninput="setTextLimit(this, 'info')"
 	                                				onblur="validateEmpty(this, '내용을')"></textarea>
+                                				<div id="text_limit">
+	                                				<span id="current_size"></span> / <span id="max_size"></span>
+	                                			</div>
 	                                        </td>
 		                                </tr>
 		                            </tbody>

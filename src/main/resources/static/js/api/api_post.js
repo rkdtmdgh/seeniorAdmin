@@ -133,7 +133,7 @@ async function postPostsCreateForm(formName) {
 	formData.append(`${prefix}body`, quill.root.innerHTML); // quill 에디터 내용
 	
 	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
-	if($imgTags.length > 0) {
+	if($imgTags.length) {
 		logger.info('이미지 태그 있음');
 		
 		for(let img of $imgTags) {
@@ -181,17 +181,17 @@ async function postPostsCreateForm(formName) {
 		
 		if(response) {
 			alert(successMessage);
-			location.replace(`/board/info/posts_list_form?infoNo=${form.category_no.value}`)
+			//location.replace(`/board/info/posts_list_form?infoNo=${form.category_no.value}`)
 			
 		} else {
 			alert(errorMessage);
-			location.reload(true);
+			//location.reload(true);
 		}
 		
 	} catch(error) {
 		logger.error(`${apiUrl} postPostsCreateForm() form submit error:`, error);
 		alert(errorMessage);
-		location.reload(true);
+		//location.reload(true);
 	}
 }
 

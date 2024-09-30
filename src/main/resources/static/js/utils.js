@@ -28,7 +28,7 @@ function setAddLoading(loading) {
 async function setLoginUserInfoInputValue(name, key) {
 	const $input = $(`input[name="${name}"]`);
 	
-	if($input.length > 0) {
+	if($input.length) {
 		const loginUserInfo = await getAccountInfo();
 		$input.val(loginUserInfo[key]);
 		
@@ -64,7 +64,7 @@ async function setContentSubInfo(txt) {
 	const $title = $('.categoty_title');
 	let $subInfo = $('.title_other_info_text');
 	
-	if($subInfo.length === 0) {
+	if(!$subInfo.length) {
 		$subInfo = $('<span class="title_other_info_text">');
 	}
 	
@@ -92,6 +92,52 @@ function setRecipeContentInfo(recipeDto) {
 		    }
 		}
 	}   
+}
+
+// 최대 텍스트 입력 설정 byte
+const maxSize = {
+	info: 500,
+}; 
+
+// 텍스트 바이트 계산
+function extractionByte(str) {
+	const encoder = new TextEncoder();
+    const encoded = encoder.encode(str); // 문자열을 UTF-8 바이트로 인코딩
+    return encoded.length; // 인코딩된 바이트 배열의 길이 반환
+}
+
+// 이전 텍스트 상태를 저장
+let previousText = '';
+
+// textarea 텍스트 입력 제한 표시 초기화
+function setTextareatLimitInit() {
+	const $textareaEle = $('[data-current-size="textarea"]').val(); // 초기값
+	const currentValue = extractionByte($textareaEle); // textarea의 현재 텍스트 값 바이트 크기
+	previousText = $textareaEle; // 기초상태 업데이트
+	
+	const $textLimitEle =  $('#text_limit'); // text_limit 요소 찾기
+	if($textLimitEle.length) {
+		$('#current_size').text(currentValue.toLocaleString()); // 현재 입력된 텍스트의 바이트 크기 표시
+		$('#max_size').text(`${maxSize.info.toLocaleString()} byte`); // 최대 크기 표시
+	}
+}
+
+// 텍스트 입력 제한
+function setTextLimit(ele, maxSizeKey) {
+	const value = $(ele).val(); // 입력된 값 가져오기
+	const textSize = extractionByte(value); // 현재 텍스트의 바이트 크기 계산
+	const maxSizeValue = maxSize[maxSizeKey];
+	
+	$('#current_size').text(textSize.toLocaleString()); // 실시간으로 크기 업데이트
+	
+	if(textSize > maxSizeValue) { // 최대 크기를 초과한 경우
+		alert(`입력 가능한 최대 텍스트 용량은 ${maxSizeValue.toLocaleString()} byte 입니다.`);
+		$(ele).val(previousText); // 초과된 부분 제거 후 초과되기 전 값 입력
+		$('#current_size').text(extractionByte(previousText).toLocaleString()); // 다시 계산 하여 표시
+		
+	} else {
+		previousText = value; // 이전 텍스트 업데이트	
+	}
 }
 
 // 새창 열기 중앙 설정
@@ -453,5 +499,8 @@ $(function() {
 	// textarea 입력된 값으로 높이값 조절
 	$('.table_textarea.small').each(function() {
 		setTextareaAutoHeight(this);
-	});
+	});	
+	
+	// textarea 텍스트 입력 제한 표시 초기화
+	setTextareatLimitInit();
 });
