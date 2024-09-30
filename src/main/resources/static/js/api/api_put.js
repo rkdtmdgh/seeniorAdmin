@@ -49,7 +49,7 @@ async function putModifyForm(formName) {
 	}
 	
 	input = form.a_pw;
-	if(input.value.trim().length > 0) {
+	if(input.value.trim().length) {
 		const isConfirm = confirm('비밀번호를 변경하시겠습니까?\n변경하지 않을 경우 입력한 값을 삭제 후 다시 저장해 주세요.');
 		if(!isConfirm) return false;	
 		

@@ -28,7 +28,7 @@ function setAddLoading(loading) {
 async function setLoginUserInfoInputValue(name, key) {
 	const $input = $(`input[name="${name}"]`);
 	
-	if($input.length > 0) {
+	if($input.length) {
 		const loginUserInfo = await getAccountInfo();
 		$input.val(loginUserInfo[key]);
 		
@@ -64,7 +64,7 @@ async function setContentSubInfo(txt) {
 	const $title = $('.categoty_title');
 	let $subInfo = $('.title_other_info_text');
 	
-	if($subInfo.length === 0) {
+	if(!$subInfo.length) {
 		$subInfo = $('<span class="title_other_info_text">');
 	}
 	
@@ -93,6 +93,21 @@ function setRecipeContentInfo(recipeDto) {
 		}
 	}   
 }
+
+// 텍스트 입력 제한 표시 초기화 (중복 초기화 방지로 함수로 실행)
+function setTextLimitInit(maxValue) {
+	const $textLimitEle =  $('#text_limit'); // text_limit 요소 찾기
+	if($textLimitEle.length) {
+		$('#current_size').text(0); // 기본값 설정
+		$('#max_size').text(`${maxValue.toLocaleString()} byte`);
+	}
+}
+
+// 텍스트 입력 제한
+//let oldTextData = '';
+//function setTextLimit(currentValue, maxValue) {
+	
+//}
 
 // 새창 열기 중앙 설정
 function setWindowOpenPosition(url, width, height) {
@@ -453,5 +468,5 @@ $(function() {
 	// textarea 입력된 값으로 높이값 조절
 	$('.table_textarea.small').each(function() {
 		setTextareaAutoHeight(this);
-	});
+	});	
 });

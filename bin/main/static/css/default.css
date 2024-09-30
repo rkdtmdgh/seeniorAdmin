@@ -643,6 +643,21 @@
     }
 }
 
+/* text limit */
+#text_limit {
+	font-size: var(--subFontSize);
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: var(--smallGap);
+	padding: var(--textPadding);
+	
+	#current_size {
+		font-weight: 500;
+		color: var(--redColor);
+	}
+}
+
 /* loading */
 .loading_wrap {
 	display: flex;

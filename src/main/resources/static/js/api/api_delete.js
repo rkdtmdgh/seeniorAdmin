@@ -42,7 +42,7 @@ async function delListData(name, isCheckList) {
 	if(isCheckList) { // 삭제 처리 페이지가 체크리스트인 경우
 		const $delDataElement = $(`input[type="checkbox"][name="${name}"]:checked`);
 		
-		if($delDataElement.length === 0) {
+		if(!$delDataElement.length) {
 			alert('항목을 선택해 주세요.');
 			return false;
 		}

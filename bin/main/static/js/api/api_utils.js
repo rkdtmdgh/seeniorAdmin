@@ -29,7 +29,7 @@ async function requestDuplicateCheck(input, nullCheck, defaultValue,  alertMsg) 
 	
 	const { word, apiUrl } = mapDuplicateCheckObject(inputName);
 	
-	if(inputValue.length === 0) {
+	if(!inputValue.length) {
 		if(!nullCheck) {
 			setClearErrorMessage(input);
 			
