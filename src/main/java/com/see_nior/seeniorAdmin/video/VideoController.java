@@ -3,6 +3,7 @@ package com.see_nior.seeniorAdmin.video;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -100,10 +101,13 @@ public class VideoController {
 	
 	// 비디오 수정 양식
 	@GetMapping("/info/modify_form")
-	public String modifyForm(@RequestParam("v_no") int v_no) {
+	public String modifyForm(@RequestParam("v_no") int v_no, Model model) {
 		log.info("modifyForm()");
 		
 		String nextPage = "video/modify_form";
+		
+		VideoDto videoDto = videoService.getVideoInfo(v_no);
+		model.addAttribute(videoDto);
 		
 		return nextPage;
 	}
