@@ -96,7 +96,7 @@ function setRecipeContentInfo(recipeDto) {
 
 // 최대 텍스트 입력 설정 byte
 const maxSize = {
-	info: 500,
+	info: 5000,
 }; 
 
 // 텍스트 바이트 계산
