@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 import com.see_nior.seeniorAdmin.dto.VideoDto;
@@ -177,16 +178,32 @@ public class VideoService {
 	}
 
 	// 비디오 삭제 확인
-	public Object deleteConfirm(int v_no) {
+	@Transactional
+	public Object deleteConfirm(List<Integer> v_nos) {
 		log.info("deleteConfirm()");
 		
-		int deleteResult = videoMapper.deleteConfirmByNo(v_no);
-		
-		if (deleteResult > 0) {
+		try {
+			
+			for (int v_no : v_nos) {
+				
+				int deleteResult = videoMapper.deleteConfirmByNo(v_no);
+				
+				if (deleteResult <= 0) {
+					log.info("삭제 실패 : v_no -- {}", v_no);
+					
+					throw new RuntimeException();
+				}
+				
+			}
+			
 			return DELETE_VIDEO_SUCCESS;
+			
+		} catch (Exception e) {
+			log.info("deleteConfirm error : {}", e);
+			
+			return DELETE_VIDEO_FAIL;
 		}
 		
-		return DELETE_VIDEO_FAIL;
 	}
 	
 }
