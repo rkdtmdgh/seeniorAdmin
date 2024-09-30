@@ -96,7 +96,7 @@ function setRecipeContentInfo(recipeDto) {
 
 // 최대 텍스트 입력 설정 byte
 const maxSize = {
-	info: 5000,
+	info: 500,
 }; 
 
 // 텍스트 바이트 계산
@@ -122,9 +122,6 @@ function setTextareatLimitInit() {
 	}
 }
 
-// 입력 가능 상태 변수
-isInputEnabled = true;
-
 // 텍스트 입력 제한
 function setTextLimit(ele, maxSizeKey) {
 	const value = $(ele).val(); // 입력된 값 가져오기
@@ -138,18 +135,7 @@ function setTextLimit(ele, maxSizeKey) {
 		$(ele).val(previousText); // 초과된 부분 제거 후 초과되기 전 값 입력
 		$('#current_size').text(extractionByte(previousText).toLocaleString()); // 다시 계산 하여 표시
 		
-		isInputEnabled = false; // 입력 비활성화
-		$(ele).off('input'); // input 이벤트 제거
-		
 	} else {
-		if(!isInputEnabled) { // 초과되지 않았다면 이벤트 활성화
-			$(ele).on('input', function() {
-				setTextLimit(this, maxSizeKey);
-			});
-			
-			isInputEnabled = true; // 입력 활성화
-		}
-		
 		previousText = value; // 이전 텍스트 업데이트	
 	}
 }
