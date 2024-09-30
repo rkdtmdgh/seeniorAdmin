@@ -214,17 +214,17 @@ async function postSubmitForm(apiUrl, formData, successMessage, errorMessage, re
 		
 		if(response) {
 			alert(successMessage);
-			//redirectUrl ? location.replace(redirectUrl) : location.reload(true);
+			redirectUrl ? location.replace(redirectUrl) : location.reload(true);
 			
 		} else {
 			alert(errorMessage);
-			//location.reload(true);
+			location.reload(true);
 		}
 		
 	} catch(error) {
 		logger.error(`${apiUrl} postSubmitForm() error:`, error);
 		alert(errorMessage);
-		//location.reload(true);
+		location.reload(true);
 	}
 }
 
