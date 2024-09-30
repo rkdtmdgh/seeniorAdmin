@@ -137,9 +137,7 @@ $(document).ready(function() {
 	}
 	
 	// quill 텍스트, 영상 입력 제한
-	$('#current_size').text(0); // 기본값 설정
-	$('#max_size').text(`${maxTextSize.toLocaleString()} byte`);
-	
+	setTextLimitInit(maxTextSize); // text limit init
 	quill.on('text-change', function(delta, oldDelta, source) { // 변경된 내용, 변경 전 내용, 변경의 출처
 		const text = quill.getText(); // 에디터의 순수 텍스트 가져오기
 		const textSize = new Blob([text]).size; // 텍스트 크기 계산 (byte)
@@ -147,7 +145,7 @@ $(document).ready(function() {
 		$('#current_size').text(textSize.toLocaleString()); // 입력된 값 변경
 		
 		if(textSize > maxTextSize) {
-			alert(`입력 가능한 최대 텍스트 용량은 ${textSize.toLocaleString()}byte 입니다.`);
+			alert(`입력 가능한 최대 텍스트 용량은 ${maxTextSize.toLocaleString()}byte 입니다.`);
 			quill.history.undo(); // 최근 입력된 내용을 되돌려 제한 초과 방지
 		}
 		

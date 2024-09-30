@@ -133,7 +133,7 @@ async function postPostsCreateForm(formName) {
 	formData.append(`${prefix}body`, quill.root.innerHTML); // quill 에디터 내용
 	
 	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
-	if($imgTags.length > 0) {
+	if($imgTags.length) {
 		logger.info('이미지 태그 있음');
 		
 		for(let img of $imgTags) {

@@ -48,7 +48,7 @@ async function getList(apiUrl, sortValue, order, page) {
 	
 	// 검색 인풋 벨류 삭제
 	const searchStringInput = document.forms['search_form'].search_string;
-	if(searchStringInput.value.trim().length > 0) searchStringInput.value = ''; // 검색 이력이 남았을 경우에만 삭제
+	if(searchStringInput.value.trim().length) searchStringInput.value = ''; // 검색 이력이 남았을 경우에만 삭제
 	
 	const urlParams = new URLSearchParams(window.location.search);
 	const infoNo = urlParams.get('infoNo') || undefined;
@@ -74,7 +74,7 @@ async function getList(apiUrl, sortValue, order, page) {
 		$contentTable.html('');
 		$pagination.html('');
 		
-		if(response && getListDtos.length > 0) {
+		if(response && getListDtos.length) {
 			// 쿼리스트링 조건 추가
 			setListQueryString(sortValue, order, getListPage.page); // page, sortValue, order
 			
@@ -158,7 +158,7 @@ async function getSearchList(event, apiUrl, page) {
 			$contentTable.html('');
 			$pagination.html('');
 			
-			if(response && getListDtos.length > 0) {
+			if(response && getListDtos.length) {
 				// 쿼리스트링 조건 추가
 				setSearchQueryString(getListPage.page, response.searchPart, response.searchString); // page, searchPart, searchString
 				
@@ -731,7 +731,7 @@ async function getCategoryList(ele, isForm, selectedValue) {
 	const $selectEle = $(`#${ele}`); // 셀렉트 요소가 생성될 table th
 	const { apiUrl, getListDtos, dataNo, dataName } = mapCategorylistObject(ele);
 	
-	if($selectEle.length > 0) {
+	if($selectEle.length) {
 		try {
 			const response = await $.ajax({
 				url: apiUrl,
@@ -741,7 +741,7 @@ async function getCategoryList(ele, isForm, selectedValue) {
 			const categoryDto = response[getListDtos];
 			logger.info(`${apiUrl} categoryDto:`, response);
 			
-			if(categoryDto && categoryDto.length > 0) {
+			if(categoryDto && categoryDto.length) {
 				if(isForm) {
 					categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
 						let selected = selectedValue ? data[dataNo] === selectedValue ? 'selected' : '' : '';
