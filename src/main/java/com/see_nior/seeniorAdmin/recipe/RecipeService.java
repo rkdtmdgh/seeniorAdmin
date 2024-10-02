@@ -21,9 +21,11 @@ import com.see_nior.seeniorAdmin.api.ApiExplorer;
 import com.see_nior.seeniorAdmin.dto.RecipeDto;
 import com.see_nior.seeniorAdmin.recipe.mapper.RecipeMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
+@RequiredArgsConstructor
 @Service
 public class RecipeService {
 	
@@ -34,11 +36,6 @@ public class RecipeService {
 	private ObjectMapper objectMapper;
 	
 	final private RecipeMapper recipeMapper;
-	
-	public RecipeService(RecipeMapper recipeMapper) {
-		this.recipeMapper = recipeMapper;
-		
-	}
 	
 	// 페이지네이션 관련
 	private int pageLimit = 10;	// 한 페이지당 보여줄 항목의 개수

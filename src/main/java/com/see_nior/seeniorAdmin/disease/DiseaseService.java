@@ -11,9 +11,11 @@ import com.see_nior.seeniorAdmin.disease.mapper.DiseaseMapper;
 import com.see_nior.seeniorAdmin.dto.DiseaseCategoryDto;
 import com.see_nior.seeniorAdmin.dto.DiseaseDto;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
+@RequiredArgsConstructor
 @Service
 public class DiseaseService {
 	
@@ -38,11 +40,6 @@ public class DiseaseService {
 	private int blockLimit = 5;	// 하단에 보여질 페이지 번호의 수
 	
 	final private DiseaseMapper diseaseMapper;
-	
-	public DiseaseService(DiseaseMapper diseaseMapper) {
-		this.diseaseMapper = diseaseMapper;
-		
-	}
 	
 	// --------------------------------------------- 질환 카테고리
 

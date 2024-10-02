@@ -11,20 +11,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.see_nior.seeniorAdmin.dto.RecipeDto;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 
 @Log4j2
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/recipe")
 public class RecipeController {
 
 	final private RecipeService recipeService;
-	
-	public RecipeController(RecipeService recipeService) {
-		this.recipeService = recipeService;
-		
-	}
 	
 	// 기존 레시피 테이블 삭제 후 테이블 생성 후 API 데이터 DB에 저장하기
 	@ResponseBody
