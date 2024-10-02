@@ -51,9 +51,9 @@ public class RecipeController {
 	
 	// 모든 식단 분류 가져오기 (식단 리스트에서 <select>박스 => 비동기)
 	@ResponseBody
-	@GetMapping("cate_info/get_category_list")
-	public Object getCategorylist() {
-		log.info("getCategoryList()");
+	@GetMapping("cate_info/get_category_list_select")
+	public Object getCategorylistSelect() {
+		log.info("getCategorylistSelect()");
 		
 		Map<String, Object> recipeCategoryDtos = recipeService.getCategoryList();
 		
