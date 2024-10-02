@@ -14,21 +14,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.see_nior.seeniorAdmin.dto.DiseaseCategoryDto;
 import com.see_nior.seeniorAdmin.dto.DiseaseDto;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 
 
 @Log4j2
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/disease")
 public class DiseaseController {
 
 	final private DiseaseService diseaseService;
-	
-	public DiseaseController(DiseaseService diseaseService) {
-		this.diseaseService = diseaseService;
-		
-	}
 	
 	// ----------------------------------------------------------------질환 카테고리
 	
