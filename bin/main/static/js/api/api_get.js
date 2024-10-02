@@ -215,7 +215,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchAdminListPage.searchAdminListCnt;
 			break;
 			
-		case '/disease/info/get_all_disease_list_with_page': // 질환 / 질병 정보 관리
+		case '/disease/info/get_disease_list': // 질환 / 질병 정보 관리
 			getListDtos = response.diseaseDtos;
 			getListPage = response.diseaseListPageNum;
 			getListCnt = response.diseaseListPageNum.diseaseListCnt;
@@ -227,13 +227,13 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchDiseaseListPageNum.searchDiseaseListCnt;
 			break;	
 			
-		case '/disease/info/get_disease_list_by_category_with_page': // 질환 / 질병 정보 관리 분류별 데이터
+		case '/disease/info/get_disease_list_by_category': // 질환 / 질병 정보 관리 분류별 데이터
 			getListDtos = response.diseaseDtos;
 			getListPage = response.diseaseListByCategoryPageNum;
 			getListCnt = response.diseaseListByCategoryPageNum.diseaseListCnt;
 			break;	
 			
-		case '/disease/cate_info/get_category_list_with_page': // 질환 / 질병 정보 분류 관리
+		case '/disease/cate_info/get_category_list': // 질환 / 질병 정보 분류 관리
 			getListDtos = response.diseaseCategoryDtos;
 			getListPage = response.diseaseCategoryListPageNum;
 			getListCnt = response.diseaseCategoryListPageNum.diseaseCategoryListCnt;
@@ -245,7 +245,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchDiseaseCategoryListPageNum.searchDiseaseCategoryListCnt;
 			break;
 			
-		case '/recipe/info/get_all_recipe_list_with_page': // 식단 정보 관리
+		case '/recipe/info/get_recipe_list': // 식단 정보 관리
 			getListDtos = response.recipeDtos;
 			getListPage = response.recipeListPageNum;
 			getListCnt = response.recipeListPageNum.recipeListCnt;
@@ -257,7 +257,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchRecipeListPageNum.searchRecipeListCnt;
 			break;	
 			
-		case '/recipe/info/get_recipe_list_by_category_with_page': // 식단 정보 관리 분류별 데이터
+		case '/recipe/info/get_recipe_list_by_category': // 식단 정보 관리 분류별 데이터
 			getListDtos = response.recipeDtos;
 			getListPage = response.recipeListByCategoryPageNum;
 			getListCnt = response.recipeListByCategoryPageNum.recipeListByCategoryCnt;
@@ -287,7 +287,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchBoardCategoryListPageNum.searchBoardCategoryListCnt;
 			break;
 			
-		case '/board/info/get_all_posts_list_with_page': // 게시물
+		case '/board/info/get_posts_list': // 게시물
 			getListDtos = response.postsDtos;
 			getListPage = response.postsListPageNum;
 			getListCnt = response.postsListPageNum.postsListCnt;
@@ -299,7 +299,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchPostsListPageNum.searchPostsListCnt;
 			break;	
 			
-		case '/notice/info/get_all_notice_list_with_page': // 공지 사항
+		case '/notice/info/get_notice_list': // 공지 사항
 			getListDtos = response.noticeDtos;
 			getListPage = response.noticeListPageNum;
 			getListCnt = response.noticeListPageNum.noticeListCnt;
@@ -311,7 +311,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchNoticeListPageNum.searchNoticeListCnt;
 			break;	
 			
-		case '/qna/info/get_all_qna_list_with_page': // 질문과 답변
+		case '/qna/info/get_qna_list': // 질문과 답변
 			getListDtos = response.qnaDtos;
 			getListPage = response.qnaListPageNum;
 			getListCnt = response.qnaListPageNum.qnaListCnt;
@@ -359,9 +359,9 @@ function generateTableList(apiUrl, data, listIndex) {
 			`;
 			break;
 			
-		case '/disease/info/get_all_disease_list_with_page': // 질환/질병 정보 관리 리스트 테이블
+		case '/disease/info/get_disease_list': // 질환/질병 정보 관리 리스트 테이블
 		case '/disease/info/search_disease_list':            // 질환/질병 정보 관리 검색 리스트 테이블
-		case '/disease/info/get_disease_list_by_category_with_page': // 질환/질병 정보 관리 분류선택 리스트 테이블
+		case '/disease/info/get_disease_list_by_category': // 질환/질병 정보 관리 분류선택 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td class="vam">
@@ -383,7 +383,7 @@ function generateTableList(apiUrl, data, listIndex) {
 			`;
 			break;
 			
-		case '/disease/cate_info/get_category_list_with_page': // 질환/질병 분류 관리 리스트 테이블
+		case '/disease/cate_info/get_category_list': // 질환/질병 분류 관리 리스트 테이블
 		case '/disease/cate_info/search_disease_category_list': // 질환/질병 분류 관리 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
@@ -403,9 +403,9 @@ function generateTableList(apiUrl, data, listIndex) {
 			`;
 			break;
 			
-		case '/recipe/info/get_all_recipe_list_with_page': // 식단 정보 관리 리스트 테이블
+		case '/recipe/info/get_recipe_list': // 식단 정보 관리 리스트 테이블
 		case '/recipe/info/search_recipe_list':            // 식단 정보 관리 검색 리스트 테이블
-		case '/recipe/info/get_recipe_list_by_category_with_page': // 식단 정보 관리 분류선택 리스트 테이블
+		case '/recipe/info/get_recipe_list_by_category': // 식단 정보 관리 분류선택 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -477,7 +477,7 @@ function generateTableList(apiUrl, data, listIndex) {
 			`;
 			break;
 			
-		case '/board/info/get_all_posts_list_with_page': // 게시물 리스트 테이블
+		case '/board/info/get_posts_list': // 게시물 리스트 테이블
 		case '/board/info/search_posts_list': // 게시물 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
@@ -508,7 +508,7 @@ function generateTableList(apiUrl, data, listIndex) {
 			`;
 			break;
 			
-		case '/notice/info/get_notice_list_with_page': // 공지 사항 리스트 테이블
+		case '/notice/info/get_notice_list': // 공지 사항 리스트 테이블
 		case '/notice/info/search_notice_category_list': // 공지 사항 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
@@ -534,7 +534,7 @@ function generateTableList(apiUrl, data, listIndex) {
 			`;
 			break;
 			
-		case '/qna/info/get_all_qna_list_with_page': // 질문과 답변 리스트 테이블
+		case '/qna/info/get_qna_list': // 질문과 답변 리스트 테이블
 		case '/qna/info/search_qna_list': // 질문과 답변 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
@@ -659,11 +659,11 @@ function mapSortListApiObject(dbTable) {
 	
 	switch(dbTable) {
 		case 'disease': // 질환/질병 정보 관리 페이지
-			apiUrl = '/disease/info/get_all_disease_list_with_page';
+			apiUrl = '/disease/info/get_disease_list';
 			break;
 		
 		case 'disease_category': // 질환/질병 분류 관리 페이지
-			apiUrl = '/disease/cate_info/get_category_list_with_page';
+			apiUrl = '/disease/cate_info/get_category_list';
 			break;
 			
 		case 'admin_account': // 관리자 계정 관리 페이지
@@ -671,7 +671,7 @@ function mapSortListApiObject(dbTable) {
 			break;
 			
 		case 'recipe': // 식단 정보 관리 페이지
-			apiUrl = '/recipe/info/get_all_recipe_list_with_page';
+			apiUrl = '/recipe/info/get_recipe_list';
 			break;
 			
 		case 'video': // 영상 정보 관리 페이지
@@ -711,11 +711,11 @@ function mapSelectListApiObject(sortValue) {
 	
 	switch(sortValue) {				
 		case 'dc_no': // 질환/질병 정보 리스트 페이지 분류명별 필터
-			apiUrl = '/disease/info/get_disease_list_by_category_with_page';
+			apiUrl = '/disease/info/get_disease_list_by_category';
 			break;
 			
 		case 'rcp_pat2': // 식단 정보 리스트 페이지 분류명별 필터
-			apiUrl = '/recipe/info/get_recipe_list_by_category_with_page';
+			apiUrl = '/recipe/info/get_recipe_list_by_category';
 			break;
 			
 		default:
