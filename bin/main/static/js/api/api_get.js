@@ -786,14 +786,14 @@ function mapCategorylistObject(ele) {
 	switch(ele) {
 		case 'dc_name': // 질환/질병 관련 페이지
 		case 'd_category_no':
-			apiUrl = '/disease/cate_info/get_category_list';
+			apiUrl = '/disease/cate_info/get_category_list_select';
 			getListDtos = 'diseaseCategoryDto';
 			dataNo = 'dc_no';
 			dataName = 'dc_name';
 			break;
 			
 		case 'rcp_pat2': // 식단 관련 페이지
-			apiUrl = '/recipe/cate_info/get_category_list';
+			apiUrl = '/recipe/cate_info/get_category_list_select';
 			getListDtos = 'recipeCategoryDto';
 			dataNo = 'rcp_pat2';
 			dataName = 'rcp_pat2';
