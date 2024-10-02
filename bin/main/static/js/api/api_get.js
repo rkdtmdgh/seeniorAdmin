@@ -227,7 +227,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchDiseaseListPageNum.searchDiseaseListCnt;
 			break;	
 			
-		case '/disease/info/get_disease_list_by_category_with_page': // 질환 / 질병 정보 관리 분류별 데이터
+		case '/disease/info/get_disease_list_by_category': // 질환 / 질병 정보 관리 분류별 데이터
 			getListDtos = response.diseaseDtos;
 			getListPage = response.diseaseListByCategoryPageNum;
 			getListCnt = response.diseaseListByCategoryPageNum.diseaseListCnt;
@@ -257,7 +257,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchRecipeListPageNum.searchRecipeListCnt;
 			break;	
 			
-		case '/recipe/info/get_recipe_list_by_category_with_page': // 식단 정보 관리 분류별 데이터
+		case '/recipe/info/get_recipe_list_by_category': // 식단 정보 관리 분류별 데이터
 			getListDtos = response.recipeDtos;
 			getListPage = response.recipeListByCategoryPageNum;
 			getListCnt = response.recipeListByCategoryPageNum.recipeListByCategoryCnt;
@@ -361,7 +361,7 @@ function generateTableList(apiUrl, data, listIndex) {
 			
 		case '/disease/info/get_disease_list': // 질환/질병 정보 관리 리스트 테이블
 		case '/disease/info/search_disease_list':            // 질환/질병 정보 관리 검색 리스트 테이블
-		case '/disease/info/get_disease_list_by_category_with_page': // 질환/질병 정보 관리 분류선택 리스트 테이블
+		case '/disease/info/get_disease_list_by_category': // 질환/질병 정보 관리 분류선택 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td class="vam">
@@ -405,7 +405,7 @@ function generateTableList(apiUrl, data, listIndex) {
 			
 		case '/recipe/info/get_recipe_list': // 식단 정보 관리 리스트 테이블
 		case '/recipe/info/search_recipe_list':            // 식단 정보 관리 검색 리스트 테이블
-		case '/recipe/info/get_recipe_list_by_category_with_page': // 식단 정보 관리 분류선택 리스트 테이블
+		case '/recipe/info/get_recipe_list_by_category': // 식단 정보 관리 분류선택 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -711,11 +711,11 @@ function mapSelectListApiObject(sortValue) {
 	
 	switch(sortValue) {				
 		case 'dc_no': // 질환/질병 정보 리스트 페이지 분류명별 필터
-			apiUrl = '/disease/info/get_disease_list_by_category_with_page';
+			apiUrl = '/disease/info/get_disease_list_by_category';
 			break;
 			
 		case 'rcp_pat2': // 식단 정보 리스트 페이지 분류명별 필터
-			apiUrl = '/recipe/info/get_recipe_list_by_category_with_page';
+			apiUrl = '/recipe/info/get_recipe_list_by_category';
 			break;
 			
 		default:
