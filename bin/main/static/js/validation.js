@@ -51,6 +51,7 @@ async function validateEmail(input, usedCheck, alertMsg) {
 				setAddErrorMessage(input, "이미 사용 중인 이메일입니다.");
 				return false;
 			}
+			
 		} catch(error) {
 			logger.error('Error during email check:', error);
 			
