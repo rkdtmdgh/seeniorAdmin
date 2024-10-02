@@ -281,7 +281,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.boardCategoryListPageNum.boardCategoryListCnt;
 			break;
 			
-		case '/board/cate_info/search_board_list': // 게시판 관리 검색
+		case '/board/cate_info/search_board_category_list': // 게시판 관리 검색
 			getListDtos = response.boardCategoryDtos;
 			getListPage = response.searchBoardCategoryListPageNum;
 			getListCnt = response.searchBoardCategoryListPageNum.searchBoardCategoryListCnt;
