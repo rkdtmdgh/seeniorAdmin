@@ -62,12 +62,12 @@ public class RecipeController {
 	
 	// 모든 식단 가져오기 (페이지네이션)
 	@ResponseBody
-	@GetMapping("info/get_all_recipe_list_with_page")
-	public Object getAllRecipeListWithPage(
+	@GetMapping("info/get_recipe_list")
+	public Object getRecipeList(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "rcp_seq") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
-		log.info("getAllRecipeListWithPage()");
+		log.info("getRecipeList()");
 		
 		// 페이지 번호에 따른 식단 리스트들 가져오기
 		Map<String, Object> recipeListWithPage = recipeService.getRecipeListWithPage(page, sortValue, order);
@@ -85,12 +85,12 @@ public class RecipeController {
 	
 	// 카테고리에 따른 식단 가져오기(페이지네이션)
 	@ResponseBody
-	@GetMapping("info/get_recipe_list_by_category_with_page")
-	public Object getRecipeListByCategoryWithPage(
+	@GetMapping("info/get_recipe_list_by_category")
+	public Object getRecipeListByCategory(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "all") String sortValue,
 			@RequestParam(value = "order") String rcp_pat2) {
-		log.info("getRecipeListByCategoryWithPage()");
+		log.info("getRecipeListByCategory()");
 		
 		// 페이지 번호에 따른 카테고리별 식단 리스트들 가져오기
 		Map<String, Object> recipeListByCategoryWithPage = recipeService.getRecipeListByCategoryWithPage(page, rcp_pat2);

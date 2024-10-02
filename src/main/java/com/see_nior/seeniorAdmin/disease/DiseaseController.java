@@ -226,12 +226,12 @@ public class DiseaseController {
 	
 	// 모든 질환 가져오기(페이지네이션 => 비동기)
 	@ResponseBody
-	@GetMapping("/info/get_all_disease_list")
-	public Object getAllDiseaseList(
+	@GetMapping("/info/get_disease_list")
+	public Object getDiseaseList(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "d_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
-		log.info("getAllDiseaseList");
+		log.info("getDiseaseList");
 		
 		// 페이지 번호에 따른 질환 리스트들 가져오기
 		Map<String, Object> diseaseListWithPage = diseaseService.getDiseaseListWithPage(page, sortValue, order);
