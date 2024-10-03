@@ -1,6 +1,7 @@
 package com.see_nior.seeniorAdmin.board.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -24,9 +25,13 @@ public interface BoardMapper {
 
 	int selectCountBoardPostsByBcNo(int bc_no);
 
-	int updateBoardCategoryForBcItemCntByBcNo(int bc_no, int bc_item_cnt);
+	int updateBoardCategoryForBcItemCntByBcNo(Map<String, Object> updateParm);
 
 	int createConfirm(BoardPostsDto boardPostsDto);
+
+	List<BoardPostsDto> getBoardPostsListWithPage(Map<String, Object> pagingParams);
+
+	int getBoardPostsByCategoryCnt(int bp_category_no);
 	
 
 }

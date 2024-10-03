@@ -170,11 +170,11 @@ public class BoardController {
 					log.info("savedFiles(string) to savedFileNames(object) success!");
 					
 					List<String> savedFileNames = (List<String>) savedFileObj.get("savedFileNames");
-					
+					String bp_dir_name = (String) savedFileObj.get("dir_name");
 					log.info("dir_name : {}",savedFileObj.get("dir_name"));
 					log.info("savedFileNames : {}",savedFileNames);
 					
-					result = boardService.createConfirm(savedFileNames,bp_category_no,bp_writer_no,bp_title,bp_body);
+					result = boardService.createConfirm(savedFileNames,bp_category_no,bp_writer_no,bp_title,bp_body,bp_dir_name);
 					
 				} catch (JsonMappingException e) {
 					log.info("savedFiles(string) to savedFileNames(array) fail!");
@@ -194,7 +194,7 @@ public class BoardController {
 		}else {
 			log.info("files empty!");
 			
-			result = boardService.createConfirm(null, bp_category_no, bp_writer_no, bp_title, bp_body);
+			result = boardService.createConfirm(null, bp_category_no, bp_writer_no, bp_title, bp_body, null);
 			
 			return result;
 			
@@ -217,6 +217,30 @@ public class BoardController {
 		return null;
 	}
 	
+	//특정 게시판 게시물 리스트 가져오기
+	@GetMapping("/info/get_posts_list")
+	@ResponseBody
+	public Object getPostsList(@RequestParam("infoNo") int bp_category_no, 
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+			@RequestParam(value = "sortValue", required = false, defaultValue = "bp_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
+		log.info("getPostsList()");
+		
+		// 특정 게시판 페이지 번호에 따른 게시물 리스트들 가져오기
+		Map<String, Object> boardPostsListWithPage = boardService.getBoardPostsListWithPage(bp_category_no, page, sortValue, order);
+				
+		// 특정 게시판 게시물 총 페이지 개수 가져오기
+		Map<String, Object> boardPostsListPageNum = boardService.getBoardPostsListPageNum(bp_category_no, page);
+				
+		boardPostsListWithPage.put("boardPostsListPageNum", boardPostsListPageNum);
+		boardPostsListWithPage.put("sortValue", sortValue);
+		boardPostsListWithPage.put("order", order);
+				
+		return boardPostsListWithPage;
+		
+	}
 	
+	
+	//특정 게시물 정보 가져오기
 
 }
