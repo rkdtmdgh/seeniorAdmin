@@ -404,7 +404,7 @@ function generateTableList(apiUrl, data, listIndex) {
 			break;
 			
 		case '/recipe/info/get_recipe_list': // 식단 정보 관리 리스트 테이블
-		case '/recipe/info/search_recipe_list':            // 식단 정보 관리 검색 리스트 테이블
+		case '/recipe/info/search_recipe_list': // 식단 정보 관리 검색 리스트 테이블
 		case '/recipe/info/get_recipe_list_by_category': // 식단 정보 관리 분류선택 리스트 테이블
 			tableTrContent = `
 				<tr>
@@ -488,7 +488,9 @@ function generateTableList(apiUrl, data, listIndex) {
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_title}(${data.bp_reply_cnt})</a>
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info table_flex_info">
+		                	<p class="info_text">${data.bp_title}</p><span class="info_num">(${data.bp_reply_cnt})</span>
+	                	</a>
 		            </td>
 		            <td>
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_view_cnt}</a>
