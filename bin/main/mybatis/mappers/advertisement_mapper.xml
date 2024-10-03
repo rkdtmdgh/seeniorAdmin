@@ -4,6 +4,29 @@
 
 <mapper namespace="com.see_nior.seeniorAdmin.advertisement.mapper.AdvertisementMapper">
 
+	<resultMap type="AdvertisementDto" id="AdvertisementDto">
+		<result column="ad_no" property="ad_no" />
+		<result column="ad_position" property="ad_position" />
+		<result column="ad_img" property="ad_img" />
+		<result column="ad_url" property="ad_url" />
+		<result column="ad_start_date" property="ad_start_date" />
+		<result column="ad_end_date" property="ad_end_date" />
+		<result column="ad_client" property="ad_client" />
+		<result column="ad_is_deleted" property="ad_is_deleted" />
+		<result column="ad_reg_date" property="ad_reg_date" />
+		<result column="ad_mod_date" property="ad_mod_date" />
+	</resultMap>
+
+<!-- 광고 등록 -->
+<insert id="insertNewAdvertisement">
+
+	INSERT INTO 
+		ADVERTISEMENT 
+		(AD_POSITION, AD_IMG, AD_URL, AD_START_DATE, AD_END_DATE, AD_CLIENT) 
+	VALUES 
+		(#{ad_position}, #{ad_img}, #{ad_url}, #{ad_start_date}, #{ad_end_date}, #{ad_client})
+
+</insert>
 
 
 </mapper>
