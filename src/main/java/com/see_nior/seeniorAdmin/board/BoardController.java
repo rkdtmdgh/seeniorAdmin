@@ -222,12 +222,12 @@ public class BoardController {
 	@ResponseBody
 	public Object getPostsList(@RequestParam("infoNo") int bp_category_no, 
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-			@RequestParam(value = "sortValue", required = false, defaultValue = "d_no") String sortValue,
+			@RequestParam(value = "sortValue", required = false, defaultValue = "bp_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		log.info("getPostsList()");
 		
 		// 특정 게시판 페이지 번호에 따른 게시물 리스트들 가져오기
-		Map<String, Object> boardPostsListWithPage = boardService.getBoardListWithPage(bp_category_no, page, sortValue, order);
+		Map<String, Object> boardPostsListWithPage = boardService.getBoardPostsListWithPage(bp_category_no, page, sortValue, order);
 				
 		// 특정 게시판 게시물 총 페이지 개수 가져오기
 		Map<String, Object> boardPostsListPageNum = boardService.getBoardPostsListPageNum(bp_category_no, page);

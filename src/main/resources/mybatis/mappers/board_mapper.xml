@@ -12,6 +12,20 @@
 		<result column="bc_reg_date" property="bc_reg_date" />
 		<result column="bc_mod_date" property="bc_mod_date" />
 	</resultMap>
+	
+	<resultMap type="BoardPostsDto" id="BoardPostsDto">
+		<result column="bp_no" property="bp_no" />
+		<result column="bp_category_no" property="bp_category_no" />		
+		<result column="bp_title" property="bp_title" />
+		<result column="bp_body" property="bp_body" />
+		<result column="bp_writer_no" property="bp_writer_no" />
+		<result column="bp_report_state" property="bp_report_state" />
+		<result column="bp_view_cnt" property="bp_view_cnt" />
+		<result column="bp_dir_name" property="bp_dir_name" />
+		<result column="bp_is_deleted" property="bp_is_deleted" />
+		<result column="bp_reg_date" property="bp_reg_date" />
+		<result column="bp_mod_date" property="bp_mod_date" />
+	</resultMap>
 
 	<select id="getList" resultType="com.see_nior.seeniorAdmin.dto.BoardCategoryDto">
 	
@@ -115,7 +129,7 @@
     	
     </insert>
     
-    <select id="getBoardPostsListWithPage" parameterType="com.see_nior.seeniorAdmin.dto.BoardPostsDto">
+    <select id="getBoardPostsListWithPage" parameterType="Object">
     
     	SELECT 
 			*
@@ -126,7 +140,7 @@
 		AND
 		    BP_IS_DELETED = 1 
     	ORDER BY 
-     		D.${sortValue} ${order} 
+     		#{sortValue} #{order} 
 		LIMIT 
 			#{start}, #{limit}
     
@@ -139,9 +153,9 @@
 		FROM 
 			BOARD_POSTS 
 		WHERE 
-			BP_IS_DELETED = 1 
+			BP_CATEGORY_NO = #{bp_category_no}			
 		AND 
-			BP_CATEGORY_NO = #{bp_category_no}
+			BP_IS_DELETED = 1 
     
     </select>
 

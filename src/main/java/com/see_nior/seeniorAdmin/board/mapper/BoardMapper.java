@@ -29,7 +29,7 @@ public interface BoardMapper {
 
 	int createConfirm(BoardPostsDto boardPostsDto);
 
-	List<BoardPostsDto> getBoardPostsListWithPage(int bp_category_no, Map<String, Object> pagingParams);
+	List<BoardPostsDto> getBoardPostsListWithPage(Map<String, Object> pagingParams);
 
 	int getBoardPostsByCategoryCnt(int bp_category_no);
 	

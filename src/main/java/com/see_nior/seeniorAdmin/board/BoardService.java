@@ -273,8 +273,8 @@ public class BoardService {
 	}
 	
 	// 특정 게시판 페이지 번호에 따른 게시물 리스트들 가져오기
-	public Map<String, Object> getBoardListWithPage(int bp_category_no, int page, String sortValue, String order) {
-		log.info("getBoardListWithPage()");
+	public Map<String, Object> getBoardPostsListWithPage(int bp_category_no, int page, String sortValue, String order) {
+		log.info("getBoardPostsListWithPage()");
 		
 		int pagingStart = (page - 1) * pageLimit;
 		
@@ -285,8 +285,9 @@ public class BoardService {
 		pagingParams.put("limit", pageLimit);
 		pagingParams.put("sortValue", sortValue);
 		pagingParams.put("order", order);
+		pagingParams.put("bp_category_no", bp_category_no);
 		
-		List<BoardPostsDto> boardPostsDtos = boardMapper.getBoardPostsListWithPage(bp_category_no,pagingParams);
+		List<BoardPostsDto> boardPostsDtos = boardMapper.getBoardPostsListWithPage(pagingParams);
 		pagingList.put("boardPostsDtos", boardPostsDtos);
 		
 		return pagingList;
