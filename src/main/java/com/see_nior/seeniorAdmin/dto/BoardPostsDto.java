@@ -15,7 +15,8 @@ public class BoardPostsDto {
 	private String bp_body;				
 	private int bp_writer_no;		
 	private boolean bp_report_state;		
-	private int bp_view_cnt;			
+	private int bp_view_cnt;
+	private String bp_dir_name;
 	private boolean bp_is_deleted;		
 	private String bp_reg_date;		
 	private String bp_mod_date;

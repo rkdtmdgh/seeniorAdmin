@@ -23,6 +23,7 @@ import com.see_nior.seeniorAdmin.board.mapper.BoardMapper;
 import com.see_nior.seeniorAdmin.board.util.BoardItemCntUpdater;
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
 import com.see_nior.seeniorAdmin.dto.BoardPostsDto;
+import com.see_nior.seeniorAdmin.dto.DiseaseDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -32,6 +33,11 @@ import lombok.extern.log4j.Log4j2;
 @Service
 public class BoardService {
 	
+	// 페이지네이션 관련
+	private int pageLimit = 10;	// 한 페이지당 보여줄 항목의 개수
+	private int blockLimit = 5;	// 하단에 보여질 페이지 번호의 수
+	
+	//필드 선언
 	final private BoardMapper boardMapper;
 	final private RestTemplate restTemplate;
 	final private BoardItemCntUpdater boardItemCntUpdater;
@@ -221,7 +227,7 @@ public class BoardService {
     
     // 게시글 DB에 저장 후 결과 값 가져오기
 	public Boolean createConfirm(List<String> savedFileNames, int bp_category_no, int bp_writer_no, String bp_title,
-			String old_bp_body) {
+			String old_bp_body, String bp_dir_name) {
 		log.info("createConfirm()");
 		
 		String bp_body = old_bp_body;
@@ -252,6 +258,7 @@ public class BoardService {
  		boardPostsDto.setBp_writer_no(bp_writer_no);
  		boardPostsDto.setBp_title(bp_title);
  		boardPostsDto.setBp_body(bp_body);
+ 		boardPostsDto.setBp_dir_name(bp_dir_name);
 		
 		int result = boardMapper.createConfirm(boardPostsDto);
         
@@ -263,6 +270,56 @@ public class BoardService {
 			return true;
 		}
 				
+	}
+	
+	// 특정 게시판 페이지 번호에 따른 게시물 리스트들 가져오기
+	public Map<String, Object> getBoardListWithPage(int bp_category_no, int page, String sortValue, String order) {
+		log.info("getBoardListWithPage()");
+		
+		int pagingStart = (page - 1) * pageLimit;
+		
+		Map<String, Object> pagingList = new HashMap<>();
+		
+		Map<String, Object> pagingParams = new HashMap<>();
+		pagingParams.put("start", pagingStart);
+		pagingParams.put("limit", pageLimit);
+		pagingParams.put("sortValue", sortValue);
+		pagingParams.put("order", order);
+		
+		List<BoardPostsDto> boardPostsDtos = boardMapper.getBoardPostsListWithPage(bp_category_no,pagingParams);
+		pagingList.put("boardPostsDtos", boardPostsDtos);
+		
+		return pagingList;
+	}
+	
+	// 특정 게시판 게시물 총 페이지 개수 가져오기
+	public Map<String, Object> getBoardPostsListPageNum(int bp_category_no, int page) {
+		
+		Map<String, Object> boardPostsLisByCategoryPageNum = new HashMap<>();
+		
+		// 전체 리스트 개수 조회
+		int boardPostsListByCategoryCnt = boardMapper.getBoardPostsByCategoryCnt(bp_category_no);
+		
+		// 전체 페이지 개수 계산
+		int maxPage = (int) (Math.ceil((double) boardPostsListByCategoryCnt / pageLimit));
+		
+		// 시작 페이지 값 계산
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
+		
+		// 마지막 페이지 값 계산
+		int endPage = startPage + blockLimit - 1;
+		if (endPage > maxPage) endPage = maxPage;
+		
+		boardPostsLisByCategoryPageNum.put("boardPostsListCnt", boardPostsListByCategoryCnt);
+		boardPostsLisByCategoryPageNum.put("page", page);
+		boardPostsLisByCategoryPageNum.put("maxPage", maxPage);
+		boardPostsLisByCategoryPageNum.put("startPage", startPage);
+		boardPostsLisByCategoryPageNum.put("endPage", endPage);
+		boardPostsLisByCategoryPageNum.put("blockLimit", blockLimit);
+		boardPostsLisByCategoryPageNum.put("pageLimit", pageLimit);
+		
+		return boardPostsLisByCategoryPageNum;
+		
 	}
 
 }
