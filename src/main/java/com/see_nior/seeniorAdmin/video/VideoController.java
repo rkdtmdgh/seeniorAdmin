@@ -124,7 +124,7 @@ public class VideoController {
 	}
 	
 	// 비디오 삭제 확인 (비동기)
-	@PostMapping("/info/delete_confirm")
+	@GetMapping("/info/delete_confirm")
 	@ResponseBody
 	public Object deleteConfirm(@RequestParam("v_no") List<Integer> v_nos) {
 		log.info("deleteConfirm()");

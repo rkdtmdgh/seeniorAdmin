@@ -13,14 +13,14 @@ import lombok.extern.log4j.Log4j2;
 @RestController
 @RequiredArgsConstructor
 @Log4j2
-public class NotificationsController {
+public class SseController {
 
-	final private NotificationsService notificationsService;
+	final private SseService SseService;
 	final private QnaService qnaService;
 	
 	@GetMapping(path = "/notifications", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	public SseEmitter sendUnansweredQuestionsNotifications() {
-		return notificationsService.getUnansweredQuestionsNotifications();
+		return SseService.getUnansweredQuestionsNotifications();
 	}
 	
 }
