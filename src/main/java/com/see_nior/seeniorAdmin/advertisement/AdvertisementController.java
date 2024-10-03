@@ -30,6 +30,7 @@ public class AdvertisementController {
 		
 	}
 	
+	
 	// 광고 등록 확인
 	@ResponseBody
 	@PostMapping("/info/create_confirm")
