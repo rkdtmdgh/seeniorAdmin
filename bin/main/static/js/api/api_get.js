@@ -288,15 +288,15 @@ function mapApiResponseObject(apiUrl, response) {
 			break;
 			
 		case '/board/info/get_posts_list': // 게시물
-			getListDtos = response.postsDtos;
-			getListPage = response.postsListPageNum;
-			getListCnt = response.postsListPageNum.postsListCnt;
+			getListDtos = response.boardPostsDtos;
+			getListPage = response.boardPostsListPageNum;
+			getListCnt = response.boardPostsListPageNum.postsListCnt;
 			break;
 			
 		case '/board/info/search_posts_list': // 게시물 검색
-			getListDtos = response.postsDtos;
-			getListPage = response.searchPostsListPageNum;
-			getListCnt = response.searchPostsListPageNum.searchPostsListCnt;
+			getListDtos = response.boardPostsDtos;
+			getListPage = response.searchBoardPostsListPageNum;
+			getListCnt = response.searchBoardPostsListPageNum.searchPostsListCnt;
 			break;	
 			
 		case '/notice/info/get_notice_list': // 공지 사항
@@ -776,7 +776,7 @@ async function getCategoryList(ele, isForm, selectedValue) {
 	}
 }
 
-// 카테고리 리스트 요청에 필요한 객체 설정
+// 셀렉트 옵션 분류 리스트 요청에 필요한 객체 설정
 function mapCategorylistObject(ele) {
 	let apiUrl;
 	let getListDtos;
@@ -786,14 +786,14 @@ function mapCategorylistObject(ele) {
 	switch(ele) {
 		case 'dc_name': // 질환/질병 관련 페이지
 		case 'd_category_no':
-			apiUrl = '/disease/cate_info/get_category_list';
+			apiUrl = '/disease/cate_info/get_category_list_select';
 			getListDtos = 'diseaseCategoryDto';
 			dataNo = 'dc_no';
 			dataName = 'dc_name';
 			break;
 			
 		case 'rcp_pat2': // 식단 관련 페이지
-			apiUrl = '/recipe/cate_info/get_category_list';
+			apiUrl = '/recipe/cate_info/get_category_list_select';
 			getListDtos = 'recipeCategoryDto';
 			dataNo = 'rcp_pat2';
 			dataName = 'rcp_pat2';
