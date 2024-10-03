@@ -25,7 +25,7 @@ public interface BoardMapper {
 
 	int selectCountBoardPostsByBcNo(int bc_no);
 
-	int updateBoardCategoryForBcItemCntByBcNo(int bc_no, int bc_item_cnt);
+	int updateBoardCategoryForBcItemCntByBcNo(Map<String, Object> updateParm);
 
 	int createConfirm(BoardPostsDto boardPostsDto);
 

@@ -3,7 +3,27 @@
 
 
 <mapper namespace="com.see_nior.seeniorAdmin.board.mapper.BoardMapper">
-
+	
+	<resultMap type="AdminAccountDto" id="AdminAccountDto">
+		<result column="a_no" property="a_no" />
+		<result column="a_id" property="a_id" />
+		<result column="a_pw" property="a_pw" />
+		<result column="a_name" property="a_name" />
+		<result column="a_phone" property="a_phone" />
+		<result column="a_birth" property="a_birth" />
+		<result column="a_department" property="a_department" />
+		<result column="a_level" property="a_level" />
+		<result column="a_position" property="a_position" />
+		<result column="a_authority_role" property="a_authority_role" />
+		<result column="a_isaccountnonexpired" property="a_isaccountnonexpired" />
+		<result column="a_isaccountnonlocked" property="a_isaccountnonlocked" />
+		<result column="a_iscredentialsnonexpired" property="a_iscredentialsnonexpired" />
+		<result column="a_isenabled" property="a_isenabled" />
+		<result column="a_is_deleted" property="a_is_deleted" />
+		<result column="a_mod_date" property="a_mod_date" />
+		<result column="a_reg_date" property="a_reg_date" />
+	</resultMap>
+		
 	<resultMap type="BoardCategoryDto" id="BoardCategoryDto">
 		<result column="bc_no" property="bc_no" />
 		<result column="bc_name" property="bc_name" />		
@@ -22,9 +42,24 @@
 		<result column="bp_report_state" property="bp_report_state" />
 		<result column="bp_view_cnt" property="bp_view_cnt" />
 		<result column="bp_dir_name" property="bp_dir_name" />
+		<result column="bp_reply_cnt" property="bp_reply_cnt" />
 		<result column="bp_is_deleted" property="bp_is_deleted" />
 		<result column="bp_reg_date" property="bp_reg_date" />
 		<result column="bp_mod_date" property="bp_mod_date" />
+		<collection property="adminAccountDto" resultMap="AdminAccountDto" />
+	</resultMap>
+		
+	<resultMap type="BoardReplyDto" id="BoardReplyDto">
+		<result column="br_no" property="br_no" />
+		<result column="br_category_no" property="br_category_no" />		
+		<result column="br_post_no" property="br_post_no" />
+		<result column="br_state" property="br_state" />
+		<result column="br_text" property="br_text" />
+		<result column="br_writer_no" property="br_writer_no" />
+		<result column="br_is_deleted" property="br_is_deleted" />
+		<result column="br_reg_date" property="br_reg_date" />
+		<result column="br_mod_date" property="br_mod_date" />
+		<collection property="boardPostsDto" resultMap="BoardPostsDto" />
 	</resultMap>
 
 	<select id="getList" resultType="com.see_nior.seeniorAdmin.dto.BoardCategoryDto">
@@ -111,7 +146,7 @@
     	
     </select>
     
-    <update id="updateBoardCategoryForBcItemCntByBcNo" parameterType="int" >
+    <update id="updateBoardCategoryForBcItemCntByBcNo" >
     	UPDATE 
     		BOARD_CATEGORY 
     	SET 
@@ -134,13 +169,17 @@
     	SELECT 
 			*
 		FROM 
-		    BOARD_POSTS
+		    BOARD_POSTS AS BP
+		JOIN 
+			ADMIN_ACCOUNT AS AC
+		ON 
+			AC.A_NO = BP.BP_WRITER_NO
 		WHERE
-			BP_CATEGORY_NO = #{bp_category_no}
+			BP.BP_CATEGORY_NO = #{bp_category_no}
 		AND
-		    BP_IS_DELETED = 1 
+		    BP.BP_IS_DELETED = 1 
     	ORDER BY 
-     		#{sortValue} #{order} 
+     		BP.${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
     

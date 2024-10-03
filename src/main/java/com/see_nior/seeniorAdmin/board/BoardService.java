@@ -267,7 +267,12 @@ public class BoardService {
 			return false;
 		}else {
 			log.info("createConfirm() insert success!!");
-			return true;
+			
+			int bc_item_cnt = boardItemCntUpdater.selectCountBoardPostsByBcNo(bp_category_no);
+			log.info("bc_item_cnt: "+bc_item_cnt);
+			Boolean upDateResult = boardItemCntUpdater.updateBoardCategoryForBcItemCntByBcNo(bp_category_no, bc_item_cnt);
+			
+			return upDateResult;
 		}
 				
 	}
