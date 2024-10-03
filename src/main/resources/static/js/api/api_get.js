@@ -488,10 +488,10 @@ function generateTableList(apiUrl, data, listIndex) {
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_title}(댓글 수)</a>
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_title}(${data.bp_reply_cnt})</a>
 		            </td>
 		            <td>
-		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_view_cnt}(조회수)</a>
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_view_cnt}</a>
 		            </td>
 					<td>
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">
@@ -499,7 +499,7 @@ function generateTableList(apiUrl, data, listIndex) {
 						</a>
 		            </td>
 					<td>
-		                <a href="" class="table_info">${data.bp_writer_no} 회원 이름, href 회원 정보 페이지</a>
+		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.bp_mod_date) || 'N/A'}</p>
