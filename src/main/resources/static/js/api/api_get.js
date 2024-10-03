@@ -290,7 +290,7 @@ function mapApiResponseObject(apiUrl, response) {
 		case '/board/info/get_posts_list': // 게시물
 			getListDtos = response.boardPostsDtos;
 			getListPage = response.boardPostsListPageNum;
-			getListCnt = response.boardPostsListPageNum.postsListCnt;
+			getListCnt = response.boardPostsListPageNum.boardPostsListCnt;
 			break;
 			
 		case '/board/info/search_posts_list': // 게시물 검색
