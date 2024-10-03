@@ -418,6 +418,19 @@
     		}
     	}
     }
+    
+    &.table_flex_info {
+    	display: flex;
+    	align-items: center;
+    	gap: var(--ssize1);
+    	
+		.info_text {
+			width: 100%;
+			overflow: hidden;
+		    text-overflow: ellipsis;
+		    white-space: nowrap;
+		}    	
+    }
 }
 
 .content_edit_table {
