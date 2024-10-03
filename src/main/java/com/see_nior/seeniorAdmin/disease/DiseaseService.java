@@ -1,6 +1,5 @@
 package com.see_nior.seeniorAdmin.disease;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,9 +11,11 @@ import com.see_nior.seeniorAdmin.disease.mapper.DiseaseMapper;
 import com.see_nior.seeniorAdmin.dto.DiseaseCategoryDto;
 import com.see_nior.seeniorAdmin.dto.DiseaseDto;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
+@RequiredArgsConstructor
 @Service
 public class DiseaseService {
 	
@@ -39,11 +40,6 @@ public class DiseaseService {
 	private int blockLimit = 5;	// 하단에 보여질 페이지 번호의 수
 	
 	final private DiseaseMapper diseaseMapper;
-	
-	public DiseaseService(DiseaseMapper diseaseMapper) {
-		this.diseaseMapper = diseaseMapper;
-		
-	}
 	
 	// --------------------------------------------- 질환 카테고리
 
@@ -459,18 +455,26 @@ public class DiseaseService {
 
 	// 질환 삭제 확인
 	@Transactional
-	public boolean deleteConfirm(ArrayList<Integer> d_nos) {
+	public boolean deleteConfirm(List<Integer> d_nos) {
 		log.info("deleteConfirm()");
 	   
 	   try {
 		   
 		   for (int d_no : d_nos) {
-			   diseaseMapper.deleteDisease(d_no);
+			   
+			   int deleteResult = diseaseMapper.deleteDisease(d_no);
+			   
+			   if (deleteResult <= 0) {
+				   log.info("삭제에 실패하였습니다 : d_no --> {}", d_no);
+				   
+				   throw new RuntimeException();
+				   
+			   }
 			   
 		   }
 		
 	   } catch (Exception e) {
-		   log.error("Error ==========>",e);
+		   log.error("deleteConfirm Error : {}",e);
 		   
 		   return DISEASE_DELETE_FAIL;
 		   

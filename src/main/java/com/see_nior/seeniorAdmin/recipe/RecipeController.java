@@ -11,20 +11,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.see_nior.seeniorAdmin.dto.RecipeDto;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 
 @Log4j2
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/recipe")
 public class RecipeController {
 
 	final private RecipeService recipeService;
-	
-	public RecipeController(RecipeService recipeService) {
-		this.recipeService = recipeService;
-		
-	}
 	
 	// 기존 레시피 테이블 삭제 후 테이블 생성 후 API 데이터 DB에 저장하기
 	@ResponseBody
@@ -51,9 +48,9 @@ public class RecipeController {
 	
 	// 모든 식단 분류 가져오기 (식단 리스트에서 <select>박스 => 비동기)
 	@ResponseBody
-	@GetMapping("cate_info/get_category_list")
-	public Object getCategorylist() {
-		log.info("getCategoryList()");
+	@GetMapping("cate_info/get_category_list_select")
+	public Object getCategorylistSelect() {
+		log.info("getCategorylistSelect()");
 		
 		Map<String, Object> recipeCategoryDtos = recipeService.getCategoryList();
 		
@@ -62,12 +59,12 @@ public class RecipeController {
 	
 	// 모든 식단 가져오기 (페이지네이션)
 	@ResponseBody
-	@GetMapping("info/get_all_recipe_list_with_page")
-	public Object getAllRecipeListWithPage(
+	@GetMapping("info/get_recipe_list")
+	public Object getRecipeList(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "rcp_seq") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
-		log.info("getAllRecipeListWithPage()");
+		log.info("getRecipeList()");
 		
 		// 페이지 번호에 따른 식단 리스트들 가져오기
 		Map<String, Object> recipeListWithPage = recipeService.getRecipeListWithPage(page, sortValue, order);
@@ -85,12 +82,12 @@ public class RecipeController {
 	
 	// 카테고리에 따른 식단 가져오기(페이지네이션)
 	@ResponseBody
-	@GetMapping("info/get_recipe_list_by_category_with_page")
-	public Object getRecipeListByCategoryWithPage(
+	@GetMapping("info/get_recipe_list_by_category")
+	public Object getRecipeListByCategory(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "all") String sortValue,
 			@RequestParam(value = "order") String rcp_pat2) {
-		log.info("getRecipeListByCategoryWithPage()");
+		log.info("getRecipeListByCategory()");
 		
 		// 페이지 번호에 따른 카테고리별 식단 리스트들 가져오기
 		Map<String, Object> recipeListByCategoryWithPage = recipeService.getRecipeListByCategoryWithPage(page, rcp_pat2);

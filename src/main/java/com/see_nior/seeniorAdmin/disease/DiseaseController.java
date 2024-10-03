@@ -1,6 +1,5 @@
 package com.see_nior.seeniorAdmin.disease;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,21 +14,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.see_nior.seeniorAdmin.dto.DiseaseCategoryDto;
 import com.see_nior.seeniorAdmin.dto.DiseaseDto;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 
 
 @Log4j2
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/disease")
 public class DiseaseController {
 
 	final private DiseaseService diseaseService;
-	
-	public DiseaseController(DiseaseService diseaseService) {
-		this.diseaseService = diseaseService;
-		
-	}
 	
 	// ----------------------------------------------------------------질환 카테고리
 	
@@ -81,9 +77,9 @@ public class DiseaseController {
 	
 	// 모든 질환 카테고리 가져오기 (질환 리스트에서 <select>박스 => 비동기)
 	@ResponseBody
-	@GetMapping("/cate_info/get_category_list")
-	public Object getCategoryList() {
-		log.info("getCategoryList()");
+	@GetMapping("/cate_info/get_category_list_select")
+	public Object getCategoryListSelect() {
+		log.info("getCategoryListSelect()");
 		
 		Map<String, Object> diseaseCategoryDtos = diseaseService.getCategoryList();
 		
@@ -93,12 +89,12 @@ public class DiseaseController {
 	
 	// 모든 질환 카테고리 가져오기(페이지네이션 => 질환 카테고리 관리용 => 비동기)
 	@ResponseBody
-	@GetMapping("/cate_info/get_category_list_with_page")
-	public Object getCategoryListWithPage(
+	@GetMapping("/cate_info/get_category_list")
+	public Object getCategoryList(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
 			@RequestParam(value = "sortValue", required = false, defaultValue = "dc_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
-		log.info("getCategoryListWithPage()");
+		log.info("getCategoryList()");
 		
 		// 페이지 번호에 따른 질환 카테고리 리스트들 가져오기
 		Map<String, Object> diseaseCategoryListWithPage = diseaseService.getCategoryListWithPage(page, sortValue, order);
@@ -227,12 +223,12 @@ public class DiseaseController {
 	
 	// 모든 질환 가져오기(페이지네이션 => 비동기)
 	@ResponseBody
-	@GetMapping("/info/get_all_disease_list_with_page")
-	public Object getAllDiseaseListWithPage(
+	@GetMapping("/info/get_disease_list")
+	public Object getDiseaseList(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "d_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
-		log.info("getAllDiseaseListWithPage");
+		log.info("getDiseaseList");
 		
 		// 페이지 번호에 따른 질환 리스트들 가져오기
 		Map<String, Object> diseaseListWithPage = diseaseService.getDiseaseListWithPage(page, sortValue, order);
@@ -250,12 +246,12 @@ public class DiseaseController {
 	
 	// 카테고리에 따른 질환 가져오기(페이지네이션 => 비동기)
 	@ResponseBody
-	@GetMapping("/info/get_disease_list_by_category_with_page")
-	public Object getDiseaseListByCategoryWithPage(
+	@GetMapping("/info/get_disease_list_by_category")
+	public Object getDiseaseListByCategory(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "all") String sortValue,
 			@RequestParam(value = "order") int dc_no) {
-		log.info("getDiseaseListByCategoryWithPage()");
+		log.info("getDiseaseListByCategory()");
 		
 		// 페이지 번호에 따른 카테고리별 질환 리스트들 가져오기
 		Map<String, Object> diseaseListByCategoryWithPage = diseaseService.getDiseaseListByCategoryWithPage(page, dc_no);
@@ -315,7 +311,7 @@ public class DiseaseController {
 	public boolean deleteConfirm(@RequestParam(value = "deleteData") List<Integer> d_nos) {
 		log.info("deleteConfirm()");
 		
-		boolean deleteResult = diseaseService.deleteConfirm(new ArrayList<>(d_nos));
+		boolean deleteResult = diseaseService.deleteConfirm(d_nos);
 		
 		return deleteResult;
 	}

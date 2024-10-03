@@ -14,15 +14,15 @@
 					break;
 
 				case '1': // 카테고리 셀렉트
-					getList('/recipe/info/get_recipe_list_by_category_with_page', sortValue, order, page);
+					getList('/recipe/info/get_recipe_list_by_category', sortValue, order, page);
 					break;
 
 				case '0':  // 정렬
-					getList('/recipe/info/get_all_recipe_list_with_page', sortValue, order, page);
+					getList('/recipe/info/get_recipe_list', sortValue, order, page);
 					break;
 					
 				default: // 기본
-					getList('/recipe/info/get_all_recipe_list_with_page', null, null, page);
+					getList('/recipe/info/get_recipe_list', null, null, page);
 			}
 
 			// RECIPE_CATEGORY 가져오기
@@ -49,7 +49,7 @@
 									<form name="search_form" onsubmit="getSearchList(event, '/recipe/info/search_recipe_list')" th:insert="~{fragments/search.html :: search('식단 정보 관리')}"></form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/recipe/info/get_all_recipe_list_with_page', null, null, 1);">전체보기</div>
+						            	<div class="btns small" onclick="getList('/recipe/info/get_recipe_list', null, null, 1);">전체보기</div>
 						            	<div onclick="postRecipeUpdate()" class="btns small">정보 업데이트</div>
 						            </div>
 					            </div>

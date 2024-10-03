@@ -1,4 +1,4 @@
-// 계정 삭제
+// 개별 삭제
 async function delSingleData(key, noValue, dataName) {
 	logger.info('deleteAccount()', key, noValue, dataName);
 	
@@ -35,7 +35,7 @@ async function delSingleData(key, noValue, dataName) {
 	}
 }
 
-// 체크 리스트 삭제
+// 리스트 삭제
 async function delListData(name, isCheckList) {
 	let deleteData; // 삭제할 데이터의 배열이 들어갈 변수
 	

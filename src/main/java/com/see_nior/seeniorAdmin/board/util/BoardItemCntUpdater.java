@@ -1,5 +1,8 @@
 package com.see_nior.seeniorAdmin.board.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 
 import com.see_nior.seeniorAdmin.board.mapper.BoardMapper;
@@ -37,8 +40,14 @@ final private BoardMapper boardMapper;
 	//BOARD_CATEGORY 테이블에 bc_no 값으로 bc_item_cnt 컬럼 업데이트 하기
 	public boolean updateBoardCategoryForBcItemCntByBcNo(int bc_no, int bc_item_cnt) {
 		log.info("updateBoardCategoryForBcItemCntByBcNo()");
+		log.info("bc_item_cnt :"+bc_item_cnt);
 		
-		int result = boardMapper.updateBoardCategoryForBcItemCntByBcNo(bc_no, bc_item_cnt);
+		Map<String, Object> updateParm = new HashMap<>();
+		
+		updateParm.put("bc_no", bc_no);
+		updateParm.put("bc_item_cnt", bc_item_cnt);
+		
+		int result = boardMapper.updateBoardCategoryForBcItemCntByBcNo(updateParm);
 		
 		if(result <= 0) {
 			log.info("updateBoardCategoryForBcItemCntByBcNo() Error!!");
