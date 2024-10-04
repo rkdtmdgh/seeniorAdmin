@@ -144,7 +144,7 @@ async function putResetPassword(a_no, a_id) {
 }
 
 // 질환 / 질병 수정
-async function putDiseaseModifyForm(formName, d_nameDefaultValue) {
+async function putDiseaseModifyForm(formName) {
 	const form = document.forms[formName];
 	let input;
 	
@@ -155,7 +155,7 @@ async function putDiseaseModifyForm(formName, d_nameDefaultValue) {
 	}
 	
 	input = form.d_name;
-	if(input.value.trim() !== d_nameDefaultValue) { // 수정이 되었을 경우
+	if(input.value !== form.current_d_name.value) { // 수정이 되었을 경우
 		if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 			input.focus();
 			return false;
@@ -228,12 +228,12 @@ async function putVideoModifyForm(formName) {
 }
 
 // 질환 / 질병 분류 수정
-async function putDiseaseCategoryModifyForm(formName, dc_nameDefaultValue) {
+async function putDiseaseCategoryModifyForm(formName) {
 	const form = document.forms[formName];
 	let input;
 	
 	input = form.dc_name;
-	if(input.value.trim() !== dc_nameDefaultValue) { // 수정이 되었을 경우
+	if(input.value !== form.current_dc_name.value) { // 수정이 되었을 경우
 		if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 			input.focus();
 			return false;
@@ -289,17 +289,17 @@ async function putBoardCategoryModifyForm(formName) {
 }
 
 // 게시판 순번 수정
-async function putBoardCategoryModifyButton(event, newBcIdx) {
+async function putBoardCategoryModifyButton(event, bc_idx) {
     const infoEle = event.target.closest('.table_info'); // 클릭된 요소의 부모 요소 찾기
-    const bcNo = infoEle.getAttribute('data-bc-no'); 
-    const bcName = infoEle.getAttribute('data-bc-name'); 
-    const currenBcIdx = infoEle.getAttribute('data-bc-idx'); 
+    const bc_no = infoEle.getAttribute('data-bc-no'); 
+    const bc_name = infoEle.getAttribute('data-bc-name'); 
+    const current_bc_idx = infoEle.getAttribute('data-bc-idx'); 
 	
 	const formData = new FormData();
-	formData.append('bc_no', bcNo);
-	formData.append('bc_name', bcName);
-	formData.append('current_bc_idx', currenBcIdx);
-	formData.append('bc_idx', newBcIdx);
+	formData.append('bc_no', bc_no);
+	formData.append('bc_name', bc_name);
+	formData.append('current_bc_idx', current_bc_idx);
+	formData.append('bc_idx', bc_idx);
 
 	await putSubmitForm(
 		'/board/cate_info/modify_category_confirm', 

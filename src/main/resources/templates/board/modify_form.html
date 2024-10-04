@@ -4,16 +4,13 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 	
 <head>
-    <th:block th:insert="~{fragments/head.html :: head('질환 / 질병 정보 수정')}"></th:block>
+    <th:block th:insert="~{fragments/head.html :: head('게시물 수정')}"></th:block>
     <script th:inline="javascript">
 		$(function() {
-            // DISEASE_CATEGORY 가져오기
-            const selectedCategory = /*[[${diseaseDto.d_category_no}]]*/ // 기본값 설정
-
-         	// DISEASE_CATEGORY 가져오기
-            getCategoryList('d_category_no', true, selectedCategory); // element id, isForm, selectedValue
+			// 타이틀 설정
+			setBoardTitle(/*[[${infoNo}]]*/);
         });
-    </script>
+	</script>
 </head>
 
 <body>
@@ -28,12 +25,12 @@
 	                <section class="content_info_wrap">
 	                    <div class="content_top">
 	                        <div class="content_top_info">
-	                            <h2 class="title">질환 / 질병 정보 관리</h2>
+	                            <h2 class="title"></h2>
 	                        </div>
-	                        <p class="sub_title">질환 / 질병 정보 수정</p>
+	                        <p class="sub_title">게시물 수정</p>
 	                    </div>
 	
-	                    <form name="disease_modify_form">
+	                    <form name="posts_modify_form">
 		                    <input type="hidden" name="d_no" th:value="${diseaseDto.d_no}">
 		                    <input type="hidden" name="current_d_name" th:value="${diseaseDto.d_name}">
 		                    

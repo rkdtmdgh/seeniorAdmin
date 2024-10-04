@@ -4,7 +4,7 @@
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
 <head>
-	<th:block th:insert="~{fragments/head.html :: head('게시판')}"></th:block>
+	<th:block th:insert="~{fragments/head.html :: head('게시판 공지 사항')}"></th:block>
 	<script th:inline="javascript">
 		$(function() {
 			// 타이틀 설정
@@ -13,15 +13,15 @@
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // 검색
-					getSearchList(null, '/board/info/search_posts_list', page);
+					getSearchList(null, '/board/info/search_notice_posts_list', page);
 					break;
 
 				case '0':  // 정렬
-					getList('/board/info/get_posts_list', sortValue, order, page);
+					getList('/board/info/get_notice_posts_list', sortValue, order, page);
 					break;
 					
 				default: // 기본
-					getList('/board/info/get_posts_list', null, null, page);
+					getList('/board/info/get_notice_posts_list', null, null, page);
 			}
         });
 	</script>
@@ -42,12 +42,12 @@
 					            <h2 class="title categoty_title"></h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/board/info/search_posts_list')" th:insert="~{fragments/search.html :: search('게시판')}"></form>
+									<form name="search_form" onsubmit="getSearchList(event, '/board/info/search_notice_posts_list')" th:insert="~{fragments/search.html :: search('게시판 공지 사항')}"></form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/board/info/get_posts_list', null, null, 1);">전체보기</div>
+						            	<div class="btns small" onclick="getList('/board/info/get_notice_posts_list', null, null, 1);">전체보기</div>
 						            	<div class="btns small delete" onclick="delListData('bp_no', true)">삭제</div>
-						            	<a th:href="@{'/board/info/create_form?infoNo=' + ${infoNo}}" class="btns small">게시물 등록</a>
+						            	<a th:href="@{'/board/info/create_notice_posts_form?infoNo=' + ${infoNo}}" class="btns small">게시물 등록</a>
 						            </div>
 					            </div>
 					        </div>
@@ -56,7 +56,6 @@
 					    <div class="table_wrap">
 	                        <table class="content_table board_info_list_table">
 	                            <colgroup>
-	                                <col class="col_checkBox">
 	                                <col class="col_no">
 	                                <col>
 	                                <col class="col_short">
@@ -66,18 +65,13 @@
 	                            </colgroup>
 	
 	                            <thead>
-	                                <tr>
-	                                	<th>
-	                                		<div class="table_title"><input type="checkbox" name="all_check" id="all_check" 
-	                                			onchange="setAllCheckBox(this)" value="bp_no" ></div>	                                        
-	                                    </th>
-	                                    
+	                                <tr>	                                    
 	                                    <th>
 	                                        <p class="table_title">No</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">제목(댓글 수)</p>
+	                                        <p class="table_title">제목</p>
 	                                    </th>
 	                                    
 	                                    <th>
@@ -85,7 +79,11 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                    	<p class="table_title">상태</p>
+	                                    	<p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'board_notice', 'bn_state')">
+	                                        	상태
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
 	                                    </th>
 	                                    
 	                                    <th>
@@ -94,7 +92,7 @@
 	                                    
 	                                    <th>
 	                                    	<p data-current-sort-value="all" class="table_title sort"
-	                                        	onclick="getSortList(event, 'board_posts', 'bp_mod_date')">
+	                                        	onclick="getSortList(event, 'board_notice', 'bn_mod_date')">
 	                                        	등록일
 	                                        	<span class="sort_icon"></span>
 	                                        </p>

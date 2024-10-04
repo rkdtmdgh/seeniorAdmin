@@ -24,7 +24,7 @@
 				            <p class="sub_title">게시판 정보 수정</p>
 					    </div>
 					    
-					    <form name="board_category_modify_form" onsubmit="return setFormSendFalse(event)">					    	
+					    <form name="board_category_modify_form">					    	
                        		<input type="hidden" name="bc_no" th:value="${boardCategoryDtoForModify.bc_no}">
                        		<input type="hidden" name="current_bc_name" th:value="${boardCategoryDtoForModify.bc_name}">
                        		<input type="hidden" name="current_bc_idx" th:value="${boardCategoryDtoForModify.bc_idx}">

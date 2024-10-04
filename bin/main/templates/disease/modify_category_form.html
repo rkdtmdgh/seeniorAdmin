@@ -24,8 +24,9 @@
 				            <p class="sub_title">질환 / 질병 분류 수정</p>
 					    </div>
 					    
-					    <form name="disease_category_modify_form" onsubmit="return setFormSendFalse(event)">					    	
+					    <form name="disease_category_modify_form">					    	
                       		<input type="hidden" name="dc_no" th:value="${diseaseCategoryDto.dc_no}">
+                      		<input type="hidden" name="current_dc_name" th:value="${diseaseCategoryDto.dc_name}">
                       		
 						    <div class="table_wrap">
 		                        <table class="content_edit_table">
@@ -59,8 +60,7 @@
 		                        		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <div th:onclick="putDiseaseCategoryModifyForm('disease_category_modify_form', [[${diseaseCategoryDto.dc_name}]])"
-	                                       class="btns">수정</div>
+	                                    <div onclick="putDiseaseCategoryModifyForm('disease_category_modify_form')" class="btns">수정</div>
 	                                </div>
 	                            </div>
 		                    </div>
