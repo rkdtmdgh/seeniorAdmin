@@ -158,8 +158,10 @@ async function postPostsCreateForm(formName) {
 		formData.append('files', emptyBlob); 
 	}
 	
+	const encoder = new TextEncoder(); // byte 계산
 	for (const [key, value] of formData.entries()) { // formData의 모든 데이터 확인
-		logger.info('postPostsCreateForm() formData:', key, value);
+		logger.info('postPostsCreateForm() formData:', key, value); // 키벨류 확인
+		logger.info(`${key} byte:`, encoder.encode(value).length); // 벨류 byte 확인
 	};
 	
 	//const isTrue = false;
@@ -178,17 +180,17 @@ async function postPostsCreateForm(formName) {
 		
 		if(response) {
 			alert(successMessage);
-			location.replace(`/board/info/posts_list_form?infoNo=${form.category_no.value}`)
+			//location.replace(`/board/info/posts_list_form?infoNo=${form.category_no.value}`)
 			
 		} else {
 			alert(errorMessage);
-			location.reload(true);
+			//location.reload(true);
 		}
 		
 	} catch(error) {
 		logger.error('/board/info/create_confirm postPostsCreateForm() form submit error:', error);
 		alert(errorMessage);
-		location.reload(true);
+		//location.reload(true);
 	}
 }
 
