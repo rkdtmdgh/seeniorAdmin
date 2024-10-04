@@ -144,7 +144,7 @@ async function putResetPassword(a_no, a_id) {
 }
 
 // 질환 / 질병 수정
-async function putDiseaseModifyForm(formName, d_nameDefaultValue) {
+async function putDiseaseModifyForm(formName) {
 	const form = document.forms[formName];
 	let input;
 	
@@ -155,7 +155,7 @@ async function putDiseaseModifyForm(formName, d_nameDefaultValue) {
 	}
 	
 	input = form.d_name;
-	if(input.value.trim() !== d_nameDefaultValue) { // 수정이 되었을 경우
+	if(input.value !== form.current_d_name.value) { // 수정이 되었을 경우
 		if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 			input.focus();
 			return false;
@@ -228,12 +228,12 @@ async function putVideoModifyForm(formName) {
 }
 
 // 질환 / 질병 분류 수정
-async function putDiseaseCategoryModifyForm(formName, dc_nameDefaultValue) {
+async function putDiseaseCategoryModifyForm(formName) {
 	const form = document.forms[formName];
 	let input;
 	
 	input = form.dc_name;
-	if(input.value.trim() !== dc_nameDefaultValue) { // 수정이 되었을 경우
+	if(input.value !== form.current_dc_name.value) { // 수정이 되었을 경우
 		if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 			input.focus();
 			return false;
@@ -289,21 +289,90 @@ async function putBoardCategoryModifyForm(formName) {
 }
 
 // 게시판 순번 수정
-async function putBoardCategoryModifyButton(event, newBcIdx) {
+async function putBoardCategoryModifyButton(event, bc_idx) {
     const infoEle = event.target.closest('.table_info'); // 클릭된 요소의 부모 요소 찾기
-    const bcNo = infoEle.getAttribute('data-bc-no'); 
-    const bcName = infoEle.getAttribute('data-bc-name'); 
-    const currenBcIdx = infoEle.getAttribute('data-bc-idx'); 
+    const bc_no = infoEle.getAttribute('data-bc-no'); 
+    const bc_name = infoEle.getAttribute('data-bc-name'); 
+    const current_bc_idx = infoEle.getAttribute('data-bc-idx'); 
 	
 	const formData = new FormData();
-	formData.append('bc_no', bcNo);
-	formData.append('bc_name', bcName);
-	formData.append('current_bc_idx', currenBcIdx);
-	formData.append('bc_idx', newBcIdx);
+	formData.append('bc_no', bc_no);
+	formData.append('bc_name', bc_name);
+	formData.append('current_bc_idx', current_bc_idx);
+	formData.append('bc_idx', bc_idx);
 
 	await putSubmitForm(
 		'/board/cate_info/modify_category_confirm', 
 		formData
+	);
+}
+
+// 게시물 수정
+async function putPostsModifyForm(formName) {
+	const form = document.forms[formName];
+	
+	input = form.bp_title;
+	if(!validateEmpty(input, '제목을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(!validateQuill(quill)) { // 내용 유효성 및 비속어 검사
+		quill.focus();
+		return false;
+	}
+	
+	const successMessage = `"${bp_title.value.trim()}" 게시물이 수정되었습니다.`;
+	const errorMessage = `"${bp_title.value.trim()}" 게시물 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	const formData = new FormData();
+	formData.append('bp_no', form.bp_no.value);
+	formData.append('bp_title', input.value.trim()); // 제목
+	formData.append('bp_body', quill.root.innerHTML); // quill 에디터 내용
+	
+	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
+	if($imgTags.length) {
+		logger.info('이미지 태그 있음');
+		
+		for(let img of $imgTags) {
+			const src= $(img)[0].src; // src 속성에 입력된 base64 Url 가져오기
+			const base64Data = src.split(',')[1]; // base64 데이터 부분 추출
+			const byteCharacters = atob(base64Data); // base64를 디코딩 반대 메소드 btoa() 
+			const byteNumbers = new Array(byteCharacters.length);
+			
+			for(let i = 0; i < byteCharacters.length; i++) {
+				byteNumbers[i] = byteCharacters.charCodeAt(i); // 각 문자를 바이트 배열로 변환
+			}
+			
+			const byteArray = new Uint8Array(byteNumbers); // 8비트 부호 없는 정수(0-255) 저장 배열
+			const mimeType = 'image/webp'; // src.match(/data:(.*?);base64/)[1]; // MIME 타입 추출
+			const blob = new Blob([byteArray], {type: mimeType}); // 이진 데이터로 blob 객체로 변환	
+			
+			// 설정된 width 크기로 리사이즈 압축 후 flle 객체로 변환
+			const resizedImageFile = await resizeImage(blob, $(img)[0].width, mimeType);
+			formData.append('files', resizedImageFile); // 리사이즈된 File객체를 formData에 추가
+		}
+		
+	} else {
+		logger.info('이미지 태그 없음');
+		const emptyBlob = new Blob([], { type: 'application/octet-stream' }); // 빈 Blob 생성
+		formData.append('files', emptyBlob); 
+	}
+	
+	const encoder = new TextEncoder(); // byte 계산
+	for (const [key, value] of formData.entries()) { // formData의 모든 데이터 확인
+		logger.info('postPostsCreateForm() formData:', key, value); // 키벨류 확인
+		logger.info(`${key} byte:`, encoder.encode(value).length); // 벨류 byte 확인
+	};
+	
+	//const isTrue = false;
+	//if(!isTrue) return false;
+	
+	await postSubmitForm(
+		'/board/info/modify_confirm',
+		formData,
+		successMessage,
+		errorMessage,
 	);
 }
 

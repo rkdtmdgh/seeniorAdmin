@@ -293,13 +293,25 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchBoardCategoryListPageNum.searchBoardCategoryListCnt;
 			break;
 			
-		case '/board/info/get_posts_list': // 게시물
+		case '/board/info/get_notice_posts_list': // 공지 게시물
+			getListDtos = response.boardNoticePostsDtos;
+			getListPage = response.boardNoticePostsListPageNum;
+			getListCnt = response.boardNoticePostsListPageNum.boardNoticePostsListCnt;
+			break;
+			
+		case '/board/info/search_notice_posts_list': // 공지 게시물 검색
+			getListDtos = response.boardNoticePostsDtos;
+			getListPage = response.searchBoardNoticePostsListPageNum;
+			getListCnt = response.searchBoardNoticePostsListPageNum.searchNoticePostsListCnt;
+			break;
+			
+		case '/board/info/get_posts_list': // 일반 게시물
 			getListDtos = response.boardPostsDtos;
 			getListPage = response.boardPostsListPageNum;
 			getListCnt = response.boardPostsListPageNum.boardPostsListCnt;
 			break;
 			
-		case '/board/info/search_posts_list': // 게시물 검색
+		case '/board/info/search_posts_list': // 일반 게시물 검색
 			getListDtos = response.boardPostsDtos;
 			getListPage = response.searchBoardPostsListPageNum;
 			getListCnt = response.searchBoardPostsListPageNum.searchPostsListCnt;
@@ -371,7 +383,7 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			tableTrContent = `
 				<tr>
 		            <td class="vam">
-		                <div class="table_info func_area"><input type="checkbox" name="d_no" class="d_no" value="${data.d_no}"></div>
+		                <div class="table_info func_area"><input type="checkbox" name="d_no" value="${data.d_no}"></div>
 		            </td>
 		            <td>
 		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${listIndex}</a>
@@ -445,7 +457,7 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			tableTrContent = `
 				<tr>
 		            <td class="vam">
-		                <div class="table_info func_area"><input type="checkbox" name="v_no" class="d_no" value="${data.v_no}"></div>
+		                <div class="table_info func_area"><input type="checkbox" name="v_no" value="${data.v_no}"></div>
 		            </td>
 		            <td>
 		                <a href="/video/info/modify_form?v_no=${data.v_no}" class="table_info">${listIndex}</a>
@@ -489,12 +501,40 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			`;
 			break;
 			
-		case '/board/info/get_posts_list': // 게시물 리스트 테이블
-		case '/board/info/search_posts_list': // 게시물 검색 리스트 테이블
+		case '/board/info/get_notice_posts_list': // 공지 게시물 리스트 테이블
+		case '/board/info/search_notice_posts_list': // 공지 게시물 검색 리스트 테이블
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/board/info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${listIndex}</a>
+		            </td>
+		            <td>
+		                <a href="/board/info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_title}</a>
+		            </td>
+		            <td>
+		                <a href="/board/info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_view_cnt}</a>
+		            </td>
+					<td>
+		                <a href="/board/info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">
+							${data.bn_state === 1 ? '정상' : '숨김'}
+						</a>
+		            </td>
+					<td>
+		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.bn_mod_date) || 'N/A'}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/board/info/get_posts_list': // 일반 게시물 리스트 테이블
+		case '/board/info/search_posts_list': // 일반 게시물 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
 					<td class="vam">
-		                <div class="table_info func_area"><input type="checkbox" name="bp_no" class="d_no" value="${data.bp_no}"></div>
+		                <div class="table_info func_area"><input type="checkbox" name="bp_no" value="${data.bp_no}"></div>
 		            </td>
 		            <td>
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${listIndex}</a>
@@ -527,7 +567,7 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			tableTrContent = `
 				<tr>
 					<td class="vam">
-		                <div class="table_info func_area"><input type="checkbox" name="d_no" class="d_no" value="${data.n_no}"></div>
+		                <div class="table_info func_area"><input type="checkbox" name="d_no" value="${data.n_no}"></div>
 		            </td>
 		            <td>
 		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${listIndex}</a>
@@ -553,7 +593,7 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			tableTrContent = `
 				<tr>
 					<td class="vam">
-		                <div class="table_info func_area"><input type="checkbox" name="bq_no" class="bq_no" value="${data.bq_no}"></div>
+		                <div class="table_info func_area"><input type="checkbox" name="bq_no" value="${data.bq_no}"></div>
 		            </td>
 		            <td>
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${listIndex}</a>
@@ -671,17 +711,17 @@ function getSortList(event, dbTable, sortValue) {
 function mapSortListApiObject(dbTable) {
 	let apiUrl;
 	
-	switch(dbTable) {
+	switch(dbTable) {			
+		case 'admin_account': // 관리자 계정 관리 페이지
+			apiUrl = '/account/list/get_admin_list';
+			break;
+			
 		case 'disease': // 질환/질병 정보 관리 페이지
 			apiUrl = '/disease/info/get_disease_list';
 			break;
 		
 		case 'disease_category': // 질환/질병 분류 관리 페이지
 			apiUrl = '/disease/cate_info/get_category_list';
-			break;
-			
-		case 'admin_account': // 관리자 계정 관리 페이지
-			apiUrl = '/account/list/get_admin_list';
 			break;
 			
 		case 'recipe': // 식단 정보 관리 페이지
@@ -692,8 +732,16 @@ function mapSortListApiObject(dbTable) {
 			apiUrl = '/video/info/get_video_list';
 			break;
 			
+		case 'board_notice': // 게시판 공지 사항 페이지
+			apiUrl = '/board/info/get_notice_posts_list';
+			break;
+			
 		case 'board_category': // 게시판 관리 페이지
 			apiUrl = '/board/cate_info/get_list';
+			break;
+			
+		case 'board_posts': // 특정 게시판 페이지
+			apiUrl = '/board/info/get_posts_list';
 			break;
 			
 		default:
@@ -740,7 +788,7 @@ function mapSelectListApiObject(sortValue) {
 	return apiUrl;
 }
 
-// 카테고리 리스트 요청 및 옵션 생성
+// 셀렉트 옵션(분류) 리스트 요청 및 옵션 생성
 async function getCategoryList(ele, isForm, selectedValue) {
 	const $selectEle = $(`#${ele}`); // 셀렉트 요소가 생성될 table th
 	const { apiUrl, getListDtos, dataNo, dataName } = mapCategorylistObject(ele);
