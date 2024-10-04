@@ -120,17 +120,14 @@ async function postPostsCreateForm(formName) {
 		return false;
 	}
 	
-	const notice = form.notice.value; // 1=공지, 0=일반
-	const prefix = notice == 1 ? 'bn_' : 'bp_';
-	const apiUrl = notice == 1 ? '/board/info/create_notice_confirm' : '/board/info/create_confirm';
-	const successMessage = `"${title.value.trim()}" ${notice == 1 ? '공지' : '일반'} 게시물이 등록되었습니다.`;
-	const errorMessage = `"${title.value.trim()}" ${notice == 1 ? '공지' : '일반'} 게시물 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const successMessage = `"${title.value.trim()}" 게시물이 등록되었습니다.`;
+	const errorMessage = `"${title.value.trim()}" 게시물 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
 	const formData = new FormData();
-	formData.append(`${prefix}title`, input.value.trim()); // 제목
-	formData.append(`${prefix}category_no`, form.category_no.value); // 게시판 no
-	formData.append(`${prefix}writer_no`, form.writer_no.value); // 작성자 no
-	formData.append(`${prefix}body`, quill.root.innerHTML); // quill 에디터 내용
+	formData.append('bp_title', input.value.trim()); // 제목
+	formData.append('bp_category_no', form.category_no.value); // 게시판 no
+	formData.append('bp_writer_no', form.writer_no.value); // 작성자 no
+	formData.append('bp_body', quill.root.innerHTML); // quill 에디터 내용
 	
 	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
 	if($imgTags.length) {
@@ -170,7 +167,7 @@ async function postPostsCreateForm(formName) {
 	
 	try {
 		const response = await $.ajax({
-			url: apiUrl,
+			url: '/board/info/create_confirm',
 			method: 'POST',
 			data: formData,
 			processData: false,  // FormData가 자동으로 Content-Type 설정
@@ -189,7 +186,7 @@ async function postPostsCreateForm(formName) {
 		}
 		
 	} catch(error) {
-		logger.error(`${apiUrl} postPostsCreateForm() form submit error:`, error);
+		logger.error('/board/info/create_confirm postPostsCreateForm() form submit error:', error);
 		alert(errorMessage);
 		location.reload(true);
 	}
