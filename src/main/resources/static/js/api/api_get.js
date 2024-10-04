@@ -468,9 +468,9 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			tableTrContent = `
 				<tr>
 					<td>
-						<div class="table_info func_area">
-							${!isFirstElement ? `<span onclick="putBoardCategoryModifyButton(${data.bc_idx}, ${data.bc_idx + 1})" class="func_arrow up"></span>` : ''}
-							${!isLastElement ? `<span onclick="putBoardCategoryModifyButton(${data.bc_idx}, ${data.bc_idx - 1})" class="func_arrow down"></span>` : ''}
+						<div class="table_info func_area" data-bc-no="${data.bc_no}" data-bc-name="${data.bc_name}" data-bc-idx="${data.bc_idx},">
+							${!isFirstElement ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx + 1})" class="func_arrow up"></span>` : ''}
+							${!isLastElement ? `<span onclick="putBoardCategoryModifyButton(evemt, ${data.bc_idx - 1})" class="func_arrow down"></span>` : ''}
 						</div>
 					</td>
 		            <td>

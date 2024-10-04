@@ -289,8 +289,15 @@ async function putBoardCategoryModifyForm(formName) {
 }
 
 // 게시판 순번 수정
-async function putBoardCategoryModifyButton(currenBcIdx, newBcIdx) {
+async function putBoardCategoryModifyButton(event, newBcIdx) {
+    const infoEle = event.target.closest('.table_info'); // 클릭된 요소의 부모 요소 찾기
+    const bcNo = infoEle.getAttribute('data-bc-no'); 
+    const bcName = infoEle.getAttribute('data-bc-name'); 
+    const currenBcIdx = infoEle.getAttribute('data-bc-idx'); 
+	
 	const formData = new FormData();
+	formData.append('bc_no', bcNo);
+	formData.append('bc_name', bcName);
 	formData.append('current_bc_idx', currenBcIdx);
 	formData.append('bc_idx', newBcIdx);
 
