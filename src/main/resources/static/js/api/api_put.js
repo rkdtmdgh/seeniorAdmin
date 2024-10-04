@@ -16,15 +16,15 @@ async function putSubmitForm(apiUrl, formData, successMessage, errorMessage) {
 		logger.info(`${apiUrl} putSubmitForm() response:`, response);
 		
 		if(response) {
-			alert(successMessage);
+			if(successMessage) alert(successMessage);
 			
 		} else {
-			alert(errorMessage);
+			if(errorMessage) alert(errorMessage);
 		}
 		
 	} catch(error) {
 		logger.error(`${apiUrl} putSubmitForm() error:`, error);
-		alert(errorMessage);
+		if(errorMessage) alert(errorMessage);
 		
 	} finally {
 		location.reload(true);
@@ -257,37 +257,53 @@ async function putDiseaseCategoryModifyForm(formName, dc_nameDefaultValue) {
 }
 
 // 게시판 수정
-async function putBoardCategoryModifyForm(formName, bc_nameDefaultValue, bc_idxDefaultValue) {
+async function putBoardCategoryModifyForm(formName) {
 	const form = document.forms[formName];
 	const bc_name = form.bc_name;
 	const bc_idx = form.bc_idx;
+	const current_bc_name = form.current_bc_name;
+	const current_bc_idx = form.current_bc_idx;
 	
-	if(bc_name.value.trim() === bc_nameDefaultValue && bc_idx.value.trim() === bc_idxDefaultValue) {
+	if(bc_name.value === current_bc_name.value && bc_idx === current_bc_idx.value) {
 		alert('수정된 내용이 없습니다');
 		return false;		
 	}
 	
-	if(bc_name.value.trim() !== bc_nameDefaultValue) { // 수정이 되었을 경우
+	if(bc_name.value !== current_bc_name.value) { // 수정이 되었을 경우
 		if(!(await requestDuplicateCheck(bc_name, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 			bc_name.focus();
 			return false;
 		}
 	} 
 	
-	const bc_idxFix = bc_idx.value.trim() || 0;
-	
-	const formData = new FormData();
-	formData.append('bc_name', bc_name.value);
-	formData.append('bc_idx', bc_idxFix);
-	
+	const formData = new FormData(form);
 	const successMessage = `"${bc_name.value}" 이(가) 수정되었습니다`;
-	const errorMessage = `"${input.value}" 이(가) 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const errorMessage = `"${bc_name.value}" 이(가) 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 
 	await putSubmitForm(
 		'/board/cate_info/modify_category_confirm', 
 		formData, 
 		successMessage, 
 		errorMessage
+	);
+}
+
+// 게시판 순번 수정
+async function putBoardCategoryModifyButton(event, newBcIdx) {
+    const infoEle = event.target.closest('.table_info'); // 클릭된 요소의 부모 요소 찾기
+    const bcNo = infoEle.getAttribute('data-bc-no'); 
+    const bcName = infoEle.getAttribute('data-bc-name'); 
+    const currenBcIdx = infoEle.getAttribute('data-bc-idx'); 
+	
+	const formData = new FormData();
+	formData.append('bc_no', bcNo);
+	formData.append('bc_name', bcName);
+	formData.append('current_bc_idx', currenBcIdx);
+	formData.append('bc_idx', newBcIdx);
+
+	await putSubmitForm(
+		'/board/cate_info/modify_category_confirm', 
+		formData
 	);
 }
 

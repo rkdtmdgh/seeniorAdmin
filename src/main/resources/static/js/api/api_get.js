@@ -84,7 +84,10 @@ async function getList(apiUrl, sortValue, order, page) {
 			let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
 			
 			getListDtos.forEach((data) => { 
-				$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, listIndex));
+			    const isFirstElement = (listIndex === getListCnt); // 첫 번째 요소인지 확인
+			    const isLastElement = (listIndex === (getListCnt - (pageLimit * (getListPage.page - 1) + pageLimit - 1)));  // 마지막 요소인지 확인
+			    
+				$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElement));
 				listIndex --;
 			});
 			
@@ -166,7 +169,10 @@ async function getSearchList(event, apiUrl, page) {
 				let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
 						
 				getListDtos.forEach((data) => { 
-					$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, listIndex)); // jQuery 선택자에서 DOM 요소가져오기[0]
+					const isFirstElement = (listIndex === getListCnt); // 첫 번째 요소인지 확인
+				    const isLastElement = (listIndex === (getListCnt - (pageLimit * (getListPage.page - 1) + pageLimit - 1)));  // 마지막 요소인지 확인
+				    
+					$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElement));
 					listIndex --;
 				});
 				
@@ -329,7 +335,7 @@ function mapApiResponseObject(apiUrl, response) {
 }
 
 // 콘텐츠 테이블 리스트 생성
-function generateTableList(apiUrl, data, listIndex) { 
+function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElement) { 
 	let tableTrContent = '';
 	
 	switch(apiUrl) {
@@ -461,6 +467,12 @@ function generateTableList(apiUrl, data, listIndex) {
 		case '/board/cate_info/search_board_category_list': // 게시판 관리 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
+					<td>
+						<div class="table_info func_area" data-bc-no="${data.bc_no}" data-bc-name="${data.bc_name}" data-bc-idx="${data.bc_idx},">
+							${!isFirstElement ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx + 1})" class="func_arrow up"></span>` : ''}
+							${!isLastElement ? `<span onclick="putBoardCategoryModifyButton(evemt, ${data.bc_idx - 1})" class="func_arrow down"></span>` : ''}
+						</div>
+					</td>
 		            <td>
 		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${listIndex}</a>
 		            </td>

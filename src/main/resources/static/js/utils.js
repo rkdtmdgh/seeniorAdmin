@@ -395,6 +395,8 @@ function setAccountModifyForm(data) {
 	    </div>
 							
 		<form name="modify_form">					    	
+    		<input type="hidden" name="a_no" value="${data.a_no}">
+    		
 		    <div class="table_wrap">
                 <table class="content_edit_table">
                     <colgroup>
@@ -408,7 +410,6 @@ function setAccountModifyForm(data) {
                         <tr>
                         	<th><p class="table_title">아이디</p></th>
                         	<td class="disabled">
-                        		<input type="hidden" name="a_no" value="${data.a_no}">
                         		<input type="text" name="a_id" id="id" class="table_info disabled"
                                 	value="${data.a_id}" disabled>
                             </td>
