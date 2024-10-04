@@ -25,6 +25,8 @@
 	                    </div>
 	
 	                    <form name="video_modify_form" onsubmit="return setFormSendFalse(event)">
+                            <input type="hidden" name="v_no" th:value="${videoDto.v_no}">
+                            
 	                        <div class="table_wrap">
 	                            <table class="content_edit_table">
 	                                <colgroup>
@@ -38,7 +40,6 @@
 		                                <tr>
 		                                    <th><p class="table_title">제목</p></th>
 		                                    <td colspan="3">
-		                                        <input type="hidden" name="v_no" th:value="${videoDto.v_no}">
 		                                        <input type="text" name="v_title" id="v_title" class="table_info" placeholder="제목"
 		                                            onblur="validateEmpty(this, '제목을');"
 		                                            th:value="${videoDto.v_title}">

@@ -405,6 +405,20 @@
         .func_btn {
             display: flex;
         }
+        
+        .func_arrow {
+        	display: block;
+        	width: var(--arrowWidth);
+        	height: var(--arrowWidth);
+        	
+        	&.up {
+        		background: url(/image/icons/a_up.gif) center no-repeat;
+        	}
+        	
+        	&.down {
+        		background: url(/image/icons/a_down.gif) center no-repeat;
+        	}
+        }
     }
     
     &.info_data_list {

@@ -34,6 +34,8 @@
 	                    </div>
 	
 	                    <form name="disease_modify_form" onsubmit="return setFormSendFalse(event)">
+		                    <input type="hidden" name="d_no" th:value="${diseaseDto.d_no}">
+		                    
 	                        <div class="table_wrap">
 	                            <table class="content_edit_table">
 	                                <colgroup>
@@ -52,7 +54,6 @@
 		
 		                                    <th><p class="table_title">질환 / 질병명</p></th>
 		                                    <td>
-		                                        <input type="hidden" name="d_no" th:value="${diseaseDto.d_no}">
 		                                        <input type="text" name="d_name" id="d_name" class="table_info" placeholder="질환 / 질병명"
 		                                            th:onblur="requestDuplicateCheck(this, true, [[${diseaseDto.d_name}]], null);"
 		                                            th:value="${diseaseDto.d_name}">

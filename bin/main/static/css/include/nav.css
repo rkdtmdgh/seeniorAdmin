@@ -52,8 +52,11 @@
                     padding: var(--subTextPadding);
 
                     .side_sub_menu {
-                        display: inline-block;
+                        display: block;
                         padding: var(--subTextIndent);
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
                     }
                     
                     &:hover {

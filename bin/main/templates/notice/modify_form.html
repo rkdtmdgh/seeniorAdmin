@@ -25,6 +25,8 @@
 	                    </div>
 	
 	                    <form name="notice_modify_form">
+                      		<input type="hidden" name="n_writer_no" th:value="${noticeDto.n_writer_no}">
+                            		
 	                        <div class="table_wrap">
 	                            <table class="content_edit_table">
 	                                <colgroup>
@@ -45,7 +47,6 @@
 	                                        
 	                                        <th><p class="table_title">작성자</p></th>
 		                                	<td class="disabled">
-		                                		<input type="hidden" name="n_writer_no" th:value="${noticeDto.n_writer_no}">
 	                                			<input type="text" class="table_info disabled" th:value="${authentication.name}" disabled>	
 	                                        </td>
 		                                </tr>

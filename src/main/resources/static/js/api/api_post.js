@@ -105,7 +105,7 @@ async function postIdentityCheckForm(event, formName) {
 	}
 }
 
-// 게시물 등록 폼
+// 일반 게시물 등록 폼
 async function postPostsCreateForm(formName) {
 	const form = document.forms[formName];
 	
