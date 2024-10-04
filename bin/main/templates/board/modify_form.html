@@ -31,8 +31,7 @@
 	                    </div>
 	
 	                    <form name="posts_modify_form">
-		                    <input type="hidden" name="d_no" th:value="${diseaseDto.d_no}">
-		                    <input type="hidden" name="current_d_name" th:value="${diseaseDto.d_name}">
+		                    <input type="hidden" name="bp_no" th:value="${selectedPostsDto.bp_no}">
 		                    
 	                        <div class="table_wrap">
 	                            <table class="content_edit_table">
@@ -45,61 +44,40 @@
 	
 	                                <tbody>
 		                                <tr>
-		                                    <th><p class="table_title">분류</p></th>
-		                                    <td>
-		                                        <select class="table_info select" name="d_category_no" id="d_category_no"></select>
-		                                    </td>
-		
-		                                    <th><p class="table_title">질환 / 질병명</p></th>
-		                                    <td>
-		                                        <input type="text" name="d_name" id="d_name" class="table_info" placeholder="질환 / 질병명"
-		                                            th:onblur="requestDuplicateCheck(this, true, [[${diseaseDto.d_name}]], null);"
-		                                            th:value="${diseaseDto.d_name}">
-		                                    </td>
+	                                        <th><p class="table_title">제목</p></th>
+		                                	<td colspan="3">
+		                                		<input type="text" name="bp_title" id="bp_title" class="table_info" placeholder="제목"
+		                                			onblur="validateEmpty(this, '제목을')"
+		                                			th:value="${selectedPostsDto.bp_title}">
+	                                        </td>
 		                                </tr>
-		
+		                                
 		                                <tr>
-		                                    <th><p class="table_title">추천 식단 재료</p></th>
-		                                    <td colspan="3">
-		                                    	<textarea rows="1" name="d_good_food" id="d_good_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
-		                                    		onkeydown="setTextareaAddCommaBeforeEnter(this, event)" 
-		                                    		oninput="setTextareaAutoHeight(this)" 
-		                                    		onblur="validateEmpty(this, '추천 식단 재료를')"
-		                                    		th:text="${diseaseDto.d_good_food}"></textarea>
-		                                    </td>
+		                                	<th><p class="table_title">작성자</p></th>
+		                                	<td colspan="3" class="disabled">
+	                                			<input type="text" name="writer_id" class="table_info" disabled>
+	                                        </td>
 		                                </tr>
+		                                
 		                                <tr>
-		                                    <th><p class="table_title">비추천 식단 재료</p></th>
-		                                    <td colspan="3">
-		                                    	<textarea rows="1" name="d_bad_food" id="d_bad_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
-		                                    		onkeydown="setTextareaAddCommaBeforeEnter(this, event)" 
-		                                    		oninput="setTextareaAutoHeight(this)" 
-		                                    		onblur="validateEmpty(this, '추천 식단 재료를')"
-		                                    		th:text="${diseaseDto.d_bad_food}"></textarea>
-		                                    </td>
-		                                </tr>
-		                                <tr>
-		                                    <th><p class="table_title">질환 / 질병 정보</p></th>
-		                                    <td colspan="3">
-		                                        <textarea name="d_info" id="d_info" class="table_textarea" data-current-size="textarea" placeholder="내용을 입력하세요"
-		                                        	oninput="setTextLimit(this, 'info')"
-		                                        	onblur="validateEmpty(this, '내용을')"
-	                                            	th:text="${diseaseDto.d_info}"></textarea>
-                                            	<div id="text_limit">
+		                                	<th><p class="table_title">내용</p></th>
+		                                	<td colspan="3">
+	                                			<div id="editor" th:utext="${selectedPostsDto.bp_body}"></div>
+	                                			<div id="text_limit">
 	                                				<span id="current_size"></span> / <span id="max_size"></span>
 	                                			</div>
-		                                    </td>
+	                                        </td>
 		                                </tr>
-	                                </tbody>
+		                            </tbody>
 	                            </table>
 	
 	                            <div class="btn_list">
-	                            	<div th:if="${diseaseDto.d_no} != null"
-		                        		 th:onclick="delListData('d_no')" class="btns delete">삭제</div>
+	                            	<div th:if="${selectedPostsDto.bp_no} != null"
+		                        		 th:onclick="delListData('bp_no')" class="btns delete">삭제</div>
 		                        		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <div onclick="putDiseaseModifyForm('disease_modify_form')" class="btns">수정</div>
+	                                    <div onclick="putPostsModifyForm('posts_modify_form')" class="btns">수정</div>
 	                                </div>
 	                            </div>
 	                        </div>

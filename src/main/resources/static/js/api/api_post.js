@@ -105,95 +105,6 @@ async function postIdentityCheckForm(event, formName) {
 	}
 }
 
-// 일반 게시물 등록 폼
-async function postPostsCreateForm(formName) {
-	const form = document.forms[formName];
-	
-	input = form.title;
-	if(!validateEmpty(input, '제목을', true)) {
-		input.focus();
-		return false;
-	}
-	
-	if(!validateQuill(quill)) { // 내용 유효성 및 비속어 검사
-		quill.focus();
-		return false;
-	}
-	
-	const successMessage = `"${title.value.trim()}" 게시물이 등록되었습니다.`;
-	const errorMessage = `"${title.value.trim()}" 게시물 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
-	
-	const formData = new FormData();
-	formData.append('bp_title', input.value.trim()); // 제목
-	formData.append('bp_category_no', form.category_no.value); // 게시판 no
-	formData.append('bp_writer_no', form.writer_no.value); // 작성자 no
-	formData.append('bp_body', quill.root.innerHTML); // quill 에디터 내용
-	
-	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
-	if($imgTags.length) {
-		logger.info('이미지 태그 있음');
-		
-		for(let img of $imgTags) {
-			const src= $(img)[0].src; // src 속성에 입력된 base64 Url 가져오기
-			const base64Data = src.split(',')[1]; // base64 데이터 부분 추출
-			const byteCharacters = atob(base64Data); // base64를 디코딩 반대 메소드 btoa() 
-			const byteNumbers = new Array(byteCharacters.length);
-			
-			for(let i = 0; i < byteCharacters.length; i++) {
-				byteNumbers[i] = byteCharacters.charCodeAt(i); // 각 문자를 바이트 배열로 변환
-			}
-			
-			const byteArray = new Uint8Array(byteNumbers); // 8비트 부호 없는 정수(0-255) 저장 배열
-			const mimeType = 'image/webp'; // src.match(/data:(.*?);base64/)[1]; // MIME 타입 추출
-			const blob = new Blob([byteArray], {type: mimeType}); // 이진 데이터로 blob 객체로 변환	
-			
-			// 설정된 width 크기로 리사이즈 압축 후 flle 객체로 변환
-			const resizedImageFile = await resizeImage(blob, $(img)[0].width, mimeType);
-			formData.append('files', resizedImageFile); // 리사이즈된 File객체를 formData에 추가
-		}
-		
-	} else {
-		logger.info('이미지 태그 없음');
-		const emptyBlob = new Blob([], { type: 'application/octet-stream' }); // 빈 Blob 생성
-		formData.append('files', emptyBlob); 
-	}
-	
-	const encoder = new TextEncoder(); // byte 계산
-	for (const [key, value] of formData.entries()) { // formData의 모든 데이터 확인
-		logger.info('postPostsCreateForm() formData:', key, value); // 키벨류 확인
-		logger.info(`${key} byte:`, encoder.encode(value).length); // 벨류 byte 확인
-	};
-	
-	//const isTrue = false;
-	//if(!isTrue) return false;
-	
-	try {
-		const response = await $.ajax({
-			url: '/board/info/create_confirm',
-			method: 'POST',
-			data: formData,
-			processData: false,  // FormData가 자동으로 Content-Type 설정
-			contentType: false,  // FormData를 문자열로 변환하지 않음
-		});
-		
-		logger.info('postPostsCreateForm() response:', response);
-		
-		if(response) {
-			alert(successMessage);
-			//location.replace(`/board/info/posts_list_form?infoNo=${form.category_no.value}`)
-			
-		} else {
-			alert(errorMessage);
-			//location.reload(true);
-		}
-		
-	} catch(error) {
-		logger.error('/board/info/create_confirm postPostsCreateForm() form submit error:', error);
-		alert(errorMessage);
-		//location.reload(true);
-	}
-}
-
 // post ajax 요청
 async function postSubmitForm(apiUrl, formData, successMessage, errorMessage, redirectUrl = null) {
 	for (const [key, value] of formData.entries()) {
@@ -362,6 +273,77 @@ async function postBoardCategoryCreateForm(formName) {
 		successMessage, 
 		errorMessage, 
 		'/board/cate_info/category_list_form'
+	);
+}
+
+// 일반 게시물 등록 폼
+async function postPostsCreateForm(formName) {
+	const form = document.forms[formName];
+	
+	input = form.bp_title;
+	if(!validateEmpty(input, '제목을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(!validateQuill(quill)) { // 내용 유효성 및 비속어 검사
+		quill.focus();
+		return false;
+	}
+	
+	const successMessage = `"${bp_title.value.trim()}" 게시물이 등록되었습니다.`;
+	const errorMessage = `"${bp_title.value.trim()}" 게시물 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	const formData = new FormData();
+	formData.append('bp_title', input.value.trim()); // 제목
+	formData.append('bp_category_no', form.bp_category_no.value); // 게시판 no
+	formData.append('bp_writer_no', form.bp_writer_no.value); // 작성자 no
+	formData.append('bp_body', quill.root.innerHTML); // quill 에디터 내용
+	
+	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
+	if($imgTags.length) {
+		logger.info('이미지 태그 있음');
+		
+		for(let img of $imgTags) {
+			const src= $(img)[0].src; // src 속성에 입력된 base64 Url 가져오기
+			const base64Data = src.split(',')[1]; // base64 데이터 부분 추출
+			const byteCharacters = atob(base64Data); // base64를 디코딩 반대 메소드 btoa() 
+			const byteNumbers = new Array(byteCharacters.length);
+			
+			for(let i = 0; i < byteCharacters.length; i++) {
+				byteNumbers[i] = byteCharacters.charCodeAt(i); // 각 문자를 바이트 배열로 변환
+			}
+			
+			const byteArray = new Uint8Array(byteNumbers); // 8비트 부호 없는 정수(0-255) 저장 배열
+			const mimeType = 'image/webp'; // src.match(/data:(.*?);base64/)[1]; // MIME 타입 추출
+			const blob = new Blob([byteArray], {type: mimeType}); // 이진 데이터로 blob 객체로 변환	
+			
+			// 설정된 width 크기로 리사이즈 압축 후 flle 객체로 변환
+			const resizedImageFile = await resizeImage(blob, $(img)[0].width, mimeType);
+			formData.append('files', resizedImageFile); // 리사이즈된 File객체를 formData에 추가
+		}
+		
+	} else {
+		logger.info('이미지 태그 없음');
+		const emptyBlob = new Blob([], { type: 'application/octet-stream' }); // 빈 Blob 생성
+		formData.append('files', emptyBlob); 
+	}
+	
+	const encoder = new TextEncoder(); // byte 계산
+	for (const [key, value] of formData.entries()) { // formData의 모든 데이터 확인
+		logger.info('postPostsCreateForm() formData:', key, value); // 키벨류 확인
+		logger.info(`${key} byte:`, encoder.encode(value).length); // 벨류 byte 확인
+	};
+	
+	//const isTrue = false;
+	//if(!isTrue) return false;
+	
+	await postSubmitForm(
+		'/board/info/create_confirm',
+		formData,
+		successMessage,
+		errorMessage,
+		`/board/info/posts_list_form?infoNo=${form.bp_category_no.value}`
 	);
 }
 

@@ -126,6 +126,11 @@ function mapDeleteObject(value) {
 			apiUrl = '/board/cate_info/delete_category_confirm';
 			replace = '/board/cate_info/category_list_form';
 			break;
+		
+		case 'bp_no': // 게시물
+			apiUrl = '/board/info/delete_confirm';
+			replace = '/board/info/posts_list_form';
+			break;
 			
 		default:
 			logger.error('mapDeleteObject() value:', value);
