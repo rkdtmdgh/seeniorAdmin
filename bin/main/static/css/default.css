@@ -418,6 +418,23 @@
     		}
     	}
     }
+    
+    &.table_flex_info {
+    	display: flex;
+    	align-items: center;
+    	
+		.info_text {
+			width: max-content;
+			overflow: hidden;
+		    text-overflow: ellipsis;
+		    white-space: nowrap;
+		}    
+		
+		.info_num {
+			width: max-content;
+			padding-left: var(--ssize1);
+		}	
+    }
 }
 
 .content_edit_table {

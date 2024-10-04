@@ -288,15 +288,15 @@ function mapApiResponseObject(apiUrl, response) {
 			break;
 			
 		case '/board/info/get_posts_list': // 게시물
-			getListDtos = response.postsDtos;
-			getListPage = response.postsListPageNum;
-			getListCnt = response.postsListPageNum.postsListCnt;
+			getListDtos = response.boardPostsDtos;
+			getListPage = response.boardPostsListPageNum;
+			getListCnt = response.boardPostsListPageNum.boardPostsListCnt;
 			break;
 			
 		case '/board/info/search_posts_list': // 게시물 검색
-			getListDtos = response.postsDtos;
-			getListPage = response.searchPostsListPageNum;
-			getListCnt = response.searchPostsListPageNum.searchPostsListCnt;
+			getListDtos = response.boardPostsDtos;
+			getListPage = response.searchBoardPostsListPageNum;
+			getListCnt = response.searchBoardPostsListPageNum.searchPostsListCnt;
 			break;	
 			
 		case '/notice/info/get_notice_list': // 공지 사항
@@ -404,7 +404,7 @@ function generateTableList(apiUrl, data, listIndex) {
 			break;
 			
 		case '/recipe/info/get_recipe_list': // 식단 정보 관리 리스트 테이블
-		case '/recipe/info/search_recipe_list':            // 식단 정보 관리 검색 리스트 테이블
+		case '/recipe/info/search_recipe_list': // 식단 정보 관리 검색 리스트 테이블
 		case '/recipe/info/get_recipe_list_by_category': // 식단 정보 관리 분류선택 리스트 테이블
 			tableTrContent = `
 				<tr>
@@ -488,10 +488,12 @@ function generateTableList(apiUrl, data, listIndex) {
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_title}(댓글 수)</a>
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info table_flex_info">
+		                	<p class="info_text">${data.bp_title}</p><span class="info_num">(${data.bp_reply_cnt})</span>
+	                	</a>
 		            </td>
 		            <td>
-		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_view_cnt}(조회수)</a>
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_view_cnt}</a>
 		            </td>
 					<td>
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">
@@ -499,7 +501,7 @@ function generateTableList(apiUrl, data, listIndex) {
 						</a>
 		            </td>
 					<td>
-		                <a href="" class="table_info">${data.bp_writer_no} 회원 이름, href 회원 정보 페이지</a>
+		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.bp_mod_date) || 'N/A'}</p>
@@ -776,7 +778,7 @@ async function getCategoryList(ele, isForm, selectedValue) {
 	}
 }
 
-// 카테고리 리스트 요청에 필요한 객체 설정
+// 셀렉트 옵션 분류 리스트 요청에 필요한 객체 설정
 function mapCategorylistObject(ele) {
 	let apiUrl;
 	let getListDtos;

@@ -263,7 +263,9 @@ CREATE TABLE BOARD_POSTS (
 	BP_WRITER_NO		INT NOT NULL COMMENT "게시물 작성자 NO(USER_ACCOUNT TABLE PK)", 					-- 게시물 작성자 NO(USER_ACCOUNT TABLE PK)
 	BP_REPORT_STATE		TINYINT DEFAULT 1 COMMENT "게시물 신고 진행 상태(기본값 = 1, 처리중 = 2, 처리 완료 = 0)",	-- 게시물 신고 진행 상태(기본값 = 1, 처리중 = 2, 처리 완료 = 0)
 	BP_VIEW_CNT			INT DEFAULT 0 COMMENT "게시물 조회수", 												-- 게시물 조회수 
-	BP_IS_DELETED		TINYINT DEFAULT 1 COMMENT "게시물 삭제 여부(기본값 = 1, 삭제 시 = 0)",					-- 게시물 삭제 여부(기본값 = 1, 삭제 시 = 0)
+	BP_DIR_NAME			VARCHAR(20) COMMENT "이미지 저장된 폴더 이름"	,										-- 게시물 이미지 저장된 폴더명
+    BP_REPLY_CNT		INT DEFAULT 0 COMMENT "게시물 댓글 갯수",											-- 게시물 댓글 갯수(BOARD_REPLY COUNT(*) WHERE BR_POST_NO)
+    BP_IS_DELETED		TINYINT DEFAULT 1 COMMENT "게시물 삭제 여부(기본값 = 1, 삭제 시 = 0)",					-- 게시물 삭제 여부(기본값 = 1, 삭제 시 = 0)
 	BP_REG_DATE			DATETIME DEFAULT NOW() COMMENT "게시물 등록일",										-- 게시물 등록일
 	BP_MOD_DATE			DATETIME DEFAULT NOW() COMMENT "게시물 수정일",										-- 게시물 수정일
     PRIMARY KEY(BP_NO)
@@ -272,6 +274,7 @@ CREATE TABLE BOARD_POSTS (
 SELECT * FROM BOARD_POSTS;
 SHOW INDEX FROM BOARD_POSTS;
 DROP TABLE BOARD_POSTS;
+DELETE FROM BOARD_POSTS;
 
 
 
