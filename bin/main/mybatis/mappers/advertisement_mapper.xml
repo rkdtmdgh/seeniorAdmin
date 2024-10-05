@@ -17,17 +17,44 @@
 		<result column="ad_mod_date" property="ad_mod_date" />
 	</resultMap>
 
-<!-- 광고 등록 -->
-<insert id="insertNewAdvertisement">
-
-	INSERT INTO 
-		ADVERTISEMENT 
-		(AD_POSITION, AD_IMG, AD_URL, AD_START_DATE, AD_END_DATE, AD_CLIENT) 
-	VALUES 
-		(#{ad_position}, #{ad_img}, #{ad_url}, #{ad_start_date}, #{ad_end_date}, #{ad_client})
-
-</insert>
-
+	<!-- 광고 등록 -->
+	<insert id="insertNewAdvertisement">
+	
+		INSERT INTO 
+			ADVERTISEMENT 
+			(AD_POSITION, AD_IMG, AD_URL, AD_START_DATE, AD_END_DATE, AD_CLIENT) 
+		VALUES 
+			(#{ad_position}, #{ad_img}, #{ad_url}, #{ad_start_date}, #{ad_end_date}, #{ad_client})
+	
+	</insert>
+	
+	<!-- 페이지에 따른 광고 가져오기(모든 광고) -->
+	<select id="getAdvertisementListWithPage">
+	
+		SELECT 
+			* 
+		FROM 
+			ADVERTISEMENT 
+		WHERE 
+			AD_IS_DELETED = 1 
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit} 
+	
+	</select>
+	
+	<!-- 광고의 총 리스트 개수 구하기(모든 광고) -->
+	<select id="getAllAdvertisementCnt">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			ADVERTISEMENT 
+		WHERE 
+			AD_IS_DELETED = 1 
+	
+	</select>
 
 </mapper>
 
