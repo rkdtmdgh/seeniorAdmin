@@ -25,6 +25,8 @@
 					    </div>
 					    
 					    <form name="admin_modify_form">					    	
+                     		<input type="hidden" name="a_no" th:value="${selectedAdminDto.a_no}">
+                     		
 						    <div class="table_wrap">
 		                        <table class="content_edit_table">
 		                            <colgroup>
@@ -38,7 +40,6 @@
 		                                <tr>
 		                                	<th><p class="table_title">아이디</p></th>
 		                                	<td class="disabled">
-		                                		<input type="hidden" name="a_no" th:value="${selectedAdminDto.a_no}">
 		                                		<input type="text" name="a_id" id="a_id" class="table_info disabled"
 	                                            	th:value="${selectedAdminDto.a_id}" disabled>
 	                                        </td>
@@ -62,7 +63,7 @@
 		                                	<th><p class="table_title">이름</p></th>
 		                                	<td>
 	                                            <input type="text" name="a_name" id="a_name" class="table_info" placeholder="이름"
-	                                            	oninput="validateEmpty(this, '이름을')" onblur="validateEmpty(this, '이름을')"
+	                                            	onblur="validateEmpty(this, '이름을')"
 	                                            	th:value="${selectedAdminDto.a_name}">
 	                                        </td>
 	                                        

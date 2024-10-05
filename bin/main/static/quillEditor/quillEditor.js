@@ -94,7 +94,7 @@ $(document).ready(function() {
 	function validationImage(file) {
 		if(!file) return false;
 		
-		if(!file.type.startsWith('image/')) { // 이미지 파일인지 검사		
+		if(!file.type.startsWith('image/')) { // 이미지 파일인지 검사	
 			alert('이미지 파일만 업로드할 수 있습니다. 이미지 파일을 선택해 주세요.');	
 			return false;
 		}
@@ -136,7 +136,7 @@ $(document).ready(function() {
 		return true;
 	}
 	
-	// 텍스트 리미스 표시 초기화
+	// 텍스트 리미트 표시 초기화
 	const initialText = quill.getText(); // 에디터 초기 순수 텍스트 가져오기
     const initialTextSize = new Blob([initialText]).size; // 텍스트 크기 계산 (byte)
 	$('#current_size').text(initialTextSize.toLocaleString()); // 기본값 설정
@@ -159,5 +159,7 @@ $(document).ready(function() {
 			alert(`영상은 최대 ${maxVideoCount}개까지만 삽입할 수 있습니다.`);
 			quill.history.undo(); // 최근 입력된 내용을 되돌려 제한 초과 방지
 		}
+		
+		if(!insertImageConfirm()) quill.history.undo();
 	});
 });

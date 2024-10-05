@@ -8,7 +8,7 @@
 	<script th:inline="javascript">
 		$(function() {
 			// 타이틀 설정
-			setContentTitle(/*[[${infoNo}]]*/);
+			setBoardTitle(/*[[${infoNo}]]*/);
 			
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
@@ -59,10 +59,10 @@
 	                                <col class="col_checkBox">
 	                                <col class="col_no">
 	                                <col>
+	                                <col class="col_short">
+	                                <col class="col_short">
 	                                <col>
-	                                <col>
-	                                <col>
-	                                <col>
+	                                <col class="col_short">
 	                            </colgroup>
 	
 	                            <thead>
@@ -85,7 +85,7 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">상태</p>
+	                                    	<p class="table_title">상태</p>
 	                                    </th>
 	                                    
 	                                    <th>
@@ -93,7 +93,11 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">등록일</p>
+	                                    	<p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'board_posts', 'bp_mod_date')">
+	                                        	등록일
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
 	                                    </th>
 	                                </tr>
 	                            </thead>

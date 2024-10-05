@@ -33,7 +33,10 @@
 	                        <p class="sub_title">질환 / 질병 정보 수정</p>
 	                    </div>
 	
-	                    <form name="disease_modify_form" onsubmit="return setFormSendFalse(event)">
+	                    <form name="disease_modify_form">
+		                    <input type="hidden" name="d_no" th:value="${diseaseDto.d_no}">
+		                    <input type="hidden" name="current_d_name" th:value="${diseaseDto.d_name}">
+		                    
 	                        <div class="table_wrap">
 	                            <table class="content_edit_table">
 	                                <colgroup>
@@ -52,7 +55,6 @@
 		
 		                                    <th><p class="table_title">질환 / 질병명</p></th>
 		                                    <td>
-		                                        <input type="hidden" name="d_no" th:value="${diseaseDto.d_no}">
 		                                        <input type="text" name="d_name" id="d_name" class="table_info" placeholder="질환 / 질병명"
 		                                            th:onblur="requestDuplicateCheck(this, true, [[${diseaseDto.d_name}]], null);"
 		                                            th:value="${diseaseDto.d_name}">
@@ -100,8 +102,7 @@
 		                        		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <div th:onclick="putDiseaseModifyForm('disease_modify_form', [[${diseaseDto.d_name}]])"
-	                                       class="btns">수정</div>
+	                                    <div onclick="putDiseaseModifyForm('disease_modify_form')" class="btns">수정</div>
 	                                </div>
 	                            </div>
 	                        </div>
