@@ -35,10 +35,10 @@ public class AdvertisementService {
 	public boolean createConfirm(AdvertisementDto advertisementDto) {
 		log.info("createConfirm()");
 		
-		int result = advertisementMapper.insertNewAdvertisement(advertisementDto);
+		int createResult = advertisementMapper.insertNewAdvertisement(advertisementDto);
 		
 		// DB에 입력 실패
-		if (result <= 0) {
+		if (createResult <= 0) {
 			return ADVERTISEMENT_CREATE_FAIL;
 		
 		// DB에 입력 성공
@@ -98,6 +98,117 @@ public class AdvertisementService {
 		advertisementListPageNum.put("pageLimit", pageLimit);
 		
 		return advertisementListPageNum;
+		
+	}
+
+	// 광고 한개 가져오기
+	public AdvertisementDto getAdvertisement(int ad_no) {
+		log.info("getAdvertisement()");
+		
+		AdvertisementDto advertisementDto = advertisementMapper.getAdvertisementByNo(ad_no);
+		
+		return advertisementDto;
+		
+	}
+
+	// 광고 수정 확인
+	public boolean modifyConfirm(AdvertisementDto advertisementDto) {
+		log.info("modifyConfirm()");
+		
+		int modifyResult = advertisementMapper.updateAdvertisement(advertisementDto);
+		
+		// DB에 입력 실패
+		if (modifyResult <= 0) {
+			
+			return ADVERTISEMENT_MODIFY_FAIL;
+		}
+		
+		return false;
+	}
+
+	// 광고 삭제 확인
+	public boolean deleteConfirm(List<Integer> ad_nos) {
+		log.info("deleteConfirm()");
+		
+		try {
+			
+			for (int ad_no : ad_nos) {
+				
+				int deleteResult = advertisementMapper.deleteAdvertisement(ad_no);
+				
+				if (deleteResult <= 0) {
+					log.info("삭제에 실패하였습니다 : ad_no ---> {}", ad_no);
+					
+					throw new RuntimeException();
+					
+				}
+				
+			}
+			
+		} catch (Exception e) {
+			log.error("deleteConfirm Error : {}", e);
+			
+			return ADVERTISEMENT_DELETE_FAIL;
+			
+		}
+
+		
+		return ADVERTISEMENT_DELETE_SUCCESS;
+	}
+
+	// 페이지에 따른 광고 가져오기(검색한 광고)
+	public Map<String, Object> getSearchAdvertisementListWithPage(String searchPart, String searchString, int page) {
+		log.info("getSearchAdvertisementListWithPage()");
+		
+		int pagingStart = (page - 1) * pageLimit;
+		
+		Map<String, Object> pagingList = new HashMap<>();
+		
+		Map<String, Object> pagingParams = new HashMap<>();
+		pagingParams.put("start", pagingStart);
+		pagingParams.put("limit", pageLimit);
+		pagingParams.put("searchPart", searchPart);
+		pagingParams.put("searchString", searchString);
+		
+		List<AdvertisementDto> searchAdvertisementDtos = advertisementMapper.getSearchAdvertisement(pagingParams);
+		pagingList.put("advertisementDtos", searchAdvertisementDtos);
+		
+		return pagingList;
+		
+	}
+
+	// 광고의 총 페이지 개수 구하기(검색한 광고)
+	public Map<String, Object> getSearchAdvertisementListPageNum(String searchPart, String searchString, int page) {
+		log.info("getSearchAdvertisementListPageNum()");
+		
+		Map<String, Object> searchAdvertisementListPageNum = new HashMap<>();
+		
+		Map<String, Object> pagingParams = new HashMap<>();
+		pagingParams.put("searchPart", searchPart);
+		pagingParams.put("searchString", searchString);
+		
+		// 전체 리스트 개수 조회
+		int searchAdvertisementListCnt = advertisementMapper.getSearchAdvertisementListCnt(pagingParams);
+		
+		// 전체 페이지 개수 계산
+		int maxPage = (int) (Math.ceil((double) searchAdvertisementListCnt / pageLimit));
+		
+		// 시작 페이지 값 계산
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
+		
+		// 마지막 페이지 값 계산
+		int endPage = startPage + blockLimit - 1;
+		if (endPage > maxPage) endPage = maxPage;
+		
+		searchAdvertisementListPageNum.put("searchAdvertisementListCnt", searchAdvertisementListCnt);
+		searchAdvertisementListPageNum.put("page", page);
+		searchAdvertisementListPageNum.put("maxPage", maxPage);
+		searchAdvertisementListPageNum.put("startPage", startPage);
+		searchAdvertisementListPageNum.put("endPage", endPage);
+		searchAdvertisementListPageNum.put("blockLimit", blockLimit);
+		searchAdvertisementListPageNum.put("pageLimiti", pageLimit);
+		
+		return searchAdvertisementListPageNum;
 		
 	}
 	
