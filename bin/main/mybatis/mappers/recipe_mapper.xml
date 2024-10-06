@@ -5,7 +5,7 @@
 <mapper namespace="com.see_nior.seeniorAdmin.recipe.mapper.RecipeMapper">
 
 	<resultMap type="RecipeDto" id="RecipeDto">
-		<result column="rcp_seq" property="rcp_seq" />
+		<id column="rcp_seq" property="rcp_seq" />
 		<result column="rcp_nm" property="rcp_nm" />
 		<result column="rcp_way2" property="rcp_way2" />
 		<result column="rcp_pat2" property="rcp_pat2" />
@@ -64,7 +64,8 @@
 	</resultMap>
 
 	<!-- 식단 테이블이 있는지 확인하기 -->
-	<select id="checkTableExists">
+	<select id="checkTableExists"
+			resultType="Integer">
 	
 		SELECT 
 			COUNT(*) 
@@ -151,7 +152,8 @@
 	</insert>
 	
 	<!-- 식단 테이블이 생성된 날짜값 가져오기 -->
-	<select id="getRecipeTableCreateTime">
+	<select id="getRecipeTableCreateTime"
+			resultType="java.sql.Date">
 	
 		SELECT 
 			CREATE_TIME 
@@ -165,7 +167,8 @@
 	</select>
 
 	<!-- 식단 API 데이터 DB에 입력하기 -->
-	<insert id="insertApiRecipeData">
+	<insert id="insertApiRecipeData"
+			parameterType="RecipeDto">
 
 		INSERT INTO 
 			RECIPE(
@@ -208,6 +211,7 @@
 	
 	<!-- 페이지에 따른 식단 가져오기(모든 식단) -->
 	<select id="getRecipeListWithPage"
+			parameterType="Map"
 			resultMap="RecipeDto">
 			
 		SELECT 
@@ -222,7 +226,8 @@
 	</select>
 	
 	<!-- 식단의 총 리스트 개수 구하기 (모든 식단) -->
-	<select id="getAllRecipeCnt">
+	<select id="getAllRecipeCnt"
+			resultType="Integer">
 		
 		SELECT 
 			COUNT(*) 
@@ -233,6 +238,7 @@
 	
 	<!-- 페이지에 따른 식단 가져오기(카테고리별 식단) -->
 	<select id="getRecipeListByCategoryWithPage"
+			parameterType="Map"
 			resultMap="RecipeDto">
 	
 		SELECT 
@@ -249,7 +255,9 @@
 	</select>
 	
 	<!-- 식단의 총 리스트 개수 구하기(카테고리별 식단) -->
-	<select id="getRecipeByCategoryCnt">
+	<select id="getRecipeByCategoryCnt"
+			parameterType="String"
+			resultType="Integer">
 		
 		SELECT 
 			COUNT(*) 
@@ -262,6 +270,7 @@
 	
 	<!-- 페이지에 따른 식단 가져오기(검색한 식단) -->
 	<select id="getSearchRecipe"
+			parameterType="Map"
 			resultMap="RecipeDto">
 			
 		SELECT 
@@ -278,7 +287,9 @@
 	</select>
 	
 	<!-- 식단의 총 리스트 개수 구하기(검색한 식단) -->
-	<select id="getSearchRecipeListCnt">
+	<select id="getSearchRecipeListCnt"
+			parameterType="Map"
+			resultType="Integer">
 		
 		SELECT 
 			COUNT(*) 
@@ -290,7 +301,9 @@
 	</select>
 	
 	<!-- 식단 한 개 가져오기 -->
-	<select id="getRecipe">
+	<select id="getRecipe"
+			parameterType="Integer"
+			resultMap="RecipeDto">
 	
 		SELECT 
 			* 
