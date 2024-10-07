@@ -4,25 +4,29 @@
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
 <head>
-	<th:block th:insert="~{fragments/head.html :: head('게시판')}"></th:block>
-	<script th:inline="javascript">
+	<th:block th:insert="~{fragments/head.html :: head('광고 관리')}"></th:block>
+	<script type="text/javascript">
 		$(function() {
-			// 타이틀 설정
-			setBoardTitle(/*[[${infoNo}]]*/);
-			
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // 검색
-					getSearchList(null, '/board/info/search_posts_list', page);
+					getSearchList(null, '/advertisement/info/search_advertisement_list', page);
+					break;
+
+				case '1': // 카테고리 셀렉트
+					getList('/advertisement/info/get_advertisement_list_by_category', sortValue, order, page);
 					break;
 
 				case '0':  // 정렬
-					getList('/board/info/get_posts_list', sortValue, order, page);
+					getList('/advertisement/info/get_advertisement_list', sortValue, order, page);
 					break;
 					
 				default: // 기본
-					getList('/board/info/get_posts_list', null, null, page);
+					getList('/advertisement/info/get_advertisement_list', null, null, page);
 			}
+
+			// DISEASE_CATEGORY 가져오기
+			//getCategoryList('ad_position'); // element id, isForm, selectedValue
         });
 	</script>
 </head>
@@ -39,63 +43,56 @@
 					<section class="content_info_wrap">
 					    <div class="content_top">
 					        <div class="content_top_info">
-					            <h2 class="title categoty_title"></h2>
+					            <h2 class="title">광고 관리</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/board/info/search_posts_list')" 
-										th:insert="~{fragments/search.html :: search('게시판')}"></form>
+									<form name="search_form" onsubmit="getSearchList(event, '/advertisement/info/search_advertisement_list')" 
+										th:insert="~{fragments/search.html :: search('광고 관리')}"></form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/board/info/get_posts_list', null, null, 1);">전체보기</div>
-						            	<div class="btns small delete" onclick="delListData('bp_no', true)">삭제</div>
-						            	<a th:href="@{'/board/info/create_form?infoNo=' + ${infoNo}}" class="btns small">게시물 등록</a>
+						            	<div class="btns small" onclick="getList('/advertisement/info/get_advertisement_list', null, null, 1);">전체보기</div>
+						            	<a href="/advertisement/info/create_form" class="btns small">등록</a>
 						            </div>
 					            </div>
 					        </div>
 					    </div>
 					    
 					    <div class="table_wrap">
-	                        <table class="content_table posts_list_table">
+	                        <table class="content_table advertisement_list_table">
 	                            <colgroup>
-	                                <col class="col_checkBox">
 	                                <col class="col_no">
+	                                <col class="col_short">
 	                                <col>
-	                                <col class="col_default">
-	                                <col class="col_no">
-	                                <col class="col_no">
-	                                <col class="col_default">
+	                                <col>
+	                                <col>
+	                                <col>
 	                            </colgroup>
 	
 	                            <thead>
 	                                <tr>
-	                                	<th>
-	                                		<div class="table_title"><input type="checkbox" name="all_check" id="all_check" 
-	                                			onchange="setAllCheckBox(this)" value="bp_no" ></div>	                                        
-	                                    </th>
-	                                    
 	                                    <th>
 	                                        <p class="table_title">No</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">제목(댓글 수)</p>
+	                                        <div class="table_title select" id="ad_position" onclick="setSelectOptionTopggle(event)">위치</div>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">작성자</p>
+	                                        <p class="table_title">시작일</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">조회수</p>
+	                                        <p class="table_title">종료일</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                    	<p class="table_title">상태</p>
+	                                        <p class="table_title">클라이언트</p>
 	                                    </th>
 	                                    
 	                                    <th>
 	                                    	<p data-current-sort-value="all" class="table_title sort"
-	                                        	onclick="getSortList(event, 'board_posts', 'bp_mod_date')">
+	                                        	onclick="getSortList(event, 'advertisement', 'ad_mod_date')">
 	                                        	등록일
 	                                        	<span class="sort_icon"></span>
 	                                        </p>

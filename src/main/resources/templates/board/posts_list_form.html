@@ -42,7 +42,8 @@
 					            <h2 class="title categoty_title"></h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/board/info/search_posts_list')" th:insert="~{fragments/search.html :: search('게시판')}"></form>
+									<form name="search_form" onsubmit="getSearchList(event, '/board/info/search_posts_list')" 
+										th:insert="~{fragments/search.html :: search('게시판')}"></form>
 						            
 						            <div class="btn_list">
 						            	<div class="btns small" onclick="getList('/board/info/get_posts_list', null, null, 1);">전체보기</div>
@@ -54,7 +55,7 @@
 					    </div>
 					    
 					    <div class="table_wrap">
-	                        <table class="content_table board_info_list_table">
+	                        <table class="content_table posts_list_table">
 	                            <colgroup>
 	                                <col class="col_checkBox">
 	                                <col class="col_no">

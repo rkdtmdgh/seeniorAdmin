@@ -39,11 +39,11 @@
 					            <h2 class="title">공지 사항</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/notice/info/search_notice_list')" th:insert="~{fragments/search.html :: search('공지 사항')}"></form>
+									<form name="search_form" onsubmit="getSearchList(event, '/notice/info/search_notice_list')" 
+										th:insert="~{fragments/search.html :: search('공지 사항')}"></form>
 						            
 						            <div class="btn_list">
 						            	<div class="btns small" onclick="getList('/notice/info/get_notice_list', null, null, 1);">전체보기</div>
-						            	<div class="btns small delete" onclick="delListData('n_no', true)">삭제</div>
 						            	<a href="/notice/info/create_form" class="btns small">공지사항 등록</a>
 						            </div>
 					            </div>
@@ -51,7 +51,7 @@
 					    </div>
 					    
 					    <div class="table_wrap">
-	                        <table class="content_table disease_list_table">
+	                        <table class="content_table notice_list_table">
 	                            <colgroup>
 	                                <col class="col_checkBox">
 	                                <col class="col_no">
@@ -67,6 +67,7 @@
 	                                		<div class="table_title"><input type="checkbox" name="all_check" id="all_check" 
 	                                			onchange="setAllCheckBox(this)" value="n_no" ></div>	                                        
 	                                    </th>
+	                                    
 	                                    <th>
 	                                        <p class="table_title">No</p>
 	                                    </th>
