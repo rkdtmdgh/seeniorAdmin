@@ -9,22 +9,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AdminAccountDto {
 
-	private int no; 
-	private String id;
-	private String pw;
-	private String name;
-	private String phone;
-	private String department;
-	private String level;
-	private String position;
-	private String authority_role;
-	private boolean isaccountnonexpired;
-	private boolean isaccountnonlocked;
-	private boolean iscredentialsnonexpired;
-	private boolean isenabled;
-	private boolean is_deleted;
-	private String reg_date;
-	private String mod_date;
-	
+	private int a_no; 
+	private String a_id;
+	private String a_pw;
+	private String a_name;
+	private String a_phone;
+	private String a_birth;
+	private String a_department;
+	private String a_level;
+	private String a_position;
+	private String a_authority_role;
+	private boolean a_isaccountnonexpired;
+	private boolean a_isaccountnonlocked;
+	private boolean a_iscredentialsnonexpired;
+	private boolean a_isenabled;
+	private boolean a_is_deleted;
+	private String a_reg_date;
+	private String a_mod_date;
 	
 }

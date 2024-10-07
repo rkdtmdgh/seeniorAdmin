@@ -1,8 +1,5 @@
 package com.see_nior.seeniorAdmin.config;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,9 +7,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-import org.springframework.security.web.savedrequest.RequestCache;
-import org.springframework.security.web.savedrequest.SavedRequest;
+
+import com.see_nior.seeniorAdmin.account.AdminAccessDeniedHandler;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
@@ -28,67 +24,71 @@ public class SecurityConfig {
 		return new BCryptPasswordEncoder();
 		
 	}
-
-	@Bean SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	
+	@Bean SecurityFilterChain adminFilterChain(HttpSecurity http) throws Exception {
 		
 		http
 			.cors(cors -> cors.disable())
 			.csrf(csrf -> csrf.disable());
-		
+
 		http
-			.authorizeHttpRequests((request) -> request
+			.authorizeHttpRequests(auth -> auth
 					.requestMatchers(
+							"/css/**",
+							"/image/**",
+							"/js/**",
+							"/quillEditor/**",
+							"/error/**",
 							"/account/sign_up_form",
 							"/account/sign_up_confirm",
 							"/account/sign_in_form",
 							"/account/sign_in_confirm",
 							"/account/sign_in_result/**",
 							"/account/sign_in_ok",
-							"/account/sign_in_ng"
+							"/account/sign_in_ng",
+							"/account/access_denied_page",
+							"/account/is_account"
 							).permitAll()
 					.requestMatchers(
+							"/account/admin_list_form",
 							"/account/get_admin_list",
+							"/account/search_admin_list",
+							"/account/admin_modify_form",
+							"/account/admin_modify_confirm",
 							"/account/is_approval"
 							).hasRole("SUPER_ADMIN")
-					.requestMatchers(
-							"/",
-							"/account/modify_form",
-							"/account/modify_confirm",
-							"/account/delete_confirm"
-							).hasAnyRole("SUPER_ADMIN", "SUB_ADMIN"));
+					.anyRequest().hasAnyRole("SUPER_ADMIN", "SUB_ADMIN"));
+		
+		http
+			.exceptionHandling(exceoptionConfig -> exceoptionConfig
+					.accessDeniedHandler(new AdminAccessDeniedHandler()));
 		
 		http
 			.formLogin(login -> login
 					.loginPage("/account/sign_in_form")
 					.loginProcessingUrl("/account/sign_in_confirm")
-					.usernameParameter("id")
-					.passwordParameter("pw")
+					.usernameParameter("a_id")
+					.passwordParameter("a_pw")
 					.successHandler((request, response, authentication) -> {
 						log.info("admin sign in success handler");
 						
-						String targetURI = "/account/sign_in_result?logined=" + true;
+						/*
+						 * 로그인 전 URI 가져오기 
+						 * RequestCache requestCache = new HttpSessionRequestCache(); SavedRequest
+						 * savedRequest = requestCache.getRequest(request, response);
+						 * 
+						 * if (savedRequest != null) {
+						 * 
+						 * targetURI = savedRequest.getRedirectUrl();
+						 * requestCache.removeRequest(request, response);
+						 * 
+						 * }
+						 */
 						
-						RequestCache requestCache = new HttpSessionRequestCache();
-						SavedRequest savedRequest = requestCache.getRequest(request, response);
-						
-						if (savedRequest != null) {
-							
-							targetURI = savedRequest.getRedirectUrl();
-							requestCache.removeRequest(request, response);
-							
-						}
-						
-						response.sendRedirect(targetURI);
+						response.sendRedirect("/account/sign_in_result?result=" + true);
 						
 					})
-					.failureHandler((request, response, exception) -> {
-						log.info("sign in fail handler");
-						
-						String encodedValue = URLEncoder.encode(exception.getMessage(), StandardCharsets.UTF_8.toString());
-						
-						response.sendRedirect("/account/sign_in_result?logined=" + false + "&errMsg=" + encodedValue);
-						
-					}));
+					.failureHandler(new CustumAuthenticationFailureHandler()));
 		
 		http
 			.logout(logout -> logout
@@ -96,12 +96,20 @@ public class SecurityConfig {
 					.logoutSuccessHandler((request, response, authentication) -> {
 						log.info("sign out success handler");
 
-						HttpSession session = request.getSession();
-						session.invalidate();
+						HttpSession session = request.getSession(false);
+						
+						if (session != null) session.invalidate();
 						
 						response.sendRedirect("/");
 						
 					}));
+		
+		http
+			.sessionManagement(sess -> sess
+				.maximumSessions(1)		
+				.maxSessionsPreventsLogin(false))
+			.sessionManagement(sess -> sess
+				.sessionFixation().newSession());
 		
 		return http.build();
 	

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html 
+   xmlns:th="http://www.thymeleaf.org" 
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<nav th:fragment="nav" class="side_menu_wrap" id="nav_wrap">
+	<div class="side_menu_inner sc">
+	    <div class="side_menu_list">
+	        <a href="/" class="side_menu_btn">
+	            <span class="side_menu">메인</span>
+	        </a>
+	    </div>
+	    
+	    <div class="side_menu_list">
+	        <a href="/account/info/modify_form" class="side_menu_btn">
+	            <span class="side_menu">내 정보 관리</span>
+	        </a>
+	    </div>
+	    
+	    <div sec:authorize="hasAnyRole('SUPER_ADMIN')" class="side_menu_list">
+	        <a href="/account/list/admin_list_form" class="side_menu_btn">
+	            <span class="side_menu">관리자 계정 관리</span>
+	        </a>
+	    </div>
+	    
+	    <div class="side_menu_list">
+	        <a href="" class="side_menu_btn">
+	            <span class="side_menu">회원 관리</span>
+	        </a>
+	    </div>
+	    
+	    <div class="side_menu_list">
+	        <p class="side_menu_btn arrow">
+	            <span class="side_menu">정보 관리</span>
+	        </p>
+	        <div class="side_sub_menu_list">
+	            <a href="/disease/info/disease_list_form" class="side_sub_menu_btn">
+	                <span class="side_sub_menu">질환/질병 정보 관리</span>
+	            </a>
+	            <a href="/disease/cate_info/category_list_form" class="side_sub_menu_btn">
+	                <span class="side_sub_menu">질환/질병 분류 관리</span>
+	            </a>
+	            <a href="/recipe/info/recipe_list_form" class="side_sub_menu_btn">
+	                <span class="side_sub_menu">식단 정보 관리</span>
+	            </a>
+	            <a href="/video/info/video_list_form" class="side_sub_menu_btn">
+	                <span class="side_sub_menu">영상 정보 관리</span>
+	            </a>
+	        </div>
+	    </div>
+	    
+	    <div class="side_menu_list">
+	        <p class="side_menu_btn arrow">
+	            <span class="side_menu">공지 사항</span>
+	        </p>
+	        <div class="side_sub_menu_list" id="side_board_notice_sub_menu">
+	            <a href="/notice/info/notice_list_form" class="side_sub_menu_btn">
+	                <span class="side_sub_menu">공지 사항</span>
+	            </a>
+	        </div>
+	    </div>
+	    
+	    <div class="side_menu_list">
+	        <a href="/qna/info/qna_list_form" class="side_menu_btn">
+	            <span class="side_menu">질문과 답변</span>
+	        </a>
+	    </div>
+	    
+	    <div class="side_menu_list">
+	        <p class="side_menu_btn arrow">
+	            <span class="side_menu">게시판 관리</span>
+	        </p>
+	        <div class="side_sub_menu_list" id="side_board_sub_menu">
+	            <a href="/board/cate_info/category_list_form" class="side_sub_menu_btn">
+	                <span class="side_sub_menu">게시판 관리</span>
+	            </a>
+	        </div>
+	    </div>
+	    
+	    <div class="side_menu_list">
+	        <a href="" class="side_menu_btn">
+	            <span class="side_menu">신고 관리</span>
+	        </a>
+	    </div>
+	    
+	    <div class="side_menu_list">
+	        <a href="" class="side_menu_btn">
+	            <span class="side_menu">광고 관리</span>
+	        </a>
+	    </div>
+	</div>
+</nav>
+</html>

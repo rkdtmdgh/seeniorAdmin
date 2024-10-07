@@ -1,6 +1,7 @@
 package com.see_nior.seeniorAdmin.account.mapper;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -11,16 +12,29 @@ public interface AccountMapper {
 
 	public int insertNewAdmin(AdminAccountDto adminAccountDto);
 
-	public boolean isAccount(String id);
+	public boolean isAccount(String a_id);
 	
-	public AdminAccountDto getAdminAccountById(String id);
+	public AdminAccountDto selectAdminAccountById(String a_id);
+	
+	public AdminAccountDto selectAdminAccountByNo(int a_no);
 
-	public void updateAdminInfo(AdminAccountDto adminAccountDto);
+	public int updateMyAdminInfo(AdminAccountDto adminAccountDto);
 
-	public int updateAdminIsDeleted(String id);
+	public int updateAdminIsDeletedByNo(int a_no);
 
-	public ArrayList<AdminAccountDto> getAdminList();
+	public List<AdminAccountDto> selectAdminList(Map<String, Object> pagingParams);
 
-	public void updateAdminRoleByNo(int no);
+	public void updateAdminRoleByNo(int a_no);
+
+	public int selectAllAccountListCnt();
+
+	public List<AdminAccountDto> selectSearchAdminList(Map<String, Object> pagingParams);
+
+	public int selectSearchAdminListCnt(Map<String, Object> searchParams);
+
+	public int updateAdminInfoFromSuper(AdminAccountDto adminAccountDto);
+
+	public int updateAdminPwReset(AdminAccountDto adminAccountDto);
+
 
 }

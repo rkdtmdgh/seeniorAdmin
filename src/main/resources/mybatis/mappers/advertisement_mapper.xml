@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.see_nior.seeniorAdmin.advertisement.mapper.AdvertisementMapper">
+
+	<resultMap type="AdvertisementDto" id="AdvertisementDto">
+		<id column="ad_no" property="ad_no" />
+		<result column="ad_position" property="ad_position" />
+		<result column="ad_img" property="ad_img" />
+		<result column="ad_url" property="ad_url" />
+		<result column="ad_start_date" property="ad_start_date" />
+		<result column="ad_end_date" property="ad_end_date" />
+		<result column="ad_client" property="ad_client" />
+		<result column="ad_is_deleted" property="ad_is_deleted" />
+		<result column="ad_reg_date" property="ad_reg_date" />
+		<result column="ad_mod_date" property="ad_mod_date" />
+	</resultMap>
+
+	<!-- 광고 등록 -->
+	<insert id="insertNewAdvertisement"
+			parameterType="AdvertisementDto">
+	
+		INSERT INTO 
+			ADVERTISEMENT 
+			(AD_POSITION, AD_IMG, AD_URL, AD_START_DATE, AD_END_DATE, AD_CLIENT) 
+		VALUES 
+			(#{ad_position}, #{ad_img}, #{ad_url}, #{ad_start_date}, #{ad_end_date}, #{ad_client})
+	
+	</insert>
+	
+	<!-- 페이지에 따른 광고 가져오기(모든 광고) -->
+	<select id="getAdvertisementListWithPage"
+			parameterType="Map"
+			resultMap="AdvertisementDto">
+	
+		SELECT 
+			* 
+		FROM 
+			ADVERTISEMENT 
+		WHERE 
+			AD_IS_DELETED = 1 
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit} 
+	
+	</select>
+	
+	<!-- 광고의 총 리스트 개수 구하기(모든 광고) -->
+	<select id="getAllAdvertisementCnt"
+			resultType="Integer">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			ADVERTISEMENT 
+		WHERE 
+			AD_IS_DELETED = 1 
+	
+	</select>
+	
+	<!-- 광고 한개 가져오기 -->
+	<select id="getAdvertisementByNo"
+			parameterType="Integer"
+			resultMap="AdvertisementDto">
+	
+		SELECT 
+			* 	
+		FROM 
+			ADVERTISEMENT 
+		WHERE 
+			AD_NO = #{ad_no}
+	
+	</select>
+	
+	<!-- 광고 수정 확인 -->
+	<update id="updateAdvertisement"
+			parameterType="AdvertisementDto">
+	
+		UPDATE 
+			ADVERTISEMENT 
+		SET 
+			AD_POSITION = #{ad_position}
+			AD_IMG = #{ad_img}
+			AD_URL = #{ad_url}
+			AD_START_DATE = #{ad_start_date}
+			AD_END_DATE = #{ad_end_date}
+			AD_CLIENT = #{ad_client}
+			AD_MOD_DATE = NOW() 
+		WHERE 
+			AD_NO = #{ad_no}
+	
+	</update>
+	
+	<!-- 광고 삭제 확인 -->
+	<update id="deleteAdvertisement"
+			parameterType="Integer">
+	
+		UPDATE 
+			ADVERTISEMENT 
+		SET 
+			AD_IS_DELETED = 0 
+		WHERE 
+			AD_NO = #{ad_no}
+	
+	</update>
+	
+	<!-- 페이지에 따른 광고 가져오기(검색한 광고) -->
+	<select id="getSearchAdvertisement"
+			parameterType="Map"
+			resultMap="AdvertisementDto">
+	
+		SELECT 
+			* 
+		FROM 
+			ADVERTISEMENT 
+		WHERE 
+			AD_IS_DELETED = 1 
+		AND 
+			${serachPart} LIKE CONCAT ('%', #{searchString}, '%') 
+		ORDER BY 
+			AD_NO DESC 
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>
+	
+	<!-- 광고의 총 리스트 개수 구하기(검색한 광고) -->
+	<select id="getSearchAdvertisementListCnt"
+			parameterType="Map"
+			resultType="Integer">
+	
+		SELECT 
+			CONUT(*) 
+		FROM 
+			ADVERTISEMENT 
+		WHERE 
+			AD_IS_DELETED = 1 
+		AND 
+			${serachPart} LIKE CONCAT ('%', #{searchString}, '%')
+	
+	</select>
+
+</mapper>
+

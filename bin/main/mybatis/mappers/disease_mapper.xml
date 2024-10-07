@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.see_nior.seeniorAdmin.disease.mapper.DiseaseMapper">
+
+	<resultMap type="DiseaseCategoryDto" id="DiseaseCategoryDto">
+		<id column="dc_no" property="dc_no" />
+		<result column="dc_name" property="dc_name" />		
+		<result column="dc_is_deleted" property="dc_is_deleted" />
+		<result column="dc_item_cnt" property="dc_item_cnt" />
+		<result column="dc_reg_date" property="dc_reg_date" />
+		<result column="dc_mod_date" property="dc_mod_date" />
+	</resultMap>
+
+	<resultMap type="DiseaseDto" id="DiseaseDto">
+		<id column="d_no" property="d_no" />
+		<result column="d_category_no" property="d_category_no" />
+		<result column="d_name" property="d_name" />
+		<result column="d_info" property="d_info" />
+		<result column="d_good_food" property="d_good_food" />
+		<result column="d_bad_food" property="d_bad_food" />
+		<result column="d_is_deleted" property="d_is_deleted" />
+		<result column="d_reg_date" property="d_reg_date" />
+		<result column="d_mod_date" property="d_mod_date" />
+		<collection property="diseaseCategoryDto" resultMap="DiseaseCategoryDto" />
+	</resultMap>
+	
+	<!-- 질환 카테고리 관련 -->
+
+	<!-- 질환 카테고리 등록 -->
+	<insert id="insertNewDiseaseCategory"
+			parameterType="DiseaseCategoryDto">
+	
+		INSERT INTO 
+			DISEASE_CATEGORY 
+			(DC_NAME) 
+		VALUES 
+			(#{dc_name})
+	
+	</insert>
+	
+	<!-- 질환 카테고리 중복 확인 -->
+	<select id="isDiseaseCategory"
+			parameterType="String"
+			resultType="boolean">
+			
+		SELECT 
+			COUNT(*) 
+		FROM 
+			DISEASE_CATEGORY 
+		WHERE 
+			DC_NAME = #{dc_name}
+	
+	</select>
+	
+	<!-- 모든 질환 카테고리 가져오기 (질환 리스트에서 select박스 => 비동기) -->
+	<select id="getDiseaseCategoryList"
+			resultMap="DiseaseCategoryDto">
+	
+		SELECT 
+			* 
+		FROM 
+			DISEASE_CATEGORY 
+		WHERE 
+			DC_IS_DELETED = 1 
+		ORDER BY 
+			DC_NAME ASC
+
+	</select>
+	
+	<!-- 카테고리 별 질환의 개수 구하기 -->
+	<select id="getCategoryItemCnt"
+			parameterType="Integer"
+			resultType="Integer">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			DISEASE 
+		WHERE 
+			D_IS_DELETED = 1 
+		AND 
+			D_CATEGORY_NO = #{dc_no}
+	
+	</select>
+	
+	<!-- 카테고리 별 질환의 개수 질환 분류 테이블에 update -->
+	<update id="updateDiseaseCategoryItemCnt"
+			parameterType="Map">
+	
+			UPDATE 
+				DISEASE_CATEGORY 
+			SET 
+				DC_ITEM_CNT = #{item_cnt} 
+			WHERE 
+				DC_NO = #{dc_no}
+	
+	</update>
+	
+	<!-- 모든 질환 카테고리 가져오기(페이지네이션 => 질환 카테고리 관리용 => 비동기) -->
+	<select id="getDiseaseCategoryListWithPage"
+			parameterType="Map"
+			resultMap="DiseaseCategoryDto">
+	
+		SELECT 
+			* 
+		FROM 
+			DISEASE_CATEGORY 
+		WHERE 
+			DC_IS_DELETED = 1 
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>
+	
+	
+	<!-- 질환 카테고리의 총 리스트 개수 구하기 -->
+	<select id="getAllDiseaseCategoryCnt"
+			resultType="Integer">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			DISEASE_CATEGORY 
+		WHERE 
+			DC_IS_DELETED = 1
+	
+	</select>
+	
+	<!-- 질환 카테고리 한개 가져오기 -->
+	<select id="getDiseaseCategory"
+			parameterType="Integer"
+			resultMap="DiseaseCategoryDto">
+			
+		SELECT 
+			* 
+		FROM 
+			DISEASE_CATEGORY 
+		WHERE 
+			DC_NO = #{dc_no} 
+			
+	</select>
+	
+	<!-- 질환 카테고리 수정 -->
+	<update id="updateDiseaseCategory"
+			parameterType="DiseaseCategoryDto">
+
+		UPDATE 
+			DISEASE_CATEGORY 
+		SET 
+			DC_NAME = #{dc_name}, 
+			DC_MOD_DATE = NOW() 
+		WHERE 
+			DC_NO = #{dc_no}
+	
+	</update>
+	
+	<!-- 질환 카테고리 삭제 -->
+	<update id="deleteDiseaseCategory"
+			parameterType="Integer">
+	
+		UPDATE 
+			DISEASE_CATEGORY 
+		SET 
+			DC_IS_DELETED = 0 
+		WHERE 
+			DC_NO = #{dc_no}
+	
+	</update>
+	
+	<!-- 페이지에 따른 질환 카테고리 가져오기(검색한 질환 카테고리) -->
+	<select id="getSearchDiseaseCategory"
+			parameterType="Map"
+			resultMap="DiseaseCategoryDto">
+		
+		SELECT 
+			* 
+		FROM 
+			DISEASE_CATEGORY 
+		WHERE 
+			DC_IS_DELETED = 1 
+		AND 
+			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+		ORDER BY 
+			DC_NAME DESC 
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>
+	
+	<!-- 질환 카테고리의 총 페이지 개수 구하기(검색한 질환 카테고리) -->
+	<select id="getSearchDiseaseCategoryListCnt"
+			parameterType="Map"
+			resultType="Integer">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			DISEASE_CATEGORY 
+		WHERE 
+			DC_IS_DELETED = 1 
+		AND 
+			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+
+	</select>
+	
+	<!-- 질환  관련 -->
+	
+	<!-- 질환 등록 -->
+	<insert id="insertNewDisease"
+			parameterType="DiseaseDto">
+	
+		INSERT INTO 
+			DISEASE 
+			(D_CATEGORY_NO, D_NAME, D_INFO, D_GOOD_FOOD, D_BAD_FOOD) 
+		VALUES 
+			(#{d_category_no}, #{d_name}, #{d_info}, #{d_good_food}, #{d_bad_food})
+	
+	</insert>
+	
+	<!-- 질환 중복 확인 -->
+	<select id="isDisease"
+			parameterType="String"
+			resultType="boolean">
+			
+		SELECT 
+			COUNT(*) 
+		FROM 
+			DISEASE 
+		WHERE 
+			D_NAME = #{d_name}
+	
+	</select>
+	
+	<!-- 페이지에 따른 질환 가져오기(모든 질환) -->
+	<select id="getDiseaseListWithPage"
+			parameterType="Map"
+			resultMap="DiseaseDto">
+			
+		SELECT 
+			D.*, 
+			DC.DC_NAME 
+		FROM 
+		    DISEASE D 
+		JOIN 
+		    DISEASE_CATEGORY DC 
+		ON 
+		    D.D_CATEGORY_NO = DC.DC_NO 
+		WHERE 
+		    D.D_IS_DELETED = 1 
+		AND 
+			DC.DC_IS_DELETED = 1 
+    	ORDER BY 
+     		D.${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>
+	
+	<!-- 질환의 총 리스트 개수 구하기(모든 질환) -->
+	<select id="getAllDiseaseCnt"
+			resultType="Integer">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			DISEASE 
+		WHERE 
+			D_IS_DELETED = 1
+	
+	</select>
+	
+	<!-- 페이지에 따른 질환 가져오기(카테고리별 질환) -->
+	<select id="getDiseaseListByCategoryWithPage"
+			parameterType="Map"
+			resultMap="DiseaseDto">
+			
+		SELECT 
+			D.*, 
+			DC.DC_NAME 
+		FROM 
+		    DISEASE D 
+		JOIN 
+		    DISEASE_CATEGORY DC 
+		ON 
+		    D.D_CATEGORY_NO = DC.DC_NO 
+		WHERE 
+		    D.D_IS_DELETED = 1 
+		AND 
+			DC.DC_IS_DELETED = 1 
+		AND 
+			D.D_CATEGORY_NO = #{dc_no} 
+		ORDER BY 
+			D_NO DESC 
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>
+	
+	<!-- 질환의 총 리스트 개수 구하기(카테고리별 질환) -->
+	<select id="getDiseaseByCategoryCnt"
+			parameterType="Integer"
+			resultType="Integer">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			DISEASE 
+		WHERE 
+			D_IS_DELETED = 1 
+		AND 
+			D_CATEGORY_NO = #{dc_no}
+	
+	</select>
+	
+	<!-- 질환 한개 가져오기 -->
+	<select id="getDiseaseByNo"
+			parameterType="Integer"
+			resultMap="DiseaseDto">
+			
+		SELECT 
+			* 
+		FROM 
+			DISEASE 
+		WHERE 
+			D_NO = #{d_no}
+	
+	</select>
+	
+	<!-- 질환 수정 -->
+	<update id="updateDisease"
+			parameterType="DiseaseDto">
+	
+		UPDATE 
+			DISEASE 
+		SET 
+			D_CATEGORY_NO = #{d_category_no}, 
+			D_NAME = #{d_name}, 
+			D_INFO = #{d_info}, 
+			D_GOOD_FOOD = #{d_good_food}, 
+			D_BAD_FOOD = #{d_bad_food}, 
+			D_MOD_DATE = NOW() 
+		WHERE 
+			D_NO = #{d_no}
+
+	</update>
+	
+	<!-- 질환 삭제 -->
+	<update id="deleteDisease"
+			parameterType="Integer">
+	
+		UPDATE 
+			DISEASE 
+		SET 
+			D_IS_DELETED = 0 
+		WHERE 
+			D_NO = #{d_no}
+	
+	</update>
+	
+	<!-- 페이지에 따른 질환 가져오기(검색한 질환) -->
+	<select id="getSearchDisease"
+			parameterType="Map"
+			resultMap="DiseaseDto">
+			
+		SELECT 
+			D.*, 
+			DC.DC_NAME  
+		FROM 
+			DISEASE D  
+		JOIN 
+			DISEASE_CATEGORY DC 
+		WHERE 
+			D.D_CATEGORY_NO = DC.DC_NO 
+		AND 
+			D.D_IS_DELETED = 1 
+		AND 
+			DC.DC_IS_DELETED = 1 
+		AND 
+			D.${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+		ORDER BY 
+			D_NO DESC 
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>
+	
+	<!-- 질환의 총 리스트 개수 구하기(검색한 질환) -->
+	<select id="getSearchDiseaseListCnt"
+			parameterType="Map"
+			resultType="Integer">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			DISEASE 
+		WHERE 
+			D_IS_DELETED = 1 
+		AND 
+			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+	
+	</select>
+
+
+</mapper>

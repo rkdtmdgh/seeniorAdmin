@@ -1,0 +1,28 @@
+#header {
+    width: 100%;
+    background-color: var(--subBgColor);
+    border-bottom: 1px solid var(--lightGrayColor);
+
+    .header_container {
+        width: 100%;
+        height: var(--headerHeight);
+        padding: 0 var(--innerPadding);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .header_menu_list {
+            display: flex;
+            align-items: center;
+            gap: var(--stepGap);
+            
+            .user_name {
+            	font-size: var(--menuFontSize);
+            	
+            	&:hover {
+            		color: var(--primaryColor);
+            	}
+            }
+        }
+    }
+}
