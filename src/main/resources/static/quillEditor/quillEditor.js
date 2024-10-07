@@ -1,14 +1,32 @@
 // 전역 변수로 선언
 let quill; // quill 에디터
 
-// 이미지 리사이즈 및 파일 객체화(리사이즈 시간 소요로 인한 비동기 처리 / 사용하는 곳에서 await 처리)
-async function resizeImage(blob, targetWidth, mimeType, quality = 0.8) {
+// Quill의 기본 Image 포맷 가져오기
+const Image = Quill.import('formats/image');
+
+// blob URL을 허용하도록 sanitize 메서드 재정의
+Image.sanitize = function(url) {
+    if (url.startsWith('blob:')) { // Blob URL을 허용하는 조건 추가
+        return url;
+    }
+    
+    return Quill.import('formats/image').sanitize(url); // 기본적으로 허용되는 URL (http, https 등)
+};
+
+// 새로운 Image 포맷 등록
+Quill.register(Image, true);
+
+// 이미지 리사이즈 및 객체 반환
+async function resizeImage(blobURL, targetWidth, quality = 0.8) {
     return new Promise((resolve, reject) => {
         const $img = $('<img>')[0]; // img 태그 생성
-        
-        // blob을 url로 변환하면 src에 입력
-        const blobURL = URL.createObjectURL(blob); 
         $img.src = blobURL;
+        
+        //const response = await fetch(blobURL); // blob URL에서 blob 객체 가져오기
+        //const blob = await response.blob(); // blob 객체 추출
+        
+        // jpeg보다 높은 압축률, 손실, 무손실, 투명, 애니메이션 지원으로 webp로 변환
+        const mimeType = 'image/webp'; // 원본 타입 유지 시 위 주석 처리 해제하여 blob.type; MIME 타입 추출 (Blob 자체에서 제공)
 
         // 이미지가 로드되면 리사이즈 시작
         $img.onload = function() {
@@ -24,23 +42,23 @@ async function resizeImage(blob, targetWidth, mimeType, quality = 0.8) {
             // 이미지를 캔버스에 그려서 리사이즈된 이미지로 복사본 생성
             ctx.drawImage($img, 0, 0, targetWidth, targetHeight); // 이미지를 캔버스에 그림(이미지 소스, x축, y축, 이미지 너비, 이미지 높이)
             
-            // Blob으로 변환 후 File객체로 변환
+            // blob으로 변환 후 File객체로 변환
             $canvas.toBlob((resizedBlob) => {
                 if (resizedBlob) {
 					const fileName = `image_${Date.now()}.${mimeType.split('/')[1]}`;
-					const file = new File([resizedBlob], fileName, {type: mimeType});
-                    resolve(file); // 리사이즈된 File객체 반환
+					const file = new File([resizedBlob], fileName, {type: mimeType}); // 파일 객체로 변환
+                    resolve(file); // 리사이즈된 파일 반환
                     
                 } else {
-                    reject(new Error("Blob 생성에 실패했습니다.")); // Blob 생성 실패 시 에러 반환
+                    reject(new Error("blob 생성에 실패했습니다.")); // blob 생성 실패 시 에러 반환
                 }
                 
-           		URL.revokeObjectURL(blobURL); // Blob URL을 브라우저 메모리에서 해제
+           		URL.revokeObjectURL(blobURL); // blob URL을 브라우저 메모리에서 해제
             
-            }, mimeType, quality); // jpeg보다 높은 압축률, 손실, 무손실, 투명, 애니메이션 지원으로 webp으로 변환
+            }, mimeType, quality);
         };
 
-        $img.onerror = reject; // 파일을 읽는 과정에서 에러 발생 시 reject
+        $img.onerror = reject; // 이미지 읽는 과정에서 에러 발생 시 reject
     });
 }
 
@@ -104,24 +122,29 @@ $(document).ready(function() {
 			return false;
 		}
 		
-		previewImage(file); // 유효성 검사 완료 시 Blob Url 생성하여 미리보기 처리
+		previewImage(file); // 유효성 검사 완료 시 image URL 생성하여 미리보기 처리
 	}
 	
-	// Base64 URL 생성하여 미리보기 처리 
+	// image URL 생성하여 미리보기 처리 
 	function previewImage(file) {
-	    const reader = new FileReader(); // FileReader 객체 생성
+		const range = quill.getSelection(); // 현재 커서 위치
+		
+		// base64 URL 사용
+	    //const reader = new FileReader(); // FileReader 객체 생성
+	    //reader.readAsDataURL(file); // 파일을 base64 데이터 URL로 읽기
+	    //reader.onload = function(event) {
+	    //    const imageURL = event.target.result; // base64 문자열을 가져옴
+	    //};
 	    
-	    reader.readAsDataURL(file); // 파일을 Base64 데이터 URL로 읽기
+	    //reader.onerror = function(error) {
+	    //    logger.error('Error reading file:', error);
+	    //};
 	    
-	    reader.onload = function(event) {
-	        const base64Url = event.target.result; // Base64 문자열을 가져옴	        
-	        const range = quill.getSelection(); // 현재 커서 위치
-	        quill.clipboard.dangerouslyPasteHTML(range ? range.index : 0, `<img src="${base64Url}" alt="image">`);
-	    };
+	    // blob URL 사용
+	    const imageURL = URL.createObjectURL(file); // blob URL 생성
 	    
-	    reader.onerror = function(error) {
-	        logger.error('Error reading file:', error);
-	    };
+	    // 이미지 URL 입력하여 이미지 태그 삽입
+	    quill.clipboard.dangerouslyPasteHTML(range ? range.index : 0, `<img src="${imageURL}" alt="image">`);
 	}
 	
 	// 이미지 개수 제한 체크	
