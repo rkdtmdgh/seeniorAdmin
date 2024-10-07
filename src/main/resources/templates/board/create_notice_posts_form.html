@@ -56,8 +56,20 @@
 		                                </tr>
 		                                
 		                                <tr>
-		                                	<th><p class="table_title">작성자</p></th>
-		                                	<td colspan="3" class="disabled">
+		                                	<th><p class="table_title">상태</p></th>
+		                                	<td>
+		                                		<div class="table_info cont_info">
+	                                            	<label class="radio">
+	                                            		<input type="radio" name="bn_state" value="1" checked="checked"> 사용
+	                                            	</label>
+	                                            	<label class="radio">
+	                                            		<input type="radio" name="bn_state" value="0"> 숨김
+	                                            	</label>
+	                                            </div>
+	                                        </td>
+	                                        
+	                                        <th><p class="table_title">작성자</p></th>
+		                                	<td class="disabled">
 	                                			<input type="text" name="writer_id" class="table_info" th:value="${#authentication.name}" disabled>
 	                                        </td>
 		                                </tr>

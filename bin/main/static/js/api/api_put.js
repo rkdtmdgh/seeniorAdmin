@@ -334,7 +334,7 @@ async function putBoardCategoryModifyButton(event, bc_idx) {
 }
 
 // 게시판 공지 사항 수정
-async function (formName) {
+async function putNoticePostsModifyForm(formName) {
 	const form = document.forms[formName];
 	
 	input = form.bn_title;
