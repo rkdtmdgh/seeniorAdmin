@@ -200,7 +200,6 @@ public class RecipeService {
  		Map<String, Object> recipeCategoryDtos = new HashMap<>();
  		
  		List<RecipeDto> recipeCategoryDto = recipeMapper.getRecipeCategoryList();
- 		log.info("recipeCategoryDto =====> {}", recipeCategoryDto);
  		
  		recipeCategoryDtos.put("recipeCategoryDto", recipeCategoryDto);
  		
