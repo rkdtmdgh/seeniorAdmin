@@ -478,9 +478,9 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 		case '/board/cate_info/get_list': // 게시판 관리 리스트 테이블
 		case '/board/cate_info/search_board_category_list': // 게시판 관리 검색 리스트 테이블
 			tableTrContent = `
-				<tr>
+				<tr data-bc-no="${data.bc_no}" data-bc-name="${data.bc_name}" data-bc-idx="${data.bc_idx}">
 					<td>
-						<div class="table_info func_area" data-bc-no="${data.bc_no}" data-bc-name="${data.bc_name}" data-bc-idx="${data.bc_idx},">
+						<div class="table_info func_area">
 							${!isFirstElement ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx + 1})" class="func_arrow up"></span>` : ''}
 							${!isLastElement ? `<span onclick="putBoardCategoryModifyButton(evemt, ${data.bc_idx - 1})" class="func_arrow down"></span>` : ''}
 						</div>
@@ -511,16 +511,16 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 		            <td>
 		                <a href="/board/info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_title}</a>
 		            </td>
+					<td>
+		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
+		            </td>
 		            <td>
 		                <a href="/board/info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_view_cnt}</a>
 		            </td>
 					<td>
 		                <a href="/board/info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">
-							${data.bn_state === 1 ? '정상' : '숨김'}
+							<span onclick="" class="btns small ${data.bn_state === 1 ? '' : 'white'}">${data.bn_state === 1 ? '사용' : '숨김'}</span>
 						</a>
-		            </td>
-					<td>
-		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.bn_mod_date) || 'N/A'}</p>

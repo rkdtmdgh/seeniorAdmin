@@ -48,6 +48,7 @@ async function setLoginUserInfoInputValue(name, key) {
 
 // 게시판 타이틀 설정
 async function setBoardTitle(infoNo) {
+	logger.info('setBoardTitle() no:', infoNo);
 	if(infoNo) {
 		const info = await getBoardInfo(infoNo);
 		
