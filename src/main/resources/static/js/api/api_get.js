@@ -783,7 +783,7 @@ function mapSortListApiObject(dbTable) {
 			break;
 			
 		case 'advertisement': // 광고 관리 페이지
-			apiUrl = '/board/info/get_advertisement_list';
+			apiUrl = '/advertisement/info/get_advertisement_list';
 			break;
 		
 		default:
