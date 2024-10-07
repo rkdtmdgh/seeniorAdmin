@@ -31,7 +31,7 @@ public class AccountController {
 
 	// 회원 가입 양식
 	@GetMapping("/sign_up_form")
-	public String signUpForm(Model model) {
+	public String signUpForm() {
 		log.info("signUpForm()");
 		
 		String nextPage = "account/sign_up_form";

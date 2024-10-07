@@ -88,6 +88,11 @@ public class VideoService {
 	public Map<String, Object> searchVideoPagingList(String searchPart, String searchString, String sortValue,
 			String order, int page) {
 		log.info("searchVideoPagingList()");
+		log.info("searchPart ----- {}", searchPart);
+		log.info("searchString ----- {}", searchString);
+		log.info("sortValue ----- {}", sortValue);
+		log.info("order ----- {}", order);
+		log.info("page ----- {}", page);
 		
 		int pagingStart = (page - 1) * pageLimit;	
 		
@@ -98,9 +103,13 @@ public class VideoService {
 		pagingParams.put("limit", pageLimit);
 		pagingParams.put("sortValue", sortValue);
 		pagingParams.put("order", order);
+		pagingParams.put("searchPart", searchPart);
+		pagingParams.put("searchString", searchString);
 
-		List<AdminAccountDto> videoDtos = videoMapper.selectSearchVideoList(pagingParams);
+		List<VideoDto> videoDtos = videoMapper.selectSearchVideoList(pagingParams);
 		pagingSearchList.put("videoDtos", videoDtos);
+		
+		log.info("videoDtos ------- {}", videoDtos);
 		
 		return pagingSearchList;
 	}
@@ -116,8 +125,8 @@ public class VideoService {
 		searchParams.put("searchString", searchString);
 		
 		// 전체 리스트 개수 조회 
-		int searchVideoListCnt = videoMapper.selectSearchVideoListCnt();
-
+		int searchVideoListCnt = videoMapper.selectSearchVideoListCnt(searchParams);
+		
 		// 전체 페이지 개수 계산
 		int maxPage = (int) (Math.ceil((double) searchVideoListCnt / pageLimit));
 		

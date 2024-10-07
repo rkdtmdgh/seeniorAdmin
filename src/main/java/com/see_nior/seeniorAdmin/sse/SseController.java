@@ -2,6 +2,7 @@ package com.see_nior.seeniorAdmin.sse;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -15,12 +16,14 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class SseController {
 
-	final private SseService SseService;
+	final private SseService sseService;
 	final private QnaService qnaService;
 	
-	@GetMapping(path = "/notifications", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-	public SseEmitter sendUnansweredQuestionsNotifications() {
-		return SseService.getUnansweredQuestionsNotifications();
+	@GetMapping(path = "/subscribe/{a_id}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	public SseEmitter subscribe(@PathVariable(value = "a_id") long a_id) {
+		log.info("subscribe()");
+		
+		return sseService.subcribe(a_id);
 	}
 	
 }
