@@ -21,6 +21,15 @@ public class SseService {
 
 	final private QnaService qnaService;
 	
+	private static final Long DEFAULT_TIMEOUT = 600L * 1000 * 60;
+	
+	public SseEmitter subcribe(long a_id) {
+		log.info("subscribe()");
+		
+		
+		return null;
+	}
+	
 	public SseEmitter getUnansweredQuestionsNotifications() {
 		log.info("getUnansweredQuestionsNotifications()");
 		
@@ -53,5 +62,7 @@ public class SseService {
 		return emitter;
 		
 	}
+
+
 	
 }

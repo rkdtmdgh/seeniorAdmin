@@ -68,9 +68,9 @@
 		FROM 
 			VIDEO 
 		WHERE 
-			V_IS_DELETED = 1
+			V_IS_DELETED = 1 
 		<if test="searchPart != null and searchString != null">
-			AND ${searchPart} LIKE CONCAT('%', #{serachString}, '%')
+			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%') 
 		</if>
 		ORDER BY 
 			${sortValue} ${order} 
