@@ -339,7 +339,19 @@ function mapApiResponseObject(apiUrl, response) {
 			getListDtos = response.qnaDtos;
 			getListPage = response.searchQnaListPageNum;
 			getListCnt = response.searchQnaListPageNum.searchQnaListCnt;
-			break;		
+			break;	
+			
+		case '/advertisement/info/get_advertisement_list': // 광고 관리
+			getListDtos = response.advertisementDtos;
+			getListPage = response.advertisementListPageNum;
+			getListCnt = response.advertisementListPageNum.videoListCnt;
+			break;	
+			
+		case '/advertisement/info/get_advertisement_list': // 광고 관리 검색
+ 			getListDtos = response.searchAdvertisementDtos;
+			getListPage = response.searchAdvertisementListPageNum;
+			getListCnt = response.searchAdvertisementListPageNum.videoListCnt;
+			break;	
 						
 	}
 		
@@ -616,6 +628,32 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 		        </tr>
 			`;
 			break;
+			
+		case '/advertisement/info/get_advertisement_list': // 광고 관리 리스트 테이블
+		case '/advertisement/info/search_advertisement_list': // 광고 관리 검색 리스트 테이블
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${listIndex}</a>
+		            </td>
+		            <td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_position}</a>
+		            </td>
+					<td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_start_date)}</a>
+		            </td>
+					<td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.bq_user_no}${setFormatDate(data.ad_end_date)}</a>
+		            </td>
+					<td>
+		                <p class="table_info">${data.ad_client}</p>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.bq_mod_date) || 'N/A'}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
 		
 		default:
 			tableTrContent = '';
@@ -744,6 +782,10 @@ function mapSortListApiObject(dbTable) {
 			apiUrl = '/board/info/get_posts_list';
 			break;
 			
+		case 'advertisement': // 광고 관리 페이지
+			apiUrl = '/board/info/get_advertisement_list';
+			break;
+		
 		default:
 			logger.error('mapSortListApiObject() dbTable:', value);
 			return false;
