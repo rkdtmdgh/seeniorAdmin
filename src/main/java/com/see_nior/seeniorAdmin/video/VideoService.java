@@ -106,7 +106,7 @@ public class VideoService {
 		pagingParams.put("searchPart", searchPart);
 		pagingParams.put("searchString", searchString);
 
-		List<AdminAccountDto> videoDtos = videoMapper.selectSearchVideoList(pagingParams);
+		List<VideoDto> videoDtos = videoMapper.selectSearchVideoList(pagingParams);
 		pagingSearchList.put("videoDtos", videoDtos);
 		
 		log.info("videoDtos ------- {}", videoDtos);
