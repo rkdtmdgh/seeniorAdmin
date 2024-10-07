@@ -24,6 +24,15 @@ function setAddLoading(loading) {
 	}
 }
 
+// FormData 키벨류, byte 확인
+function setFormDataCheckConsoleLog(formData) {
+	const encoder = new TextEncoder(); // byte 계산
+	for (const [key, value] of formData.entries()) { // formData의 모든 데이터 확인
+		logger.info('postPostsCreateForm() formData:', key, value); // 키벨류 확인
+		logger.info(`${key} byte:`, encoder.encode(value).length); // 벨류 byte 확인
+	};
+}
+
 // 로그인 유저 정보 해당 인풋에 정보 입력
 async function setLoginUserInfoInputValue(name, key) {
 	const $input = $(`input[name="${name}"]`);

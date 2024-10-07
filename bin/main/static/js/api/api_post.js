@@ -107,9 +107,7 @@ async function postIdentityCheckForm(event, formName) {
 
 // post ajax 요청
 async function postSubmitForm(apiUrl, formData, successMessage, errorMessage, redirectUrl = null) {
-	for (const [key, value] of formData.entries()) {
-		logger.info('postSubmitForm() formData:', key, value);
-	};
+	setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
 	
 	try {
 		const response = await $.ajax({
@@ -334,12 +332,6 @@ async function postPostsCreateForm(formName) {
 		const emptyBlob = new Blob([], { type: 'application/octet-stream' }); // 빈 Blob 생성
 		formData.append('files', emptyBlob); 
 	}
-	
-	const encoder = new TextEncoder(); // byte 계산
-	for (const [key, value] of formData.entries()) { // formData의 모든 데이터 확인
-		logger.info('postPostsCreateForm() formData:', key, value); // 키벨류 확인
-		logger.info(`${key} byte:`, encoder.encode(value).length); // 벨류 byte 확인
-	};
 	
 	//const isTrue = false;
 	//if(!isTrue) return false;

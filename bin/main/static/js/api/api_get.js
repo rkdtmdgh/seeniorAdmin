@@ -544,6 +544,9 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 		                	<p class="info_text">${data.bp_title}</p><span class="info_num">(${data.bp_reply_cnt})</span>
 	                	</a>
 		            </td>
+					<td>
+		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
+		            </td>
 		            <td>
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_view_cnt}</a>
 		            </td>
@@ -551,9 +554,6 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">
 							${data.bp_report_state === 0 ? '처리완료' : data.bp_report_state === 1 ? '정상' : data.bp_report_state === 2 ? '처리중' : 'N/A'}
 						</a>
-		            </td>
-					<td>
-		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.bp_mod_date) || 'N/A'}</p>

@@ -1,11 +1,9 @@
 // 전역 변수로 선언
 let quill; // quill 에디터
 
-// Quill의 기본 Image 포맷 가져오기
-const Image = Quill.import('formats/image');
-
-// blob URL을 허용하도록 sanitize 메서드 재정의
-Image.sanitize = function(url) {
+// Quill 에디터에서 blob URL을 허용 설정
+const Image = Quill.import('formats/image'); // Quill의 기본 Image 포맷 가져오기
+Image.sanitize = function(url) { // blob URL을 허용하도록 sanitize 메서드 재정의
     if (url.startsWith('blob:')) { // Blob URL을 허용하는 조건 추가
         return url;
     }
@@ -13,8 +11,7 @@ Image.sanitize = function(url) {
     return Quill.import('formats/image').sanitize(url); // 기본적으로 허용되는 URL (http, https 등)
 };
 
-// 새로운 Image 포맷 등록
-Quill.register(Image, true);
+Quill.register(Image, true); // 새로운 Image 포맷 등록
 
 // 이미지 리사이즈 및 객체 반환
 async function resizeImage(blobURL, targetWidth, quality = 0.8) {
@@ -165,24 +162,60 @@ $(document).ready(function() {
 	$('#current_size').text(initialTextSize.toLocaleString()); // 기본값 설정
 	$('#max_size').text(`${maxTextSize.toLocaleString()} byte`);
 	
-	// quill 텍스트, 영상 입력 제한
+	// 로드시 초기 이미지 목록 체크(수정폼에서 삭제된 이미지 src 추적하고 처리하기 위한 로직)
+	const initialImageSrcs = []; // 수정 폼이 처음 로드될 때 기존 이미지 src를 저장할 배열
+	const $quillImages = $(quill.root).find('img'); // 에디터에서 img 태그 선택
+	if($quillImages.length) { // 이미지 태그가 있을 경우 실행
+		$quillImages.each(function() {
+			initialImageSrcs.push($(this).attr('src')); // DB에서 가져온 기존 이미지들의 src를 배열에 저장
+		});
+	}
+	
+	// quill 텍스트, 영상 입력 제한 및 이미지 삽입, 삭제에 대한 처리
+	let deletedImageSrcs = []; // 제거된 이미지의 src를 저장할 배열
+	
 	quill.on('text-change', function(delta, oldDelta, source) { // 변경된 내용, 변경 전 내용, 변경의 출처
+		// 텍스트 리미트 표시 업데이트
 		const text = quill.getText(); // 에디터의 순수 텍스트 가져오기
 		const textSize = new Blob([text]).size; // 텍스트 크기 계산 (byte)
-		
 		$('#current_size').text(textSize.toLocaleString()); // 입력된 값 변경
-		
-		if(textSize > maxTextSize) {
+		if(textSize > maxTextSize) { 
 			alert(`입력 가능한 최대 텍스트 용량은 ${maxTextSize.toLocaleString()} byte 입니다.`);
 			quill.history.undo(); // 최근 입력된 내용을 되돌려 제한 초과 방지
 		}
 		
+		// 영상 삽입 제한
 		const videoCount = $(quill.root).find('iframe').length; // 현재 삽입된 영상 개수
-		if(videoCount > maxVideoCount) {
+		if(videoCount > maxVideoCount) { 
 			alert(`영상은 최대 ${maxVideoCount}개까지만 삽입할 수 있습니다.`);
 			quill.history.undo(); // 최근 입력된 내용을 되돌려 제한 초과 방지
 		}
 		
-		if(!insertImageConfirm()) quill.history.undo(); // 이미지 삽입 개수 제한
+		// 이미지 삽입 개수 제한
+		if(!insertImageConfirm()) quill.history.undo(); 
+		
+		// 초기 이미지와 현재 이미지를 비교하여 삭제 감지 및 복구 처리
+		const currentImageSrcs = $(quill.root).find('img').map(function() { // 현재 이미지 태그들의 src
+			return $(this).attr('src'); 
+		}).get(); // 이미지 태그들의 src를 자바스크립트 배열로 반환
+			
+		if(initialImageSrcs.length) {
+			initialImageSrcs.forEach((src) => { // 초기 이미지와 현재 이미지를 비교하여 삭제된 이미지 찾기
+				if(!currentImageSrcs.includes(src)) { // 초기 이미지중 현재 에디터에 없는 이미지
+					if(!deletedImageSrcs.includes(src)) { // deletedImageSrcs 배열에 중복 추가 방지
+						deletedImageSrcs.push(src); // 삭제된 이미지 src 추가
+					}
+				}
+			});
+			
+			// deletedImageSrcs 배열 재구성
+			deletedImageSrcs = deletedImageSrcs.filter((src) => { // 복구된 이미지(Ctrl+Z, 되돌리기 등) deletedImageSrcs에서 제거
+				return !currentImageSrcs.includes(src); // 현제 에디터에 존재하는 이미지 src는 추가하지 않음
+			});
+		}
+		
+		logger.info('quill editor initialImageSrcs[]:', initialImageSrcs);
+		logger.info('quill editor currentImageSrcs[]:', currentImageSrcs);
+		logger.info('quill editor deletedImageSrcs[]:', deletedImageSrcs);
 	});
 });

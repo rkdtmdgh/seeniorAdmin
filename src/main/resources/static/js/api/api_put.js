@@ -1,8 +1,6 @@
 // put ajax 요청
 async function putSubmitForm(apiUrl, formData, successMessage, errorMessage) {
-	for (const [key, value] of formData.entries()) {
-		logger.info('putSubmitForm() formData:', key, value);
-	};
+	setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
 	
 	try {
 		const response = await $.ajax({
@@ -335,22 +333,13 @@ async function putPostsModifyForm(formName) {
 		logger.info('이미지 태그 있음');
 		
 		for(let img of $imgTags) {
-			const src= $(img)[0].src; // src 속성에 입력된 base64 Url 가져오기
-			const base64Data = src.split(',')[1]; // base64 데이터 부분 추출
-			const byteCharacters = atob(base64Data); // base64를 디코딩 반대 메소드 btoa() 
-			const byteNumbers = new Array(byteCharacters.length);
+			const blobURL= $(img)[0].src; // src 속성에 입력된 blob URL 가져오기
+			const targetWidth = $(img)[0].width; // 리사이즈할 대상 이미지의 너비 가져오기
 			
-			for(let i = 0; i < byteCharacters.length; i++) {
-				byteNumbers[i] = byteCharacters.charCodeAt(i); // 각 문자를 바이트 배열로 변환
-			}
-			
-			const byteArray = new Uint8Array(byteNumbers); // 8비트 부호 없는 정수(0-255) 저장 배열
-			const mimeType = 'image/webp'; // src.match(/data:(.*?);base64/)[1]; // MIME 타입 추출
-			const blob = new Blob([byteArray], {type: mimeType}); // 이진 데이터로 blob 객체로 변환	
-			
-			// 설정된 width 크기로 리사이즈 압축 후 flle 객체로 변환
-			const resizedImageFile = await resizeImage(blob, $(img)[0].width, mimeType);
+			// 설정된 width 크기로 리사이즈 압축 후 flle 개게로 변환하여 formData 추가
+			const resizedImageFile = await resizeImage(blobURL, targetWidth);
 			formData.append('files', resizedImageFile); // 리사이즈된 File객체를 formData에 추가
+			URL.revokeObjectURL(blobURL); // blob URL을 브라우저 메모리에서 해제
 		}
 		
 	} else {
@@ -358,12 +347,6 @@ async function putPostsModifyForm(formName) {
 		const emptyBlob = new Blob([], { type: 'application/octet-stream' }); // 빈 Blob 생성
 		formData.append('files', emptyBlob); 
 	}
-	
-	const encoder = new TextEncoder(); // byte 계산
-	for (const [key, value] of formData.entries()) { // formData의 모든 데이터 확인
-		logger.info('postPostsCreateForm() formData:', key, value); // 키벨류 확인
-		logger.info(`${key} byte:`, encoder.encode(value).length); // 벨류 byte 확인
-	};
 	
 	//const isTrue = false;
 	//if(!isTrue) return false;
