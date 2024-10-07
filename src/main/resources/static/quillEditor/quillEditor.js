@@ -160,6 +160,6 @@ $(document).ready(function() {
 			quill.history.undo(); // 최근 입력된 내용을 되돌려 제한 초과 방지
 		}
 		
-		if(!insertImageConfirm()) quill.history.undo();
+		if(!insertImageConfirm()) quill.history.undo(); // 이미지 삽입 개수 제한
 	});
 });
