@@ -126,6 +126,11 @@ function mapDeleteObject(value) {
 			apiUrl = '/board/cate_info/delete_category_confirm';
 			replace = '/board/cate_info/category_list_form';
 			break;
+			
+		case 'bn_no': // 게시판 공지 사항
+			apiUrl = '/board/info/delete_notice_posts_confirm';
+			replace = '/board/info/notice_posts_form';
+			break;
 		
 		case 'bp_no': // 게시물
 			apiUrl = '/board/info/delete_confirm';

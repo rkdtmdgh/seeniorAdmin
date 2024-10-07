@@ -107,9 +107,7 @@ async function postIdentityCheckForm(event, formName) {
 
 // post ajax 요청
 async function postSubmitForm(apiUrl, formData, successMessage, errorMessage, redirectUrl = null) {
-	for (const [key, value] of formData.entries()) {
-		logger.info('postSubmitForm() formData:', key, value);
-	};
+	setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
 	
 	try {
 		const response = await $.ajax({
@@ -213,6 +211,36 @@ async function postDiseaseCreateForm(formName) {
 	);
 }
 
+// 식단 정보 업데이트
+async function postRecipeUpdate() {
+	const isConfirm = confirm('업데이트는 약 10~30초 정도가 소요됩니다. 업데이트하시겠습니까?');
+	if(!isConfirm) return false;
+	
+    setAddLoading(true); // 로딩 시작
+	
+	try {
+		const response = await $.ajax({
+			url: '/recipe/info/refresh_api_recipe_data',
+			method: 'GET',
+		});
+		
+		logger.info('postRecipeUpdate() response:', response);	
+		
+		if(response) {
+			alert('최신 정보로 업데이트하였습니다.');
+			
+		} else {
+			alert('최신 정보 업데이트에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
+		}
+		
+	} catch(error) {
+		logger.error('postRecipeUpdate() error:', error);
+		
+	} finally {
+		location.reload(true);
+	}
+}
+
 // 영상 정보 등록 폼
 async function postVideoCreateForm(formName) {
 	const form = document.forms[formName];
@@ -246,110 +274,6 @@ async function postVideoCreateForm(formName) {
 		successMessage, 
 		errorMessage, 
 		'/video/info/video_list_form'
-	);
-}
-
-// 게시판 등록 폼
-async function postBoardCategoryCreateForm(formName) {
-	const form = document.forms[formName];
-	const bc_name = form.bc_name;
-	const bc_idx = form.bc_idx;
-	
-	if(!(await requestDuplicateCheck(bc_name, true, false, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
-		bc_name.focus();
-		return false;
-	}
-	
-	const formData = new FormData();
-	formData.append('bc_name', bc_name.value.trim());
-	formData.append('bc_idx', replaceNumber(bc_idx)); // 문자열 제외 및 min, max 체크하여 입력값 설정
-	
-	const successMessage = `"${bc_name.value}" 게시판이 등록되었습니다.`;
-	const errorMessage = `"${bc_name.value}" 게시판 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
-	
-	await postSubmitForm(
-		'/board/cate_info/create_category_confirm', 
-		formData, 
-		successMessage, 
-		errorMessage, 
-		'/board/cate_info/category_list_form'
-	);
-}
-
-// 일반 게시물 등록 폼
-async function postPostsCreateForm(formName) {
-	const form = document.forms[formName];
-	
-	input = form.bp_title;
-	if(!validateEmpty(input, '제목을', true)) {
-		input.focus();
-		return false;
-	}
-	
-	if(!validateQuill(quill)) { // 내용 유효성 및 비속어 검사
-		quill.focus();
-		return false;
-	}
-	
-	const successMessage = `"${bp_title.value.trim()}" 게시물이 등록되었습니다.`;
-	const errorMessage = `"${bp_title.value.trim()}" 게시물 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
-	
-	const formData = new FormData();
-	formData.append('bp_title', input.value.trim()); // 제목
-	formData.append('bp_category_no', form.bp_category_no.value); // 게시판 no
-	formData.append('bp_writer_no', form.bp_writer_no.value); // 작성자 no
-	formData.append('bp_body', quill.root.innerHTML); // quill 에디터 내용
-	
-	// 이미지 파일 리사이즈 및 압축하여 formData에 담기
-	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
-	if($imgTags.length) {
-		logger.info('이미지 태그 있음');
-		
-		for(let img of $imgTags) {
-			const blobURL= $(img)[0].src; // src 속성에 입력된 blob URL 가져오기
-			const targetWidth = $(img)[0].width; // 리사이즈할 대상 이미지의 너비 가져오기
-			
-			// base64 URL 사용 시
-			//const base64Data =  $(img)[0].src.split(',')[1]; // base64 데이터 부분 추출
-			//const byteCharacters = atob(base64Data); // base64를 디코딩 반대 메소드 btoa() 
-			//const byteNumbers = new Array(byteCharacters.length);
-			
-			//for(let i = 0; i < byteCharacters.length; i++) {
-			//	byteNumbers[i] = byteCharacters.charCodeAt(i); // 각 문자를 바이트 배열로 변환
-			//}
-			
-			//const byteArray = new Uint8Array(byteNumbers); // 8비트 부호 없는 정수(0-255) 저장 배열
-			//const targetWidth = $(img)[0].width; // 리사이즈할 대상 이미지의 너비 가져오기
-			//const blob = new Blob([byteArray], {type: mimeType}); // 이진 데이터로 blob 객체로 변환	
-			//const blobURL = URL.createObjectURL(blob);
-			
-			// 설정된 width 크기로 리사이즈 압축 후 flle 개게로 변환하여 formData 추가
-			const resizedImageFile = await resizeImage(blobURL, targetWidth);
-			formData.append('files', resizedImageFile); // 리사이즈된 File객체를 formData에 추가
-			URL.revokeObjectURL(blobURL); // blob URL을 브라우저 메모리에서 해제
-		}
-		
-	} else {
-		logger.info('이미지 태그 없음');
-		const emptyBlob = new Blob([], { type: 'application/octet-stream' }); // 빈 Blob 생성
-		formData.append('files', emptyBlob); 
-	}
-	
-	const encoder = new TextEncoder(); // byte 계산
-	for (const [key, value] of formData.entries()) { // formData의 모든 데이터 확인
-		logger.info('postPostsCreateForm() formData:', key, value); // 키벨류 확인
-		logger.info(`${key} byte:`, encoder.encode(value).length); // 벨류 byte 확인
-	};
-	
-	//const isTrue = false;
-	//if(!isTrue) return false;
-	
-	await postSubmitForm(
-		'/board/info/create_confirm',
-		formData,
-		successMessage,
-		errorMessage,
-		`/board/info/posts_list_form?infoNo=${form.bp_category_no.value}`
 	);
 }
 
@@ -391,32 +315,154 @@ async function postQnaNoticeCreateForm(formName) {
 	);
 }
 
-// 식단 정보 업데이트
-async function postRecipeUpdate() {
-	const isConfirm = confirm('업데이트는 약 10~30초 정도가 소요됩니다. 업데이트하시겠습니까?');
-	if(!isConfirm) return false;
+// 게시판 등록 폼
+async function postBoardCategoryCreateForm(formName) {
+	const form = document.forms[formName];
+	const bc_name = form.bc_name;
+	const bc_idx = form.bc_idx;
 	
-    setAddLoading(true); // 로딩 시작
+	if(!(await requestDuplicateCheck(bc_name, true, false, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+		bc_name.focus();
+		return false;
+	}
 	
-	try {
-		const response = await $.ajax({
-			url: '/recipe/info/refresh_api_recipe_data',
-			method: 'GET',
-		});
+	const formData = new FormData();
+	formData.append('bc_name', bc_name.value.trim());
+	formData.append('bc_idx', replaceNumber(bc_idx)); // 문자열 제외 및 min, max 체크하여 입력값 설정
+	
+	const successMessage = `"${bc_name.value}" 게시판이 등록되었습니다.`;
+	const errorMessage = `"${bc_name.value}" 게시판 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	await postSubmitForm(
+		'/board/cate_info/create_category_confirm', 
+		formData, 
+		successMessage, 
+		errorMessage, 
+		'/board/cate_info/category_list_form'
+	);
+}
+
+// 게시판 공지 사항 등록 폼
+async function postNoticePostsCreateForm(formName) {
+	const form = document.forms[formName];
+	
+	input = form.bn_title;
+	if(!validateEmpty(input, '제목을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(!validateQuill(quill)) { // 내용 유효성 및 비속어 검사
+		quill.focus();
+		return false;
+	}
+	
+	const successMessage = `"${bn_title.value.trim()}" 게시판 공지 사항이 등록되었습니다.`;
+	const errorMessage = `"${bn_title.value.trim()}" 게시판 공지 사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	const formData = new FormData();
+	formData.append('bn_title', input.value.trim()); // 제목
+	formData.append('bn_category_no', form.bn_category_no.value); // 게시판 no
+	formData.append('bn_writer_no', form.bn_writer_no.value); // 작성자 no
+	formData.append('bn_body', quill.root.innerHTML); // quill 에디터 내용
+	
+	// 이미지 파일 리사이즈 및 압축하여 formData에 담기
+	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
+	if($imgTags.length) {
+		logger.info('이미지 태그 있음');
 		
-		logger.info('postRecipeUpdate() response:', response);	
-		
-		if(response) {
-			alert('최신 정보로 업데이트하였습니다.');
+		for(let img of $imgTags) {
+			const blobURL= $(img)[0].src; // src 속성에 입력된 blob URL 가져오기
+			const targetWidth = $(img)[0].width; // 리사이즈할 대상 이미지의 너비 가져오기
 			
-		} else {
-			alert('최신 정보 업데이트에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
+			// base64 URL 사용 시
+			//const base64Data =  $(img)[0].src.split(',')[1]; // base64 데이터 부분 추출
+			//const byteCharacters = atob(base64Data); // base64를 디코딩 반대 메소드 btoa() 
+			//const byteNumbers = new Array(byteCharacters.length);
+			
+			//for(let i = 0; i < byteCharacters.length; i++) {
+			//	byteNumbers[i] = byteCharacters.charCodeAt(i); // 각 문자를 바이트 배열로 변환
+			//}
+			
+			//const byteArray = new Uint8Array(byteNumbers); // 8비트 부호 없는 정수(0-255) 저장 배열
+			//const targetWidth = $(img)[0].width; // 리사이즈할 대상 이미지의 너비 가져오기
+			//const blob = new Blob([byteArray], {type: mimeType}); // 이진 데이터로 blob 객체로 변환	
+			//const blobURL = URL.createObjectURL(blob);
+			
+			// 설정된 width 크기로 리사이즈 압축 후 flle 개게로 변환하여 formData 추가
+			const resizedImageFile = await resizeImage(blobURL, targetWidth);
+			formData.append('files', resizedImageFile); // 리사이즈된 File객체를 formData에 추가
+			URL.revokeObjectURL(blobURL); // blob URL을 브라우저 메모리에서 해제
 		}
 		
-	} catch(error) {
-		logger.error('postRecipeUpdate() error:', error);
-		
-	} finally {
-		location.reload(true);
+	} else {
+		logger.info('이미지 태그 없음');
+		const emptyBlob = new Blob([], { type: 'application/octet-stream' }); // 빈 Blob 생성
+		formData.append('files', emptyBlob); 
 	}
+	
+	//const isTrue = false;
+	//if(!isTrue) return false;
+	
+	await postSubmitForm(
+		'/board/info/create_notice_posts_confirm',
+		formData,
+		successMessage,
+		errorMessage,
+		`/board/info/notice_posts_list_form?infoNo=${form.bn_category_no.value}`
+	);
+}
+
+// 일반 게시물 등록 폼
+async function postPostsCreateForm(formName) {
+	const form = document.forms[formName];
+	
+	input = form.bp_title;
+	if(!validateEmpty(input, '제목을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(!validateQuill(quill)) { // 내용 유효성 및 비속어 검사
+		quill.focus();
+		return false;
+	}
+	
+	const successMessage = `"${bp_title.value.trim()}" 게시물이 등록되었습니다.`;
+	const errorMessage = `"${bp_title.value.trim()}" 게시물 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	const formData = new FormData();
+	formData.append('bp_title', input.value.trim()); // 제목
+	formData.append('bp_category_no', form.bp_category_no.value); // 게시판 no
+	formData.append('bp_writer_no', form.bp_writer_no.value); // 작성자 no
+	formData.append('bp_body', quill.root.innerHTML); // quill 에디터 내용
+	
+	// 이미지 파일 리사이즈 및 압축하여 formData에 담기
+	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
+	if($imgTags.length) {
+		logger.info('이미지 태그 있음');
+		
+		for(let img of $imgTags) {
+			const blobURL= $(img)[0].src; // src 속성에 입력된 blob URL 가져오기
+			const targetWidth = $(img)[0].width; // 리사이즈할 대상 이미지의 너비 가져오기
+
+			// 설정된 width 크기로 리사이즈 압축 후 flle 개게로 변환하여 formData 추가
+			const resizedImageFile = await resizeImage(blobURL, targetWidth);
+			formData.append('files', resizedImageFile); // 리사이즈된 File객체를 formData에 추가
+			URL.revokeObjectURL(blobURL); // blob URL을 브라우저 메모리에서 해제
+		}
+		
+	} else {
+		logger.info('이미지 태그 없음');
+		const emptyBlob = new Blob([], { type: 'application/octet-stream' }); // 빈 Blob 생성
+		formData.append('files', emptyBlob); 
+	}
+
+	await postSubmitForm(
+		'/board/info/create_confirm',
+		formData,
+		successMessage,
+		errorMessage,
+		`/board/info/posts_list_form?infoNo=${form.bp_category_no.value}`
+	);
 }
