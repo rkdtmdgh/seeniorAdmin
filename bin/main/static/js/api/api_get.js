@@ -278,7 +278,7 @@ function mapApiResponseObject(apiUrl, response) {
 		case '/video/info/search_video_list': // 영상 정보 관리 검색
 			getListDtos = response.videoDtos;
 			getListPage = response.searchVideoListPage;
-			getListCnt = response.searchVideoListPageNum.searchVideoListCnt;
+			getListCnt = response.searchVideoListPage.searchVideoListCnt;
 			break;	
 			
 		case '/board/cate_info/get_list': // 게시판 관리
