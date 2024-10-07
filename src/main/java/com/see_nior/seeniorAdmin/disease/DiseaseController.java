@@ -228,7 +228,7 @@ public class DiseaseController {
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "d_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
-		log.info("getDiseaseList");
+		log.info("getDiseaseList()");
 		
 		// 페이지 번호에 따른 질환 리스트들 가져오기
 		Map<String, Object> diseaseListWithPage = diseaseService.getDiseaseListWithPage(page, sortValue, order);
@@ -308,7 +308,7 @@ public class DiseaseController {
 	// 질환 삭제 확인
 	@ResponseBody
 	@PostMapping("/info/delete_confirm")
-	public boolean deleteConfirm(@RequestParam(value = "deleteData") List<Integer> d_nos) {
+	public boolean deleteConfirm(@RequestParam(value = "d_nos") List<Integer> d_nos) {
 		log.info("deleteConfirm()");
 		
 		boolean deleteResult = diseaseService.deleteConfirm(d_nos);
