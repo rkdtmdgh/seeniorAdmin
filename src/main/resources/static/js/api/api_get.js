@@ -809,7 +809,7 @@ function getSelectList(event) {
 	getList(apiUrl, sortValue, order, 1);
 }
 
-// getList() 요청에 필요한 객체 설정
+// select getList() 요청에 필요한 객체 설정
 function mapSelectListApiObject(sortValue) {
 	let apiUrl;
 	
