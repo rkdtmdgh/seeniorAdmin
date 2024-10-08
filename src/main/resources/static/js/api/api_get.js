@@ -524,21 +524,24 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			tableTrContent = `
 				<tr>
 		            <td>
-		                <a href="/board/info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${listIndex}</a>
+		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/board/info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_title}</a>
-		            </td>
-					<td>
-		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
+		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">게시판명</a>
 		            </td>
 		            <td>
-		                <a href="/board/info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_view_cnt}</a>
+		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_title}</a>
 		            </td>
 					<td>
-		                <a href="/board/info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">
+		                <a href="/account/noti_info/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
+		            </td>
+		            <td>
+		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_view_cnt}</a>
+		            </td>
+					<td>
+		                <div class="table_info">
 							<span onclick="" class="btns small ${data.bn_state === 1 ? '' : 'white'}">${data.bn_state === 1 ? '사용' : '숨김'}</span>
-						</a>
+						</div>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.bn_mod_date) || 'N/A'}</p>
@@ -837,7 +840,7 @@ function mapSelectListApiObject(sortValue) {
 	return apiUrl;
 }
 
-// 셀렉트 옵션(분류) 리스트 요청 및 옵션 생성
+// 셀렉트 옵션 리스트 요청 및 옵션 생성
 async function getCategoryList(ele, isForm, selectedValue) {
 	const $selectEle = $(`#${ele}`); // 셀렉트 요소가 생성될 table th
 	const { apiUrl, getListDtos, dataNo, dataName } = mapCategorylistObject(ele);
@@ -908,6 +911,14 @@ function mapCategorylistObject(ele) {
 			getListDtos = 'recipeRcpPat2Dto';
 			dataNo = 'rcp_pat2';
 			dataName = 'rcp_pat2';
+			break;
+			
+		case 'bc_name': // 게시판 공지 사항 페이지
+		case 'bn_category_no':
+			apiUrl = '/board/cate_info/get_list';
+			getListDtos = 'boardCategoryDtos';
+			dataNo = 'bc_no';
+			dataName = 'bc_name';
 			break;
 			
 		case 'rcp_pat2': // 광고 관련 페이지

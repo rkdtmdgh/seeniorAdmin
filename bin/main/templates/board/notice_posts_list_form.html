@@ -6,23 +6,27 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('게시판 공지 사항')}"></th:block>
 	<script th:inline="javascript">
-		$(function() {
-			// 타이틀 설정
-			setBoardTitle(/*[[${infoNo}]]*/);
-			
+		$(function() {			
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
-				case '2': // 검색
+				case '2': // search
 					getSearchList(null, '/board/info/search_notice_posts_list', page);
 					break;
+				
+				case '1': // select
+					getList('/board/noti_info/get_notice_posts_list_by_category', sortValue, order, page);
+					break;
 
-				case '0':  // 정렬
+				case '0': // sort
 					getList('/board/noti_info/get_notice_posts_list', sortValue, order, page);
 					break;
 					
-				default: // 기본
+				default:
 					getList('/board/noti_info/get_notice_posts_list', null, null, page);
 			}
+			
+			// BOARD_CATEGORY 가져오기
+			getCategoryList('bc_name'); // element id, isForm, selectedValue
         });
 	</script>
 </head>
@@ -39,7 +43,7 @@
 					<section class="content_info_wrap">
 					    <div class="content_top">
 					        <div class="content_top_info">
-					            <h2 class="title categoty_title"></h2>
+					            <h2 class="title categoty_title">게시판 공지 사항</h2>
 					            
 					            <div class="content_top_right">
 									<form name="search_form" onsubmit="getSearchList(event, '/board/noti_info/search_notice_posts_list')" 
@@ -57,6 +61,7 @@
 	                        <table class="content_table notice_posts_list_table">
 	                            <colgroup>
 	                                <col class="col_no">
+	                                <col class="col_default">
 	                                <col>
 	                                <col class="col_default">
 	                                <col class="col_short">
@@ -68,6 +73,10 @@
 	                                <tr>	                                    
 	                                    <th>
 	                                        <p class="table_title">No</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <div class="table_title select" id="bc_name" onclick="setSelectOptionTopggle(event)">게시판</div>
 	                                    </th>
 	                                    
 	                                    <th>
