@@ -27,7 +27,7 @@ public interface RecipeMapper {
 	public void insertApiRecipeData(RecipeDto recipeDto);
 
 	// 모든 식단 분류 가져오기(식단 리스트에서 <select>박스 => 비동기)
-	public List<RecipeDto> getRecipeCategoryList();
+	public List<RecipeDto> getRecipeTypeList();
 	
 	// 페이지에 따른 식단 가져오기 (모든 식단)
 	public List<RecipeDto> getRecipeListWithPage(Map<String, Object> pagingParams);
@@ -36,10 +36,10 @@ public interface RecipeMapper {
 	public int getAllRecipeCnt();
 
 	// 페이지에 따른 식단 가져오기(카테고리별 식단)
-	public List<RecipeDto> getRecipeListByCategoryWithPage(Map<String, Object> pagingParams);
+	public List<RecipeDto> getRecipeListByTypeWithPage(Map<String, Object> pagingParams);
 
 	// 식단의 총 리스트 개수 구하기(카테고리별 식단)
-	public int getRecipeByCategoryCnt(String rcp_pat2);
+	public int getRecipeByTypeCnt(String rcp_pat2);
 
 	// 페이지에 따른 식단 가져오기(검색한 식단)
 	public List<RecipeDto> getSearchRecipe(Map<String, Object> pagingParams);
