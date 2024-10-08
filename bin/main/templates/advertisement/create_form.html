@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
+<head>
+	<th:block th:insert="~{fragments/head.html :: head('광고 등록')}"></th:block>
+</head>
+
+<body>
+	<main class="contents_wrap">
+		<header th:replace="~{fragments/header.html :: header}"></header>
+	
+		<article class="contents_container">
+			<nav th:replace="~{fragments/nav.html :: nav}"></nav>
+			
+			<div class="content">
+                <div class="content_inner sc">
+					<section class="content_info_wrap">
+						<div class="content_top">
+					        <div class="content_top_info">
+					            <h2 class="title">광고 관리</h2>
+					        </div>
+				            <p class="sub_title">광고 등록</p>
+					    </div>
+					    
+					    <form name="advertisement_reg_form" onsubmit="return false">
+						    <div class="table_wrap">
+		                        <table class="content_edit_table">
+		                            <colgroup>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                </colgroup>
+	                                
+		                            <tbody>
+		                            	<tr>
+		                                	<th><p class="table_title">클라이언트</p></th>
+		                                	<td>
+		                                		<input type="text" name="ad_client" id="ad_client" class="table_info" placeholder="클라이언트"
+		                                			onblur="validateEmpty(this, '클라이언트를')">
+		                                	</td>
+		                                	
+		                                	<th><p class="table_title">위치</p></th>
+		                                	<td>
+		                                		<select class="table_info select" name="ad_position" id="ad_position">
+		                                			<option value="" selected disabled>선택하세요</option>
+	                                			</select>
+		                                	</td>
+	                                	</tr>
+	                                	
+	                                	<tr>
+		                                	<th><p class="table_title">시작일</p></th>
+		                                	<td>
+		                                		<input type="date" name="ad_start_date" id="ad_start_date" max="9999-12-31" min="1900-01-01" class="table_info"
+	                                            	onchange="validateEmpty(this, '시작일을')" onblur="validateEmpty(this, '시작일을')">
+		                                	</td>
+		                                	
+		                                	<th><p class="table_title">종료일</p></th>
+		                                	<td>
+		                                		<input type="date" name="ad_end_date" id="ad_end_date" max="9999-12-31" min="1900-01-01" class="table_info"
+	                                            	onchange="validateEmpty(this, '종료일을')" onblur="validateEmpty(this, '종료일을')">
+		                                	</td>
+	                                	</tr>
+	                                	
+	                                	<tr>
+		                                	<th><p class="table_title">파일 첨부</p></th>
+		                                	<td>
+		                                	
+		                                	</td>
+	                                	</tr>
+		                            </tbody>
+		                        </table>
+		                        
+		                        <div class="btn_list right">
+	                                <div class="btn_list">
+	                                    <div onclick="history.back();" class="btns cancel">뒤로가기</div>
+	                                    <div onclick="postAdvertisementCreateForm('advertisement_reg_form')" class="btns">등록</div>
+	                                </div>
+	                            </div>
+		                    </div>
+	                    </form>
+					</section>
+                </div>
+            </div>
+		</article>
+	</main>
+</body>
+</html>
