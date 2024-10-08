@@ -293,7 +293,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchBoardCategoryListPageNum.searchBoardCategoryListCnt;
 			break;
 			
-		case '/board/info/get_notice_posts_list': // 공지 게시물
+		case '/board/noti_info/get_notice_posts_list': // 공지 게시물
 			getListDtos = response.boardNoticePostsDtos;
 			getListPage = response.boardNoticePostsListPageNum;
 			getListCnt = response.boardNoticePostsListPageNum.boardNoticePostsListCnt;
@@ -519,7 +519,7 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			`;
 			break;
 			
-		case '/board/info/get_notice_posts_list': // 공지 게시물 리스트 테이블
+		case '/board/noti_info/get_notice_posts_list': // 공지 게시물 리스트 테이블
 		case '/board/info/search_notice_posts_list': // 공지 게시물 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
@@ -637,7 +637,7 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			
 		case '/advertisement/info/get_advertisement_list': // 광고 관리 리스트 테이블
 		case '/advertisement/info/search_advertisement_list': // 광고 관리 검색 리스트 테이블
-		case '/advertisement/info/get_advertisement_list_by_position': // 광고 관리 분류 선택 리스트 테이블
+		case '/advertisement/info/get_advertisement_list_by_position': // 광고 관리 위치 선택 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -778,7 +778,7 @@ function mapSortListApiObject(dbTable) {
 			break;
 			
 		case 'board_notice': // 게시판 공지 사항 페이지
-			apiUrl = '/board/info/get_notice_posts_list';
+			apiUrl = '/board/noti_info/get_notice_posts_list';
 			break;
 			
 		case 'board_category': // 게시판 관리 페이지

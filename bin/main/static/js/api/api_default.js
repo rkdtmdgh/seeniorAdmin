@@ -13,24 +13,16 @@ async function getBoardList() {
 
 		logger.info('getBoardList() response:', response);
 
-		const $sideBoardNoticeSubMenu = $('#side_board_notice_sub_menu');
 		const $sideBoardSubMenu = $('#side_board_sub_menu');
 
 		if (response && response.boardCategoryDtos) {
-			response.boardCategoryDtos.forEach((data) => { 
-				let boardNoticeSubMenu = `
-					<a href="/board/info/notice_posts_list_form?infoNo=${data.bc_no}" class="side_sub_menu_btn">
-						<span class="side_sub_menu">${data.bc_name}</span>
-					</a>
-				`;
-				
+			response.boardCategoryDtos.forEach((data) => { 				
 				let boardSubMenu = `
 					<a href="/board/info/posts_list_form?infoNo=${data.bc_no}" class="side_sub_menu_btn">
 						<span class="side_sub_menu">${data.bc_name}</span>
 					</a>
 				`;
 				
-				$sideBoardNoticeSubMenu.append(boardNoticeSubMenu);
 				$sideBoardSubMenu.append(boardSubMenu);
 			});
 			
@@ -61,7 +53,7 @@ function signOut() {
 
 // NAV 토글 및 페이지 관련 카테고리 메뉴 선택 표시
 function navActiveToggle() {
-	const currentPath = window.location.pathname.split('/').slice(0,4).join('/'); // 현재 URL에서 1~3번째까지 path 
+	const currentPath = window.location.pathname.split('/').slice(0,3).join('/'); // 현재 URL에서 1~2번째까지 path 
 	const currentQueryParams = new URLSearchParams(window.location.search); // 쿼리 파라미터
 	//logger.info('URL currentPath:', currentPath);
 
@@ -70,7 +62,7 @@ function navActiveToggle() {
 		const $navMenu = $(this);
 		const $navMenuBtn = $navMenu.find('.side_menu_btn');
 		const href = $navMenuBtn.attr('href') || null; // 메뉴 버튼의 href
-		const hrefPath = href ? new URL(href, window.location.origin).pathname.split('/').slice(0, 4).join('/') : ''; // href에서 1~3번째 path
+		const hrefPath = href ? new URL(href, window.location.origin).pathname.split('/').slice(0, 3).join('/') : ''; // href에서 1~2번째 path
 		//logger.info('Href hrefPath:', hrefPath);
 		
 		if (hrefPath && hrefPath === currentPath) { // 서브 메뉴가 없고 href가 현재 경로가 일치할 경우
@@ -83,7 +75,7 @@ function navActiveToggle() {
 			$navSubMenus.each(function() {
 				const $navSubMenu = $(this);
 				const subHref = $navSubMenu.attr('href') || null;
-				const subHrefPath = subHref ? new URL(subHref, window.location.origin).pathname.split('/').slice(0, 4).join('/') : ''; // 서브메뉴 href에서 1~3번째 path
+				const subHrefPath = subHref ? new URL(subHref, window.location.origin).pathname.split('/').slice(0, 3).join('/') : ''; // 서브메뉴 href에서 1~2번째 path
 				const subHrefQueryParams = new URLSearchParams(new URL(subHref, window.location.origin).search);
 				//logger.info('Sub Href subHrefPath:', subHrefPath);
 				
