@@ -348,10 +348,16 @@ function mapApiResponseObject(apiUrl, response) {
 			break;	
 			
 		case '/advertisement/info/get_advertisement_list': // 광고 관리 검색
- 			getListDtos = response.searchAdvertisementDtos;
+ 			getListDtos = response.advertisementDtos;
 			getListPage = response.searchAdvertisementListPageNum;
 			getListCnt = response.searchAdvertisementListPageNum.videoListCnt;
 			break;	
+			
+		case '/advertisement/info/get_advertisement_list_by_category': // 광고 관리 분류별 데이터
+			getListDtos = response.advertisementCategoryDto;
+			getListPage = response.advertisementByCategoryPageNum;
+			getListCnt = response.advertisementByCategoryPageNum.recipeListByCategoryCnt;
+			break;
 						
 	}
 		
@@ -391,7 +397,7 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			
 		case '/disease/info/get_disease_list': // 질환/질병 정보 관리 리스트 테이블
 		case '/disease/info/search_disease_list':            // 질환/질병 정보 관리 검색 리스트 테이블
-		case '/disease/info/get_disease_list_by_category': // 질환/질병 정보 관리 분류선택 리스트 테이블
+		case '/disease/info/get_disease_list_by_category': // 질환/질병 정보 관리 분류 선택 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td class="vam">
@@ -435,7 +441,7 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			
 		case '/recipe/info/get_recipe_list': // 식단 정보 관리 리스트 테이블
 		case '/recipe/info/search_recipe_list': // 식단 정보 관리 검색 리스트 테이블
-		case '/recipe/info/get_recipe_list_by_category': // 식단 정보 관리 분류선택 리스트 테이블
+		case '/recipe/info/get_recipe_list_by_category': // 식단 정보 관리 분류 선택 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -631,6 +637,7 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			
 		case '/advertisement/info/get_advertisement_list': // 광고 관리 리스트 테이블
 		case '/advertisement/info/search_advertisement_list': // 광고 관리 검색 리스트 테이블
+		case '/advertisement/info/get_advertisement_list_by_category': // 광고 관리 분류 선택 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -890,14 +897,21 @@ function mapCategorylistObject(ele) {
 	switch(ele) {
 		case 'dc_name': // 질환/질병 관련 페이지
 		case 'd_category_no':
-			apiUrl = '/disease/cate_info/get_category_list_select';
+			apiUrl = '/disease';
 			getListDtos = 'diseaseCategoryDto';
 			dataNo = 'dc_no';
 			dataName = 'dc_name';
 			break;
 			
 		case 'rcp_pat2': // 식단 관련 페이지
-			apiUrl = '/recipe/cate_info/get_category_list_select';
+			apiUrl = '/recipe';
+			getListDtos = 'recipeCategoryDto';
+			dataNo = 'rcp_pat2';
+			dataName = 'rcp_pat2';
+			break;
+			
+		case 'rcp_pat2': // 광고 관련 페이지
+			apiUrl = '/advertisement';
 			getListDtos = 'recipeCategoryDto';
 			dataNo = 'rcp_pat2';
 			dataName = 'rcp_pat2';
@@ -907,6 +921,8 @@ function mapCategorylistObject(ele) {
 			logger.error('mapCategorylistObject() value:', value);
 			return false;
 	}
+	
+	apiUrl = apiUrl + '/cate_info/get_category_list_select';
 	
 	return { apiUrl, getListDtos, dataNo, dataName };
 }
