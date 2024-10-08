@@ -263,10 +263,10 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchRecipeListPageNum.searchRecipeListCnt;
 			break;	
 			
-		case '/recipe/info/get_recipe_list_by_category': // 식단 정보 관리 분류별 데이터
+		case '/recipe/info/get_recipe_list_by_rcp_pat2': // 식단 정보 관리 음식 종류별 데이터
 			getListDtos = response.recipeDtos;
-			getListPage = response.recipeListByCategoryPageNum;
-			getListCnt = response.recipeListByCategoryPageNum.recipeListByCategoryCnt;
+			getListPage = response.recipeListByRcpPat2PageNum;
+			getListCnt = response.recipeListByRcpPat2PageNum.recipeListByRcpPat2Cnt;
 			break;
 			
 		case '/video/info/get_video_list': // 영상 정보 관리
@@ -344,19 +344,19 @@ function mapApiResponseObject(apiUrl, response) {
 		case '/advertisement/info/get_advertisement_list': // 광고 관리
 			getListDtos = response.advertisementDtos;
 			getListPage = response.advertisementListPageNum;
-			getListCnt = response.advertisementListPageNum.videoListCnt;
+			getListCnt = response.advertisementListPageNum.advertisementListCnt;
 			break;	
 			
 		case '/advertisement/info/get_advertisement_list': // 광고 관리 검색
  			getListDtos = response.advertisementDtos;
 			getListPage = response.searchAdvertisementListPageNum;
-			getListCnt = response.searchAdvertisementListPageNum.videoListCnt;
+			getListCnt = response.searchAdvertisementListPageNum.searchAdvertisementListCnt;
 			break;	
 			
-		case '/advertisement/info/get_advertisement_list_by_category': // 광고 관리 분류별 데이터
-			getListDtos = response.advertisementCategoryDto;
-			getListPage = response.advertisementByCategoryPageNum;
-			getListCnt = response.advertisementByCategoryPageNum.recipeListByCategoryCnt;
+		case '/advertisement/info/get_advertisement_list_by_position': // 광고 관리 분류별 데이터
+			getListDtos = response.advertisementDtos;
+			getListPage = response.advertisementByPositionPageNum;
+			getListCnt = response.advertisementByPositionPageNum.advertisementListByPositionCnt;
 			break;
 						
 	}
@@ -441,7 +441,7 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			
 		case '/recipe/info/get_recipe_list': // 식단 정보 관리 리스트 테이블
 		case '/recipe/info/search_recipe_list': // 식단 정보 관리 검색 리스트 테이블
-		case '/recipe/info/get_recipe_list_by_category': // 식단 정보 관리 분류 선택 리스트 테이블
+		case '/recipe/info/get_recipe_list_by_rcp_pat2': // 식단 정보 관리 음식 종류 선택 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -637,7 +637,7 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			
 		case '/advertisement/info/get_advertisement_list': // 광고 관리 리스트 테이블
 		case '/advertisement/info/search_advertisement_list': // 광고 관리 검색 리스트 테이블
-		case '/advertisement/info/get_advertisement_list_by_category': // 광고 관리 분류 선택 리스트 테이블
+		case '/advertisement/info/get_advertisement_list_by_position': // 광고 관리 분류 선택 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -650,13 +650,13 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_start_date)}</a>
 		            </td>
 					<td>
-		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.bq_user_no}${setFormatDate(data.ad_end_date)}</a>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_end_date)}</a>
 		            </td>
 					<td>
 		                <p class="table_info">${data.ad_client}</p>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.bq_mod_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.ad_mod_date) || 'N/A'}</p>
 		            </td>
 		        </tr>
 			`;
@@ -821,12 +821,12 @@ function mapSelectListApiObject(sortValue) {
 	let apiUrl;
 	
 	switch(sortValue) {				
-		case 'dc_no': // 질환/질병 정보 리스트 페이지 분류명별 필터
+		case 'dc_no': // 질환/질병 정보 리스트 페이지 분류 선택 리스트 요청
 			apiUrl = '/disease/info/get_disease_list_by_category';
 			break;
 			
-		case 'rcp_pat2': // 식단 정보 리스트 페이지 분류명별 필터
-			apiUrl = '/recipe/info/get_recipe_list_by_category';
+		case 'rcp_pat2': // 식단 정보 리스트 페이지 음식 종류 선택 리스트 요청
+			apiUrl = '/recipe/info/get_recipe_list_by_rcp_pat2';
 			break;
 			
 		default:
@@ -897,32 +897,30 @@ function mapCategorylistObject(ele) {
 	switch(ele) {
 		case 'dc_name': // 질환/질병 관련 페이지
 		case 'd_category_no':
-			apiUrl = '/disease';
+			apiUrl = '/disease/cate_info/get_category_list_select';
 			getListDtos = 'diseaseCategoryDto';
 			dataNo = 'dc_no';
 			dataName = 'dc_name';
 			break;
 			
 		case 'rcp_pat2': // 식단 관련 페이지
-			apiUrl = '/recipe';
-			getListDtos = 'recipeCategoryDto';
+			apiUrl = '/recipe/info/get_rcp_pat2_list_select';
+			getListDtos = 'recipeRcpPat2Dto';
 			dataNo = 'rcp_pat2';
 			dataName = 'rcp_pat2';
 			break;
 			
 		case 'rcp_pat2': // 광고 관련 페이지
-			apiUrl = '/advertisement';
-			getListDtos = 'recipeCategoryDto';
-			dataNo = 'rcp_pat2';
-			dataName = 'rcp_pat2';
+			apiUrl = '/advertisement/info/get_position_list_select';
+			getListDtos = 'advertisementPositionDto';
+			dataNo = 'ad_position';
+			dataName = 'ad_position';
 			break;
 		
 		default:
 			logger.error('mapCategorylistObject() value:', value);
 			return false;
 	}
-	
-	apiUrl = apiUrl + '/cate_info/get_category_list_select';
 	
 	return { apiUrl, getListDtos, dataNo, dataName };
 }
