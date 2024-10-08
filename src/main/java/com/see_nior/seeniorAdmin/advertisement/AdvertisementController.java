@@ -64,9 +64,9 @@ public class AdvertisementController {
 	public Object getPositionListSelect() {
 		log.info("getPositionListSelect()");
 		
-		Map<String, Object> advertisementPositionDtos = advertisementService.getPositionList();
+		Map<String, Object> advertisementDtos = advertisementService.getPositionList();
 		
-		return advertisementPositionDtos;
+		return advertisementDtos;
 		
 	}
 	
