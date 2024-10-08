@@ -53,13 +53,13 @@ public class AdvertisementService {
 	public Map<String, Object> getPositionList() {
 		log.info("getPositionList()");
 		
-		Map<String, Object> advertisementPositionDtos = new HashMap<>();
+		Map<String, Object> advertisementDtos = new HashMap<>();
 		
-		List<AdvertisementDto> advertisementPositionDto = advertisementMapper.getPositionList();
+		List<AdvertisementDto> advertisementDto = advertisementMapper.getPositionList();
 		
-		advertisementPositionDtos.put("advertisementPositionDto", advertisementPositionDto);
+		advertisementDtos.put("advertisementDto", advertisementDto);
 		
-		return advertisementPositionDtos;
+		return advertisementDtos;
 	}
 
 	// 페이지에 따른 광고 가져오기(모든 광고)
