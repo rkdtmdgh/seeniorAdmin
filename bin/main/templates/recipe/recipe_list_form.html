@@ -9,19 +9,19 @@
 		$(function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
-				case '2': // 검색
+				case '2': // search
 					getSearchList(null, '/recipe/info/search_recipe_list', page);
 					break;
 
-				case '1': // 셀렉트
+				case '1': // select
 					getList('/recipe/info/get_recipe_list_by_rcp_pat2', sortValue, order, page);
 					break;
 
-				case '0':  // 정렬
+				case '0': // sort
 					getList('/recipe/info/get_recipe_list', sortValue, order, page);
 					break;
 					
-				default: // 기본
+				default:
 					getList('/recipe/info/get_recipe_list', null, null, page);
 			}
 
