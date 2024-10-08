@@ -197,7 +197,7 @@
 	</insert>
 	
 	<!-- 모든 식단 카테고리 가져오기(식단 리스트에서 <select>박스 => 비동기) -->
-	<select id="getRecipeCategoryList"
+	<select id="getRecipeTypeList"
 			resultMap="RecipeDto">
 	
 		SELECT DISTINCT 
@@ -237,7 +237,7 @@
 	</select>
 	
 	<!-- 페이지에 따른 식단 가져오기(카테고리별 식단) -->
-	<select id="getRecipeListByCategoryWithPage"
+	<select id="getRecipeListByTypeWithPage"
 			parameterType="Map"
 			resultMap="RecipeDto">
 	
@@ -255,7 +255,7 @@
 	</select>
 	
 	<!-- 식단의 총 리스트 개수 구하기(카테고리별 식단) -->
-	<select id="getRecipeByCategoryCnt"
+	<select id="getRecipeByTypeCnt"
 			parameterType="String"
 			resultType="Integer">
 		

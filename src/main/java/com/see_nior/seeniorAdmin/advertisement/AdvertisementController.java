@@ -64,9 +64,9 @@ public class AdvertisementController {
 	public Object getPositionListSelect() {
 		log.info("getPositionListSelect()");
 		
-		Map<String, Object> advertisementDtos = advertisementService.getPositionList();
+		Map<String, Object> advertisementPositionDtos = advertisementService.getPositionList();
 		
-		return advertisementDtos;
+		return advertisementPositionDtos;
 		
 	}
 	
@@ -95,7 +95,7 @@ public class AdvertisementController {
 	
 	// 광고 위치에 따른 광고 가져오기(페이지네이션)
 	@ResponseBody
-	@GetMapping("/info/get_advertisement_list_by_positon")
+	@GetMapping("/info/get_advertisement_list_by_position")
 	public Object getAdvertisementListByPosition(
 			@RequestParam(value = "page", required = false, defaultValue = "1")int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "all") String sortValue,
