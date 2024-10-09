@@ -380,28 +380,29 @@ public class BoardService {
 	}
 	
 	//게시판 순서 변경
-	public int modifyCategoryIdx(int current_bc_idx, int bc_idx) {
+	public int modifyCategoryIdx(int bc_no, int current_bc_idx, int bc_idx) {
 		log.info("modifyCategoryIdx()");
 		
 		Map<String, Object> modifyParams = new HashMap<>();
 		
+		modifyParams.put("bc_no", bc_no);
 		modifyParams.put("current_bc_idx", current_bc_idx);
 		modifyParams.put("bc_idx", bc_idx);
 		
 		int result = 0;
 		
-		result = boardMapper.targetModifyCategoryIdx(modifyParams);
+		result = boardMapper.matchingModifyCategoryIdx(modifyParams);
 		
 		if(result > 0) {
 			
-			result = boardMapper.matchingModifyCategoryIdx(modifyParams);
+			result = boardMapper.targetModifyCategoryIdx(modifyParams);
 			
 			if(result <= 0) {
-				log.info("matchingModifyCategoryIdx() error!");
+				log.info("targetModifyCategoryIdx() error!");
 			}
 			
 		}else {
-			log.info("targetModifyCategoryIdx() error!");
+			log.info("matchingModifyCategoryIdx() error!");
 		}
 		
 		return result;
