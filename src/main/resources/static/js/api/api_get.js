@@ -347,7 +347,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.advertisementListPageNum.advertisementListCnt;
 			break;	
 			
-		case '/advertisement/info/get_advertisement_list': // 광고 관리 검색
+		case '/advertisement/info/search_advertisement_list': // 광고 관리 검색
  			getListDtos = response.advertisementDtos;
 			getListPage = response.searchAdvertisementListPageNum;
 			getListCnt = response.searchAdvertisementListPageNum.searchAdvertisementListCnt;
