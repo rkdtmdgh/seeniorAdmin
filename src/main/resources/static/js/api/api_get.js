@@ -263,10 +263,10 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchRecipeListPageNum.searchRecipeListCnt;
 			break;	
 			
-		case '/recipe/info/get_recipe_list_by_category': // 식단 정보 관리 분류별 데이터
+		case '/recipe/info/get_recipe_list_by_type': // 식단 정보 관리 분류별 데이터
 			getListDtos = response.recipeDtos;
-			getListPage = response.recipeListByCategoryPageNum;
-			getListCnt = response.recipeListByCategoryPageNum.recipeListByCategoryCnt;
+			getListPage = response.recipeListByTypePageNum;
+			getListCnt = response.recipeListByTypePageNum.recipeListByTypeCnt;
 			break;
 			
 		case '/video/info/get_video_list': // 영상 정보 관리
@@ -435,7 +435,7 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			
 		case '/recipe/info/get_recipe_list': // 식단 정보 관리 리스트 테이블
 		case '/recipe/info/search_recipe_list': // 식단 정보 관리 검색 리스트 테이블
-		case '/recipe/info/get_recipe_list_by_category': // 식단 정보 관리 분류선택 리스트 테이블
+		case '/recipe/info/get_recipe_list_by_type': // 식단 정보 관리 분류선택 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -819,7 +819,7 @@ function mapSelectListApiObject(sortValue) {
 			break;
 			
 		case 'rcp_pat2': // 식단 정보 리스트 페이지 분류명별 필터
-			apiUrl = '/recipe/info/get_recipe_list_by_category';
+			apiUrl = '/recipe/info/get_recipe_list_by_type';
 			break;
 			
 		default:
@@ -897,8 +897,8 @@ function mapCategorylistObject(ele) {
 			break;
 			
 		case 'rcp_pat2': // 식단 관련 페이지
-			apiUrl = '/recipe/cate_info/get_category_list_select';
-			getListDtos = 'recipeCategoryDto';
+			apiUrl = '/recipe/cate_info/get_type_list_select';
+			getListDtos = 'recipeTypeDto';
 			dataNo = 'rcp_pat2';
 			dataName = 'rcp_pat2';
 			break;
