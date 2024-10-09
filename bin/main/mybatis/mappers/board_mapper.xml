@@ -230,17 +230,6 @@
     
     </select>
     
-    <update id="targetModifyCategoryIdx">
-    
-    	UPDATE 
-        	BOARD_CATEGORY
-        SET 
-        	BC_IDX = #{bc_idx}
-        WHERE 
-        	BC_IDX = #{current_bc_idx}
-    
-    </update>
-    
     <update id="matchingModifyCategoryIdx">
     
     	UPDATE 
@@ -251,5 +240,16 @@
         	BC_IDX = #{bc_idx}
     
     </update>
+    
+    <update id="targetModifyCategoryIdx">
+    
+    	UPDATE 
+        	BOARD_CATEGORY
+        SET 
+        	BC_IDX = #{bc_idx}
+        WHERE 
+        	BC_NO = #{bc_no}
+    
+    </update>   
 
 </mapper>

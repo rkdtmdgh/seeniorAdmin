@@ -265,10 +265,12 @@ public class BoardController {
 	//게시판 순서 변경
 	@PostMapping("/cate_info/modify_category_idx")
 	@ResponseBody
-	public boolean modifyCategoryIdx(@RequestParam("current_bc_idx") int current_bc_idx, @RequestParam("bc_idx") int bc_idx) {
+	public boolean modifyCategoryIdx(@RequestParam("bc_no") int bc_no,
+			@RequestParam("current_bc_idx") int current_bc_idx, 
+			@RequestParam("bc_idx") int bc_idx) {
 		log.info("get_posts_list()");
 		
-		int result = boardService.modifyCategoryIdx(current_bc_idx,bc_idx);
+		int result = boardService.modifyCategoryIdx(bc_no,current_bc_idx,bc_idx);
 		
 		if(result <= 0) {
 			return false;

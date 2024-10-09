@@ -86,8 +86,8 @@ async function getList(apiUrl, sortValue, order, page) {
 			getListDtos.forEach((data) => { 
 			    const isFirstElement = (listIndex === getListCnt); // 첫 번째 요소인지 확인
 			    const isLastElement = (listIndex === (getListCnt - (pageLimit * (getListPage.page - 1) + pageLimit - 1)));  // 마지막 요소인지 확인
-			    
-				$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElement));
+			   
+				$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElement, page));
 				listIndex --;
 			});
 			
@@ -263,10 +263,10 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchRecipeListPageNum.searchRecipeListCnt;
 			break;	
 			
-		case '/recipe/info/get_recipe_list_by_rcp_pat2': // 식단 정보 관리 음식 종류별 데이터
+		case '/recipe/info/get_recipe_list_by_type': // 식단 정보 관리 음식 종류별 데이터
 			getListDtos = response.recipeDtos;
-			getListPage = response.recipeListByRcpPat2PageNum;
-			getListCnt = response.recipeListByRcpPat2PageNum.recipeListByRcpPat2Cnt;
+			getListPage = response.recipeListByTypePageNum;
+			getListCnt = response.recipeListByTypePageNum.recipeListByTypeCnt;
 			break;
 			
 		case '/video/info/get_video_list': // 영상 정보 관리
@@ -281,7 +281,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchVideoListPage.searchVideoListCnt;
 			break;	
 			
-		case '/board/cate_info/get_list': // 게시판 관리
+		case '/board/cate_info/get_category_list': // 게시판 관리
 			getListDtos = response.boardCategoryDtos;
 			getListPage = response.boardCategoryListPageNum;
 			getListCnt = response.boardCategoryListPageNum.boardCategoryListCnt;
@@ -347,7 +347,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.advertisementListPageNum.advertisementListCnt;
 			break;	
 			
-		case '/advertisement/info/get_advertisement_list': // 광고 관리 검색
+		case '/advertisement/info/search_advertisement_list': // 광고 관리 검색
  			getListDtos = response.advertisementDtos;
 			getListPage = response.searchAdvertisementListPageNum;
 			getListCnt = response.searchAdvertisementListPageNum.searchAdvertisementListCnt;
@@ -365,7 +365,7 @@ function mapApiResponseObject(apiUrl, response) {
 }
 
 // 콘텐츠 테이블 리스트 생성
-function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElement) { 
+function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElement, page) { 
 	let tableTrContent = '';
 	
 	switch(apiUrl) {
@@ -441,7 +441,7 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			
 		case '/recipe/info/get_recipe_list': // 식단 정보 관리 리스트 테이블
 		case '/recipe/info/search_recipe_list': // 식단 정보 관리 검색 리스트 테이블
-		case '/recipe/info/get_recipe_list_by_rcp_pat2': // 식단 정보 관리 음식 종류 선택 리스트 테이블
+		case '/recipe/info/get_recipe_list_by_type': // 식단 정보 관리 음식 종류 선택 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -493,24 +493,27 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			`;
 			break;
 			
-		case '/board/cate_info/get_list': // 게시판 관리 리스트 테이블
+		case '/board/cate_info/get_category_list': // 게시판 관리 리스트 테이블
 		case '/board/cate_info/search_board_category_list': // 게시판 관리 검색 리스트 테이블
 			tableTrContent = `
-				<tr data-bc-no="${data.bc_no}" data-bc-name="${data.bc_name}" data-bc-idx="${data.bc_idx}">
-					<td>
+				<tr data-bc-no="${data.bc_no}" data-bc-idx="${data.bc_idx}">
+					<td class="vam">
 						<div class="table_info func_area">
-							${!isFirstElement ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx + 1})" class="func_arrow up"></span>` : ''}
-							${!isLastElement ? `<span onclick="putBoardCategoryModifyButton(evemt, ${data.bc_idx - 1})" class="func_arrow down"></span>` : ''}
+							${!isFirstElement ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx + 1}, ${page})" class="func_arrow up"></span>` : ''}
+							${!isLastElement ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx - 1}, ${page})" class="func_arrow down"></span>` : ''}
 						</div>
 					</td>
 		            <td>
 		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
+		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${data.bc_idx}</a>
+		            </td>
+		            <td>
 		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${data.bc_name}</a>
 		            </td>
 		            <td>
-		                <a href="" class="table_info">${data.bc_item_cnt}</a>
+		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${data.bc_item_cnt}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.bc_reg_date) || 'N/A'}</p>
@@ -785,7 +788,7 @@ function mapSortListApiObject(dbTable) {
 			break;
 			
 		case 'board_category': // 게시판 관리 페이지
-			apiUrl = '/board/cate_info/get_list';
+			apiUrl = '/board/cate_info/get_category_list';
 			break;
 			
 		case 'board_posts': // 특정 게시판 페이지
@@ -829,7 +832,7 @@ function mapSelectListApiObject(sortValue) {
 			break;
 			
 		case 'rcp_pat2': // 식단 정보 리스트 페이지 음식 종류 선택 리스트 요청
-			apiUrl = '/recipe/info/get_recipe_list_by_rcp_pat2';
+			apiUrl = '/recipe/info/get_recipe_list_by_type';
 			break;
 			
 		default:
@@ -907,15 +910,15 @@ function mapCategorylistObject(ele) {
 			break;
 			
 		case 'rcp_pat2': // 식단 관련 페이지
-			apiUrl = '/recipe/info/get_rcp_pat2_list_select';
-			getListDtos = 'recipeRcpPat2Dto';
+			apiUrl = '/recipe/info/get_type_list_select';
+			getListDtos = 'recipeTypeDto';
 			dataNo = 'rcp_pat2';
 			dataName = 'rcp_pat2';
 			break;
 			
 		case 'bc_name': // 게시판 공지 사항 페이지
 		case 'bn_category_no':
-			apiUrl = '/board/cate_info/get_list';
+			apiUrl = '/board/cate_info/get_category_list';
 			getListDtos = 'boardCategoryDtos';
 			dataNo = 'bc_no';
 			dataName = 'bc_name';
