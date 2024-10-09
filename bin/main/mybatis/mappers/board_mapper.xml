@@ -230,7 +230,7 @@
     
     </select>
     
-    <update id="targetModifyCategoryIdx" parameterType="Object">
+    <update id="targetModifyCategoryIdx">
     
     	UPDATE 
         	BOARD_CATEGORY
@@ -241,7 +241,7 @@
     
     </update>
     
-    <update id="targetModifyCategoryIdx" parameterType="Object">
+    <update id="matchingModifyCategoryIdx">
     
     	UPDATE 
         	BOARD_CATEGORY
