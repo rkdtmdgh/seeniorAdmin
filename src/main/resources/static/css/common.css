@@ -45,6 +45,7 @@
     --signFormWidth: 340px;
     --iconsWidth: 20px;
     --arrowWidth: 5px; /* X2 (5px = 10px) */
+    --arrowButtonWidth: 15px;
     
     --headerHeight: 70px;
     --tableTextareaHeight: 400px;

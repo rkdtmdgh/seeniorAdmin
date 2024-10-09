@@ -315,22 +315,42 @@ async function putBoardCategoryModifyForm(formName) {
 }
 
 // 게시판 순번 수정
-async function putBoardCategoryModifyButton(event, bc_idx) {
+async function putBoardCategoryModifyButton(event, bc_idx, page) {
     const infoEle = event.target.closest('tr'); // 클릭된 요소의 가장 가까운 tr 요소 찾기
     const bc_no = infoEle.getAttribute('data-bc-no'); 
-    const bc_name = infoEle.getAttribute('data-bc-name'); 
     const current_bc_idx = infoEle.getAttribute('data-bc-idx'); 
 	
 	const formData = new FormData();
 	formData.append('bc_no', bc_no);
-	formData.append('bc_name', bc_name);
 	formData.append('current_bc_idx', current_bc_idx);
 	formData.append('bc_idx', bc_idx);
+	
+	setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
+	
+	const errorMessage = '순번 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 
-	await putSubmitForm(
-		'/board/cate_info/modify_category_confirm', 
-		formData
-	);
+	try {
+		const response = await $.ajax({
+			url: '/board/cate_info/modify_category_idx',
+			method: 'POST',
+			data: formData,
+			processData: false,  // FormData가 자동으로 Content-Type 설정
+			contentType: false,  // FormData를 문자열로 변환하지 않음
+		});
+		
+		logger.info('/board/cate_info/modify_category_idx putBoardCategoryModifyButton() response:', response);
+		
+		if(!response) {
+			if(errorMessage) alert(errorMessage);
+		}
+		
+	} catch(error) {
+		logger.error('/board/cate_info/modify_category_idx putBoardCategoryModifyButton() error:', error);
+		if(errorMessage) alert(errorMessage);
+		
+	} finally {
+		getList('/board/cate_info/get_category_list', null, null, page);
+	}
 }
 
 // 게시판 공지 사항 수정
