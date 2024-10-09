@@ -48,6 +48,19 @@ public class AdvertisementService {
 		}
 		
 	}
+	
+	// 모든 광고 위치 가져오기 (광고 리스트에서 <select>박스 => 비동기)
+	public Map<String, Object> getPositionList() {
+		log.info("getPositionList()");
+		
+		Map<String, Object> advertisementPositionDtos = new HashMap<>();
+		
+		List<AdvertisementDto> advertisementPositionDto = advertisementMapper.getPositionList();
+		
+		advertisementPositionDtos.put("advertisementPositionDto", advertisementPositionDto);
+		
+		return advertisementPositionDtos;
+	}
 
 	// 페이지에 따른 광고 가져오기(모든 광고)
 	public Map<String, Object> getAdvertisementListWithPage(int page, String sortValue, String order) {
@@ -83,7 +96,7 @@ public class AdvertisementService {
 		int maxPage = (int) (Math.ceil((double) advertisementListCnt / pageLimit));
 		
 		// 시작 페이지 값 계산
-		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1);
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
 		
 		// 마지막 페이지 값 계산
 		int endPage = startPage + blockLimit - 1;
@@ -100,6 +113,57 @@ public class AdvertisementService {
 		return advertisementListPageNum;
 		
 	}
+	
+	// 페이지에 따른 광고 가져오기(위치별 광고)
+	public Map<String, Object> getAdvertisementListByPositionWithPage(int page, int position) {
+		log.info("getAdvertisementListByPositionWithPage()");
+		
+		int pagingStart = (page - 1) * pageLimit;
+		
+		Map<String, Object> pagingList = new HashMap<>();
+		
+		Map<String, Object> pagingParams = new HashMap<>();
+		pagingParams.put("start", pagingStart);
+		pagingParams.put("limit", pageLimit);
+		pagingParams.put("position", position);
+		
+		List<AdvertisementDto> advertisementDtos = advertisementMapper.getAdvertisementListByPositionWithPage(pagingParams);
+		pagingList.put("advertisementDtos", advertisementDtos);
+		
+		return pagingList;
+		
+	}
+	
+	// 광고의 총 페이지 개수 구하기 (위치별 광고)
+	public Map<String, Object> getAdvertisementByPositionPageNum(int page, int position) {
+		log.info("getAdvertisementByPositionPageNum()");
+		
+		Map<String, Object> advertisementListByPositionPageNum = new HashMap<>();
+		
+		// 전체 리스트 개수 주회
+		int advertisementListByPositionCnt = advertisementMapper.getAdvertisementByPositionCnt(position);
+		
+		// 전체 페이지 개수 계산
+		int maxPage = (int) (Math.ceil((double) advertisementListByPositionCnt / pageLimit));
+		
+		// 시작 페이지 값 계산
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
+		
+		// 마지막 페이지 값 계산
+		int endPage = startPage + blockLimit - 1;
+		if (endPage > maxPage) endPage = maxPage;
+		
+		advertisementListByPositionPageNum.put("advertisementListByPositionCnt", advertisementListByPositionCnt);
+		advertisementListByPositionPageNum.put("page", page);
+		advertisementListByPositionPageNum.put("maxPage", maxPage);
+		advertisementListByPositionPageNum.put("startPage", startPage);
+		advertisementListByPositionPageNum.put("endPage", endPage);
+		advertisementListByPositionPageNum.put("blockLimit", blockLimit);
+		advertisementListByPositionPageNum.put("pageLimit", pageLimit);
+		
+		return advertisementListByPositionPageNum;
+	}
+	
 
 	// 광고 한개 가져오기
 	public AdvertisementDto getAdvertisement(int ad_no) {
@@ -211,5 +275,7 @@ public class AdvertisementService {
 		return searchAdvertisementListPageNum;
 		
 	}
+
+	
 	
 }

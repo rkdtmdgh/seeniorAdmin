@@ -9,15 +9,15 @@
 		$(function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
-				case '2': // 검색
+				case '2': // search
 					getSearchList(null, '/board/cate_info/search_board_list', page);
 					break;
 
-				case '0':  // 정렬
+				case '0': // sort
 					getList('/board/cate_info/get_list', sortValue, order, page);
 					break;
 					
-				default: // 기본
+				default:
 					getList('/board/cate_info/get_list', null, null, page);
 			}
         });
@@ -39,7 +39,8 @@
 					            <h2 class="title">게시판 관리</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/board/cate_info/search_board_category_list')" th:insert="~{fragments/search.html :: search('게시판 관리')}"></form>
+									<form name="search_form" onsubmit="getSearchList(event, '/board/cate_info/search_board_category_list')" 
+										th:insert="~{fragments/search.html :: search('게시판 관리')}"></form>
 						            
 						            <div class="btn_list">
 						            	<div class="btns small" onclick="getList('/board/cate_info/get_list', null, null, 1);">전체보기</div>
@@ -75,6 +76,7 @@
 	                                    <th>
 	                                        <p class="table_title">게시물 수</p>
 	                                    </th>
+	                                    
 	                                    <th>
 	                                        <p class="table_title">등록일</p>
 	                                    </th>

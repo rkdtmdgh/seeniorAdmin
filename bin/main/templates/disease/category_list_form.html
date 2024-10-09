@@ -9,15 +9,15 @@
 		$(function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
-				case '2': // 검색
+				case '2': // search
 					getSearchList(null, '/disease/cate_info/search_disease_category_list', page);
 					break;
 					
-				case '0':  // 정렬
+				case '0': // sort
 					getList('/disease/cate_info/get_category_list', sortValue, order, page);
 					break;
 					
-				default: // 기본
+				default:
 					getList('/disease/cate_info/get_category_list', null, null, page);
 			}
         });
@@ -39,7 +39,8 @@
 					            <h2 class="title">질환 / 질병 분류 관리</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/disease/cate_info/search_disease_category_list')" th:insert="~{fragments/search.html :: search('질환 / 질병 분류 관리')}"></form>
+									<form name="search_form" onsubmit="getSearchList(event, '/disease/cate_info/search_disease_category_list')" 
+										th:insert="~{fragments/search.html :: search('질환 / 질병 분류 관리')}"></form>
 						            
 						            <div class="btn_list">
 						            	<div class="btns small" onclick="getList('/disease/cate_info/get_category_list', null, null, 1);">전체보기</div>

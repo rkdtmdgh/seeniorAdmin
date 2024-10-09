@@ -63,6 +63,57 @@ public class BoardService {
 		return cateDtos;
 	}
 	
+	//페이지에 따른 모든 게시판 항목 가져오기
+	public Map<String, Object> getBoardCategoryListWithPage(int page, String sortValue, String order) {
+		log.info("getBoardCategoryListWithPage()");
+		
+		int pagingStart = (page - 1) * pageLimit;
+		
+		Map<String, Object> pagingList = new HashMap<>();
+		
+		Map<String, Object> pagingParams = new HashMap<>();
+		pagingParams.put("start", pagingStart);
+		pagingParams.put("limit", pageLimit);
+		pagingParams.put("sortValue", sortValue);
+		pagingParams.put("order", order);
+		
+		List<BoardCategoryDto> boardCategoryDtos = boardMapper.getBoardCategoryListWithPage(pagingParams);
+		
+		pagingList.put("boardCategoryDtos", boardCategoryDtos);
+		
+		return pagingList;
+	}
+	
+	// 게시판 카테고리의 총 페이지 개수 구하기
+	public Map<String, Object> getBoardCategoryListPageNum(int page) {
+		log.info("getBoardCategoryListPageNum()");
+		
+		Map<String, Object> boardCategoryListPageNum = new HashMap<>();
+		
+		// 전체 리스트 개수 조회
+		int boardCategoryListCnt = boardMapper.getAllBoardCategoryCnt();
+		
+		// 전체 페이지 개수 계산
+		int maxPage = (int) (Math.ceil((double) boardCategoryListCnt / pageLimit));
+		
+		// 시작 페이지 값 계산 
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
+		
+		// 마지막 페이지 값 계산
+		int endPage = startPage + blockLimit - 1;
+		if (endPage > maxPage) endPage = maxPage;
+		
+		boardCategoryListPageNum.put("boardCategoryListCnt", boardCategoryListCnt);
+		boardCategoryListPageNum.put("page", page);
+		boardCategoryListPageNum.put("maxPage", maxPage);
+		boardCategoryListPageNum.put("startPage", startPage);
+		boardCategoryListPageNum.put("endPage", endPage);
+		boardCategoryListPageNum.put("blockLimit", blockLimit);
+		boardCategoryListPageNum.put("pageLimit", pageLimit);
+		
+		return boardCategoryListPageNum;
+	}
+	
 	//게시판명 중복 확인
 	public boolean isBoardCategory(BoardCategoryDto boardCategoryDto) {
 		log.info("isBoardCategory()");
@@ -327,5 +378,36 @@ public class BoardService {
 		return boardPostsLisByCategoryPageNum;
 		
 	}
+	
+	//게시판 순서 변경
+	public int modifyCategoryIdx(int current_bc_idx, int bc_idx) {
+		log.info("modifyCategoryIdx()");
+		
+		Map<String, Object> modifyParams = new HashMap<>();
+		
+		modifyParams.put("current_bc_idx", current_bc_idx);
+		modifyParams.put("bc_idx", bc_idx);
+		
+		int result = 0;
+		
+		result = boardMapper.targetModifyCategoryIdx(modifyParams);
+		
+		if(result > 0) {
+			
+			result = boardMapper.matchingModifyCategoryIdx(modifyParams);
+			
+			if(result <= 0) {
+				log.info("matchingModifyCategoryIdx() error!");
+			}
+			
+		}else {
+			log.info("targetModifyCategoryIdx() error!");
+		}
+		
+		return result;
+	}
+	
+
+	
 
 }

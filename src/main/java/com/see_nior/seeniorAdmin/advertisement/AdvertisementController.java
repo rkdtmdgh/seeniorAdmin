@@ -58,6 +58,17 @@ public class AdvertisementController {
 		
 	}
 	
+	// 모든 광고 위치 가져오기 (광고 리스트에서 <select>박스 => 비동기)
+	@ResponseBody
+	@GetMapping("info/get_position_list_select")
+	public Object getPositionListSelect() {
+		log.info("getPositionListSelect()");
+		
+		Map<String, Object> advertisementPositionDtos = advertisementService.getPositionList();
+		
+		return advertisementPositionDtos;
+		
+	}
 	
 	// 모든 광고 가져오기(페이지네이션 => 비동기)
 	@ResponseBody
@@ -81,6 +92,30 @@ public class AdvertisementController {
 		return advertisementListWithPage;
 		
 	}
+	
+	// 광고 위치에 따른 광고 가져오기(페이지네이션)
+	@ResponseBody
+	@GetMapping("/info/get_advertisement_list_by_position")
+	public Object getAdvertisementListByPosition(
+			@RequestParam(value = "page", required = false, defaultValue = "1")int page,
+			@RequestParam(value = "sortValue", required = false, defaultValue = "all") String sortValue,
+			@RequestParam(value = "order") int position) {
+		log.info("getAdvertisementListByPosition()");
+		
+		// 페이지 번호에 따른 위치별 광고 리스트들 가져오기
+		Map<String, Object> advertisementListByPositionWithPage = advertisementService.getAdvertisementListByPositionWithPage(page, position);
+		
+		// 위치별 광고 총 페이지 개수 가져오기
+		Map<String, Object> advertisementByPositionPageNum = advertisementService.getAdvertisementByPositionPageNum(page, position);
+		
+		advertisementListByPositionWithPage.put("advertisementByPositionPageNum", advertisementByPositionPageNum);
+		advertisementListByPositionWithPage.put("sortValue", sortValue);
+		advertisementListByPositionWithPage.put("order", position);
+		
+		return advertisementListByPositionWithPage;
+		
+	}
+	
 	
 	// 광고 한개 가져오기
 	@ResponseBody

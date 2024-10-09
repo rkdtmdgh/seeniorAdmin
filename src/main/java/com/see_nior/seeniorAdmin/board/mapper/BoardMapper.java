@@ -12,6 +12,10 @@ import com.see_nior.seeniorAdmin.dto.BoardPostsDto;
 public interface BoardMapper {
 
 	List<BoardCategoryDto> getList();
+	
+	List<BoardCategoryDto> getBoardCategoryListWithPage(Map<String, Object> pagingParams);
+
+	int getAllBoardCategoryCnt();
 
 	boolean isBoardCategory(String bc_name);
 
@@ -32,6 +36,11 @@ public interface BoardMapper {
 	List<BoardPostsDto> getBoardPostsListWithPage(Map<String, Object> pagingParams);
 
 	int getBoardPostsByCategoryCnt(int bp_category_no);
+
+	int targetModifyCategoryIdx(Map<String, Object> modifyParams);
+
+	int matchingModifyCategoryIdx(Map<String, Object> modifyParams);
+
 	
 
 }

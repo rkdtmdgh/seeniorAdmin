@@ -39,9 +39,31 @@ public class BoardController {
 	@GetMapping("/cate_info/get_list")
 	@ResponseBody
 	public Object getList() {		
-		log.info("getList()");
-				
+		log.info("getList()");		
+		
 		return boardService.getList();
+	}
+	
+	//페이징 처리된 게시판 항목 가져오기
+	@GetMapping("/cate_info/get_category_list")
+	@ResponseBody
+	public Object getCategoryList(
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
+			@RequestParam(value = "sortValue", required = false, defaultValue = "bc_idx") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "asc") String order) {		
+		log.info("getCategoryList()");
+					
+		// 페이지 번호에 따른 게시판 카테고리 리스트들 가져오기
+		Map<String, Object> boardCategoryListWithPage = boardService.getBoardCategoryListWithPage(page, sortValue, order);
+					
+		// 게시판 카테고리 총 페이지 개수 가져오기
+		Map<String, Object> boardCategoryListPageNum = boardService.getBoardCategoryListPageNum(page);
+			
+		boardCategoryListWithPage.put("boardCategoryListPageNum", boardCategoryListPageNum);
+		boardCategoryListWithPage.put("sortValue", sortValue);
+		boardCategoryListWithPage.put("order", order);
+			
+		return boardCategoryListWithPage;
 	}
 	
 	//게시판 관리 양식으로 이동
@@ -240,7 +262,23 @@ public class BoardController {
 		
 	}
 	
+	//게시판 순서 변경
+	@PostMapping("/cate_info/modify_category_idx")
+	@ResponseBody
+	public boolean modifyCategoryIdx(@RequestParam("current_bc_idx") int current_bc_idx, @RequestParam("bc_idx") int bc_idx) {
+		log.info("get_posts_list()");
+		
+		int result = boardService.modifyCategoryIdx(current_bc_idx,bc_idx);
+		
+		if(result <= 0) {
+			return false;
+		}else {
+			return true;
+		}
+				
+	}
 	
+		
 	//특정 게시물 정보 가져오기
 
 }

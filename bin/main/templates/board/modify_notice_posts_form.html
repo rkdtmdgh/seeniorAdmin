@@ -4,13 +4,14 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 	
 <head>
-    <th:block th:insert="~{fragments/head.html :: head('게시물 수정')}"></th:block>
+    <th:block th:insert="~{fragments/head.html :: head('공지 사항 수정')}"></th:block>
     <script th:inline="javascript">
 		$(function() {
-			// 타이틀 설정
-			setBoardTitle(/*[[${infoNo}]]*/);
+         	// BOARD_CATEGORY 가져오기
+            const selectedCategory = /*[[${boardboardNoticePostsDto.bn_category_no}]]*/ // 기본값 설정
+            getCategoryList('bn_category_no', true, selectedCategory); // element id, isForm, selectedValue
         });
-	</script>
+    </script>
 </head>
 
 <body>
@@ -25,13 +26,13 @@
 	                <section class="content_info_wrap">
 	                    <div class="content_top">
 	                        <div class="content_top_info">
-	                            <h2 class="title"></h2>
+	                            <h2 class="title">게시판 공지 사항</h2>
 	                        </div>
 	                        <p class="sub_title">게시판 공지 사항 수정</p>
 	                    </div>
 	
 	                    <form name="notice_posts_modify_form">
-		                    <input type="hidden" name="bn_no" th:value="${noticePostsDto.bn_no}">
+		                    <input type="hidden" name="bn_no" th:value="${boardNoticePostsDto.bn_no}">
 		                    
 	                        <div class="table_wrap">
 	                            <table class="content_edit_table">
@@ -43,12 +44,21 @@
 	                                </colgroup>
 	
 	                                <tbody>
+	                                	<tr>
+	                                        <th><p class="table_title">게시판 선택</p></th>
+		                                	<td>
+		                                		<select class="table_info select" name="bn_category_no" id="bn_category_no">
+		                                			<option value="" selected disabled>선택하세요</option>
+		                                		</select>
+	                                        </td>
+		                                </tr>
+	                                
 		                                <tr>
 	                                        <th><p class="table_title">제목</p></th>
 		                                	<td colspan="3">
 		                                		<input type="text" name="bn_title" id="bn_title" class="table_info" placeholder="제목"
 		                                			onblur="validateEmpty(this, '제목을')"
-		                                			th:value="${noticePostsDto.bn_title}">
+		                                			th:value="${boardNoticePostsDto.bn_title}">
 	                                        </td>
 		                                </tr>
 		                                
@@ -58,11 +68,11 @@
 		                                		<div class="table_info cont_info">
 	                                            	<label class="radio">
 	                                            		<input type="radio" name="bn_state" value="1"
-	                                            			th:checked="${noticePostsDto.bn_state == 1}"> 사용
+	                                            			th:checked="${boardNoticePostsDto.bn_state == 1}"> 사용
 	                                            	</label>
 	                                            	<label class="radio">
 	                                            		<input type="radio" name="bn_state" value="0"
-	                                            			th:checked="${noticePostsDto.bn_state == 0}"> 숨김
+	                                            			th:checked="${boardNoticePostsDto.bn_state == 0}"> 숨김
 	                                            	</label>
 	                                            </div>
 	                                        </td>
@@ -76,7 +86,7 @@
 		                                <tr>
 		                                	<th><p class="table_title">내용</p></th>
 		                                	<td colspan="3">
-	                                			<div id="editor" th:utext="${noticePostsDto.bn_body}"></div>
+	                                			<div id="editor" th:utext="${boardNoticePostsDto.bn_body}"></div>
 	                                			<div id="text_limit">
 	                                				<span id="current_size"></span> / <span id="max_size"></span>
 	                                			</div>
@@ -86,8 +96,8 @@
 	                            </table>
 	
 	                            <div class="btn_list">
-	                            	<div th:if="${noticePostsDto.bn_no} != null"
-		                        		 th:onclick="delSingleData('bn_no', [[${noticePostsDto.bn_no}]], [[${noticePostsDto.bn_title}]])" class="btns delete">삭제</div>
+	                            	<div th:if="${boardNoticePostsDto.bn_no} != null"
+		                        		 th:onclick="delSingleData('bn_no', [[${boardNoticePostsDto.bn_no}]], [[${boardNoticePostsDto.bn_title}]])" class="btns delete">삭제</div>
 		                        		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>

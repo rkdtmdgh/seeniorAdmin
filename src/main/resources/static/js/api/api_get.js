@@ -263,10 +263,10 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchRecipeListPageNum.searchRecipeListCnt;
 			break;	
 			
-		case '/recipe/info/get_recipe_list_by_category': // 식단 정보 관리 분류별 데이터
+		case '/recipe/info/get_recipe_list_by_rcp_pat2': // 식단 정보 관리 음식 종류별 데이터
 			getListDtos = response.recipeDtos;
-			getListPage = response.recipeListByCategoryPageNum;
-			getListCnt = response.recipeListByCategoryPageNum.recipeListByCategoryCnt;
+			getListPage = response.recipeListByRcpPat2PageNum;
+			getListCnt = response.recipeListByRcpPat2PageNum.recipeListByRcpPat2Cnt;
 			break;
 			
 		case '/video/info/get_video_list': // 영상 정보 관리
@@ -293,7 +293,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchBoardCategoryListPageNum.searchBoardCategoryListCnt;
 			break;
 			
-		case '/board/info/get_notice_posts_list': // 공지 게시물
+		case '/board/noti_info/get_notice_posts_list': // 공지 게시물
 			getListDtos = response.boardNoticePostsDtos;
 			getListPage = response.boardNoticePostsListPageNum;
 			getListCnt = response.boardNoticePostsListPageNum.boardNoticePostsListCnt;
@@ -339,7 +339,25 @@ function mapApiResponseObject(apiUrl, response) {
 			getListDtos = response.qnaDtos;
 			getListPage = response.searchQnaListPageNum;
 			getListCnt = response.searchQnaListPageNum.searchQnaListCnt;
-			break;		
+			break;	
+			
+		case '/advertisement/info/get_advertisement_list': // 광고 관리
+			getListDtos = response.advertisementDtos;
+			getListPage = response.advertisementListPageNum;
+			getListCnt = response.advertisementListPageNum.advertisementListCnt;
+			break;	
+			
+		case '/advertisement/info/get_advertisement_list': // 광고 관리 검색
+ 			getListDtos = response.advertisementDtos;
+			getListPage = response.searchAdvertisementListPageNum;
+			getListCnt = response.searchAdvertisementListPageNum.searchAdvertisementListCnt;
+			break;	
+			
+		case '/advertisement/info/get_advertisement_list_by_position': // 광고 관리 분류별 데이터
+			getListDtos = response.advertisementDtos;
+			getListPage = response.advertisementByPositionPageNum;
+			getListCnt = response.advertisementByPositionPageNum.advertisementListByPositionCnt;
+			break;
 						
 	}
 		
@@ -379,7 +397,7 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			
 		case '/disease/info/get_disease_list': // 질환/질병 정보 관리 리스트 테이블
 		case '/disease/info/search_disease_list':            // 질환/질병 정보 관리 검색 리스트 테이블
-		case '/disease/info/get_disease_list_by_category': // 질환/질병 정보 관리 분류선택 리스트 테이블
+		case '/disease/info/get_disease_list_by_category': // 질환/질병 정보 관리 분류 선택 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td class="vam">
@@ -423,7 +441,7 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			
 		case '/recipe/info/get_recipe_list': // 식단 정보 관리 리스트 테이블
 		case '/recipe/info/search_recipe_list': // 식단 정보 관리 검색 리스트 테이블
-		case '/recipe/info/get_recipe_list_by_category': // 식단 정보 관리 분류선택 리스트 테이블
+		case '/recipe/info/get_recipe_list_by_rcp_pat2': // 식단 정보 관리 음식 종류 선택 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -501,26 +519,29 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			`;
 			break;
 			
-		case '/board/info/get_notice_posts_list': // 공지 게시물 리스트 테이블
+		case '/board/noti_info/get_notice_posts_list': // 공지 게시물 리스트 테이블
 		case '/board/info/search_notice_posts_list': // 공지 게시물 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
-		                <a href="/board/info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${listIndex}</a>
+		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/board/info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_title}</a>
-		            </td>
-					<td>
-		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
+		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">게시판명</a>
 		            </td>
 		            <td>
-		                <a href="/board/info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_view_cnt}</a>
+		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_title}</a>
 		            </td>
 					<td>
-		                <a href="/board/info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">
+		                <a href="/account/noti_info/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
+		            </td>
+		            <td>
+		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_view_cnt}</a>
+		            </td>
+					<td>
+		                <div class="table_info">
 							<span onclick="" class="btns small ${data.bn_state === 1 ? '' : 'white'}">${data.bn_state === 1 ? '사용' : '숨김'}</span>
-						</a>
+						</div>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.bn_mod_date) || 'N/A'}</p>
@@ -612,6 +633,33 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.bq_mod_date) || 'N/A'}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/advertisement/info/get_advertisement_list': // 광고 관리 리스트 테이블
+		case '/advertisement/info/search_advertisement_list': // 광고 관리 검색 리스트 테이블
+		case '/advertisement/info/get_advertisement_list_by_position': // 광고 관리 위치 선택 리스트 테이블
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${listIndex}</a>
+		            </td>
+		            <td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_position}</a>
+		            </td>
+					<td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_start_date)}</a>
+		            </td>
+					<td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_end_date)}</a>
+		            </td>
+					<td>
+		                <p class="table_info">${data.ad_client}</p>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.ad_mod_date) || 'N/A'}</p>
 		            </td>
 		        </tr>
 			`;
@@ -733,7 +781,7 @@ function mapSortListApiObject(dbTable) {
 			break;
 			
 		case 'board_notice': // 게시판 공지 사항 페이지
-			apiUrl = '/board/info/get_notice_posts_list';
+			apiUrl = '/board/noti_info/get_notice_posts_list';
 			break;
 			
 		case 'board_category': // 게시판 관리 페이지
@@ -744,6 +792,10 @@ function mapSortListApiObject(dbTable) {
 			apiUrl = '/board/info/get_posts_list';
 			break;
 			
+		case 'advertisement': // 광고 관리 페이지
+			apiUrl = '/advertisement/info/get_advertisement_list';
+			break;
+		
 		default:
 			logger.error('mapSortListApiObject() dbTable:', value);
 			return false;
@@ -767,17 +819,17 @@ function getSelectList(event) {
 	getList(apiUrl, sortValue, order, 1);
 }
 
-// getList() 요청에 필요한 객체 설정
+// select getList() 요청에 필요한 객체 설정
 function mapSelectListApiObject(sortValue) {
 	let apiUrl;
 	
 	switch(sortValue) {				
-		case 'dc_no': // 질환/질병 정보 리스트 페이지 분류명별 필터
+		case 'dc_no': // 질환/질병 정보 리스트 페이지 분류 선택 리스트 요청
 			apiUrl = '/disease/info/get_disease_list_by_category';
 			break;
 			
-		case 'rcp_pat2': // 식단 정보 리스트 페이지 분류명별 필터
-			apiUrl = '/recipe/info/get_recipe_list_by_category';
+		case 'rcp_pat2': // 식단 정보 리스트 페이지 음식 종류 선택 리스트 요청
+			apiUrl = '/recipe/info/get_recipe_list_by_rcp_pat2';
 			break;
 			
 		default:
@@ -788,7 +840,7 @@ function mapSelectListApiObject(sortValue) {
 	return apiUrl;
 }
 
-// 셀렉트 옵션(분류) 리스트 요청 및 옵션 생성
+// 셀렉트 옵션 리스트 요청 및 옵션 생성
 async function getCategoryList(ele, isForm, selectedValue) {
 	const $selectEle = $(`#${ele}`); // 셀렉트 요소가 생성될 table th
 	const { apiUrl, getListDtos, dataNo, dataName } = mapCategorylistObject(ele);
@@ -855,10 +907,25 @@ function mapCategorylistObject(ele) {
 			break;
 			
 		case 'rcp_pat2': // 식단 관련 페이지
-			apiUrl = '/recipe/cate_info/get_category_list_select';
-			getListDtos = 'recipeCategoryDto';
+			apiUrl = '/recipe/info/get_rcp_pat2_list_select';
+			getListDtos = 'recipeRcpPat2Dto';
 			dataNo = 'rcp_pat2';
 			dataName = 'rcp_pat2';
+			break;
+			
+		case 'bc_name': // 게시판 공지 사항 페이지
+		case 'bn_category_no':
+			apiUrl = '/board/cate_info/get_list';
+			getListDtos = 'boardCategoryDtos';
+			dataNo = 'bc_no';
+			dataName = 'bc_name';
+			break;
+			
+		case 'rcp_pat2': // 광고 관련 페이지
+			apiUrl = '/advertisement/info/get_position_list_select';
+			getListDtos = 'advertisementPositionDto';
+			dataNo = 'ad_position';
+			dataName = 'ad_position';
 			break;
 		
 		default:
