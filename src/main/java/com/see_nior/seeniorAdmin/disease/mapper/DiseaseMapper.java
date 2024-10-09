@@ -58,7 +58,7 @@ public interface DiseaseMapper {
 	public boolean isDisease(String d_name);
 	
 	// 페이지에 따른 질환 가져오기(모든 질환)
-	public List<DiseaseDto> getDiseaseListWithPage(Map<String, Object> pagingParms);
+	public List<DiseaseDto> getDiseaseListWithPage(Map<String, Object> pagingParams);
 	
 	// 질환의 총 리스트 개수 구하기(모든 질환)
 	public int getAllDiseaseCnt();

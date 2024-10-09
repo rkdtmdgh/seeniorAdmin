@@ -68,10 +68,10 @@ public class VideoController {
 		Map<String, Object> searchVideoList =
 				videoService.searchVideoPagingList(searchPart, searchString, sortValue, order, page);
 		
-		Map<String, Object> searchAdminListPage = 
+		Map<String, Object> searchVideoListPage = 
 				videoService.searchVideoListPageNum(searchPart, searchString, page);
 		
-		searchVideoList.put("searchAdminListPage", searchAdminListPage);
+		searchVideoList.put("searchVideoListPage", searchVideoListPage);
 		searchVideoList.put("sortValue", sortValue);
 		searchVideoList.put("order", order);
 		searchVideoList.put("searchPart", searchPart);
@@ -126,7 +126,7 @@ public class VideoController {
 	// 비디오 삭제 확인 (비동기)
 	@PostMapping("/info/delete_confirm")
 	@ResponseBody
-	public Object deleteConfirm(@RequestParam("v_no") List<Integer> v_nos) {
+	public Object deleteConfirm(@RequestParam("v_nos") List<Integer> v_nos) {
 		log.info("deleteConfirm()");
 		
 		return videoService.deleteConfirm(v_nos);

@@ -24,6 +24,15 @@ function setAddLoading(loading) {
 	}
 }
 
+// FormData 키벨류, byte 확인
+function setFormDataCheckConsoleLog(formData) {
+	const encoder = new TextEncoder(); // byte 계산
+	for (const [key, value] of formData.entries()) { // formData의 모든 데이터 확인
+		logger.info('postPostsCreateForm() formData:', key, value); // 키벨류 확인
+		logger.info(`${key} byte:`, encoder.encode(value).length); // 벨류 byte 확인
+	};
+}
+
 // 로그인 유저 정보 해당 인풋에 정보 입력
 async function setLoginUserInfoInputValue(name, key) {
 	const $input = $(`input[name="${name}"]`);
@@ -37,15 +46,9 @@ async function setLoginUserInfoInputValue(name, key) {
 	}
 }
 
-// submit 이벤트 막기(form 에서 enter키 입력 되지 않고 버튼으로 submit만 가능하도록)
-// 예외 사항으로 form 내부에 disabled 되어 있는 인풋이 있는 경우에는 사용하지 않아도 됨
-function setFormSendFalse(event) {
-	event.preventDefault(); // 폼의 기본 제출 동작 방지
-    return false; // 폼 제출 방지
-}
-
-// 콘텐츠 타이틀 설정
-async function setContentTitle(infoNo) {
+// 게시판 타이틀 설정
+async function setBoardTitle(infoNo) {
+	logger.info('setBoardTitle() no:', infoNo);
 	if(infoNo) {
 		const info = await getBoardInfo(infoNo);
 		
@@ -395,6 +398,8 @@ function setAccountModifyForm(data) {
 	    </div>
 							
 		<form name="modify_form">					    	
+    		<input type="hidden" name="a_no" value="${data.a_no}">
+    		
 		    <div class="table_wrap">
                 <table class="content_edit_table">
                     <colgroup>
@@ -408,7 +413,6 @@ function setAccountModifyForm(data) {
                         <tr>
                         	<th><p class="table_title">아이디</p></th>
                         	<td class="disabled">
-                        		<input type="hidden" name="a_no" value="${data.a_no}">
                         		<input type="text" name="a_id" id="id" class="table_info disabled"
                                 	value="${data.a_id}" disabled>
                             </td>

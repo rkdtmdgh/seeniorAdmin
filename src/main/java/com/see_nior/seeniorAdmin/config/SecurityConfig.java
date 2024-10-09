@@ -25,7 +25,7 @@ public class SecurityConfig {
 		
 	}
 	
-	@Bean SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	@Bean SecurityFilterChain adminFilterChain(HttpSecurity http) throws Exception {
 		
 		http
 			.cors(cors -> cors.disable())

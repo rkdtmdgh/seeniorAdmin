@@ -164,7 +164,7 @@
     	
     </insert>
     
-    <select id="getBoardPostsListWithPage" parameterType="Object">
+    <select id="getBoardPostsListWithPage" parameterType="Object" resultMap="BoardPostsDto">
     
     	SELECT 
 			*

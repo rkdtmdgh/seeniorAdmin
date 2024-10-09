@@ -8,19 +8,19 @@
 	<script th:inline="javascript">
 		$(function() {
 			// 타이틀 설정
-			setContentTitle(/*[[${infoNo}]]*/);
+			setBoardTitle(/*[[${infoNo}]]*/);
 			
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
-				case '2': // 검색
+				case '2': // search
 					getSearchList(null, '/board/info/search_posts_list', page);
 					break;
 
-				case '0':  // 정렬
+				case '0': // sort
 					getList('/board/info/get_posts_list', sortValue, order, page);
 					break;
 					
-				default: // 기본
+				default:
 					getList('/board/info/get_posts_list', null, null, page);
 			}
         });
@@ -42,7 +42,8 @@
 					            <h2 class="title categoty_title"></h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/board/info/search_posts_list')" th:insert="~{fragments/search.html :: search('게시판')}"></form>
+									<form name="search_form" onsubmit="getSearchList(event, '/board/info/search_posts_list')" 
+										th:insert="~{fragments/search.html :: search('게시판')}"></form>
 						            
 						            <div class="btn_list">
 						            	<div class="btns small" onclick="getList('/board/info/get_posts_list', null, null, 1);">전체보기</div>
@@ -54,15 +55,15 @@
 					    </div>
 					    
 					    <div class="table_wrap">
-	                        <table class="content_table board_info_list_table">
+	                        <table class="content_table posts_list_table">
 	                            <colgroup>
 	                                <col class="col_checkBox">
 	                                <col class="col_no">
 	                                <col>
-	                                <col>
-	                                <col>
-	                                <col>
-	                                <col>
+	                                <col class="col_default">
+	                                <col class="col_no">
+	                                <col class="col_no">
+	                                <col class="col_default">
 	                            </colgroup>
 	
 	                            <thead>
@@ -81,19 +82,23 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">조회수</p>
-	                                    </th>
-	                                    
-	                                    <th>
-	                                        <p class="table_title">상태</p>
-	                                    </th>
-	                                    
-	                                    <th>
 	                                        <p class="table_title">작성자</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">등록일</p>
+	                                        <p class="table_title">조회수</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                    	<p class="table_title">상태</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                    	<p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'board_posts', 'bp_mod_date')">
+	                                        	등록일
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
 	                                    </th>
 	                                </tr>
 	                            </thead>

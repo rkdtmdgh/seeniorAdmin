@@ -16,14 +16,14 @@ async function getBoardList() {
 		const $sideBoardSubMenu = $('#side_board_sub_menu');
 
 		if (response && response.boardCategoryDtos) {
-			response.boardCategoryDtos.forEach((data) => { 
-				let innerContent = `
+			response.boardCategoryDtos.forEach((data) => { 				
+				let boardSubMenu = `
 					<a href="/board/info/posts_list_form?infoNo=${data.bc_no}" class="side_sub_menu_btn">
 						<span class="side_sub_menu">${data.bc_name}</span>
 					</a>
 				`;
 				
-				$sideBoardSubMenu.append(innerContent);
+				$sideBoardSubMenu.append(boardSubMenu);
 			});
 			
 		} else {
@@ -53,15 +53,17 @@ function signOut() {
 
 // NAV 토글 및 페이지 관련 카테고리 메뉴 선택 표시
 function navActiveToggle() {
-	const currentPath = window.location.pathname.split('/').slice(0,3).join('/'); // 현재 URL에서 첫 번째와 두 번째까지 path 
+	const currentPath = window.location.pathname.split('/').slice(0,3).join('/'); // 현재 URL에서 1~2번째까지 path 
 	const currentQueryParams = new URLSearchParams(window.location.search); // 쿼리 파라미터
+	//logger.info('URL currentPath:', currentPath);
 
 	const $navMenuBtns = $('.side_menu_list'); // 모든 nav 메뉴 버튼
 	$navMenuBtns.each(function() { // 화살표 함수에는 this가 포함되지 않아 function으로 대체
 		const $navMenu = $(this);
 		const $navMenuBtn = $navMenu.find('.side_menu_btn');
 		const href = $navMenuBtn.attr('href') || null; // 메뉴 버튼의 href
-		const hrefPath = href ? new URL(href, window.location.origin).pathname.split('/').slice(0, 3).join('/') : ''; // href에서 첫 번째와 두 번째 path
+		const hrefPath = href ? new URL(href, window.location.origin).pathname.split('/').slice(0, 3).join('/') : ''; // href에서 1~2번째 path
+		//logger.info('Href hrefPath:', hrefPath);
 		
 		if (hrefPath && hrefPath === currentPath) { // 서브 메뉴가 없고 href가 현재 경로가 일치할 경우
 			$navMenu.addClass('select');
@@ -73,8 +75,9 @@ function navActiveToggle() {
 			$navSubMenus.each(function() {
 				const $navSubMenu = $(this);
 				const subHref = $navSubMenu.attr('href') || null;
-				const subHrefPath = subHref ? new URL(subHref, window.location.origin).pathname.split('/').slice(0, 3).join('/') : ''; // 서브메뉴 href에서 첫 번째와 두 번째 path
+				const subHrefPath = subHref ? new URL(subHref, window.location.origin).pathname.split('/').slice(0, 3).join('/') : ''; // 서브메뉴 href에서 1~2번째 path
 				const subHrefQueryParams = new URLSearchParams(new URL(subHref, window.location.origin).search);
+				//logger.info('Sub Href subHrefPath:', subHrefPath);
 				
 				if (subHrefPath && subHrefPath === currentPath) {
 					// 쿼리 스트링 확인(같은 카테고리에서 구분이 필요할 경우)

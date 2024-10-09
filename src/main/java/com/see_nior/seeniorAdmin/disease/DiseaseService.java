@@ -56,10 +56,10 @@ public class DiseaseService {
 	public boolean createCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto) {
 		log.info("createCategoryConfirm()");
 		
-		int result = diseaseMapper.insertNewDiseaseCategory(diseaseCategoryDto);
+		int createResult = diseaseMapper.insertNewDiseaseCategory(diseaseCategoryDto);
 		
 		// DB에 입력 실패
-		if (result <= 0) {
+		if (createResult <= 0) {
 			
 			return DISEASE_CATEGORY_CREATE_FAIL;
 			
@@ -162,10 +162,10 @@ public class DiseaseService {
 	public boolean modifyCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto) {
 		log.info("modifyCategoryConfirm()");
 			
-		int result = diseaseMapper.updateDiseaseCategory(diseaseCategoryDto);
+		int modifyResult = diseaseMapper.updateDiseaseCategory(diseaseCategoryDto);
 		
 		// DB에 입력 실패
-		if (result <= 0) {
+		if (modifyResult <= 0) {
 			
 			return DISEASE_CATEGORY_MODIFY_FAIL;
 			
@@ -182,10 +182,10 @@ public class DiseaseService {
 	public boolean deleteCategoryConfirm(int dc_no) {
 		log.info("deleteCategoryConfirm()");
 		
-		int result = diseaseMapper.deleteDiseaseCategory(dc_no);
+		int deleteResult = diseaseMapper.deleteDiseaseCategory(dc_no);
 		
 		// DB에 입력 실패
-		if (result <= 0) {
+		if (deleteResult <= 0) {
 			
 			return DISEASE_CATEGORY_DELETE_FAIL;
 		
@@ -307,10 +307,10 @@ public class DiseaseService {
 	public boolean createConfirm(DiseaseDto diseaseDto) {
 		log.info("createConfirm()");
 			
-		int result = diseaseMapper.insertNewDisease(diseaseDto);
+		int createResult = diseaseMapper.insertNewDisease(diseaseDto);
 		
 		// DB에 입력 실패
-		if (result <= 0) {
+		if (createResult <= 0) {
 			return DISEASE_CREATE_FAIL;
 			
 		// DB에 입력 성공
@@ -437,14 +437,14 @@ public class DiseaseService {
 	public boolean modifyConfirm(DiseaseDto diseaseDto) {
 		log.info("modifyConfirm");
 			
-			int result = diseaseMapper.updateDisease(diseaseDto);
+			int modifyResult = diseaseMapper.updateDisease(diseaseDto);
 			
 			// DB에 입력 실패
-			if (result <= 0) {
+			if (modifyResult <= 0) {
 				
 				return DISEASE_MODIFY_FAIL;
 				
-			// DB에 입력 실패
+			// DB에 입력 성공
 			} else {
 				
 				return DISEASE_MODIFY_SUCCESS;

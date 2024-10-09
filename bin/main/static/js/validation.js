@@ -95,6 +95,7 @@ function validatePhone(input, alertMsg) {
 // 데이터 유효값 확인
 function validateEmpty(input, txt, alertMsg,  notViewMsg = false) { // 요소, 텍스트, alert 여부, 에러메세지 요소 표기 여부(false = 노출, ture = 노출X)
 	const errorMessage = txt + " 입력해 주세요.";
+	input.value = input.value.trim(); // 앞뒤 공백 제거 적용
 	if(alertMsg) {
 		if(!notViewMsg && !validateInput(input, null, errorMessage)) {
 			alert(errorMessage);
@@ -145,8 +146,10 @@ function validateVideo(input, alertMsg) {
 	
     //동영상 URL을 임베디드 URL로 변환
 	const url = $input.val().trim();
-    const platformInfo = extractPlatformInfo(url); // 플랫폼 정보 추출    
     let $previewEle = $input.parent().find('.preview_container'); // 부모 요소 내에 미리보기 요소를 찾음
+    if($previewEle.length && $previewEle.find('iframe').attr('src') === url) return false; // 수정되지 않았을 경우 리턴
+    
+    const platformInfo = extractPlatformInfo(url); // 플랫폼 정보 추출    
     
     if(platformInfo) {	    
 		// 미리보기 요소가 없으면 생성

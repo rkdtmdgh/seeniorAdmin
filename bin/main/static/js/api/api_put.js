@@ -1,8 +1,6 @@
 // put ajax 요청
 async function putSubmitForm(apiUrl, formData, successMessage, errorMessage) {
-	for (const [key, value] of formData.entries()) {
-		logger.info('putSubmitForm() formData:', key, value);
-	};
+	setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
 	
 	try {
 		const response = await $.ajax({
@@ -16,15 +14,15 @@ async function putSubmitForm(apiUrl, formData, successMessage, errorMessage) {
 		logger.info(`${apiUrl} putSubmitForm() response:`, response);
 		
 		if(response) {
-			alert(successMessage);
+			if(successMessage) alert(successMessage);
 			
 		} else {
-			alert(errorMessage);
+			if(errorMessage) alert(errorMessage);
 		}
 		
 	} catch(error) {
 		logger.error(`${apiUrl} putSubmitForm() error:`, error);
-		alert(errorMessage);
+		if(errorMessage) alert(errorMessage);
 		
 	} finally {
 		location.reload(true);
@@ -144,7 +142,7 @@ async function putResetPassword(a_no, a_id) {
 }
 
 // 질환 / 질병 수정
-async function putDiseaseModifyForm(formName, d_nameDefaultValue) {
+async function putDiseaseModifyForm(formName) {
 	const form = document.forms[formName];
 	let input;
 	
@@ -155,7 +153,7 @@ async function putDiseaseModifyForm(formName, d_nameDefaultValue) {
 	}
 	
 	input = form.d_name;
-	if(input.value.trim() !== d_nameDefaultValue) { // 수정이 되었을 경우
+	if(input.value !== form.current_d_name.value) { // 수정이 되었을 경우
 		if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 			input.focus();
 			return false;
@@ -186,6 +184,35 @@ async function putDiseaseModifyForm(formName, d_nameDefaultValue) {
 
 	await putSubmitForm(
 		'/disease/info/modify_confirm', 
+		formData, 
+		successMessage, 
+		errorMessage
+	);
+}
+
+// 질환 / 질병 분류 수정
+async function putDiseaseCategoryModifyForm(formName) {
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.dc_name;
+	if(input.value !== form.current_dc_name.value) { // 수정이 되었을 경우
+		if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+			input.focus();
+			return false;
+		}
+		
+	} else {
+		alert('수정된 내용이 없습니다');
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	const successMessage = `"${input.value}" 질환/질병 분류명이 수정되었습니다`;
+	const errorMessage = `"${input.value}" 질환/질병 분류명 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+
+	await putSubmitForm(
+		'/disease/cate_info/modify_category_confirm', 
 		formData, 
 		successMessage, 
 		errorMessage
@@ -227,70 +254,6 @@ async function putVideoModifyForm(formName) {
 	);
 }
 
-// 질환 / 질병 분류 수정
-async function putDiseaseCategoryModifyForm(formName, dc_nameDefaultValue) {
-	const form = document.forms[formName];
-	let input;
-	
-	input = form.dc_name;
-	if(input.value.trim() !== dc_nameDefaultValue) { // 수정이 되었을 경우
-		if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
-			input.focus();
-			return false;
-		}
-		
-	} else {
-		alert('수정된 내용이 없습니다');
-		return false;
-	}
-	
-	const formData = new FormData(form);
-	const successMessage = `"${input.value}" 질환/질병 분류명이 수정되었습니다`;
-	const errorMessage = `"${input.value}" 질환/질병 분류명 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
-
-	await putSubmitForm(
-		'/disease/cate_info/modify_category_confirm', 
-		formData, 
-		successMessage, 
-		errorMessage
-	);
-}
-
-// 게시판 수정
-async function putBoardCategoryModifyForm(formName, bc_nameDefaultValue, bc_idxDefaultValue) {
-	const form = document.forms[formName];
-	const bc_name = form.bc_name;
-	const bc_idx = form.bc_idx;
-	
-	if(bc_name.value.trim() === bc_nameDefaultValue && bc_idx.value.trim() === bc_idxDefaultValue) {
-		alert('수정된 내용이 없습니다');
-		return false;		
-	}
-	
-	if(bc_name.value.trim() !== bc_nameDefaultValue) { // 수정이 되었을 경우
-		if(!(await requestDuplicateCheck(bc_name, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
-			bc_name.focus();
-			return false;
-		}
-	} 
-	
-	const bc_idxFix = bc_idx.value.trim() || 0;
-	
-	const formData = new FormData();
-	formData.append('bc_name', bc_name.value);
-	formData.append('bc_idx', bc_idxFix);
-	
-	const successMessage = `"${bc_name.value}" 이(가) 수정되었습니다`;
-	const errorMessage = `"${input.value}" 이(가) 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
-
-	await putSubmitForm(
-		'/board/cate_info/modify_category_confirm', 
-		formData, 
-		successMessage, 
-		errorMessage
-	);
-}
-
 // 공지사항 수정
 async function putNoticeModifyForm(formName) {
 	const form = document.forms[formName];
@@ -316,5 +279,164 @@ async function putNoticeModifyForm(formName) {
 		formData, 
 		successMessage, 
 		errorMessage
+	);
+}
+
+// 게시판 수정
+async function putBoardCategoryModifyForm(formName) {
+	const form = document.forms[formName];
+	const bc_name = form.bc_name;
+	const bc_idx = form.bc_idx;
+	const current_bc_name = form.current_bc_name;
+	const current_bc_idx = form.current_bc_idx;
+	
+	if(bc_name.value === current_bc_name.value && bc_idx === current_bc_idx.value) {
+		alert('수정된 내용이 없습니다');
+		return false;		
+	}
+	
+	if(bc_name.value !== current_bc_name.value) { // 수정이 되었을 경우
+		if(!(await requestDuplicateCheck(bc_name, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+			bc_name.focus();
+			return false;
+		}
+	} 
+	
+	const formData = new FormData(form);
+	const successMessage = `"${bc_name.value}" 이(가) 수정되었습니다`;
+	const errorMessage = `"${bc_name.value}" 이(가) 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+
+	await putSubmitForm(
+		'/board/cate_info/modify_category_confirm', 
+		formData, 
+		successMessage, 
+		errorMessage
+	);
+}
+
+// 게시판 순번 수정
+async function putBoardCategoryModifyButton(event, bc_idx) {
+    const infoEle = event.target.closest('tr'); // 클릭된 요소의 가장 가까운 tr 요소 찾기
+    const bc_no = infoEle.getAttribute('data-bc-no'); 
+    const bc_name = infoEle.getAttribute('data-bc-name'); 
+    const current_bc_idx = infoEle.getAttribute('data-bc-idx'); 
+	
+	const formData = new FormData();
+	formData.append('bc_no', bc_no);
+	formData.append('bc_name', bc_name);
+	formData.append('current_bc_idx', current_bc_idx);
+	formData.append('bc_idx', bc_idx);
+
+	await putSubmitForm(
+		'/board/cate_info/modify_category_confirm', 
+		formData
+	);
+}
+
+// 게시판 공지 사항 수정
+async function putNoticePostsModifyForm(formName) {
+	const form = document.forms[formName];
+	
+	input = form.bn_title;
+	if(!validateEmpty(input, '제목을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(!validateQuill(quill)) { // 내용 유효성 및 비속어 검사
+		quill.focus();
+		return false;
+	}
+	
+	const successMessage = `"${bn_title.value.trim()}" 게시판 공지 사항이 수정되었습니다.`;
+	const errorMessage = `"${bn_title.value.trim()}" 게시판 공지 사항 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	const formData = new FormData();
+	formData.append('bn_no', form.bn_no.value);
+	formData.append('bn_title', input.value.trim()); // 제목
+	formData.append('bn_body', quill.root.innerHTML); // quill 에디터 내용
+	
+	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
+	if($imgTags.length) {
+		logger.info('이미지 태그 있음');
+		
+		for(let img of $imgTags) {
+			const blobURL= $(img)[0].src; // src 속성에 입력된 blob URL 가져오기
+			const targetWidth = $(img)[0].width; // 리사이즈할 대상 이미지의 너비 가져오기
+			
+			// 설정된 width 크기로 리사이즈 압축 후 flle 객체로 변환하여 formData 추가
+			const resizedImageFile = await resizeImage(blobURL, targetWidth);
+			formData.append('files', resizedImageFile); // 리사이즈된 File객체를 formData에 추가
+			URL.revokeObjectURL(blobURL); // blob URL을 브라우저 메모리에서 해제
+		}
+		
+	} else {
+		logger.info('이미지 태그 없음');
+		const emptyBlob = new Blob([], { type: 'application/octet-stream' }); // 빈 Blob 생성
+		formData.append('files', emptyBlob); 
+	}
+	
+	//const isTrue = false;
+	//if(!isTrue) return false;
+	
+	await postSubmitForm(
+		'/board/info/modify_confirm',
+		formData,
+		successMessage,
+		errorMessage,
+	);
+}
+
+// 게시물 수정
+async function putPostsModifyForm(formName) {
+	const form = document.forms[formName];
+	
+	input = form.bp_title;
+	if(!validateEmpty(input, '제목을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(!validateQuill(quill)) { // 내용 유효성 및 비속어 검사
+		quill.focus();
+		return false;
+	}
+	
+	const successMessage = `"${bp_title.value.trim()}" 게시물이 수정되었습니다.`;
+	const errorMessage = `"${bp_title.value.trim()}" 게시물 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	const formData = new FormData();
+	formData.append('bp_no', form.bp_no.value);
+	formData.append('bp_title', input.value.trim()); // 제목
+	formData.append('bp_body', quill.root.innerHTML); // quill 에디터 내용
+	
+	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
+	if($imgTags.length) {
+		logger.info('이미지 태그 있음');
+		
+		for(let img of $imgTags) {
+			const blobURL= $(img)[0].src; // src 속성에 입력된 blob URL 가져오기
+			const targetWidth = $(img)[0].width; // 리사이즈할 대상 이미지의 너비 가져오기
+			
+			// 설정된 width 크기로 리사이즈 압축 후 flle 객체로 변환하여 formData 추가
+			const resizedImageFile = await resizeImage(blobURL, targetWidth);
+			formData.append('files', resizedImageFile); // 리사이즈된 File객체를 formData에 추가
+			URL.revokeObjectURL(blobURL); // blob URL을 브라우저 메모리에서 해제
+		}
+		
+	} else {
+		logger.info('이미지 태그 없음');
+		const emptyBlob = new Blob([], { type: 'application/octet-stream' }); // 빈 Blob 생성
+		formData.append('files', emptyBlob); 
+	}
+	
+	//const isTrue = false;
+	//if(!isTrue) return false;
+	
+	await postSubmitForm(
+		'/board/info/modify_confirm',
+		formData,
+		successMessage,
+		errorMessage,
 	);
 }

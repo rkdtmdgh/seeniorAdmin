@@ -405,6 +405,20 @@
         .func_btn {
             display: flex;
         }
+        
+        .func_arrow {
+        	display: block;
+        	width: var(--arrowWidth);
+        	height: var(--arrowWidth);
+        	
+        	&.up {
+        		background: url(/image/icons/a_up.gif) center no-repeat;
+        	}
+        	
+        	&.down {
+        		background: url(/image/icons/a_down.gif) center no-repeat;
+        	}
+        }
     }
     
     &.info_data_list {
@@ -417,6 +431,23 @@
     			display: none;
     		}
     	}
+    }
+    
+    &.table_flex_info {
+    	display: flex;
+    	align-items: center;
+    	
+		.info_text {
+			width: max-content;
+			overflow: hidden;
+		    text-overflow: ellipsis;
+		    white-space: nowrap;
+		}    
+		
+		.info_num {
+			width: max-content;
+			padding-left: var(--ssize1);
+		}	
     }
 }
 

@@ -84,7 +84,10 @@ async function getList(apiUrl, sortValue, order, page) {
 			let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
 			
 			getListDtos.forEach((data) => { 
-				$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, listIndex));
+			    const isFirstElement = (listIndex === getListCnt); // 첫 번째 요소인지 확인
+			    const isLastElement = (listIndex === (getListCnt - (pageLimit * (getListPage.page - 1) + pageLimit - 1)));  // 마지막 요소인지 확인
+			    
+				$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElement));
 				listIndex --;
 			});
 			
@@ -166,7 +169,10 @@ async function getSearchList(event, apiUrl, page) {
 				let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
 						
 				getListDtos.forEach((data) => { 
-					$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, listIndex)); // jQuery 선택자에서 DOM 요소가져오기[0]
+					const isFirstElement = (listIndex === getListCnt); // 첫 번째 요소인지 확인
+				    const isLastElement = (listIndex === (getListCnt - (pageLimit * (getListPage.page - 1) + pageLimit - 1)));  // 마지막 요소인지 확인
+				    
+					$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElement));
 					listIndex --;
 				});
 				
@@ -257,10 +263,10 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchRecipeListPageNum.searchRecipeListCnt;
 			break;	
 			
-		case '/recipe/info/get_recipe_list_by_category': // 식단 정보 관리 분류별 데이터
+		case '/recipe/info/get_recipe_list_by_rcp_pat2': // 식단 정보 관리 음식 종류별 데이터
 			getListDtos = response.recipeDtos;
-			getListPage = response.recipeListByCategoryPageNum;
-			getListCnt = response.recipeListByCategoryPageNum.recipeListByCategoryCnt;
+			getListPage = response.recipeListByRcpPat2PageNum;
+			getListCnt = response.recipeListByRcpPat2PageNum.recipeListByRcpPat2Cnt;
 			break;
 			
 		case '/video/info/get_video_list': // 영상 정보 관리
@@ -272,7 +278,7 @@ function mapApiResponseObject(apiUrl, response) {
 		case '/video/info/search_video_list': // 영상 정보 관리 검색
 			getListDtos = response.videoDtos;
 			getListPage = response.searchVideoListPage;
-			getListCnt = response.searchVideoListPageNum.searchVideoListCnt;
+			getListCnt = response.searchVideoListPage.searchVideoListCnt;
 			break;	
 			
 		case '/board/cate_info/get_list': // 게시판 관리
@@ -281,19 +287,31 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.boardCategoryListPageNum.boardCategoryListCnt;
 			break;
 			
-		case '/board/cate_info/search_board_list': // 게시판 관리 검색
+		case '/board/cate_info/search_board_category_list': // 게시판 관리 검색
 			getListDtos = response.boardCategoryDtos;
 			getListPage = response.searchBoardCategoryListPageNum;
 			getListCnt = response.searchBoardCategoryListPageNum.searchBoardCategoryListCnt;
 			break;
 			
-		case '/board/info/get_posts_list': // 게시물
+		case '/board/noti_info/get_notice_posts_list': // 공지 게시물
+			getListDtos = response.boardNoticePostsDtos;
+			getListPage = response.boardNoticePostsListPageNum;
+			getListCnt = response.boardNoticePostsListPageNum.boardNoticePostsListCnt;
+			break;
+			
+		case '/board/info/search_notice_posts_list': // 공지 게시물 검색
+			getListDtos = response.boardNoticePostsDtos;
+			getListPage = response.searchBoardNoticePostsListPageNum;
+			getListCnt = response.searchBoardNoticePostsListPageNum.searchNoticePostsListCnt;
+			break;
+			
+		case '/board/info/get_posts_list': // 일반 게시물
 			getListDtos = response.boardPostsDtos;
 			getListPage = response.boardPostsListPageNum;
 			getListCnt = response.boardPostsListPageNum.boardPostsListCnt;
 			break;
 			
-		case '/board/info/search_posts_list': // 게시물 검색
+		case '/board/info/search_posts_list': // 일반 게시물 검색
 			getListDtos = response.boardPostsDtos;
 			getListPage = response.searchBoardPostsListPageNum;
 			getListCnt = response.searchBoardPostsListPageNum.searchPostsListCnt;
@@ -321,7 +339,25 @@ function mapApiResponseObject(apiUrl, response) {
 			getListDtos = response.qnaDtos;
 			getListPage = response.searchQnaListPageNum;
 			getListCnt = response.searchQnaListPageNum.searchQnaListCnt;
-			break;		
+			break;	
+			
+		case '/advertisement/info/get_advertisement_list': // 광고 관리
+			getListDtos = response.advertisementDtos;
+			getListPage = response.advertisementListPageNum;
+			getListCnt = response.advertisementListPageNum.advertisementListCnt;
+			break;	
+			
+		case '/advertisement/info/get_advertisement_list': // 광고 관리 검색
+ 			getListDtos = response.advertisementDtos;
+			getListPage = response.searchAdvertisementListPageNum;
+			getListCnt = response.searchAdvertisementListPageNum.searchAdvertisementListCnt;
+			break;	
+			
+		case '/advertisement/info/get_advertisement_list_by_position': // 광고 관리 분류별 데이터
+			getListDtos = response.advertisementDtos;
+			getListPage = response.advertisementByPositionPageNum;
+			getListCnt = response.advertisementByPositionPageNum.advertisementListByPositionCnt;
+			break;
 						
 	}
 		
@@ -329,7 +365,7 @@ function mapApiResponseObject(apiUrl, response) {
 }
 
 // 콘텐츠 테이블 리스트 생성
-function generateTableList(apiUrl, data, listIndex) { 
+function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElement) { 
 	let tableTrContent = '';
 	
 	switch(apiUrl) {
@@ -361,11 +397,11 @@ function generateTableList(apiUrl, data, listIndex) {
 			
 		case '/disease/info/get_disease_list': // 질환/질병 정보 관리 리스트 테이블
 		case '/disease/info/search_disease_list':            // 질환/질병 정보 관리 검색 리스트 테이블
-		case '/disease/info/get_disease_list_by_category': // 질환/질병 정보 관리 분류선택 리스트 테이블
+		case '/disease/info/get_disease_list_by_category': // 질환/질병 정보 관리 분류 선택 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td class="vam">
-		                <div class="table_info func_area"><input type="checkbox" name="d_no" class="d_no" value="${data.d_no}"></div>
+		                <div class="table_info func_area"><input type="checkbox" name="d_no" value="${data.d_no}"></div>
 		            </td>
 		            <td>
 		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${listIndex}</a>
@@ -404,8 +440,8 @@ function generateTableList(apiUrl, data, listIndex) {
 			break;
 			
 		case '/recipe/info/get_recipe_list': // 식단 정보 관리 리스트 테이블
-		case '/recipe/info/search_recipe_list':            // 식단 정보 관리 검색 리스트 테이블
-		case '/recipe/info/get_recipe_list_by_category': // 식단 정보 관리 분류선택 리스트 테이블
+		case '/recipe/info/search_recipe_list': // 식단 정보 관리 검색 리스트 테이블
+		case '/recipe/info/get_recipe_list_by_rcp_pat2': // 식단 정보 관리 음식 종류 선택 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -439,7 +475,7 @@ function generateTableList(apiUrl, data, listIndex) {
 			tableTrContent = `
 				<tr>
 		            <td class="vam">
-		                <div class="table_info func_area"><input type="checkbox" name="v_no" class="d_no" value="${data.v_no}"></div>
+		                <div class="table_info func_area"><input type="checkbox" name="v_no" value="${data.v_no}"></div>
 		            </td>
 		            <td>
 		                <a href="/video/info/modify_form?v_no=${data.v_no}" class="table_info">${listIndex}</a>
@@ -460,7 +496,13 @@ function generateTableList(apiUrl, data, listIndex) {
 		case '/board/cate_info/get_list': // 게시판 관리 리스트 테이블
 		case '/board/cate_info/search_board_category_list': // 게시판 관리 검색 리스트 테이블
 			tableTrContent = `
-				<tr>
+				<tr data-bc-no="${data.bc_no}" data-bc-name="${data.bc_name}" data-bc-idx="${data.bc_idx}">
+					<td>
+						<div class="table_info func_area">
+							${!isFirstElement ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx + 1})" class="func_arrow up"></span>` : ''}
+							${!isLastElement ? `<span onclick="putBoardCategoryModifyButton(evemt, ${data.bc_idx - 1})" class="func_arrow down"></span>` : ''}
+						</div>
+					</td>
 		            <td>
 		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${listIndex}</a>
 		            </td>
@@ -477,18 +519,54 @@ function generateTableList(apiUrl, data, listIndex) {
 			`;
 			break;
 			
-		case '/board/info/get_posts_list': // 게시물 리스트 테이블
-		case '/board/info/search_posts_list': // 게시물 검색 리스트 테이블
+		case '/board/noti_info/get_notice_posts_list': // 공지 게시물 리스트 테이블
+		case '/board/info/search_notice_posts_list': // 공지 게시물 검색 리스트 테이블
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${listIndex}</a>
+		            </td>
+		            <td>
+		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">게시판명</a>
+		            </td>
+		            <td>
+		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_title}</a>
+		            </td>
+					<td>
+		                <a href="/account/noti_info/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
+		            </td>
+		            <td>
+		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_view_cnt}</a>
+		            </td>
+					<td>
+		                <div class="table_info">
+							<span onclick="" class="btns small ${data.bn_state === 1 ? '' : 'white'}">${data.bn_state === 1 ? '사용' : '숨김'}</span>
+						</div>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.bn_mod_date) || 'N/A'}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/board/info/get_posts_list': // 일반 게시물 리스트 테이블
+		case '/board/info/search_posts_list': // 일반 게시물 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
 					<td class="vam">
-		                <div class="table_info func_area"><input type="checkbox" name="bp_no" class="d_no" value="${data.bp_no}"></div>
+		                <div class="table_info func_area"><input type="checkbox" name="bp_no" value="${data.bp_no}"></div>
 		            </td>
 		            <td>
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_title}(${data.bp_reply_cnt})</a>
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info table_flex_info">
+		                	<p class="info_text">${data.bp_title}</p><span class="info_num">(${data.bp_reply_cnt})</span>
+	                	</a>
+		            </td>
+					<td>
+		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
 		            </td>
 		            <td>
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_view_cnt}</a>
@@ -497,9 +575,6 @@ function generateTableList(apiUrl, data, listIndex) {
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">
 							${data.bp_report_state === 0 ? '처리완료' : data.bp_report_state === 1 ? '정상' : data.bp_report_state === 2 ? '처리중' : 'N/A'}
 						</a>
-		            </td>
-					<td>
-		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.bp_mod_date) || 'N/A'}</p>
@@ -513,7 +588,7 @@ function generateTableList(apiUrl, data, listIndex) {
 			tableTrContent = `
 				<tr>
 					<td class="vam">
-		                <div class="table_info func_area"><input type="checkbox" name="d_no" class="d_no" value="${data.n_no}"></div>
+		                <div class="table_info func_area"><input type="checkbox" name="d_no" value="${data.n_no}"></div>
 		            </td>
 		            <td>
 		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${listIndex}</a>
@@ -539,7 +614,7 @@ function generateTableList(apiUrl, data, listIndex) {
 			tableTrContent = `
 				<tr>
 					<td class="vam">
-		                <div class="table_info func_area"><input type="checkbox" name="bq_no" class="bq_no" value="${data.bq_no}"></div>
+		                <div class="table_info func_area"><input type="checkbox" name="bq_no" value="${data.bq_no}"></div>
 		            </td>
 		            <td>
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${listIndex}</a>
@@ -558,6 +633,33 @@ function generateTableList(apiUrl, data, listIndex) {
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.bq_mod_date) || 'N/A'}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/advertisement/info/get_advertisement_list': // 광고 관리 리스트 테이블
+		case '/advertisement/info/search_advertisement_list': // 광고 관리 검색 리스트 테이블
+		case '/advertisement/info/get_advertisement_list_by_position': // 광고 관리 위치 선택 리스트 테이블
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${listIndex}</a>
+		            </td>
+		            <td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_position}</a>
+		            </td>
+					<td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_start_date)}</a>
+		            </td>
+					<td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_end_date)}</a>
+		            </td>
+					<td>
+		                <p class="table_info">${data.ad_client}</p>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.ad_mod_date) || 'N/A'}</p>
 		            </td>
 		        </tr>
 			`;
@@ -657,17 +759,17 @@ function getSortList(event, dbTable, sortValue) {
 function mapSortListApiObject(dbTable) {
 	let apiUrl;
 	
-	switch(dbTable) {
+	switch(dbTable) {			
+		case 'admin_account': // 관리자 계정 관리 페이지
+			apiUrl = '/account/list/get_admin_list';
+			break;
+			
 		case 'disease': // 질환/질병 정보 관리 페이지
 			apiUrl = '/disease/info/get_disease_list';
 			break;
 		
 		case 'disease_category': // 질환/질병 분류 관리 페이지
 			apiUrl = '/disease/cate_info/get_category_list';
-			break;
-			
-		case 'admin_account': // 관리자 계정 관리 페이지
-			apiUrl = '/account/list/get_admin_list';
 			break;
 			
 		case 'recipe': // 식단 정보 관리 페이지
@@ -678,10 +780,22 @@ function mapSortListApiObject(dbTable) {
 			apiUrl = '/video/info/get_video_list';
 			break;
 			
+		case 'board_notice': // 게시판 공지 사항 페이지
+			apiUrl = '/board/noti_info/get_notice_posts_list';
+			break;
+			
 		case 'board_category': // 게시판 관리 페이지
 			apiUrl = '/board/cate_info/get_list';
 			break;
 			
+		case 'board_posts': // 특정 게시판 페이지
+			apiUrl = '/board/info/get_posts_list';
+			break;
+			
+		case 'advertisement': // 광고 관리 페이지
+			apiUrl = '/advertisement/info/get_advertisement_list';
+			break;
+		
 		default:
 			logger.error('mapSortListApiObject() dbTable:', value);
 			return false;
@@ -705,17 +819,17 @@ function getSelectList(event) {
 	getList(apiUrl, sortValue, order, 1);
 }
 
-// getList() 요청에 필요한 객체 설정
+// select getList() 요청에 필요한 객체 설정
 function mapSelectListApiObject(sortValue) {
 	let apiUrl;
 	
 	switch(sortValue) {				
-		case 'dc_no': // 질환/질병 정보 리스트 페이지 분류명별 필터
+		case 'dc_no': // 질환/질병 정보 리스트 페이지 분류 선택 리스트 요청
 			apiUrl = '/disease/info/get_disease_list_by_category';
 			break;
 			
-		case 'rcp_pat2': // 식단 정보 리스트 페이지 분류명별 필터
-			apiUrl = '/recipe/info/get_recipe_list_by_category';
+		case 'rcp_pat2': // 식단 정보 리스트 페이지 음식 종류 선택 리스트 요청
+			apiUrl = '/recipe/info/get_recipe_list_by_rcp_pat2';
 			break;
 			
 		default:
@@ -726,7 +840,7 @@ function mapSelectListApiObject(sortValue) {
 	return apiUrl;
 }
 
-// 카테고리 리스트 요청 및 옵션 생성
+// 셀렉트 옵션 리스트 요청 및 옵션 생성
 async function getCategoryList(ele, isForm, selectedValue) {
 	const $selectEle = $(`#${ele}`); // 셀렉트 요소가 생성될 table th
 	const { apiUrl, getListDtos, dataNo, dataName } = mapCategorylistObject(ele);
@@ -793,10 +907,25 @@ function mapCategorylistObject(ele) {
 			break;
 			
 		case 'rcp_pat2': // 식단 관련 페이지
-			apiUrl = '/recipe/cate_info/get_category_list_select';
-			getListDtos = 'recipeCategoryDto';
+			apiUrl = '/recipe/info/get_rcp_pat2_list_select';
+			getListDtos = 'recipeRcpPat2Dto';
 			dataNo = 'rcp_pat2';
 			dataName = 'rcp_pat2';
+			break;
+			
+		case 'bc_name': // 게시판 공지 사항 페이지
+		case 'bn_category_no':
+			apiUrl = '/board/cate_info/get_list';
+			getListDtos = 'boardCategoryDtos';
+			dataNo = 'bc_no';
+			dataName = 'bc_name';
+			break;
+			
+		case 'rcp_pat2': // 광고 관련 페이지
+			apiUrl = '/advertisement/info/get_position_list_select';
+			getListDtos = 'advertisementPositionDto';
+			dataNo = 'ad_position';
+			dataName = 'ad_position';
 			break;
 		
 		default:

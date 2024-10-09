@@ -37,7 +37,7 @@ async function delSingleData(key, noValue, dataName) {
 
 // 리스트 삭제
 async function delListData(name, isCheckList) {
-	let deleteData; // 삭제할 데이터의 배열이 들어갈 변수
+	let deleteArray; // 삭제할 데이터의 배열이 들어갈 변수
 	
 	if(isCheckList) { // 삭제 처리 페이지가 체크리스트인 경우
 		const $delDataElement = $(`input[type="checkbox"][name="${name}"]:checked`);
@@ -49,17 +49,17 @@ async function delListData(name, isCheckList) {
 		
 		if(!confirm('선택한 항목을 삭제하시겠습니까?')) return false;
 		
-		deleteData = Array.from($delDataElement, checkbox => $(checkbox).val());
+		deleteArray = Array.from($delDataElement, checkbox => $(checkbox).val());
 		
 	} else { // 리스트중 디테일 페이지에서 단일 데이터 삭제 시
 		const $delData = $(`input[name="${name}"]`);
 		
 		if(!confirm('삭제하시겠습니까?')) return false;
 		
-		deleteData = [$delData.val()];
+		deleteArray = [$delData.val()];
 	}
 	
-	logger.info('delListData() deleteData:', deleteData);
+	logger.info(`delListData() ${name}s:`, deleteArray);
 	
 	const { apiUrl, replace } = mapDeleteObject(name); // 커맨드와 경로 설정
 	const errorMessage = '삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
@@ -69,7 +69,7 @@ async function delListData(name, isCheckList) {
 			url: apiUrl,
 			method: 'POST',
 			data: {
-				deleteData: deleteData, // 항목 배열
+				[`${name}s`]: deleteArray, // 항목 배열
 			},
 		});
 		
@@ -112,14 +112,29 @@ function mapDeleteObject(value) {
 			replace = '/disease/info/disease_list_form';
 			break;
 		
-		case 'bc_no': // 게시판
-			apiUrl = '/board/cate_info/delete_category_confirm';
-			replace = '/board/cate_info/category_list_form';
+		case 'v_no': // 영상 정보
+			apiUrl = '/video/info/delete_confirm';
+			replace = '/video/info/video_list_form';
 			break;
 			
 		case 'n_no': // 공지사항
 			apiUrl = '/notice/info/delete_confirm';
 			replace = '/notice/info/notice_list_form';
+			break;
+		
+		case 'bc_no': // 게시판
+			apiUrl = '/board/cate_info/delete_category_confirm';
+			replace = '/board/cate_info/category_list_form';
+			break;
+			
+		case 'bn_no': // 게시판 공지 사항
+			apiUrl = '/board/info/delete_notice_posts_confirm';
+			replace = '/board/info/notice_posts_form';
+			break;
+		
+		case 'bp_no': // 게시물
+			apiUrl = '/board/info/delete_confirm';
+			replace = '/board/info/posts_list_form';
 			break;
 			
 		default:

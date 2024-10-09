@@ -24,6 +24,8 @@ async function requestEmailDuplicateCheck(email) {
 async function requestDuplicateCheck(input, nullCheck, defaultValue,  alertMsg) { // 요소, 기본값, alert 여부, 빈값 체크 여부
 	const inputName = input.name;
 	const inputValue = input.value.trim();
+	input.value = inputValue; // 앞뒤 공백 제거 적용
+	
 	let errorMessage;
 	logger.info('requestDuplicateCheck() input:', inputName, inputValue);
 	

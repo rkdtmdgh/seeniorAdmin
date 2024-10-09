@@ -43,9 +43,18 @@
 				<option value="bc_name" selected>게시판명</option>
 			</th:block>
 			
+			<th:block th:if="${option == '게시판 공지 사항'}">
+				<option value="bn_title" selected>제목</option>
+				<option value="bn_writer_no" selected>작성자</option>
+			</th:block>
+			
 			<th:block th:if="${option == '게시판'}">
 				<option value="bp_title" selected>제목</option>
 				<option value="bp_writer_no">작성자</option>
+			</th:block>
+			
+			<th:block th:if="${option == '광고 관리'}">
+				<option value="ad_client" selected>클라이언트</option>
 			</th:block>
 		</select>
 		
