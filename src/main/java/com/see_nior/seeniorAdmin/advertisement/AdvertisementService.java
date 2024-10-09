@@ -96,7 +96,7 @@ public class AdvertisementService {
 		int maxPage = (int) (Math.ceil((double) advertisementListCnt / pageLimit));
 		
 		// 시작 페이지 값 계산
-		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1);
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
 		
 		// 마지막 페이지 값 계산
 		int endPage = startPage + blockLimit - 1;
