@@ -37,6 +37,10 @@ public interface BoardMapper {
 
 	int getBoardPostsByCategoryCnt(int bp_category_no);
 
+	int targetModifyCategoryIdx(Map<String, Object> modifyParams);
+
+	int matchingModifyCategoryIdx(Map<String, Object> modifyParams);
+
 	
 
 }

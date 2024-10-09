@@ -229,5 +229,27 @@
 			BP_IS_DELETED = 1 
     
     </select>
+    
+    <update id="targetModifyCategoryIdx" parameterType="Object">
+    
+    	UPDATE 
+        	BOARD_CATEGORY
+        SET 
+        	BC_IDX = #{bc_idx}
+        WHERE 
+        	BC_IDX = #{current_bc_idx}
+    
+    </update>
+    
+    <update id="targetModifyCategoryIdx" parameterType="Object">
+    
+    	UPDATE 
+        	BOARD_CATEGORY
+        SET 
+        	BC_IDX = #{current_bc_idx}
+        WHERE 
+        	BC_IDX = #{bc_idx}
+    
+    </update>
 
 </mapper>
