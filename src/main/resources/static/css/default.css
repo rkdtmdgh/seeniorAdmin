@@ -400,7 +400,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: var(--ssize2);
+        gap: var(--ssize1);
 
         .func_btn {
             display: flex;
@@ -408,8 +408,10 @@
         
         .func_arrow {
         	display: block;
-        	width: var(--arrowWidth);
-        	height: var(--arrowWidth);
+        	width: var(--arrowButtonWidth);
+        	height: var(--arrowButtonWidth);
+        	padding: var(--tableBtnPadding);
+        	cursor: pointer;
         	
         	&.up {
         		background: url(/image/icons/a_up.gif) center no-repeat;
