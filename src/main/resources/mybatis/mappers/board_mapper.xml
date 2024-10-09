@@ -28,6 +28,7 @@
 		<result column="bc_no" property="bc_no" />
 		<result column="bc_name" property="bc_name" />		
 		<result column="bc_idx" property="bc_idx" />
+		<result column="bc_item_cnt" property="bc_item_cnt" />
 		<result column="bc_is_deleted" property="bc_is_deleted" />
 		<result column="bc_reg_date" property="bc_reg_date" />
 		<result column="bc_mod_date" property="bc_mod_date" />
@@ -73,6 +74,37 @@
 		ORDER BY 
 			BC_IDX 
 		ASC
+	
+	</select>
+	
+	<!-- 모든 게시판 카테고리 가져오기(페이지네이션 => 비동기) -->
+	<select id="getBoardCategoryListWithPage"
+			parameterType="Map"
+			resultMap="BoardCategoryDto">
+	
+		SELECT 
+			* 
+		FROM 
+			BOARD_CATEGORY 
+		WHERE 
+			BC_IS_DELETED = 1 
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>
+	
+	<!-- 게시판 카테고리의 총 리스트 개수 구하기 -->
+	<select id="getAllBoardCategoryCnt"
+			resultType="Integer">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_CATEGORY 
+		WHERE 
+			BC_IS_DELETED = 1
 	
 	</select>
 	
