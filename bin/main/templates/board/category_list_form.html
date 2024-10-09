@@ -14,11 +14,11 @@
 					break;
 
 				case '0': // sort
-					getList('/board/cate_info/get_list', sortValue, order, page);
+					getList('/board/cate_info/get_category_list', sortValue, order, page);
 					break;
 					
 				default:
-					getList('/board/cate_info/get_list', null, null, page);
+					getList('/board/cate_info/get_category_list', null, null, page);
 			}
         });
 	</script>
@@ -43,7 +43,7 @@
 										th:insert="~{fragments/search.html :: search('게시판 관리')}"></form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/board/cate_info/get_list', null, null, 1);">전체보기</div>
+						            	<div class="btns small" onclick="getList('/board/cate_info/get_category_list', null, null, 1);">전체보기</div>
 						            	<a href="/board/cate_info/create_category_form" class="btns small">등록</a>
 						            </div>
 					            </div>
@@ -66,11 +66,7 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p data-current-sort-value="all" class="table_title sort"
-	                                        	onclick="getSortList(event, 'board_category', 'bc_name')">
-	                                        	게시판명
-	                                        	<span class="sort_icon"></span>
-	                                        </p>
+	                                        <p class="table_title">게시판명</p>
 	                                    </th>
 	                                    
 	                                    <th>

@@ -281,7 +281,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchVideoListPage.searchVideoListCnt;
 			break;	
 			
-		case '/board/cate_info/get_list': // 게시판 관리
+		case '/board/cate_info/get_category_list': // 게시판 관리
 			getListDtos = response.boardCategoryDtos;
 			getListPage = response.boardCategoryListPageNum;
 			getListCnt = response.boardCategoryListPageNum.boardCategoryListCnt;
@@ -493,7 +493,7 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			`;
 			break;
 			
-		case '/board/cate_info/get_list': // 게시판 관리 리스트 테이블
+		case '/board/cate_info/get_category_list': // 게시판 관리 리스트 테이블
 		case '/board/cate_info/search_board_category_list': // 게시판 관리 검색 리스트 테이블
 			tableTrContent = `
 				<tr data-bc-no="${data.bc_no}" data-bc-name="${data.bc_name}" data-bc-idx="${data.bc_idx}">
@@ -785,7 +785,7 @@ function mapSortListApiObject(dbTable) {
 			break;
 			
 		case 'board_category': // 게시판 관리 페이지
-			apiUrl = '/board/cate_info/get_list';
+			apiUrl = '/board/cate_info/get_category_list';
 			break;
 			
 		case 'board_posts': // 특정 게시판 페이지
@@ -915,7 +915,7 @@ function mapCategorylistObject(ele) {
 			
 		case 'bc_name': // 게시판 공지 사항 페이지
 		case 'bn_category_no':
-			apiUrl = '/board/cate_info/get_list';
+			apiUrl = '/board/cate_info/get_category_list';
 			getListDtos = 'boardCategoryDtos';
 			dataNo = 'bc_no';
 			dataName = 'bc_name';
