@@ -29,6 +29,19 @@
 	
 	</insert>
 	
+	<!-- 모든 광고 위치 가져오기 (광고 리스트에서 <select>박스 => 비동기) -->
+	<select id="getPositionList"
+			resultMap="AdvertisementDto">
+			
+		SELECT DISTINCT 
+			AD_POSITION 
+		FROM 
+			ADVERTISEMENT 
+		ORDER BY 
+			AD_POSITION DESC
+	
+	</select>
+	
 	<!-- 페이지에 따른 광고 가져오기(모든 광고) -->
 	<select id="getAdvertisementListWithPage"
 			parameterType="Map"
@@ -57,6 +70,42 @@
 			ADVERTISEMENT 
 		WHERE 
 			AD_IS_DELETED = 1 
+	
+	</select>
+	
+	<!-- 페이지에 따른 광고 가져오기 (위치별 광고) -->
+	<select id="getAdvertisementListByPositionWithPage"
+			parameterType="Integer"
+			resultMap="AdvertisementDto">
+			
+		SELECT 
+			* 
+		FROM 
+			ADVERTISEMENT 
+		WHERE 
+			AD_IS_DELETED = 1 
+		AND 
+			AD_POSITION = #{position} 
+		ORDER BY 
+			AD_NO DESC 
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>
+	
+	<!-- 광고의 총 리스트 개수 구하기(위치별 광고) -->
+	<select id="getAdvertisementByPositionCnt"
+			parameterType="Integer"
+			resultType="Integer">
+
+		SELECT 
+			COUNT(*) 
+		FROM 
+			ADVERTISEMENT 
+		WHERE 
+			AD_IS_DELETED = 1 
+		AND 
+			AD_POSITION = #{position} 
 	
 	</select>
 	
@@ -118,7 +167,7 @@
 		WHERE 
 			AD_IS_DELETED = 1 
 		AND 
-			${serachPart} LIKE CONCAT ('%', #{searchString}, '%') 
+			${searchPart} LIKE CONCAT ('%', #{searchString}, '%') 
 		ORDER BY 
 			AD_NO DESC 
 		LIMIT 
@@ -132,13 +181,13 @@
 			resultType="Integer">
 	
 		SELECT 
-			CONUT(*) 
+			COUNT(*) 
 		FROM 
 			ADVERTISEMENT 
 		WHERE 
 			AD_IS_DELETED = 1 
 		AND 
-			${serachPart} LIKE CONCAT ('%', #{searchString}, '%')
+			${searchPart} LIKE CONCAT ('%', #{searchString}, '%')
 	
 	</select>
 

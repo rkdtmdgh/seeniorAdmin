@@ -48,13 +48,13 @@ public class RecipeController {
 	
 	// 모든 식단 분류 가져오기 (식단 리스트에서 <select>박스 => 비동기)
 	@ResponseBody
-	@GetMapping("cate_info/get_category_list_select")
-	public Object getCategorylistSelect() {
-		log.info("getCategorylistSelect()");
+	@GetMapping("info/get_type_list_select")
+	public Object getTypelistSelect() {
+		log.info("getTypelistSelect()");
 		
-		Map<String, Object> recipeCategoryDtos = recipeService.getCategoryList();
+		Map<String, Object> recipeTypeDtos = recipeService.getTypeList();
 		
-		return recipeCategoryDtos;
+		return recipeTypeDtos;
 	}
 	
 	// 모든 식단 가져오기 (페이지네이션)
@@ -82,24 +82,24 @@ public class RecipeController {
 	
 	// 카테고리에 따른 식단 가져오기(페이지네이션)
 	@ResponseBody
-	@GetMapping("info/get_recipe_list_by_category")
-	public Object getRecipeListByCategory(
+	@GetMapping("info/get_recipe_list_by_type")
+	public Object getRecipeListByType(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "all") String sortValue,
 			@RequestParam(value = "order") String rcp_pat2) {
-		log.info("getRecipeListByCategory()");
+		log.info("getRecipeListByType()");
 		
 		// 페이지 번호에 따른 카테고리별 식단 리스트들 가져오기
-		Map<String, Object> recipeListByCategoryWithPage = recipeService.getRecipeListByCategoryWithPage(page, rcp_pat2);
+		Map<String, Object> recipeListByTypeWithPage = recipeService.getRecipeListByTypeWithPage(page, rcp_pat2);
 		
 		// 카테고리별 식단 총 페이지 개수 가져오기
-		Map<String, Object> recipeListByCategoryPageNum = recipeService.getRecipeListByCategoryPageNum(page, rcp_pat2);
+		Map<String, Object> recipeListByTypePageNum = recipeService.getRecipeListByTypePageNum(page, rcp_pat2);
 		
-		recipeListByCategoryWithPage.put("recipeListByCategoryPageNum", recipeListByCategoryPageNum);
-		recipeListByCategoryWithPage.put("sortValue", sortValue);
-		recipeListByCategoryWithPage.put("order", rcp_pat2);
+		recipeListByTypeWithPage.put("recipeListByTypePageNum", recipeListByTypePageNum);
+		recipeListByTypeWithPage.put("sortValue", sortValue);
+		recipeListByTypeWithPage.put("order", rcp_pat2);
 		
-		return recipeListByCategoryWithPage;
+		return recipeListByTypeWithPage;
 		
 	}
 	
