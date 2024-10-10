@@ -33,6 +33,34 @@
             
             .header_menu_btn_wrap {
            		position: relative;
+           		
+           		.alarm_num {
+           			width: var(--iconsWidth);
+           			height: var(--iconsWidth);
+           			position: absolute;
+           			top: 0;
+           			right: 0;
+           			
+           			.num {
+           				display: flex;
+           				align-items: center;
+           				justify-content: center;
+           				width: max-content;
+           				min-width: 1em;
+           				font-size: 10px;
+           				font-weight: var(--bold);
+           				line-height: 1;
+           				background-color: var(--redColor);
+           				color: var(--whiteColor);
+           				border-radius: 20px;
+           				border: 2px solid var(--whiteColor);
+           				padding: var(--smallIconsPadding);
+           				position: absolute;
+           				top: -0.5em;
+           				left: 50%;
+           				transform: translateX(-50%);
+           			}
+            	}
 				
 				#notifications {
 					display: none;
