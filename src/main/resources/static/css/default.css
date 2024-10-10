@@ -410,15 +410,16 @@
         	display: block;
         	width: var(--arrowButtonWidth);
         	height: var(--arrowButtonWidth);
-        	padding: var(--tableBtnPadding);
         	cursor: pointer;
         	
         	&.up {
-        		background: url(/image/icons/a_up.gif) center no-repeat;
+        		background: url(/image/icons/a_up.png) center no-repeat;
+        		background-size: contain;
         	}
         	
         	&.down {
-        		background: url(/image/icons/a_down.gif) center no-repeat;
+        		background: url(/image/icons/a_down.png) center no-repeat;
+        		background-size: contain;
         	}
         }
     }

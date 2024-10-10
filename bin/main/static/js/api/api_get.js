@@ -83,11 +83,8 @@ async function getList(apiUrl, sortValue, order, page) {
 			let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
 			let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
 			
-			getListDtos.forEach((data) => { 
-			    const isFirstElement = (listIndex === getListCnt); // 첫 번째 요소인지 확인
-			    const isLastElement = (listIndex === (getListCnt - (pageLimit * (getListPage.page - 1) + pageLimit - 1)));  // 마지막 요소인지 확인
-			   
-				$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElement, page));
+			getListDtos.forEach((data) => { 			   
+				$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, getListCnt, listIndex, page));
 				listIndex --;
 			});
 			
@@ -168,11 +165,8 @@ async function getSearchList(event, apiUrl, page) {
 				let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
 				let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
 						
-				getListDtos.forEach((data) => { 
-					const isFirstElement = (listIndex === getListCnt); // 첫 번째 요소인지 확인
-				    const isLastElement = (listIndex === (getListCnt - (pageLimit * (getListPage.page - 1) + pageLimit - 1)));  // 마지막 요소인지 확인
-				    
-					$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElement));
+				getListDtos.forEach((data) => {
+					$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, getListCnt, listIndex, page));
 					listIndex --;
 				});
 				
@@ -365,7 +359,7 @@ function mapApiResponseObject(apiUrl, response) {
 }
 
 // 콘텐츠 테이블 리스트 생성
-function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElement, page) { 
+function generateTableList(apiUrl, data, getListCnt, listIndex, page) { 
 	let tableTrContent = '';
 	
 	switch(apiUrl) {
@@ -499,8 +493,8 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 				<tr data-bc-no="${data.bc_no}" data-bc-idx="${data.bc_idx}">
 					<td class="vam">
 						<div class="table_info func_area">
-							${!isFirstElement ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx - 1}, ${page})" class="func_arrow up"></span>` : ''}
-							${!isLastElement ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx + 1}, ${page})" class="func_arrow down"></span>` : ''}
+							${data.bc_idx !== 1 ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx - 1}, ${page})" class="func_arrow up"></span>` : ''}
+							${data.bc_idx !== getListCnt ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx + 1}, ${page})" class="func_arrow down"></span>` : ''}
 						</div>
 					</td>
 		            <td>
