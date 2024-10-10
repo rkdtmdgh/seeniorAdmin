@@ -94,7 +94,23 @@
             				.notifications_info {
             					display: flex;
 	            				justify-content: space-between;
+	            				align-items: center;
 	           					gap: var(--smallGap);
+	           					
+	           					.notifications_user {
+	           						display: flex;
+	           						align-items: center;
+	           						gap: var(--ssize1);
+	           						
+	           						.thumbnail {
+	           							display: block;
+	           							width: var(--smallThumbWidth);
+	           							height: var(--smallThumbWidth);
+	           							border-radius: 50%;
+	           							border: 1px solid var(--lightGrayColor);
+	           							overflow: hidden;
+	           						}
+	           					}
             					
             					.notifications_lapse {
             						display: inline-block;
