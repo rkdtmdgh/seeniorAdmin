@@ -63,7 +63,7 @@
 .input_icon {
 	width: var(--iconsWidth);
 	height: var(--iconsWidth);
-	padding: var(--iconsPadding);
+	padding: var(--inputIconsPadding);
 	position: absolute;
 	top: var(--inputIconTop);
 	right: 1em;
@@ -410,15 +410,14 @@
         	display: block;
         	width: var(--arrowButtonWidth);
         	height: var(--arrowButtonWidth);
-        	padding: var(--tableBtnPadding);
         	cursor: pointer;
         	
         	&.up {
-        		background: url(/image/icons/a_up.gif) center no-repeat;
+        		background: url(/image/icons/a_up.png) center no-repeat;
         	}
         	
         	&.down {
-        		background: url(/image/icons/a_down.gif) center no-repeat;
+        		background: url(/image/icons/a_down.png) center no-repeat;
         	}
         }
     }
@@ -469,6 +468,24 @@
 
     .table_info {
         text-align: left;
+    }
+    
+    .preview_container {
+    	width: 100%;
+    	max-width: 400px;
+    	
+    	&.horizontal {
+	    	aspect-ratio: 16 / 9; /* 비율 유지 (16:9 비율) */
+    	}
+    	
+    	&.vertical {
+	    	aspect-ratio: 9 / 16; /* 비율 유지 (9:16 비율) */
+    	}
+    
+    	iframe {
+    		width: 100%;
+    		height: 100%;
+    	}
     }
     
     .cont_info {

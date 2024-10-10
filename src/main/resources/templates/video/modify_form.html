@@ -49,15 +49,13 @@
 		                                <tr>
 		                                    <th><p class="table_title">URL</p></th>
 		                                    <td colspan="3">
-		                                    	<div class="cont_info">
-			                                		<input type="text" name="v_link" id="v_link" class="table_info" placeholder="URL"
-		                                				onblur="validateVideo(this)"
-		                                				th:value="${videoDto.v_link}">
-	                                				<div class="table_info preview_container">
-	                                					<iframe frameborder="0" allowfullscreen="true" th:src="${videoDto.v_link}">)</iframe>
-	                                				</div>
-	                                				<input type="hidden" name="v_platform" th:value="${videoDto.v_platform}">
-		                                		</div>
+		                                		<input type="text" name="v_link" id="v_link" class="table_info" placeholder="URL"
+	                                				onblur="validateVideo(this)"
+	                                				th:value="${videoDto.v_link}">
+                                				<div class="table_info preview_container" th:classappend="${videoDto.v_platform == 'instagram_reels'} ? 'vertical' : 'horizontal'">
+                                					<iframe frameborder="0" allowfullscreen="true" th:src="${videoDto.v_link}">)</iframe>
+                                				</div>
+                                				<input type="hidden" name="v_platform" th:value="${videoDto.v_platform}">
 		                                    </td>
 		                                </tr>
 		                                

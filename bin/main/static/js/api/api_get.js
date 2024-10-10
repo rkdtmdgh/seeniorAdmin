@@ -83,11 +83,8 @@ async function getList(apiUrl, sortValue, order, page) {
 			let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
 			let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
 			
-			getListDtos.forEach((data) => { 
-			    const isFirstElement = (listIndex === getListCnt); // 첫 번째 요소인지 확인
-			    const isLastElement = (listIndex === (getListCnt - (pageLimit * (getListPage.page - 1) + pageLimit - 1)));  // 마지막 요소인지 확인
-			   
-				$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElement, page));
+			getListDtos.forEach((data) => { 			   
+				$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, getListCnt, listIndex, page));
 				listIndex --;
 			});
 			
@@ -168,11 +165,8 @@ async function getSearchList(event, apiUrl, page) {
 				let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
 				let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
 						
-				getListDtos.forEach((data) => { 
-					const isFirstElement = (listIndex === getListCnt); // 첫 번째 요소인지 확인
-				    const isLastElement = (listIndex === (getListCnt - (pageLimit * (getListPage.page - 1) + pageLimit - 1)));  // 마지막 요소인지 확인
-				    
-					$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElement));
+				getListDtos.forEach((data) => {
+					$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, getListCnt, listIndex, page));
 					listIndex --;
 				});
 				
@@ -293,13 +287,13 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchBoardCategoryListPageNum.searchBoardCategoryListCnt;
 			break;
 			
-		case '/board/noti_info/get_notice_posts_list': // 공지 게시물
+		case '/board/noti_info/get_board_notice_list': // 공지 게시물
 			getListDtos = response.boardNoticePostsDtos;
 			getListPage = response.boardNoticePostsListPageNum;
 			getListCnt = response.boardNoticePostsListPageNum.boardNoticePostsListCnt;
 			break;
 			
-		case '/board/info/search_notice_posts_list': // 공지 게시물 검색
+		case '/board/info/search_board_notice_list': // 공지 게시물 검색
 			getListDtos = response.boardNoticePostsDtos;
 			getListPage = response.searchBoardNoticePostsListPageNum;
 			getListCnt = response.searchBoardNoticePostsListPageNum.searchNoticePostsListCnt;
@@ -365,7 +359,7 @@ function mapApiResponseObject(apiUrl, response) {
 }
 
 // 콘텐츠 테이블 리스트 생성
-function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElement, page) { 
+function generateTableList(apiUrl, data, getListCnt, listIndex, page) { 
 	let tableTrContent = '';
 	
 	switch(apiUrl) {
@@ -484,7 +478,7 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 		                <a href="/video/info/modify_form?v_no=${data.v_no}" class="table_info">${data.v_title}</a>
 		            </td>
 		            <td class="ta_l">
-		                <a href="${data.v_link}" onclick="setWindowOpenPosition(this.href, '640', '360'); return false;" class="table_info">${data.v_link}</a>
+		                <a href="${data.v_link}" onclick="setWindowOpenPosition(this.href, ${data.v_platform === 'instagram_reels' ? '360, 640' : '640, 360'}); return false;" class="table_info">${data.v_link}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.v_mod_date) || 'N/A'}</p>
@@ -499,8 +493,8 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 				<tr data-bc-no="${data.bc_no}" data-bc-idx="${data.bc_idx}">
 					<td class="vam">
 						<div class="table_info func_area">
-							${!isFirstElement ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx - 1}, ${page})" class="func_arrow up"></span>` : ''}
-							${!isLastElement ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx + 1}, ${page})" class="func_arrow down"></span>` : ''}
+							${data.bc_idx !== 1 ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx - 1}, ${page})" class="func_arrow up"></span>` : ''}
+							${data.bc_idx !== getListCnt ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx + 1}, ${page})" class="func_arrow down"></span>` : ''}
 						</div>
 					</td>
 		            <td>
@@ -522,24 +516,24 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			`;
 			break;
 			
-		case '/board/noti_info/get_notice_posts_list': // 공지 게시물 리스트 테이블
-		case '/board/info/search_notice_posts_list': // 공지 게시물 검색 리스트 테이블
+		case '/board/noti_info/get_board_notice_list': // 공지 게시물 리스트 테이블
+		case '/board/info/search_board_notice_list': // 공지 게시물 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
-		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${listIndex}</a>
+		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">게시판명</a>
+		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">게시판명</a>
 		            </td>
 		            <td>
-		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_title}</a>
+		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_title}</a>
 		            </td>
 					<td>
 		                <a href="/account/noti_info/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
 		            </td>
 		            <td>
-		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_view_cnt}</a>
+		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_view_cnt}</a>
 		            </td>
 					<td>
 		                <div class="table_info">
@@ -784,7 +778,7 @@ function mapSortListApiObject(dbTable) {
 			break;
 			
 		case 'board_notice': // 게시판 공지 사항 페이지
-			apiUrl = '/board/noti_info/get_notice_posts_list';
+			apiUrl = '/board/noti_info/get_board_notice_list';
 			break;
 			
 		case 'board_category': // 게시판 관리 페이지

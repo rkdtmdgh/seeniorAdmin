@@ -147,16 +147,20 @@ function validateVideo(input, alertMsg) {
     //동영상 URL을 임베디드 URL로 변환
 	const url = $input.val().trim();
     let $previewEle = $input.parent().find('.preview_container'); // 부모 요소 내에 미리보기 요소를 찾음
-    if($previewEle.length && $previewEle.find('iframe').attr('src') === url) return false; // 수정되지 않았을 경우 리턴
+    if($previewEle.length && $previewEle.find('iframe').attr('src') === url) return; // 수정되지 않았을 경우 리턴
     
     const platformInfo = extractPlatformInfo(url); // 플랫폼 정보 추출    
     
     if(platformInfo) {	    
 		// 미리보기 요소가 없으면 생성
-    	if (!$previewEle.length) $previewEle = $('<div class="table_info preview_container">'); // 요소 생성 및 클래스 추가
+    	if (!$previewEle.length) $previewEle = $(`
+    		<div class="table_info preview_container ${
+				platformInfo.platform == 'instagram_reels' ? 'vertical' : 'horizontal'
+    		}">
+    	`); // 요소 생성 및 클래스 추가
     	
     	// iframe 태그에 플랫폼에 맞는 임베디드 URL 삽입하여 preview_container 요소 추가
-    	$previewEle.html(`<iframe frameborder="0" allowfullscreen="true" src="${platformInfo.embedUrl}">)</iframe>`);
+    	$previewEle.html(`<iframe frameborder="0" allowfullscreen="true" src="${platformInfo.embedUrl}"></iframe>`);
     	$input.val(platformInfo.embedUrl); // 임베드된 주소로 변경
     	$input.parent().append($previewEle);
     	
@@ -175,8 +179,8 @@ function validateVideo(input, alertMsg) {
     	
 	} else { // 유효한 URl이 아니거나 지원되지 않은 플랫폼일 경우
 		if ($previewEle.length) $previewEle.remove(); // 잘못된 URL 입력 시 미리보기 삭제
-		if(alertMsg) alert('지원되지 않은 플랫폼이거나 유효하지 않은 URL입니다. 올바른 URL을 입력해 주세요.');
-		setAddErrorMessage(input, '지원되지 않은 플랫폼이거나 유효하지 않은 URL입니다. 올바른 URL을 입력해 주세요.');
+		if(alertMsg) alert('지원되지 않은 플랫폼이거나 유효하지 않은 URL입니다. \n지원 플랫폼: YouTube, Vimeo, Dailymotion, Instagram Reels');
+		setAddErrorMessage(input, '지원되지 않은 플랫폼이거나 유효하지 않은 URL입니다. 지원 플랫폼: YouTube, Vimeo, Dailymotion, Instagram Reels');
 		return false;
 	}
 	
@@ -202,11 +206,6 @@ function extractPlatformInfo(url) {
             name: 'dailymotion',
             regEx: /(?:https?:\/\/)?(?:www\.)?dailymotion\.com\/video\/([a-zA-Z0-9]+)/,
             embedUrl: (id) => `https://www.dailymotion.com/embed/video/${id}`
-        },
-        {
-            name: 'facebook_reels',
-            regEx: /(?:https?:\/\/)?(?:www\.)?facebook\.com\/reel\/([a-zA-Z0-9_-]+)/,
-            embedUrl: (id) => `https://www.facebook.com/reel/${id}/embed`
         },
         {
             name: 'instagram_reels',
