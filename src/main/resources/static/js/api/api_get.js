@@ -287,13 +287,13 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchBoardCategoryListPageNum.searchBoardCategoryListCnt;
 			break;
 			
-		case '/board/noti_info/get_notice_posts_list': // 공지 게시물
+		case '/board/noti_info/get_board_notice_list': // 공지 게시물
 			getListDtos = response.boardNoticePostsDtos;
 			getListPage = response.boardNoticePostsListPageNum;
 			getListCnt = response.boardNoticePostsListPageNum.boardNoticePostsListCnt;
 			break;
 			
-		case '/board/info/search_notice_posts_list': // 공지 게시물 검색
+		case '/board/info/search_board_notice_list': // 공지 게시물 검색
 			getListDtos = response.boardNoticePostsDtos;
 			getListPage = response.searchBoardNoticePostsListPageNum;
 			getListCnt = response.searchBoardNoticePostsListPageNum.searchNoticePostsListCnt;
@@ -516,24 +516,24 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			`;
 			break;
 			
-		case '/board/noti_info/get_notice_posts_list': // 공지 게시물 리스트 테이블
-		case '/board/info/search_notice_posts_list': // 공지 게시물 검색 리스트 테이블
+		case '/board/noti_info/get_board_notice_list': // 공지 게시물 리스트 테이블
+		case '/board/info/search_board_notice_list': // 공지 게시물 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
-		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${listIndex}</a>
+		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">게시판명</a>
+		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">게시판명</a>
 		            </td>
 		            <td>
-		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_title}</a>
+		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_title}</a>
 		            </td>
 					<td>
 		                <a href="/account/noti_info/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
 		            </td>
 		            <td>
-		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_view_cnt}</a>
+		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_view_cnt}</a>
 		            </td>
 					<td>
 		                <div class="table_info">
@@ -778,7 +778,7 @@ function mapSortListApiObject(dbTable) {
 			break;
 			
 		case 'board_notice': // 게시판 공지 사항 페이지
-			apiUrl = '/board/noti_info/get_notice_posts_list';
+			apiUrl = '/board/noti_info/get_board_notice_list';
 			break;
 			
 		case 'board_category': // 게시판 관리 페이지

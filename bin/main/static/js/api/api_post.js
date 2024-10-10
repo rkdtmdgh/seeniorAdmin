@@ -405,11 +405,11 @@ async function postNoticePostsCreateForm(formName) {
 	//if(!isTrue) return false;
 	
 	await postSubmitForm(
-		'/board/info/create_notice_posts_confirm',
+		'/board/info/create_board_notice_confirm',
 		formData,
 		successMessage,
 		errorMessage,
-		`/board/info/notice_posts_list_form?infoNo=${form.bn_category_no.value}`
+		`/board/info/board_notice_list_form?infoNo=${form.bn_category_no.value}`
 	);
 }
 

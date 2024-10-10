@@ -128,7 +128,7 @@ function mapDeleteObject(value) {
 			break;
 			
 		case 'bn_no': // 게시판 공지 사항
-			apiUrl = '/board/info/delete_notice_posts_confirm';
+			apiUrl = '/board/info/delete_board_notice_confirm';
 			replace = '/board/info/notice_posts_form';
 			break;
 		
