@@ -97,6 +97,7 @@
 	           					gap: var(--smallGap);
             					
             					.notifications_lapse {
+            						display: inline-block;
             						width: 30%;
             						min-width: 30%;	
             						font-size: var(--subFontSize);
@@ -104,6 +105,7 @@
             				}
             				
             				.notifications_content {
+            					display: block;
             					padding-top: var(--ssize2);
             					overflow: hidden;
 							    text-overflow: ellipsis;
