@@ -64,6 +64,7 @@
     --borderInputPadding: 1em 1em 10px;
     --selectPadding: 0.53em 2.2em 0.53em 1em;;
     --iconsPadding: 0.5em;
+    --smallIconsPadding: 0.3em 0.5em;
     --inputIconsPadding: 0.15em;
     --tableInputErrorPadding: 0 1.2em 0.7em;
     --optionPadding: 0.5em 1.2em;
@@ -75,7 +76,7 @@
     --formGap: 30px;
 
     --bdrs: 0.5em;
-    --bxsh: 0 1px 4px 0 rgba(0,0,0, .15);
+    --bxsh: 0 1px 5px rgba(0,0,0, .15);
     --inputBorder: 1px solid var(--lightGrayColor);
 
     --transition: .2s; 
