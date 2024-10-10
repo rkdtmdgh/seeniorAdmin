@@ -147,7 +147,7 @@ function validateVideo(input, alertMsg) {
     //동영상 URL을 임베디드 URL로 변환
 	const url = $input.val().trim();
     let $previewEle = $input.parent().find('.preview_container'); // 부모 요소 내에 미리보기 요소를 찾음
-    if($previewEle.length && $previewEle.find('iframe').attr('src') === url) return false; // 수정되지 않았을 경우 리턴
+    if($previewEle.length && $previewEle.find('iframe').attr('src') === url) return; // 수정되지 않았을 경우 리턴
     
     const platformInfo = extractPlatformInfo(url); // 플랫폼 정보 추출    
     

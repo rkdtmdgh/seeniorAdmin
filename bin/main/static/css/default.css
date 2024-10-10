@@ -414,12 +414,10 @@
         	
         	&.up {
         		background: url(/image/icons/a_up.png) center no-repeat;
-        		background-size: contain;
         	}
         	
         	&.down {
         		background: url(/image/icons/a_down.png) center no-repeat;
-        		background-size: contain;
         	}
         }
     }
@@ -473,8 +471,8 @@
     }
     
     .preview_container {
-    	width: max-content;
-    	max-width: 450px;
+    	width: 100%;
+    	max-width: 400px;
     	
     	&.horizontal {
 	    	aspect-ratio: 16 / 9; /* 비율 유지 (16:9 비율) */
