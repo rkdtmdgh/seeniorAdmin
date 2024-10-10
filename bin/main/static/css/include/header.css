@@ -14,15 +14,85 @@
         .header_menu_list {
             display: flex;
             align-items: center;
-            gap: var(--stepGap);
+            gap: var(--smallGap);
             
-            .user_name {
+            .header_menu {
+            	padding: var(--iconsPadding);
+            	border-radius: var(--bdrs);
+            	border: 1px solid var(--lightGrayColor);
+            	box-sizing: content-box;
+			}
+			
+			.user_name {
             	font-size: var(--menuFontSize);
             	
             	&:hover {
             		color: var(--primaryColor);
             	}
             }
+            
+            .header_menu_btn_wrap {
+           		position: relative;
+				
+				#notifications {
+					display: none;
+            		width: 400px;
+            		padding-top: var(--smallGap);
+            		position: absolute;
+            		top: 100%;
+            		right: 0;
+            		z-index: 1;
+	            		
+            		.notifications_container {
+            			width: 100%;
+            			height: max-content;
+            			max-height: 450px;
+            			background-color: var(--subBgColor);
+            			border-radius: var(--bdrs);
+            			border: 1px solid var(--lightGrayColor);
+            			box-shadow: var(--bxsh);
+            			
+            			.notifications_info_list {
+            				display: block;
+            				font-size: 14px;
+            				color: var(--grayColor);
+            				padding: var(--notificationsPadding);
+            				
+            				&:hover {
+            					background-color: var(--lightBlueColor);
+            				}
+            				
+            				.notifications_info {
+            					display: flex;
+	            				justify-content: space-between;
+	           					gap: var(--smallGap);
+            					
+            					.notifications_lapse {
+            						width: 30%;
+            						min-width: 30%;	
+            						font-size: var(--subFontSize);
+            					}
+            				}
+            				
+            				.notifications_content {
+            					padding-top: var(--ssize2);
+            					overflow: hidden;
+							    text-overflow: ellipsis;
+							    white-space: nowrap;
+            				
+       	    					.notifications_category {
+       	    						font-weight: 500;
+       	    						color: var(--blackColor);
+       	    					}
+            				}
+            			}
+            		}
+            		
+            		&.active {
+            			display: block;
+	            	}
+            	}
+			}
         }
     }
 }

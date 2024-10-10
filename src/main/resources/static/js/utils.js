@@ -311,14 +311,6 @@ function setTableColumnsNum() {
 	return maxCols;
 }
 
-// 테이블 셀렉트 옵션 노출 토글 버튼
-function setSelectOptionTopggle(event) {
-	const $selectEle = $(event.currentTarget).find('.select_option_list'); // 클릭한 요소 내의 커스텀 셀렉트 요소 찾기
-	const $allSelectEle = $('.select_option_list'); // 모든 커스텀 셀렉트 요소
-	$allSelectEle.not($selectEle).removeClass('active');
-	$selectEle.toggleClass('active');
-}
-
 // textarea 입력 시 자동으로 높이값 조정
 function setTextareaAutoHeight(ele) {
 	const $textarea = $(ele);
@@ -488,11 +480,32 @@ function setAccountModifyForm(data) {
 	return dataFormContent;
 }
 
+// 해더 알람 모달 노출 토글 버튼
+function setNotificationsTopggle(event) {
+	const $notificationsEle = $(event.currentTarget).find('#notifications'); // 클릭한 요소 내의 알람 모달 요소 찾기
+	$notificationsEle.toggleClass('active');
+}
+
+// 테이블 셀렉트 옵션 노출 토글 버튼
+function setSelectOptionTopggle(event) {
+	const $selectEle = $(event.currentTarget).find('.select_option_list'); // 클릭한 요소 내의 커스텀 셀렉트 요소 찾기
+	const $allSelectEle = $('.select_option_list'); // 모든 커스텀 셀렉트 요소
+	$allSelectEle.not($selectEle).removeClass('active');
+	$selectEle.toggleClass('active');
+}
+
 // 문서 클릭 이벤트
 $(document).on('click', function(event) {
+	let isTriggerClick; // 클릭 트리거 확인
+	
+	// 해더 알람 모달 노출 닫기
+	const $openNotificationsEle = $('#notifications.active'); 
+	isTriggerClick = event.target.closest('.header_menu_btn_wrap.alarm'); // 클릭한 요소가 알람 버튼인지 확인
+	if(!isTriggerClick) $openNotificationsEle.removeClass('active'); // 열려있는 알람 모달창 닫기
+	
 	// 커스텀 셀렉트 open, close 기능
 	const $openSelectEle = $('.select_option_list.active'); // 열려 있는 셀렉트 옵션 요소
-	const isTriggerClick = event.target.closest('.table_title.select'); // 클릭한 요소가 커스텀 셀렉트 버튼인지 확인
+	isTriggerClick = event.target.closest('.table_title.select'); // 클릭한 요소가 커스텀 셀렉트 버튼인지 확인
 	if(!isTriggerClick) { // 클릭한 요소가 커스텀 셀렉트 버튼이 아닐 경우
 		$openSelectEle.removeClass('active'); // 열려 있는 셀렉트 옵션 닫기
 	}

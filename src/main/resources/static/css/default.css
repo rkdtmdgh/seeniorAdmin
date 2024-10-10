@@ -63,7 +63,7 @@
 .input_icon {
 	width: var(--iconsWidth);
 	height: var(--iconsWidth);
-	padding: var(--iconsPadding);
+	padding: var(--inputIconsPadding);
 	position: absolute;
 	top: var(--inputIconTop);
 	right: 1em;
