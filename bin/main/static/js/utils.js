@@ -495,18 +495,19 @@ function setSelectOptionTopggle(event) {
 }
 
 // 문서 클릭 이벤트
-$(document).on('click', function(event) {
-	let isTriggerClick; // 클릭 트리거 확인
-	
+$(document).on('click', function(event) {	
 	// 해더 알람 모달 노출 닫기
 	const $openNotificationsEle = $('#notifications.active'); 
-	isTriggerClick = event.target.closest('.header_menu_btn_wrap.alarm'); // 클릭한 요소가 알람 버튼인지 확인
-	if(!isTriggerClick) $openNotificationsEle.removeClass('active'); // 열려있는 알람 모달창 닫기
+	const isNotificationsTriggerClick = event.target.closest('.header_menu_btn_wrap.alarm'); // 클릭한 요소가 알람 버튼인지 확인
+	if($openNotificationsEle.length && !isNotificationsTriggerClick) { // 클릭한 요소가 알람 버튼이 아닐 경우
+		$openNotificationsEle.removeClass('active'); // 열려있는 알람 모달창 닫기
+	}
+		
 	
 	// 커스텀 셀렉트 open, close 기능
 	const $openSelectEle = $('.select_option_list.active'); // 열려 있는 셀렉트 옵션 요소
-	isTriggerClick = event.target.closest('.table_title.select'); // 클릭한 요소가 커스텀 셀렉트 버튼인지 확인
-	if(!isTriggerClick) { // 클릭한 요소가 커스텀 셀렉트 버튼이 아닐 경우
+	const isSelectTriggerClick = event.target.closest('.table_title.select'); // 클릭한 요소가 커스텀 셀렉트 버튼인지 확인
+	if($openSelectEle.length && !isSelectTriggerClick) { // 클릭한 요소가 커스텀 셀렉트 버튼이 아닐 경우
 		$openSelectEle.removeClass('active'); // 열려 있는 셀렉트 옵션 닫기
 	}
 });
