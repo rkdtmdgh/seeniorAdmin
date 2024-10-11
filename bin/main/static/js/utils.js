@@ -40,9 +40,8 @@ function setAddLoading(loading, parentEleClass, backgroundColor=null) {
 
 // FormData 키벨류, byte 확인
 function setFormDataCheckConsoleLog(formData) {
-	const encoder = new TextEncoder(); // byte 계산
 	for (const [key, value] of formData.entries()) { // formData의 모든 데이터 확인
-		logger.info(`formData ${key}: ${value} / byte: ${encoder.encode(value).length}`); // byte, 키벨류 확인
+		logger.info(`formData ${key}: ${value} / byte: ${extractionByte(value)}`); // byte, 키벨류 확인
 	};
 }
 
