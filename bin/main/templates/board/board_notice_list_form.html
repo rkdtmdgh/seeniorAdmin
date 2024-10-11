@@ -6,27 +6,27 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('게시판 공지 사항')}"></th:block>
 	<script th:inline="javascript">
-		$(function() {			
+		$(async function() {			
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // search
-					getSearchList(null, '/board/info/search_board_notice_list', page);
+					await getSearchList(null, '/board/info/search_board_notice_list', page);
 					break;
 				
 				case '1': // select
-					getList('/board/noti_info/get_board_notice_list', sortValue, order, page);
+					await getList('/board/noti_info/get_board_notice_list', sortValue, order, page);
 					break;
 
 				case '0': // sort
-					getList('/board/noti_info/get_board_notice_list', sortValue, order, page);
+					await getList('/board/noti_info/get_board_notice_list', sortValue, order, page);
 					break;
 					
 				default:
-					getList('/board/noti_info/get_board_notice_list', null, null, page);
+					await getList('/board/noti_info/get_board_notice_list', null, null, page);
 			}
 			
 			// board category 가져오기
-			getCategoryList('bc_name'); // element id, isForm, selectedValue
+			await getCategoryList('bc_name'); // element id, isForm, selectedValue
         });
 	</script>
 </head>
