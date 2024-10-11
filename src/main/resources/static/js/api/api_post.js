@@ -1,5 +1,5 @@
 // 회원 가입 폼
-async function postSignUpForm(event, formName) {
+async function postSignUpForm(event, formName) {    
 	if(event) event.preventDefault();
 	const form = document.forms[formName];
 	let input;
@@ -36,13 +36,17 @@ async function postSignUpForm(event, formName) {
 	}
 	
 	// 모든 유효성 검사가 통과되었을 때 폼 제출
-	form.action = "/account/sign_up_confirm"; 
-    form.method = "post"; 
-    form.submit()
+	if(setAddLoading(true, 'input_list_container')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+		form.action = "/account/sign_up_confirm"; 
+	    form.method = "post"; 
+	    form.submit()
+	}
 }
 
 // 로그인 폼
-function postSignInForm(event, formName) {
+function postSignInForm(event, formName) {    
+    isPostSignInProcessing = true; // 요청 시작 시 플래그 설정
+    
 	if(event) event.preventDefault();
 	const form = document.forms[formName];
 	let input;
@@ -60,13 +64,15 @@ function postSignInForm(event, formName) {
 	}
 	
 	// 모든 유효성 검사가 통과되었을 때 폼 제출
-	form.action = "/account/sign_in_confirm"; 
-    form.method = "post"; 
-    form.submit();
+	if(setAddLoading(true, 'input_list_container')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+		form.action = "/account/sign_in_confirm"; 
+	    form.method = "post"; 
+	    form.submit();
+    }
 }
 
 // 본인 확인 폼
-async function postIdentityCheckForm(event, formName) {
+async function postIdentityCheckForm(event, formName) {   
 	if(event) event.preventDefault();
 	const form = document.forms[formName];
 	let input;
@@ -77,62 +83,66 @@ async function postIdentityCheckForm(event, formName) {
 		return false;
 	}
 	
-	try {
-		const response = await $.ajax({
-			url: '/account/info/modify_check',
-			method: 'POST',
-			data: {
-				a_pw: input.value.trim(),
-			},
-		});
-		
-		logger.info('/account/info/modify_check postIdentityCheckForm() response:', response);
-				
-		if(response) {
-			sessionStorage.setItem('loginedId', response.loginedId);
-			sessionStorage.setItem('checkDate', response.checkDate);
-			await getAccountInfo(true); // get_account_info 요청, account modify form set
+	if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+		try {
+			const response = await $.ajax({
+				url: '/account/info/modify_check',
+				method: 'POST',
+				data: {
+					a_pw: input.value.trim(),
+				},
+			});
 			
-		} else {
-			alert('비밀번호가 일치하지 않습니다. 확인 후 다시 시도해 주세요.');
-			return false;
+			logger.info('/account/info/modify_check postIdentityCheckForm() response:', response);
+					
+			if(response) {
+				sessionStorage.setItem('loginedId', response.loginedId);
+				sessionStorage.setItem('checkDate', response.checkDate);
+				await getAccountInfo(true); // get_account_info 요청, account modify form set
+				
+			} else {
+				alert('비밀번호가 일치하지 않습니다. 확인 후 다시 시도해 주세요.');
+				return false;
+			}
+			
+		} catch(error) {
+			logger.error('/account/info/modify_check postIdentityCheckForm() error:', error);
+			alert('본인 확인 오류로 데이터를 불러오는데 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
+			location.reload(true);
 		}
-		
-	} catch(error) {
-		logger.error('/account/info/modify_check postIdentityCheckForm() error:', error);
-		alert('본인 확인 오류로 데이터를 불러오는데 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
-		location.replace('/account/info/modify_form');
 	}
 }
 
 // post ajax 요청
-async function postSubmitForm(apiUrl, formData, successMessage, errorMessage, redirectUrl = null) {
-	setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
-	
-	try {
-		const response = await $.ajax({
-			url: apiUrl,
-			method: 'POST',
-			data: formData,
-			processData: false,  // FormData가 자동으로 Content-Type 설정
-			contentType: false,  // FormData를 문자열로 변환하지 않음
-		});
+async function postFormDataSubmitForm(apiUrl, formData, successMessage, errorMessage, redirectUrl = null, loddingParentEle) {
+	if(setAddLoading(true, loddingParentEle)) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+		setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
 		
-		logger.info(`${apiUrl} postSubmitForm() response:`, response);
-		
-		if(response) {
-			alert(successMessage);
-			redirectUrl ? location.replace(redirectUrl) : location.reload(true);
+		try {
+			const response = await $.ajax({
+				url: apiUrl,
+				method: 'POST',
+				data: formData,
+				processData: false,  // FormData가 자동으로 Content-Type 설정
+				contentType: false,  // FormData를 문자열로 변환하지 않음
+			});
 			
-		} else {
+			logger.info(`${apiUrl} postFormDataSubmitForm() response:`, response);
+			
+			if(response) {
+				alert(successMessage);
+				redirectUrl ? location.replace(redirectUrl) : location.reload(true);
+				
+			} else {
+				alert(errorMessage);
+				location.reload(true);
+			}
+			
+		} catch(error) {
+			logger.error(`${apiUrl} postFormDataSubmitForm() error:`, error);
 			alert(errorMessage);
 			location.reload(true);
 		}
-		
-	} catch(error) {
-		logger.error(`${apiUrl} postSubmitForm() error:`, error);
-		alert(errorMessage);
-		location.reload(true);
 	}
 }
 
@@ -154,12 +164,13 @@ async function postDiseaseCategoryCreateForm(event, formName, nextPage) {
 	const successMessage = `"${input.value}" 분류가 등록되었습니다.`;
 	const errorMessage = `"${input.value}" 분류 등록 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
-	await postSubmitForm(
+	await postFormDataSubmitForm(
 		'/disease/cate_info/create_category_confirm', 				// apiUrl
 		formData, 													// data
 		successMessage, 											// 성공 메세지
 		errorMessage,												// 실패 메세지 																
-		nextPage ? '/disease/cate_info/category_list_form' : null	// 다음 페이지
+		nextPage ? '/disease/cate_info/category_list_form' : null,	// 다음 페이지
+		'content_inner'                                         // 로딩 표시할 부모 요소
 	);
 }
 
@@ -202,12 +213,13 @@ async function postDiseaseCreateForm(formName) {
 	const successMessage = `"${form.d_name.value}" 질환/질병 정보가 등록되었습니다.`;
 	const errorMessage = `"${form.d_name.value}" 질환 / 질병 정보 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
-	await postSubmitForm(
+	await postFormDataSubmitForm(
 		'/disease/info/create_confirm', 
 		formData, 
 		successMessage, 
 		errorMessage, 
-		'/disease/info/disease_list_form'
+		'/disease/info/disease_list_form',
+		'content_inner'
 	);
 }
 
@@ -216,28 +228,28 @@ async function postRecipeUpdate() {
 	const isConfirm = confirm('업데이트는 약 10~30초 정도가 소요됩니다. 업데이트하시겠습니까?');
 	if(!isConfirm) return false;
 	
-    setAddLoading(true); // 로딩 시작
-	
-	try {
-		const response = await $.ajax({
-			url: '/recipe/info/refresh_api_recipe_data',
-			method: 'GET',
-		});
-		
-		logger.info('postRecipeUpdate() response:', response);	
-		
-		if(response) {
-			alert('최신 정보로 업데이트하였습니다.');
+	if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+		try {
+			const response = await $.ajax({
+				url: '/recipe/info/refresh_api_recipe_data',
+				method: 'GET',
+			});
 			
-		} else {
-			alert('최신 정보 업데이트에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
+			logger.info('postRecipeUpdate() response:', response);	
+			
+			if(response) {
+				alert('최신 정보로 업데이트하였습니다.');
+				
+			} else {
+				alert('최신 정보 업데이트에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
+			}
+			
+		} catch(error) {
+			logger.error('postRecipeUpdate() error:', error);
+			
+		} finally {
+			location.reload(true);
 		}
-		
-	} catch(error) {
-		logger.error('postRecipeUpdate() error:', error);
-		
-	} finally {
-		location.reload(true);
 	}
 }
 
@@ -268,12 +280,13 @@ async function postVideoCreateForm(formName) {
 	const successMessage = `"${form.v_title.value}"\n영상 정보가 등록되었습니다.`;
 	const errorMessage = `"${form.v_title.value}"\n영상 정보 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
-	await postSubmitForm(
+	await postFormDataSubmitForm(
 		'/video/info/create_confirm', 
 		formData, 
 		successMessage, 
 		errorMessage, 
-		'/video/info/video_list_form'
+		'/video/info/video_list_form',
+		'content_inner'
 	);
 }
 
@@ -287,12 +300,13 @@ async function postNoticeCreateForm(formName) {
 	const successMessage = '공지사항이 등록되었습니다.';
 	const errorMessage = '공지사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 	
-	await postSubmitForm(
+	await postFormDataSubmitForm(
 		'/notice/info/create_confirm', 
 		formData, 
 		successMessage, 
 		errorMessage, 
-		'/notice/info/notice_list_form'
+		'/notice/info/notice_list_form',
+		'content_inner'
 	);
 }
 
@@ -306,12 +320,13 @@ async function postQnaNoticeCreateForm(formName) {
 	const successMessage = '질문과 답변 공지사항이 등록되었습니다.';
 	const errorMessage = '질문과 답변 공지사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 	
-	await postSubmitForm(
+	await postFormDataSubmitForm(
 		'/qna/info/qna_notice_create_confirm', 
 		formData, 
 		successMessage, 
 		errorMessage, 
-		'/qna/info/qna_list_form'
+		'/qna/info/qna_list_form',
+		'content_inner'
 	);
 }
 
@@ -333,12 +348,13 @@ async function postBoardCategoryCreateForm(formName) {
 	const successMessage = `"${bc_name.value}" 게시판이 등록되었습니다.`;
 	const errorMessage = `"${bc_name.value}" 게시판 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
-	await postSubmitForm(
+	await postFormDataSubmitForm(
 		'/board/cate_info/create_category_confirm', 
 		formData, 
 		successMessage, 
 		errorMessage, 
-		'/board/cate_info/category_list_form'
+		'/board/cate_info/category_list_form',
+		'content_inner'
 	);
 }
 
@@ -401,15 +417,13 @@ async function postNoticePostsCreateForm(formName) {
 		formData.append('files', emptyBlob); 
 	}
 	
-	//const isTrue = false;
-	//if(!isTrue) return false;
-	
-	await postSubmitForm(
+	await postFormDataSubmitForm(
 		'/board/info/create_board_notice_confirm',
 		formData,
 		successMessage,
 		errorMessage,
-		`/board/info/board_notice_list_form?infoNo=${form.bn_category_no.value}`
+		`/board/info/board_notice_list_form?infoNo=${form.bn_category_no.value}`,
+		'content_inner'
 	);
 }
 
@@ -458,12 +472,13 @@ async function postPostsCreateForm(formName) {
 		formData.append('files', emptyBlob); 
 	}
 
-	await postSubmitForm(
+	await postFormDataSubmitForm(
 		'/board/info/create_confirm',
 		formData,
 		successMessage,
 		errorMessage,
-		`/board/info/posts_list_form?infoNo=${form.bp_category_no.value}`
+		`/board/info/posts_list_form?infoNo=${form.bp_category_no.value}`,
+		'content_inner'
 	);
 }
 
@@ -508,12 +523,13 @@ async function postAdvertisementCreateForm(formName) {
 	const successMessage = `"${form.ad_client.value}" 님의 광고가 등록되었습니다.`;
 	const errorMessage = `"${form.ad_client.value}" 님의 광고 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
-	await postSubmitForm(
+	await postFormDataSubmitForm(
 		'/advertisement/info/create_confirm', 
 		formData, 
 		successMessage, 
 		errorMessage, 
-		'/advertisement/info/advertisement_list_form'
+		'/advertisement/info/advertisement_list_form',
+		'content_inner'
 	);
 }
 

@@ -43,72 +43,73 @@ async function getBoardInfo(infoNo) {
 
 // 콘텐츠 리스트 요청
 async function getList(apiUrl, sortValue, order, page) {
-    setAddLoading(true); // 로딩 시작
-	setAllcheck(); // all_check 체크박스 초기화
-	
-	// 검색 인풋 벨류 삭제
-	const searchStringInput = document.forms['search_form'].search_string;
-	if(searchStringInput.value.trim().length) searchStringInput.value = ''; // 검색 이력이 남았을 경우에만 삭제
-	
-	const urlParams = new URLSearchParams(window.location.search);
-	const infoNo = urlParams.get('infoNo') || undefined;
-	
-	const intPage = page || 1
-	let params = `?page=${intPage}`;
-	if(sortValue) params = `${params}&sortValue=${encodeURIComponent(sortValue)}&order=${encodeURIComponent(order)}`;
-	if(infoNo) params = `${params}&infoNo=${infoNo}`;
-	
-	logger.info('apiUrl:', apiUrl + params);
-	
-	try {
-		const response = await $.ajax({
-			url: apiUrl + params,
-			method: 'GET',
-		});
+	if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+		setAllcheck(); // all_check 체크박스 초기화
 		
-		logger.info(`${apiUrl} getList() response:`, response);
+		// 검색 인풋 벨류 삭제
+		const searchStringInput = document.forms['search_form'].search_string;
+		if(searchStringInput.value.trim().length) searchStringInput.value = ''; // 검색 이력이 남았을 경우에만 삭제
 		
-		const { getListDtos, getListPage, getListCnt } = mapApiResponseObject(apiUrl, response);
-		const $contentTable = $('.content_table tbody'); // 데이터가 나열될 테이블 요소
-		const $pagination = $('.pagination_wrap'); // 페이지 네이션 요소
-		$contentTable.html('');
-		$pagination.html('');
+		const urlParams = new URLSearchParams(window.location.search);
+		const infoNo = urlParams.get('infoNo') || undefined;
 		
-		if(response && getListDtos.length) {
-			// 쿼리스트링 조건 추가
-			setListQueryString(sortValue, order, getListPage.page); // page, sortValue, order
-			
-			if(response.reg_date) setContentSubInfo(response.reg_date); // 타이틀 옆 서브내용 표시(예: 업데이트 날짜 등)
-							
-			let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
-			let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
-			
-			getListDtos.forEach((data) => { 			   
-				$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, getListCnt, listIndex, page));
-				listIndex --;
+		const intPage = page || 1
+		let params = `?page=${intPage}`;
+		if(sortValue) params = `${params}&sortValue=${encodeURIComponent(sortValue)}&order=${encodeURIComponent(order)}`;
+		if(infoNo) params = `${params}&infoNo=${infoNo}`;
+		
+		logger.info('apiUrl:', apiUrl + params);
+		
+		try {
+			const response = await $.ajax({
+				url: apiUrl + params,
+				method: 'GET',
 			});
 			
-			// 페이지네이션 생성	
-			const paging = generatePagination(getListPage, sortValue, order, apiUrl, false); // 페이징벨류값, sortValue, order, 커맨드, isSearch
-			$pagination.html(paging);
+			logger.info(`${apiUrl} getList() response:`, response);
 			
-		} else {
-			logger.info('데이터가 없거나 유효하지 않습니다.');
-			const maxCols = setTableColumnsNum();
-			$contentTable.html(`
-				<tr>
-                    <td colspan="${maxCols}">
-                        <p class="table_info">목록이 없습니다.</p>
-                    </td>
-                </tr>
-			`);
+			const { getListDtos, getListPage, getListCnt } = mapApiResponseObject(apiUrl, response);
+			const $contentTable = $('.content_table tbody'); // 데이터가 나열될 테이블 요소
+			const $pagination = $('.pagination_wrap'); // 페이지 네이션 요소
+			$contentTable.html('');
+			$pagination.html('');
+			
+			if(response && getListDtos.length) {
+				// 쿼리스트링 조건 추가
+				setListQueryString(sortValue, order, getListPage.page); // page, sortValue, order
+				
+				if(response.reg_date) setContentSubInfo(response.reg_date); // 타이틀 옆 서브내용 표시(예: 업데이트 날짜 등)
+								
+				let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
+				let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
+				
+				getListDtos.forEach((data) => { 			   
+					$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, getListCnt, listIndex, page));
+					listIndex --;
+				});
+				
+				// 페이지네이션 생성	
+				const paging = generatePagination(getListPage, sortValue, order, apiUrl, false); // 페이징벨류값, sortValue, order, 커맨드, isSearch
+				$pagination.html(paging);
+				
+			} else {
+				logger.info('데이터가 없거나 유효하지 않습니다.');
+				const maxCols = setTableColumnsNum();
+				$contentTable.html(`
+					<tr>
+	                    <td colspan="${maxCols}">
+	                        <p class="table_info">목록이 없습니다.</p>
+	                    </td>
+	                </tr>
+				`);
+			}
+			
+		} catch(error) {
+			logger.error(apiUrl + ' error:', error);
+			
+		} finally {
+			setAddLoading(false, 'content_inner'); // 로딩 제거
 		}
-		
-	} catch(error) {
-		logger.error(apiUrl + ' error:', error);
-		
-	} finally {
-		setAddLoading(false); // 로딩 제거
 	}
 }
 
@@ -131,67 +132,68 @@ async function getSearchList(event, apiUrl, page) {
 	}
 	
 	if(apiUrl) {
-        setAddLoading(true); // 로딩 시작
-		setAllcheck(); // all_check 체크박스 초기화
+		if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+			setAllcheck(); // all_check 체크박스 초기화
+			
+			const urlParams = new URLSearchParams(window.location.search);
+			const infoNo = urlParams.get('infoNo') || undefined;
 		
-		const urlParams = new URLSearchParams(window.location.search);
-		const infoNo = urlParams.get('infoNo') || undefined;
-	
-		let intPage = page || 1;
-		logger.info('searchForm() searchPart:', form.search_part.value);
-		logger.info('searchForm() searchString:', input.value.trim());
-		
-		let params = `?searchPart=${form.search_part.value}&searchString=${input.value.trim()}&page=${intPage}`;
-		if(infoNo) params = `${params}&infoNo=${infoNo}`;
-				
-		try {
-			const response = await $.ajax({
-				url: apiUrl + params,
-				method: 'GET',
-			});
+			let intPage = page || 1;
+			logger.info('searchForm() searchPart:', form.search_part.value);
+			logger.info('searchForm() searchString:', input.value.trim());
 			
-			logger.info(`${apiUrl} searchForm() response:`, response);
-			
-			const { getListDtos, getListPage, getListCnt } = mapApiResponseObject(apiUrl, response);
-			const $contentTable = $('.content_table tbody'); // 데이터가 나열될 테이블 요소
-			const $pagination = $('.pagination_wrap'); // 페이지 네이션 요소
-			$contentTable.html('');
-			$pagination.html('');
-			
-			if(response && getListDtos.length) {
-				// 쿼리스트링 조건 추가
-				setSearchQueryString(getListPage.page, response.searchPart, response.searchString); // page, searchPart, searchString
-				
-				let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
-				let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
-						
-				getListDtos.forEach((data) => {
-					$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, getListCnt, listIndex, page));
-					listIndex --;
+			let params = `?searchPart=${form.search_part.value}&searchString=${input.value.trim()}&page=${intPage}`;
+			if(infoNo) params = `${params}&infoNo=${infoNo}`;
+					
+			try {
+				const response = await $.ajax({
+					url: apiUrl + params,
+					method: 'GET',
 				});
 				
-				// 페이지네이션 생성			
-				const paging = generatePagination(getListPage, null, null, apiUrl, true); // 페이징벨류값, sortValue, order, 커맨드, isSearch
-				$pagination.html(paging);
+				logger.info(`${apiUrl} searchForm() response:`, response);
 				
-			} else {
-				logger.info('데이터가 없거나 유효하지 않습니다.');
-				// 테이블의 전체 열 수 계산하기
-				const maxCols = setTableColumnsNum();
-				$contentTable.html(`
-					<tr>
-                        <td colspan="${maxCols}">
-                            <p class="table_info">검색된 내용이 없습니다.</p>
-                        </td>
-                    </tr>
-				`);
+				const { getListDtos, getListPage, getListCnt } = mapApiResponseObject(apiUrl, response);
+				const $contentTable = $('.content_table tbody'); // 데이터가 나열될 테이블 요소
+				const $pagination = $('.pagination_wrap'); // 페이지 네이션 요소
+				$contentTable.html('');
+				$pagination.html('');
+				
+				if(response && getListDtos.length) {
+					// 쿼리스트링 조건 추가
+					setSearchQueryString(getListPage.page, response.searchPart, response.searchString); // page, searchPart, searchString
+					
+					let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
+					let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
+							
+					getListDtos.forEach((data) => {
+						$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, getListCnt, listIndex, page));
+						listIndex --;
+					});
+					
+					// 페이지네이션 생성			
+					const paging = generatePagination(getListPage, null, null, apiUrl, true); // 페이징벨류값, sortValue, order, 커맨드, isSearch
+					$pagination.html(paging);
+					
+				} else {
+					logger.info('데이터가 없거나 유효하지 않습니다.');
+					// 테이블의 전체 열 수 계산하기
+					const maxCols = setTableColumnsNum();
+					$contentTable.html(`
+						<tr>
+	                        <td colspan="${maxCols}">
+	                            <p class="table_info">검색된 내용이 없습니다.</p>
+	                        </td>
+	                    </tr>
+					`);
+				}
+				
+			} catch(error) {
+				logger.error(apiUrl + ' searchForm() error:', error);
+				
+			} finally {
+				setAddLoading(false, 'content_inner'); // 로딩 제거
 			}
-			
-		} catch(error) {
-			logger.error(apiUrl + ' searchForm() error:', error);
-			
-		} finally {
-			setAddLoading(false); // 로딩 제거
 		}
 	}
 }
@@ -843,50 +845,55 @@ function mapSelectListApiObject(sortValue) {
 
 // 셀렉트 옵션 리스트 요청 및 옵션 생성
 async function getCategoryList(ele, isForm, selectedValue) {
-	const $selectEle = $(`#${ele}`); // 셀렉트 요소가 생성될 table th
-	const { apiUrl, getListDtos, dataNo, dataName } = mapCategorylistObject(ele);
-	
-	if($selectEle.length) {
-		try {
-			const response = await $.ajax({
-				url: apiUrl,
-				method: 'GET',
-			});
-			
-			const categoryDto = response[getListDtos];
-			logger.info(`${apiUrl} categoryDto:`, response);
-			
-			if(categoryDto && categoryDto.length) {
-				if(isForm) {
-					categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
-						let selected = selectedValue ? data[dataNo] === selectedValue ? 'selected' : '' : '';
-						let option = `<option value="${data[dataNo]}" ${selected}>${data[dataName]}</option>`;
-						
-						if(selected) {
-							$selectEle[0].insertAdjacentHTML('afterbegin', option);
+	if(setAddLoading(true, `${ele}_select`, '#F7F7F7')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+		const $selectEle = $(`#${ele}`); // 셀렉트 요소가 생성될 table th
+		const { apiUrl, getListDtos, dataNo, dataName } = mapCategorylistObject(ele);
+		
+		if($selectEle.length) {
+			try {
+				const response = await $.ajax({
+					url: apiUrl,
+					method: 'GET',
+				});
+				
+				const categoryDto = response[getListDtos];
+				logger.info(`${apiUrl} categoryDto:`, response);
+				
+				if(categoryDto && categoryDto.length) {
+					if(isForm) {
+						categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
+							let selected = selectedValue ? data[dataNo] === selectedValue ? 'selected' : '' : '';
+							let option = `<option value="${data[dataNo]}" ${selected}>${data[dataName]}</option>`;
 							
-						} else {
-							$selectEle[0].insertAdjacentHTML('beforeend', option);
-						}
-					});
+							if(selected) {
+								$selectEle[0].insertAdjacentHTML('afterbegin', option);
+								
+							} else {
+								$selectEle[0].insertAdjacentHTML('beforeend', option);
+							}
+						});
+						
+					} else {
+						const ceateSelect = `<ul data-sort-value="${dataNo}" class="select_option_list sc"></ul>`;
+				        $selectEle[0].insertAdjacentHTML('beforeend', ceateSelect);
+				        const $selectOptionlist = $('ul.select_option_list');
+						
+						categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
+							let option = `<li data-order="${data[dataNo]}" class="option" onclick="getSelectList(event);">${data[dataName]}</li>`;
+							$selectOptionlist[0].insertAdjacentHTML('beforeend', option);
+						});
+					}
 					
 				} else {
-					const ceateSelect = `<ul data-sort-value="${dataNo}" class="select_option_list sc"></ul>`;
-			        $selectEle[0].insertAdjacentHTML('beforeend', ceateSelect);
-			        const $selectOptionlist = $('ul.select_option_list');
-					
-					categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
-						let option = `<li data-order="${data[dataNo]}" class="option" onclick="getSelectList(event);">${data[dataName]}</li>`;
-						$selectOptionlist[0].insertAdjacentHTML('beforeend', option);
-					});
+					$selectEle.removeClass('select');
 				}
 				
-			} else {
-				$selectEle.removeClass('select');
+			} catch(error) {
+				logger.error(apiUrl + ' error:', error);
+				
+			} finally {
+				setAddLoading(false, `${ele}_select`) // 로딩 제거
 			}
-			
-		} catch(error) {
-			logger.error(apiUrl + ' error:', error);
 		}
 	}
 }

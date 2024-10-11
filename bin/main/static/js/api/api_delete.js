@@ -1,37 +1,39 @@
 // 개별 삭제
 async function delSingleData(key, noValue, dataName) {
-	logger.info('deleteAccount()', key, noValue, dataName);
-	
-	const isConfirm = confirm(`${dataName} 을(를) 삭제하시겠습니까?`);
-	if(!isConfirm) return false;
-	
-	const { apiUrl, replace } = mapDeleteObject(key); // 커맨드와 경로 설정
-	const errorMessage = `${dataName} 삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
-	
-	try {
-		const response = await $.ajax({
-			url: apiUrl,
-			method: 'POST',
-			data: {
-				[key]: noValue,
-			},
-		});
+	if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+		logger.info('deleteAccount()', key, noValue, dataName);
 		
-		logger.info(`${apiUrl} delSingleData() response:`, response);
+		const isConfirm = confirm(`${dataName} 을(를) 삭제하시겠습니까?`);
+		if(!isConfirm) return false;
 		
-		if(response) {
-			alert(`${dataName} 이(가) 삭제되었습니다.`);
-			location.replace(replace);
+		const { apiUrl, replace } = mapDeleteObject(key); // 커맨드와 경로 설정
+		const errorMessage = `${dataName} 삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+		
+		try {
+			const response = await $.ajax({
+				url: apiUrl,
+				method: 'POST',
+				data: {
+					[key]: noValue,
+				},
+			});
 			
-		} else {
+			logger.info(`${apiUrl} delSingleData() response:`, response);
+			
+			if(response) {
+				alert(`${dataName} 이(가) 삭제되었습니다.`);
+				location.replace(replace);
+				
+			} else {
+				alert(errorMessage);
+				location.reload(true);
+			}
+			
+		} catch(error) {
+			logger.error(`${apiUrl} delSingleData() error:`, error);
 			alert(errorMessage);
 			location.reload(true);
 		}
-		
-	} catch(error) {
-		logger.error(`${apiUrl} delSingleData() error:`, error);
-		alert(errorMessage);
-		location.reload(true);
 	}
 }
 
@@ -64,30 +66,32 @@ async function delListData(name, isCheckList) {
 	const { apiUrl, replace } = mapDeleteObject(name); // 커맨드와 경로 설정
 	const errorMessage = '삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 	
-	try {
-		const response = await $.ajax({
-			url: apiUrl,
-			method: 'POST',
-			data: {
-				[`${name}s`]: deleteArray, // 항목 배열
-			},
-		});
-		
-		logger.info(apiUrl + ' delListData() response:', response);
-		
-		if(response) {
-			alert('삭제되었습니다.');
+	if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+		try {
+			const response = await $.ajax({
+				url: apiUrl,
+				method: 'POST',
+				data: {
+					[`${name}s`]: deleteArray, // 항목 배열
+				},
+			});
 			
-		} else {
+			logger.info(apiUrl + ' delListData() response:', response);
+			
+			if(response) {
+				alert('삭제되었습니다.');
+				
+			} else {
+				alert(errorMessage);
+			}
+			
+		} catch(error) {
+			logger.error(`${apiUrl} error:`, error);
 			alert(errorMessage);
+			
+		} finally {
+			isCheckList ? location.reload(true) : location.replace(replace);
 		}
-		
-	} catch(error) {
-		logger.error(`${apiUrl} error:`, error);
-		alert(errorMessage);
-		
-	} finally {
-		isCheckList ? location.reload(true) : location.replace(replace);
 	}
 }
 

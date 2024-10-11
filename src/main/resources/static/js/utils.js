@@ -11,16 +11,30 @@ function setInputFocus(ele) {
 
 // loading set
 let loadingTimeout; // 타이머 변수를 전역으로 선언
-function setAddLoading(loading) {
-	const $loadingElement = $('<span class="loading_wrap"></span>');
+function setAddLoading(loading, parentEleClass, backgroundColor=null) {
 	if(loading) {
+		if($(`.${parentEleClass}_loading_wrap`).length.length) { // 이미 로딩 요소가 존재할 경우 
+			alert('현재 요청이 진행 중입니다. 잠시 후 다시 시도해 주세요.');
+			logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: Already loading`);
+			
+			return false; // 이미 요청이 진행 중이면 함수 종료 (중복 요청 방지)
+		}
+		
 		loadingTimeout = setTimeout(() => {
-			$('.content_info_wrap').append($loadingElement); // 해당 컨텐츠에 로딩 요소 추가		
-		}, 100);
+			$(`.${parentEleClass}`).append(`
+				<span class="${parentEleClass}_loading_wrap loading" style="background-color: ${backgroundColor ? backgroundColor : 'var(--whiteColor)'};"></span>
+			`); // 해당 컨텐츠에 로딩 요소 추가		
+		}, 20);
+		logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: success loading`);
+		
+		return true; // 로딩 표시 요청 완료
 		
 	} else {
 		clearTimeout(loadingTimeout); // 딜레이 시간 안에 통신 완료 시 로딩 타이머 취소
-		$('.loading_wrap').remove(); // 로딩 요소 제거
+		$(`.${parentEleClass}_loading_wrap`).remove(); // 로딩 요소 제거
+		logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: stop loading`);
+		
+		return false;
 	}
 }
 
@@ -28,8 +42,7 @@ function setAddLoading(loading) {
 function setFormDataCheckConsoleLog(formData) {
 	const encoder = new TextEncoder(); // byte 계산
 	for (const [key, value] of formData.entries()) { // formData의 모든 데이터 확인
-		logger.info('postPostsCreateForm() formData:', key, value); // 키벨류 확인
-		logger.info(`${key} byte:`, encoder.encode(value).length); // 벨류 byte 확인
+		logger.info(`formData ${key}: ${value} / byte: ${encoder.encode(value).length}`); // byte, 키벨류 확인
 	};
 }
 
