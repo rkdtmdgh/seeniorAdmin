@@ -347,7 +347,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchAdvertisementListPageNum.searchAdvertisementListCnt;
 			break;	
 			
-		case '/advertisement/info/get_advertisement_list_by_position': // 광고 관리 분류별 데이터
+		case '/advertisement/info/get_advertisement_list_by_category': // 광고 관리 분류별 데이터
 			getListDtos = response.advertisementDtos;
 			getListPage = response.advertisementByPositionPageNum;
 			getListCnt = response.advertisementByPositionPageNum.advertisementListByPositionCnt;
@@ -390,8 +390,8 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			break;
 			
 		case '/disease/info/get_disease_list': // 질환/질병 정보 관리 리스트 테이블
-		case '/disease/info/search_disease_list':            // 질환/질병 정보 관리 검색 리스트 테이블
-		case '/disease/info/get_disease_list_by_category': // 질환/질병 정보 관리 분류 선택 리스트 테이블
+		case '/disease/info/search_disease_list': // 질환/질병 정보 관리 검색 리스트 테이블
+		case '/disease/info/get_disease_list_by_category': // 질환/질병 정보 관리 질병군별 분류 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td class="vam">
@@ -435,7 +435,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			
 		case '/recipe/info/get_recipe_list': // 식단 정보 관리 리스트 테이블
 		case '/recipe/info/search_recipe_list': // 식단 정보 관리 검색 리스트 테이블
-		case '/recipe/info/get_recipe_list_by_type': // 식단 정보 관리 음식 종류 선택 리스트 테이블
+		case '/recipe/info/get_recipe_list_by_type': // 식단 정보 관리 음식 종류별 분류 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -637,7 +637,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			
 		case '/advertisement/info/get_advertisement_list': // 광고 관리 리스트 테이블
 		case '/advertisement/info/search_advertisement_list': // 광고 관리 검색 리스트 테이블
-		case '/advertisement/info/get_advertisement_list_by_position': // 광고 관리 위치 선택 리스트 테이블
+		case '/advertisement/info/get_advertisement_list_by_category': // 광고 관리 위치별 분류 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -821,12 +821,16 @@ function mapSelectListApiObject(sortValue) {
 	let apiUrl;
 	
 	switch(sortValue) {				
-		case 'dc_no': // 질환/질병 정보 리스트 페이지 분류 선택 리스트 요청
+		case 'dc_no': // 질환/질병 정보 리스트 페이지 질병군별 분류 리스트 요청
 			apiUrl = '/disease/info/get_disease_list_by_category';
 			break;
 			
-		case 'rcp_pat2': // 식단 정보 리스트 페이지 음식 종류 선택 리스트 요청
+		case 'rcp_pat2': // 식단 정보 리스트 페이지 음식 종류별 분류 리스트 요청
 			apiUrl = '/recipe/info/get_recipe_list_by_type';
+			break;
+		
+		case 'ad_position': // 광고 관리 리스트 페이지 위치별 분류 리스트 요청
+			apiUrl = '/advertisement/info/get_advertisement_list_by_category';
 			break;
 			
 		default:
@@ -895,7 +899,7 @@ function mapCategorylistObject(ele) {
 	let dataName;
 	
 	switch(ele) {
-		case 'dc_name': // 질환/질병 관련 페이지
+		case 'dc_name': // 질병군별 분류 리스트(분류별 관리o)
 		case 'd_category_no':
 			apiUrl = '/disease/cate_info/get_category_list_select';
 			getListDtos = 'diseaseCategoryDto';
@@ -903,23 +907,23 @@ function mapCategorylistObject(ele) {
 			dataName = 'dc_name';
 			break;
 			
-		case 'rcp_pat2': // 식단 관련 페이지
+		case 'rcp_pat2': // 음식 종류별 분류 리스트(분류별 관리x)
 			apiUrl = '/recipe/info/get_type_list_select';
 			getListDtos = 'recipeTypeDto';
 			dataNo = 'rcp_pat2';
 			dataName = 'rcp_pat2';
 			break;
 			
-		case 'bc_name': // 게시판 공지 사항 페이지
+		case 'bc_name': // 게시판별 분류 리스트(분류별 관리o)
 		case 'bn_category_no':
-			apiUrl = '/board/cate_info/get_category_list';
+			apiUrl = '/board/cate_info/get_category_list_select';
 			getListDtos = 'boardCategoryDtos';
 			dataNo = 'bc_no';
 			dataName = 'bc_name';
 			break;
 			
-		case 'rcp_pat2': // 광고 관련 페이지
-			apiUrl = '/advertisement/info/get_position_list_select';
+		case 'ad_position': // 위치별 분류 리스트(분류별 관리o)
+			apiUrl = '/advertisement/info/get_category_list_select';
 			getListDtos = 'advertisementPositionDto';
 			dataNo = 'ad_position';
 			dataName = 'ad_position';
