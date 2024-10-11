@@ -478,7 +478,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/video/info/modify_form?v_no=${data.v_no}" class="table_info">${data.v_title}</a>
 		            </td>
 		            <td class="ta_l">
-		                <a href="${data.v_link}" onclick="setWindowOpenPosition(this.href, ${data.v_platform === 'instagram_reels' ? '360, 640' : '640, 360'}); return false;" class="table_info">${data.v_link}</a>
+		                <a href="${data.v_link}" onclick="setWindowOpenPosition(this.href, 640, 360); return false;" class="table_info">${data.v_link}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.v_mod_date) || 'N/A'}</p>
