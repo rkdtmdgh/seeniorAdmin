@@ -473,15 +473,8 @@
     .preview_container {
     	width: 100%;
     	max-width: 400px;
-    	
-    	&.horizontal {
-	    	aspect-ratio: 16 / 9; /* 비율 유지 (16:9 비율) */
-    	}
-    	
-    	&.vertical {
-	    	aspect-ratio: 9 / 16; /* 비율 유지 (9:16 비율) */
-    	}
-    
+    	aspect-ratio: 16 / 9; /* 비율 유지 (16:9 비율) */
+
     	iframe {
     		width: 100%;
     		height: 100%;
@@ -716,13 +709,12 @@
 }
 
 /* loading */
-.loading_wrap {
+.loading {
 	display: flex;
 	justify-content: center;
 	align-items: center;
    	width: 100%;
    	height: 100%;
-   	background-color: var(--whiteColor);
    	border-radius: var(--bdrs);
    	position: absolute;
    	top: 0;

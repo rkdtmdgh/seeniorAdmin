@@ -7,7 +7,7 @@
 	<th:block th:insert="~{fragments/head.html :: head('질환 / 질병 정보 등록')}"></th:block>
 	<script type="text/javascript">
 		$(function() {
-			// DISEASE_CATEGORY 가져오기
+			// disease category 가져오기
 			getCategoryList('d_category_no', true); // element id, isForm, selectedValue
         });
 	</script>
@@ -74,7 +74,7 @@
 		                                <tr>
 		                                	<th><p class="table_title">분류 선택</p></th>
 		                                	<td>
-		                                		<select class="table_info select" name="d_category_no" id="d_category_no">
+		                                		<select class="table_info select d_category_no_select" name="d_category_no" id="d_category_no">
 		                                			<option value="" selected disabled>선택하세요</option>
 		                                		</select>
 	                                        </td>
