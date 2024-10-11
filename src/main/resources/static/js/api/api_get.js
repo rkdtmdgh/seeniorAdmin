@@ -922,8 +922,9 @@ function mapCategorylistObject(ele) {
 			dataName = 'bc_name';
 			break;
 			
-		case 'ad_position': // 위치별 분류 리스트(분류별 관리o)
-			apiUrl = '/advertisement/info/get_category_list_select';
+		case 'ac_name': // 위치별 분류 리스트(분류별 관리o)
+		case 'ad_category_no':
+			apiUrl = '/advertisement/cate_info/get_category_list_select';
 			getListDtos = 'advertisementPositionDto';
 			dataNo = 'ad_position';
 			dataName = 'ad_position';

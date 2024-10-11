@@ -460,3 +460,50 @@ async function putPostsModifyForm(formName) {
 		errorMessage,
 	);
 }
+
+// 광고 수정 폼
+async function putAdvertisementModifyForm(formName) {
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.ad_client;
+	if(!validateEmpty(input, '클라이언트를', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.ad_category_no;
+	if(input.value === "") {
+		alert('분류를 선택해 주세요.');
+		return false;
+	}
+	
+	input = form.ad_start_date;
+	if(!validateEmpty(input, '시작일을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.ad_end_date;
+	if(!validateEmpty(input, '종료일을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.ad_url;
+	if(!validateEmpty(input, 'URL 주소를', true)) {
+		input.focus();
+		return false;
+	}
+	
+	const formData = new FormData(form); 
+	const successMessage = `"${form.ad_client.value}" 님의 광고가 수정되었습니다.`;
+	const errorMessage = `"${form.ad_client.value}" 님의 광고 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	await putSubmitForm(
+		'/advertisement/info/modify_confirm',
+		formData,
+		successMessage,
+		errorMessage
+	);
+}

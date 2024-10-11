@@ -7,7 +7,7 @@
     <th:block th:insert="~{fragments/head.html :: head('공지 사항 수정')}"></th:block>
     <script th:inline="javascript">
 		$(function() {
-         	// BOARD_CATEGORY 가져오기
+         	// board category 가져오기
             const selectedCategory = /*[[${boardboardNoticePostsDto.bn_category_no}]]*/ // 기본값 설정
             getCategoryList('bn_category_no', true, selectedCategory); // element id, isForm, selectedValue
         });

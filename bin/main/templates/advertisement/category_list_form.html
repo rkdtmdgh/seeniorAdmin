@@ -4,29 +4,22 @@
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
 <head>
-	<th:block th:insert="~{fragments/head.html :: head('광고 관리')}"></th:block>
+	<th:block th:insert="~{fragments/head.html :: head('광고 분류 관리')}"></th:block>
 	<script type="text/javascript">
 		$(function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // search
-					getSearchList(null, '/advertisement/info/search_advertisement_list', page);
+					getSearchList(null, '/advertisement/cate_info/search_advertisement_category_list', page);
 					break;
-
-				case '1': // select
-					getList('/advertisement/info/get_advertisement_list_by_category', sortValue, order, page);
-					break;
-
-				case '0':  // sort
-					getList('/advertisement/info/get_advertisement_list', sortValue, order, page);
+					
+				case '0': // sort
+					getList('/advertisement/cate_info/get_category_list', sortValue, order, page);
 					break;
 					
 				default:
-					getList('/advertisement/info/get_advertisement_list', null, null, page);
+					getList('/advertisement/cate_info/get_category_list', null, null, page);
 			}
-
-			// advertisement category 가져오기
-			getCategoryList('ac_name'); // element id, isForm, selectedValue
         });
 	</script>
 </head>
@@ -43,26 +36,24 @@
 					<section class="content_info_wrap">
 					    <div class="content_top">
 					        <div class="content_top_info">
-					            <h2 class="title">광고 관리</h2>
+					            <h2 class="title">광고 분류 관리</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/advertisement/info/search_advertisement_list')" 
-										th:insert="~{fragments/search.html :: search('광고 관리')}"></form>
+									<form name="search_form" onsubmit="getSearchList(event, '/advertisement/cate_info/search_advertisement_category_list')" 
+										th:insert="~{fragments/search.html :: search('광고 분류 관리')}"></form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/advertisement/info/get_advertisement_list', null, null, 1);">전체보기</div>
-						            	<a href="/advertisement/info/create_form" class="btns small">등록</a>
+						            	<div class="btns small" onclick="getList('/advertisement/cate_info/get_category_list', null, null, 1);">전체보기</div>
+						            	<a href="/advertisement/cate_info/create_category_form" class="btns small">등록</a>
 						            </div>
 					            </div>
 					        </div>
 					    </div>
 					    
 					    <div class="table_wrap">
-	                        <table class="content_table advertisement_list_table">
+	                        <table class="content_table advertisement_category_list_table">
 	                            <colgroup>
 	                                <col class="col_no">
-	                                <col class="col_short">
-	                                <col>
 	                                <col>
 	                                <col>
 	                                <col>
@@ -75,27 +66,15 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <div class="table_title select" id="ac_name" onclick="setSelectOptionTopggle(event)">뷴류</div>
+	                                    	<p class="table_title">분류</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">시작일</p>
+	                                        <p class="table_title">광고 수</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">종료일</p>
-	                                    </th>
-	                                    
-	                                    <th>
-	                                        <p class="table_title">클라이언트</p>
-	                                    </th>
-	                                    
-	                                    <th>
-	                                    	<p data-current-sort-value="all" class="table_title sort"
-	                                        	onclick="getSortList(event, 'advertisement', 'ad_mod_date')">
-	                                        	등록일
-	                                        	<span class="sort_icon"></span>
-	                                        </p>
+	                                    	<p class="table_title">등록일</p>
 	                                    </th>
 	                                </tr>
 	                            </thead>

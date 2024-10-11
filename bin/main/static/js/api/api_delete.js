@@ -128,13 +128,23 @@ function mapDeleteObject(value) {
 			break;
 			
 		case 'bn_no': // 게시판 공지 사항
-			apiUrl = '/board/info/delete_board_notice_confirm';
-			replace = '/board/info/notice_posts_form';
+			apiUrl = '/board/noti_info/delete_board_notice_confirm';
+			replace = '/board/noti_info/board_notice_list_form';
 			break;
 		
 		case 'bp_no': // 게시물
 			apiUrl = '/board/info/delete_confirm';
 			replace = '/board/info/posts_list_form';
+			break;
+			
+		case 'ad_no': // 광고 분류
+			apiUrl = '/advertisement/cate_info/delete_category_confirm';
+			replace = '/advertisement/cate_info/category_list_form';
+			break;
+			
+		case 'ad_no': // 광고
+			apiUrl = '/advertisement/info/delete_confirm';
+			replace = '/advertisement/info/advertisement_list_form';
 			break;
 			
 		default:

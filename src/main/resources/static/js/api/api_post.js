@@ -466,3 +466,54 @@ async function postPostsCreateForm(formName) {
 		`/board/info/posts_list_form?infoNo=${form.bp_category_no.value}`
 	);
 }
+
+// 광고 등록 폼
+async function postAdvertisementCreateForm(formName) {
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.ad_client;
+	if(!validateEmpty(input, '클라이언트를', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.ad_category_no;
+	if(input.value === "") {
+		alert('분류를 선택해 주세요.');
+		return false;
+	}
+	
+	input = form.ad_start_date;
+	if(!validateEmpty(input, '시작일을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.ad_end_date;
+	if(!validateEmpty(input, '종료일을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.ad_url;
+	if(!validateEmpty(input, 'URL 주소를', true)) {
+		input.focus();
+		return false;
+	}
+	
+	// 이미지 파일 검증 추가
+	
+	const formData = new FormData(form);
+	const successMessage = `"${form.ad_client.value}" 님의 광고가 등록되었습니다.`;
+	const errorMessage = `"${form.ad_client.value}" 님의 광고 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	await postSubmitForm(
+		'/advertisement/info/create_confirm', 
+		formData, 
+		successMessage, 
+		errorMessage, 
+		'/advertisement/info/advertisement_list_form'
+	);
+}
+

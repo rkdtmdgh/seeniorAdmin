@@ -7,7 +7,7 @@
 	<th:block th:insert="~{fragments/head.html :: head('공지 사항 등록')}"></th:block>
 	<script th:inline="javascript">
 		$(function() {			
-			// BOARD_CATEGORY 가져오기
+			// board category 가져오기
 			getCategoryList('bn_category_no', true); // element id, isForm, selectedValue
 			
 			// 작성자 no 값 설정
