@@ -6,27 +6,27 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('식단 정보 관리')}"></th:block>
 	<script type="text/javascript">
-		$(function() {
+		$(async function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // search
-					getSearchList(null, '/recipe/info/search_recipe_list', page);
+					await getSearchList(null, '/recipe/info/search_recipe_list', page);
 					break;
 
 				case '1': // select
-					getList('/recipe/info/get_recipe_list_by_type', sortValue, order, page);
+					await getList('/recipe/info/get_recipe_list_by_type', sortValue, order, page);
 					break;
 
 				case '0': // sort
-					getList('/recipe/info/get_recipe_list', sortValue, order, page);
+					await getList('/recipe/info/get_recipe_list', sortValue, order, page);
 					break;
 					
 				default:
-					getList('/recipe/info/get_recipe_list', null, null, page);
+					await getList('/recipe/info/get_recipe_list', null, null, page);
 			}
 
 			// recipe category 가져오기
-			getCategoryList('rcp_pat2'); // element id, isForm, selectedValue
+			await getCategoryList('rcp_pat2'); // element id, isForm, selectedValue
         });
 	</script>
 </head>

@@ -109,6 +109,9 @@ async function postIdentityCheckForm(event, formName) {
 			logger.error('/account/info/modify_check postIdentityCheckForm() error:', error);
 			alert('본인 확인 오류로 데이터를 불러오는데 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
 			location.reload(true);
+			
+		} finally {
+			setAddLoading(false, 'content_inner')
 		}
 	}
 }
