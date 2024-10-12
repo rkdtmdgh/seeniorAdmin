@@ -46,6 +46,8 @@ public interface BoardMapper {
 
 	int getSearchBoardCategoryListCnt(Map<String, Object> pagingParams);
 
+	int modifyCategoryConfirm(BoardCategoryDto boardCategoryDto);
+
 	
 
 }

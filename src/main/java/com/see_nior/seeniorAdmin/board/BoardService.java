@@ -146,7 +146,7 @@ public class BoardService {
 					
 		log.info("bc_idx: ",bc_idx);
 		
-		//DB에서 board category 마지막 idx값 꺼내오기
+		//DB에서 board category idx 업데이트 처리
 		int result = boardMapper.updateBoardCategoryIdx(bc_idx);
 		
 		if(result < 0) {
@@ -462,6 +462,37 @@ public class BoardService {
 		searchBoardCategoryListPageNum.put("pageLimit", pageLimit);
 		
 		return searchBoardCategoryListPageNum;
+	}
+	
+	//게시판 카테고리 정보 수정
+	public boolean modifyCategoryConfirm(BoardCategoryDto boardCategoryDto, int current_bc_idx) {
+		log.info("getSearchBoardCategoryListPageNum()");
+		
+		Map<String, Object> modifyParams = new HashMap<>();
+		
+		modifyParams.put("current_bc_idx", current_bc_idx);
+		modifyParams.put("bc_idx", boardCategoryDto.getBc_idx());
+		
+		int result = 0;
+		
+		result = boardMapper.matchingModifyCategoryIdx(modifyParams);
+		
+		if(result > 0) {
+			
+			result = boardMapper.modifyCategoryConfirm(boardCategoryDto);
+			
+			if(result <= 0) {
+				log.info("modifyCategoryConfirm() error!");
+				return false;
+			}else {				
+				return true;
+			}			
+			
+		}else {
+			log.info("matchingModifyCategoryIdx() error!");
+			return false;
+		}
+		
 	}
 	
 
