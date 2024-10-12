@@ -495,8 +495,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 				<tr data-bc-no="${data.bc_no}" data-bc-idx="${data.bc_idx}">
 					<td class="vam">
 						<div class="table_info func_area">
-							${data.bc_idx !== 1 ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx - 1}, ${page})" class="func_arrow up"></span>` : ''}
-							${data.bc_idx !== getListCnt ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx + 1}, ${page})" class="func_arrow down"></span>` : ''}
+							${getListCnt > 1 ? `
+								${data.bc_idx !== 1 ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx - 1}, ${page})" class="func_arrow up"></span>` : ''}
+								${data.bc_idx !== getListCnt ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx + 1}, ${page})" class="func_arrow down"></span>` : ''}
+							` : ''}
 						</div>
 					</td>
 		            <td>
@@ -846,7 +848,7 @@ function mapSelectListApiObject(sortValue) {
 // 셀렉트 옵션 리스트 요청 및 옵션 생성
 async function getCategoryList(ele, isForm, selectedValue) {
 	const $selectEle = $(`#${ele}`); // 셀렉트 요소가 생성될 table th or td
-	const bgc = $selectEle.closest('th') ? '#F7F7F7' : '#F7F7F7';
+	const bgc = $selectEle.parent()[0].tagName === 'TH' ? '#F7F7F7' : '#FFFFFF';
 	
 	if(setAddLoading(true, `${ele}_select`, bgc)) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
 		const { apiUrl, getListDtos, dataNo, dataName } = mapCategorylistObject(ele);

@@ -10,7 +10,7 @@
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // search
-					await getSearchList(null, '/board/cate_info/search_board_list', page);
+					await getSearchList(null, '/board/cate_info/search_board_category_list', page);
 					break;
 
 				case '0': // sort
