@@ -50,7 +50,7 @@
 	                                        <th><p class="table_title">순번</p></th>
 		                                	<td>
 		                                		<input type="number" name="bc_idx" id="bc_idx" class="table_info" placeholder="순번"
-		                                			min="1" th:max="${boardCategoryIdxMaxNum + 1}" 
+		                                			min="1" th:max="${boardCategoryIdxMaxNum}" 
 		                                			onkeydown="blockEKey(event)"
 		                                			oninput="replaceNumber(this)"
 		                                			th:value="${boardCategoryDtoForModify.bc_idx}">
