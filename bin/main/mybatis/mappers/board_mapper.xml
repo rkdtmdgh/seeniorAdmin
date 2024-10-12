@@ -288,13 +288,41 @@
 
 	</select>
 	
+	<!-- 게시판 카테고리 정보 수정을 위한 IDX값 변경 add -->
+	<update id="modifyCategoryIdxByBetweenAdd">
+    	UPDATE 
+    		BOARD_CATEGORY
+    	SET 
+    		BC_IDX = BC_IDX + 1
+    	WHERE
+    		BC_IDX BETWEEN #{bc_idx} 
+    	AND 
+    		#{current_bc_idx} 
+    	AND 
+    		BC_IDX != #{current_bc_idx}
+    </update>
+    
+    <!-- 게시판 카테고리 정보 수정을 위한 IDX값 변경 sub -->
+	<update id="modifyCategoryIdxByBetweenSub">
+    	UPDATE 
+    		BOARD_CATEGORY
+    	SET 
+    		BC_IDX = BC_IDX - 1
+    	WHERE
+    		BC_IDX BETWEEN #{current_bc_idx} 
+    	AND 
+    		#{bc_idx} 
+    	AND 
+    		BC_IDX != #{current_bc_idx}
+    </update>
+	
 	<!-- 게시판 카테고리 정보 수정 요청 -->
 	<update id="modifyCategoryConfirm" parameterType="BoardCategoryDto">
     	UPDATE 
     		BOARD_CATEGORY
     	SET 
-    		BC_NAME = #{bc_item_cnt},
-    		BC_IDX = #{bc_item_cnt},
+    		BC_NAME = #{bc_name},
+    		BC_IDX = #{bc_idx},
     		BC_MOD_DATE = NOW()
     	WHERE 
     		BC_NO = #{bc_no}

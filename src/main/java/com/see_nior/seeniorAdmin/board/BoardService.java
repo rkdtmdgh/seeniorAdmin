@@ -468,30 +468,43 @@ public class BoardService {
 	public boolean modifyCategoryConfirm(BoardCategoryDto boardCategoryDto, int current_bc_idx) {
 		log.info("getSearchBoardCategoryListPageNum()");
 		
-		Map<String, Object> modifyParams = new HashMap<>();
+		boolean result = false;
 		
-		modifyParams.put("current_bc_idx", current_bc_idx);
-		modifyParams.put("bc_idx", boardCategoryDto.getBc_idx());
-		
-		int result = 0;
-		
-		result = boardMapper.matchingModifyCategoryIdx(modifyParams);
-		
-		if(result > 0) {
+		if( current_bc_idx != boardCategoryDto.getBc_idx()) {
+			log.info("current_bc_idx != boardCategoryDto");
 			
+			Map<String, Object> parm = new HashMap<>();
+			
+			parm.put("current_bc_idx", current_bc_idx);
+			parm.put("bc_idx", boardCategoryDto.getBc_idx());
+			
+			if(current_bc_idx > boardCategoryDto.getBc_idx()) {				
+				result = boardMapper.modifyCategoryIdxByBetweenAdd(parm);
+			}else{
+				result = boardMapper.modifyCategoryIdxByBetweenSub(parm);
+			}
+			
+			
+			if(!result) {
+				log.info("modifyCategoryIdxByBetween() fail!!");
+			}else {
+				result = boardMapper.modifyCategoryConfirm(boardCategoryDto);
+				
+				if(!result) {
+					log.info("modifyCategoryConfirm() fail!!");
+				}
+			}
+			
+		}else {	
+			log.info("current_bc_idx == boardCategoryDto");
 			result = boardMapper.modifyCategoryConfirm(boardCategoryDto);
 			
-			if(result <= 0) {
-				log.info("modifyCategoryConfirm() error!");
-				return false;
-			}else {				
-				return true;
-			}			
-			
-		}else {
-			log.info("matchingModifyCategoryIdx() error!");
-			return false;
+			if(!result) {
+				log.info("modifyCategoryConfirm() fail!!");
+			}
 		}
+					
+		return result;
 		
 	}
 	
