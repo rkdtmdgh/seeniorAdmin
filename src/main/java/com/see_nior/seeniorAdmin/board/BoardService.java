@@ -23,6 +23,7 @@ import com.see_nior.seeniorAdmin.board.mapper.BoardMapper;
 import com.see_nior.seeniorAdmin.board.util.BoardItemCntUpdater;
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
 import com.see_nior.seeniorAdmin.dto.BoardPostsDto;
+import com.see_nior.seeniorAdmin.dto.DiseaseCategoryDto;
 import com.see_nior.seeniorAdmin.dto.DiseaseDto;
 
 import lombok.RequiredArgsConstructor;
@@ -406,6 +407,61 @@ public class BoardService {
 		}
 		
 		return result;
+	}
+	
+	// 페이지에 따른 게시판 카테고리 가져오기(검색한 게시판 카테고리)
+	public Map<String, Object> getSearchBoardCategoryListWithPage(String searchPart, String searchString, int page) {
+		log.info("getSearchBoardCategoryListWithPage()");
+		
+		int pagingStart = (page - 1) * pageLimit;
+		
+		Map<String, Object> pagingList = new HashMap<>();
+		
+		Map<String, Object> pagingParams = new HashMap<>();
+		pagingParams.put("start", pagingStart);
+		pagingParams.put("limit", pageLimit);
+		pagingParams.put("searchPart", searchPart);
+		pagingParams.put("searchString", searchString);
+		
+		List<BoardCategoryDto> searchBoardCategoryDtos = boardMapper.getSearchBoardCategory(pagingParams);
+				
+		pagingList.put("boardCategoryDtos", searchBoardCategoryDtos);
+		
+		return pagingList;
+	}
+	
+	// 게시판 카테고리의 총 페이지 개수 구하기(검색한 게시판 카테고리)
+	public Map<String, Object> getSearchBoardCategoryListPageNum(String searchPart, String searchString, int page) {
+		log.info("getSearchBoardCategoryListPageNum()");
+		
+		Map<String, Object> searchBoardCategoryListPageNum = new HashMap<>();
+		
+		Map<String, Object> pagingParams = new HashMap<>();
+		pagingParams.put("searchPart", searchPart);
+		pagingParams.put("searchString", searchString);
+		
+		// 전체 리스트 개수 조회
+		int searchBoardCategoryListCnt = boardMapper.getSearchBoardCategoryListCnt(pagingParams);
+		
+		// 전체 페이지 개수 계산
+		int maxPage = (int) (Math.ceil((double) searchBoardCategoryListCnt / pageLimit));
+		
+		// 시작 페이지 값 계산
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
+		
+		// 마지막 페이지 값 계산
+		int endPage = startPage + blockLimit - 1;
+		if (endPage > maxPage) endPage = maxPage;
+		
+		searchBoardCategoryListPageNum.put("searchBoardCategoryListCnt", searchBoardCategoryListCnt);
+		searchBoardCategoryListPageNum.put("page", page);
+		searchBoardCategoryListPageNum.put("maxPage", maxPage);
+		searchBoardCategoryListPageNum.put("startPage", startPage);
+		searchBoardCategoryListPageNum.put("endPage", endPage);
+		searchBoardCategoryListPageNum.put("blockLimit", blockLimit);
+		searchBoardCategoryListPageNum.put("pageLimit", pageLimit);
+		
+		return searchBoardCategoryListPageNum;
 	}
 	
 
