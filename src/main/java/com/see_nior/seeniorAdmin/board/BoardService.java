@@ -146,7 +146,7 @@ public class BoardService {
 					
 		log.info("bc_idx: ",bc_idx);
 		
-		//DB에서 board category 마지막 idx값 꺼내오기
+		//DB에서 board category idx 업데이트 처리
 		int result = boardMapper.updateBoardCategoryIdx(bc_idx);
 		
 		if(result < 0) {
@@ -462,6 +462,50 @@ public class BoardService {
 		searchBoardCategoryListPageNum.put("pageLimit", pageLimit);
 		
 		return searchBoardCategoryListPageNum;
+	}
+	
+	//게시판 카테고리 정보 수정
+	public boolean modifyCategoryConfirm(BoardCategoryDto boardCategoryDto, int current_bc_idx) {
+		log.info("getSearchBoardCategoryListPageNum()");
+		
+		boolean result = false;
+		
+		if( current_bc_idx != boardCategoryDto.getBc_idx()) {
+			log.info("current_bc_idx != boardCategoryDto");
+			
+			Map<String, Object> parm = new HashMap<>();
+			
+			parm.put("current_bc_idx", current_bc_idx);
+			parm.put("bc_idx", boardCategoryDto.getBc_idx());
+			
+			if(current_bc_idx > boardCategoryDto.getBc_idx()) {				
+				result = boardMapper.modifyCategoryIdxByBetweenAdd(parm);
+			}else{
+				result = boardMapper.modifyCategoryIdxByBetweenSub(parm);
+			}
+			
+			
+			if(!result) {
+				log.info("modifyCategoryIdxByBetween() fail!!");
+			}else {
+				result = boardMapper.modifyCategoryConfirm(boardCategoryDto);
+				
+				if(!result) {
+					log.info("modifyCategoryConfirm() fail!!");
+				}
+			}
+			
+		}else {	
+			log.info("current_bc_idx == boardCategoryDto");
+			result = boardMapper.modifyCategoryConfirm(boardCategoryDto);
+			
+			if(!result) {
+				log.info("modifyCategoryConfirm() fail!!");
+			}
+		}
+					
+		return result;
+		
 	}
 	
 

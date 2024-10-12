@@ -266,13 +266,13 @@
 		AND 
 			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 		ORDER BY 
-			BC_NAME DESC 
+			BC_IDX DESC 
 		LIMIT 
 			#{start}, #{limit}
 	
 	</select>  
 	
-	<!-- 질환 카테고리의 총 페이지 개수 구하기(검색한 질환 카테고리) -->
+	<!-- 게시판 카테고리의 총 페이지 개수 구하기(검색한 질환 카테고리) -->
 	<select id="getSearchBoardCategoryListCnt"
 			parameterType="Map"
 			resultType="Integer">
@@ -287,5 +287,45 @@
 			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 
 	</select>
+	
+	<!-- 게시판 카테고리 정보 수정을 위한 IDX값 변경 add -->
+	<update id="modifyCategoryIdxByBetweenAdd">
+    	UPDATE 
+    		BOARD_CATEGORY
+    	SET 
+    		BC_IDX = BC_IDX + 1
+    	WHERE
+    		BC_IDX BETWEEN #{bc_idx} 
+    	AND 
+    		#{current_bc_idx} 
+    	AND 
+    		BC_IDX != #{current_bc_idx}
+    </update>
+    
+    <!-- 게시판 카테고리 정보 수정을 위한 IDX값 변경 sub -->
+	<update id="modifyCategoryIdxByBetweenSub">
+    	UPDATE 
+    		BOARD_CATEGORY
+    	SET 
+    		BC_IDX = BC_IDX - 1
+    	WHERE
+    		BC_IDX BETWEEN #{current_bc_idx} 
+    	AND 
+    		#{bc_idx} 
+    	AND 
+    		BC_IDX != #{current_bc_idx}
+    </update>
+	
+	<!-- 게시판 카테고리 정보 수정 요청 -->
+	<update id="modifyCategoryConfirm" parameterType="BoardCategoryDto">
+    	UPDATE 
+    		BOARD_CATEGORY
+    	SET 
+    		BC_NAME = #{bc_name},
+    		BC_IDX = #{bc_idx},
+    		BC_MOD_DATE = NOW()
+    	WHERE 
+    		BC_NO = #{bc_no}
+    </update>
 
 </mapper>

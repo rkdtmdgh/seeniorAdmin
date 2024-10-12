@@ -45,6 +45,14 @@ public interface BoardMapper {
 	List<BoardCategoryDto> getSearchBoardCategory(Map<String, Object> pagingParams);
 
 	int getSearchBoardCategoryListCnt(Map<String, Object> pagingParams);
+	
+	boolean modifyCategoryConfirm(BoardCategoryDto boardCategoryDto);
+
+	boolean modifyCategoryIdxByBetweenAdd(Map<String, Object> parm);
+
+	boolean modifyCategoryIdxByBetweenSub(Map<String, Object> parm);
+
+
 
 	
 

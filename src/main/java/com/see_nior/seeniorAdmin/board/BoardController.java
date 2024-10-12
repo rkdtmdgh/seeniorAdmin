@@ -20,6 +20,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 
@@ -300,6 +302,31 @@ public class BoardController {
 		searchBoardCategoryListWithPage.put("searchString", searchString);
 		
 		return searchBoardCategoryListWithPage;
+	}
+	
+	//게시판 카테고리 정보 수정
+	@PostMapping("/cate_info/modify_category_confirm")
+	@ResponseBody
+	public boolean modifyCategoryConfirm(BoardCategoryDto boardCategoryDto, @RequestParam("current_bc_idx") int current_bc_idx) {
+		log.info("modifyCategoryConfirm()");
+		
+		log.info("modifyDto: {}",boardCategoryDto);
+		log.info("current_bc_idx: {}",current_bc_idx);
+		
+		boolean result = boardService.modifyCategoryConfirm(boardCategoryDto,current_bc_idx);
+		
+		return result;
+	}
+	
+	//게시판 카테고리 삭제 요청
+	@PostMapping("/cate_info/delete_category_confirm")
+	@ResponseBody
+	public boolean deleteCategoryConfirm(BoardCategoryDto boardCategoryDto) {
+		log.info("deleteCategoryConfirm()");
+			
+		log.info("deleteDto: {}",boardCategoryDto);
+		
+		return true;
 	}
 	
 	
