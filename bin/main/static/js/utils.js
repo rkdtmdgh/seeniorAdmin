@@ -12,30 +12,30 @@ function setInputFocus(ele) {
 // loading set
 let loadingTimeout; // 타이머 변수를 전역으로 선언
 function setAddLoading(loading, parentEleClass, backgroundColor=null) {
-	if(loading) {
-		if($(`.${parentEleClass}_loading_wrap`).length.length) { // 이미 로딩 요소가 존재할 경우 
-			alert('현재 요청이 진행 중입니다. 잠시 후 다시 시도해 주세요.');
-			logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: Already loading`);
-			
-			return false; // 이미 요청이 진행 중이면 함수 종료 (중복 요청 방지)
-		}
-		
-		loadingTimeout = setTimeout(() => {
-			$(`.${parentEleClass}`).append(`
-				<span class="${parentEleClass}_loading_wrap loading" style="background-color: ${backgroundColor ? backgroundColor : 'var(--whiteColor)'};"></span>
-			`); // 해당 컨텐츠에 로딩 요소 추가		
-		}, 20);
-		logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: success loading`);
-		
-		return true; // 로딩 표시 요청 완료
-		
-	} else {
+	if(!loading) {
 		clearTimeout(loadingTimeout); // 딜레이 시간 안에 통신 완료 시 로딩 타이머 취소
-		$(`.${parentEleClass}_loading_wrap`).remove(); // 로딩 요소 제거
+		if($(`.${parentEleClass}_loading_wrap`).length) $(`.${parentEleClass}_loading_wrap`).remove(); // 로딩 요소 제거
 		logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: stop loading`);
 		
 		return false;
+		
 	}
+	
+	if($(`.${parentEleClass}_loading_wrap`).length.length) { // 이미 로딩 요소가 존재할 경우 
+		alert('현재 요청이 진행 중입니다. 잠시 후 다시 시도해 주세요.');
+		logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: Already loading`);
+		
+		return false; // 이미 요청이 진행 중이면 함수 종료 (중복 요청 방지)
+	}
+	
+	loadingTimeout = setTimeout(() => {
+		$(`.${parentEleClass}`).append(`
+			<span class="${parentEleClass}_loading_wrap loading" style="background-color: ${backgroundColor ? backgroundColor : 'var(--whiteColor)'};"></span>
+		`); // 해당 컨텐츠에 로딩 요소 추가
+	}, 50);
+	logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: success loading`);
+	
+	return true; // 로딩 표시 요청 완료
 }
 
 // FormData 키벨류, byte 확인
