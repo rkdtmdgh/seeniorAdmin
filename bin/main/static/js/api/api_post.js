@@ -73,17 +73,17 @@ function postSignInForm(event, formName) {
 
 // 본인 확인 폼
 async function postIdentityCheckForm(event, formName) {   
-	if(event) event.preventDefault();
-	const form = document.forms[formName];
-	let input;
-	
-	input = form.a_pw;
-	if(!validateEmpty(input, '비밀번호를', true, true)) {
-		input.focus();
-		return false;
-	}
-	
 	if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+		if(event) event.preventDefault();
+		const form = document.forms[formName];
+		let input;
+		
+		input = form.a_pw;
+		if(!validateEmpty(input, '비밀번호를', true, true)) {
+			input.focus();
+			return false;
+		}
+	
 		try {
 			const response = await $.ajax({
 				url: '/account/info/modify_check',
