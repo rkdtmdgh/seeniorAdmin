@@ -80,7 +80,7 @@ $(document).ready(function() {
 	});
 	
 	// 제한 설정
-	const maxFileSize = 1024 * 1024 * 5; // 파일 사이즈 byte
+	const maxFileSize = 1024 * 1024 * 2; // 파일 사이즈 byte
 	const maxTextSize = 1000000; // 최대 텍스트 입력 설정 byte
 	const maxImageCount = 10; // 최대 이미지 삽입 개수
 	const maxVideoCount = 5; // 최대 영상 삽입 개수

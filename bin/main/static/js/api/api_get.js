@@ -43,75 +43,73 @@ async function getBoardInfo(infoNo) {
 
 // 콘텐츠 리스트 요청
 async function getList(apiUrl, sortValue, order, page) {
-    setAddLoading(true); // 로딩 시작
-	setAllcheck(); // all_check 체크박스 초기화
-	
-	// 검색 인풋 벨류 삭제
-	const searchStringInput = document.forms['search_form'].search_string;
-	if(searchStringInput.value.trim().length) searchStringInput.value = ''; // 검색 이력이 남았을 경우에만 삭제
-	
-	const urlParams = new URLSearchParams(window.location.search);
-	const infoNo = urlParams.get('infoNo') || undefined;
-	
-	const intPage = page || 1
-	let params = `?page=${intPage}`;
-	if(sortValue) params = `${params}&sortValue=${encodeURIComponent(sortValue)}&order=${encodeURIComponent(order)}`;
-	if(infoNo) params = `${params}&infoNo=${infoNo}`;
-	
-	logger.info('apiUrl:', apiUrl + params);
-	
-	try {
-		const response = await $.ajax({
-			url: apiUrl + params,
-			method: 'GET',
-		});
+	if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+		setAllcheck(); // all_check 체크박스 초기화
 		
-		logger.info(`${apiUrl} getList() response:`, response);
+		// 검색 인풋 벨류 삭제
+		const searchStringInput = document.forms['search_form'].search_string;
+		if(searchStringInput.value.trim().length) searchStringInput.value = ''; // 검색 이력이 남았을 경우에만 삭제
 		
-		const { getListDtos, getListPage, getListCnt } = mapApiResponseObject(apiUrl, response);
-		const $contentTable = $('.content_table tbody'); // 데이터가 나열될 테이블 요소
-		const $pagination = $('.pagination_wrap'); // 페이지 네이션 요소
-		$contentTable.html('');
-		$pagination.html('');
+		const urlParams = new URLSearchParams(window.location.search);
+		const infoNo = urlParams.get('infoNo') || undefined;
 		
-		if(response && getListDtos.length) {
-			// 쿼리스트링 조건 추가
-			setListQueryString(sortValue, order, getListPage.page); // page, sortValue, order
-			
-			if(response.reg_date) setContentSubInfo(response.reg_date); // 타이틀 옆 서브내용 표시(예: 업데이트 날짜 등)
-							
-			let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
-			let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
-			
-			getListDtos.forEach((data) => { 
-			    const isFirstElement = (listIndex === getListCnt); // 첫 번째 요소인지 확인
-			    const isLastElement = (listIndex === (getListCnt - (pageLimit * (getListPage.page - 1) + pageLimit - 1)));  // 마지막 요소인지 확인
-			    
-				$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElement));
-				listIndex --;
+		const intPage = page || 1
+		let params = `?page=${intPage}`;
+		if(sortValue) params = `${params}&sortValue=${encodeURIComponent(sortValue)}&order=${encodeURIComponent(order)}`;
+		if(infoNo) params = `${params}&infoNo=${infoNo}`;
+		
+		logger.info('apiUrl:', apiUrl + params);
+		
+		try {
+			const response = await $.ajax({
+				url: apiUrl + params,
+				method: 'GET',
 			});
 			
-			// 페이지네이션 생성	
-			const paging = generatePagination(getListPage, sortValue, order, apiUrl, false); // 페이징벨류값, sortValue, order, 커맨드, isSearch
-			$pagination.html(paging);
+			logger.info(`${apiUrl} getList() response:`, response);
 			
-		} else {
-			logger.info('데이터가 없거나 유효하지 않습니다.');
-			const maxCols = setTableColumnsNum();
-			$contentTable.html(`
-				<tr>
-                    <td colspan="${maxCols}">
-                        <p class="table_info">목록이 없습니다.</p>
-                    </td>
-                </tr>
-			`);
+			const { getListDtos, getListPage, getListCnt } = mapApiResponseObject(apiUrl, response);
+			const $contentTable = $('.content_table tbody'); // 데이터가 나열될 테이블 요소
+			const $pagination = $('.pagination_wrap'); // 페이지 네이션 요소
+			$contentTable.html('');
+			$pagination.html('');
+			
+			if(response && getListDtos.length) {
+				// 쿼리스트링 조건 추가
+				setListQueryString(sortValue, order, getListPage.page); // page, sortValue, order
+				
+				if(response.reg_date) setContentSubInfo(response.reg_date); // 타이틀 옆 서브내용 표시(예: 업데이트 날짜 등)
+								
+				let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
+				let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
+				
+				getListDtos.forEach((data) => { 			   
+					$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, getListCnt, listIndex, page));
+					listIndex --;
+				});
+				
+				// 페이지네이션 생성	
+				const paging = generatePagination(getListPage, sortValue, order, apiUrl, false); // 페이징벨류값, sortValue, order, 커맨드, isSearch
+				$pagination.html(paging);
+				
+			} else {
+				logger.info('데이터가 없거나 유효하지 않습니다.');
+				const maxCols = setTableColumnsNum();
+				$contentTable.html(`
+					<tr>
+	                    <td colspan="${maxCols}">
+	                        <p class="table_info">목록이 없습니다.</p>
+	                    </td>
+	                </tr>
+				`);
+			}
+			
+		} catch(error) {
+			logger.error(apiUrl + ' error:', error);
+			
+		} finally {
+			setAddLoading(false, 'content_inner'); // 로딩 제거
 		}
-		
-	} catch(error) {
-		logger.error(apiUrl + ' error:', error);
-		
-	} finally {
-		setAddLoading(false); // 로딩 제거
 	}
 }
 
@@ -134,70 +132,68 @@ async function getSearchList(event, apiUrl, page) {
 	}
 	
 	if(apiUrl) {
-        setAddLoading(true); // 로딩 시작
-		setAllcheck(); // all_check 체크박스 초기화
+		if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+			setAllcheck(); // all_check 체크박스 초기화
+			
+			const urlParams = new URLSearchParams(window.location.search);
+			const infoNo = urlParams.get('infoNo') || undefined;
 		
-		const urlParams = new URLSearchParams(window.location.search);
-		const infoNo = urlParams.get('infoNo') || undefined;
-	
-		let intPage = page || 1;
-		logger.info('searchForm() searchPart:', form.search_part.value);
-		logger.info('searchForm() searchString:', input.value.trim());
-		
-		let params = `?searchPart=${form.search_part.value}&searchString=${input.value.trim()}&page=${intPage}`;
-		if(infoNo) params = `${params}&infoNo=${infoNo}`;
-				
-		try {
-			const response = await $.ajax({
-				url: apiUrl + params,
-				method: 'GET',
-			});
+			let intPage = page || 1;
+			logger.info('searchForm() searchPart:', form.search_part.value);
+			logger.info('searchForm() searchString:', input.value.trim());
 			
-			logger.info(`${apiUrl} searchForm() response:`, response);
-			
-			const { getListDtos, getListPage, getListCnt } = mapApiResponseObject(apiUrl, response);
-			const $contentTable = $('.content_table tbody'); // 데이터가 나열될 테이블 요소
-			const $pagination = $('.pagination_wrap'); // 페이지 네이션 요소
-			$contentTable.html('');
-			$pagination.html('');
-			
-			if(response && getListDtos.length) {
-				// 쿼리스트링 조건 추가
-				setSearchQueryString(getListPage.page, response.searchPart, response.searchString); // page, searchPart, searchString
-				
-				let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
-				let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
-						
-				getListDtos.forEach((data) => { 
-					const isFirstElement = (listIndex === getListCnt); // 첫 번째 요소인지 확인
-				    const isLastElement = (listIndex === (getListCnt - (pageLimit * (getListPage.page - 1) + pageLimit - 1)));  // 마지막 요소인지 확인
-				    
-					$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElement));
-					listIndex --;
+			let params = `?searchPart=${form.search_part.value}&searchString=${input.value.trim()}&page=${intPage}`;
+			if(infoNo) params = `${params}&infoNo=${infoNo}`;
+					
+			try {
+				const response = await $.ajax({
+					url: apiUrl + params,
+					method: 'GET',
 				});
 				
-				// 페이지네이션 생성			
-				const paging = generatePagination(getListPage, null, null, apiUrl, true); // 페이징벨류값, sortValue, order, 커맨드, isSearch
-				$pagination.html(paging);
+				logger.info(`${apiUrl} searchForm() response:`, response);
 				
-			} else {
-				logger.info('데이터가 없거나 유효하지 않습니다.');
-				// 테이블의 전체 열 수 계산하기
-				const maxCols = setTableColumnsNum();
-				$contentTable.html(`
-					<tr>
-                        <td colspan="${maxCols}">
-                            <p class="table_info">검색된 내용이 없습니다.</p>
-                        </td>
-                    </tr>
-				`);
+				const { getListDtos, getListPage, getListCnt } = mapApiResponseObject(apiUrl, response);
+				const $contentTable = $('.content_table tbody'); // 데이터가 나열될 테이블 요소
+				const $pagination = $('.pagination_wrap'); // 페이지 네이션 요소
+				$contentTable.html('');
+				$pagination.html('');
+				
+				if(response && getListDtos.length) {
+					// 쿼리스트링 조건 추가
+					setSearchQueryString(getListPage.page, response.searchPart, response.searchString); // page, searchPart, searchString
+					
+					let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
+					let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
+							
+					getListDtos.forEach((data) => {
+						$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, getListCnt, listIndex, page));
+						listIndex --;
+					});
+					
+					// 페이지네이션 생성			
+					const paging = generatePagination(getListPage, null, null, apiUrl, true); // 페이징벨류값, sortValue, order, 커맨드, isSearch
+					$pagination.html(paging);
+					
+				} else {
+					logger.info('데이터가 없거나 유효하지 않습니다.');
+					// 테이블의 전체 열 수 계산하기
+					const maxCols = setTableColumnsNum();
+					$contentTable.html(`
+						<tr>
+	                        <td colspan="${maxCols}">
+	                            <p class="table_info">검색된 내용이 없습니다.</p>
+	                        </td>
+	                    </tr>
+					`);
+				}
+				
+			} catch(error) {
+				logger.error(apiUrl + ' searchForm() error:', error);
+				
+			} finally {
+				setAddLoading(false, 'content_inner'); // 로딩 제거
 			}
-			
-		} catch(error) {
-			logger.error(apiUrl + ' searchForm() error:', error);
-			
-		} finally {
-			setAddLoading(false); // 로딩 제거
 		}
 	}
 }
@@ -263,10 +259,10 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchRecipeListPageNum.searchRecipeListCnt;
 			break;	
 			
-		case '/recipe/info/get_recipe_list_by_rcp_pat2': // 식단 정보 관리 음식 종류별 데이터
+		case '/recipe/info/get_recipe_list_by_type': // 식단 정보 관리 음식 종류별 데이터
 			getListDtos = response.recipeDtos;
-			getListPage = response.recipeListByRcpPat2PageNum;
-			getListCnt = response.recipeListByRcpPat2PageNum.recipeListByRcpPat2Cnt;
+			getListPage = response.recipeListByTypePageNum;
+			getListCnt = response.recipeListByTypePageNum.recipeListByTypeCnt;
 			break;
 			
 		case '/video/info/get_video_list': // 영상 정보 관리
@@ -281,7 +277,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchVideoListPage.searchVideoListCnt;
 			break;	
 			
-		case '/board/cate_info/get_list': // 게시판 관리
+		case '/board/cate_info/get_category_list': // 게시판 관리
 			getListDtos = response.boardCategoryDtos;
 			getListPage = response.boardCategoryListPageNum;
 			getListCnt = response.boardCategoryListPageNum.boardCategoryListCnt;
@@ -293,13 +289,13 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchBoardCategoryListPageNum.searchBoardCategoryListCnt;
 			break;
 			
-		case '/board/noti_info/get_notice_posts_list': // 공지 게시물
+		case '/board/noti_info/get_board_notice_list': // 공지 게시물
 			getListDtos = response.boardNoticePostsDtos;
 			getListPage = response.boardNoticePostsListPageNum;
 			getListCnt = response.boardNoticePostsListPageNum.boardNoticePostsListCnt;
 			break;
 			
-		case '/board/info/search_notice_posts_list': // 공지 게시물 검색
+		case '/board/info/search_board_notice_list': // 공지 게시물 검색
 			getListDtos = response.boardNoticePostsDtos;
 			getListPage = response.searchBoardNoticePostsListPageNum;
 			getListCnt = response.searchBoardNoticePostsListPageNum.searchNoticePostsListCnt;
@@ -347,13 +343,13 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.advertisementListPageNum.advertisementListCnt;
 			break;	
 			
-		case '/advertisement/info/get_advertisement_list': // 광고 관리 검색
+		case '/advertisement/info/search_advertisement_list': // 광고 관리 검색
  			getListDtos = response.advertisementDtos;
 			getListPage = response.searchAdvertisementListPageNum;
 			getListCnt = response.searchAdvertisementListPageNum.searchAdvertisementListCnt;
 			break;	
 			
-		case '/advertisement/info/get_advertisement_list_by_position': // 광고 관리 분류별 데이터
+		case '/advertisement/info/get_advertisement_list_by_category': // 광고 관리 분류별 데이터
 			getListDtos = response.advertisementDtos;
 			getListPage = response.advertisementByPositionPageNum;
 			getListCnt = response.advertisementByPositionPageNum.advertisementListByPositionCnt;
@@ -365,7 +361,7 @@ function mapApiResponseObject(apiUrl, response) {
 }
 
 // 콘텐츠 테이블 리스트 생성
-function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElement) { 
+function generateTableList(apiUrl, data, getListCnt, listIndex, page) { 
 	let tableTrContent = '';
 	
 	switch(apiUrl) {
@@ -396,8 +392,8 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			break;
 			
 		case '/disease/info/get_disease_list': // 질환/질병 정보 관리 리스트 테이블
-		case '/disease/info/search_disease_list':            // 질환/질병 정보 관리 검색 리스트 테이블
-		case '/disease/info/get_disease_list_by_category': // 질환/질병 정보 관리 분류 선택 리스트 테이블
+		case '/disease/info/search_disease_list': // 질환/질병 정보 관리 검색 리스트 테이블
+		case '/disease/info/get_disease_list_by_category': // 질환/질병 정보 관리 질병군별 분류 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td class="vam">
@@ -441,7 +437,7 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			
 		case '/recipe/info/get_recipe_list': // 식단 정보 관리 리스트 테이블
 		case '/recipe/info/search_recipe_list': // 식단 정보 관리 검색 리스트 테이블
-		case '/recipe/info/get_recipe_list_by_rcp_pat2': // 식단 정보 관리 음식 종류 선택 리스트 테이블
+		case '/recipe/info/get_recipe_list_by_type': // 식단 정보 관리 음식 종류별 분류 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -484,7 +480,7 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 		                <a href="/video/info/modify_form?v_no=${data.v_no}" class="table_info">${data.v_title}</a>
 		            </td>
 		            <td class="ta_l">
-		                <a href="${data.v_link}" onclick="setWindowOpenPosition(this.href, '640', '360'); return false;" class="table_info">${data.v_link}</a>
+		                <a href="${data.v_link}" onclick="setWindowOpenPosition(this.href, 640, 360); return false;" class="table_info">${data.v_link}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.v_mod_date) || 'N/A'}</p>
@@ -493,24 +489,27 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			`;
 			break;
 			
-		case '/board/cate_info/get_list': // 게시판 관리 리스트 테이블
+		case '/board/cate_info/get_category_list': // 게시판 관리 리스트 테이블
 		case '/board/cate_info/search_board_category_list': // 게시판 관리 검색 리스트 테이블
 			tableTrContent = `
-				<tr data-bc-no="${data.bc_no}" data-bc-name="${data.bc_name}" data-bc-idx="${data.bc_idx}">
-					<td>
+				<tr data-bc-no="${data.bc_no}" data-bc-idx="${data.bc_idx}">
+					<td class="vam">
 						<div class="table_info func_area">
-							${!isFirstElement ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx + 1})" class="func_arrow up"></span>` : ''}
-							${!isLastElement ? `<span onclick="putBoardCategoryModifyButton(evemt, ${data.bc_idx - 1})" class="func_arrow down"></span>` : ''}
+							${data.bc_idx !== 1 ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx - 1}, ${page})" class="func_arrow up"></span>` : ''}
+							${data.bc_idx !== getListCnt ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx + 1}, ${page})" class="func_arrow down"></span>` : ''}
 						</div>
 					</td>
 		            <td>
 		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
+		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${data.bc_idx}</a>
+		            </td>
+		            <td>
 		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${data.bc_name}</a>
 		            </td>
 		            <td>
-		                <a href="" class="table_info">${data.bc_item_cnt}</a>
+		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${data.bc_item_cnt}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.bc_reg_date) || 'N/A'}</p>
@@ -519,24 +518,24 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			`;
 			break;
 			
-		case '/board/noti_info/get_notice_posts_list': // 공지 게시물 리스트 테이블
-		case '/board/info/search_notice_posts_list': // 공지 게시물 검색 리스트 테이블
+		case '/board/noti_info/get_board_notice_list': // 공지 게시물 리스트 테이블
+		case '/board/info/search_board_notice_list': // 공지 게시물 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
-		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${listIndex}</a>
+		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">게시판명</a>
+		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">게시판명</a>
 		            </td>
 		            <td>
-		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_title}</a>
+		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_title}</a>
 		            </td>
 					<td>
 		                <a href="/account/noti_info/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
 		            </td>
 		            <td>
-		                <a href="/board/noti_info/modify_notice_posts_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_view_cnt}</a>
+		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_view_cnt}</a>
 		            </td>
 					<td>
 		                <div class="table_info">
@@ -640,7 +639,7 @@ function generateTableList(apiUrl, data, listIndex, isFirstElement, isLastElemen
 			
 		case '/advertisement/info/get_advertisement_list': // 광고 관리 리스트 테이블
 		case '/advertisement/info/search_advertisement_list': // 광고 관리 검색 리스트 테이블
-		case '/advertisement/info/get_advertisement_list_by_position': // 광고 관리 위치 선택 리스트 테이블
+		case '/advertisement/info/get_advertisement_list_by_category': // 광고 관리 위치별 분류 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -781,11 +780,11 @@ function mapSortListApiObject(dbTable) {
 			break;
 			
 		case 'board_notice': // 게시판 공지 사항 페이지
-			apiUrl = '/board/noti_info/get_notice_posts_list';
+			apiUrl = '/board/noti_info/get_board_notice_list';
 			break;
 			
 		case 'board_category': // 게시판 관리 페이지
-			apiUrl = '/board/cate_info/get_list';
+			apiUrl = '/board/cate_info/get_category_list';
 			break;
 			
 		case 'board_posts': // 특정 게시판 페이지
@@ -824,12 +823,16 @@ function mapSelectListApiObject(sortValue) {
 	let apiUrl;
 	
 	switch(sortValue) {				
-		case 'dc_no': // 질환/질병 정보 리스트 페이지 분류 선택 리스트 요청
+		case 'dc_no': // 질환/질병 정보 리스트 페이지 질병군별 분류 리스트 요청
 			apiUrl = '/disease/info/get_disease_list_by_category';
 			break;
 			
-		case 'rcp_pat2': // 식단 정보 리스트 페이지 음식 종류 선택 리스트 요청
-			apiUrl = '/recipe/info/get_recipe_list_by_rcp_pat2';
+		case 'rcp_pat2': // 식단 정보 리스트 페이지 음식 종류별 분류 리스트 요청
+			apiUrl = '/recipe/info/get_recipe_list_by_type';
+			break;
+		
+		case 'ad_position': // 광고 관리 리스트 페이지 위치별 분류 리스트 요청
+			apiUrl = '/advertisement/info/get_advertisement_list_by_category';
 			break;
 			
 		default:
@@ -842,50 +845,55 @@ function mapSelectListApiObject(sortValue) {
 
 // 셀렉트 옵션 리스트 요청 및 옵션 생성
 async function getCategoryList(ele, isForm, selectedValue) {
-	const $selectEle = $(`#${ele}`); // 셀렉트 요소가 생성될 table th
-	const { apiUrl, getListDtos, dataNo, dataName } = mapCategorylistObject(ele);
-	
-	if($selectEle.length) {
-		try {
-			const response = await $.ajax({
-				url: apiUrl,
-				method: 'GET',
-			});
-			
-			const categoryDto = response[getListDtos];
-			logger.info(`${apiUrl} categoryDto:`, response);
-			
-			if(categoryDto && categoryDto.length) {
-				if(isForm) {
-					categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
-						let selected = selectedValue ? data[dataNo] === selectedValue ? 'selected' : '' : '';
-						let option = `<option value="${data[dataNo]}" ${selected}>${data[dataName]}</option>`;
-						
-						if(selected) {
-							$selectEle[0].insertAdjacentHTML('afterbegin', option);
+	if(setAddLoading(true, `${ele}_select`, '#F7F7F7')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+		const $selectEle = $(`#${ele}`); // 셀렉트 요소가 생성될 table th
+		const { apiUrl, getListDtos, dataNo, dataName } = mapCategorylistObject(ele);
+		
+		if($selectEle.length) {
+			try {
+				const response = await $.ajax({
+					url: apiUrl,
+					method: 'GET',
+				});
+				
+				const categoryDto = response[getListDtos];
+				logger.info(`${apiUrl} categoryDto:`, response);
+				
+				if(categoryDto && categoryDto.length) {
+					if(isForm) {
+						categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
+							let selected = selectedValue ? data[dataNo] === selectedValue ? 'selected' : '' : '';
+							let option = `<option value="${data[dataNo]}" ${selected}>${data[dataName]}</option>`;
 							
-						} else {
-							$selectEle[0].insertAdjacentHTML('beforeend', option);
-						}
-					});
+							if(selected) {
+								$selectEle[0].insertAdjacentHTML('afterbegin', option);
+								
+							} else {
+								$selectEle[0].insertAdjacentHTML('beforeend', option);
+							}
+						});
+						
+					} else {
+						const ceateSelect = `<ul data-sort-value="${dataNo}" class="select_option_list sc"></ul>`;
+				        $selectEle[0].insertAdjacentHTML('beforeend', ceateSelect);
+				        const $selectOptionlist = $('ul.select_option_list');
+						
+						categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
+							let option = `<li data-order="${data[dataNo]}" class="option" onclick="getSelectList(event);">${data[dataName]}</li>`;
+							$selectOptionlist[0].insertAdjacentHTML('beforeend', option);
+						});
+					}
 					
 				} else {
-					const ceateSelect = `<ul data-sort-value="${dataNo}" class="select_option_list sc"></ul>`;
-			        $selectEle[0].insertAdjacentHTML('beforeend', ceateSelect);
-			        const $selectOptionlist = $('ul.select_option_list');
-					
-					categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
-						let option = `<li data-order="${data[dataNo]}" class="option" onclick="getSelectList(event);">${data[dataName]}</li>`;
-						$selectOptionlist[0].insertAdjacentHTML('beforeend', option);
-					});
+					$selectEle.removeClass('select');
 				}
 				
-			} else {
-				$selectEle.removeClass('select');
+			} catch(error) {
+				logger.error(apiUrl + ' error:', error);
+				
+			} finally {
+				setAddLoading(false, `${ele}_select`) // 로딩 제거
 			}
-			
-		} catch(error) {
-			logger.error(apiUrl + ' error:', error);
 		}
 	}
 }
@@ -898,7 +906,7 @@ function mapCategorylistObject(ele) {
 	let dataName;
 	
 	switch(ele) {
-		case 'dc_name': // 질환/질병 관련 페이지
+		case 'dc_name': // 질병군별 분류 리스트(분류별 관리o)
 		case 'd_category_no':
 			apiUrl = '/disease/cate_info/get_category_list_select';
 			getListDtos = 'diseaseCategoryDto';
@@ -906,23 +914,24 @@ function mapCategorylistObject(ele) {
 			dataName = 'dc_name';
 			break;
 			
-		case 'rcp_pat2': // 식단 관련 페이지
-			apiUrl = '/recipe/info/get_rcp_pat2_list_select';
-			getListDtos = 'recipeRcpPat2Dto';
+		case 'rcp_pat2': // 음식 종류별 분류 리스트(분류별 관리x)
+			apiUrl = '/recipe/info/get_type_list_select';
+			getListDtos = 'recipeTypeDto';
 			dataNo = 'rcp_pat2';
 			dataName = 'rcp_pat2';
 			break;
 			
-		case 'bc_name': // 게시판 공지 사항 페이지
+		case 'bc_name': // 게시판별 분류 리스트(분류별 관리o)
 		case 'bn_category_no':
-			apiUrl = '/board/cate_info/get_list';
+			apiUrl = '/board/cate_info/get_category_list_select';
 			getListDtos = 'boardCategoryDtos';
 			dataNo = 'bc_no';
 			dataName = 'bc_name';
 			break;
 			
-		case 'rcp_pat2': // 광고 관련 페이지
-			apiUrl = '/advertisement/info/get_position_list_select';
+		case 'ac_name': // 위치별 분류 리스트(분류별 관리o)
+		case 'ad_category_no':
+			apiUrl = '/advertisement/cate_info/get_category_list_select';
 			getListDtos = 'advertisementPositionDto';
 			dataNo = 'ad_position';
 			dataName = 'ad_position';

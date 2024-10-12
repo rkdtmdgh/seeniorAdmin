@@ -7,7 +7,7 @@
     <th:block th:insert="~{fragments/head.html :: head('공지 사항 수정')}"></th:block>
     <script th:inline="javascript">
 		$(function() {
-         	// BOARD_CATEGORY 가져오기
+         	// board category 가져오기
             const selectedCategory = /*[[${boardboardNoticePostsDto.bn_category_no}]]*/ // 기본값 설정
             getCategoryList('bn_category_no', true, selectedCategory); // element id, isForm, selectedValue
         });
@@ -47,7 +47,7 @@
 	                                	<tr>
 	                                        <th><p class="table_title">게시판 선택</p></th>
 		                                	<td>
-		                                		<select class="table_info select" name="bn_category_no" id="bn_category_no">
+		                                		<select class="table_info select bn_category_no_select" name="bn_category_no" id="bn_category_no">
 		                                			<option value="" selected disabled>선택하세요</option>
 		                                		</select>
 	                                        </td>

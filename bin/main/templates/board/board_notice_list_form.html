@@ -6,27 +6,27 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('게시판 공지 사항')}"></th:block>
 	<script th:inline="javascript">
-		$(function() {			
+		$(async function() {			
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // search
-					getSearchList(null, '/board/info/search_notice_posts_list', page);
+					await getSearchList(null, '/board/info/search_board_notice_list', page);
 					break;
 				
 				case '1': // select
-					getList('/board/noti_info/get_notice_posts_list_by_category', sortValue, order, page);
+					await getList('/board/noti_info/get_board_notice_list', sortValue, order, page);
 					break;
 
 				case '0': // sort
-					getList('/board/noti_info/get_notice_posts_list', sortValue, order, page);
+					await getList('/board/noti_info/get_board_notice_list', sortValue, order, page);
 					break;
 					
 				default:
-					getList('/board/noti_info/get_notice_posts_list', null, null, page);
+					await getList('/board/noti_info/get_board_notice_list', null, null, page);
 			}
 			
-			// BOARD_CATEGORY 가져오기
-			getCategoryList('bc_name'); // element id, isForm, selectedValue
+			// board category 가져오기
+			await getCategoryList('bc_name'); // element id, isForm, selectedValue
         });
 	</script>
 </head>
@@ -46,12 +46,12 @@
 					            <h2 class="title categoty_title">게시판 공지 사항</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/board/noti_info/search_notice_posts_list')" 
+									<form name="search_form" onsubmit="getSearchList(event, '/board/noti_info/search_board_notice_list')" 
 										th:insert="~{fragments/search.html :: search('게시판 공지 사항')}"></form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/board/noti_info/get_notice_posts_list', null, null, 1);">전체보기</div>
-						            	<a href="/board/noti_info/create_notice_posts_form" class="btns small">게시물 등록</a>
+						            	<div class="btns small" onclick="getList('/board/noti_info/get_board_notice_list', null, null, 1);">전체보기</div>
+						            	<a href="/board/noti_info/create_board_notice_form" class="btns small">게시물 등록</a>
 						            </div>
 					            </div>
 					        </div>
@@ -76,7 +76,7 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <div class="table_title select" id="bc_name" onclick="setSelectOptionTopggle(event)">게시판</div>
+	                                        <div class="table_title select bc_name_select" id="bc_name" onclick="setSelectOptionTopggle(event)">게시판</div>
 	                                    </th>
 	                                    
 	                                    <th>

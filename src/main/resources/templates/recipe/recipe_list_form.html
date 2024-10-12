@@ -6,27 +6,27 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('식단 정보 관리')}"></th:block>
 	<script type="text/javascript">
-		$(function() {
+		$(async function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // search
-					getSearchList(null, '/recipe/info/search_recipe_list', page);
+					await getSearchList(null, '/recipe/info/search_recipe_list', page);
 					break;
 
 				case '1': // select
-					getList('/recipe/info/get_recipe_list_by_rcp_pat2', sortValue, order, page);
+					await getList('/recipe/info/get_recipe_list_by_type', sortValue, order, page);
 					break;
 
 				case '0': // sort
-					getList('/recipe/info/get_recipe_list', sortValue, order, page);
+					await getList('/recipe/info/get_recipe_list', sortValue, order, page);
 					break;
 					
 				default:
-					getList('/recipe/info/get_recipe_list', null, null, page);
+					await getList('/recipe/info/get_recipe_list', null, null, page);
 			}
 
-			// RECIPE_CATEGORY 가져오기
-			getCategoryList('rcp_pat2'); // element id, isForm, selectedValue
+			// recipe category 가져오기
+			await getCategoryList('rcp_pat2'); // element id, isForm, selectedValue
         });
 	</script>
 </head>
@@ -74,7 +74,7 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <div class="table_title select" id="rcp_pat2" onclick="setSelectOptionTopggle(event)">음식 종류</div>
+	                                        <div class="table_title select rcp_pat2_select" id="rcp_pat2" onclick="setSelectOptionTopggle(event)">분류</div>
 	                                    </th>
 	                                    
 	                                    <th>

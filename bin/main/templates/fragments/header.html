@@ -19,22 +19,126 @@
 	        </a>
 	    </div>
 	
-	    <div class="header_menu_list">
-	    	<!-- <div id="notifications"></div> -->
-	    
+	    <div class="header_menu_list">	    
 	        <a href="/account/info/modify_form" sec:authentication="name" class="header_menu user_name">userName</a>
 	
-	        <div class="header_menu func_icon">
-	            <svg aria-label="알람" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 27 27">
-	                <g>
-	                    <path d="M22.504,20.902h-1.443V10.691c0-4.169-3.392-7.56-7.56-7.56S5.94,6.522,5.94,10.691v10.211H4.496V10.691
-	                        c0-4.964,4.039-9.003,9.004-9.003s9.004,4.039,9.004,9.003V20.902z"/>
-	                    <rect x="1.824" y="20.902" width="23.351" height="1.443"/>
-	                    <rect x="12.779" y="0.131" width="1.443" height="3"/>
-	                    <path d="M13.5,26.869c-1.974,0-3.581-1.606-3.581-3.581v-2.387h1.443v2.387c0,1.178,0.959,2.137,2.138,2.137
-	                        s2.138-0.959,2.138-2.137v-2.387h1.443v2.387C17.081,25.263,15.474,26.869,13.5,26.869z"/>
-	                </g>
-	            </svg>
+			<div class="header_menu_btn_wrap alarm" onclick="setNotificationsTopggle(event);">
+		        <div class="header_menu func_icon alarm">
+		            <svg aria-label="알람" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 27 27">
+		                <g>
+		                    <path d="M22.504,20.902h-1.443V10.691c0-4.169-3.392-7.56-7.56-7.56S5.94,6.522,5.94,10.691v10.211H4.496V10.691
+		                        c0-4.964,4.039-9.003,9.004-9.003s9.004,4.039,9.004,9.003V20.902z"/>
+		                    <rect x="1.824" y="20.902" width="23.351" height="1.443"/>
+		                    <rect x="12.779" y="0.131" width="1.443" height="3"/>
+		                    <path d="M13.5,26.869c-1.974,0-3.581-1.606-3.581-3.581v-2.387h1.443v2.387c0,1.178,0.959,2.137,2.138,2.137
+		                        s2.138-0.959,2.138-2.137v-2.387h1.443v2.387C17.081,25.263,15.474,26.869,13.5,26.869z"/>
+		                </g>
+		            </svg>
+		        </div>
+		        
+		        <div class="alarm_num"><span class="num">8</span></div>
+		        
+	            <div id="notifications">
+	            	<div class="notifications_container sc">
+	            		<a href="" class="notifications_info_list">
+	            			<span class="notifications_info">
+		            			<span class="notifications_user">
+		            				<span class="thumbnail"><img src="" alt="thumnnail" class="user_thumnnail"></span>
+		            				<span class="user">id || name || nickname</span>
+		            			</span>	                        			
+	            				<span class="notifications_lapse ta_r">1(시간,일,개월) 전</span>
+	            			</span>
+	            			
+	            			<span class="notifications_content">
+	            				<span class="notifications_category">[질문과 답변 또는 신고 등]</span> 컨텐츠 내용 (질문과 답변 제목, 신고 내용 등)
+	            			</span>	
+	            		</a>
+	            		
+	            		<a href="" class="notifications_info_list">
+	            			<span class="notifications_info">
+		            			<span class="notifications_user">
+		            				<span class="thumbnail"><img src="" alt="thumnnail" class="user_thumnnail"></span>
+		            				<span class="user">id || name || nickname</span>
+		            			</span>	                        			
+	            				<span class="notifications_lapse ta_r">1(시간,일,개월) 전</span>
+	            			</span>
+	            			
+	            			<span class="notifications_content">
+	            				<span class="notifications_category">[질문과 답변 또는 신고 등]</span> 컨텐츠 내용 (질문과 답변 제목, 신고 내용 등)
+	            			</span>	
+	            		</a>
+	            		
+	            		<a href="" class="notifications_info_list">
+	            			<span class="notifications_info">
+		            			<span class="notifications_user">
+		            				<span class="thumbnail"><img src="" alt="thumnnail" class="user_thumnnail"></span>
+		            				<span class="user">id || name || nickname</span>
+		            			</span>	                        			
+	            				<span class="notifications_lapse ta_r">1(시간,일,개월) 전</span>
+	            			</span>
+	            			
+	            			<span class="notifications_content">
+	            				<span class="notifications_category">[질문과 답변 또는 신고 등]</span> 컨텐츠 내용 (질문과 답변 제목, 신고 내용 등)
+	            			</span>	
+	            		</a>
+	            		
+	            		<a href="" class="notifications_info_list">
+	            			<span class="notifications_info">
+		            			<span class="notifications_user">
+		            				<span class="thumbnail"><img src="" alt="thumnnail" class="user_thumnnail"></span>
+		            				<span class="user">id || name || nickname</span>
+		            			</span>	                        			
+	            				<span class="notifications_lapse ta_r">1(시간,일,개월) 전</span>
+	            			</span>
+	            			
+	            			<span class="notifications_content">
+	            				<span class="notifications_category">[질문과 답변 또는 신고 등]</span> 컨텐츠 내용 (질문과 답변 제목, 신고 내용 등)
+	            			</span>	
+	            		</a>
+	            		
+	            		<a href="" class="notifications_info_list">
+	            			<span class="notifications_info">
+		            			<span class="notifications_user">
+		            				<span class="thumbnail"><img src="" alt="thumnnail" class="user_thumnnail"></span>
+		            				<span class="user">id || name || nickname</span>
+		            			</span>	                        			
+	            				<span class="notifications_lapse ta_r">1(시간,일,개월) 전</span>
+	            			</span>
+	            			
+	            			<span class="notifications_content">
+	            				<span class="notifications_category">[질문과 답변 또는 신고 등]</span> 컨텐츠 내용 (질문과 답변 제목, 신고 내용 등)
+	            			</span>	
+	            		</a>
+	            		
+	            		<a href="" class="notifications_info_list">
+	            			<span class="notifications_info">
+		            			<span class="notifications_user">
+		            				<span class="thumbnail"><img src="" alt="thumnnail" class="user_thumnnail"></span>
+		            				<span class="user">id || name || nickname</span>
+		            			</span>	                        			
+	            				<span class="notifications_lapse ta_r">1(시간,일,개월) 전</span>
+	            			</span>
+	            			
+	            			<span class="notifications_content">
+	            				<span class="notifications_category">[질문과 답변 또는 신고 등]</span> 컨텐츠 내용 (질문과 답변 제목, 신고 내용 등)
+	            			</span>	
+	            		</a>
+	            		
+	            		<a href="" class="notifications_info_list">
+	            			<span class="notifications_info">
+		            			<span class="notifications_user">
+		            				<span class="thumbnail"><img src="" alt="thumnnail" class="user_thumnnail"></span>
+		            				<span class="user">id || name || nickname</span>
+		            			</span>	                        			
+	            				<span class="notifications_lapse ta_r">1(시간,일,개월) 전</span>
+	            			</span>
+	            			
+	            			<span class="notifications_content">
+	            				<span class="notifications_category">[질문과 답변 또는 신고 등]</span> 컨텐츠 내용 (질문과 답변 제목, 신고 내용 등)
+	            			</span>	
+	            		</a>
+	            	</div>
+	            </div>
 	        </div>
 	
 	        <div onclick="signOut();" class="header_menu func_icon">

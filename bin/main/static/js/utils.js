@@ -11,25 +11,37 @@ function setInputFocus(ele) {
 
 // loading set
 let loadingTimeout; // 타이머 변수를 전역으로 선언
-function setAddLoading(loading) {
-	const $loadingElement = $('<span class="loading_wrap"></span>');
+function setAddLoading(loading, parentEleClass, backgroundColor=null) {
 	if(loading) {
+		if($(`.${parentEleClass}_loading_wrap`).length.length) { // 이미 로딩 요소가 존재할 경우 
+			alert('현재 요청이 진행 중입니다. 잠시 후 다시 시도해 주세요.');
+			logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: Already loading`);
+			
+			return false; // 이미 요청이 진행 중이면 함수 종료 (중복 요청 방지)
+		}
+		
 		loadingTimeout = setTimeout(() => {
-			$('.content_info_wrap').append($loadingElement); // 해당 컨텐츠에 로딩 요소 추가		
-		}, 100);
+			$(`.${parentEleClass}`).append(`
+				<span class="${parentEleClass}_loading_wrap loading" style="background-color: ${backgroundColor ? backgroundColor : 'var(--whiteColor)'};"></span>
+			`); // 해당 컨텐츠에 로딩 요소 추가		
+		}, 20);
+		logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: success loading`);
+		
+		return true; // 로딩 표시 요청 완료
 		
 	} else {
 		clearTimeout(loadingTimeout); // 딜레이 시간 안에 통신 완료 시 로딩 타이머 취소
-		$('.loading_wrap').remove(); // 로딩 요소 제거
+		$(`.${parentEleClass}_loading_wrap`).remove(); // 로딩 요소 제거
+		logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: stop loading`);
+		
+		return false;
 	}
 }
 
 // FormData 키벨류, byte 확인
 function setFormDataCheckConsoleLog(formData) {
-	const encoder = new TextEncoder(); // byte 계산
 	for (const [key, value] of formData.entries()) { // formData의 모든 데이터 확인
-		logger.info('postPostsCreateForm() formData:', key, value); // 키벨류 확인
-		logger.info(`${key} byte:`, encoder.encode(value).length); // 벨류 byte 확인
+		logger.info(`formData ${key}: ${value} / byte: ${extractionByte(value)}`); // byte, 키벨류 확인
 	};
 }
 
@@ -311,14 +323,6 @@ function setTableColumnsNum() {
 	return maxCols;
 }
 
-// 테이블 셀렉트 옵션 노출 토글 버튼
-function setSelectOptionTopggle(event) {
-	const $selectEle = $(event.currentTarget).find('.select_option_list'); // 클릭한 요소 내의 커스텀 셀렉트 요소 찾기
-	const $allSelectEle = $('.select_option_list'); // 모든 커스텀 셀렉트 요소
-	$allSelectEle.not($selectEle).removeClass('active');
-	$selectEle.toggleClass('active');
-}
-
 // textarea 입력 시 자동으로 높이값 조정
 function setTextareaAutoHeight(ele) {
 	const $textarea = $(ele);
@@ -488,12 +492,34 @@ function setAccountModifyForm(data) {
 	return dataFormContent;
 }
 
+// 해더 알람 모달 노출 토글 버튼
+function setNotificationsTopggle(event) {
+	const $notificationsEle = $(event.currentTarget).find('#notifications'); // 클릭한 요소 내의 알람 모달 요소 찾기
+	$notificationsEle.toggleClass('active');
+}
+
+// 테이블 셀렉트 옵션 노출 토글 버튼
+function setSelectOptionTopggle(event) {
+	const $selectEle = $(event.currentTarget).find('.select_option_list'); // 클릭한 요소 내의 커스텀 셀렉트 요소 찾기
+	const $allSelectEle = $('.select_option_list'); // 모든 커스텀 셀렉트 요소
+	$allSelectEle.not($selectEle).removeClass('active');
+	$selectEle.toggleClass('active');
+}
+
 // 문서 클릭 이벤트
-$(document).on('click', function(event) {
+$(document).on('click', function(event) {	
+	// 해더 알람 모달 노출 닫기
+	const $openNotificationsEle = $('#notifications.active'); 
+	const isNotificationsTriggerClick = event.target.closest('.header_menu_btn_wrap.alarm'); // 클릭한 요소가 알람 버튼인지 확인
+	if($openNotificationsEle.length && !isNotificationsTriggerClick) { // 클릭한 요소가 알람 버튼이 아닐 경우
+		$openNotificationsEle.removeClass('active'); // 열려있는 알람 모달창 닫기
+	}
+		
+	
 	// 커스텀 셀렉트 open, close 기능
 	const $openSelectEle = $('.select_option_list.active'); // 열려 있는 셀렉트 옵션 요소
-	const isTriggerClick = event.target.closest('.table_title.select'); // 클릭한 요소가 커스텀 셀렉트 버튼인지 확인
-	if(!isTriggerClick) { // 클릭한 요소가 커스텀 셀렉트 버튼이 아닐 경우
+	const isSelectTriggerClick = event.target.closest('.table_title.select'); // 클릭한 요소가 커스텀 셀렉트 버튼인지 확인
+	if($openSelectEle.length && !isSelectTriggerClick) { // 클릭한 요소가 커스텀 셀렉트 버튼이 아닐 경우
 		$openSelectEle.removeClass('active'); // 열려 있는 셀렉트 옵션 닫기
 	}
 });
