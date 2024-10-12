@@ -280,6 +280,29 @@ public class BoardController {
 				
 	}
 	
+	//게시판 카테고리 검색
+	@GetMapping("/cate_info/search_board_category_list")
+	@ResponseBody
+	public Object searchBoardCategoryList(
+			@RequestParam(value = "searchPart") String searchPart,
+			@RequestParam(value = "searchString") String searchString,
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("searchBoardCategoryList()");
+		
+		// 페이지 번호에 따른 검색 게시판 카테고리 리스트들 가져오기
+		Map<String, Object> searchBoardCategoryListWithPage = boardService.getSearchBoardCategoryListWithPage(searchPart, searchString, page);
+				
+		// 검색 게시판 카테고리 총 페이지 개수 가져오기
+		Map<String, Object> searchBoardCategoryListPageNum = boardService.getSearchBoardCategoryListPageNum(searchPart, searchString, page);
+				
+		searchBoardCategoryListWithPage.put("searchBoardCategoryListPageNum", searchBoardCategoryListPageNum);
+		searchBoardCategoryListWithPage.put("searchPart", searchPart);
+		searchBoardCategoryListWithPage.put("searchString", searchString);
+		
+		return searchBoardCategoryListWithPage;
+	}
+	
+	
 		
 	//특정 게시물 정보 가져오기
 

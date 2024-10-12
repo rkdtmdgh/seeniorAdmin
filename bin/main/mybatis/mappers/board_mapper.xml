@@ -250,6 +250,42 @@
         WHERE 
         	BC_NO = #{bc_no}
     
-    </update>   
+    </update> 
+    
+    <!-- 페이지에 따른 게시판 카테고리 가져오기(검색한 게시판 카테고리) -->
+	<select id="getSearchBoardCategory"
+			parameterType="Map"
+			resultMap="BoardCategoryDto">
+		
+		SELECT 
+			* 
+		FROM 
+			BOARD_CATEGORY 
+		WHERE 
+			BC_IS_DELETED = 1 
+		AND 
+			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+		ORDER BY 
+			BC_NAME DESC 
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>  
+	
+	<!-- 질환 카테고리의 총 페이지 개수 구하기(검색한 질환 카테고리) -->
+	<select id="getSearchBoardCategoryListCnt"
+			parameterType="Map"
+			resultType="Integer">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_CATEGORY 
+		WHERE 
+			BC_IS_DELETED = 1 
+		AND 
+			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+
+	</select>
 
 </mapper>
