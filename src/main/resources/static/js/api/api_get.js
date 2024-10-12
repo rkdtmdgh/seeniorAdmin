@@ -115,24 +115,24 @@ async function getList(apiUrl, sortValue, order, page) {
 
 // 검색 리스트 요청
 async function getSearchList(event, apiUrl, page) {
-	if(event) event.preventDefault();
-	const form = document.forms['search_form'];
-	let input;
-	
-	input = form.search_string;
-	if(!validateEmpty(input, '검색어를', true, true)) { // 요소, text, alert 여부, 에러메세지 미노출 여부
-		input.focus();
-		return false;
-	}
-	
-	if(input.value.trim().length < 2) {
-		alert('검색어는 2자 이상 입력해 주세요.');
-		input.focus();
-		return false;
-	}
-	
-	if(apiUrl) {
-		if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+	if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+		if(event) event.preventDefault();
+		const form = document.forms['search_form'];
+		let input;
+		
+		input = form.search_string;
+		if(!validateEmpty(input, '검색어를', true, true)) { // 요소, text, alert 여부, 에러메세지 미노출 여부
+			input.focus();
+			return false;
+		}
+		
+		if(input.value.trim().length < 2) {
+			alert('검색어는 2자 이상 입력해 주세요.');
+			input.focus();
+			return false;
+		}
+		
+		if(apiUrl) {
 			setAllcheck(); // all_check 체크박스 초기화
 			
 			const urlParams = new URLSearchParams(window.location.search);
@@ -845,8 +845,10 @@ function mapSelectListApiObject(sortValue) {
 
 // 셀렉트 옵션 리스트 요청 및 옵션 생성
 async function getCategoryList(ele, isForm, selectedValue) {
-	if(setAddLoading(true, `${ele}_select`, '#F7F7F7')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
-		const $selectEle = $(`#${ele}`); // 셀렉트 요소가 생성될 table th
+	const $selectEle = $(`#${ele}`); // 셀렉트 요소가 생성될 table th or td
+	const bgc = $selectEle.closest('th') ? '#F7F7F7' : '#F7F7F7';
+	
+	if(setAddLoading(true, `${ele}_select`, bgc)) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
 		const { apiUrl, getListDtos, dataNo, dataName } = mapCategorylistObject(ele);
 		
 		if($selectEle.length) {

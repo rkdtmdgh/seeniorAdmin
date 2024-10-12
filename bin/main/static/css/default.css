@@ -359,6 +359,10 @@
     }
 }
 
+.select {
+	position: relative;
+}
+
 .select_option_list {
 	display: none;
 	width: 100%;

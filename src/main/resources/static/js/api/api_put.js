@@ -327,21 +327,21 @@ async function putBoardCategoryModifyForm(formName) {
 
 // 게시판 순번 수정
 async function putBoardCategoryModifyButton(event, bc_idx, page) {    
-    const infoEle = event.target.closest('tr'); // 클릭된 요소의 가장 가까운 tr 요소 찾기
-    const bc_no = infoEle.getAttribute('data-bc-no'); 
-    const current_bc_idx = infoEle.getAttribute('data-bc-idx'); 
-	
-	const formData = new FormData();
-	formData.append('bc_no', bc_no);
-	formData.append('current_bc_idx', current_bc_idx);
-	formData.append('bc_idx', bc_idx);
-	
-	setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
-	
-	const errorMessage = '순번 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
-
 	// 실시간 비동기 작업으로 리로드 되지 않도록 putSubmitForm함수 사용하지 않음
 	if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+		const infoEle = event.target.closest('tr'); // 클릭된 요소의 가장 가까운 tr 요소 찾기
+	    const bc_no = infoEle.getAttribute('data-bc-no'); 
+	    const current_bc_idx = infoEle.getAttribute('data-bc-idx'); 
+		
+		const formData = new FormData();
+		formData.append('bc_no', bc_no);
+		formData.append('current_bc_idx', current_bc_idx);
+		formData.append('bc_idx', bc_idx);
+		
+		setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
+		
+		const errorMessage = '순번 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
+	
 		try {
 			const response = await $.ajax({
 				url: '/board/cate_info/modify_category_idx',
@@ -362,8 +362,8 @@ async function putBoardCategoryModifyButton(event, bc_idx, page) {
 			if(errorMessage) alert(errorMessage);
 			
 		} finally {
-			getList('/board/cate_info/get_category_list', null, null, page);
 			setAddLoading(false, 'content_inner'); // 로딩 종료
+			getList('/board/cate_info/get_category_list', null, null, page);
 		}
 	}
 }
