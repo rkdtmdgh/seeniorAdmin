@@ -5,10 +5,52 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.see_nior.seeniorAdmin.dto.AdvertisementCategoryDto;
 import com.see_nior.seeniorAdmin.dto.AdvertisementDto;
+import com.see_nior.seeniorAdmin.dto.DiseaseCategoryDto;
 
 @Mapper
 public interface AdvertisementMapper {
+	
+	// -------------------------------------------광고 위치-------------------------------------------
+	
+	// 광고 위치 등록
+	public int insertNewAdvertisementCategory(AdvertisementCategoryDto advertisementCategoryDto);
+	
+	// 광고 위치명 중복 확인
+	public boolean isAdvertisementCategory(String ac_name);
+	
+	// 모든 광고 위치 가져오기 (광고 리스트에서 select 박스)
+	public List<DiseaseCategoryDto> getAdvertisementCategoryList();
+	
+	// 광고 위치 별 광고의 개수 구하기
+	public int getCategoryItemCnt(int ac_no);
+	
+	// 광고 위치 별 광고의 개수 광고 위치 테이블에 update
+	public void updateAdvertisementCategoryItemCnt(Map<String, Object> itemCntParam);
+	
+	// 페이지에 따른 광고 위치 리스트 가져오기
+	public List<AdvertisementCategoryDto> getAdvertisementCategoryListWithPage(Map<String, Object> pagingParams);
+	
+	// 광고 위치의 총 리스트 개수 구하기
+	public int getAllAdvertisementCategoryCnt();
+	
+	// 광고 위치 한개 가져오기
+	public AdvertisementCategoryDto getAdvertisementCategory(int ac_no);
+	
+	// 광고 위치 수정
+	public int updateAdvertisementCategory(AdvertisementCategoryDto advertisementCategoryDto);
+	
+	// 광고 위치 삭제
+	public int deleteAdvertisementCategory(int ac_no);
+	
+	// 페이지에 따른 광고 위치 가져오기(검색한 광고 위치)
+	public List<AdvertisementCategoryDto> getSearchAdvertisementCategory(Map<String, Object> pagingParams);
+	
+	// 광고 위치의 총 페이지 개수 구하기(검색한 광고 위치)
+	public int getSearchAdvertisementCategoryListCnt(Map<String, Object> pagingParams);
+	
+	// -------------------------------------------광고 -------------------------------------------
 
 	// 광고 등록
 	public int insertNewAdvertisement(AdvertisementDto advertisementDto);
@@ -42,6 +84,20 @@ public interface AdvertisementMapper {
 
 	// 광고의 총 리스트 개수 구하기(검색한 광고)
 	public int getSearchAdvertisementListCnt(Map<String, Object> pagingParams);
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
 
 
 }

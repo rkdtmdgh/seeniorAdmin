@@ -1,6 +1,5 @@
 package com.see_nior.seeniorAdmin.advertisement;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.see_nior.seeniorAdmin.dto.AdvertisementCategoryDto;
 import com.see_nior.seeniorAdmin.dto.AdvertisementDto;
 
 import lombok.RequiredArgsConstructor;
@@ -23,6 +23,153 @@ import lombok.extern.log4j.Log4j2;
 public class AdvertisementController {
 
 	final private AdvertisementService advertisementService;
+	
+	// --------------------------------------------------------- 광고 위치
+	
+	// 광고 위치 등록 양식
+	@GetMapping("/cate_info/create_category_form")
+	public String createCategoryForm() {
+		log.info("createCategoryForm()");
+		
+		String nextPage = "advertisement/create_category_form";
+		
+		return nextPage;
+		
+	}
+	
+	// 광고 위치명 중복 확인
+	@ResponseBody
+	@GetMapping("cate_info/is_advertisement_category")
+	public boolean isAdvertisementCategory(@RequestParam(value = "ac_name") String ac_name) {
+		log.info("isAdvertisementCategory()");
+		
+		boolean isAdvertisementCategory = advertisementService.isAdvertisementCategory(ac_name);
+		
+		return isAdvertisementCategory;
+		
+	}
+	
+	// 광고 위치 등록 확인
+	@ResponseBody
+	@PostMapping("/cate_info/create_category_confirm")
+	public boolean createCategoryConfirmW(AdvertisementCategoryDto advertisementCategoryDto) {
+		log.info("createCategoryConfirm()");
+		
+		boolean createCategoryResult = advertisementService.createCategoryConfirm(advertisementCategoryDto);
+		
+		return createCategoryResult;
+		
+	}
+	
+	// 광고 위치 리스트 양식
+	@GetMapping("/cate_info/category_list_form")
+	public String categoryListForm() {
+		log.info("categoryListForm()");
+		
+		String nextPage = "advertisement/category_list_form";
+		
+		return nextPage;
+		
+	}
+	
+	// 모든 광고 위치 가져오기 (광고 리스트에서 <select>박스 => 비동기)
+	@ResponseBody
+	@GetMapping("/cate_info/get_category_list_select")
+	public Object getCategoryListSelect() {
+		log.info("getCategoryListSelect()");
+		
+		Map<String, Object> advertisementCategoryDtos = advertisementService.getCategoryList();
+		
+		return advertisementCategoryDtos;
+		
+	}
+
+	// 모든 광고 위치 가져오기(페이지네이션 => 광고 위치 관리용 => 비동기)
+	@ResponseBody
+	@GetMapping("/cate_info/get_category_list")
+	public Object getCategoryList(
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
+			@RequestParam(value = "sortValue", required = false, defaultValue = "ac_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
+		log.info("getCategoryList()");
+		
+		// 페이지 번호에 따른 광고 위치 리스트들 가져오기
+		Map<String, Object> advertisementCategoryListWithPage = advertisementService.getCategoryListWithPage(page, sortValue, order);
+		
+		// 광고 위치 총 페이지 개수 가져오기
+		Map<String, Object> advertisementCategoryListPageNum = advertisementService.getAdvertisementCategoryListPageNum(page);
+		
+		advertisementCategoryListWithPage.put("advertisementCategoryListPageNum", advertisementCategoryListPageNum);
+		advertisementCategoryListWithPage.put("sortValue", sortValue);
+		advertisementCategoryListWithPage.put("order", order);
+		
+		return advertisementCategoryListWithPage;
+		
+	}
+	
+	// 광고 위치 수정 양식
+	@GetMapping("/cate_info/modify_category_form")
+	public String modifyCategoryForm(@RequestParam(value = "ac_no") int ac_no, Model model) {
+		log.info("modifyCategoryForm()");
+		
+		String nextPage = "advertisement/modify_category_form";
+		
+		AdvertisementCategoryDto advertisementCategoryDto = advertisementService.getCategory(ac_no);
+		
+		model.addAttribute("advertisementCategoryDto", advertisementCategoryDto);
+		
+		return nextPage;
+		
+	}
+	
+	// 광고 위치 수정 확인(비동기)
+	@ResponseBody
+	@PostMapping("/cate_info/modify_category_confirm")
+	public boolean modifyCategoryConfirm(AdvertisementCategoryDto advertisementCategoryDto) {
+		log.info("modifyCategoryConfirm()");
+		
+		boolean modifyCategoryResult = advertisementService.modifyCategoryConfirm(advertisementCategoryDto);
+		
+		return modifyCategoryResult;
+		
+	}
+	
+	// 광고 위치 삭제 확인(비동기)
+	@ResponseBody
+	@PostMapping("/cate_info/delete_category_confirm")
+	public boolean deleteCategoryConfirm(@RequestParam(value = "ac_no") int ac_no) {
+		log.info("deleteCategoryConfirm()");
+		
+		boolean deleteCategoryResult = advertisementService.deleteCategoryConfirm(ac_no);
+		
+		return deleteCategoryResult;
+		
+	}
+	
+	// 광고 위치 검색(페이지네이션 => 비동기)
+	@ResponseBody
+	@GetMapping("/cate_info/search_disease_category_list")
+	public Object searchDiseaseCategoryList(
+			@RequestParam(value = "searchPart") String searchPart,
+			@RequestParam(value = "searchString") String searchString,
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("searchDiseaseCategoryList()");
+		
+		// 페이지 번호에 따른 검색 광고 위치 리스트들 가져오기
+		Map<String, Object> searchAdvertisementCategoryListWithPage = advertisementService.getSearchAdvertisementCategoryListWithPage(searchPart, searchString, page);
+		
+		// 검색 광고 위치 총 페이지 개수 가져오기
+		Map<String, Object> searchAdvertisementCategoryListPageNum = advertisementService.getSearchAdvertisementCategoryListPageNum(searchPart, searchString, page);
+		
+		searchAdvertisementCategoryListWithPage.put("searchAdvertisementCategoryListPageNum", searchAdvertisementCategoryListPageNum);
+		searchAdvertisementCategoryListWithPage.put("searchPart", searchPart);
+		searchAdvertisementCategoryListWithPage.put("searchString", searchString);
+		
+		return searchAdvertisementCategoryListWithPage;
+		
+	}
+	
+	// --------------------------------------------------------- 광고
 	
 	// 광고 등록 양식
 	@GetMapping("/info/create_form")
@@ -159,10 +306,10 @@ public class AdvertisementController {
 	// 광고 삭제 확인
 	@ResponseBody
 	@PostMapping("/info/delete_confirm")
-	public boolean deleteConfirm(@RequestParam(value = "ad_nos") List<Integer> ad_nos) {
+	public boolean deleteConfirm(@RequestParam(value = "ad_no") int ad_no) {
 		log.info("deleteConfirm()");
 		
-		boolean deleteResult = advertisementService.deleteConfirm(ad_nos);
+		boolean deleteResult = advertisementService.deleteConfirm(ad_no);
 		
 		return deleteResult;
 		

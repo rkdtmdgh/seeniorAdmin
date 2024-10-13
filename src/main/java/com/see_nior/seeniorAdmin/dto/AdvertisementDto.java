@@ -19,5 +19,7 @@ public class AdvertisementDto {
 	private int ad_is_deleted;
 	private String ad_reg_date;
 	private String ad_mod_date;
+	
+	AdvertisementCategoryDto advertisementCategoryDto;
 
 }
