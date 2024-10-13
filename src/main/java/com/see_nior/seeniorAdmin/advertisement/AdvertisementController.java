@@ -24,6 +24,49 @@ public class AdvertisementController {
 
 	final private AdvertisementService advertisementService;
 	
+	// --------------------------------------------------------- 광고 위치
+	
+	// 광고 위치 등록 양식
+	@GetMapping("/cate_info/create_category_form")
+	public String createCategoryForm() {
+		log.info("createCategoryForm()");
+		
+		String nextPage = "advertisement/create_category_form";
+		
+		return nextPage;
+		
+	}
+	
+	// 광고 위치명 중복 확인
+	@ResponseBody
+	@GetMapping("cate_info/is_advertisement_category")
+	public boolean isAdvertisementCategory(@RequestParam(value = "ac_name") String ac_name) {
+		log.info("isAdvertisementCategory()");
+		
+		boolean isAdvertisementCategory = advertisementService.isAdvertisementCategory(ac_name);
+		
+		return isAdvertisementCategory;
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// --------------------------------------------------------- 광고
+	
 	// 광고 등록 양식
 	@GetMapping("/info/create_form")
 	public String createForm() {

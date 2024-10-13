@@ -17,6 +17,14 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 public class AdvertisementService {
 	
+	// 광고 위치 관련
+	final static public boolean ADVERTISEMENT_CATEGORY_CREATE_FAIL = false;
+	final static public boolean ADVERTISEMENT_CATEGORY_CREATE_SUCCESS = true;
+	final static public boolean ADVERTISEMENT_CATEGORY_MODIFY_FAIL = false;
+	final static public boolean ADVERTISEMENT_CATEGORY_MODIFY_SUCCESS = true;
+	final static public boolean ADVERTISEMENT_CATEGORY_DELETE_FAIL = false;
+	final static public boolean ADVERTISEMENT_CATEGORY_DELETE_SUCCESS = true;
+	
 	// 광고 관련
 	final static public boolean ADVERTISEMENT_CREATE_FAIL = false;		// 광고 추가 실패
 	final static public boolean ADVERTISEMENT_CREATE_SUCCESS = true;	// 광고 추가 성공
@@ -30,6 +38,23 @@ public class AdvertisementService {
 	private int blockLimit = 5;	// 하단에 보여질 페이지 번호의 수
 	
 	final private AdvertisementMapper advertisementMapper;
+	
+	// --------------------------------------------------------- 광고 위치
+	
+	// 광고 위치명 중복 확인
+	public boolean isAdvertisementCategory(String ac_name) {
+		log.info("isAdvertisementCategory()");
+		
+		boolean isAdvertisementCategory = advertisementMapper.isAdvertisementCategory(ac_name);
+		
+		return isAdvertisementCategory;
+		
+	}
+	
+	
+	
+	
+	// --------------------------------------------------------- 광고
 
 	// 광고 등록 확인
 	public boolean createConfirm(AdvertisementDto advertisementDto) {
@@ -275,6 +300,8 @@ public class AdvertisementService {
 		return searchAdvertisementListPageNum;
 		
 	}
+
+	
 
 	
 	

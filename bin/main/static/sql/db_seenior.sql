@@ -1086,6 +1086,31 @@ SELECT * FROM VIDEO;
 SHOW INDEX FROM VIDEO;
 DROP TABLE VIDEO;
 
+-- 광고 위치 테이블 -------------------------------------------------------------------------------------------------------------------
+CREATE TABLE ADVERTISEMENT_CATEGORY (
+	AC_NO			INT AUTO_INCREMENT COMMENT "광고 위치 NO(PK)",						-- 광고 위치 NO(PK)
+    AC_NAME 		VARCHAR(100) NOT NULL COMMENT "광고 위치 명",							-- 광고 위치 명
+    AC_IS_DELETED	TINYINT DEFAULT 1 COMMENT "광고 위치 삭제 여부(기본값 = 0, 삭제 시 = 1)",	-- 광고 위치 삭제 여부(기본값 = 0, 삭제 시 = 1)
+	AC_ITEM_CNT		INT DEFAULT 0 COMMENT "광고 위치에 포함된 광고 개수",						-- 광고 위치에 포함된 광고 개수
+    AC_REG_DATE		DATETIME DEFAULT NOW() COMMENT "광고 위치 등록일",						-- 광고 위치 등록일
+	AC_MOD_DATE		DATETIME DEFAULT NOW() COMMENT "광고 위치 수정일",						-- 광고 위치 수정일
+    PRIMARY KEY(AC_NO)
+);
+
+SELECT * FROM ADVERTISEMENT_CATEGORY;
+SHOW INDEX FROM ADVERTISEMENT_CATEGORY;
+DROP TABLE ADVERTISEMENT_CATEGORY;
+
+INSERT INTO ADVERTISEMENT_CATEGORY(AC_NAME) VALUES("메인");
+INSERT INTO ADVERTISEMENT_CATEGORY(AC_NAME) VALUES("상단-1");
+INSERT INTO ADVERTISEMENT_CATEGORY(AC_NAME) VALUES("상단-2");
+INSERT INTO ADVERTISEMENT_CATEGORY(AC_NAME) VALUES("좌측");
+INSERT INTO ADVERTISEMENT_CATEGORY(AC_NAME) VALUES("우측");
+INSERT INTO ADVERTISEMENT_CATEGORY(AC_NAME) VALUES("하단-1");
+INSERT INTO ADVERTISEMENT_CATEGORY(AC_NAME) VALUES("하단-2");
+
+
+
 -- 광고 테이블 -------------------------------------------------------------------------------------------------------------------
 CREATE TABLE ADVERTISEMENT (
 	AD_NO			INT	AUTO_INCREMENT COMMENT "광고 NO(PK)", 						-- 광고 NO(PK)

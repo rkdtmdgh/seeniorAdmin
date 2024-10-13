@@ -9,6 +9,14 @@ import com.see_nior.seeniorAdmin.dto.AdvertisementDto;
 
 @Mapper
 public interface AdvertisementMapper {
+	
+	// -------------------------------------------광고 위치-------------------------------------------
+	
+	// 광고 위치명 중복체크
+	public boolean isAdvertisementCategory(String ac_name);
+	
+	
+	// -------------------------------------------광고 -------------------------------------------
 
 	// 광고 등록
 	public int insertNewAdvertisement(AdvertisementDto advertisementDto);
@@ -42,6 +50,8 @@ public interface AdvertisementMapper {
 
 	// 광고의 총 리스트 개수 구하기(검색한 광고)
 	public int getSearchAdvertisementListCnt(Map<String, Object> pagingParams);
+
+	
 
 
 }
