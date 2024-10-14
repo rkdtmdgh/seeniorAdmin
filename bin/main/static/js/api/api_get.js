@@ -163,6 +163,8 @@ async function getSearchList(event, apiUrl, page) {
 					// 쿼리스트링 조건 추가
 					setSearchQueryString(getListPage.page, response.searchPart, response.searchString); // page, searchPart, searchString
 					
+					if(response.reg_date) setContentSubInfo(response.reg_date); // 타이틀 옆 서브내용 표시(예: 업데이트 날짜 등)
+					
 					let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
 					let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
 							
@@ -229,7 +231,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchDiseaseListPageNum.searchDiseaseListCnt;
 			break;	
 			
-		case '/disease/info/get_disease_list_by_category': // 질환 / 질병 정보 관리 분류별 데이터
+		case '/disease/info/get_disease_list_by_category': // 질환 / 질병 정보 관리 질병군별 데이터
 			getListDtos = response.diseaseDtos;
 			getListPage = response.diseaseListByCategoryPageNum;
 			getListCnt = response.diseaseListByCategoryPageNum.diseaseListCnt;
@@ -349,10 +351,22 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchAdvertisementListPageNum.searchAdvertisementListCnt;
 			break;	
 			
-		case '/advertisement/info/get_advertisement_list_by_category': // 광고 관리 분류별 데이터
+		case '/advertisement/info/get_advertisement_list_by_category': // 광고 관리 위치별 데이터
 			getListDtos = response.advertisementDtos;
-			getListPage = response.advertisementByPositionPageNum;
-			getListCnt = response.advertisementByPositionPageNum.advertisementListByPositionCnt;
+			getListPage = response.advertisementByCategoryPageNum;
+			getListCnt = response.advertisementByCategoryPageNum.advertisementListByCategoryCnt;
+			break;
+			
+		case '/advertisement/cate_info/get_category_list': // 광고 분류 관리
+			getListDtos = response.advertisementCategoryDtos;
+			getListPage = response.advertisementCategoryListPageNum;
+			getListCnt = response.advertisementCategoryListPageNum.advertisementCategoryListCnt;
+			break;
+			
+		case '/advertisement/cate_info/search_advertisement_category_list': // 광고 분류 검색
+			getListDtos = response.advertisementCategoryDtos;
+			getListPage = response.searchAdvertisementCategoryListPageNum;
+			getListCnt = response.searchAdvertisementCategoryListPageNum.searchAdvertisementCategoryListCnt;
 			break;
 						
 	}
@@ -648,7 +662,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_position}</a>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.advertisementCategoryDto.ac_name}</a>
 		            </td>
 					<td>
 		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_start_date)}</a>
@@ -661,6 +675,26 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.ad_mod_date) || 'N/A'}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/advertisement/cate_info/get_category_list': // 광고 분류 관리 리스트 테이블
+		case '/advertisement/cate_info/search_advertisement_category_list': // 광고 분류 관리 검색 리스트 테이블
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/advertisement/cate_info/modify_category_form?ac_no=${data.ac_no}" class="table_info">${listIndex}</a>
+		            </td>
+		            <td>
+		                <a href="/advertisement/cate_info/modify_category_form?ac_no=${data.ac_no}" class="table_info">${data.ac_name}</a>
+		            </td>
+		            <td>
+		                <a href="/advertisement/info/advertisement_list_form?sortType=1&sortValue=ac_no&order=${data.ac_no}" class="table_info">${data.ac_item_cnt}</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.ac_reg_date) || 'N/A'}</p>
 		            </td>
 		        </tr>
 			`;
@@ -833,7 +867,7 @@ function mapSelectListApiObject(sortValue) {
 			apiUrl = '/recipe/info/get_recipe_list_by_type';
 			break;
 		
-		case 'ad_position': // 광고 관리 리스트 페이지 위치별 분류 리스트 요청
+		case 'ac_no': // 광고 관리 리스트 페이지 위치별 분류 리스트 요청
 			apiUrl = '/advertisement/info/get_advertisement_list_by_category';
 			break;
 			
@@ -936,9 +970,9 @@ function mapCategorylistObject(ele) {
 		case 'ac_name': // 위치별 분류 리스트(분류별 관리o)
 		case 'ad_category_no':
 			apiUrl = '/advertisement/cate_info/get_category_list_select';
-			getListDtos = 'advertisementPositionDto';
-			dataNo = 'ad_position';
-			dataName = 'ad_position';
+			getListDtos = 'advertisementCategoryDto';
+			dataNo = 'ac_no';
+			dataName = 'ac_name';
 			break;
 		
 		default:

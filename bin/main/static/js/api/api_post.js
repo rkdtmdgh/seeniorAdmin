@@ -173,7 +173,7 @@ async function postDiseaseCategoryCreateForm(event, formName, nextPage) {
 		successMessage, 											// 성공 메세지
 		errorMessage,												// 실패 메세지 																
 		nextPage ? '/disease/cate_info/category_list_form' : null,	// 다음 페이지
-		'content_inner'                                         // 로딩 표시할 부모 요소
+		'content_inner'                                             // 로딩 표시할 부모 요소
 	);
 }
 
