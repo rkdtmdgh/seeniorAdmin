@@ -15,7 +15,7 @@
 
 	<resultMap type="AdvertisementDto" id="AdvertisementDto">
 		<id column="ad_no" property="ad_no" />
-		<result column="ad_position" property="ad_position" />
+		<result column="ad_category_no" property="ad_category_no" />
 		<result column="ad_img" property="ad_img" />
 		<result column="ad_url" property="ad_url" />
 		<result column="ad_start_date" property="ad_start_date" />

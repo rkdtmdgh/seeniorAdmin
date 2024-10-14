@@ -358,8 +358,8 @@ public class AdvertisementService {
 	}
 	
 	// 페이지에 따른 광고 가져오기(위치별 광고)
-	public Map<String, Object> getAdvertisementListByPositionWithPage(int page, int position) {
-		log.info("getAdvertisementListByPositionWithPage()");
+	public Map<String, Object> getAdvertisementListByCategoryWithPage(int page, int ac_no) {
+		log.info("getAdvertisementListByCategoryWithPage()");
 		
 		int pagingStart = (page - 1) * pageLimit;
 		
@@ -368,9 +368,9 @@ public class AdvertisementService {
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
-		pagingParams.put("position", position);
+		pagingParams.put("ac_no", ac_no);
 		
-		List<AdvertisementDto> advertisementDtos = advertisementMapper.getAdvertisementListByPositionWithPage(pagingParams);
+		List<AdvertisementDto> advertisementDtos = advertisementMapper.getAdvertisementListByCategoryWithPage(pagingParams);
 		pagingList.put("advertisementDtos", advertisementDtos);
 		
 		return pagingList;
@@ -378,13 +378,13 @@ public class AdvertisementService {
 	}
 	
 	// 광고의 총 페이지 개수 구하기 (위치별 광고)
-	public Map<String, Object> getAdvertisementByPositionPageNum(int page, int position) {
-		log.info("getAdvertisementByPositionPageNum()");
+	public Map<String, Object> getAdvertisementByCategoryPageNum(int page, int ac_no) {
+		log.info("getAdvertisementByCategoryPageNum()");
 		
 		Map<String, Object> advertisementListByPositionPageNum = new HashMap<>();
 		
 		// 전체 리스트 개수 주회
-		int advertisementListByPositionCnt = advertisementMapper.getAdvertisementByPositionCnt(position);
+		int advertisementListByPositionCnt = advertisementMapper.getAdvertisementByCategoryCnt(ac_no);
 		
 		// 전체 페이지 개수 계산
 		int maxPage = (int) (Math.ceil((double) advertisementListByPositionCnt / pageLimit));
@@ -501,7 +501,7 @@ public class AdvertisementService {
 		searchAdvertisementListPageNum.put("startPage", startPage);
 		searchAdvertisementListPageNum.put("endPage", endPage);
 		searchAdvertisementListPageNum.put("blockLimit", blockLimit);
-		searchAdvertisementListPageNum.put("pageLimiti", pageLimit);
+		searchAdvertisementListPageNum.put("pageLimit", pageLimit);
 		
 		return searchAdvertisementListPageNum;
 		

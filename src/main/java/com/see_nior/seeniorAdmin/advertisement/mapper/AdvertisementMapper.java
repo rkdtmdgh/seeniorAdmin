@@ -65,10 +65,10 @@ public interface AdvertisementMapper {
 	public int getAllAdvertisementCnt();
 	
 	// 페이지에 따른 광고 가져오기(위치별 광고)
-	public List<AdvertisementDto> getAdvertisementListByPositionWithPage(Map<String, Object> pagingParams);
+	public List<AdvertisementDto> getAdvertisementListByCategoryWithPage(Map<String, Object> pagingParams);
 
 	// 광고의 총 리스트 개수 구하기(위치별 광고)
-	public int getAdvertisementByPositionCnt(int position);
+	public int getAdvertisementByCategoryCnt(int position);
 	
 	// 광고 한개 가져오기
 	public AdvertisementDto getAdvertisementByNo(int ad_no);
