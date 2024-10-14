@@ -70,6 +70,13 @@
 	cursor: pointer;
 }
 
+/* customize file upload */
+.file_upload_container {
+	width: 400px;
+	aspect-ratio: 16 / 9; /* 비율 유지 (16:9 비율) */
+	border: 1px solid #000;
+}
+
 /* textarea */
 .table_textarea {
 	width: 100%;
