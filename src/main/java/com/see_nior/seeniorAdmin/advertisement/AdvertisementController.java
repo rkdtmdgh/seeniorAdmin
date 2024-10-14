@@ -39,7 +39,7 @@ public class AdvertisementController {
 	
 	// 광고 위치명 중복 확인
 	@ResponseBody
-	@GetMapping("cate_info/is_advertisement_category")
+	@GetMapping("/cate_info/is_advertisement_category")
 	public boolean isAdvertisementCategory(@RequestParam(value = "ac_name") String ac_name) {
 		log.info("isAdvertisementCategory()");
 		
@@ -148,12 +148,12 @@ public class AdvertisementController {
 	
 	// 광고 위치 검색(페이지네이션 => 비동기)
 	@ResponseBody
-	@GetMapping("/cate_info/search_disease_category_list")
-	public Object searchDiseaseCategoryList(
+	@GetMapping("/cate_info/search_advertisement_category_list")
+	public Object searchAdvertisementCategoryList(
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
-		log.info("searchDiseaseCategoryList()");
+		log.info("searchAdvertisementCategoryList()");
 		
 		// 페이지 번호에 따른 검색 광고 위치 리스트들 가져오기
 		Map<String, Object> searchAdvertisementCategoryListWithPage = advertisementService.getSearchAdvertisementCategoryListWithPage(searchPart, searchString, page);
@@ -205,18 +205,6 @@ public class AdvertisementController {
 		
 	}
 	
-	// 모든 광고 위치 가져오기 (광고 리스트에서 <select>박스 => 비동기)
-	@ResponseBody
-	@GetMapping("info/get_position_list_select")
-	public Object getPositionListSelect() {
-		log.info("getPositionListSelect()");
-		
-		Map<String, Object> advertisementPositionDtos = advertisementService.getPositionList();
-		
-		return advertisementPositionDtos;
-		
-	}
-	
 	// 모든 광고 가져오기(페이지네이션 => 비동기)
 	@ResponseBody
 	@GetMapping("info/get_advertisement_list")
@@ -242,24 +230,24 @@ public class AdvertisementController {
 	
 	// 광고 위치에 따른 광고 가져오기(페이지네이션)
 	@ResponseBody
-	@GetMapping("/info/get_advertisement_list_by_position")
-	public Object getAdvertisementListByPosition(
+	@GetMapping("/info/get_advertisement_list_by_category")
+	public Object getAdvertisementListByCategory(
 			@RequestParam(value = "page", required = false, defaultValue = "1")int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "all") String sortValue,
-			@RequestParam(value = "order") int position) {
-		log.info("getAdvertisementListByPosition()");
+			@RequestParam(value = "order") int ac_no) {
+		log.info("getAdvertisementListByCategory()");
 		
 		// 페이지 번호에 따른 위치별 광고 리스트들 가져오기
-		Map<String, Object> advertisementListByPositionWithPage = advertisementService.getAdvertisementListByPositionWithPage(page, position);
+		Map<String, Object> advertisementListByCategoryWithPage = advertisementService.getAdvertisementListByCategoryWithPage(page, ac_no);
 		
 		// 위치별 광고 총 페이지 개수 가져오기
-		Map<String, Object> advertisementByPositionPageNum = advertisementService.getAdvertisementByPositionPageNum(page, position);
+		Map<String, Object> advertisementByCategoryPageNum = advertisementService.getAdvertisementByCategoryPageNum(page, ac_no);
 		
-		advertisementListByPositionWithPage.put("advertisementByPositionPageNum", advertisementByPositionPageNum);
-		advertisementListByPositionWithPage.put("sortValue", sortValue);
-		advertisementListByPositionWithPage.put("order", position);
+		advertisementListByCategoryWithPage.put("advertisementByCategoryPageNum", advertisementByCategoryPageNum);
+		advertisementListByCategoryWithPage.put("sortValue", sortValue);
+		advertisementListByCategoryWithPage.put("order", ac_no);
 		
-		return advertisementListByPositionWithPage;
+		return advertisementListByCategoryWithPage;
 		
 	}
 	

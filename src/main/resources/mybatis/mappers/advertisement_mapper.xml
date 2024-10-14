@@ -15,7 +15,7 @@
 
 	<resultMap type="AdvertisementDto" id="AdvertisementDto">
 		<id column="ad_no" property="ad_no" />
-		<result column="ad_position" property="ad_position" />
+		<result column="ad_category_no" property="ad_category_no" />
 		<result column="ad_img" property="ad_img" />
 		<result column="ad_url" property="ad_url" />
 		<result column="ad_start_date" property="ad_start_date" />
@@ -260,7 +260,7 @@
 	</select>
 	
 	<!-- 페이지에 따른 광고 가져오기 (위치별 광고) -->
-	<select id="getAdvertisementListByPositionWithPage"
+	<select id="getAdvertisementListByCategoryWithPage"
 			parameterType="Integer"
 			resultMap="AdvertisementDto">
 			
@@ -287,7 +287,7 @@
 	</select>
 	
 	<!-- 광고의 총 리스트 개수 구하기(위치별 광고) -->
-	<select id="getAdvertisementByPositionCnt"
+	<select id="getAdvertisementByCategoryCnt"
 			parameterType="Integer"
 			resultType="Integer">
 
@@ -298,7 +298,7 @@
 		WHERE 
 			AD_IS_DELETED = 1 
 		AND 
-			AD_POSITION = #{position} 
+			AD_CATEGORY_NO = #{ac_no} 
 	
 	</select>
 	
