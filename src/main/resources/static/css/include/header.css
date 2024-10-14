@@ -121,12 +121,14 @@
             				}
             				
             				.notifications_content {
-            					display: block;
+            					display: -webkit-box;
             					padding-top: var(--ssize2);
-            					overflow: hidden;
-							    text-overflow: ellipsis;
-							    white-space: nowrap;
-            				
+							    -webkit-line-clamp: 2;
+			                    -webkit-box-orient: vertical;
+			                    overflow: hidden;
+			                    text-overflow: ellipsis;
+			                    white-space: normal;
+            			
        	    					.notifications_category {
        	    						font-weight: 500;
        	    						color: var(--blackColor);

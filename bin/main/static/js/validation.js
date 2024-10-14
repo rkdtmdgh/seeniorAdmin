@@ -296,3 +296,22 @@ function replaceDate(input) {
         }
     }
 }
+
+// 첨부 파일 이미지 검사
+function validationInputFileImage(file) {
+	if(!file) return false; // 파일이 유효한지 더블 체크
+	
+	if(!file.type.startsWith('image/')) { // 이미지 파일인지 검사	
+		alert('이미지 파일만 업로드할 수 있습니다. 이미지 파일을 선택해 주세요.');	
+		input.value = ''; // input file 초기화
+		return false;
+	}
+	
+	const maxFileSize = 1024 * 1024 * 5; // 5MB 용량 제한
+	if(file.size > maxFileSize) { // 파일 크기 검사
+		alert('업로드 가능한 최대 용량을 초과했습니다. 5MB 이하의 이미지 파일을 선택해 주세요.');
+		return false;
+	}
+	
+	return true;
+}

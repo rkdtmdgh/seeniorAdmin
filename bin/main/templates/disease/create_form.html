@@ -30,7 +30,7 @@
 				            <p class="sub_title">질환 / 질병 분류 등록</p>
 					    </div>
 					    
-						<form name="disease_category_reg_form" onsubmit="postDiseaseCategoryCreateForm(event, 'disease_category_reg_form')">					    	
+						<form name="disease_category_reg_form" onsubmit="return false">					    	
 						    <div class="table_wrap mb_stepGap">
 		                        <table class="content_edit_table">
 		                            <colgroup>
@@ -47,7 +47,7 @@
 		                                		<div class="cont_info">
 			                                		<input type="text" name="dc_name" id="dc_name" class="table_info" placeholder="신규 분류 등록 시 입력해 주세요"
 			                                			onblur="requestDuplicateCheck(this)">
-			                                		<button type="submit" class="btns small">등록</button>
+			                                		<div onclick="postDiseaseCategoryCreateForm('disease_category_reg_form')" class="btns small">등록</div>
 		                                		</div>
 	                                        </td>
 		                                </tr>
