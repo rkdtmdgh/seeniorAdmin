@@ -508,6 +508,31 @@ public class BoardService {
 		
 	}
 	
+	//게시판 카테고리 삭제 요청
+	public boolean deleteCategoryConfirm(BoardCategoryDto boardCategoryDto) {
+		log.info("deleteCategoryConfirm()");
+		
+		int result = -1;
+		
+		result = boardMapper.subBoardCategoryIdxForDelete(boardCategoryDto);
+				
+		if(result < 0) {
+			log.info("subBoardCategoryIdxForDelete fail!!");
+			return false;
+		}else {		
+			result = boardMapper.deleteCategoryConfirm(boardCategoryDto);
+			
+			if(result <= 0) {
+				log.info("deleteCategoryConfirm fail!!");
+				return false;
+			}else {				
+				return true;
+			}
+			
+		}
+		
+	}
+	
 
 	
 
