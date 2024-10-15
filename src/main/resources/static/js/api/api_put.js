@@ -147,6 +147,42 @@ async function putResetPassword(a_no, a_id) {
 	);
 }
 
+// 회원 정보 수정
+async function putUserAccountModifyForm(formName) {
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.u_nickname;
+	if(!validateEmpty(input, '닉네임을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.u_birth;
+	if(!validateEmpty(input, '생년월일을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.u_phone;
+	if(!validatePhone(input, true)) {
+		input.focus();
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	const successMessage = `"${form.u_id.value}" 계정 정보가 수정되었습니다`;
+	const errorMessage = `"${form.u_id.value}" 계정 정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+
+	await putSubmitForm(
+		'/user_account/info/modify_confirm', 
+		formData, 
+		successMessage, 
+		errorMessage,
+		'content_inner'
+	);
+}
+
 // 질환 / 질병 분류 수정
 async function putDiseaseCategoryModifyForm(formName) {
 	const form = document.forms[formName];
