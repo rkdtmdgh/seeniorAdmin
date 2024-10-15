@@ -377,9 +377,6 @@ async function postNoticePostsCreateForm(formName) {
 	const errorMessage = `"${bn_title.value.trim()}" 게시판 공지 사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
 	const formData = new FormData();
-	formData.append('bn_title', input.value.trim()); // 제목
-	formData.append('bn_category_no', form.bn_category_no.value); // 게시판 no
-	formData.append('bn_writer_no', form.bn_writer_no.value); // 작성자 no
 	formData.append('bn_body', quill.root.innerHTML); // quill 에디터 내용
 	
 	// 이미지 파일 리사이즈 및 압축하여 formData에 담기
