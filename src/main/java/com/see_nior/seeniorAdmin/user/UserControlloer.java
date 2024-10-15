@@ -3,11 +3,14 @@ package com.see_nior.seeniorAdmin.user;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.see_nior.seeniorAdmin.dto.UserAccountDto;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -79,18 +82,26 @@ public class UserControlloer {
 	
 	// 일반 멤버 정보 수정 양식
 	@GetMapping("/info/modify_form")
-	public String modifyForm() {
+	public String modifyForm(@RequestParam("u_no") int u_no, Model model) {
 		log.info("modifyForm()");
 		
-		return new String();
+		String nextPage = "userAccount/modify_form";
+		
+		UserAccountDto userAccountDto = userService.getUserAccountByNo(u_no);
+		
+		model.addAttribute(userAccountDto);
+		
+		return nextPage;
 	}
 	
-	// 일반 멤버 정보 수정 확인 modify_confirm
+	// 일반 멤버 정보 수정 확인 
 	@PostMapping("/info/modify_confirm")
-	public String modifyConfirm() {
-		log.info("getUserList()");
+	@ResponseBody
+	public Object modifyConfirm(UserAccountDto userAccountDto) {
+		log.info("modifyConfirm()");
 		
-		return null;
+		return userService.userAccountModifyConfirm(userAccountDto);
+		
 	}
 	
 	// 일반 멤버 탈퇴 확인 delete_confirm

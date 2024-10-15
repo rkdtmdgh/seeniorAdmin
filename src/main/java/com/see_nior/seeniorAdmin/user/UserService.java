@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
+import com.see_nior.seeniorAdmin.dto.UserAccountDto;
 import com.see_nior.seeniorAdmin.user.mapper.UserMapper;
 
 import lombok.extern.log4j.Log4j2;
@@ -14,6 +15,9 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @Service
 public class UserService {
+	
+	final static public boolean USER_MODIFY_SUCCESS = true;
+	final static public boolean USER_MODIFY_FAIL = false;
 	
 	private int pageLimit = 10;		// 한 페이지당 보여줄 정보 수
 	private int blockLimit = 5;		// 하단에 보여질 페이지 번호 수
@@ -130,6 +134,29 @@ public class UserService {
 		searchUserListPageNum.put("blockLimit", blockLimit);
 		
 		return searchUserListPageNum;
+	}
+
+	// 일반 멤버 정보 조회 by no
+	public UserAccountDto getUserAccountByNo(int u_no) {
+		log.info("getUserAccountByNo()");
+		
+		UserAccountDto userAccountDto =
+				userMapper.selectUserAccountByNo(u_no);
+		
+		return userAccountDto;
+	}
+
+	// 일반 멤버 정보 수정 확인
+	public Object userAccountModifyConfirm(UserAccountDto userAccountDto) {
+		log.info("userAccountModifyConfirm()");
+		
+		int result =  userMapper.updateUserAccountInfo(userAccountDto);
+		
+		if (result >= 0)
+			return USER_MODIFY_SUCCESS;
+		else 
+			return USER_MODIFY_FAIL;
+	
 	}
 	
 	
