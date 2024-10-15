@@ -1138,16 +1138,19 @@ INSERT INTO ADVERTISEMENT_CATEGORY(AC_NAME, AC_NOTE) VALUES("하단-2", "권장�
 
 -- 광고 테이블 -------------------------------------------------------------------------------------------------------------------
 CREATE TABLE ADVERTISEMENT (
-	AD_NO			INT	AUTO_INCREMENT COMMENT "광고 NO(PK)", 							-- 광고 NO(PK)
-	AD_CATEGORY_NO	INT	NOT NULL COMMENT "광고 위치NO(ADVERTISEMENT_CATEGORY TABLE PK)",	-- 광고 위치NO(ADVERTISEMENT_CATEGORY TABLE PK)
-	AD_IMG			VARCHAR(255) NOT NULL COMMENT "광고 사진",							-- 광고 사진
-	AD_URL			VARCHAR(255) NOT NULL COMMENT "광고 URL",							-- 광고 URL
-	AD_START_DATE	DATE NOT NULL COMMENT "광고 시작일",									-- 광고 시작일
-	AD_END_DATE		DATE NOT NULL COMMENT "광고 종료일",									-- 광고 종료일
-	AD_CLIENT		VARCHAR(100) NOT NULL COMMENT "광고주",								-- 광고주 
-	AD_IS_DELETED	TINYINT DEFAULT 1 COMMENT "광고 삭제 여부(기본값 = 1, 삭제 시 = 0)",		-- 광고 삭제 여부(기본값 = 1, 삭제 시 = 0)
-	AD_REG_DATE		DATETIME DEFAULT NOW() COMMENT "광고 등록일",							-- 광고 등록일
-	AD_MOD_DATE		DATETIME DEFAULT NOW() COMMENT "광고 수정일",							-- 광고 수정일
+	AD_NO			INT	AUTO_INCREMENT COMMENT "광고 NO(PK)", 								-- 광고 NO(PK)
+	AD_CATEGORY_NO	INT	NOT NULL COMMENT "광고 위치NO(ADVERTISEMENT_CATEGORY TABLE PK)",		-- 광고 위치NO(ADVERTISEMENT_CATEGORY TABLE PK)
+	AD_IMG			VARCHAR(255) NOT NULL COMMENT "광고 사진 파일 명",							-- 광고 사진 파일 명
+    AD_DIR_NAME		VARCHAR(255) COMMENT "이미지 파일 저장 폴더 명",								-- 광고 사진 파일 저장 폴더 명
+	AD_IDX			INT COMMENT "광고 노출 순서",												-- 광고 노출 순서
+    AD_URL			VARCHAR(255) NOT NULL COMMENT "광고 URL",								-- 광고 URL
+	AD_START_DATE	DATE NOT NULL COMMENT "광고 시작일",										-- 광고 시작일
+	AD_END_DATE		DATE NOT NULL COMMENT "광고 종료일",										-- 광고 종료일
+	AD_CLIENT		VARCHAR(100) NOT NULL COMMENT "광고주",									-- 광고주 
+    AD_STATE		TINYINT NOT NULL DEFAULT 1 COMMENT "광고 상태(기본값 = 1, 광고 종료 = 0)",	-- 광고 상태(기본값 = 1, 노출 종료 = 0)							--
+	AD_IS_DELETED	TINYINT DEFAULT 1 COMMENT "광고 삭제 여부(기본값 = 1, 삭제 시 = 0)",			-- 광고 삭제 여부(기본값 = 1, 삭제 시 = 0)
+	AD_REG_DATE		DATETIME DEFAULT NOW() COMMENT "광고 등록일",								-- 광고 등록일
+	AD_MOD_DATE		DATETIME DEFAULT NOW() COMMENT "광고 수정일",								-- 광고 수정일
     PRIMARY KEY(AD_NO)
 );
 
