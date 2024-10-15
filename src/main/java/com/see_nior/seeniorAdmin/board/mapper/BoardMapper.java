@@ -52,7 +52,9 @@ public interface BoardMapper {
 
 	boolean modifyCategoryIdxByBetweenSub(Map<String, Object> parm);
 
+	int deleteCategoryConfirm(BoardCategoryDto boardCategoryDto);
 
+	int subBoardCategoryIdxForDelete(BoardCategoryDto boardCategoryDto);
 
 	
 

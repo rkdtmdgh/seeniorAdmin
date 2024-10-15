@@ -323,10 +323,10 @@ public class BoardController {
 	@ResponseBody
 	public boolean deleteCategoryConfirm(BoardCategoryDto boardCategoryDto) {
 		log.info("deleteCategoryConfirm()");
-			
-		log.info("deleteDto: {}",boardCategoryDto);
+		log.info("deleteDto: {}",boardCategoryDto);	
+		boolean result = boardService.deleteCategoryConfirm(boardCategoryDto);
 		
-		return true;
+		return result;
 	}
 	
 	
