@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class AdvertisementDto {
 	
 	private int ad_no;
-	private int ad_position;
+	private int ad_category_no;
 	private String ad_img;
 	private String ad_url;
 	private String ad_start_date;
@@ -19,5 +19,7 @@ public class AdvertisementDto {
 	private int ad_is_deleted;
 	private String ad_reg_date;
 	private String ad_mod_date;
+	
+	AdvertisementCategoryDto advertisementCategoryDto;
 
 }

@@ -6,10 +6,10 @@
 <head>
     <th:block th:insert="~{fragments/head.html :: head('질환 / 질병 정보 수정')}"></th:block>
     <script th:inline="javascript">
-		$(function() {
-         	// DISEASE_CATEGORY 가져오기
+		$(async function() {
+         	// disease category 가져오기
             const selectedCategory = /*[[${diseaseDto.d_category_no}]]*/ // 기본값 설정
-            getCategoryList('d_category_no', true, selectedCategory); // element id, isForm, selectedValue
+            await getCategoryList('d_category_no', true, selectedCategory); // element id, isForm, selectedValue
         });
     </script>
 </head>
@@ -48,7 +48,7 @@
 		                                <tr>
 		                                    <th><p class="table_title">분류</p></th>
 		                                    <td>
-		                                        <select class="table_info select" name="d_category_no" id="d_category_no"></select>
+		                                        <select class="table_info select d_category_no_select" name="d_category_no" id="d_category_no"></select>
 		                                    </td>
 		
 		                                    <th><p class="table_title">질환 / 질병명</p></th>

@@ -6,19 +6,19 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('관리자 계정 관리')}"></th:block>
 	<script type="text/javascript">
-		$(function() {
+		$(async function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // search
-					getSearchList(null, '/account/list/search_admin_list', page);
+					await getSearchList(null, '/account/list/search_admin_list', page);
 					break;
 
 				case '0':  // sort
-					getList('/account/list/get_admin_list', sortValue, order, page);
+					await getList('/account/list/get_admin_list', sortValue, order, page);
 					break;
 					
 				default: 
-					getList('/account/list/get_admin_list', null, null, page);
+					await getList('/account/list/get_admin_list', null, null, page);
 			}
         });
 	</script>

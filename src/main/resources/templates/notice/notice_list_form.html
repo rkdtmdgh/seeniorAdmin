@@ -6,19 +6,19 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('공지 사항')}"></th:block>
 	<script type="text/javascript">
-		$(function() {
+		$(async function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // search
-					getSearchList(null, '/notice/info/search_notice_list', page);
+					await getSearchList(null, '/notice/info/search_notice_list', page);
 					break;
 
 				case '0': // sort
-					getList('/notice/info/get_notice_list', sortValue, order, page);
+					await getList('/notice/info/get_notice_list', sortValue, order, page);
 					break;
 					
 				default:
-					getList('/notice/info/get_notice_list', null, null, page);
+					await getList('/notice/info/get_notice_list', null, null, page);
 			}
         });
 	</script>

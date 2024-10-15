@@ -6,9 +6,9 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('질환 / 질병 정보 등록')}"></th:block>
 	<script type="text/javascript">
-		$(function() {
-			// DISEASE_CATEGORY 가져오기
-			getCategoryList('d_category_no', true); // element id, isForm, selectedValue
+		$(async function() {
+			// disease category 가져오기
+			await getCategoryList('d_category_no', true); // element id, isForm, selectedValue
         });
 	</script>
 </head>
@@ -30,7 +30,7 @@
 				            <p class="sub_title">질환 / 질병 분류 등록</p>
 					    </div>
 					    
-						<form name="disease_category_reg_form" onsubmit="postDiseaseCategoryCreateForm(event, 'disease_category_reg_form')">					    	
+						<form name="disease_category_reg_form" onsubmit="return false">					    	
 						    <div class="table_wrap mb_stepGap">
 		                        <table class="content_edit_table">
 		                            <colgroup>
@@ -47,7 +47,7 @@
 		                                		<div class="cont_info">
 			                                		<input type="text" name="dc_name" id="dc_name" class="table_info" placeholder="신규 분류 등록 시 입력해 주세요"
 			                                			onblur="requestDuplicateCheck(this)">
-			                                		<button type="submit" class="btns small">등록</button>
+			                                		<div onclick="postDiseaseCategoryCreateForm('disease_category_reg_form')" class="btns small">등록</div>
 		                                		</div>
 	                                        </td>
 		                                </tr>
@@ -73,8 +73,8 @@
 		                            <tbody>
 		                                <tr>
 		                                	<th><p class="table_title">분류 선택</p></th>
-		                                	<td>
-		                                		<select class="table_info select" name="d_category_no" id="d_category_no">
+		                                	<td class="select d_category_no_select">
+		                                		<select class="table_info" name="d_category_no" id="d_category_no">
 		                                			<option value="" selected disabled>선택하세요</option>
 		                                		</select>
 	                                        </td>

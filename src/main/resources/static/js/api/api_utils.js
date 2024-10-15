@@ -102,6 +102,11 @@ function mapDuplicateCheckObject(value) {
 			word = '게시판명';
 			apiUrl = '/board/cate_info/is_board_category';
 			break;
+
+		case 'ac_name':
+			word = '광고 위치명';
+			apiUrl = '/advertisement/cate_info/is_advertisement_category';
+			break;
 			
 		default:
 			logger.error('setWordAndCommand() value:', value);

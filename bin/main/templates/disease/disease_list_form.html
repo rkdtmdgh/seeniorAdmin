@@ -6,27 +6,27 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('질환 / 질병 정보 관리')}"></th:block>
 	<script type="text/javascript">
-		$(function() {
+		$(async function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // search
-					getSearchList(null, '/disease/info/search_disease_list', page);
+					await getSearchList(null, '/disease/info/search_disease_list', page);
 					break;
 
 				case '1': // select
-					getList('/disease/info/get_disease_list_by_category', sortValue, order, page);
+					await getList('/disease/info/get_disease_list_by_category', sortValue, order, page);
 					break;
 
 				case '0': // sort
-					getList('/disease/info/get_disease_list', sortValue, order, page);
+					await getList('/disease/info/get_disease_list', sortValue, order, page);
 					break;
 					
 				default:
-					getList('/disease/info/get_disease_list', null, null, page);
+					await getList('/disease/info/get_disease_list', null, null, page);
 			}
 
-			// DISEASE_CATEGORY 가져오기
-			getCategoryList('dc_name'); // element id, isForm, selectedValue
+			// disease category 가져오기
+			await getCategoryList('dc_name'); // element id, isForm, selectedValue
         });
 	</script>
 </head>
@@ -80,7 +80,7 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <div class="table_title select" id="dc_name" onclick="setSelectOptionTopggle(event)">분류명</div>
+	                                        <div class="table_title select dc_name_select" id="dc_name" onclick="setSelectOptionTopggle(event)">분류</div>
 	                                    </th>
 	                                    
 	                                    <th>

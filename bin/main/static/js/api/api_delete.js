@@ -7,31 +7,33 @@ async function delSingleData(key, noValue, dataName) {
 	
 	const { apiUrl, replace } = mapDeleteObject(key); // 커맨드와 경로 설정
 	const errorMessage = `${dataName} 삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
-	
-	try {
-		const response = await $.ajax({
-			url: apiUrl,
-			method: 'POST',
-			data: {
-				[key]: noValue,
-			},
-		});
 		
-		logger.info(`${apiUrl} delSingleData() response:`, response);
-		
-		if(response) {
-			alert(`${dataName} 이(가) 삭제되었습니다.`);
-			location.replace(replace);
+	if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+		try {
+			const response = await $.ajax({
+				url: apiUrl,
+				method: 'POST',
+				data: {
+					[key]: noValue,
+				},
+			});
 			
-		} else {
+			logger.info(`${apiUrl} delSingleData() response:`, response);
+			
+			if(response) {
+				alert(`${dataName} 이(가) 삭제되었습니다.`);
+				location.replace(replace);
+				
+			} else {
+				alert(errorMessage);
+				location.reload(true);
+			}
+			
+		} catch(error) {
+			logger.error(`${apiUrl} delSingleData() error:`, error);
 			alert(errorMessage);
 			location.reload(true);
 		}
-		
-	} catch(error) {
-		logger.error(`${apiUrl} delSingleData() error:`, error);
-		alert(errorMessage);
-		location.reload(true);
 	}
 }
 
@@ -64,30 +66,32 @@ async function delListData(name, isCheckList) {
 	const { apiUrl, replace } = mapDeleteObject(name); // 커맨드와 경로 설정
 	const errorMessage = '삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 	
-	try {
-		const response = await $.ajax({
-			url: apiUrl,
-			method: 'POST',
-			data: {
-				[`${name}s`]: deleteArray, // 항목 배열
-			},
-		});
-		
-		logger.info(apiUrl + ' delListData() response:', response);
-		
-		if(response) {
-			alert('삭제되었습니다.');
+	if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+		try {
+			const response = await $.ajax({
+				url: apiUrl,
+				method: 'POST',
+				data: {
+					[`${name}s`]: deleteArray, // 항목 배열
+				},
+			});
 			
-		} else {
+			logger.info(apiUrl + ' delListData() response:', response);
+			
+			if(response) {
+				alert('삭제되었습니다.');
+				
+			} else {
+				alert(errorMessage);
+			}
+			
+		} catch(error) {
+			logger.error(`${apiUrl} error:`, error);
 			alert(errorMessage);
+			
+		} finally {
+			isCheckList ? location.reload(true) : location.replace(replace);
 		}
-		
-	} catch(error) {
-		logger.error(`${apiUrl} error:`, error);
-		alert(errorMessage);
-		
-	} finally {
-		isCheckList ? location.reload(true) : location.replace(replace);
 	}
 }
 
@@ -128,13 +132,23 @@ function mapDeleteObject(value) {
 			break;
 			
 		case 'bn_no': // 게시판 공지 사항
-			apiUrl = '/board/info/delete_notice_posts_confirm';
-			replace = '/board/info/notice_posts_form';
+			apiUrl = '/board/noti_info/delete_board_notice_confirm';
+			replace = '/board/noti_info/board_notice_list_form';
 			break;
 		
 		case 'bp_no': // 게시물
 			apiUrl = '/board/info/delete_confirm';
 			replace = '/board/info/posts_list_form';
+			break;
+			
+		case 'ac_no': // 광고 분류
+			apiUrl = '/advertisement/cate_info/delete_category_confirm';
+			replace = '/advertisement/cate_info/category_list_form';
+			break;
+			
+		case 'ad_no': // 광고
+			apiUrl = '/advertisement/info/delete_confirm';
+			replace = '/advertisement/info/advertisement_list_form';
 			break;
 			
 		default:

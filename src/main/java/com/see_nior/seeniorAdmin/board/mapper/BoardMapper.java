@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
 import com.see_nior.seeniorAdmin.dto.BoardPostsDto;
+import com.see_nior.seeniorAdmin.dto.DiseaseCategoryDto;
 
 @Mapper
 public interface BoardMapper {
@@ -40,6 +41,20 @@ public interface BoardMapper {
 	int targetModifyCategoryIdx(Map<String, Object> modifyParams);
 
 	int matchingModifyCategoryIdx(Map<String, Object> modifyParams);
+
+	List<BoardCategoryDto> getSearchBoardCategory(Map<String, Object> pagingParams);
+
+	int getSearchBoardCategoryListCnt(Map<String, Object> pagingParams);
+	
+	boolean modifyCategoryConfirm(BoardCategoryDto boardCategoryDto);
+
+	boolean modifyCategoryIdxByBetweenAdd(Map<String, Object> parm);
+
+	boolean modifyCategoryIdxByBetweenSub(Map<String, Object> parm);
+
+	int deleteCategoryConfirm(BoardCategoryDto boardCategoryDto);
+
+	int subBoardCategoryIdxForDelete(BoardCategoryDto boardCategoryDto);
 
 	
 

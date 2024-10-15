@@ -11,25 +11,34 @@ function setInputFocus(ele) {
 
 // loading set
 let loadingTimeout; // 타이머 변수를 전역으로 선언
-function setAddLoading(loading) {
-	const $loadingElement = $('<span class="loading_wrap"></span>');
-	if(loading) {
-		loadingTimeout = setTimeout(() => {
-			$('.content_info_wrap').append($loadingElement); // 해당 컨텐츠에 로딩 요소 추가		
-		}, 100);
-		
-	} else {
+function setAddLoading(loading, parentEleClass, backgroundColor=null) {
+	if(!loading) {
 		clearTimeout(loadingTimeout); // 딜레이 시간 안에 통신 완료 시 로딩 타이머 취소
-		$('.loading_wrap').remove(); // 로딩 요소 제거
+		if($(`.${parentEleClass}_loading_wrap`).length) $(`.${parentEleClass}_loading_wrap`).remove(); // 로딩 요소 제거
+		//logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: stop loading`);
+		return false;
+		
 	}
+	
+	if($(`.${parentEleClass}_loading_wrap`).length.length) { // 이미 로딩 요소가 존재할 경우 
+		alert('현재 요청이 진행 중입니다. 잠시 후 다시 시도해 주세요.');
+		//logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: Already loading`);
+		return false; // 이미 요청이 진행 중이면 함수 종료 (중복 요청 방지)
+	}
+	
+	loadingTimeout = setTimeout(() => {
+		$(`.${parentEleClass}`).append(`
+			<span class="${parentEleClass}_loading_wrap loading" style="background-color: ${backgroundColor ? backgroundColor : 'var(--whiteColor)'};"></span>
+		`); // 해당 컨텐츠에 로딩 요소 추가
+	}, 50);
+	//logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: success loading`);
+	return true; // 로딩 표시 요청 완료
 }
 
 // FormData 키벨류, byte 확인
 function setFormDataCheckConsoleLog(formData) {
-	const encoder = new TextEncoder(); // byte 계산
 	for (const [key, value] of formData.entries()) { // formData의 모든 데이터 확인
-		logger.info('postPostsCreateForm() formData:', key, value); // 키벨류 확인
-		logger.info(`${key} byte:`, encoder.encode(value).length); // 벨류 byte 확인
+		logger.info(`formData ${key}: ${value} / byte: ${extractionByte(value)}`); // byte, 키벨류 확인
 	};
 }
 
@@ -311,14 +320,6 @@ function setTableColumnsNum() {
 	return maxCols;
 }
 
-// 테이블 셀렉트 옵션 노출 토글 버튼
-function setSelectOptionTopggle(event) {
-	const $selectEle = $(event.currentTarget).find('.select_option_list'); // 클릭한 요소 내의 커스텀 셀렉트 요소 찾기
-	const $allSelectEle = $('.select_option_list'); // 모든 커스텀 셀렉트 요소
-	$allSelectEle.not($selectEle).removeClass('active');
-	$selectEle.toggleClass('active');
-}
-
 // textarea 입력 시 자동으로 높이값 조정
 function setTextareaAutoHeight(ele) {
 	const $textarea = $(ele);
@@ -488,12 +489,69 @@ function setAccountModifyForm(data) {
 	return dataFormContent;
 }
 
+// 해더 알람 모달 노출 토글 버튼
+function setNotificationsTopggle(event) {
+	const $notificationsEle = $(event.currentTarget).find('#notifications'); // 클릭한 요소 내의 알람 모달 요소 찾기
+	$notificationsEle.toggleClass('active');
+}
+
+// 테이블 셀렉트 옵션 노출 토글 버튼
+function setSelectOptionTopggle(event) {
+	const $selectEle = $(event.currentTarget).find('.select_option_list'); // 클릭한 요소 내의 커스텀 셀렉트 요소 찾기
+	const $allSelectEle = $('.select_option_list'); // 모든 커스텀 셀렉트 요소
+	$allSelectEle.not($selectEle).removeClass('active');
+	$selectEle.toggleClass('active');
+}
+
+// 첨부 이미지 파일 검증 후 미리보기 요청
+function setInputFileImageCheck(input) {
+	const file = input.files[0];
+	if(!file) return false; // 파일이 유효한지 검사
+	setImageFilePreview(file, input); // 검증 후 미리보기 처리
+}
+
+// 첨부 이미지 파일 미리보기
+function setImageFilePreview(file, input) {
+	if(!validationInputFileImage(file)) return false; // 이미지, 용량 검증
+	
+	// 미리보기 설정
+    const imageURL = URL.createObjectURL(file); // blob URL 생성
+    const $fileUploadEle = $('.file_upload_container');
+    const $imagePreviewEle = $('<div class="image_file_preview">');
+    const $image = $(`<img src="${imageURL}" alt="select image file preview">`);
+    
+    $imagePreviewEle.append($image);
+    $imagePreviewEle.append(`<div class="close" onclick="setImageFilePreviewInit('${input.name}')">`);
+    $fileUploadEle.addClass('displayNone').parent().append($imagePreviewEle);
+}
+
+// 첨부 이미지 파일 미리보기 초기화
+function setImageFilePreviewInit(inputName) {
+	const $input = $(`input[name="${inputName}"]`); 
+	const $fileUploadEle = $input.closest('.file_upload_container');
+	const $imagePreviewEle = $fileUploadEle.siblings('.image_file_preview');
+	const imageSrc = $imagePreviewEle.find('img').attr('src');
+	
+	$input.val(''); // input file 초기화
+	$fileUploadEle.removeClass('displayNone'); // 파일 업로더 노출
+	$imagePreviewEle.remove(); // 미리보기 제거
+	if(imageSrc) URL.revokeObjectURL(imageSrc); // blob URL을 브라우저 메모리에서 해제
+}
+
 // 문서 클릭 이벤트
-$(document).on('click', function(event) {
+$(document).on('click', function(event) {	
+	// 해더 알람 모달 노출 닫기
+	const $openNotificationsEle = $('#notifications.active'); 
+	const isNotificationsTriggerClick = event.target.closest('.header_menu_btn_wrap.alarm'); // 클릭한 요소가 알람 버튼인지 확인
+	if($openNotificationsEle.length && !isNotificationsTriggerClick) { // 클릭한 요소가 알람 버튼이 아닐 경우
+		$openNotificationsEle.removeClass('active'); // 열려있는 알람 모달창 닫기
+	}
+		
+	
 	// 커스텀 셀렉트 open, close 기능
 	const $openSelectEle = $('.select_option_list.active'); // 열려 있는 셀렉트 옵션 요소
-	const isTriggerClick = event.target.closest('.table_title.select'); // 클릭한 요소가 커스텀 셀렉트 버튼인지 확인
-	if(!isTriggerClick) { // 클릭한 요소가 커스텀 셀렉트 버튼이 아닐 경우
+	const isSelectTriggerClick = event.target.closest('.table_title.select'); // 클릭한 요소가 커스텀 셀렉트 버튼인지 확인
+	if($openSelectEle.length && !isSelectTriggerClick) { // 클릭한 요소가 커스텀 셀렉트 버튼이 아닐 경우
 		$openSelectEle.removeClass('active'); // 열려 있는 셀렉트 옵션 닫기
 	}
 });
@@ -507,4 +565,25 @@ $(function() {
 	
 	// textarea 텍스트 입력 제한 표시 초기화
 	setTextareatLimitInit();
+	
+	// DnD 이미지 파일 첨부 유효성 검사, 미리보기 처리
+	const $fileUploadEle = $('.file_upload_container');
+	$fileUploadEle.on('dragenter dragover', function(e) {
+		e.preventDefault(); // 기본 동작 방지
+		$(this).addClass('drag_over'); // 드래그 중 표시
+	});
+	
+	$fileUploadEle.on('dragleave', function(e) {
+		e.preventDefault(); 
+		$(this).removeClass('drag_over'); // 드래그 중 표시 제거
+ 	});
+ 	
+ 	$fileUploadEle.on('drop', function(e) {		
+		e.preventDefault(); 
+		const file = e.originalEvent.dataTransfer.files[0]; // 드롭한 파일
+		const $input = $(this).find('input[type="file"]')[0];
+		
+		if(file) setImageFilePreview(file, $input);
+	});
+	
 });

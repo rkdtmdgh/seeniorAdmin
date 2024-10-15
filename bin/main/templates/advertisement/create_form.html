@@ -5,6 +5,12 @@
    
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('광고 등록')}"></th:block>
+	<script type="text/javascript">
+		$(async function() {
+			// advertisement category 가져오기
+			await getCategoryList('ad_category_no', true); // element id, isForm, selectedValue
+        });
+	</script>
 </head>
 
 <body>
@@ -35,18 +41,18 @@
 	                                </colgroup>
 	                                
 		                            <tbody>
-		                            	<tr>
+		                            	<tr>		                                	
+		                                	<th><p class="table_title">분류</p></th>
+		                                	<td>
+		                                		<select class="table_info select ad_category_no_select" name="ad_category_no" id="ad_category_no">
+		                                			<option value="" selected disabled>선택하세요</option>
+	                                			</select>
+		                                	</td>
+		                                	
 		                                	<th><p class="table_title">클라이언트</p></th>
 		                                	<td>
 		                                		<input type="text" name="ad_client" id="ad_client" class="table_info" placeholder="클라이언트"
 		                                			onblur="validateEmpty(this, '클라이언트를')">
-		                                	</td>
-		                                	
-		                                	<th><p class="table_title">위치</p></th>
-		                                	<td>
-		                                		<select class="table_info select" name="ad_position" id="ad_position">
-		                                			<option value="" selected disabled>선택하세요</option>
-	                                			</select>
 		                                	</td>
 	                                	</tr>
 	                                	
@@ -65,9 +71,31 @@
 	                                	</tr>
 	                                	
 	                                	<tr>
-		                                	<th><p class="table_title">파일 첨부</p></th>
+		                                	<th><p class="table_title">URL</p></th>
 		                                	<td>
-		                                	
+		                                		<input type="text" name="ad_url" id="ad_url" class="table_info" placeholder="URL"
+	                                				onblur="validateEmpty(this, 'URL 주소를')">
+		                                	</td>
+	                                	</tr>
+	                                	
+	                                	<tr>
+		                                	<th>
+		                                		<p class="table_title">
+		                                			파일 첨부
+			                                		<span class="guideline">(권장 사이즈: 1920x1080)</span>
+		                                		</p>
+		                                	</th>
+		                                	<td colspan="2">
+		                                		<div class="table_info">
+		                                			<label class="file_upload_container">
+		                                				<input type="file" name="ad_img" id="ad_img" accept="image/*"  onchange="setInputFileImageCheck(this)"> 
+		                                				<img src="/image/icons/image_file_upload.png" alt="image file uploader" class="file_upload_img">
+		                                				<span class="file_upload_info">
+			                                				<span class="file_upload_txt">클릭하거나 이미지 파일을 끌어다 놓으세요.</span>
+			                                				<span class="file_upload_restrictions">5MB 이하의 이미지 파일 형식만 첨부 가능합니다.</span>
+		                                				</span>
+		                                			</label>
+		                                		</div>
 		                                	</td>
 	                                	</tr>
 		                            </tbody>

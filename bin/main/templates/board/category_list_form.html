@@ -6,19 +6,19 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('게시판 관리')}"></th:block>
 	<script type="text/javascript">
-		$(function() {
+		$(async function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // search
-					getSearchList(null, '/board/cate_info/search_board_list', page);
+					await getSearchList(null, '/board/cate_info/search_board_category_list', page);
 					break;
 
 				case '0': // sort
-					getList('/board/cate_info/get_category_list', sortValue, order, page);
+					await getList('/board/cate_info/get_category_list', sortValue, order, page);
 					break;
 					
 				default:
-					getList('/board/cate_info/get_category_list', null, null, page);
+					await getList('/board/cate_info/get_category_list', null, null, page);
 			}
         });
 	</script>
@@ -55,7 +55,6 @@
 	                            <colgroup>
 	                                <col class="col_no">
 	                                <col class="col_no">
-	                                <col class="col_no">
 	                                <col>
 	                                <col>
 	                                <col>
@@ -68,15 +67,11 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">No</p>
-	                                    </th>
-	                                    
-	                                    <th>
 	                                    	<p class="table_title">순번</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">게시판명</p>
+	                                        <p class="table_title">분류</p>
 	                                    </th>
 	                                    
 	                                    <th>

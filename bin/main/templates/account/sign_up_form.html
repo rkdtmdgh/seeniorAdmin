@@ -50,7 +50,7 @@
 	                    <label for="birth" class="border_input">
 	                        <span class="input_title">생년월일</span>
 	                        <input type="date" name="a_birth" id="birth" max="9999-12-31" min="1900-01-01" class="input_txt" 
-	                        	onchange="validateEmpty(this, '생년월일을')" onblur="validateEmpty(this, '생년월일을')">
+	                        	onblur="replaceDate(this)">
 	                    </label>
 						
 						<label for="tel" class="border_input">

@@ -6,22 +6,22 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('게시판')}"></th:block>
 	<script th:inline="javascript">
-		$(function() {
+		$(async function() {
 			// 타이틀 설정
 			setBoardTitle(/*[[${infoNo}]]*/);
 			
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // search
-					getSearchList(null, '/board/info/search_posts_list', page);
+					await getSearchList(null, '/board/info/search_posts_list', page);
 					break;
 
 				case '0': // sort
-					getList('/board/info/get_posts_list', sortValue, order, page);
+					await getList('/board/info/get_posts_list', sortValue, order, page);
 					break;
 					
 				default:
-					getList('/board/info/get_posts_list', null, null, page);
+					await getList('/board/info/get_posts_list', null, null, page);
 			}
         });
 	</script>

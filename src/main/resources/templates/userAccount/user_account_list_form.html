@@ -4,29 +4,23 @@
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
 <head>
-	<th:block th:insert="~{fragments/head.html :: head('게시판 공지 사항')}"></th:block>
-	<script th:inline="javascript">
-		$(function() {			
+	<th:block th:insert="~{fragments/head.html :: head('회원 관리')}"></th:block>
+	<script type="text/javascript">
+		$(async function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
+			
 			switch(sortType) {
 				case '2': // search
-					getSearchList(null, '/board/info/search_notice_posts_list', page);
-					break;
-				
-				case '1': // select
-					getList('/board/noti_info/get_notice_posts_list_by_category', sortValue, order, page);
+					await getSearchList(null, '/user_account/info/search_user_account_list', page);
 					break;
 
-				case '0': // sort
-					getList('/board/noti_info/get_notice_posts_list', sortValue, order, page);
+				case '0':  // sort
+					await getList('/user_account/info/get_user_account_list', sortValue, order, page);
 					break;
 					
 				default:
-					getList('/board/noti_info/get_notice_posts_list', null, null, page);
+					await getList('/user_account/info/get_user_account_list', null, null, page);
 			}
-			
-			// BOARD_CATEGORY 가져오기
-			getCategoryList('bc_name'); // element id, isForm, selectedValue
         });
 	</script>
 </head>
@@ -43,66 +37,61 @@
 					<section class="content_info_wrap">
 					    <div class="content_top">
 					        <div class="content_top_info">
-					            <h2 class="title categoty_title">게시판 공지 사항</h2>
+					            <h2 class="title">회원 관리</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/board/noti_info/search_notice_posts_list')" 
-										th:insert="~{fragments/search.html :: search('게시판 공지 사항')}"></form>
+									<form name="search_form" onsubmit="getSearchList(event, '/user_account/info/search_user_account_list')" 
+										th:insert="~{fragments/search.html :: search('회원 관리')}"></form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/board/noti_info/get_notice_posts_list', null, null, 1);">전체보기</div>
-						            	<a href="/board/noti_info/create_notice_posts_form" class="btns small">게시물 등록</a>
+						            	<div class="btns small" onclick="getList('/user_account/info/get_user_account_list', null, null, 1);">전체보기</div>
 						            </div>
 					            </div>
 					        </div>
 					    </div>
 					    
 					    <div class="table_wrap">
-	                        <table class="content_table notice_posts_list_table">
+	                        <table class="content_table user_account_list_table">
 	                            <colgroup>
 	                                <col class="col_no">
-	                                <col class="col_default">
 	                                <col>
-	                                <col class="col_default">
-	                                <col class="col_short">
-	                                <col class="col_short">
-	                                <col class="col_default">
+	                                <col>
+	                                <col>
+	                                <col>
+	                                <col class="col_no">
+	                                <col>
 	                            </colgroup>
 	
 	                            <thead>
-	                                <tr>	                                    
+	                                <tr>
 	                                    <th>
 	                                        <p class="table_title">No</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <div class="table_title select" id="bc_name" onclick="setSelectOptionTopggle(event)">게시판</div>
+	                                        <p class="table_title">아이디</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">제목</p>
+	                                        <p class="table_title">이름(닉네임)</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">작성자</p>
+	                                        <p class="table_title">연락처</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">조회수</p>
+	                                        <p class="table_title">소속 기관</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                    	<p data-current-sort-value="all" class="table_title sort"
-	                                        	onclick="getSortList(event, 'board_notice', 'bn_state')">
-	                                        	상태
-	                                        	<span class="sort_icon"></span>
-	                                        </p>
+	                                    	<p class="table_title">상태</p>
 	                                    </th>
 	                                    
 	                                    <th>
 	                                    	<p data-current-sort-value="all" class="table_title sort"
-	                                        	onclick="getSortList(event, 'board_notice', 'bn_mod_date')">
-	                                        	등록일
+	                                        	onclick="getSortList(event, 'user_account', 'ad_reg_date')">
+	                                        	가입일
 	                                        	<span class="sort_icon"></span>
 	                                        </p>
 	                                    </th>

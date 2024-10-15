@@ -27,8 +27,9 @@
     --grayColor: #555; /* gray */
     --middleGrayColor: #C1C1C1; /* middle gray */
     --lightGrayColor: #E8E8E8; /* light gray */
-    --blueColor: #010102; /* blue */ 
-    --greenColor: #33D486; /* green */
+    --lightBlueColor: #F3F6FB; /* blue */ 
+    --greenColor: #13ce29; /* green */
+    --lightGreenColor: #26e83d; /* green */
     --yellowColor: #FFC73C; /* yellow */
     --redColor: #FF5B45; /* red */
     --optionColor: #1967D2;
@@ -44,6 +45,8 @@
     --sideMenuWidth: 270px;
     --signFormWidth: 340px;
     --iconsWidth: 20px;
+    --bigIconsWidth: 45px;
+    --smallThumbWidth: 30px;
     --arrowWidth: 5px; /* X2 (5px = 10px) */
     --arrowButtonWidth: 15px;
     
@@ -63,9 +66,12 @@
     --subTextIndent: 0 0 0 0.85em;
     --borderInputPadding: 1em 1em 10px;
     --selectPadding: 0.53em 2.2em 0.53em 1em;;
-    --iconsPadding: 0.15em;
+    --iconsPadding: 0.5em;
+    --smallIconsPadding: 0.3em 0.5em;
+    --inputIconsPadding: 0.15em;
     --tableInputErrorPadding: 0 1.2em 0.7em;
     --optionPadding: 0.5em 1.2em;
+    --notificationsPadding: 1.5em;
 
     --baseGap: 20px;
     --smallGap: 10px;
@@ -73,7 +79,7 @@
     --formGap: 30px;
 
     --bdrs: 0.5em;
-    --bxsh: 0 1px 4px 0 rgba(0,0,0, .15);
+    --bxsh: 0 1px 5px rgba(0,0,0, .15);
     --inputBorder: 1px solid var(--lightGrayColor);
 
     --transition: .2s; 
@@ -163,7 +169,7 @@ select {
     -moz-appearance: none;
     appearance: none;
     padding: var(--selectPadding);
-    background: url(../image/icons/gray_arrow.png) right 1em center no-repeat;
+    background: url(/image/icons/gray_arrow.png) right 1em center no-repeat;
 }
 
 input:-webkit-autofill,

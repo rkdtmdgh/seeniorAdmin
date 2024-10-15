@@ -250,6 +250,104 @@
         WHERE 
         	BC_NO = #{bc_no}
     
-    </update>   
+    </update> 
+    
+    <!-- 페이지에 따른 게시판 카테고리 가져오기(검색한 게시판 카테고리) -->
+	<select id="getSearchBoardCategory"
+			parameterType="Map"
+			resultMap="BoardCategoryDto">
+		
+		SELECT 
+			* 
+		FROM 
+			BOARD_CATEGORY 
+		WHERE 
+			BC_IS_DELETED = 1 
+		AND 
+			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+		ORDER BY 
+			BC_IDX DESC 
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>  
+	
+	<!-- 게시판 카테고리의 총 페이지 개수 구하기(검색한 질환 카테고리) -->
+	<select id="getSearchBoardCategoryListCnt"
+			parameterType="Map"
+			resultType="Integer">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_CATEGORY 
+		WHERE 
+			BC_IS_DELETED = 1 
+		AND 
+			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+
+	</select>
+	
+	<!-- 게시판 카테고리 정보 수정을 위한 IDX값 변경 add -->
+	<update id="modifyCategoryIdxByBetweenAdd">
+    	UPDATE 
+    		BOARD_CATEGORY
+    	SET 
+    		BC_IDX = BC_IDX + 1
+    	WHERE
+    		BC_IDX BETWEEN #{bc_idx} 
+    	AND 
+    		#{current_bc_idx} 
+    	AND 
+    		BC_IDX != #{current_bc_idx}
+    </update>
+    
+    <!-- 게시판 카테고리 정보 수정을 위한 IDX값 변경 sub -->
+	<update id="modifyCategoryIdxByBetweenSub">
+    	UPDATE 
+    		BOARD_CATEGORY
+    	SET 
+    		BC_IDX = BC_IDX - 1
+    	WHERE
+    		BC_IDX BETWEEN #{current_bc_idx} 
+    	AND 
+    		#{bc_idx} 
+    	AND 
+    		BC_IDX != #{current_bc_idx}
+    </update>
+	
+	<!-- 게시판 카테고리 정보 수정 요청 -->
+	<update id="modifyCategoryConfirm" parameterType="BoardCategoryDto">
+    	UPDATE 
+    		BOARD_CATEGORY
+    	SET 
+    		BC_NAME = #{bc_name},
+    		BC_IDX = #{bc_idx},
+    		BC_MOD_DATE = NOW()
+    	WHERE 
+    		BC_NO = #{bc_no}
+    </update>
+    
+    <!-- 게시판 카테고리 삭제 요청시 idx -처리 -->
+    <update id="subBoardCategoryIdxForDelete" parameterType="BoardCategoryDto">
+        UPDATE 
+        	BOARD_CATEGORY
+        SET 
+        	BC_IDX = BC_IDX - 1
+        WHERE 
+        	BC_IDX > #{bc_idx}
+    </update>
+    
+    <!-- 게시판 카테고리 삭제 요청 -->
+    <update id="deleteCategoryConfirm" parameterType="BoardCategoryDto">
+    	UPDATE 
+    		BOARD_CATEGORY
+    	SET 
+    		BC_IDX = 0,
+    		BC_IS_DELETED = 0
+    	WHERE
+    		BC_NO = #{bc_no}    
+    		<!-- current_idx로 위 아래 idx들 -1혹은 +1하는 로직 필요 -->
+    </update>
 
 </mapper>
