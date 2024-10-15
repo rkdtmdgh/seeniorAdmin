@@ -15,14 +15,14 @@ function setAddLoading(loading, parentEleClass, backgroundColor=null) {
 	if(!loading) {
 		clearTimeout(loadingTimeout); // 딜레이 시간 안에 통신 완료 시 로딩 타이머 취소
 		if($(`.${parentEleClass}_loading_wrap`).length) $(`.${parentEleClass}_loading_wrap`).remove(); // 로딩 요소 제거
-		logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: stop loading`);
+		//logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: stop loading`);
 		return false;
 		
 	}
 	
 	if($(`.${parentEleClass}_loading_wrap`).length.length) { // 이미 로딩 요소가 존재할 경우 
 		alert('현재 요청이 진행 중입니다. 잠시 후 다시 시도해 주세요.');
-		logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: Already loading`);
+		//logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: Already loading`);
 		return false; // 이미 요청이 진행 중이면 함수 종료 (중복 요청 방지)
 	}
 	
@@ -31,7 +31,7 @@ function setAddLoading(loading, parentEleClass, backgroundColor=null) {
 			<span class="${parentEleClass}_loading_wrap loading" style="background-color: ${backgroundColor ? backgroundColor : 'var(--whiteColor)'};"></span>
 		`); // 해당 컨텐츠에 로딩 요소 추가
 	}, 50);
-	logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: success loading`);
+	//logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: success loading`);
 	return true; // 로딩 표시 요청 완료
 }
 
@@ -507,35 +507,34 @@ function setSelectOptionTopggle(event) {
 function setInputFileImageCheck(input) {
 	const file = input.files[0];
 	if(!file) return false; // 파일이 유효한지 검사
-	setImageFilePreview(file); // 검증 후 미리보기 처리
+	setImageFilePreview(file, input); // 검증 후 미리보기 처리
 }
 
 // 첨부 이미지 파일 미리보기
-function setImageFilePreview(file) {
+function setImageFilePreview(file, input) {
 	if(!validationInputFileImage(file)) return false; // 이미지, 용량 검증
 	
 	// 미리보기 설정
     const imageURL = URL.createObjectURL(file); // blob URL 생성
     const $fileUploadEle = $('.file_upload_container');
     const $imagePreviewEle = $('<div class="image_file_preview">');
-    const $image = $(`<img src="${imageURL}" alt="select image file preview" id="preview_image">`);
+    const $image = $(`<img src="${imageURL}" alt="select image file preview">`);
     
     $imagePreviewEle.append($image);
     $imagePreviewEle.append(`<div class="close" onclick="setImageFilePreviewInit('${input.name}')">`);
-    $fileUploadEle.hide().parent().append($imagePreviewEle);
+    $fileUploadEle.addClass('displayNone').parent().append($imagePreviewEle);
 }
 
 // 첨부 이미지 파일 미리보기 초기화
 function setImageFilePreviewInit(inputName) {
 	const $input = $(`input[name="${inputName}"]`); 
-	const $fileUploadEle = $('.file_upload_container');
-	const $imagePreviewEle = $('.image_file_preview');
-	const imageSrc = $('#preview_image').attr('src');
+	const $fileUploadEle = $input.closest('.file_upload_container');
+	const $imagePreviewEle = $fileUploadEle.siblings('.image_file_preview');
+	const imageSrc = $imagePreviewEle.find('img').attr('src');
 	
 	$input.val(''); // input file 초기화
-	$fileUploadEle.show(); // 파일 업로더 노출
+	$fileUploadEle.removeClass('displayNone'); // 파일 업로더 노출
 	$imagePreviewEle.remove(); // 미리보기 제거
-	
 	if(imageSrc) URL.revokeObjectURL(imageSrc); // blob URL을 브라우저 메모리에서 해제
 }
 
@@ -567,7 +566,7 @@ $(function() {
 	// textarea 텍스트 입력 제한 표시 초기화
 	setTextareatLimitInit();
 	
-	// 이미지 파일 첨부 DnD 유효성 검사, 미리보기 처리
+	// DnD 이미지 파일 첨부 유효성 검사, 미리보기 처리
 	const $fileUploadEle = $('.file_upload_container');
 	$fileUploadEle.on('dragenter dragover', function(e) {
 		e.preventDefault(); // 기본 동작 방지
@@ -579,15 +578,12 @@ $(function() {
 		$(this).removeClass('drag_over'); // 드래그 중 표시 제거
  	});
  	
- 	$fileUploadEle.on('drop', function(e) {
+ 	$fileUploadEle.on('drop', function(e) {		
 		e.preventDefault(); 
-		$(this).removeClass('drag_over'); // 드래그 중 표시 제거
-		
 		const file = e.originalEvent.dataTransfer.files[0]; // 드롭한 파일
+		const $input = $(this).find('input[type="file"]')[0];
 		
-		if(file) {
-			setImageFilePreview(file);
-		}
+		if(file) setImageFilePreview(file, $input);
 	});
 	
 });

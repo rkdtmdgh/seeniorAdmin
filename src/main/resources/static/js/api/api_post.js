@@ -342,9 +342,8 @@ async function postBoardCategoryCreateForm(formName) {
 		return false;
 	}
 	
-	const formData = new FormData();
-	formData.append('bc_name', bc_name.value.trim());
-	formData.append('bc_idx', replaceNumber(bc_idx)); // 문자열 제외 및 min, max 체크하여 입력값 설정
+	const formData = new FormData(form);
+	formData.set('bc_idx', replaceNumber(bc_idx)); // 문자열 제외 및 min, max 체크하여 입력값 설정
 	
 	const successMessage = `"${bc_name.value}" 게시판이 등록되었습니다.`;
 	const errorMessage = `"${bc_name.value}" 게시판 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
@@ -443,13 +442,10 @@ async function postPostsCreateForm(formName) {
 		return false;
 	}
 	
-	const successMessage = `"${bp_title.value.trim()}" 게시물이 등록되었습니다.`;
-	const errorMessage = `"${bp_title.value.trim()}" 게시물 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const successMessage = `"${bp_title.value}" 게시물이 등록되었습니다.`;
+	const errorMessage = `"${bp_title.value}" 게시물 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
-	const formData = new FormData();
-	formData.append('bp_title', input.value.trim()); // 제목
-	formData.append('bp_category_no', form.bp_category_no.value); // 게시판 no
-	formData.append('bp_writer_no', form.bp_writer_no.value); // 작성자 no
+	const formData = new FormData(form);
 	formData.append('bp_body', quill.root.innerHTML); // quill 에디터 내용
 	
 	// 이미지 파일 리사이즈 및 압축하여 formData에 담기
@@ -514,15 +510,15 @@ async function postAdvertisementCreateForm(formName) {
 	const form = document.forms[formName];
 	let input;
 	
-	input = form.ad_client;
-	if(!validateEmpty(input, '클라이언트를', true)) {
-		input.focus();
-		return false;
-	}
-	
 	input = form.ad_category_no;
 	if(input.value === "") {
 		alert('분류를 선택해 주세요.');
+		return false;
+	}
+	
+	input = form.ad_client;
+	if(!validateEmpty(input, '클라이언트를', true)) {
+		input.focus();
 		return false;
 	}
 	
@@ -544,7 +540,12 @@ async function postAdvertisementCreateForm(formName) {
 		return false;
 	}
 	
-	// 이미지 파일 검증 추가
+	input = form.ad_img;
+	if(!input.files.length) {
+		alert('이미지 파일을 선택해 주세요.');
+		input.focus();
+		return false;
+	}
 	
 	const formData = new FormData(form);
 	const successMessage = `"${form.ad_client.value}" 님의 광고가 등록되었습니다.`;

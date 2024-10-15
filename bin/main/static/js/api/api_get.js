@@ -516,9 +516,6 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 						</div>
 					</td>
 		            <td>
-		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${listIndex}</a>
-		            </td>
-		            <td>
 		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${data.bc_idx}</a>
 		            </td>
 		            <td>
