@@ -522,7 +522,7 @@ function setImageFilePreview(file, input) {
     
     $imagePreviewEle.append($image);
     $imagePreviewEle.append(`<div class="close" onclick="setImageFilePreviewInit('${input.name}')">`);
-    $fileUploadEle.hide().parent().append($imagePreviewEle);
+    $fileUploadEle.addClass('displayNone').parent().append($imagePreviewEle);
 }
 
 // 첨부 이미지 파일 미리보기 초기화
@@ -533,7 +533,7 @@ function setImageFilePreviewInit(inputName) {
 	const imageSrc = $imagePreviewEle.find('img').attr('src');
 	
 	$input.val(''); // input file 초기화
-	$fileUploadEle.show(); // 파일 업로더 노출
+	$fileUploadEle.removeClass('displayNone'); // 파일 업로더 노출
 	$imagePreviewEle.remove(); // 미리보기 제거
 	if(imageSrc) URL.revokeObjectURL(imageSrc); // blob URL을 브라우저 메모리에서 해제
 }
