@@ -94,7 +94,7 @@
 	
 	                            <div class="btn_list">
 	                            	<div th:if="${advertisementDto.ad_no} != null"
-		                        		 th:onclick="delSingleData('ad_no', [[${advertisementDto.ad_no}]], [[${advertisementDto.a_id} + '님의 광고']])" class="btns delete">삭제</div>
+		                        		 th:onclick="delSingleData('ad_no', [[${advertisementDto.ad_no}]], [[${advertisementDto.ad_client} + '님의 광고']])" class="btns delete">삭제</div>
 		                        		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
