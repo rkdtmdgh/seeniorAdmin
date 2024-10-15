@@ -79,7 +79,7 @@
 	
 	</select>
 	
-		<!-- 일반 멤버 검색 리스트 개수 -->
+	<!-- 일반 멤버 검색 리스트 개수 -->
 	<select id="selectSearchUserListCnt"
 			resultType="Integer">
 			
@@ -94,5 +94,55 @@
 		</if>
 	
 	</select>
+	
+	<!-- 일반 멤버 정보 조회 by no -->
+	<select id="selectUserAccountByNo"
+			resultType="UserAccountDto">
+		
+		SELECT 
+			* 
+		FROM 
+			USER_ACCOUNT 
+		WHERE 
+			U_NO = #{u_no} 
+		AND 
+			U_IS_DELETED = 1 
+	
+	</select>
+	
+	<!-- 일반 멤버 정보 수정 확인 -->
+	<update id="updateUserAccountInfo">
+	
+		UPDATE 
+			USER_ACCOUNT 
+		SET 
+			U_NAME = #{u_name}, 
+			U_PHONE = #{u_phone}, 
+			U_NICKNAME = #{u_nickname}, 
+			U_GENDER = #{u_gender}, 
+			U_BIRTH = #{u_birth}, 
+			U_ADDRESS = #{u_address}, 
+			<if test="u_profile_img != '' and u_profile_img != null">
+				U_PROFILE_IMG = #{u_profile_img}, 
+			</if>
+			<if test="u_company != '' and u_company != null">
+				U_COMPANY = #{u_company}, 
+			</if>
+			<if test="u_is_personal != '' and u_is_personal != null">
+				<choose>
+					<when test="u_is_personal == true">
+						U_IS_PERSONAL = 1, 
+					</when>
+					<when test="u_is_personal == false">
+						U_IS_PERSONAL = 0, 
+					</when>
+				</choose>
+			</if>
+			U_REG_DATE = NOW(), 
+			U_MOD_DATE = NOW() 
+		WHERE 
+			U_NO = #{u_no} 
+	
+	</update>
 	
 </mapper>
