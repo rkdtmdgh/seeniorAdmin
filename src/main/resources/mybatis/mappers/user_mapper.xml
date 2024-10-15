@@ -53,7 +53,7 @@
 		SELECT 
 			COUNT(U_NO)
 		FROM 
-			USER_ACCOUNT 
+			USER_ACCOUNT  
 		WHERE 
 			U_IS_DELETED = 1
 	

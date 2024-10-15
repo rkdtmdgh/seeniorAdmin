@@ -57,10 +57,10 @@ public class UserService {
 		Map<String, Object> userListPageNum = new HashMap<>();
 		
 		// 전체 리스트 개수 조회 
-		int userListCnt = userMapper.selectAllUserListCnt();
+		int userAccountListCnt = userMapper.selectAllUserListCnt();
 
 		// 전체 페이지 개수 계산
-		int maxPage = (int) (Math.ceil((double) userListCnt / pageLimit));
+		int maxPage = (int) (Math.ceil((double) userAccountListCnt / pageLimit));
 		
 		// 시작 페이지 값 계산
 		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
@@ -69,7 +69,7 @@ public class UserService {
 		int endPage = startPage + blockLimit - 1;
 		if (endPage > maxPage) endPage = maxPage;
 		
-		userListPageNum.put("userListCnt", userListCnt);
+		userListPageNum.put("userAccountListCnt", userAccountListCnt);
 		userListPageNum.put("page", page);
 		userListPageNum.put("maxPage", maxPage);
 		userListPageNum.put("startPage", startPage);
