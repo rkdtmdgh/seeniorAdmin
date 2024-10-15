@@ -95,6 +95,47 @@ async function delListData(name, isCheckList) {
 	}
 }
 
+// 게시판 삭제 (삭제 시 다른 데이터들의 idx 변경이 필요하여 함수 추가)
+async function delBoardCategory(bc_no, bc_idx, dataName) {
+	logger.info('delBoardCategory()', bc_no, bc_idx);
+	
+	const isConfirm = confirm(`${dataName} 을(를) 삭제하시겠습니까?`);
+	if(!isConfirm) return false;
+	
+	const { apiUrl, replace } = mapDeleteObject('bc_no'); // 커맨드와 경로 설정
+	const errorMessage = `${dataName} 삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+		
+	if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+		try {
+			const response = await $.ajax({
+				url: apiUrl,
+				method: 'POST',
+				data: {
+					bc_no: bc_no,
+					bc_idx: bc_idx,
+				},
+			});
+			
+			logger.info(`${apiUrl} delBoardCategory() response:`, response);
+			
+			if(response) {
+				alert(`${dataName} 이(가) 삭제되었습니다.`);
+				location.replace(replace);
+				
+			} else {
+				alert(errorMessage);
+				location.reload(true);
+			}
+			
+		} catch(error) {
+			logger.error(`${apiUrl} delBoardCategory() error:`, error);
+			alert(errorMessage);
+			location.reload(true);
+		}
+	}
+}
+
+
 // 삭제 요청에 필요한 객체 설정
 function mapDeleteObject(value) { 
 	let apiUrl;

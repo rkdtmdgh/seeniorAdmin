@@ -487,8 +487,13 @@ async function postAdvertisementCategoryCreateForm(formName, nextPage) {
 		return false;
 	}
 	
-	const formData = new FormData(form);
+	input = form.ac_img_size;
+	if(!validateEmpty(input, '권장 사이즈를', true)) {
+		input.focus();
+		return false;
+	}
 	
+	const formData = new FormData(form);
 	const successMessage = `"${input.value}" 분류가 등록되었습니다.`;
 	const errorMessage = `"${input.value}" 분류 등록 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
