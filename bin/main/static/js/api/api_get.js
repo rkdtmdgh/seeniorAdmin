@@ -219,6 +219,18 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchAdminListPage.searchAdminListCnt;
 			break;
 			
+		case '/user_account/info/get_user_account_list': // 회원 관리
+			getListDtos = response.userAccountDtos;
+			getListPage = response.userAccountListPage;
+			getListCnt = response.userAccountListPage.userAccountListCnt;
+			break;
+			
+		case '/user_account/info/search_user_account_list': // 회원 관리 검색
+			getListDtos = response.userAccountDtos;
+			getListPage = response.searchUseAccountListPageNum;
+			getListCnt = response.searchUseAccountListPageNum.searchUseAccountListCnt;
+			break;
+			
 		case '/disease/info/get_disease_list': // 질환 / 질병 정보 관리
 			getListDtos = response.diseaseDtos;
 			getListPage = response.diseaseListPageNum;
@@ -387,19 +399,56 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <p class="table_info">${listIndex}</p>
 		            </td>
 		            <td>
-		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_id || 'N/A'}</a>
+		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_id}</a>
 		            </td>
 		            <td>
-		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_authority_role == 'SUB_ADMIN' ? '완료' : '대기'}</a>
+		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_authority_role === 'SUB_ADMIN' ? '완료' : '대기'}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${data.a_phone || 'N/A'}</p>
+		                <p class="table_info">${data.a_phone}</p>
 		            </td>
 		            <td>
-		                <p class="table_info">${data.a_name || 'N/A'}</p>
+		                <p class="table_info">${data.a_name}</p>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.a_reg_date || 'N/A')}</p>
+		                <p class="table_info">${setFormatDate(data.a_reg_date)}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/user_account/info/get_user_account_list':  // 회원 관리 리스트 테이블
+		case '/user_account/info/search_user_account_list': // 회원 관리 검색 리스트 테이블
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <p class="table_info">${listIndex}</p>
+		            </td>
+		            <td>
+		                <a href="/user_account/info/user_account_modify_form?u_no=${data.u_no}" class="table_info">${data.u_id}</a>
+		            </td>
+		            <td>
+		                <a href="/user_account/info/user_account_modify_form?u_no=${data.u_no}" class="table_info">
+		                	${data.u_is_blocked === 1 ? `${data.u_name}(${data.u_nickname})` : '-'}
+		                </a>
+		            </td>
+		            <td>
+		                <a href="/user_account/info/user_account_modify_form?u_no=${data.u_no}" class="table_info">
+		                	${data.u_is_blocked === 1 ? `${data.u_phone}` : '-'}
+		                </a>
+		            </td>
+		            <td>
+		                <a href="/user_account/info/user_account_modify_form?u_no=${data.u_no}" class="table_info">
+		                	${data.u_is_blocked === 1 ? `${data.u_company}` : '-'}
+		                </a>
+		            </td>
+		            <td>
+		                <a href="/user_account/info/user_account_modify_form?u_no=${data.u_no}" class="table_info">
+		                	${data.u_is_blocked === 1 ? `${data.u_is_blocked === 0 ? '정상' : '정지'}` : '탈퇴'}
+		                </a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.u_reg_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -420,10 +469,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${data.diseaseCategoryDto.dc_name}</a>
 		            </td>
 		            <td>
-		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${data.d_name || 'N/A'}</a>
+		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${data.d_name}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.d_mod_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.d_mod_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -443,7 +492,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/disease/info/disease_list_form?sortType=1&sortValue=dc_no&order=${data.dc_no}" class="table_info">${data.dc_item_cnt}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.dc_reg_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.dc_reg_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -461,10 +510,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/recipe/info/detail_form?rcp_seq=${data.rcp_seq}" class="table_info">${data.rcp_pat2}</a>
 		            </td>
 		            <td>
-		                <a href="/recipe/info/detail_form?rcp_seq=${data.rcp_seq}" class="table_info">${data.rcp_nm || 'N/A'}</a>
+		                <a href="/recipe/info/detail_form?rcp_seq=${data.rcp_seq}" class="table_info">${data.rcp_nm}</a>
 		            </td>
 		            <td>
-		                <a href="/recipe/info/detail_form?rcp_seq=${data.rcp_seq}" class="table_info">${data.rcp_way2 || 'N/A'}</a>
+		                <a href="/recipe/info/detail_form?rcp_seq=${data.rcp_seq}" class="table_info">${data.rcp_way2}</a>
 		            </td>
 		            <td class="ta_l">
 		                <a href="/recipe/info/detail_form?rcp_seq=${data.rcp_seq}" class="table_info info_data_list">
@@ -497,7 +546,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="${data.v_link}" onclick="setWindowOpenPosition(this.href, 640, 360); return false;" class="table_info">${data.v_link}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.v_mod_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.v_mod_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -525,7 +574,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${data.bc_item_cnt}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.bc_reg_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.bc_reg_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -556,7 +605,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 						</div>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.bn_mod_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.bn_mod_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -589,7 +638,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 						</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.bp_mod_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.bp_mod_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -615,7 +664,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_writer_no} 작성자 아이디</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.n_mod_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.n_mod_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -641,10 +690,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="" class="table_info">${data.bq_user_no}(작성자 아이디)</a>
 		            </td>
 					<td>
-		                <p class="table_info">${setFormatDate(data.bq_reg_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.bq_reg_date)}</p>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.bq_mod_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.bq_mod_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -671,7 +720,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <p class="table_info">${data.ad_client}</p>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.ad_mod_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.ad_mod_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -691,7 +740,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/advertisement/info/advertisement_list_form?sortType=1&sortValue=ac_no&order=${data.ac_no}" class="table_info">${data.ac_item_cnt}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.ac_reg_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.ac_reg_date)}</p>
 		            </td>
 		        </tr>
 			`;

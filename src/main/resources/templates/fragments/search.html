@@ -12,6 +12,13 @@
 				<option value="a_phone">연락처</option>
 			</th:block>
 			
+			<th:block th:if="${option == '회원 관리'}">
+				<option value="u_id" selected>아이디</option>
+				<option value="u_name">이름</option>
+				<option value="u_nickname">닉네임</option>
+				<option value="u_phone">연락처</option>
+			</th:block>
+			
 			<th:block th:if="${option == '질환 / 질병 정보 관리'}">
 				<option value="d_name" selected>질환/질병명</option>
 			</th:block>
