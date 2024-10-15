@@ -264,7 +264,7 @@ public class BoardService {
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
 
             // API 호출
-            String serverURL = "http://localhost:8091/upload_file"; //local
+            String serverURL = "http://localhost:8091/board_upload_file"; //local
             ResponseEntity<String> response = restTemplate.postForEntity(serverURL, requestEntity, String.class);
 
             return response;
