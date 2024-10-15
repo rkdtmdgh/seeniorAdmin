@@ -31,7 +31,7 @@ public class UserControlloer {
 	public String userAccountListForm() {
 		log.info("userAccountListForm()");
 		
-		String nextPage = "user/user_account_list_form";
+		String nextPage = "userAccount/user_account_list_form";
 		
 		return nextPage;
 	}
@@ -47,8 +47,8 @@ public class UserControlloer {
 		
 		Map<String, Object> userAccountList = userService.getUserAccountPagingList(sortValue, order, page);
 		
-		Map<String, Object> userAccountListPageNum = userService.getUserListPageNum(page);
-		userAccountList.put("userAccountListPageNum", userAccountListPageNum);
+		Map<String, Object> userAccountListPage = userService.getUserListPageNum(page);
+		userAccountList.put("userAccountListPage", userAccountListPage);
 		userAccountList.put("sortValue", sortValue);
 		userAccountList.put("order", order);
 		
