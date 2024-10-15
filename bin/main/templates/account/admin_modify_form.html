@@ -40,7 +40,7 @@
 		                                <tr>
 		                                	<th><p class="table_title">아이디</p></th>
 		                                	<td class="disabled">
-		                                		<input type="text" name="a_id" id="a_id" class="table_info disabled"
+		                                		<input type="text" name="a_id" id="a_id" class="table_info"
 	                                            	th:value="${selectedAdminDto.a_id}" disabled>
 	                                        </td>
 	                                        
@@ -70,7 +70,7 @@
 	                                        <th><p class="table_title">생년월일</p></th>
 		                                	<td>
 	                                            <input type="date" name="a_birth" id="a_birth" max="9999-12-31" min="1900-01-01" class="table_info"
-	                                            	onchange="validateEmpty(this, '생년월일을')" onblur="validateEmpty(this, '생년월일을')"
+                                            		onblur="replaceDate(this)"
 	                                            	th:value="${selectedAdminDto.a_birth}">
 	                                        </td>
 		                                </tr>

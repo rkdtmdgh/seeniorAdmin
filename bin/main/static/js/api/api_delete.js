@@ -1,14 +1,14 @@
 // 개별 삭제
 async function delSingleData(key, noValue, dataName) {
+	logger.info('deleteAccount()', key, noValue, dataName);
+	
+	const isConfirm = confirm(`${dataName} 을(를) 삭제하시겠습니까?`);
+	if(!isConfirm) return false;
+	
+	const { apiUrl, replace } = mapDeleteObject(key); // 커맨드와 경로 설정
+	const errorMessage = `${dataName} 삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+		
 	if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
-		logger.info('deleteAccount()', key, noValue, dataName);
-		
-		const isConfirm = confirm(`${dataName} 을(를) 삭제하시겠습니까?`);
-		if(!isConfirm) return false;
-		
-		const { apiUrl, replace } = mapDeleteObject(key); // 커맨드와 경로 설정
-		const errorMessage = `${dataName} 삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
-		
 		try {
 			const response = await $.ajax({
 				url: apiUrl,
@@ -141,7 +141,7 @@ function mapDeleteObject(value) {
 			replace = '/board/info/posts_list_form';
 			break;
 			
-		case 'ad_no': // 광고 분류
+		case 'ac_no': // 광고 분류
 			apiUrl = '/advertisement/cate_info/delete_category_confirm';
 			replace = '/advertisement/cate_info/category_list_form';
 			break;

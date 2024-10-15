@@ -93,7 +93,7 @@ function validatePhone(input, alertMsg) {
 }
 
 // 데이터 유효값 확인
-function validateEmpty(input, txt, alertMsg,  notViewMsg = false) { // 요소, 텍스트, alert 여부, 에러메세지 요소 표기 여부(false = 노출, ture = 노출X)
+function validateEmpty(input, txt, alertMsg,  notViewMsg = false) { // 요소, 텍스트, alert 여부, 에러메세지 요소 표기 여부(false = 노출, ture = 노출X / 검색폼에서 사용)
 	const errorMessage = txt + " 입력해 주세요.";
 	input.value = input.value.trim(); // 앞뒤 공백 제거 적용
 	if(alertMsg) {
@@ -295,4 +295,23 @@ function replaceDate(input) {
             alert(`${maxDate.getFullYear()}년도 이전으로 입력해 주세요.`);
         }
     }
+}
+
+// 첨부 파일 이미지 검사
+function validationInputFileImage(file) {
+	if(!file) return false; // 파일이 유효한지 더블 체크
+	
+	if(!file.type.startsWith('image/')) { // 이미지 파일인지 검사	
+		alert('이미지 파일만 업로드할 수 있습니다. 이미지 파일을 선택해 주세요.');	
+		input.value = ''; // input file 초기화
+		return false;
+	}
+	
+	const maxFileSize = 1024 * 1024 * 5; // 5MB 용량 제한
+	if(file.size > maxFileSize) { // 파일 크기 검사
+		alert('업로드 가능한 최대 용량을 초과했습니다. 5MB 이하의 이미지 파일을 선택해 주세요.');
+		return false;
+	}
+	
+	return true;
 }

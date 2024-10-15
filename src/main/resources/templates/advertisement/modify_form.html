@@ -84,9 +84,28 @@
 	                                	</tr>
 	                                	
 	                                	<tr>
-		                                	<th><p class="table_title">파일 첨부</p></th>
-		                                	<td>
-		                                		
+		                                	<th>
+		                                		<p class="table_title">
+		                                			파일 첨부
+			                                		<span class="guideline">(권장 사이즈: 1920x1080)</span>
+		                                		</p>
+		                                	</th>
+		                                	<td colspan="2">
+		                                		<div class="table_info">
+		                                			<label class="file_upload_container displayNone">
+		                                				<input type="file" name="ad_img" id="ad_img" accept="image/*"  onchange="setInputFileImageCheck(this)"> 
+		                                				<img src="/image/icons/image_file_upload.png" alt="image file uploader" class="file_upload_img">
+		                                				<span class="file_upload_info">
+			                                				<span class="file_upload_txt">클릭하거나 이미지 파일을 끌어다 놓으세요.</span>
+			                                				<span class="file_upload_restrictions">5MB 이하의 이미지 파일 형식만 첨부 가능합니다.</span>
+		                                				</span>
+		                                			</label>
+		                                			
+		                                			<div class="image_file_preview">
+		                                				<img th:src="${advertisementDto.ad_img}" alt="select image file preview">
+		                                				<div class="close" onclick="setImageFilePreviewInit('ad_img')"></div>
+	                                				</div>
+		                                		</div>
 		                                	</td>
 	                                	</tr>
 	                                </tbody>
@@ -94,7 +113,7 @@
 	
 	                            <div class="btn_list">
 	                            	<div th:if="${advertisementDto.ad_no} != null"
-		                        		 th:onclick="delSingleData('ad_no', [[${advertisementDto.ad_no}]], [[${advertisementDto.a_id} + '님의 광고']])" class="btns delete">삭제</div>
+		                        		 th:onclick="delSingleData('ad_no', [[${advertisementDto.ad_no}]], [[${advertisementDto.ad_client} + '님의 광고']])" class="btns delete">삭제</div>
 		                        		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>

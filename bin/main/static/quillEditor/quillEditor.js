@@ -91,7 +91,7 @@ $(document).ready(function() {
 			const $fileInput = $('<input type="file" accept="image/*">'); // 같은 파일 삽입시 중복 적용을 위해 재사용하지 않음
 	        $fileInput.trigger('click'); // 파일 선택창 열기
 		    $fileInput.on('change', function() { // 파일이 선택되었을 때
-				validationImage(this.files[0]);
+				validationQuillImage(this.files[0]);
 			});
 		}
     });
@@ -101,12 +101,12 @@ $(document).ready(function() {
 		event.preventDefault();
 		if(insertImageConfirm()) { // 이미지 삽입 제한 체크
 			const file = event.originalEvent.dataTransfer.files[0]; // jQuery 객체로 감싸졌을 경우 직접 dataTransfer가 접근되지 않을 수 있음(originalEvent 사용)
-			validationImage(file);
+			validationQuillImage(file);
 		}
 	});
 	
 	// 이미지 파일 첨부 핸들러
-	function validationImage(file) {
+	function validationQuillImage(file) {
 		if(!file) return false;
 		
 		if(!file.type.startsWith('image/')) { // 이미지 파일인지 검사	
@@ -115,7 +115,7 @@ $(document).ready(function() {
 		}
 		
 		if(file.size > maxFileSize) { // 파일 크기 검사
-			alert('업로드 가능한 최대 용량을 초과했습니다. 5MB 이하의 이미지 파일을 선택해 주세요.');
+			alert('업로드 가능한 최대 용량을 초과했습니다. 2MB 이하의 이미지 파일을 선택해 주세요.');
 			return false;
 		}
 		

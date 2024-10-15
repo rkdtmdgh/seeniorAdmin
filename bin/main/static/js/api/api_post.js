@@ -81,6 +81,7 @@ async function postIdentityCheckForm(event, formName) {
 		input = form.a_pw;
 		if(!validateEmpty(input, '비밀번호를', true, true)) {
 			input.focus();
+			setAddLoading(false, 'content_inner')
 			return false;
 		}
 	
@@ -102,7 +103,6 @@ async function postIdentityCheckForm(event, formName) {
 				
 			} else {
 				alert('비밀번호가 일치하지 않습니다. 확인 후 다시 시도해 주세요.');
-				return false;
 			}
 			
 		} catch(error) {
@@ -111,13 +111,13 @@ async function postIdentityCheckForm(event, formName) {
 			location.reload(true);
 			
 		} finally {
-			setAddLoading(false, 'content_inner')
+			setAddLoading(false, 'content_inner');
 		}
 	}
 }
 
 // post ajax 요청
-async function postFormDataSubmitForm(apiUrl, formData, successMessage, errorMessage, redirectUrl = null, loddingParentEle) {
+async function postSubmitForm(apiUrl, formData, successMessage, errorMessage, redirectUrl = null, loddingParentEle) {
 	if(setAddLoading(true, loddingParentEle)) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
 		setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
 		
@@ -130,7 +130,7 @@ async function postFormDataSubmitForm(apiUrl, formData, successMessage, errorMes
 				contentType: false,  // FormData를 문자열로 변환하지 않음
 			});
 			
-			logger.info(`${apiUrl} postFormDataSubmitForm() response:`, response);
+			logger.info(`${apiUrl} postSubmitForm() response:`, response);
 			
 			if(response) {
 				alert(successMessage);
@@ -142,7 +142,7 @@ async function postFormDataSubmitForm(apiUrl, formData, successMessage, errorMes
 			}
 			
 		} catch(error) {
-			logger.error(`${apiUrl} postFormDataSubmitForm() error:`, error);
+			logger.error(`${apiUrl} postSubmitForm() error:`, error);
 			alert(errorMessage);
 			location.reload(true);
 		}
@@ -150,8 +150,7 @@ async function postFormDataSubmitForm(apiUrl, formData, successMessage, errorMes
 }
 
 // 질환/질병 분류 등록 폼
-async function postDiseaseCategoryCreateForm(event, formName, nextPage) {
-	if(event) event.preventDefault();
+async function postDiseaseCategoryCreateForm( formName, nextPage) {
 	const form = document.forms[formName];
 	let input;
 	
@@ -161,19 +160,18 @@ async function postDiseaseCategoryCreateForm(event, formName, nextPage) {
 		return false;
 	}
 	
-	const formData = new FormData();
-	formData.append('dc_name', input.value.trim());
+	const formData = new FormData(form);
 	
 	const successMessage = `"${input.value}" 분류가 등록되었습니다.`;
 	const errorMessage = `"${input.value}" 분류 등록 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
-	await postFormDataSubmitForm(
+	await postSubmitForm(
 		'/disease/cate_info/create_category_confirm', 				// apiUrl
 		formData, 													// data
 		successMessage, 											// 성공 메세지
 		errorMessage,												// 실패 메세지 																
 		nextPage ? '/disease/cate_info/category_list_form' : null,	// 다음 페이지
-		'content_inner'                                         // 로딩 표시할 부모 요소
+		'content_inner'                                             // 로딩 표시할 부모 요소
 	);
 }
 
@@ -216,7 +214,7 @@ async function postDiseaseCreateForm(formName) {
 	const successMessage = `"${form.d_name.value}" 질환/질병 정보가 등록되었습니다.`;
 	const errorMessage = `"${form.d_name.value}" 질환 / 질병 정보 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
-	await postFormDataSubmitForm(
+	await postSubmitForm(
 		'/disease/info/create_confirm', 
 		formData, 
 		successMessage, 
@@ -283,7 +281,7 @@ async function postVideoCreateForm(formName) {
 	const successMessage = `"${form.v_title.value}"\n영상 정보가 등록되었습니다.`;
 	const errorMessage = `"${form.v_title.value}"\n영상 정보 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
-	await postFormDataSubmitForm(
+	await postSubmitForm(
 		'/video/info/create_confirm', 
 		formData, 
 		successMessage, 
@@ -303,7 +301,7 @@ async function postNoticeCreateForm(formName) {
 	const successMessage = '공지사항이 등록되었습니다.';
 	const errorMessage = '공지사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 	
-	await postFormDataSubmitForm(
+	await postSubmitForm(
 		'/notice/info/create_confirm', 
 		formData, 
 		successMessage, 
@@ -323,7 +321,7 @@ async function postQnaNoticeCreateForm(formName) {
 	const successMessage = '질문과 답변 공지사항이 등록되었습니다.';
 	const errorMessage = '질문과 답변 공지사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 	
-	await postFormDataSubmitForm(
+	await postSubmitForm(
 		'/qna/info/qna_notice_create_confirm', 
 		formData, 
 		successMessage, 
@@ -344,14 +342,13 @@ async function postBoardCategoryCreateForm(formName) {
 		return false;
 	}
 	
-	const formData = new FormData();
-	formData.append('bc_name', bc_name.value.trim());
-	formData.append('bc_idx', replaceNumber(bc_idx)); // 문자열 제외 및 min, max 체크하여 입력값 설정
+	const formData = new FormData(form);
+	formData.set('bc_idx', replaceNumber(bc_idx)); // 문자열 제외 및 min, max 체크하여 입력값 설정
 	
 	const successMessage = `"${bc_name.value}" 게시판이 등록되었습니다.`;
 	const errorMessage = `"${bc_name.value}" 게시판 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
-	await postFormDataSubmitForm(
+	await postSubmitForm(
 		'/board/cate_info/create_category_confirm', 
 		formData, 
 		successMessage, 
@@ -380,9 +377,6 @@ async function postNoticePostsCreateForm(formName) {
 	const errorMessage = `"${bn_title.value.trim()}" 게시판 공지 사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
 	const formData = new FormData();
-	formData.append('bn_title', input.value.trim()); // 제목
-	formData.append('bn_category_no', form.bn_category_no.value); // 게시판 no
-	formData.append('bn_writer_no', form.bn_writer_no.value); // 작성자 no
 	formData.append('bn_body', quill.root.innerHTML); // quill 에디터 내용
 	
 	// 이미지 파일 리사이즈 및 압축하여 formData에 담기
@@ -420,7 +414,7 @@ async function postNoticePostsCreateForm(formName) {
 		formData.append('files', emptyBlob); 
 	}
 	
-	await postFormDataSubmitForm(
+	await postSubmitForm(
 		'/board/info/create_board_notice_confirm',
 		formData,
 		successMessage,
@@ -445,13 +439,10 @@ async function postPostsCreateForm(formName) {
 		return false;
 	}
 	
-	const successMessage = `"${bp_title.value.trim()}" 게시물이 등록되었습니다.`;
-	const errorMessage = `"${bp_title.value.trim()}" 게시물 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const successMessage = `"${bp_title.value}" 게시물이 등록되었습니다.`;
+	const errorMessage = `"${bp_title.value}" 게시물 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
-	const formData = new FormData();
-	formData.append('bp_title', input.value.trim()); // 제목
-	formData.append('bp_category_no', form.bp_category_no.value); // 게시판 no
-	formData.append('bp_writer_no', form.bp_writer_no.value); // 작성자 no
+	const formData = new FormData(form);
 	formData.append('bp_body', quill.root.innerHTML); // quill 에디터 내용
 	
 	// 이미지 파일 리사이즈 및 압축하여 formData에 담기
@@ -475,7 +466,7 @@ async function postPostsCreateForm(formName) {
 		formData.append('files', emptyBlob); 
 	}
 
-	await postFormDataSubmitForm(
+	await postSubmitForm(
 		'/board/info/create_confirm',
 		formData,
 		successMessage,
@@ -485,20 +476,46 @@ async function postPostsCreateForm(formName) {
 	);
 }
 
+// 광고 분류 등록 폼
+async function postAdvertisementCategoryCreateForm(formName, nextPage) {
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.ac_name;
+	if(!(await requestDuplicateCheck(input, true, false, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+		input.focus();
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	
+	const successMessage = `"${input.value}" 분류가 등록되었습니다.`;
+	const errorMessage = `"${input.value}" 분류 등록 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	await postSubmitForm(
+		'/advertisement/cate_info/create_category_confirm',
+		formData,
+		successMessage,
+		errorMessage, 																
+		nextPage ? '/advertisement/cate_info/category_list_form' : null,
+		'content_inner'
+	);
+}
+
 // 광고 등록 폼
 async function postAdvertisementCreateForm(formName) {
 	const form = document.forms[formName];
 	let input;
 	
-	input = form.ad_client;
-	if(!validateEmpty(input, '클라이언트를', true)) {
-		input.focus();
-		return false;
-	}
-	
 	input = form.ad_category_no;
 	if(input.value === "") {
 		alert('분류를 선택해 주세요.');
+		return false;
+	}
+	
+	input = form.ad_client;
+	if(!validateEmpty(input, '클라이언트를', true)) {
+		input.focus();
 		return false;
 	}
 	
@@ -520,13 +537,18 @@ async function postAdvertisementCreateForm(formName) {
 		return false;
 	}
 	
-	// 이미지 파일 검증 추가
+	input = form.ad_img;
+	if(!input.files.length) {
+		alert('이미지 파일을 선택해 주세요.');
+		input.focus();
+		return false;
+	}
 	
 	const formData = new FormData(form);
 	const successMessage = `"${form.ad_client.value}" 님의 광고가 등록되었습니다.`;
 	const errorMessage = `"${form.ad_client.value}" 님의 광고 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
-	await postFormDataSubmitForm(
+	await postSubmitForm(
 		'/advertisement/info/create_confirm', 
 		formData, 
 		successMessage, 

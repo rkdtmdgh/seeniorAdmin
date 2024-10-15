@@ -4,9 +4,18 @@
 
 <mapper namespace="com.see_nior.seeniorAdmin.advertisement.mapper.AdvertisementMapper">
 
+	<resultMap type="AdvertisementCategoryDto" id="AdvertisementCategoryDto">
+		<id column="ac_no" property="ac_no" />
+		<result column="ac_name" property="ac_name" />
+		<result column="ac_is_deleted" property="ac_is_deleted" />
+		<result column="ac_item_cnt" property="ac_item_cnt" />
+		<result column="ac_reg_date" property="ac_reg_date" />
+		<result column="ac_mod_date" property="ac_mod_date" />
+	</resultMap>
+
 	<resultMap type="AdvertisementDto" id="AdvertisementDto">
 		<id column="ad_no" property="ad_no" />
-		<result column="ad_position" property="ad_position" />
+		<result column="ad_category_no" property="ad_category_no" />
 		<result column="ad_img" property="ad_img" />
 		<result column="ad_url" property="ad_url" />
 		<result column="ad_start_date" property="ad_start_date" />
@@ -15,7 +24,190 @@
 		<result column="ad_is_deleted" property="ad_is_deleted" />
 		<result column="ad_reg_date" property="ad_reg_date" />
 		<result column="ad_mod_date" property="ad_mod_date" />
+		<collection property="advertisementCategoryDto" resultMap="AdvertisementCategoryDto" />
 	</resultMap>
+
+	<!-- 광고 위치 관련 -->
+
+	<!-- 광고 위치 등록 -->
+	<insert id="insertNewAdvertisementCategory"
+			parameterType="AdvertisementCategoryDto">
+			
+		INSERT INTO 
+			ADVERTISEMENT_CATEGORY 
+			(AC_NAME) 
+		VALUES 
+			(#{ac_name})
+	
+	</insert>
+
+	<!-- 광고 위치명 중복 확인 -->
+	<select id="isAdvertisementCategory"
+			parameterType="String"
+			resultType="boolean">
+
+		SELECT 
+			COUNT(*) 
+		FROM 
+			ADVERTISEMENT_CATEGORY 
+		WHERE 
+			AC_NAME = #{ac_name}
+	
+	</select>
+
+	<!-- 모든 광고 위치 가져오기 (광고 리스트에서 select 박스) -->
+	<select id="getAdvertisementCategoryList"
+			resultMap="AdvertisementCategoryDto">
+			
+		SELECT 
+			* 
+		FROM 
+			ADVERTISEMENT_CATEGORY 
+		WHERE 
+			AC_IS_DELETED = 1 
+		ORDER BY 
+			AC_NAME ASC
+	
+	</select>
+	
+	<!-- 광고 위치 별 광고의 개수 구하기 -->
+	<select id="getCategoryItemCnt"
+			parameterType="Integer"
+			resultType="Integer">
+			
+		SELECT 
+			COUNT(*) 
+		FROM 
+			ADVERTISEMENT 
+		WHERE
+		 	AD_IS_DELETED = 1 
+		AND 
+			AD_CATEGORY_NO = #{ac_no}
+	
+	</select>
+	
+	<!-- 광고 위치 별 광고의 개수 광고 위치 테이블에 update -->
+	<update id="updateAdvertisementCategoryItemCnt"
+			parameterType="Map">
+			
+		UPDATE 
+			ADVERTISEMENT_CATEGORY 
+		SET 
+			AC_ITEM_CNT = #{item_cnt} 
+		WHERE 
+			AC_NO = #{ac_no}
+	
+	</update>
+	
+	<!-- 모든 광고 위치 가져오기(페이지네이션 => 광고 위치 관리용) -->
+	<select id="getAdvertisementCategoryListWithPage"
+			parameterType="Map"
+			resultMap="AdvertisementCategoryDto">
+			
+		SELECT 
+			* 
+		FROM 
+			ADVERTISEMENT_CATEGORY 
+		WHERE 
+			AC_IS_DELETED = 1 
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>
+	
+	<!-- 광고 위치의 총 리스트 개수 구하기 -->
+	<select id="getAllAdvertisementCategoryCnt"
+			resultType="Integer">
+			
+		SELECT 
+			COUNT(*) 
+		FROM 
+			ADVERTISEMENT_CATEGORY 
+		WHERE 
+			AC_IS_DELETED = 1 
+	
+	</select>
+	
+	<!-- 광고 위치 한개 가져오기 -->
+	<select id="getAdvertisementCategory"
+			parameterType="Integer"
+			resultMap="AdvertisementCategoryDto">
+		
+		SELECT 
+			* 
+		FROM 
+			ADVERTISEMENT_CATEGORY 
+		WHERE 
+			AC_NO = #{ac_no}
+	
+	</select>
+	
+	<!-- 광고 위치 수정 -->
+	<update id="updateAdvertisementCategory"
+			parameterType="AdvertisementCategoryDto">
+			
+		UPDATE 
+			ADVERTISEMENT_CATEGORY 
+		SET 
+			AC_NAME = #{ac_name}, 
+			AC_MOD_DATE = NOW() 
+		WHERE 
+			AC_NO = #{ac_no}
+	
+	</update>
+	
+	<!-- 광고 위치 삭제 -->
+	<update id="deleteAdvertisementCategory"
+			parameterType="Integer">
+			
+		UPDATE 
+			ADVERTISEMENT_CATEGORY 
+		SET 
+			AC_IS_DELETED = 0 
+		WHERE 
+			AC_NO = #{ac_no}	
+	
+	</update>
+	
+	<!-- 페이지에 따른 광고 위치 가져오기(검색한 광고 위치) -->
+	<select id="getSearchAdvertisementCategory"
+			parameterType="Map"
+			resultMap="AdvertisementCategoryDto">
+			
+		SELECT 
+			* 
+		FROM 
+			ADVERTISEMENT_CATEGORY 
+		WHERE 
+			AC_IS_DELETED = 1 
+		AND 
+			${searchPart} LIKE CONCAT('%', #{searchString}, '%') 
+		ORDER BY 
+			AC_NAME DESC 
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>
+
+	<!-- 광고 위치의 총 페이지 개수 구하기(검색한 광고 위치) -->
+	<select id="getSearchAdvertisementCategoryListCnt"
+			parameterType="Map"
+			resultType="Integer">
+			
+		SELECT 
+			COUNT(*) 
+		FROM 
+			ADVERTISEMENT_CATEGORY 
+		WHERE 
+			AC_IS_DELETED = 1 
+		AND 
+			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+	
+	</select>
+
+	<!-- 광고 관련 -->
 
 	<!-- 광고 등록 -->
 	<insert id="insertNewAdvertisement"
@@ -23,24 +215,11 @@
 	
 		INSERT INTO 
 			ADVERTISEMENT 
-			(AD_POSITION, AD_IMG, AD_URL, AD_START_DATE, AD_END_DATE, AD_CLIENT) 
+			(AD_CATEGORY_NO, AD_IMG, AD_URL, AD_START_DATE, AD_END_DATE, AD_CLIENT) 
 		VALUES 
-			(#{ad_position}, #{ad_img}, #{ad_url}, #{ad_start_date}, #{ad_end_date}, #{ad_client})
+			(#{ad_category_no}, #{ad_img}, #{ad_url}, #{ad_start_date}, #{ad_end_date}, #{ad_client})
 	
 	</insert>
-	
-	<!-- 모든 광고 위치 가져오기 (광고 리스트에서 <select>박스 => 비동기) -->
-	<select id="getPositionList"
-			resultMap="AdvertisementDto">
-			
-		SELECT DISTINCT 
-			AD_POSITION 
-		FROM 
-			ADVERTISEMENT 
-		ORDER BY 
-			AD_POSITION DESC
-	
-	</select>
 	
 	<!-- 페이지에 따른 광고 가져오기(모든 광고) -->
 	<select id="getAdvertisementListWithPage"
@@ -48,15 +227,22 @@
 			resultMap="AdvertisementDto">
 	
 		SELECT 
-			* 
+			AD.*, 
+			AC.AC_NAME 
 		FROM 
-			ADVERTISEMENT 
+		    ADVERTISEMENT AD 
+		JOIN 
+		    ADVERTISEMENT_CATEGORY AC 
+		ON 
+		    AD.AD_CATEGORY_NO = AC.AC_NO 
 		WHERE 
-			AD_IS_DELETED = 1 
-		ORDER BY 
-			${sortValue} ${order} 
+		    AD.AD_IS_DELETED = 1 
+		AND 
+			AC.AC_IS_DELETED = 1 
+    	ORDER BY 
+     		AD.${sortValue} ${order} 
 		LIMIT 
-			#{start}, #{limit} 
+			#{start}, #{limit}
 	
 	</select>
 	
@@ -74,18 +260,25 @@
 	</select>
 	
 	<!-- 페이지에 따른 광고 가져오기 (위치별 광고) -->
-	<select id="getAdvertisementListByPositionWithPage"
+	<select id="getAdvertisementListByCategoryWithPage"
 			parameterType="Integer"
 			resultMap="AdvertisementDto">
 			
 		SELECT 
-			* 
+			AD.*, 
+			AC.AC_NAME 
 		FROM 
-			ADVERTISEMENT 
+		    ADVERTISEMENT AD 
+		JOIN 
+		    ADVERTISEMENT_CATEGORY AC 
+		ON 
+		    AD.AD_CATEGORY_NO = AC.AC_NO 
 		WHERE 
-			AD_IS_DELETED = 1 
+		    AD.AD_IS_DELETED = 1 
 		AND 
-			AD_POSITION = #{position} 
+			AC.AC_IS_DELETED = 1 
+		AND 
+			AD.AD_CATEGORY_NO = #{ac_no} 
 		ORDER BY 
 			AD_NO DESC 
 		LIMIT 
@@ -94,7 +287,7 @@
 	</select>
 	
 	<!-- 광고의 총 리스트 개수 구하기(위치별 광고) -->
-	<select id="getAdvertisementByPositionCnt"
+	<select id="getAdvertisementByCategoryCnt"
 			parameterType="Integer"
 			resultType="Integer">
 
@@ -105,7 +298,7 @@
 		WHERE 
 			AD_IS_DELETED = 1 
 		AND 
-			AD_POSITION = #{position} 
+			AD_CATEGORY_NO = #{ac_no} 
 	
 	</select>
 	
@@ -130,7 +323,7 @@
 		UPDATE 
 			ADVERTISEMENT 
 		SET 
-			AD_POSITION = #{ad_position}
+			AD_CATEGORY_NO = #{ad_category_no}
 			AD_IMG = #{ad_img}
 			AD_URL = #{ad_url}
 			AD_START_DATE = #{ad_start_date}
@@ -142,7 +335,7 @@
 	
 	</update>
 	
-	<!-- 광고 삭제 확인 -->
+	<!-- 광고 삭제 -->
 	<update id="deleteAdvertisement"
 			parameterType="Integer">
 	
@@ -161,13 +354,20 @@
 			resultMap="AdvertisementDto">
 	
 		SELECT 
-			* 
+			AD.*, 
+			AC.AC_NAME  
 		FROM 
-			ADVERTISEMENT 
+			ADVERTISEMENT AD  
+		JOIN 
+			ADVERTISEMENT_CATEGORY AC 
 		WHERE 
-			AD_IS_DELETED = 1 
+			AD.AD_CATEGORY_NO = AC.AC_NO 
 		AND 
-			${searchPart} LIKE CONCAT ('%', #{searchString}, '%') 
+			AD.AD_IS_DELETED = 1 
+		AND 
+			AC.AC_IS_DELETED = 1 
+		AND 
+			AD.${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 		ORDER BY 
 			AD_NO DESC 
 		LIMIT 
@@ -190,6 +390,7 @@
 			${searchPart} LIKE CONCAT ('%', #{searchString}, '%')
 	
 	</select>
+
 
 </mapper>
 

@@ -89,12 +89,12 @@
 	<update id="updateDiseaseCategoryItemCnt"
 			parameterType="Map">
 	
-			UPDATE 
-				DISEASE_CATEGORY 
-			SET 
-				DC_ITEM_CNT = #{item_cnt} 
-			WHERE 
-				DC_NO = #{dc_no}
+		UPDATE 
+			DISEASE_CATEGORY 
+		SET 
+			DC_ITEM_CNT = #{item_cnt} 
+		WHERE 
+			DC_NO = #{dc_no}
 	
 	</update>
 	

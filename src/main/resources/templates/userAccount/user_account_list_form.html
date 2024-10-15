@@ -4,21 +4,22 @@
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
 <head>
-	<th:block th:insert="~{fragments/head.html :: head('게시판 관리')}"></th:block>
+	<th:block th:insert="~{fragments/head.html :: head('회원 관리')}"></th:block>
 	<script type="text/javascript">
 		$(async function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
+			
 			switch(sortType) {
 				case '2': // search
-					await getSearchList(null, '/board/cate_info/search_board_category_list', page);
+					await getSearchList(null, '/user_account/info/search_user_account_list', page);
 					break;
 
-				case '0': // sort
-					await getList('/board/cate_info/get_category_list', sortValue, order, page);
+				case '0':  // sort
+					await getList('/user_account/info/get_user_account_list', sortValue, order, page);
 					break;
 					
 				default:
-					await getList('/board/cate_info/get_category_list', null, null, page);
+					await getList('/user_account/info/get_user_account_list', null, null, page);
 			}
         });
 	</script>
@@ -36,50 +37,63 @@
 					<section class="content_info_wrap">
 					    <div class="content_top">
 					        <div class="content_top_info">
-					            <h2 class="title">게시판 관리</h2>
+					            <h2 class="title">회원 관리</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/board/cate_info/search_board_category_list')" 
-										th:insert="~{fragments/search.html :: search('게시판 관리')}"></form>
+									<form name="search_form" onsubmit="getSearchList(event, '/user_account/info/search_user_account_list')" 
+										th:insert="~{fragments/search.html :: search('회원 관리')}"></form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/board/cate_info/get_category_list', null, null, 1);">전체보기</div>
-						            	<a href="/board/cate_info/create_category_form" class="btns small">등록</a>
+						            	<div class="btns small" onclick="getList('/user_account/info/get_user_account_list', null, null, 1);">전체보기</div>
 						            </div>
 					            </div>
 					        </div>
 					    </div>
 					    
 					    <div class="table_wrap">
-	                        <table class="content_table board_list_table">
+	                        <table class="content_table user_account_list_table">
 	                            <colgroup>
 	                                <col class="col_no">
+	                                <col>
+	                                <col>
+	                                <col>
+	                                <col>
 	                                <col class="col_no">
-	                                <col>
-	                                <col>
 	                                <col>
 	                            </colgroup>
 	
 	                            <thead>
 	                                <tr>
-	                                	<th>
-	                                        <p class="table_title"></p>
+	                                    <th>
+	                                        <p class="table_title">No</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                    	<p class="table_title">순번</p>
+	                                        <p class="table_title">아이디</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">분류</p>
+	                                        <p class="table_title">이름(닉네임)</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">게시물 수</p>
+	                                        <p class="table_title">연락처</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">등록일</p>
+	                                        <p class="table_title">소속 기관</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                    	<p class="table_title">상태</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                    	<p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'user_account', 'ad_reg_date')">
+	                                        	가입일
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
 	                                    </th>
 	                                </tr>
 	                            </thead>
