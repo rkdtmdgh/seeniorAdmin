@@ -26,8 +26,8 @@ public class UserService {
 	}
 	
 	// 일반 멤버 리스트 가져오기 
-	public Map<String, Object> getUserPagingList(String sort, int page) {
-		log.info("getUserPagingList()");
+	public Map<String, Object> getUserAccountPagingList(String sortValue, String order, int page) {
+		log.info("getUserAccountPagingList()");
 		
 		int pagingStart = (page - 1) * pageLimit;	
 		
@@ -36,7 +36,8 @@ public class UserService {
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
-		pagingParams.put("sort", sort);
+		pagingParams.put("sortValue", sortValue);
+		pagingParams.put("order", order);
 
 		List<AdminAccountDto> userAccountDtos = userMapper.selectUserList(pagingParams);
 		pagingList.put("userAccountDtos", userAccountDtos);
@@ -52,7 +53,7 @@ public class UserService {
 		Map<String, Object> userListPageNum = new HashMap<>();
 		
 		// 전체 리스트 개수 조회 
-		int userListCnt = userMapper.selectUserListCnt();
+		int userListCnt = userMapper.selectAllUserListCnt();
 
 		// 전체 페이지 개수 계산
 		int maxPage = (int) (Math.ceil((double) userListCnt / pageLimit));
@@ -76,23 +77,25 @@ public class UserService {
 	}
 
 	//일반 멤버 검색 리트스 가져오기
-	public Map<String, Object> searchUserPagingList(int page, String searchPart, String searchString) {
+	public Map<String, Object> searchUserPagingList(String searchPart, String searchString, String sortValue, String order, int page) {
 		log.info("searchUserPagingList()");
 		
 		int pagingStart = (page - 1) * pageLimit;	
 		
-		Map<String, Object> pagingList = new HashMap<>();
+		Map<String, Object> pagingSearchList = new HashMap<>();
 		
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
+		pagingParams.put("sortValue", sortValue);
+		pagingParams.put("order", order);
 		pagingParams.put("searchPart", searchPart);
 		pagingParams.put("searchString", searchString);
 
-		List<AdminAccountDto> searchUserAccountDtos = userMapper.selectSearchUserList(pagingParams);
-		pagingList.put("searchUserAccountDtos", searchUserAccountDtos);
+		List<AdminAccountDto> userAccountDtos = userMapper.selectSearchUserList(pagingParams);
+		pagingSearchList.put("userAccountDtos", userAccountDtos);
 		
-		return pagingList;
+		return pagingSearchList;
 	}
 
 	// 일반 멤버 검색 리스트 개수
@@ -102,7 +105,7 @@ public class UserService {
 		Map<String, Object> searchUserListPageNum = new HashMap<>();
 		
 		Map<String, Object> searchParams = new HashMap<>();
-		searchParams.put("searchPart", searchParams);
+		searchParams.put("searchPart", searchPart);
 		searchParams.put("searchString", searchString);
 		
 		// 전체 리스트 개수 조회 

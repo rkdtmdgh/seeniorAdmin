@@ -81,7 +81,7 @@ public class AccountController {
 			@RequestParam(value = "errMsg", required = false) String errMsg,
 			@RequestParam("result") boolean result,
 			Model model) {
-		log.info("signInNg()");
+		log.info("sign_in_result()");
 		
 		String nextPage = "account/sign_in_result";
 		
