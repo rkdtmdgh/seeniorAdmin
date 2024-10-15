@@ -10,9 +10,9 @@ import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 @Mapper
 public interface UserMapper {
 
-	public int selectUserListCnt();
-
 	public List<AdminAccountDto> selectUserList(Map<String, Object> pagingParams);
+
+	public int selectAllUserListCnt();
 
 	public int selectSearchUserListCnt(Map<String, Object> searchParams);
 

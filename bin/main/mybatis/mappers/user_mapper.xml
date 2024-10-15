@@ -28,18 +28,6 @@
 		<result column="u_mod_date" property="u_mod_date"/>
 	</resultMap>
 
-	<!-- 멤버 리스트 카운트 -->
-	<select id="selectUserListCnt"
-			resultType="Integer">
-	
-		SELECT 
-			COUNT(U_NO)
-		FROM 
-			USER_ACCOUNT 
-		WHERE 
-			U_IS_DELETED = 1
-	
-	</select>
 	
 	<!-- 멤버 리스트 페이징  -->
 	<select id="selectUserList"
@@ -48,28 +36,26 @@
 		SELECT 
 			* 
 		FROM 
-			U_USER_ACCOUNT 
+			USER_ACCOUNT 
 		WHERE 
 			U_IS_DELETED = 1
-		ORDER BY U_NO DESC 
+		ORDER BY 
+			${sortValue} ${order} 
 		LIMIT 
-			#{start}, #{limit}
+			#{start}, #{limit} 
 
 	</select>
 	
-	<!-- 일반 멤버 검색 리스트 개수 -->
-	<select id="selectSearchUserListCnt"
+	<!-- 멤버 리스트 카운트 -->
+	<select id="selectAllUserListCnt"
 			resultType="Integer">
-			
+	
 		SELECT 
 			COUNT(U_NO)
 		FROM 
 			USER_ACCOUNT 
 		WHERE 
 			U_IS_DELETED = 1
-		<if test="searchPart != null and searchString != null">
-			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
-		</if>
 	
 	</select>
 	
@@ -86,9 +72,26 @@
 		<if test="searchPart != null and searchString != null">
 			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 		</if>
-		ORDER BY U_NO DESC 
+		ORDER BY 
+			${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit} 
+	
+	</select>
+	
+		<!-- 일반 멤버 검색 리스트 개수 -->
+	<select id="selectSearchUserListCnt"
+			resultType="Integer">
+			
+		SELECT 
+			COUNT(U_NO)
+		FROM 
+			USER_ACCOUNT 
+		WHERE 
+			U_IS_DELETED = 1
+		<if test="searchPart != null and searchString != null">
+			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+		</if>
 	
 	</select>
 	
