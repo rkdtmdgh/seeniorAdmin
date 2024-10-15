@@ -111,6 +111,10 @@
 .image_file_preview {
 	padding: var(--ssize3);
 	position: relative;
+	
+	img {
+		border: 1px solid var(--lightGrayColor);
+	}
 }
 
 /* close button */

@@ -46,9 +46,11 @@
 		                                			th:value="${advertisementCategoryDto.ac_name}">
 	                                        </td>
 	                                        
-	                                        <th><p class="table_title">광고 수</p></th>
-	                                        <td>
-	                                        	<input type="text" class="table_info" th:value="${advertisementCategoryDto.ac_item_cnt}" disabled>
+	                                        <th><p class="table_title">권장 사이즈</p></th>
+		                                	<td>
+		                                		<input type="text" name="ac_rec_size" id="ac_rec_size" class="table_info" placeholder="권장 사이즈"
+		                                			onblur="validateEmpty(this, '권장 사이즈를');"
+		                                			th:value="${advertisementCategoryDto.ac_rec_size}">
 	                                        </td>
 		                                </tr>
 		                            </tbody>

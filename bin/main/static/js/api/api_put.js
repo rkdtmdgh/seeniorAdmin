@@ -132,7 +132,7 @@ async function putResetPassword(a_no, a_id) {
 	const isConfirm = confirm(`${a_id} 계정 비밀번호를 초기화하시겠습니까?`);
 	if(!isConfirm) return false;	
 		
-	const formData = new FormData();
+	const formData = new FormData(); // 비동기로 추가된 html로 폼 요소들이 DOM에 제대로 반영되지 않을 수 있어 append로 삽입
 	formData.append('a_no', a_no);
 	
 	const successMessage = `"${a_id}" 비밀번호가 초기화되었습니다.`;
@@ -383,12 +383,10 @@ async function putNoticePostsModifyForm(formName) {
 		return false;
 	}
 	
-	const successMessage = `"${bn_title.value.trim()}" 게시판 공지 사항이 수정되었습니다.`;
-	const errorMessage = `"${bn_title.value.trim()}" 게시판 공지 사항 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const successMessage = `"${bn_title.value}" 게시판 공지 사항이 수정되었습니다.`;
+	const errorMessage = `"${bn_title.value}" 게시판 공지 사항 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
 	const formData = new FormData();
-	formData.append('bn_no', form.bn_no.value);
-	formData.append('bn_title', input.value.trim()); // 제목
 	formData.append('bn_body', quill.root.innerHTML); // quill 에디터 내용
 	
 	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
@@ -435,12 +433,10 @@ async function putPostsModifyForm(formName) {
 		return false;
 	}
 	
-	const successMessage = `"${bp_title.value.trim()}" 게시물이 수정되었습니다.`;
-	const errorMessage = `"${bp_title.value.trim()}" 게시물 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const successMessage = `"${bp_title.value}" 게시물이 수정되었습니다.`;
+	const errorMessage = `"${bp_title.value}" 게시물 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
-	const formData = new FormData();
-	formData.append('bp_no', form.bp_no.value);
-	formData.append('bp_title', input.value.trim()); // 제목
+	const formData = new FormData(form);
 	formData.append('bp_body', quill.root.innerHTML); // quill 에디터 내용
 	
 	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
@@ -507,15 +503,15 @@ async function putAdvertisementModifyForm(formName) {
 	const form = document.forms[formName];
 	let input;
 	
-	input = form.ad_client;
-	if(!validateEmpty(input, '클라이언트를', true)) {
-		input.focus();
-		return false;
-	}
-	
 	input = form.ad_category_no;
 	if(input.value === "") {
 		alert('분류를 선택해 주세요.');
+		return false;
+	}
+	
+	input = form.ad_client;
+	if(!validateEmpty(input, '클라이언트를', true)) {
+		input.focus();
 		return false;
 	}
 	
@@ -535,6 +531,16 @@ async function putAdvertisementModifyForm(formName) {
 	if(!validateEmpty(input, 'URL 주소를', true)) {
 		input.focus();
 		return false;
+	}
+	
+	const imageSrc = $('.image_file_preview').find('img').attr('src'); 
+	if(!imageSrc) { // 기존 이미지를 제거했는지 확인
+		input = form.ad_img;
+		if(!input.files.length) {
+			alert('이미지 파일을 선택해 주세요.');
+			input.focus();
+			return false;
+		}
 	}
 	
 	const formData = new FormData(form); 

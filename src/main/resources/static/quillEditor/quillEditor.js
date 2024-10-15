@@ -115,7 +115,7 @@ $(document).ready(function() {
 		}
 		
 		if(file.size > maxFileSize) { // 파일 크기 검사
-			alert('업로드 가능한 최대 용량을 초과했습니다. 5MB 이하의 이미지 파일을 선택해 주세요.');
+			alert('업로드 가능한 최대 용량을 초과했습니다. 2MB 이하의 이미지 파일을 선택해 주세요.');
 			return false;
 		}
 		
