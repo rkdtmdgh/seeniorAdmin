@@ -7,6 +7,7 @@
 	<resultMap type="AdvertisementCategoryDto" id="AdvertisementCategoryDto">
 		<id column="ac_no" property="ac_no" />
 		<result column="ac_name" property="ac_name" />
+		<result column="ac_note" property="ac_note" />
 		<result column="ac_is_deleted" property="ac_is_deleted" />
 		<result column="ac_item_cnt" property="ac_item_cnt" />
 		<result column="ac_reg_date" property="ac_reg_date" />
@@ -35,9 +36,9 @@
 			
 		INSERT INTO 
 			ADVERTISEMENT_CATEGORY 
-			(AC_NAME) 
+			(AC_NAME, AC_NOTE) 
 		VALUES 
-			(#{ac_name})
+			(#{ac_name}, #{ac_note})
 	
 	</insert>
 
@@ -152,6 +153,7 @@
 			ADVERTISEMENT_CATEGORY 
 		SET 
 			AC_NAME = #{ac_name}, 
+			AC_NOTE = #{ac_note}, 
 			AC_MOD_DATE = NOW() 
 		WHERE 
 			AC_NO = #{ac_no}
