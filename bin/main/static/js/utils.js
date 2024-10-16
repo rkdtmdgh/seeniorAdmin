@@ -78,7 +78,7 @@ function setSelectGuidelineInfo(selectElement, infoElement) {
 	const $infoEle = $(infoElement); // 전달받은 요소값으로 참조('.', '#')
 	
 	if($infoEle.length && info) {
-		$infoEle.text(`(${info})`); // 내용 업데이트
+		$infoEle.text(info); // 내용 업데이트
 	}
 }
 
@@ -463,27 +463,32 @@ function setAccountModifyForm(data) {
                                 	onkeydown="replacePhone(this)" onkeyup="validatePhone(this)" onblur="validatePhone(this)"
                                 	value="${data.a_phone}">
                             </td>
-                        	<th><p class="table_title">부서</p></th>
-                        	<td class="disabled">
-                                <input type="text" name="a_department" id="department" class="table_info" placeholder="부서"
-                                	value="${data.a_department || ''}"
-                                	${data.a_authority_role != 'SUPER_ADMIN' ? 'disabled' : ''}>
-                            </td>
-                        </tr>
-
-                        <tr>
-                        	<th><p class="table_title">직위</p></th>
-                        	<td class="disabled">
-                                <input type="text" name="a_level" id="level" class="table_info" placeholder="직위"
-                                	value="${data.a_level || ''}"
-                                	${data.a_authority_role != 'SUPER_ADMIN' ? 'disabled' : ''}>
-                            </td>
-                        	<th><p class="table_title">직책</p></th>
-                        	<td class="disabled">
-                                <input type="text" name="a_position" id="position" class="table_info" placeholder="직책"
-                                	value="${data.a_position || ''}"
-                                	${data.a_authority_role != 'SUPER_ADMIN' ? 'disabled' : ''}>
-                            </td>
+                            
+                            ${data.a_authority_role != 'SUPER_ADMIN' ? 
+                            	`
+                            	<th><p class="table_title">부서</p></th>
+		                        	<td class="disabled">
+		                                <input type="text" class="table_info" placeholder="부서"
+		                                	value="${data.a_department || ''}" disabled>
+		                            </td>
+		                        </tr>
+		
+		                        <tr>
+		                        	<th><p class="table_title">직위</p></th>
+		                        	<td class="disabled">
+		                                <input type="text" class="table_info" placeholder="직위"
+		                                	value="${data.a_level || ''}" disabled>
+		                            </td>
+		                        	<th><p class="table_title">직책</p></th>
+		                        	<td class="disabled">
+		                                <input type="text" class="table_info" placeholder="직책"
+		                                	value="${data.a_position || ''}" disabled>
+		                            </td>
+                            	` 
+                        	: 
+                            	''
+                            }
+                        	
                         </tr>
                     </tbody>
                 </table>
