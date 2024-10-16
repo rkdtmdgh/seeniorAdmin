@@ -2,6 +2,7 @@ package com.see_nior.seeniorAdmin.advertisement;
 
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.see_nior.seeniorAdmin.dto.AdvertisementCategoryDto;
 import com.see_nior.seeniorAdmin.dto.AdvertisementDto;
@@ -180,14 +182,24 @@ public class AdvertisementController {
 		
 		return nextPage;
 		
-		
 	}
 	
 	// 광고 등록 확인
 	@ResponseBody
 	@PostMapping("/info/create_confirm")
-	public boolean createConfirm(AdvertisementDto advertisementDto) {
+	public boolean createConfirm(
+			@RequestParam(value = "file") MultipartFile file,
+			AdvertisementDto advertisementDto) {
 		log.info("createConfirm()");
+		log.info("file ---> {}", file);
+		
+		ResponseEntity<String> savedFile = advertisementService.uploadFile(file, advertisementDto);
+		
+		if (savedFile != null) {
+			log.info("uploadFile SUCCESS!!");
+			
+			
+		}
 		
 		boolean createResult = advertisementService.createConfirm(advertisementDto);
 		
