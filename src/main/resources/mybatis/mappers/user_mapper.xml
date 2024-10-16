@@ -122,9 +122,9 @@
 			U_NICKNAME = #{u_nickname}, 
 			U_GENDER = #{u_gender}, 
 			U_BIRTH = #{u_birth}, 
-			U_ADDRESS = #{u_zip_code}, 
+			U_ZIP_CODE = #{u_zip_code}, 
 			U_ADDRESS = #{u_address}, 
-			U_ADDRESS = #{u_detailed_address}, 
+			U_DETAILED_ADDRESS = #{u_detailed_address}, 
 			<if test="u_profile_img != '' and u_profile_img != null">
 				U_PROFILE_IMG = #{u_profile_img}, 
 			</if>
