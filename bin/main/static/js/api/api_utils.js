@@ -26,7 +26,7 @@ async function requestDuplicateCheck(input, nullCheck, defaultValue,  alertMsg) 
 	const inputValue = input.value.trim();
 	input.value = inputValue; // 앞뒤 공백 제거 적용
 	
-	let errorMessage;
+	let errorMessage = '';
 	logger.info('requestDuplicateCheck() input:', inputName, inputValue);
 	
 	const { word, apiUrl } = mapDuplicateCheckObject(inputName);
@@ -84,8 +84,8 @@ async function requestDuplicateCheck(input, nullCheck, defaultValue,  alertMsg) 
 
 // 중복 확인에 필요한 객체 설정
 function mapDuplicateCheckObject(value) {
-	let word;
-	let apiUrl;
+	let word = null;
+	let apiUrl = null;
 	
 	switch(value) {
 		case 'dc_name':
