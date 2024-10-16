@@ -26,8 +26,6 @@
 					    
 					    <form name="advertisement_category_modify_form">					    	
                       		<input type="hidden" name="ac_no" th:value="${advertisementCategoryDto.ac_no}">
-                      		<input type="hidden" name="current_ac_name" th:value="${advertisementCategoryDto.ac_name}">
-                      		<input type="hidden" name="current_ac_img_size" th:value="${advertisementCategoryDto.ac_img_size}">
                       		
 						    <div class="table_wrap">
 		                        <table class="content_edit_table">
@@ -47,20 +45,24 @@
 		                                			th:value="${advertisementCategoryDto.ac_name}">
 	                                        </td>
 	                                        
-	                                        <th><p class="table_title">권장 사이즈</p></th>
+	                                        <th><p class="table_title">참고 사항</p></th>
 		                                	<td>
-		                                		<div class="table_info"></div>
-		                                		<input type="text" name="ac_img_size" id="ac_img_size" class="table_info" placeholder="권장 사이즈"
-		                                			onblur="validateEmpty(this, '권장 사이즈를');"
-		                                			th:value="${advertisementCategoryDto.ac_img_size}">
+		                                		<input type="text" name="ac_note" id="ac_note" class="table_info" placeholder="참고 사항"
+		                                			th:value="${advertisementCategoryDto.ac_note}">
 	                                        </td>
 		                                </tr>
 		                            </tbody>
 		                        </table>
 		                        
 		                        <div class="btn_list">
-		                        	<div th:if="${advertisementCategoryDto.ac_no} != null"
-		                        		 th:onclick="delSingleData('ac_no', [[${advertisementCategoryDto.ac_no}]], [[${advertisementCategoryDto.ac_name}]])" class="btns delete">삭제</div>
+		                        	<div th:if="${advertisementCategoryDto.ac_no} != null" class="btns delete"
+		                        		 th:onclick="
+		                        		 	delSingleData(
+		                        		 		[[${advertisementCategoryDto.ac_name}]], 
+		                        		 		'ac_no', 
+		                        		 		[[${advertisementCategoryDto.ac_no}]]
+		                        		 	)
+	                        		 	">삭제</div>
 		                        		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
