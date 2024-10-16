@@ -213,6 +213,38 @@
 	</select>
 
 	<!-- 광고 관련 -->
+	
+	<!-- 해당 광고 위치의 광고 maxIdx값 구하기 -->
+	<select id="getAdvertisementIdxMaxNumByCategory"
+			parameterType="Integer"
+			resultType="Integer">
+	
+		SELECT 
+			AD_IDX 
+		FROM 
+			ADVERTISEMENT 
+		WHERE 
+			AD_CATEGORY_NO = #{ac_no}
+		AND 
+			AD_IS_DELETED = 1 
+		ORDER BY 
+			AD_IDX DESC 
+		LIMIT 0, 1
+	
+	</select>
+	
+	<!-- idx값을 중간값으로 입력 시 나머지 idx들 +1 처리 하기 -->
+	<update id="updateAdvertisementIdx"
+			parameterType="Integer">
+			
+		UPDATE 
+			ADVERTISEMENT 
+		SET 
+			AD_IDX = AD_IDX + 1 
+		WHERE 
+			AD_IDX >= #{ad_idx}
+	
+	</update>
 
 	<!-- 광고 등록 -->
 	<insert id="insertNewAdvertisement"
