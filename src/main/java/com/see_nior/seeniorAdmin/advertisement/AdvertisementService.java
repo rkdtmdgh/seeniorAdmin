@@ -318,23 +318,45 @@ public class AdvertisementService {
 		
 	}
 	
+	// 광고 등록 양식에서 광고를 등록할 위치를 선택 했을 시 해당 위치의 maxIdx 가져오기
+	public int getAdvertisementIdxMaxNum(int ac_no) {
+		log.info("getAdvertisementIdxMaxNum()");
+		
+		int advertisementIdxMaxNum = advertisementMapper.getAdvertisementIdxMaxNumByCategory(ac_no);
+		
+		return advertisementIdxMaxNum;
+	}
+	
 	// 광고 등록 확인
 	public boolean createConfirm(AdvertisementDto advertisementDto, String ad_dir_name, String savedFileName) {
 		log.info("createConfirm()");
 		
-		advertisementDto.setAd_dir_name(ad_dir_name);
-		advertisementDto.setAd_img(savedFileName);
+		// idx값을 중간값으로 입력 시 나머지 idx들 +1 처리 하기
+		int ad_idx = advertisementDto.getAd_idx();
+		int updateIdxResult = advertisementMapper.updateAdvertisementIdx(ad_idx);
 		
-		int createResult = advertisementMapper.insertNewAdvertisement(advertisementDto);
-		
-		// DB에 입력 실패
-		if (createResult <= 0) {
+		if (updateIdxResult <= 0) {
+			log.info("idx 업데이트 실패!!");
+			
 			return ADVERTISEMENT_CREATE_FAIL;
-		
-		// DB에 입력 성공
+			
 		} else {
-			return ADVERTISEMENT_CREATE_SUCCESS;
-					
+			
+			advertisementDto.setAd_dir_name(ad_dir_name);
+			advertisementDto.setAd_img(savedFileName);
+			
+			int createResult = advertisementMapper.insertNewAdvertisement(advertisementDto);
+			
+			// DB에 입력 실패
+			if (createResult <= 0) {
+				return ADVERTISEMENT_CREATE_FAIL;
+			
+			// DB에 입력 성공
+			} else {
+				return ADVERTISEMENT_CREATE_SUCCESS;
+						
+			}
+			
 		}
 		
 	}
@@ -540,5 +562,8 @@ public class AdvertisementService {
 		return searchAdvertisementListPageNum;
 		
 	}
+
+	
+
 	
 }

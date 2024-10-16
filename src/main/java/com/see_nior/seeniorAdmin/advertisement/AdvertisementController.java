@@ -188,6 +188,18 @@ public class AdvertisementController {
 		
 	}
 	
+	// 광고 등록 양식에서 광고를 등록할 위치를 선택 했을 시 해당 위치의 maxIdx 가져오기
+	@ResponseBody
+	@GetMapping("/info/create_category_select")
+	public Object createCategorySelect(@RequestParam(value = "ac_no") int ac_no) {
+		log.info("createCategorySelect()");
+		
+		int advertisementIdxMaxNum = advertisementService.getAdvertisementIdxMaxNum(ac_no);
+		
+		return advertisementIdxMaxNum;
+		
+	}
+	
 	// 광고 등록 확인
 	@ResponseBody
 	@PostMapping("/info/create_confirm")
@@ -197,6 +209,7 @@ public class AdvertisementController {
 		log.info("createConfirm()");
 		log.info("file ---> {}", file);
 		
+		// 이미지 서버에 저장된 이미지 파일 이름 가져오기
 		ResponseEntity<String> savedFile = advertisementService.uploadFile(file, advertisementDto);
 		
 		if (savedFile != null) {
