@@ -111,7 +111,8 @@
 	</select>
 	
 	<!-- 일반 멤버 정보 수정 확인 -->
-	<update id="updateUserAccountInfo">
+	<update id="updateUserAccountInfo"
+			parameterType="UserAccountDto">
 	
 		UPDATE 
 			USER_ACCOUNT 
@@ -121,24 +122,20 @@
 			U_NICKNAME = #{u_nickname}, 
 			U_GENDER = #{u_gender}, 
 			U_BIRTH = #{u_birth}, 
+			U_ZIP_CODE = #{u_zip_code}, 
 			U_ADDRESS = #{u_address}, 
+			U_DETAILED_ADDRESS = #{u_detailed_address}, 
 			<if test="u_profile_img != '' and u_profile_img != null">
 				U_PROFILE_IMG = #{u_profile_img}, 
 			</if>
-			<if test="u_company != '' and u_company != null">
-				U_COMPANY = #{u_company}, 
+			U_COMPANY = #{u_company}, 
+			U_IS_PERSONAL = 
+			<if test="u_is_personal == true">
+				1, 
 			</if>
-			<if test="u_is_personal != '' and u_is_personal != null">
-				<choose>
-					<when test="u_is_personal == true">
-						U_IS_PERSONAL = 1, 
-					</when>
-					<when test="u_is_personal == false">
-						U_IS_PERSONAL = 0, 
-					</when>
-				</choose>
+			<if test="u_is_personal == false">
+				0, 
 			</if>
-			U_REG_DATE = NOW(), 
 			U_MOD_DATE = NOW() 
 		WHERE 
 			U_NO = #{u_no} 
