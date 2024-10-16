@@ -871,6 +871,10 @@ function mapSortListApiObject(dbTable) {
 			apiUrl = '/account/list/get_admin_list';
 			break;
 			
+		case 'user_account': // 회원 관리 페이지
+			apiUrl = '/user_account/info/get_user_account_list';
+			break;
+			
 		case 'disease': // 질환/질병 정보 관리 페이지
 			apiUrl = '/disease/info/get_disease_list';
 			break;

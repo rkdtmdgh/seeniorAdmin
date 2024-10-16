@@ -82,7 +82,7 @@ async function putModifyForm(formName) {
 		formData, 						// data
 		successMessage, 				// 성공 메세지
 		errorMessage,					// 실패 메세지
-		'content_inner'             // 로딩 표시할 부모 요소
+		'content_inner'                 // 로딩 표시할 부모 요소
 	);
 }
 
