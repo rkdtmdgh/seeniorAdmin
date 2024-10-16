@@ -202,9 +202,9 @@ async function getSearchList(event, apiUrl, page) {
 
 // 요청 Api Response 객체 설정 
 function mapApiResponseObject(apiUrl, response) { 
-	let getListDtos;
-	let getListPage;
-	let getListCnt;
+	let getListDtos = null;
+	let getListPage = null;
+	let getListCnt = null;
 	
 	switch(apiUrl) {
 		case '/account/list/get_admin_list': // 관리자 계정 관리
@@ -227,8 +227,8 @@ function mapApiResponseObject(apiUrl, response) {
 			
 		case '/user_account/info/search_user_account_list': // 회원 관리 검색
 			getListDtos = response.userAccountDtos;
-			getListPage = response.searchUseAccountListPageNum;
-			getListCnt = response.searchUseAccountListPageNum.searchUseAccountListCnt;
+			getListPage = response.searchUserAccountListPageNum;
+			getListCnt = response.searchUserAccountListPageNum.searchUserListCnt;
 			break;
 			
 		case '/disease/info/get_disease_list': // 질환 / 질병 정보 관리
@@ -424,29 +424,52 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            <td>
 		                <p class="table_info">${listIndex}</p>
 		            </td>
-		            <td>
-		                <a href="/user_account/info/user_account_modify_form?u_no=${data.u_no}" class="table_info">${data.u_id}</a>
-		            </td>
-		            <td>
-		                <a href="/user_account/info/user_account_modify_form?u_no=${data.u_no}" class="table_info">
-		                	${data.u_is_blocked === 1 ? `${data.u_name}(${data.u_nickname})` : '-'}
-		                </a>
-		            </td>
-		            <td>
-		                <a href="/user_account/info/user_account_modify_form?u_no=${data.u_no}" class="table_info">
-		                	${data.u_is_blocked === 1 ? `${data.u_phone}` : '-'}
-		                </a>
-		            </td>
-		            <td>
-		                <a href="/user_account/info/user_account_modify_form?u_no=${data.u_no}" class="table_info">
-		                	${data.u_is_blocked === 1 ? `${data.u_company}` : '-'}
-		                </a>
-		            </td>
-		            <td>
-		                <a href="/user_account/info/user_account_modify_form?u_no=${data.u_no}" class="table_info">
-		                	${data.u_is_blocked === 1 ? `${data.u_is_blocked === 0 ? '정상' : '정지'}` : '탈퇴'}
-		                </a>
-		            </td>
+		            
+		            ${data.u_is_deleted === true ? // true = 정상, flase = 탈퇴
+		            `
+			            <td>
+			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_id}</a>
+			            </td>
+			            <td>
+			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_name}(${data.u_nickname})</a>
+			            </td>
+			            <td>
+			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_phone}</a>
+			            </td>
+			            <td>
+			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_company || '-'} </a>
+			            </td>
+			            <td>
+			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">
+			                	${data.u_is_blocked === true ? // // true = 정상, flase = 정지
+			                		'정상' 
+			                	: 
+			                		'정지'
+		                		}
+			                </a>
+			            </td>
+		            `
+		            :
+		            
+		            `
+			            <td>
+			                <p class="table_info">${data.u_id}</p>
+			            </td>
+			            <td>
+			                <p class="table_info">-</p>
+			            </td>
+			            <td>
+			                <p class="table_info">-</p>
+			            </td>
+			            <td>
+			                <p class="table_info">-</p>
+			            </td>
+			            <td>
+			                <p class="table_info">탈퇴</p>
+			            </td>
+		            `
+		            }
+		            
 		            <td>
 		                <p class="table_info">${setFormatDate(data.u_reg_date)}</p>
 		            </td>
@@ -841,11 +864,15 @@ function getSortList(event, dbTable, sortValue) {
 
 // sort getList() 요청에 필요한 객체 설정
 function mapSortListApiObject(dbTable) {
-	let apiUrl;
+	let apiUrl = null;
 	
 	switch(dbTable) {			
 		case 'admin_account': // 관리자 계정 관리 페이지
 			apiUrl = '/account/list/get_admin_list';
+			break;
+			
+		case 'user_account': // 회원 관리 페이지
+			apiUrl = '/user_account/info/get_user_account_list';
 			break;
 			
 		case 'disease': // 질환/질병 정보 관리 페이지
@@ -881,7 +908,7 @@ function mapSortListApiObject(dbTable) {
 			break;
 		
 		default:
-			logger.error('mapSortListApiObject() dbTable:', value);
+			logger.error('mapSortListApiObject() not found set DB Table:', value);
 			return false;
 	}
 	
@@ -905,7 +932,7 @@ function getSelectList(event) {
 
 // select getList() 요청에 필요한 객체 설정
 function mapSelectListApiObject(sortValue) {
-	let apiUrl;
+	let apiUrl = null;
 	
 	switch(sortValue) {				
 		case 'dc_no': // 질환/질병 정보 리스트 페이지 질병군별 분류 리스트 요청
@@ -971,7 +998,7 @@ async function getCategoryList(ele, isForm, selectedValue) {
 								if(data[categoryConfig.dataNote]){
 									logger.info('guideline:', data[categoryConfig.dataNote]);
 									const $guideline = $('.guideline');
-									$guideline.text(`(${data[categoryConfig.dataNote]})`);									
+									$guideline.text(data[categoryConfig.dataNote]);									
 								}
 								
 							} else {

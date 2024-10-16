@@ -40,21 +40,27 @@
 		                                <tr>
 		                                    <th><p class="table_title">아이디</p></th>
 		                                	<td class="disabled">
-	                                			<input type="text" name="u_id" class="table_info" disabled
-	                                				th:value="${userAccountDto.u_id}">
+		                                		<div class="cont_info">
+		                                			<input type="text" name="u_id" class="table_info" disabled
+		                                				th:value="${userAccountDto.u_id}">
+		                                		
+		                                			<div class="btns small" th:classappend="${userAccountDto.u_is_blocked == true ? 'white' : 'delete'}"
+		                                				th:text="${userAccountDto.u_is_blocked == true ? '정상' : '정지'}"
+		                                			></div>
+		                                		</div>
 	                                        </td>
 	                                        
 	                                        <th><p class="table_title">가입일</p></th>
 		                                    <td class="disabled">
-		                                        <input type="text" name="u_phone" id="u_phone" class="table_info" disabled
+		                                        <input type="text" class="table_info" disabled
 		                                            th:value="${userAccountDto.u_reg_date}">
 		                                    </td>
 		                                </tr>
 		
 		                                <tr>
 		                                    <th><p class="table_title">이름</p></th>
-		                                    <td class="disabled">
-		                                        <input type="text" name="u_name" id="u_name" class="table_info" disabled
+		                                    <td>
+		                                        <input type="text" name="u_name" id="u_name" class="table_info"
 		                                            th:value="${userAccountDto.u_name}">
 		                                    </td>
 		                                    
@@ -62,7 +68,7 @@
 		                                    <td>
 		                                        <input type="text" name="u_nickname" id="u_nickname" class="table_info" placeholder="닉네임"
 		                                        	onblur="validateEmpty(this, '닉네임을')"
-		                                            th:value="${userAccountDto.u_name}">
+		                                            th:value="${userAccountDto.u_nickname}">
 		                                    </td>
 		                                </tr>
 		                                
@@ -71,19 +77,19 @@
 		                                	<td>
 	                                            <input type="date" name="u_birth" id="u_birth" max="9999-12-31" min="1900-01-01" class="table_info"
 	                                            	onblur="replaceDate(this)"
-	                                            	th:value="${selectedAdminDto.a_birth}">
+	                                            	th:value="${userAccountDto.u_birth}">
 	                                        </td>
 		                                    
 		                                    <th><p class="table_title">성별</p></th>
 		                                    <td>
 		                                        <div class="table_info cont_info">
 	                                            	<label class="radio">
-	                                            		<input type="radio" name="u_gender" value="남"
-	                                            			th:checked="${userAccountDto.u_gender == '남'}"> 남
+	                                            		<input type="radio" name="u_gender" value="M"
+	                                            			th:checked="${userAccountDto.u_gender == 'M'}"> 남
 	                                            	</label>
 	                                            	<label class="radio">
-	                                            		<input type="radio" name="u_gender" value="여"
-	                                            			th:checked="${userAccountDto.u_gender == '여'}"> 여
+	                                            		<input type="radio" name="u_gender" value="F"
+	                                            			th:checked="${userAccountDto.u_gender == 'F'}"> 여
 	                                            	</label>
 	                                            </div>
 		                                    </td>
@@ -101,16 +107,22 @@
 		                                    
 		                                    <th><p class="table_title">소속 기관</p></th>
 		                                    <td>
-		                                    	<input type="text" name="u_phone" id="u_phone" class="table_info" placeholder='소속 기관'
+		                                    	<input type="text" name="u_company" id="u_company" class="table_info" placeholder='소속 기관'
 		                                            th:value="${userAccountDto.u_company}">
 		                                    </td>
 		                                </tr>
 		                                
 		                                <tr>
-		                                    <th><p class="table_title">주소</p></th>
-		                                    <td colspan="3">
+		                                    <th><p class="table_title">우편번호</p></th>
+		                                    <td rowspan="3" colspan="3">
 		                                        
 		                                    </td>
+		                                </tr>
+		                                <tr>
+		                                    <th><p class="table_title">주소</p></th>
+		                                </tr>
+		                                <tr>
+		                                    <th><p class="table_title">상세주소</p></th>
 		                                </tr>
 	                                </tbody>
 	                            </table>
