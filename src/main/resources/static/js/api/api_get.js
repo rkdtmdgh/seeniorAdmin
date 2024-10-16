@@ -227,8 +227,8 @@ function mapApiResponseObject(apiUrl, response) {
 			
 		case '/user_account/info/search_user_account_list': // 회원 관리 검색
 			getListDtos = response.userAccountDtos;
-			getListPage = response.searchUseAccountListPageNum;
-			getListCnt = response.searchUseAccountListPageNum.searchUseAccountListCnt;
+			getListPage = response.searchUserAccountListPageNum;
+			getListCnt = response.searchUserAccountListPageNum.searchUserListCnt;
 			break;
 			
 		case '/disease/info/get_disease_list': // 질환 / 질병 정보 관리
@@ -428,19 +428,19 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            ${data.u_is_deleted === true ? // true = 정상, flase = 탈퇴
 		            `
 			            <td>
-			                <a href="/user_account/info/user_account_modify_form?u_no=${data.u_no}" class="table_info">${data.u_id}</a>
+			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_id}</a>
 			            </td>
 			            <td>
-			                <a href="/user_account/info/user_account_modify_form?u_no=${data.u_no}" class="table_info">${data.u_name}(${data.u_nickname})</a>
+			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_name}(${data.u_nickname})</a>
 			            </td>
 			            <td>
-			                <a href="/user_account/info/user_account_modify_form?u_no=${data.u_no}" class="table_info">${data.u_phone}</a>
+			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_phone}</a>
 			            </td>
 			            <td>
-			                <a href="/user_account/info/user_account_modify_form?u_no=${data.u_no}" class="table_info">${data.u_company || '-'} </a>
+			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_company || '-'} </a>
 			            </td>
 			            <td>
-			                <a href="/user_account/info/user_account_modify_form?u_no=${data.u_no}" class="table_info">
+			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">
 			                	${data.u_is_blocked === true ? // // true = 정상, flase = 정지
 			                		'정상' 
 			                	: 
@@ -994,7 +994,7 @@ async function getCategoryList(ele, isForm, selectedValue) {
 								if(data[categoryConfig.dataNote]){
 									logger.info('guideline:', data[categoryConfig.dataNote]);
 									const $guideline = $('.guideline');
-									$guideline.text(`(${data[categoryConfig.dataNote]})`);									
+									$guideline.text(data[categoryConfig.dataNote]);									
 								}
 								
 							} else {

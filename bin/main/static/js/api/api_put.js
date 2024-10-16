@@ -72,9 +72,6 @@ async function putModifyForm(formName) {
 	formData.append('a_name', form.a_name.value);
 	formData.append('a_birth', form.a_birth.value);
 	formData.append('a_phone', form.a_phone.value);
-	formData.append('a_department', form.a_department.value);
-	formData.append('a_level', form.a_level.value);
-	formData.append('a_position', form.a_position.value);
 	
 	const successMessage = '정보가 수정되었습니다';
 	const errorMessage = '정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
