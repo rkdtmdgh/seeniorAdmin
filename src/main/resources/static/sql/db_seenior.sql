@@ -187,7 +187,9 @@ CREATE TABLE USER_ACCOUNT (
 	U_NICKNAME 					VARCHAR(255) NOT NULL UNIQUE COMMENT "유저 닉네임(별명)", 					-- 유저 닉네임(별명)
 	U_GENDER 					CHAR NOT NULL COMMENT "유저 성별",										-- 유저 성별
 	U_BIRTH 					DATE NOT NULL COMMENT "유저 생년월일",										-- 유저 생년월일
-	U_ADDRESS 					VARCHAR(255) COMMENT "유저 주소",											-- 유저 주소
+	U_ZIP_CODE 					VARCHAR(255) COMMENT "유저 우편 번호",										-- 유저 우편 번호
+    U_ADDRESS 					VARCHAR(255) COMMENT "유저 주소",											-- 유저 주소
+    U_DETAILED_ADDRESS 			VARCHAR(255) COMMENT "유저 상세 주소",										-- 유저 상세 주소
     U_PROFILE_IMG 				VARCHAR(255) COMMENT "유저프로필 이미지 파일 명",								-- 유저 프로필 이미지 파일 명
 	U_COMPANY 					VARCHAR(50) COMMENT "유저 소속 기관",										-- 유저 소속 기관
 	U_IS_PERSONAL 				TINYINT COMMENT "유저 개인회원 OR 기관회원 여부 (개인 = 1, 기관 = 0)",			-- 유저 개인회원 OR 기관회원 여부 (개인 = 1, 기관 = 0)
