@@ -908,7 +908,7 @@ function mapSortListApiObject(dbTable) {
 			break;
 		
 		default:
-			logger.error('mapSortListApiObject() dbTable:', value);
+			logger.error('mapSortListApiObject() not found set DB Table:', value);
 			return false;
 	}
 	
