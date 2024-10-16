@@ -60,8 +60,17 @@
 		                        </table>
 		                        
 		                        <div class="btn_list">
-		                        	<div th:if="${boardCategoryDtoForModify.bc_no} != null"
-		                        		 th:onclick="delSingleData('bc_no', [[${boardCategoryDtoForModify.bc_no}]], [[${boardCategoryDtoForModify.bc_name}]])" class="btns delete">삭제</div>
+		                        	<div th:if="${boardCategoryDtoForModify.bc_no} != null" class="btns delete"
+		                        		 th:onclick="
+		                        		 	delSingleData(
+		                        		 		[[${boardCategoryDtoForModify.bc_name}]], 
+		                        		 		'bc_no', 
+		                        		 		[[${boardCategoryDtoForModify.bc_no}]], 
+		                        		 		{
+		                        		 			'bc_idx': [[${boardCategoryDtoForModify.bc_idx}]],
+		                        		 		}
+	                        		 		)
+	                        		 	">삭제</div>
 		                        		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>

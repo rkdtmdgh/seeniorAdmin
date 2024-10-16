@@ -71,6 +71,17 @@ async function setBoardTitle(infoNo) {
 	}
 }
 
+// 셀렉트 데이터로 특정 요소 텍스트 변경
+function setSelectGuidelineInfo(selectElement, infoElement) {
+	const selectOption = $(selectElement).find('option:selected'); // 선택된 옵션
+	const info = selectOption.data('info'); // 선택된 옵션의 data-info 속성 값 가져오기
+	const $infoEle = $(infoElement); // 전달받은 요소값으로 참조('.', '#')
+	
+	if($infoEle.length && info) {
+		$infoEle.text(`(${info})`); // 내용 업데이트
+	}
+}
+
 // 콘텐츠 서브 내용 설정
 async function setContentSubInfo(txt) {
 	const $title = $('.categoty_title');
