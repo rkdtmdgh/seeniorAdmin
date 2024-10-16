@@ -510,14 +510,8 @@ async function putAdvertisementCategoryModifyForm(formName) {
 	let input;
 	
 	input = form.ac_name;
-	if(input.value !== form.current_ac_name.value) { // 수정이 되었을 경우
-		if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
-			input.focus();
-			return false;
-		}
-		
-	} else {
-		alert('수정된 내용이 없습니다');
+	if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+		input.focus();
 		return false;
 	}
 	

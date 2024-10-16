@@ -740,6 +740,9 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/advertisement/info/advertisement_list_form?sortType=1&sortValue=ac_no&order=${data.ac_no}" class="table_info">${data.ac_item_cnt}</a>
 		            </td>
 		            <td>
+		                <p class="table_info">${data.ac_note ? data.ac_note : '-'}</p>
+		            </td>
+		            <td>
 		                <p class="table_info">${setFormatDate(data.ac_reg_date)}</p>
 		            </td>
 		        </tr>
@@ -931,39 +934,63 @@ async function getCategoryList(ele, isForm, selectedValue) {
 	const bgc = $selectEle.parent()[0].tagName === 'TH' ? '#F7F7F7' : '#FFFFFF';
 	
 	if(setAddLoading(true, `${ele}_select`, bgc)) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
-		const { apiUrl, getListDtos, dataNo, dataName } = mapCategorylistObject(ele);
+		const categoryConfig = mapCategorylistObject(ele);
 		
 		if($selectEle.length) {
 			try {
 				const response = await $.ajax({
-					url: apiUrl,
+					url: categoryConfig.apiUrl,
 					method: 'GET',
 				});
 				
-				const categoryDto = response[getListDtos];
-				logger.info(`${apiUrl} categoryDto:`, response);
+				const categoryDto = response[categoryConfig.getListDtos];
+				logger.info(`${categoryConfig.apiUrl} categoryDto:`, response);
 				
 				if(categoryDto && categoryDto.length) {
 					if(isForm) {
 						categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
-							let selected = selectedValue ? data[dataNo] === selectedValue ? 'selected' : '' : '';
-							let option = `<option value="${data[dataNo]}" ${selected}>${data[dataName]}</option>`;
+							let selected = selectedValue ? data[categoryConfig.dataNo] === selectedValue ? 'selected' : '' : '';
+							let option = `
+								<option 
+									${selected}
+									value="${data[categoryConfig.dataNo]}" 
+									${data[categoryConfig.dataNote] ?
+										`data-info="${data[categoryConfig.dataNote]}"`
+									:
+										''
+									}
+								>
+									${data[categoryConfig.dataName]}
+								</option>
+							`;
 							
 							if(selected) {
 								$selectEle[0].insertAdjacentHTML('afterbegin', option);
 								
+								// 선택된 참고 사항 노출(처음만 적용)
+								if(data[categoryConfig.dataNote]){
+									logger.info('guideline:', data[categoryConfig.dataNote]);
+									const $guideline = $('.guideline');
+									$guideline.text(`(${data[categoryConfig.dataNote]})`);									
+								}
+								
 							} else {
 								$selectEle[0].insertAdjacentHTML('beforeend', option);
+							}
+							
+							// dataNote가 있을 경우에 onchange 이벤트 추가
+							if(categoryDto.some(data => data[categoryConfig.dataNote])) {
+								$selectEle.attr("onchange", "setSelectGuidelineInfo(this, '.guideline')");
 							}
 						});
 						
 					} else {
-						const ceateSelect = `<ul data-sort-value="${dataNo}" class="select_option_list sc"></ul>`;
+						const ceateSelect = `<ul data-sort-value="${categoryConfig.dataNo}" class="select_option_list sc"></ul>`;
 				        $selectEle[0].insertAdjacentHTML('beforeend', ceateSelect);
 				        const $selectOptionlist = $('ul.select_option_list');
 						
 						categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
-							let option = `<li data-order="${data[dataNo]}" class="option" onclick="getSelectList(event);">${data[dataName]}</li>`;
+							let option = `<li data-order="${data[categoryConfig.dataNo]}" class="option" onclick="getSelectList(event);">${data[categoryConfig.dataName]}</li>`;
 							$selectOptionlist[0].insertAdjacentHTML('beforeend', option);
 						});
 					}
@@ -973,7 +1000,7 @@ async function getCategoryList(ele, isForm, selectedValue) {
 				}
 				
 			} catch(error) {
-				logger.error(apiUrl + ' error:', error);
+				logger.error(`${categoryConfig.apiUrl} error:`, error);
 				
 			} finally {
 				setAddLoading(false, `${ele}_select`) // 로딩 제거
@@ -984,10 +1011,11 @@ async function getCategoryList(ele, isForm, selectedValue) {
 
 // 셀렉트 옵션 분류 리스트 요청에 필요한 객체 설정
 function mapCategorylistObject(ele) {
-	let apiUrl;
-	let getListDtos;
-	let dataNo;
-	let dataName;
+	let apiUrl = null;
+	let getListDtos = null;
+	let dataNo = null;
+	let dataName = null;
+	let dataNote = null;
 	
 	switch(ele) {
 		case 'dc_name': // 질병군별 분류 리스트(분류별 관리o)
@@ -1019,6 +1047,7 @@ function mapCategorylistObject(ele) {
 			getListDtos = 'advertisementCategoryDto';
 			dataNo = 'ac_no';
 			dataName = 'ac_name';
+			dataNote = 'ac_note';
 			break;
 		
 		default:
@@ -1026,5 +1055,5 @@ function mapCategorylistObject(ele) {
 			return false;
 	}
 	
-	return { apiUrl, getListDtos, dataNo, dataName };
+	return { apiUrl, getListDtos, dataNo, dataName, dataNote };
 }

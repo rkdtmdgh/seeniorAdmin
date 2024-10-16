@@ -1,28 +1,20 @@
-// 개별 삭제
-async function delSingleData(key, noValue, dataName) {
-	logger.info('deleteAccount()', key, noValue, dataName);
+// 삭제 처리
+async function deleteData(deleteConfig, data, dataName, errorMessage) {
+	logger.info('deleteData()', deleteConfig.apiUrl, data);
 	
-	const isConfirm = confirm(`${dataName} 을(를) 삭제하시겠습니까?`);
-	if(!isConfirm) return false;
-	
-	const { apiUrl, replace } = mapDeleteObject(key); // 커맨드와 경로 설정
-	const errorMessage = `${dataName} 삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
-		
 	if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
 		try {
 			const response = await $.ajax({
-				url: apiUrl,
+				url: deleteConfig.apiUrl,
 				method: 'POST',
-				data: {
-					[key]: noValue,
-				},
+				data: data,
 			});
 			
-			logger.info(`${apiUrl} delSingleData() response:`, response);
+			logger.info(`${deleteConfig.apiUrl} deleteData() response:`, response);
 			
-			if(response) {
-				alert(`${dataName} 이(가) 삭제되었습니다.`);
-				location.replace(replace);
+		if(response) {
+				alert(`${dataName} 삭제되었습니다.`);
+				location.replace(deleteConfig.replace);
 				
 			} else {
 				alert(errorMessage);
@@ -30,19 +22,36 @@ async function delSingleData(key, noValue, dataName) {
 			}
 			
 		} catch(error) {
-			logger.error(`${apiUrl} delSingleData() error:`, error);
+			logger.error(`${deleteConfig.apiUrl} error:`, error);
 			alert(errorMessage);
 			location.reload(true);
 		}
 	}
 }
 
+// 개별 삭제
+async function delSingleData(dataName, key, noValue, additionalData = {}) { // 추가 인자가 필요할 경우 {} 객체로 additionalData위치에 인자 전달
+	logger.info('delSingleData()', key, noValue, dataName);
+	
+	const isConfirm = confirm(`${dataName} 을(를) 삭제하시겠습니까?`);
+	if(!isConfirm) return false;
+	
+	const data = { [key]: noValue };
+	Object.assign(data, additionalData); // 추가 데이터가 필요 시 data에 추가
+	
+	const deleteConfig = mapDeleteObject(key); // 커맨드와 경로 설정
+	const errorMessage = `${dataName} 삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const delName = dataName + ' 이(가)';
+		
+	deleteData(deleteConfig, data, delName, errorMessage);
+}
+
 // 리스트 삭제
-async function delListData(name, isCheckList) {
-	let deleteArray; // 삭제할 데이터의 배열이 들어갈 변수
+async function delListData(key, isCheckList) {
+	let deleteArray = []; // 삭제할 데이터의 배열이 들어갈 변수
 	
 	if(isCheckList) { // 삭제 처리 페이지가 체크리스트인 경우
-		const $delDataElement = $(`input[type="checkbox"][name="${name}"]:checked`);
+		const $delDataElement = $(`input[type="checkbox"][name="${key}"]:checked`);
 		
 		if(!$delDataElement.length) {
 			alert('항목을 선택해 주세요.');
@@ -50,49 +59,21 @@ async function delListData(name, isCheckList) {
 		}
 		
 		if(!confirm('선택한 항목을 삭제하시겠습니까?')) return false;
-		
 		deleteArray = Array.from($delDataElement, checkbox => $(checkbox).val());
 		
 	} else { // 리스트중 디테일 페이지에서 단일 데이터 삭제 시
-		const $delData = $(`input[name="${name}"]`);
-		
+		const $delData = $(`input[name="${key}"]`);
 		if(!confirm('삭제하시겠습니까?')) return false;
-		
 		deleteArray = [$delData.val()];
 	}
 	
-	logger.info(`delListData() ${name}s:`, deleteArray);
+	logger.info(`delListData() ${key}s:`, deleteArray);
 	
-	const { apiUrl, replace } = mapDeleteObject(name); // 커맨드와 경로 설정
+	const data = { [`${key}s`]: deleteArray };
+	const deleteConfig = mapDeleteObject(key); // 커맨드와 경로 설정
 	const errorMessage = '삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 	
-	if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
-		try {
-			const response = await $.ajax({
-				url: apiUrl,
-				method: 'POST',
-				data: {
-					[`${name}s`]: deleteArray, // 항목 배열
-				},
-			});
-			
-			logger.info(apiUrl + ' delListData() response:', response);
-			
-			if(response) {
-				alert('삭제되었습니다.');
-				
-			} else {
-				alert(errorMessage);
-			}
-			
-		} catch(error) {
-			logger.error(`${apiUrl} error:`, error);
-			alert(errorMessage);
-			
-		} finally {
-			isCheckList ? location.reload(true) : location.replace(replace);
-		}
-	}
+	deleteData(deleteConfig, data, '항목이', errorMessage);
 }
 
 // 삭제 요청에 필요한 객체 설정
