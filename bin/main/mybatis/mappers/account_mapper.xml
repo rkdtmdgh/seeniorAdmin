@@ -88,7 +88,9 @@
 		FROM 
 			ADMIN_ACCOUNT 
 		WHERE 
-			A_NO = #{a_no}
+			A_NO = #{a_no} 
+		AND 
+			A_IS_DELETED = 1 
 		
 	</select>
 	

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
+import com.see_nior.seeniorAdmin.dto.UserAccountDto;
 
 @Mapper
 public interface UserMapper {
@@ -17,5 +18,9 @@ public interface UserMapper {
 	public int selectSearchUserListCnt(Map<String, Object> searchParams);
 
 	public List<AdminAccountDto> selectSearchUserList(Map<String, Object> pagingParams);
+
+	public UserAccountDto selectUserAccountByNo(int u_no);
+
+	public int updateUserAccountInfo(UserAccountDto userAccountDto);
 
 }
