@@ -202,9 +202,9 @@ async function getSearchList(event, apiUrl, page) {
 
 // 요청 Api Response 객체 설정 
 function mapApiResponseObject(apiUrl, response) { 
-	let getListDtos;
-	let getListPage;
-	let getListCnt;
+	let getListDtos = null;
+	let getListPage = null;
+	let getListCnt = null;
 	
 	switch(apiUrl) {
 		case '/account/list/get_admin_list': // 관리자 계정 관리
@@ -227,8 +227,8 @@ function mapApiResponseObject(apiUrl, response) {
 			
 		case '/user_account/info/search_user_account_list': // 회원 관리 검색
 			getListDtos = response.userAccountDtos;
-			getListPage = response.searchUseAccountListPageNum;
-			getListCnt = response.searchUseAccountListPageNum.searchUseAccountListCnt;
+			getListPage = response.searchUserAccountListPageNum;
+			getListCnt = response.searchUserAccountListPageNum.searchUserListCnt;
 			break;
 			
 		case '/disease/info/get_disease_list': // 질환 / 질병 정보 관리
@@ -424,29 +424,52 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            <td>
 		                <p class="table_info">${listIndex}</p>
 		            </td>
-		            <td>
-		                <a href="/user_account/info/user_account_modify_form?u_no=${data.u_no}" class="table_info">${data.u_id}</a>
-		            </td>
-		            <td>
-		                <a href="/user_account/info/user_account_modify_form?u_no=${data.u_no}" class="table_info">
-		                	${data.u_is_blocked === 1 ? `${data.u_name}(${data.u_nickname})` : '-'}
-		                </a>
-		            </td>
-		            <td>
-		                <a href="/user_account/info/user_account_modify_form?u_no=${data.u_no}" class="table_info">
-		                	${data.u_is_blocked === 1 ? `${data.u_phone}` : '-'}
-		                </a>
-		            </td>
-		            <td>
-		                <a href="/user_account/info/user_account_modify_form?u_no=${data.u_no}" class="table_info">
-		                	${data.u_is_blocked === 1 ? `${data.u_company}` : '-'}
-		                </a>
-		            </td>
-		            <td>
-		                <a href="/user_account/info/user_account_modify_form?u_no=${data.u_no}" class="table_info">
-		                	${data.u_is_blocked === 1 ? `${data.u_is_blocked === 0 ? '정상' : '정지'}` : '탈퇴'}
-		                </a>
-		            </td>
+		            
+		            ${data.u_is_deleted === true ? // true = 정상, flase = 탈퇴
+		            `
+			            <td>
+			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_id}</a>
+			            </td>
+			            <td>
+			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_name}(${data.u_nickname})</a>
+			            </td>
+			            <td>
+			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_phone}</a>
+			            </td>
+			            <td>
+			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_company || '-'} </a>
+			            </td>
+			            <td>
+			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">
+			                	${data.u_is_blocked === true ? // // true = 정상, flase = 정지
+			                		'정상' 
+			                	: 
+			                		'정지'
+		                		}
+			                </a>
+			            </td>
+		            `
+		            :
+		            
+		            `
+			            <td>
+			                <p class="table_info">${data.u_id}</p>
+			            </td>
+			            <td>
+			                <p class="table_info">-</p>
+			            </td>
+			            <td>
+			                <p class="table_info">-</p>
+			            </td>
+			            <td>
+			                <p class="table_info">-</p>
+			            </td>
+			            <td>
+			                <p class="table_info">탈퇴</p>
+			            </td>
+		            `
+		            }
+		            
 		            <td>
 		                <p class="table_info">${setFormatDate(data.u_reg_date)}</p>
 		            </td>
@@ -740,6 +763,9 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/advertisement/info/advertisement_list_form?sortType=1&sortValue=ac_no&order=${data.ac_no}" class="table_info">${data.ac_item_cnt}</a>
 		            </td>
 		            <td>
+		                <p class="table_info">${data.ac_note ? data.ac_note : '-'}</p>
+		            </td>
+		            <td>
 		                <p class="table_info">${setFormatDate(data.ac_reg_date)}</p>
 		            </td>
 		        </tr>
@@ -838,11 +864,15 @@ function getSortList(event, dbTable, sortValue) {
 
 // sort getList() 요청에 필요한 객체 설정
 function mapSortListApiObject(dbTable) {
-	let apiUrl;
+	let apiUrl = null;
 	
 	switch(dbTable) {			
 		case 'admin_account': // 관리자 계정 관리 페이지
 			apiUrl = '/account/list/get_admin_list';
+			break;
+			
+		case 'user_account': // 회원 관리 페이지
+			apiUrl = '/user_account/info/get_user_account_list';
 			break;
 			
 		case 'disease': // 질환/질병 정보 관리 페이지
@@ -878,7 +908,7 @@ function mapSortListApiObject(dbTable) {
 			break;
 		
 		default:
-			logger.error('mapSortListApiObject() dbTable:', value);
+			logger.error('mapSortListApiObject() not found set DB Table:', value);
 			return false;
 	}
 	
@@ -902,7 +932,7 @@ function getSelectList(event) {
 
 // select getList() 요청에 필요한 객체 설정
 function mapSelectListApiObject(sortValue) {
-	let apiUrl;
+	let apiUrl = null;
 	
 	switch(sortValue) {				
 		case 'dc_no': // 질환/질병 정보 리스트 페이지 질병군별 분류 리스트 요청
@@ -931,39 +961,63 @@ async function getCategoryList(ele, isForm, selectedValue) {
 	const bgc = $selectEle.parent()[0].tagName === 'TH' ? '#F7F7F7' : '#FFFFFF';
 	
 	if(setAddLoading(true, `${ele}_select`, bgc)) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
-		const { apiUrl, getListDtos, dataNo, dataName } = mapCategorylistObject(ele);
+		const categoryConfig = mapCategorylistObject(ele);
 		
 		if($selectEle.length) {
 			try {
 				const response = await $.ajax({
-					url: apiUrl,
+					url: categoryConfig.apiUrl,
 					method: 'GET',
 				});
 				
-				const categoryDto = response[getListDtos];
-				logger.info(`${apiUrl} categoryDto:`, response);
+				const categoryDto = response[categoryConfig.getListDtos];
+				logger.info(`${categoryConfig.apiUrl} categoryDto:`, response);
 				
 				if(categoryDto && categoryDto.length) {
 					if(isForm) {
 						categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
-							let selected = selectedValue ? data[dataNo] === selectedValue ? 'selected' : '' : '';
-							let option = `<option value="${data[dataNo]}" ${selected}>${data[dataName]}</option>`;
+							let selected = selectedValue ? data[categoryConfig.dataNo] === selectedValue ? 'selected' : '' : '';
+							let option = `
+								<option 
+									${selected}
+									value="${data[categoryConfig.dataNo]}" 
+									${data[categoryConfig.dataNote] ?
+										`data-info="${data[categoryConfig.dataNote]}"`
+									:
+										''
+									}
+								>
+									${data[categoryConfig.dataName]}
+								</option>
+							`;
 							
 							if(selected) {
 								$selectEle[0].insertAdjacentHTML('afterbegin', option);
 								
+								// 선택된 참고 사항 노출(처음만 적용)
+								if(data[categoryConfig.dataNote]){
+									logger.info('guideline:', data[categoryConfig.dataNote]);
+									const $guideline = $('.guideline');
+									$guideline.text(data[categoryConfig.dataNote]);									
+								}
+								
 							} else {
 								$selectEle[0].insertAdjacentHTML('beforeend', option);
+							}
+							
+							// dataNote가 있을 경우에 onchange 이벤트 추가
+							if(categoryDto.some(data => data[categoryConfig.dataNote])) {
+								$selectEle.attr("onchange", "setSelectGuidelineInfo(this, '.guideline')");
 							}
 						});
 						
 					} else {
-						const ceateSelect = `<ul data-sort-value="${dataNo}" class="select_option_list sc"></ul>`;
+						const ceateSelect = `<ul data-sort-value="${categoryConfig.dataNo}" class="select_option_list sc"></ul>`;
 				        $selectEle[0].insertAdjacentHTML('beforeend', ceateSelect);
 				        const $selectOptionlist = $('ul.select_option_list');
 						
 						categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
-							let option = `<li data-order="${data[dataNo]}" class="option" onclick="getSelectList(event);">${data[dataName]}</li>`;
+							let option = `<li data-order="${data[categoryConfig.dataNo]}" class="option" onclick="getSelectList(event);">${data[categoryConfig.dataName]}</li>`;
 							$selectOptionlist[0].insertAdjacentHTML('beforeend', option);
 						});
 					}
@@ -973,7 +1027,7 @@ async function getCategoryList(ele, isForm, selectedValue) {
 				}
 				
 			} catch(error) {
-				logger.error(apiUrl + ' error:', error);
+				logger.error(`${categoryConfig.apiUrl} error:`, error);
 				
 			} finally {
 				setAddLoading(false, `${ele}_select`) // 로딩 제거
@@ -984,10 +1038,11 @@ async function getCategoryList(ele, isForm, selectedValue) {
 
 // 셀렉트 옵션 분류 리스트 요청에 필요한 객체 설정
 function mapCategorylistObject(ele) {
-	let apiUrl;
-	let getListDtos;
-	let dataNo;
-	let dataName;
+	let apiUrl = null;
+	let getListDtos = null;
+	let dataNo = null;
+	let dataName = null;
+	let dataNote = null;
 	
 	switch(ele) {
 		case 'dc_name': // 질병군별 분류 리스트(분류별 관리o)
@@ -1019,6 +1074,7 @@ function mapCategorylistObject(ele) {
 			getListDtos = 'advertisementCategoryDto';
 			dataNo = 'ac_no';
 			dataName = 'ac_name';
+			dataNote = 'ac_note';
 			break;
 		
 		default:
@@ -1026,5 +1082,5 @@ function mapCategorylistObject(ele) {
 			return false;
 	}
 	
-	return { apiUrl, getListDtos, dataNo, dataName };
+	return { apiUrl, getListDtos, dataNo, dataName, dataNote };
 }

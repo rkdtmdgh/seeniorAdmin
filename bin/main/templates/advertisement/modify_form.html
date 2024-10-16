@@ -87,7 +87,7 @@
 		                                	<th>
 		                                		<p class="table_title">
 		                                			파일 첨부
-			                                		<span class="guideline">(권장 사이즈: 1920x1080)</span>
+			                                		<span class="guideline"></span>
 		                                		</p>
 		                                	</th>
 		                                	<td colspan="2">
@@ -112,8 +112,14 @@
 	                            </table>
 	
 	                            <div class="btn_list">
-	                            	<div th:if="${advertisementDto.ad_no} != null"
-		                        		 th:onclick="delSingleData('ad_no', [[${advertisementDto.ad_no}]], [[${advertisementDto.ad_client} + '님의 광고']])" class="btns delete">삭제</div>
+	                            	<div th:if="${advertisementDto.ad_no} != null" class="btns delete"
+		                        		 th:onclick="
+		                        		 	delSingleData(
+		                        		 		[[${advertisementDto.ad_client} + '님의 광고']], 
+		                        		 		'ad_no', 
+		                        		 		[[${advertisementDto.ad_no}]]
+		                        		 	)
+		                        		 ">삭제</div>
 		                        		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>

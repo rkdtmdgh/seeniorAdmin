@@ -63,7 +63,12 @@
 		                                	<th>
 		                                		<p class="table_title">
 		                                			내용
-			                                		<span class="guideline">(이미지별 최대 용량: 2MB)</span>
+			                                		<span class="guideline">
+			                                			영상: 최대 5개
+			                                			<br>이미지: 최대 10개
+			                                			<br>이미지별 최대 용량: 2MB
+			                                			<br>삽입 가능
+		                                			</span>
 		                                		</p>
 		                                	</th>
 		                                	
@@ -78,8 +83,8 @@
 	                            </table>
 	
 	                            <div class="btn_list">
-	                            	<div th:if="${selectedPostsDto.bp_no} != null"
-		                        		 th:onclick="delListData('bp_no')" class="btns delete">삭제</div>
+	                            	<div th:if="${selectedPostsDto.bp_no} != null" class="btns delete"
+		                        		 th:onclick="delListData('bp_no')">삭제</div>
 		                        		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>

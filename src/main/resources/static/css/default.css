@@ -618,6 +618,7 @@
 	font-weight: normal;
 	color: var(--greenColor);
 	padding-top: var(--ssize1);
+	white-space: normal;
 }
 
 .content_view_wrap {

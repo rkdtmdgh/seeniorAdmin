@@ -72,9 +72,6 @@ async function putModifyForm(formName) {
 	formData.append('a_name', form.a_name.value);
 	formData.append('a_birth', form.a_birth.value);
 	formData.append('a_phone', form.a_phone.value);
-	formData.append('a_department', form.a_department.value);
-	formData.append('a_level', form.a_level.value);
-	formData.append('a_position', form.a_position.value);
 	
 	const successMessage = '정보가 수정되었습니다';
 	const errorMessage = '정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
@@ -85,7 +82,7 @@ async function putModifyForm(formName) {
 		formData, 						// data
 		successMessage, 				// 성공 메세지
 		errorMessage,					// 실패 메세지
-		'content_inner'             // 로딩 표시할 부모 요소
+		'content_inner'                 // 로딩 표시할 부모 요소
 	);
 }
 
@@ -171,6 +168,11 @@ async function putUserAccountModifyForm(formName) {
 	}
 	
 	const formData = new FormData(form);
+	
+	input = form.u_company;
+	if(input.value.trim()) input.value = input.value.trim(); // u_company의 값이 있다면 앞 뒤 공백 제거
+	formData.set('u_is_personal', input.value.trim() ? false : true); // u_company값의 따라 u_is_personal 수정
+	
 	const successMessage = `"${form.u_id.value}" 계정 정보가 수정되었습니다`;
 	const errorMessage = `"${form.u_id.value}" 계정 정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 
@@ -510,14 +512,8 @@ async function putAdvertisementCategoryModifyForm(formName) {
 	let input;
 	
 	input = form.ac_name;
-	if(input.value !== form.current_ac_name.value) { // 수정이 되었을 경우
-		if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
-			input.focus();
-			return false;
-		}
-		
-	} else {
-		alert('수정된 내용이 없습니다');
+	if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+		input.focus();
 		return false;
 	}
 	
