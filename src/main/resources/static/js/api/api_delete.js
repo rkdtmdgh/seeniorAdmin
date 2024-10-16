@@ -78,8 +78,8 @@ async function delListData(key, isCheckList) {
 
 // 삭제 요청에 필요한 객체 설정
 function mapDeleteObject(value) { 
-	let apiUrl;
-	let replace;
+	let apiUrl = null;
+	let replace = null;
 	
 	switch(value) {
 		case 'a_no': // 관리자 계정
