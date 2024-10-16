@@ -319,8 +319,11 @@ public class AdvertisementService {
 	}
 	
 	// 광고 등록 확인
-	public boolean createConfirm(AdvertisementDto advertisementDto) {
+	public boolean createConfirm(AdvertisementDto advertisementDto, String ad_dir_name, String savedFileName) {
 		log.info("createConfirm()");
+		
+		advertisementDto.setAd_dir_name(ad_dir_name);
+		advertisementDto.setAd_img(savedFileName);
 		
 		int createResult = advertisementMapper.insertNewAdvertisement(advertisementDto);
 		

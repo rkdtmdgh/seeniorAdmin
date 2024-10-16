@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.dto.AdvertisementCategoryDto;
 import com.see_nior.seeniorAdmin.dto.AdvertisementDto;
 
@@ -188,7 +192,7 @@ public class AdvertisementController {
 	@ResponseBody
 	@PostMapping("/info/create_confirm")
 	public boolean createConfirm(
-			@RequestParam(value = "file") MultipartFile file,
+			@RequestParam(value = "files") MultipartFile file,
 			AdvertisementDto advertisementDto) {
 		log.info("createConfirm()");
 		log.info("file ---> {}", file);
@@ -198,12 +202,40 @@ public class AdvertisementController {
 		if (savedFile != null) {
 			log.info("uploadFile SUCCESS!!");
 			
+			ObjectMapper objectMapper = new ObjectMapper();
+			
+			try {
+				Map<String, Object> savedFileObj = objectMapper.readValue(savedFile.getBody(), new TypeReference<Map<String, Object>>() {});
+				
+				String ad_dir_name = (String) savedFileObj.get("dir_name");
+				String savedFileName = (String) savedFileObj.get("savedFileName");
+				log.info("ad_dir_name ----> {}", ad_dir_name);
+				log.info("savedFileName ----> {}", savedFileName);
+				
+				boolean createResult = advertisementService.createConfirm(advertisementDto, ad_dir_name, savedFileName);
+				
+				return createResult;
+				
+			} catch (JsonMappingException e) {
+				log.info("JsonMappingException!!");
+				e.printStackTrace();
+				
+				return false;
+				
+			} catch (JsonProcessingException e) {
+				log.info("JsonProcessingException!!");
+				e.printStackTrace();
+				
+				return false;
+				
+			}
+			
+		} else {
+			log.info("upload file fail!!");
+			
+			return false;
 			
 		}
-		
-		boolean createResult = advertisementService.createConfirm(advertisementDto);
-		
-		return createResult;
 		
 	}
 	
