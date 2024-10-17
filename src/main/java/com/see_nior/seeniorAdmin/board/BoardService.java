@@ -298,7 +298,16 @@ public class BoardService {
 			
 			while (matcher.find()) {
 				String oldSrc = matcher.group();
-				String newSrc = "img src=\"" + imgServerPath +"board/" + bp_category_no + bp_writer_no + bp_dir_name + savedFileNames.get(index++) + "\"";
+				String newSrc = "img src=\"" 
+						+ imgServerPath 
+						+"board/" 
+						+ bp_category_no 
+						+"/"
+						+ bp_writer_no 
+						+"/"
+						+ bp_dir_name 
+						+"/"
+						+ savedFileNames.get(index++) + "\"";
 				matcher.appendReplacement(new_bp_body, newSrc);
 			}
 			matcher.appendTail(new_bp_body);
