@@ -559,6 +559,12 @@ async function putAdvertisementModifyForm(formName) {
 		return false;
 	}
 	
+	if(new Date(form.ad_end_date.value) < new Date(form.ad_start_date.value)) {
+		alert('종료일이 시작일보다 작을 수 없습니다.');
+		input.focus();
+		return false;
+	}
+	
 	input = form.ad_url;
 	if(!validateEmpty(input, 'URL 주소를', true)) {
 		input.focus();
