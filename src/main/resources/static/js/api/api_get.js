@@ -1056,9 +1056,15 @@ async function getMaxIdxAndSetAttribute(name, value, formName) {
 			
 			logger.info(`${getSelectMaxIdxApiUrl} getMaxIdxAndSetAttribute():`, response);
 			
-			const max = formName === 'modify' ? response : response + 1; // modify인 경우 최대값 그대로 사용 create일 경우 최대값+1
-			if(formName === 'create') $('#idx_number').val(1); // create form일 경우 먼저 입력되어 있는 값 제거
-			$('#idx_number').attr('max', max); // 해당 인풋 요소에 max속성값 추가/변경
+			// modify인 경우 최대값 그대로 사용 create일 경우 최대값+1, 기본값은 1
+			let max = response < 1 ? 1 : response;
+			max = formName === 'modify' ? max : max + 1 ;
+			
+			if(formName === 'create') $('#idx_number').val(max); // create form일 경우 최대값으로 설정
+			$('#idx_number').attr('max', max); // 해당 인풋 요소에 max속성, value값 추가/변경
+			
+			// modify인 경우 값이 유지가 되어야하나 max값이 입력값보다 작을 경우에 대비하여 강제로 blur 이벤트 트리거
+			$('#idx_number').focus().trigger('blur'); 
 			
 		} catch(error) {
 			logger.error(`${getSelectMaxIdxApiUrl} getMaxIdxAndSetAttribute() error:`, error);
