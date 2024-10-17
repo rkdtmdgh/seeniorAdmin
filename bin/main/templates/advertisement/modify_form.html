@@ -10,6 +10,10 @@
 			// advertisement category 가져오기
             const selectedCategory = /*[[${advertisementDto.ad_category_no}]]*/ // 기본값 설정
             await getCategoryList('ad_category_no', 'modify', selectedCategory); // element id, form 종류, selectedValue
+            
+            // 순번 max값 설정
+            const basicSelectCateValue = $('#ad_category_no').find('option:selected').val();
+            getMaxIdxAndSetAttribute('ad_category_no', basicSelectCateValue, 'modify');
         });
     </script>
 </head>

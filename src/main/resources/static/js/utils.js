@@ -9,29 +9,43 @@ function setInputFocus(ele) {
 	}
 }
 
-// loading set
-let loadingTimeout; // 타이머 변수를 전역으로 선언
+// 중복요청 방지 및 로딩 표시 설정
+let debounceState = {}; // 각 요청별 상태 관리
+let debounceStateI = 0;
 function setAddLoading(loading, parentEleClass, backgroundColor=null) {
+	// 각 parentEleClass별로 로딩 상태를 관리
+	if (!debounceState[parentEleClass]) {
+		debounceState[parentEleClass] = {
+			isLoading: false, // 로딩 상태
+			timeoutId: null, // 디바운싱 타이머 아이디
+		}
+	}
+	
 	if(!loading) {
-		clearTimeout(loadingTimeout); // 딜레이 시간 안에 통신 완료 시 로딩 타이머 취소
+		clearTimeout(debounceState[parentEleClass].timeoutId); // 딜레이 시간 안에 통신 완료 시 로딩 타이머 취소
 		if($(`.${parentEleClass}_loading_wrap`).length) $(`.${parentEleClass}_loading_wrap`).remove(); // 로딩 요소 제거
-		//logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: stop loading`);
+		debounceState[parentEleClass].isLoading = false; // 로딩 상태 초기화
+		logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: stop loading`);
+		logger.info(`debounceState[parentEleClass].isLoading  ${parentEleClass}_loading_wrap:`, debounceState[parentEleClass].isLoading );
 		return false;
 		
 	}
 	
-	if($(`.${parentEleClass}_loading_wrap`).length.length) { // 이미 로딩 요소가 존재할 경우 
+	if(debounceState[parentEleClass].isLoading) { // 이미 해당 요청에 대한 로딩이 진행 중일 경우
 		alert('현재 요청이 진행 중입니다. 잠시 후 다시 시도해 주세요.');
-		//logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: Already loading`);
-		return false; // 이미 요청이 진행 중이면 함수 종료 (중복 요청 방지)
+		logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: Already loading`);
+		return false; // 중복 요청 무시
 	}
 	
-	loadingTimeout = setTimeout(() => {
+	// 리딩 엣지에서 첫 요청 처리
+	debounceState[parentEleClass] = true; // 로딩 상태로 설정하여 중복 요청 방지
+	debounceState[parentEleClass].timeoutId = setTimeout(() => {
 		$(`.${parentEleClass}`).append(`
 			<span class="${parentEleClass}_loading_wrap loading" style="background-color: ${backgroundColor ? backgroundColor : 'var(--whiteColor)'};"></span>
 		`); // 해당 컨텐츠에 로딩 요소 추가
 	}, 50);
-	//logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: success loading`);
+	logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: success loading`);
+	logger.info(`debounceState[parentEleClass].isLoading  ${parentEleClass}_loading_wrap:`, debounceState[parentEleClass].isLoading );
 	return true; // 로딩 표시 요청 완료
 }
 
