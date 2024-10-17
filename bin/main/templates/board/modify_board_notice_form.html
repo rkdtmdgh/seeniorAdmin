@@ -9,7 +9,7 @@
 		$(function() {
          	// board category 가져오기
             const selectedCategory = /*[[${boardboardNoticePostsDto.bn_category_no}]]*/ // 기본값 설정
-            getCategoryList('bn_category_no', true, selectedCategory); // element id, isForm, selectedValue
+            getCategoryList('bn_category_no', 'modify', selectedCategory); // element id, form 종류, selectedValue
         });
     </script>
 </head>
@@ -65,7 +65,7 @@
 		                                <tr>
 		                                	<th><p class="table_title">상태</p></th>
 		                                	<td>
-		                                		<div class="table_info cont_info">
+		                                		<div class="table_info">
 	                                            	<label class="radio">
 	                                            		<input type="radio" name="bn_state" value="1"
 	                                            			th:checked="${boardNoticePostsDto.bn_state == 1}"> 사용

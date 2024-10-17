@@ -9,7 +9,7 @@
 		$(async function() {
          	// disease category 가져오기
             const selectedCategory = /*[[${diseaseDto.d_category_no}]]*/ // 기본값 설정
-            await getCategoryList('d_category_no', true, selectedCategory); // element id, isForm, selectedValue
+            await getCategoryList('d_category_no', 'modify', selectedCategory); // element id, form 종류, selectedValue
         });
     </script>
 </head>

@@ -956,7 +956,7 @@ function mapSelectListApiObject(sortValue) {
 }
 
 // 셀렉트 옵션 리스트 요청 및 옵션 생성
-async function getCategoryList(ele, isForm, selectedValue) {
+async function getCategoryList(ele, formName, selectedValue, ) {
 	const $selectEle = $(`#${ele}`); // 셀렉트 요소가 생성될 table th or td
 	const bgc = $selectEle.parent()[0].tagName === 'TH' ? '#F7F7F7' : '#FFFFFF';
 	
@@ -966,15 +966,15 @@ async function getCategoryList(ele, isForm, selectedValue) {
 		if($selectEle.length) {
 			try {
 				const response = await $.ajax({
-					url: categoryConfig.apiUrl,
+					url: categoryConfig.getCateSelectApiUrl,
 					method: 'GET',
 				});
 				
 				const categoryDto = response[categoryConfig.getListDtos];
-				logger.info(`${categoryConfig.apiUrl} categoryDto:`, response);
+				logger.info(`${categoryConfig.getCateSelectApiUrl} categoryDto:`, response);
 				
 				if(categoryDto && categoryDto.length) {
-					if(isForm) {
+					if(formName) {
 						categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
 							let selected = selectedValue ? data[categoryConfig.dataNo] === selectedValue ? 'selected' : '' : '';
 							let option = `
@@ -997,7 +997,7 @@ async function getCategoryList(ele, isForm, selectedValue) {
 								// 선택된 참고 사항 노출(처음만 적용)
 								if(data[categoryConfig.dataNote]){
 									logger.info('guideline:', data[categoryConfig.dataNote]);
-									const $guideline = $('.guideline');
+									const $guideline = $('#guideline');
 									$guideline.text(data[categoryConfig.dataNote]);									
 								}
 								
@@ -1007,7 +1007,7 @@ async function getCategoryList(ele, isForm, selectedValue) {
 							
 							// dataNote가 있을 경우에 onchange 이벤트 추가
 							if(categoryDto.some(data => data[categoryConfig.dataNote])) {
-								$selectEle.attr("onchange", "setSelectGuidelineInfo(this, '.guideline')");
+								$selectEle.attr("onchange", `setSelectGuidelineInfo(this, '${formName}')`);
 							}
 						});
 						
@@ -1027,7 +1027,7 @@ async function getCategoryList(ele, isForm, selectedValue) {
 				}
 				
 			} catch(error) {
-				logger.error(`${categoryConfig.apiUrl} error:`, error);
+				logger.error(`${categoryConfig.getCateSelectApiUrl} error:`, error);
 				
 			} finally {
 				setAddLoading(false, `${ele}_select`) // 로딩 제거
@@ -1036,9 +1036,42 @@ async function getCategoryList(ele, isForm, selectedValue) {
 	}
 }
 
+// 동적으로 순번 max값 적용
+async function getMaxIdxAndSetAttribute(name, value, formName) {
+	logger.info('getMaxIdxAndSetAttribute():', name, value, formName);
+	
+	const { getSelectMaxIdxApiUrl } = mapCategorylistObject(name); // name값에 해당하는 maxIdx값 요청 api
+	
+	if(!getSelectMaxIdxApiUrl) return; // name값에 해당하는 maxIdx값 요청 api가 없을 경우 리턴
+	
+	if(setAddLoading(true, 'order_number')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+		try {
+			const response = await $.ajax({
+				url: getSelectMaxIdxApiUrl,
+				method: 'GET',
+				data: {
+					[name]: value,
+				},
+			});
+			
+			logger.info(`${getSelectMaxIdxApiUrl} getMaxIdxAndSetAttribute():`, response);
+			
+			const max = formName === 'modify' ? response : response + 1; // modify인 경우 최대값 그대로 사용 create일 경우 최대값+1
+			$('#idx_number').attr('max', max); // 해당 인풋 요소에 max속성값 추가/변경
+			
+		} catch(error) {
+			logger.error(`${getSelectMaxIdxApiUrl} getMaxIdxAndSetAttribute() error:`, error);
+			
+		} finally {
+			setAddLoading(false, `order_number`) // 로딩 제거
+		}
+	}
+}
+
 // 셀렉트 옵션 분류 리스트 요청에 필요한 객체 설정
 function mapCategorylistObject(ele) {
-	let apiUrl = null;
+	let getCateSelectApiUrl = null;
+	let getSelectMaxIdxApiUrl = null;
 	let getListDtos = null;
 	let dataNo = null;
 	let dataName = null;
@@ -1047,14 +1080,14 @@ function mapCategorylistObject(ele) {
 	switch(ele) {
 		case 'dc_name': // 질병군별 분류 리스트(분류별 관리o)
 		case 'd_category_no':
-			apiUrl = '/disease/cate_info/get_category_list_select';
+			getCateSelectApiUrl = '/disease/cate_info/get_category_list_select';
 			getListDtos = 'diseaseCategoryDto';
 			dataNo = 'dc_no';
 			dataName = 'dc_name';
 			break;
 			
 		case 'rcp_pat2': // 음식 종류별 분류 리스트(분류별 관리x)
-			apiUrl = '/recipe/info/get_type_list_select';
+			getCateSelectApiUrl = '/recipe/info/get_type_list_select';
 			getListDtos = 'recipeTypeDto';
 			dataNo = 'rcp_pat2';
 			dataName = 'rcp_pat2';
@@ -1062,7 +1095,7 @@ function mapCategorylistObject(ele) {
 			
 		case 'bc_name': // 게시판별 분류 리스트(분류별 관리o)
 		case 'bn_category_no':
-			apiUrl = '/board/cate_info/get_category_list_select';
+			getCateSelectApiUrl = '/board/cate_info/get_category_list_select';
 			getListDtos = 'boardCategoryDtos';
 			dataNo = 'bc_no';
 			dataName = 'bc_name';
@@ -1070,7 +1103,8 @@ function mapCategorylistObject(ele) {
 			
 		case 'ac_name': // 위치별 분류 리스트(분류별 관리o)
 		case 'ad_category_no':
-			apiUrl = '/advertisement/cate_info/get_category_list_select';
+			getCateSelectApiUrl = '/advertisement/cate_info/get_category_list_select';
+			getSelectMaxIdxApiUrl = '/advertisement/info/create_category_select';
 			getListDtos = 'advertisementCategoryDto';
 			dataNo = 'ac_no';
 			dataName = 'ac_name';
@@ -1082,5 +1116,5 @@ function mapCategorylistObject(ele) {
 			return false;
 	}
 	
-	return { apiUrl, getListDtos, dataNo, dataName, dataNote };
+	return { getCateSelectApiUrl, getSelectMaxIdxApiUrl, getListDtos, dataNo, dataName, dataNote };
 }

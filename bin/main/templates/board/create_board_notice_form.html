@@ -8,7 +8,7 @@
 	<script th:inline="javascript">
 		$(async function() {			
 			// board category 가져오기
-			await getCategoryList('bn_category_no', true); // element id, isForm, selectedValue
+			await getCategoryList('bn_category_no', 'create'); // element id, form 종류, selectedValue
 			
 			// 작성자 no 값 설정
 			setLoginUserInfoInputValue('bn_writer_no', 'a_no');
@@ -66,7 +66,7 @@
 		                                <tr>
 		                                	<th><p class="table_title">상태</p></th>
 		                                	<td>
-		                                		<div class="table_info cont_info">
+		                                		<div class="table_info">
 	                                            	<label class="radio">
 	                                            		<input type="radio" name="bn_state" value="1" checked="checked"> 사용
 	                                            	</label>

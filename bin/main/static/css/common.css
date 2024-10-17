@@ -169,7 +169,7 @@ select {
     -moz-appearance: none;
     appearance: none;
     padding: var(--selectPadding);
-    background: url(/image/icons/gray_arrow.png) right 1em center no-repeat;
+    background: url(/image/icons/gray_arrow.png) right 1.2em center no-repeat;
 }
 
 input:-webkit-autofill,
