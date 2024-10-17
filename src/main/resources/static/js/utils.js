@@ -43,7 +43,7 @@ function setLoading(loading, parentEleClass, backgroundColor='var(--whiteColor)'
 	if($(`.${parentEleClass}_loading_wrap`).length.length) { // 이미 로딩 요소가 존재할 경우 
 		alert('현재 요청이 진행 중입니다. 잠시 후 다시 시도해 주세요.');
 		//logger.info(`setLoading() ${parentEleClass}_loading_wrap: Already loading`);
-		return false; // 이미 요청이 진행 중이면 함수 종료 (중복 요청 방지)
+		return false; // 이미 요청이 진행 중이면 함수 종료
 	}
 	
 	loadingTimeout = setTimeout(() => {
