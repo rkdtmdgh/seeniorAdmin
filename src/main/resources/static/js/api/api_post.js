@@ -43,7 +43,7 @@ async function postSignUpProcess(event, formName) {
 	}
 	
 	// 모든 유효성 검사가 통과되었을 때 폼 제출
-	if(setLoading(true, 'input_list_container')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+	if(setLoading(true, 'input_list_container')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
 		form.action = "/account/sign_up_confirm"; 
 	    form.method = "post"; 
 	    form.submit()
@@ -69,7 +69,7 @@ function postSignInProcess(event, formName) {
 	}
 	
 	// 모든 유효성 검사가 통과되었을 때 폼 제출
-	if(setLoading(true, 'input_list_container')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+	if(setLoading(true, 'input_list_container')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
 		form.action = "/account/sign_in_confirm"; 
 	    form.method = "post"; 
 	    form.submit();
@@ -78,7 +78,7 @@ function postSignInProcess(event, formName) {
 
 // 본인 확인
 async function postIdentityCheckProcess(event, formName) {   
-	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
 		if(event) event.preventDefault();
 		const form = document.forms[formName];
 		let input;
@@ -123,7 +123,7 @@ async function postIdentityCheckProcess(event, formName) {
 
 // post 통합 ajax 요청
 async function postIntegSubmitProcess(apiUrl, formData, successMessage, errorMessage, redirectUrl = null, loddingParentEle) {
-	if(setLoading(true, loddingParentEle)) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+	if(setLoading(true, loddingParentEle)) { // 로딩 추가 함수 실행이 성공하면 요청 진행 
 		setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
 		
 		try {
@@ -234,7 +234,7 @@ async function postRecipeUpdateProcess() {
 	const isConfirm = confirm('업데이트는 약 10~30초 정도가 소요됩니다. 업데이트하시겠습니까?');
 	if(!isConfirm) return false;
 	
-	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 
 		try {
 			const response = await $.ajax({
 				url: '/recipe/info/refresh_api_recipe_data',

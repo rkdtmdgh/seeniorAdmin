@@ -79,7 +79,7 @@ async function getListProcess(apiUrl, sortValue, order, page) {
 
 // 검색 리스트 요청
 async function getSearchListProcess(event, apiUrl, page) {
-	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
 		if(event) event.preventDefault();
 		const form = document.forms['search_form'];
 		let input;
@@ -924,7 +924,7 @@ async function getCategoryList(ele, formName, selectedValue, ) {
 	const $selectEle = $(`#${ele}`); // 셀렉트 요소가 생성될 table th or td
 	const bgc = $selectEle.parent()[0].tagName === 'TH' ? '#F7F7F7' : '#FFFFFF';
 	
-	if(setLoading(true, `${ele}_select`, bgc)) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+	if(setLoading(true, `${ele}_select`, bgc)) { // 로딩 추가 함수 실행이 성공하면 요청 진행
 		const categoryConfig = mapCategorylistObject(ele);
 		
 		if($selectEle.length) {
@@ -1008,7 +1008,7 @@ async function getMaxIdxAndSetAttribute(name, value, formName) {
 	
 	if(!getSelectMaxIdxApiUrl) return; // name값에 해당하는 maxIdx값 요청 api가 없을 경우 리턴
 	
-	if(setLoading(true, 'order_number')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+	if(setLoading(true, 'order_number')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
 		try {
 			const response = await $.ajax({
 				url: getSelectMaxIdxApiUrl,

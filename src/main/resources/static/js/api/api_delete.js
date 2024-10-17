@@ -5,7 +5,7 @@ const deleteData = debounceAsync(deleteDataProcess, 'deleteDataProcess'); // 삭
 async function deleteDataProcess(deleteConfig, data, dataName, errorMessage) {
 	logger.info('deleteData()', deleteConfig.apiUrl, data);
 	
-	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
 		try {
 			const response = await $.ajax({
 				url: deleteConfig.apiUrl,
