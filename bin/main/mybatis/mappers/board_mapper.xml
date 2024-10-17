@@ -349,5 +349,15 @@
     		BC_NO = #{bc_no}    
     		<!-- current_idx로 위 아래 idx들 -1혹은 +1하는 로직 필요 -->
     </update>
+    
+     <!-- 특정 게시물 정보 요청 -->
+     <select id="modifyForm" parameterType="int" resultMap="BoardPostsDto">
+     	SELECT
+     		*
+     	FROM
+     		BOARD_POSTS
+     	WHERE 
+     		BP_NO = #{bp_no}
+     </select>
 
 </mapper>

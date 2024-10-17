@@ -545,6 +545,23 @@ public class BoardService {
 		
 	}
 	
+	//특정 게시물 정보 가져오기
+	public BoardPostsDto modifyForm(int bp_no) {
+		log.info("modifyForm()");
+		
+		//특정 게시물 정보 가져오기 select
+		List<BoardPostsDto> boardPostsDtos = boardMapper.modifyForm(bp_no);
+		log.info("boardPostsDtos: {}",boardPostsDtos);
+		
+		if(boardPostsDtos.size() == 0) {
+			log.info("modifyForm() fail!!");
+			return null;
+		}
+		
+		return boardPostsDtos.get(0);
+		
+	}
+	
 
 	
 
