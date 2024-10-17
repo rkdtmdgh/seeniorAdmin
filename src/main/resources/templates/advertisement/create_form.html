@@ -76,19 +76,28 @@
 		                                		<input type="text" name="ad_url" id="ad_url" class="table_info" placeholder="URL"
 	                                				onblur="validateEmpty(this, 'URL 주소를')">
 		                                	</td>
+		                                	
+		                                	<th><p class="table_title">순번</p></th>
+		                                	<td class="order_number">
+		                                		<input type="number" name="ad_idx" id="idx_number" class="table_info" placeholder="순번"
+		                                			min="1"
+		                                			onkeydown="blockEKey(event)"
+		                                			oninput="replaceNumber(this)"
+		                                			value="1">
+		                                	</td>
 	                                	</tr>
 	                                	
 	                                	<tr>
 		                                	<th>
 		                                		<p class="table_title">
 		                                			파일 첨부
-			                                		<span id="guideline">(권장 사이즈: 1920x1080)</span>
+			                                		<span id="guideline"></span>
 		                                		</p>
 		                                	</th>
 		                                	<td colspan="2">
 		                                		<div class="table_info">
 		                                			<label class="file_upload_container">
-		                                				<input type="file" name="ad_img" id="ad_img" accept="image/*"  onchange="setInputFileImageCheck(this)"> 
+		                                				<input type="file" name="files" id="files" accept="image/*"  onchange="setInputFileImageCheck(this)"> 
 		                                				<img src="/image/icons/image_file_upload.png" alt="image file uploader" class="file_upload_img">
 		                                				<span class="file_upload_info">
 			                                				<span class="file_upload_txt">클릭하거나 이미지 파일을 끌어다 놓으세요.</span>

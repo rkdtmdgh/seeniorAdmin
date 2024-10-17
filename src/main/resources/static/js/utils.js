@@ -75,7 +75,7 @@ async function setBoardTitle(infoNo) {
 function setSelectGuidelineInfo(selectElement, formName) {
 	const $selectOption = $(selectElement).find('option:selected'); // 선택된 옵션
 	const info = $selectOption.data('info'); // 선택된 옵션의 data-info 속성 값 가져오기
-	const $infoEle = $('#guideline'); // 전달받은 요소값으로 참조('.', '#')
+	let $infoEle = $('#guideline'); // 전달받은 요소값으로 참조('.', '#')
 	
 	if($infoEle.length && info) {
 		$infoEle.text(info); // 내용 업데이트
