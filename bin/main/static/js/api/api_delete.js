@@ -1,8 +1,11 @@
+// 함수 디바운싱 적용 // 함수, key명
+const deleteData = debounceAsync(deleteDataProcess, 'deleteDataProcess'); // 삭제 처리
+
 // 삭제 처리
-async function deleteData(deleteConfig, data, dataName, errorMessage) {
+async function deleteDataProcess(deleteConfig, data, dataName, errorMessage) {
 	logger.info('deleteData()', deleteConfig.apiUrl, data);
 	
-	if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
 		try {
 			const response = await $.ajax({
 				url: deleteConfig.apiUrl,

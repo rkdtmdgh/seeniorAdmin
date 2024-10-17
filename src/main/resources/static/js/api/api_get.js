@@ -1,49 +1,10 @@
-// 로그인 유저 데이터 요청
-async function getAccountInfo(modify=false) {
-	try {
-		const response = await $.ajax({
-			url: '/account/info/get_account_info',
-			method: 'GET',
-		});
-		
-		logger.info('/account/info/get_account_info getAccountInfo() response:', response);
-		
-		if(response && modify) {
-			const $contentInfoWrap = $('.content_info_wrap');
-			$contentInfoWrap.html(setAccountModifyForm(response)); // account/modifyForm SET
-		}
-		
-		return response;
-	
-	} catch(error) {
-		logger.error('/account/info/get_account_info getAccountInfo() error:', error);
-		throw new error('계정 정보를 불러오는 중 오류가 발생했습니다.');
-	}
-}
-
-// 특정 게시판 데이터 요청
-async function getBoardInfo(infoNo) {
-	try {
-		const response = await $.ajax({
-			url: `/board/info/get_board_info?infoNo=${infoNo}`,
-			method: 'GET',
-		});
-		
-		logger.info(' getBoardInfo() response:', response);
-		
-		if(response) {
-			return response;
-		}
-		
-	} catch(error) {
-		logger.error(' getBoardInfo() error:', error);
-		throw new error('게시판 정보를 불러오는 중 오류가 발생했습니다.');
-	}
-}
+// 함수 디바운싱 적용 // 함수, key명
+const getList = debounceAsync(getListProcess, 'getListProcess'); // 콘텐츠 리스트 요청
+const getSearchList = debounceAsync(getSearchListProcess, 'getSearchListProcess'); // 검색 리스트 요청
 
 // 콘텐츠 리스트 요청
-async function getList(apiUrl, sortValue, order, page) {
-	if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+async function getListProcess(apiUrl, sortValue, order, page) {
+	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
 		setAllcheck(); // all_check 체크박스 초기화
 		
 		// 검색 인풋 벨류 삭제
@@ -61,6 +22,9 @@ async function getList(apiUrl, sortValue, order, page) {
 		logger.info('apiUrl:', apiUrl + params);
 		
 		try {
+			// 테스트를 위한 딜레이
+            //await new Promise(resolve => setTimeout(resolve, 2000));
+            
 			const response = await $.ajax({
 				url: apiUrl + params,
 				method: 'GET',
@@ -108,14 +72,14 @@ async function getList(apiUrl, sortValue, order, page) {
 			logger.error(apiUrl + ' error:', error);
 			
 		} finally {
-			setAddLoading(false, 'content_inner'); // 로딩 제거
+			setLoading(false, 'content_inner'); // 로딩 제거
 		}
 	}
 }
 
 // 검색 리스트 요청
-async function getSearchList(event, apiUrl, page) {
-	if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+async function getSearchListProcess(event, apiUrl, page) {
+	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
 		if(event) event.preventDefault();
 		const form = document.forms['search_form'];
 		let input;
@@ -194,7 +158,7 @@ async function getSearchList(event, apiUrl, page) {
 				logger.error(apiUrl + ' searchForm() error:', error);
 				
 			} finally {
-				setAddLoading(false, 'content_inner'); // 로딩 제거
+				setLoading(false, 'content_inner'); // 로딩 제거
 			}
 		}
 	}
@@ -960,7 +924,7 @@ async function getCategoryList(ele, formName, selectedValue, ) {
 	const $selectEle = $(`#${ele}`); // 셀렉트 요소가 생성될 table th or td
 	const bgc = $selectEle.parent()[0].tagName === 'TH' ? '#F7F7F7' : '#FFFFFF';
 	
-	if(setAddLoading(true, `${ele}_select`, bgc)) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+	if(setLoading(true, `${ele}_select`, bgc)) { // 로딩 추가 함수 실행이 성공하면 요청 진행
 		const categoryConfig = mapCategorylistObject(ele);
 		
 		if($selectEle.length) {
@@ -1030,7 +994,7 @@ async function getCategoryList(ele, formName, selectedValue, ) {
 				logger.error(`${categoryConfig.getCateSelectApiUrl} error:`, error);
 				
 			} finally {
-				setAddLoading(false, `${ele}_select`) // 로딩 제거
+				setLoading(false, `${ele}_select`) // 로딩 제거
 			}
 		}
 	}
@@ -1044,7 +1008,7 @@ async function getMaxIdxAndSetAttribute(name, value, formName) {
 	
 	if(!getSelectMaxIdxApiUrl) return; // name값에 해당하는 maxIdx값 요청 api가 없을 경우 리턴
 	
-	if(setAddLoading(true, 'order_number')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+	if(setLoading(true, 'order_number')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
 		try {
 			const response = await $.ajax({
 				url: getSelectMaxIdxApiUrl,
@@ -1056,15 +1020,21 @@ async function getMaxIdxAndSetAttribute(name, value, formName) {
 			
 			logger.info(`${getSelectMaxIdxApiUrl} getMaxIdxAndSetAttribute():`, response);
 			
-			const max = formName === 'modify' ? response : response + 1; // modify인 경우 최대값 그대로 사용 create일 경우 최대값+1
-			if(formName === 'create') $('#idx_number').val(1); // create form일 경우 먼저 입력되어 있는 값 제거
-			$('#idx_number').attr('max', max); // 해당 인풋 요소에 max속성값 추가/변경
+			// modify인 경우 최대값 그대로 사용 create일 경우 최대값+1, 기본값은 1
+			let max = response < 1 ? 1 : response;
+			max = formName === 'modify' ? max : max + 1 ;
+			
+			if(formName === 'create') $('#idx_number').val(max); // create form일 경우 최대값으로 설정
+			$('#idx_number').attr('max', max); // 해당 인풋 요소에 max속성, value값 추가/변경
+			
+			// modify인 경우 값이 유지가 되어야하나 max값이 입력값보다 작을 경우에 대비하여 강제로 blur 이벤트 트리거
+			$('#idx_number').focus().trigger('blur'); 
 			
 		} catch(error) {
 			logger.error(`${getSelectMaxIdxApiUrl} getMaxIdxAndSetAttribute() error:`, error);
 			
 		} finally {
-			setAddLoading(false, `order_number`) // 로딩 제거
+			setLoading(false, `order_number`) // 로딩 제거
 		}
 	}
 }
@@ -1118,4 +1088,47 @@ function mapCategorylistObject(ele) {
 	}
 	
 	return { getCateSelectApiUrl, getSelectMaxIdxApiUrl, getListDtos, dataNo, dataName, dataNote };
+}
+
+// 로그인 유저 데이터 요청
+async function getAccountInfo(modify=false) {
+	try {
+		const response = await $.ajax({
+			url: '/account/info/get_account_info',
+			method: 'GET',
+		});
+		
+		logger.info('/account/info/get_account_info getAccountInfo() response:', response);
+		
+		if(response && modify) {
+			const $contentInfoWrap = $('.content_info_wrap');
+			$contentInfoWrap.html(setAccountModifyForm(response)); // account/modifyForm SET
+		}
+		
+		return response;
+	
+	} catch(error) {
+		logger.error('/account/info/get_account_info getAccountInfo() error:', error);
+		throw new error('계정 정보를 불러오는 중 오류가 발생했습니다.');
+	}
+}
+
+// 특정 게시판 데이터 요청
+async function getBoardInfo(infoNo) {
+	try {
+		const response = await $.ajax({
+			url: `/board/info/get_board_info?infoNo=${infoNo}`,
+			method: 'GET',
+		});
+		
+		logger.info(' getBoardInfo() response:', response);
+		
+		if(response) {
+			return response;
+		}
+		
+	} catch(error) {
+		logger.error(' getBoardInfo() error:', error);
+		throw new error('게시판 정보를 불러오는 중 오류가 발생했습니다.');
+	}
 }

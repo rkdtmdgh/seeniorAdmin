@@ -12,8 +12,8 @@
             await getCategoryList('ad_category_no', 'modify', selectedCategory); // element id, form 종류, selectedValue
             
             // 순번 max값 설정
-            const basicSelectCateValue = $('#ad_category_no').find('option:selected').val();
-            getMaxIdxAndSetAttribute('ad_category_no', basicSelectCateValue, 'modify');
+            const categoryMaxIdx = $('#ad_category_no').find('option:selected').val();
+            getMaxIdxAndSetAttribute('ad_category_no', categoryMaxIdx, 'modify');
         });
     </script>
 </head>
@@ -92,6 +92,7 @@
 		                                			min="1"
 		                                			onkeydown="blockEKey(event)"
 		                                			oninput="replaceNumber(this)"
+		                                			onblur="replaceNumber(this)"
 		                                			th:value="${advertisementDto.ad_idx}">
 		                                	</td>
 	                                	</tr>
@@ -136,7 +137,7 @@
 		                        		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <div onclick="putAdvertisementModifyForm('advertisement_modify_form')" class="btns">수정</div>
+	                                    <div onclick="putAdvertisementModify('advertisement_modify_form')" class="btns">수정</div>
 	                                </div>
 	                            </div>
 	                        </div>

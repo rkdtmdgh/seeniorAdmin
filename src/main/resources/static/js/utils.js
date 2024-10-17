@@ -9,29 +9,50 @@ function setInputFocus(ele) {
 	}
 }
 
+// 디바운싱(리딩 엣지 방식) 상태 관리 유틸 함수 
+const debounceMap = {}; // 각 함수별로 관리되는 디바운스 상태 객체
+function debounceAsync(func, key) { // 비동기 방식 디바운싱 처리
+	return async function(...args) { // 모든 인자
+		if(debounceMap[key]) return; // key에 해당하는 함수가 실행 중일 경우 요청 무시(중복 요청 방지) 
+		
+		// 요청 시작
+		debounceMap[key] = true; // key에 해당하는 함수 디바운싱 상태 처리 추가
+		logger.info(`'${key}' debounceAsync() start`);
+		
+		try {
+			await func(...args); // 요청 함수 실행
+			
+		} finally {
+			// 요청 종료
+			debounceMap[key] = false; // key에 해당하는 함수 디바운싱 상태 제거 
+			logger.info(`'${key}' debounceAsync() end`);
+		}
+	}
+}
+
 // loading set
 let loadingTimeout; // 타이머 변수를 전역으로 선언
-function setAddLoading(loading, parentEleClass, backgroundColor=null) {
+function setLoading(loading, parentEleClass, backgroundColor='var(--whiteColor)') {
 	if(!loading) {
 		clearTimeout(loadingTimeout); // 딜레이 시간 안에 통신 완료 시 로딩 타이머 취소
 		if($(`.${parentEleClass}_loading_wrap`).length) $(`.${parentEleClass}_loading_wrap`).remove(); // 로딩 요소 제거
-		//logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: stop loading`);
+		//logger.info(`setLoading() ${parentEleClass}_loading_wrap: stop loading`);
 		return false;
-		
 	}
 	
 	if($(`.${parentEleClass}_loading_wrap`).length.length) { // 이미 로딩 요소가 존재할 경우 
 		alert('현재 요청이 진행 중입니다. 잠시 후 다시 시도해 주세요.');
-		//logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: Already loading`);
-		return false; // 이미 요청이 진행 중이면 함수 종료 (중복 요청 방지)
+		//logger.info(`setLoading() ${parentEleClass}_loading_wrap: Already loading`);
+		return false; // 이미 요청이 진행 중이면 함수 종료
 	}
 	
 	loadingTimeout = setTimeout(() => {
 		$(`.${parentEleClass}`).append(`
-			<span class="${parentEleClass}_loading_wrap loading" style="background-color: ${backgroundColor ? backgroundColor : 'var(--whiteColor)'};"></span>
+			<span class="${parentEleClass}_loading_wrap loading" style="background-color: ${backgroundColor};"></span>
 		`); // 해당 컨텐츠에 로딩 요소 추가
 	}, 50);
-	//logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: success loading`);
+	
+	//logger.info(`setLoading() ${parentEleClass}_loading_wrap: success loading`);
 	return true; // 로딩 표시 요청 완료
 }
 
@@ -378,7 +399,7 @@ function setIdentityCheckForm() {
 	    </div>
 	    
 	    <div class="sign_form" id="password_check_form">
-	    	<form name="modify_check_form" onsubmit="postIdentityCheckForm(event, 'modify_check_form')">
+	    	<form name="modify_check_form" onsubmit="postIdentityCheck(event, 'modify_check_form')">
             	<div class="input_list_container">
 	                <div class="input_list" id="input_list_info">					
 	                    <label for="pw" class="border_input">
@@ -489,7 +510,7 @@ function setAccountModifyForm(data) {
 		                            </td>
                             	` 
                         	: 
-                            	''
+                            	'<td colspan="2"></td>'
                             }
                         	
                         </tr>
@@ -498,7 +519,7 @@ function setAccountModifyForm(data) {
 
                 <div class="btn_list right">
                     <div class="btn_list">
-                        <div onclick="putModifyForm('modify_form')" class="btns">수정</div>
+                        <div onclick="putMyAccountSubmit('modify_form')" class="btns">수정</div>
                     </div>
                 </div>
             </div>
