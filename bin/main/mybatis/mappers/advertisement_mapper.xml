@@ -224,7 +224,7 @@
 		FROM 
 			ADVERTISEMENT 
 		WHERE 
-			AD_CATEGORY_NO = #{ac_no}
+			AD_CATEGORY_NO = #{ad_category_no}
 		AND 
 			AD_IS_DELETED = 1 
 		ORDER BY 

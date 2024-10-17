@@ -191,10 +191,10 @@ public class AdvertisementController {
 	// 광고 등록 양식에서 광고를 등록할 위치를 선택 했을 시 해당 위치의 maxIdx 가져오기
 	@ResponseBody
 	@GetMapping("/info/create_category_select")
-	public Object createCategorySelect(@RequestParam(value = "ac_no") int ac_no) {
+	public Object createCategorySelect(@RequestParam(value = "ad_category_no") int ad_category_no) {
 		log.info("createCategorySelect()");
 		
-		int advertisementIdxMaxNum = advertisementService.getAdvertisementIdxMaxNum(ac_no);
+		int advertisementIdxMaxNum = advertisementService.getAdvertisementIdxMaxNum(ad_category_no);
 		
 		return advertisementIdxMaxNum;
 		

@@ -52,7 +52,7 @@ public interface AdvertisementMapper {
 	// -------------------------------------------광고 -------------------------------------------
 
 	// 해당 광고 위치의 광고 maxIdx값 구하기
-	public int getAdvertisementIdxMaxNumByCategory(int ac_no);
+	public Integer getAdvertisementIdxMaxNumByCategory(int ad_category_no);
 	
 	// idx값을 중간값으로 입력 시 나머지 idx들 +1 처리 하기
 	public int updateAdvertisementIdx(int ad_idx);

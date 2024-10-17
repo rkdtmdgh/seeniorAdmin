@@ -319,10 +319,12 @@ public class AdvertisementService {
 	}
 	
 	// 광고 등록 양식에서 광고를 등록할 위치를 선택 했을 시 해당 위치의 maxIdx 가져오기
-	public int getAdvertisementIdxMaxNum(int ac_no) {
+	public int getAdvertisementIdxMaxNum(int ad_category_no) {
 		log.info("getAdvertisementIdxMaxNum()");
 		
-		int advertisementIdxMaxNum = advertisementMapper.getAdvertisementIdxMaxNumByCategory(ac_no);
+		Integer advertisementIdxMaxNum = advertisementMapper.getAdvertisementIdxMaxNumByCategory(ad_category_no);
+		
+		if (advertisementIdxMaxNum == null) advertisementIdxMaxNum = 0;
 		
 		return advertisementIdxMaxNum;
 	}
