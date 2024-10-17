@@ -9,43 +9,29 @@ function setInputFocus(ele) {
 	}
 }
 
-// 중복요청 방지 및 로딩 표시 설정
-let debounceState = {}; // 각 요청별 상태 관리
-let debounceStateI = 0;
+// loading set
+let loadingTimeout; // 타이머 변수를 전역으로 선언
 function setAddLoading(loading, parentEleClass, backgroundColor=null) {
-	// 각 parentEleClass별로 로딩 상태를 관리
-	if (!debounceState[parentEleClass]) {
-		debounceState[parentEleClass] = {
-			isLoading: false, // 로딩 상태
-			timeoutId: null, // 디바운싱 타이머 아이디
-		}
-	}
-	
 	if(!loading) {
-		clearTimeout(debounceState[parentEleClass].timeoutId); // 딜레이 시간 안에 통신 완료 시 로딩 타이머 취소
+		clearTimeout(loadingTimeout); // 딜레이 시간 안에 통신 완료 시 로딩 타이머 취소
 		if($(`.${parentEleClass}_loading_wrap`).length) $(`.${parentEleClass}_loading_wrap`).remove(); // 로딩 요소 제거
-		debounceState[parentEleClass].isLoading = false; // 로딩 상태 초기화
-		logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: stop loading`);
-		logger.info(`debounceState[parentEleClass].isLoading  ${parentEleClass}_loading_wrap:`, debounceState[parentEleClass].isLoading );
+		//logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: stop loading`);
 		return false;
 		
 	}
 	
-	if(debounceState[parentEleClass].isLoading) { // 이미 해당 요청에 대한 로딩이 진행 중일 경우
+	if($(`.${parentEleClass}_loading_wrap`).length.length) { // 이미 로딩 요소가 존재할 경우 
 		alert('현재 요청이 진행 중입니다. 잠시 후 다시 시도해 주세요.');
-		logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: Already loading`);
-		return false; // 중복 요청 무시
+		//logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: Already loading`);
+		return false; // 이미 요청이 진행 중이면 함수 종료 (중복 요청 방지)
 	}
 	
-	// 리딩 엣지에서 첫 요청 처리
-	debounceState[parentEleClass] = true; // 로딩 상태로 설정하여 중복 요청 방지
-	debounceState[parentEleClass].timeoutId = setTimeout(() => {
+	loadingTimeout = setTimeout(() => {
 		$(`.${parentEleClass}`).append(`
 			<span class="${parentEleClass}_loading_wrap loading" style="background-color: ${backgroundColor ? backgroundColor : 'var(--whiteColor)'};"></span>
 		`); // 해당 컨텐츠에 로딩 요소 추가
 	}, 50);
-	logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: success loading`);
-	logger.info(`debounceState[parentEleClass].isLoading  ${parentEleClass}_loading_wrap:`, debounceState[parentEleClass].isLoading );
+	//logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: success loading`);
 	return true; // 로딩 표시 요청 완료
 }
 
@@ -89,7 +75,7 @@ async function setBoardTitle(infoNo) {
 function setSelectGuidelineInfo(selectElement, formName) {
 	const $selectOption = $(selectElement).find('option:selected'); // 선택된 옵션
 	const info = $selectOption.data('info'); // 선택된 옵션의 data-info 속성 값 가져오기
-	const $infoEle = $('#guideline'); // 전달받은 요소값으로 참조('.', '#')
+	let $infoEle = $('#guideline'); // 전달받은 요소값으로 참조('.', '#')
 	
 	if($infoEle.length && info) {
 		$infoEle.text(info); // 내용 업데이트
