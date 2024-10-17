@@ -12,8 +12,8 @@
             await getCategoryList('ad_category_no', 'modify', selectedCategory); // element id, form 종류, selectedValue
             
             // 순번 max값 설정
-            const basicSelectCateValue = $('#ad_category_no').find('option:selected').val();
-            getMaxIdxAndSetAttribute('ad_category_no', basicSelectCateValue, 'modify');
+            const categoryMaxIdx = $('#ad_category_no').find('option:selected').val();
+            getMaxIdxAndSetAttribute('ad_category_no', categoryMaxIdx, 'modify');
         });
     </script>
 </head>
@@ -92,6 +92,7 @@
 		                                			min="1"
 		                                			onkeydown="blockEKey(event)"
 		                                			oninput="replaceNumber(this)"
+		                                			onblur="replaceNumber(this)"
 		                                			th:value="${advertisementDto.ad_idx}">
 		                                	</td>
 	                                	</tr>
