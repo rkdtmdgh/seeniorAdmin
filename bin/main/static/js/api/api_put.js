@@ -1,6 +1,9 @@
-// put ajax 요청
-async function putSubmitForm(apiUrl, formData, successMessage, errorMessage, loddingParentEle) {   
-	if(setAddLoading(true, loddingParentEle)) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+// 함수 디바운싱 적용 // 함수, key명
+const putIntegSubmit = debounceAsync(putIntegSubmitProcess, 'putIntegSubmitProcess'); // put 통합 ajax 요청
+
+// put 통합 ajax 요청
+async function putIntegSubmitProcess(apiUrl, formData, successMessage, errorMessage, loddingParentEle) {   
+	if(setLoading(true, loddingParentEle)) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
 		setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
 		
 		try {
@@ -12,7 +15,7 @@ async function putSubmitForm(apiUrl, formData, successMessage, errorMessage, lod
 				contentType: false,  // FormData를 문자열로 변환하지 않음
 			});
 			
-			logger.info(`${apiUrl} putSubmitForm() response:`, response);
+			logger.info(`${apiUrl} putIntegSubmit() response:`, response);
 			
 			if(response) {
 				if(successMessage) alert(successMessage);
@@ -22,7 +25,7 @@ async function putSubmitForm(apiUrl, formData, successMessage, errorMessage, lod
 			}
 			
 		} catch(error) {
-			logger.error(`${apiUrl} putSubmitForm() error:`, error);
+			logger.error(`${apiUrl} putIntegSubmit() error:`, error);
 			if(errorMessage) alert(errorMessage);
 			
 		} finally {
@@ -31,8 +34,8 @@ async function putSubmitForm(apiUrl, formData, successMessage, errorMessage, lod
 	}
 }
 
-// 본인 계정 정보 수정 폼
-async function putModifyForm(formName) {
+// 본인 계정 정보 수정
+async function putMyAccountSubmit(formName) {
 	const form = document.forms[formName];
 	let input;
 	
@@ -75,9 +78,9 @@ async function putModifyForm(formName) {
 	
 	const successMessage = '정보가 수정되었습니다';
 	const errorMessage = '정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
-	logger.info('내 정보 관리 폼 데이터:', formData);
+	logger.info('putMyAccountSubmit formData:', formData);
 	
-	await putSubmitForm(
+	await putIntegSubmit(
 		'/account/info/modify_confirm', // apiUrl
 		formData, 						// data
 		successMessage, 				// 성공 메세지
@@ -86,8 +89,8 @@ async function putModifyForm(formName) {
 	);
 }
 
-// 관리자 계정 정보 수정(SUPER_ADMIN) 폼
-async function putAdminModifyForm(formName) {
+// 관리자 계정 정보 수정(SUPER_ADMIN)
+async function putAdminModify(formName) {
 	const form = document.forms[formName];
 	let input;
 	
@@ -113,7 +116,7 @@ async function putAdminModifyForm(formName) {
 	const successMessage = `"${form.a_id.value}" 정보가 수정되었습니다`;
 	const errorMessage = `"${form.a_id.value}" 정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 
-	await putSubmitForm(
+	await putIntegSubmit(
 		'/account/list/admin_modify_confirm', 
 		formData, 
 		successMessage, 
@@ -124,8 +127,6 @@ async function putAdminModifyForm(formName) {
 
 // 관리자 계정 비밀번호 초기화
 async function putResetPassword(a_no, a_id) {
-	logger.info('putResetPassword():', a_no, a_id);
-	
 	const isConfirm = confirm(`${a_id} 계정 비밀번호를 초기화하시겠습니까?`);
 	if(!isConfirm) return false;	
 		
@@ -135,7 +136,7 @@ async function putResetPassword(a_no, a_id) {
 	const successMessage = `"${a_id}" 비밀번호가 초기화되었습니다.`;
 	const errorMessage = `"${a_id}" 비밀번호 초기화에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
-	await putSubmitForm(
+	await putIntegSubmit(
 		'/account/list/reset_password', 
 		formData, 
 		successMessage, 
@@ -145,7 +146,7 @@ async function putResetPassword(a_no, a_id) {
 }
 
 // 회원 정보 수정
-async function putUserAccountModifyForm(formName) {
+async function putUserAccountModify(formName) {
 	const form = document.forms[formName];
 	let input;
 	
@@ -176,7 +177,7 @@ async function putUserAccountModifyForm(formName) {
 	const successMessage = `"${form.u_id.value}" 계정 정보가 수정되었습니다`;
 	const errorMessage = `"${form.u_id.value}" 계정 정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 
-	await putSubmitForm(
+	await putIntegSubmit(
 		'/user_account/info/modify_confirm', 
 		formData, 
 		successMessage, 
@@ -186,7 +187,7 @@ async function putUserAccountModifyForm(formName) {
 }
 
 // 질환 / 질병 분류 수정
-async function putDiseaseCategoryModifyForm(formName) {
+async function putDiseaseCategoryModify(formName) {
 	const form = document.forms[formName];
 	let input;
 	
@@ -206,7 +207,7 @@ async function putDiseaseCategoryModifyForm(formName) {
 	const successMessage = `"${input.value}" 질환/질병 분류명이 수정되었습니다`;
 	const errorMessage = `"${input.value}" 질환/질병 분류명 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 
-	await putSubmitForm(
+	await putIntegSubmit(
 		'/disease/cate_info/modify_category_confirm', 
 		formData, 
 		successMessage, 
@@ -216,7 +217,7 @@ async function putDiseaseCategoryModifyForm(formName) {
 }
 
 // 질환 / 질병 수정
-async function putDiseaseModifyForm(formName) {
+async function putDiseaseModify(formName) {
 	const form = document.forms[formName];
 	let input;
 	
@@ -256,7 +257,7 @@ async function putDiseaseModifyForm(formName) {
 	const successMessage = `"${form.d_name.value}" 질환/질병 정보가 수정되었습니다`;
 	const errorMessage = `"${form.d_name.value}" 질환/질병 정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 
-	await putSubmitForm(
+	await putIntegSubmit(
 		'/disease/info/modify_confirm', 
 		formData, 
 		successMessage, 
@@ -266,7 +267,7 @@ async function putDiseaseModifyForm(formName) {
 }
 
 // 영상 정보 수정
-async function putVideoModifyForm(formName) {
+async function putVideoModify(formName) {
 	const form = document.forms[formName];
 	let input;
 	
@@ -292,7 +293,7 @@ async function putVideoModifyForm(formName) {
 	const successMessage = `"${form.v_title.value}" 영상 정보가 수정되었습니다`;
 	const errorMessage = `"${form.v_title.value}" 영상 정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 
-	await putSubmitForm(
+	await putIntegSubmit(
 		'/video/info/modify_confirm', 
 		formData, 
 		successMessage, 
@@ -302,7 +303,7 @@ async function putVideoModifyForm(formName) {
 }
 
 // 공지사항 수정
-async function putNoticeModifyForm(formName) {
+async function putNoticeModify(formName) {
 	const form = document.forms[formName];
 	let input;
 		
@@ -321,7 +322,7 @@ async function putNoticeModifyForm(formName) {
 	const successMessage = '수정되었습니다';
 	const errorMessage = '수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 
-	await putSubmitForm(
+	await putIntegSubmit(
 		'/notice/info/modify_confirm', 
 		formData, 
 		successMessage, 
@@ -331,7 +332,7 @@ async function putNoticeModifyForm(formName) {
 }
 
 // 게시판 수정
-async function putBoardCategoryModifyForm(formName) {
+async function putBoardCategoryModify(formName) {
 	const form = document.forms[formName];
 	const bc_name = form.bc_name;
 	const bc_idx = form.bc_idx;
@@ -354,7 +355,7 @@ async function putBoardCategoryModifyForm(formName) {
 	const successMessage = `"${bc_name.value}" 이(가) 수정되었습니다`;
 	const errorMessage = `"${bc_name.value}" 이(가) 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 
-	await putSubmitForm(
+	await putIntegSubmit(
 		'/board/cate_info/modify_category_confirm', 
 		formData, 
 		successMessage, 
@@ -365,8 +366,8 @@ async function putBoardCategoryModifyForm(formName) {
 
 // 게시판 순번 수정
 async function putBoardCategoryModifyButton(event, bc_idx, page) {    
-	// 실시간 비동기 작업으로 리로드 되지 않도록 putSubmitForm함수 사용하지 않음
-	if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+	// 실시간 비동기 작업으로 리로드 되지 않도록 putIntegSubmit함수 사용하지 않음
+	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
 		const infoEle = event.target.closest('tr'); // 클릭된 요소의 가장 가까운 tr 요소 찾기
 	    const bc_no = infoEle.getAttribute('data-bc-no'); 
 	    const current_bc_idx = infoEle.getAttribute('data-bc-idx'); 
@@ -376,7 +377,7 @@ async function putBoardCategoryModifyButton(event, bc_idx, page) {
 		formData.append('current_bc_idx', current_bc_idx);
 		formData.append('bc_idx', bc_idx);
 		
-		setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
+		// setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
 		
 		const errorMessage = '순번 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 	
@@ -400,14 +401,14 @@ async function putBoardCategoryModifyButton(event, bc_idx, page) {
 			if(errorMessage) alert(errorMessage);
 			
 		} finally {
-			setAddLoading(false, 'content_inner'); // 로딩 종료
+			setLoading(false, 'content_inner'); // 로딩 종료
 			getList('/board/cate_info/get_category_list', null, null, page);
 		}
 	}
 }
 
 // 게시판 공지 사항 수정
-async function putNoticePostsModifyForm(formName) {
+async function putNoticePostsModify(formName) {
 	const form = document.forms[formName];
 	
 	input = form.bn_title;
@@ -447,7 +448,7 @@ async function putNoticePostsModifyForm(formName) {
 		formData.append('files', emptyBlob); 
 	}
 	
-	await putSubmitForm(
+	await putIntegSubmit(
 		'/board/info/modify_confirm',
 		formData,
 		successMessage,
@@ -457,7 +458,7 @@ async function putNoticePostsModifyForm(formName) {
 }
 
 // 게시물 수정
-async function putPostsModifyForm(formName) {
+async function putPostsModify(formName) {
 	const form = document.forms[formName];
 	
 	input = form.bp_title;
@@ -497,7 +498,7 @@ async function putPostsModifyForm(formName) {
 		formData.append('files', emptyBlob); 
 	}
 	
-	await putSubmitForm(
+	await putIntegSubmit(
 		'/board/info/modify_confirm',
 		formData,
 		successMessage,
@@ -507,7 +508,7 @@ async function putPostsModifyForm(formName) {
 }
 
 // 광고 분류 수정
-async function putAdvertisementCategoryModifyForm(formName) {
+async function putAdvertisementCategoryModify(formName) {
 	const form = document.forms[formName];
 	let input;
 	
@@ -521,7 +522,7 @@ async function putAdvertisementCategoryModifyForm(formName) {
 	const successMessage = `"${input.value}" 광고 분류명이 수정되었습니다`;
 	const errorMessage = `"${input.value}" 광고 분류명 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 
-	await putSubmitForm(
+	await putIntegSubmit(
 		'/advertisement/cate_info/modify_category_confirm', 
 		formData, 
 		successMessage, 
@@ -530,8 +531,8 @@ async function putAdvertisementCategoryModifyForm(formName) {
 	);
 }
 
-// 광고 수정 폼
-async function putAdvertisementModifyForm(formName) {
+// 광고 수정
+async function putAdvertisementModify(formName) {
 	const form = document.forms[formName];
 	let input;
 	
@@ -585,7 +586,7 @@ async function putAdvertisementModifyForm(formName) {
 	const successMessage = `"${form.ad_client.value}" 님의 광고가 수정되었습니다.`;
 	const errorMessage = `"${form.ad_client.value}" 님의 광고 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
-	await putSubmitForm(
+	await putIntegSubmit(
 		'/advertisement/info/modify_confirm',
 		formData,
 		successMessage,
