@@ -39,15 +39,13 @@
 	                                <tbody>
 		                                <tr>
 		                                    <th><p class="table_title">아이디</p></th>
-		                                	<td class="disabled">
-		                                		<div class="cont_info">
-		                                			<input type="text" name="u_id" class="table_info" disabled
-		                                				th:value="${userAccountDto.u_id}">
-		                                		
-		                                			<div class="btns small" th:classappend="${userAccountDto.u_is_blocked == true ? 'white' : 'delete'}"
-		                                				th:text="${userAccountDto.u_is_blocked == true ? '정상' : '정지'}"
-		                                			></div>
-		                                		</div>
+		                                	<td class="cont_info disabled">
+	                                			<input type="text" name="u_id" class="table_info" disabled
+	                                				th:value="${userAccountDto.u_id}">
+	                                		
+	                                			<div class="btns small" th:classappend="${userAccountDto.u_is_blocked == true ? 'white' : 'delete'}"
+	                                				th:text="${userAccountDto.u_is_blocked == true ? '정상' : '정지'}"
+	                                			></div>
 	                                        </td>
 	                                        
 	                                        <th><p class="table_title">가입일</p></th>
@@ -82,7 +80,7 @@
 		                                    
 		                                    <th><p class="table_title">성별</p></th>
 		                                    <td>
-		                                        <div class="table_info cont_info">
+		                                        <div class="table_info">
 	                                            	<label class="radio">
 	                                            		<input type="radio" name="u_gender" value="M"
 	                                            			th:checked="${userAccountDto.u_gender == 'M'}"> 남

@@ -555,6 +555,10 @@
     th {
         vertical-align: top;
     }
+    
+    td {
+    	position: relative;
+    }
 
     .table_title {
         display: block;
@@ -577,8 +581,6 @@
     }
     
     .cont_info {
-       	position: relative;
-       	
        	.table_info {
        		padding-right: 80px; 
        	}
@@ -612,7 +614,7 @@
     }
 }
 
-.guideline {
+#guideline {
 	display: block;
 	font-size: var(--etcFontSize);
 	font-weight: normal;

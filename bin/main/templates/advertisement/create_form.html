@@ -8,7 +8,7 @@
 	<script type="text/javascript">
 		$(async function() {
 			// advertisement category 가져오기
-			await getCategoryList('ad_category_no', true); // element id, isForm, selectedValue
+			await getCategoryList('ad_category_no', 'create'); // element id, form 종류, selectedValue
         });
 	</script>
 </head>
@@ -82,7 +82,7 @@
 		                                	<th>
 		                                		<p class="table_title">
 		                                			파일 첨부
-			                                		<span class="guideline">(권장 사이즈: 1920x1080)</span>
+			                                		<span id="guideline">(권장 사이즈: 1920x1080)</span>
 		                                		</p>
 		                                	</th>
 		                                	<td colspan="2">

@@ -9,7 +9,7 @@
 		$(async function() {
 			// advertisement category 가져오기
             const selectedCategory = /*[[${advertisementDto.ad_category_no}]]*/ // 기본값 설정
-            await getCategoryList('ad_category_no', true, selectedCategory); // element id, isForm, selectedValue
+            await getCategoryList('ad_category_no', 'modify', selectedCategory); // element id, form 종류, selectedValue
         });
     </script>
 </head>
@@ -81,13 +81,22 @@
 	                                				onblur="validateEmpty(this, 'URL 주소를')"
                                 					th:value="${advertisementDto.ad_url}">
 		                                	</td>
+		                                	
+		                                	<th><p class="table_title">순번</p></th>
+		                                	<td class="order_number">
+		                                		<input type="number" name="ad_idx" id="idx_number" class="table_info" placeholder="순번"
+		                                			min="1"
+		                                			onkeydown="blockEKey(event)"
+		                                			oninput="replaceNumber(this)"
+		                                			th:value="${advertisementDto.ad_idx}">
+		                                	</td>
 	                                	</tr>
 	                                	
 	                                	<tr>
 		                                	<th>
 		                                		<p class="table_title">
 		                                			파일 첨부
-			                                		<span class="guideline"></span>
+			                                		<span id="guideline"></span>
 		                                		</p>
 		                                	</th>
 		                                	<td colspan="2">
