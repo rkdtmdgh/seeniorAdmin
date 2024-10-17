@@ -56,6 +56,8 @@ public interface BoardMapper {
 
 	int subBoardCategoryIdxForDelete(BoardCategoryDto boardCategoryDto);
 
+	List<BoardPostsDto> modifyForm(int bp_no);
+
 	
 
 }
