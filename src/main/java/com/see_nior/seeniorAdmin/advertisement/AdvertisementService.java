@@ -26,6 +26,9 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 public class AdvertisementService {
 	
+	// 이미지 서버 경로
+	private String imgServerPath = "127.0.0.1:8091/seeniorUploadImg/";
+	
 	// 광고 위치 관련
 	final static public boolean ADVERTISEMENT_CATEGORY_CREATE_FAIL = false;
 	final static public boolean ADVERTISEMENT_CATEGORY_CREATE_SUCCESS = true;
@@ -334,12 +337,48 @@ public class AdvertisementService {
 		log.info("createConfirm()");
 		
 		// idx값을 중간값으로 입력 시 나머지 idx들 +1 처리 하기
-		int updateIdxResult = advertisementMapper.updateAdvertisementIdx(advertisementDto);
 		
-		if (updateIdxResult <= 0) {
-			log.info("idx 업데이트 실패!!");
+		int AdvertisementMaxIdx = advertisementMapper.getAdvertisementIdxMaxNumByCategory(advertisementDto.getAd_category_no());
+		
+		if (advertisementDto.getAd_idx() < AdvertisementMaxIdx) {
 			
-			return ADVERTISEMENT_CREATE_FAIL;
+			int updateIdxResult = advertisementMapper.updateAdvertisementIdx(advertisementDto);
+			
+			if (updateIdxResult <= 0) {
+				log.info("idx 업데이트 실패!!");
+				
+				return ADVERTISEMENT_CREATE_FAIL;
+				
+			} else {
+				
+				advertisementDto.setAd_dir_name(ad_dir_name);
+				
+				String newSrc = "http://"
+						+ imgServerPath
+						+"advertisement/"
+						+ advertisementDto.getAd_category_no()
+						+ "/"
+						+ ad_dir_name
+						+ "/"
+						+ savedFileName;
+				
+				log.info("newSrc : {}", newSrc);
+				
+				advertisementDto.setAd_img(newSrc);
+				
+				int createResult = advertisementMapper.insertNewAdvertisement(advertisementDto);
+				
+				// DB에 입력 실패
+				if (createResult <= 0) {
+					return ADVERTISEMENT_CREATE_FAIL;
+				
+				// DB에 입력 성공
+				} else {
+					return ADVERTISEMENT_CREATE_SUCCESS;
+							
+				}
+				
+			}
 			
 		} else {
 			
