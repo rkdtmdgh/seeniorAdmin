@@ -362,8 +362,6 @@ public class AdvertisementService {
 						+ "/"
 						+ savedFileName;
 				
-				log.info("newSrc : {}", newSrc);
-				
 				advertisementDto.setAd_img(newSrc);
 				
 				int createResult = advertisementMapper.insertNewAdvertisement(advertisementDto);
@@ -383,7 +381,17 @@ public class AdvertisementService {
 		} else {
 			
 			advertisementDto.setAd_dir_name(ad_dir_name);
-			advertisementDto.setAd_img(savedFileName);
+			
+			String newSrc = "http://"
+					+ imgServerPath
+					+"advertisement/"
+					+ advertisementDto.getAd_category_no()
+					+ "/"
+					+ ad_dir_name
+					+ "/"
+					+ savedFileName;
+			
+			advertisementDto.setAd_img(newSrc);
 			
 			int createResult = advertisementMapper.insertNewAdvertisement(advertisementDto);
 			
