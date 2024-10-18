@@ -334,8 +334,7 @@ public class AdvertisementService {
 		log.info("createConfirm()");
 		
 		// idx값을 중간값으로 입력 시 나머지 idx들 +1 처리 하기
-		int ad_idx = advertisementDto.getAd_idx();
-		int updateIdxResult = advertisementMapper.updateAdvertisementIdx(ad_idx);
+		int updateIdxResult = advertisementMapper.updateAdvertisementIdx(advertisementDto);
 		
 		if (updateIdxResult <= 0) {
 			log.info("idx 업데이트 실패!!");
