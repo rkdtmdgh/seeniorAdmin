@@ -446,7 +446,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		case '/disease/info/get_disease_list_by_category': // 질환/질병 정보 관리 질병군별 분류 리스트 테이블
 			tableTrContent = `
 				<tr>
-		            <td class="vam">
+		            <td class="va_m">
 		                <div class="table_info func_area"><input type="checkbox" name="d_no" value="${data.d_no}"></div>
 		            </td>
 		            <td>
@@ -520,7 +520,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		case '/video/info/search_video_list': // 영상 정보 관리 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
-		            <td class="vam">
+		            <td class="va_m">
 		                <div class="table_info func_area"><input type="checkbox" name="v_no" value="${data.v_no}"></div>
 		            </td>
 		            <td>
@@ -543,7 +543,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		case '/board/cate_info/search_board_category_list': // 게시판 관리 검색 리스트 테이블
 			tableTrContent = `
 				<tr data-bc-no="${data.bc_no}" data-bc-idx="${data.bc_idx}">
-					<td class="vam">
+					<td class="va_m">
 						<div class="table_info func_area">
 							${getListCnt > 1 ? `
 								${data.bc_idx !== 1 ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx - 1}, ${page})" class="func_arrow up"></span>` : ''}
@@ -602,7 +602,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		case '/board/info/search_posts_list': // 일반 게시물 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
-					<td class="vam">
+					<td class="va_m">
 		                <div class="table_info func_area"><input type="checkbox" name="bp_no" value="${data.bp_no}"></div>
 		            </td>
 		            <td>
@@ -635,7 +635,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		case '/notice/info/search_notice_category_list': // 공지 사항 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
-					<td class="vam">
+					<td class="va_m">
 		                <div class="table_info func_area"><input type="checkbox" name="d_no" value="${data.n_no}"></div>
 		            </td>
 		            <td>
@@ -661,7 +661,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		case '/qna/info/search_qna_list': // 질문과 답변 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
-					<td class="vam">
+					<td class="va_m">
 		                <div class="table_info func_area"><input type="checkbox" name="bq_no" value="${data.bq_no}"></div>
 		            </td>
 		            <td>
@@ -1091,7 +1091,7 @@ function mapCategorylistObject(ele) {
 }
 
 // 로그인 유저 데이터 요청
-async function getAccountInfo(modify=false) {
+async function getAccountInfo(modify = false) {
 	try {
 		const response = await $.ajax({
 			url: '/account/info/get_account_info',

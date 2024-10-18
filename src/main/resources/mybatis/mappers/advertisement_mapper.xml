@@ -242,7 +242,9 @@
 		SET 
 			AD_IDX = AD_IDX + 1 
 		WHERE 
-			AD_IDX >= #{ad_idx}
+			AD_CATEGORY_NO = #{ad_category_no} 
+		AND 
+			AD_IDX >= #{ad_idx} 
 	
 	</update>
 
