@@ -9,7 +9,6 @@
 
     /* font */
     --baseFontFamily: 'Pretendard Variable';
-    --baseFontSize: 16px;
     --subFontSize: 0.9em;
     --smallFontSize: 0.75em;
     --menuFontSize: 0.95em;
@@ -107,7 +106,7 @@
 
 html, body {
     font-family: var(--baseFontFamily);
-    font-size: var(--baseFontSize);
+    font-size: 16px;
     background-color: var(--bgColor);
     color: var(--blackColor);
 }
