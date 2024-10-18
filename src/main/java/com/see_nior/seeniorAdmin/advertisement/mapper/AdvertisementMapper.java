@@ -55,7 +55,7 @@ public interface AdvertisementMapper {
 	public Integer getAdvertisementIdxMaxNumByCategory(int ad_category_no);
 	
 	// idx값을 중간값으로 입력 시 나머지 idx들 +1 처리 하기
-	public int updateAdvertisementIdx(int ad_idx);
+	public int updateAdvertisementIdx(AdvertisementDto advertisementDto);
 	
 	// 광고 등록
 	public int insertNewAdvertisement(AdvertisementDto advertisementDto);
