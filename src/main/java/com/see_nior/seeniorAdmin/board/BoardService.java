@@ -298,7 +298,7 @@ public class BoardService {
 			
 			while (matcher.find()) {
 				String oldSrc = matcher.group();
-				String newSrc = "img src=\"" 
+				String newSrc = "img src=\"http://" 
 						+ imgServerPath 
 						+"board/" 
 						+ bp_category_no 
