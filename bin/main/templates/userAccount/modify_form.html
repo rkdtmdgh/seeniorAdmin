@@ -67,6 +67,7 @@
                                 			<th><p class="table_title">이름</p></th>
                                 			<td>
 		                                        <input type="text" name="u_name" id="u_name" class="table_info"
+		                                        	onblur="validateEmpty(this, '이름을')"
 		                                            th:value="${userAccountDto.u_name}">
 		                                    </td>
                                 			
@@ -112,13 +113,17 @@
 		                                    </td>
 		                                    
 		                                    <th><p class="table_title">우편번호</p></th>
-		                                    <td rowspan="3">
-		                                    	<div class="adress_wrap">
-		                                    		<div class="zip_code">
-		                                    		
-		                                    		</div>
-		                                    	</div>
-		                                    </td>
+		                                    <td>
+		                                    	<div class="cont_info disabled">
+		                                			<input type="text" name="u_zip_code" id="u_zip_code" class="table_info" placeholder="우편번호 5자리"
+		                                				maxlength="5"
+		                                				onkeyup="replaceNumber(this)"
+		                                				onblur="validateEmpty(this, '우편번호를')"
+		                                				th:value="${userAccountDto.u_zip_code}">
+		                                		
+		                                			<div class="btns small">주소 검색</div>
+		                                        </div>
+		                                    </td>	
 		                                </tr>
 		                                
 		                                <tr>
@@ -139,20 +144,31 @@
 		                                    </td>
 		                                    
 		                                    <th><p class="table_title">주소</p></th>
+		                                    <td>
+		                                    	<input type="text" name="u_address" id="u_address" class="table_info" placeholder="주소"
+		                                				onblur="validateEmpty(this, '주소를')"
+		                                				th:value="${userAccountDto.u_address}">
+		                                    </td>	
 		                                </tr>
 		                                
 		                                <tr>
-		                                    <th><p class="table_title">소속 기관</p></th>
+		                                    <th><p class="table_title">소속기관</p></th>
 		                                    <td>
 		                                    	<input type="text" name="u_company" id="u_company" class="table_info" 
 		                                    		data-placeholder-readonly="기업 선택 시 입력 가능"
 		                                    		data-placeholder-enabled="소속 기관"
 		                                    		th:placeholder="${userAccountDto.u_is_personal == true ? '기업 선택 시 입력 가능' : '소속 기관'}"
-		                                            th:value="${userAccountDto.u_company}"
-		                                            th:readonly="${userAccountDto.u_is_personal}">
+		                                            th:readonly="${userAccountDto.u_is_personal}"
+		                                            th:attr="onblur=${userAccountDto.u_is_personal == false ? 'validateEmpty(this, ''소속기관을'')' : null}"
+		                                            th:value="${userAccountDto.u_company}">
 		                                    </td>
 		                                    
 		                                    <th><p class="table_title">상세주소</p></th>
+		                                    <td>
+		                                    	<input type="text" name="u_detailed_address" id="u_detailed_address" class="table_info" placeholder="상세주소"
+		                                				onblur="validateEmpty(this, '상세주소를')"
+		                                				th:value="${userAccountDto.u_detailed_address}">
+		                                    </td>	
 		                                </tr>
 	                                </tbody>
 	                            </table>

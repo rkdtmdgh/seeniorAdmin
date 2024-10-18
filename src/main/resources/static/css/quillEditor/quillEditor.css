@@ -55,7 +55,6 @@
 .ql-editor iframe {
     width: 100%;
     height: auto;
-    max-width: 800px !important; 
-    margin: auto;
+    max-width: 800px !important;
     aspect-ratio: 16 / 9; /* 비율 유지 (16:9 비율) */
 }
