@@ -332,7 +332,7 @@ public class BoardController {
 			
 	//특정 게시물 정보 가져오기
 	@GetMapping("/info/modify_form")
-	public String modifyForm(@RequestParam("bp_no") int bp_no, Model model) {
+	public String modifyForm(@RequestParam("infoNo") int infoNo, @RequestParam("bp_no") int bp_no, Model model) {
 		log.info("modifyForm()");
 		
 		BoardPostsDto boardPostsDto = boardService.modifyForm(bp_no);
@@ -340,6 +340,7 @@ public class BoardController {
 		log.info("boardPostsDto: {}",boardPostsDto);
 		
 		model.addAttribute("boardPostsDto", boardPostsDto);
+		model.addAttribute("infoNo", infoNo);
 		
 		String nextPage = "board/modify_form";
 		
