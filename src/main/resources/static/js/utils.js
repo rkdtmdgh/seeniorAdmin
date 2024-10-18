@@ -92,6 +92,19 @@ async function setBoardTitle(infoNo) {
 	}
 }
 
+// 콘텐츠 서브 내용 설정
+async function setContentSubInfo(txt) {
+	const $title = $('.categoty_title');
+	let $subInfo = $('.title_other_info_text');
+	
+	if(!$subInfo.length) {
+		$subInfo = $('<span class="title_other_info_text">');
+	}
+	
+	$subInfo.text(`마지막 업데이트 ${txt}`);		
+	$title.append($subInfo);	
+}
+
 // 셀렉트 데이터로 특정 요소 텍스트 변경
 function setSelectGuidelineInfo(selectElement, formName) {
 	const $selectOption = $(selectElement).find('option:selected'); // 선택된 옵션
@@ -106,17 +119,17 @@ function setSelectGuidelineInfo(selectElement, formName) {
 	getMaxIdxAndSetAttribute($(selectElement).attr('name'), $selectOption.val(), formName);
 }
 
-// 콘텐츠 서브 내용 설정
-async function setContentSubInfo(txt) {
-	const $title = $('.categoty_title');
-	let $subInfo = $('.title_other_info_text');
+// 라디오 버튼으로 연계된 요소 제어
+function setInputStateFromRadio(state, targetEle, defaultValue = null) {
+	const placeholderEnabled = $(targetEle).data('placeholder-enabled');
+    const placeholderReadonly = $(targetEle).data('placeholder-readonly');
 	
-	if(!$subInfo.length) {
-		$subInfo = $('<span class="title_other_info_text">');
+	if(!state) {
+		$(targetEle).val('').attr('readonly', true).attr('placeholder', placeholderReadonly); // 타겟 요소의 비활성화 및 값 초기화
+		
+	} else {
+		$(targetEle).val(defaultValue).attr('readonly', false).attr('placeholder', placeholderEnabled); // 타겟 요소를 활성화 및 기본 값 설정
 	}
-	
-	$subInfo.text(`마지막 업데이트 ${txt}`);		
-	$title.append($subInfo);	
 }
 
 // 레시피 내용 레이아웃 설정
@@ -586,7 +599,6 @@ $(document).on('click', function(event) {
 	if($openNotificationsEle.length && !isNotificationsTriggerClick) { // 클릭한 요소가 알람 버튼이 아닐 경우
 		$openNotificationsEle.removeClass('active'); // 열려있는 알람 모달창 닫기
 	}
-		
 	
 	// 커스텀 셀렉트 open, close 기능
 	const $openSelectEle = $('.select_option_list.active'); // 열려 있는 셀렉트 옵션 요소

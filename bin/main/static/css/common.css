@@ -45,7 +45,7 @@
     --sideMenuWidth: 270px;
     --signFormWidth: 340px;
     --iconsWidth: 20px;
-    --bigIconsWidth: 45px;
+    --bigIconsWidth: 65px;
     --smallThumbWidth: 30px;
     --arrowWidth: 5px; /* X2 (5px = 10px) */
     --arrowButtonWidth: 15px;
@@ -136,25 +136,7 @@ input[type="text"], input[type="password"], input[type="date"], input[type="numb
     outline: none;
 }
 
-input[type="date"] {
-	line-height: 0.9;
-}
-
-input::placeholder, textarea::placeholder {
-    color: var(--middleGrayColor);
-}
-
-input:disabled {
-	cursor: not-allowed;
-	background-color: unset;
-}
-
-.disabled {
-    background-color: var(--tableDisabledBgColor);
-    cursor: not-allowed;
-    color: var(--middleGrayColor);
-}
-
+/* lebel */
 label {
 	&.radio {
 		padding-right: var(--smallGap);
@@ -164,12 +146,27 @@ label {
 	}
 }
 
+/* select */
 select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     padding: var(--selectPadding);
     background: url(/image/icons/gray_arrow.png) right 1.2em center no-repeat;
+}
+
+/* input */
+input[type="date"] {
+	line-height: 0.9;
+}
+
+input::placeholder, textarea::placeholder {
+    color: var(--middleGrayColor);
+}
+
+input:disabled, input[type="text"]:read-only {
+	cursor: not-allowed;
+	background-color: unset;
 }
 
 input:-webkit-autofill,
@@ -218,21 +215,15 @@ table {
         &:last-child {
             border: none;
         }
-        
-        &.vam {
-        	vertical-align: middle;
-        }
     }
 }
 
-/* margin, padding */
-.mb_stepGap {
-	margin-bottom: var(--stepGap);
-}
-
-.pr_baseGap {
-	padding-right: var(--baseGap);
-}
+/* colgroup */
+.col_checkBox { width: 50px; }
+.col_no { width: 70px; }
+.col_default { width: 20%; }
+.col_short { width: 13%; }
+.col_row_title { width: 15%; }
 
 /* accessibility */
 .a11y-hidden {
