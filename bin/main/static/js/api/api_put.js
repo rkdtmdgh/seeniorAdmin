@@ -150,6 +150,12 @@ async function putUserAccountModify(formName) {
 	const form = document.forms[formName];
 	let input;
 	
+	input = form.u_name;
+	if(!validateEmpty(input, '이름을', true)) {
+		input.focus();
+		return false;
+	}
+	
 	input = form.u_nickname;
 	if(!validateEmpty(input, '닉네임을', true)) {
 		input.focus();
@@ -168,12 +174,13 @@ async function putUserAccountModify(formName) {
 		return false;
 	}
 	
-	const formData = new FormData(form);
-	
 	input = form.u_company;
-	if(input.value.trim()) input.value = input.value.trim(); // u_company의 값이 있다면 앞 뒤 공백 제거
-	formData.set('u_is_personal', input.value.trim() ? false : true); // u_company값의 따라 u_is_personal 수정
+	if(!form.u_is_personal.value && !validateEmpty(input, '소속기관을', true)) {
+		input.focus();
+		return false;
+	}
 	
+	const formData = new FormData(form);	
 	const successMessage = `"${form.u_id.value}" 계정 정보가 수정되었습니다`;
 	const errorMessage = `"${form.u_id.value}" 계정 정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 

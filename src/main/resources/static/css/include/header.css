@@ -83,7 +83,7 @@
             			
             			.notifications_info_list {
             				display: block;
-            				font-size: 14px;
+            				font-size: var(--subFontSize);
             				color: var(--grayColor);
             				padding: var(--notificationsPadding);
             				
