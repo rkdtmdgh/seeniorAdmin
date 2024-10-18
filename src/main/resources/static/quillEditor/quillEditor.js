@@ -3,12 +3,13 @@ let quill; // quill 에디터
 
 // Quill 에디터에서 blob URL을 허용 설정
 const Image = Quill.import('formats/image'); // Quill의 기본 Image 포맷 가져오기
+const originalSanitize = Image.sanitize; // 기존 sanitize 메서드를 저장
 Image.sanitize = function(url) { // blob URL을 허용하도록 sanitize 메서드 재정의
     if (url.startsWith('blob:')) { // Blob URL을 허용하는 조건 추가
         return url;
     }
     
-    return Quill.import('formats/image').sanitize(url); // 기본적으로 허용되는 URL (http, https 등)
+    return originalSanitize.call(this, url); // 기존 sanitize 메서드를 호출
 };
 
 Quill.register(Image, true); // 새로운 Image 포맷 등록
