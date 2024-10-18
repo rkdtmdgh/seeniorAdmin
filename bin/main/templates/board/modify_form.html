@@ -31,7 +31,7 @@
 	                    </div>
 	
 	                    <form name="posts_modify_form">
-		                    <input type="hidden" name="bp_no" th:value="${selectedPostsDto.bp_no}">
+		                    <input type="hidden" name="bp_no" th:value="${boardPostsDto.bp_no}">
 		                    
 	                        <div class="table_wrap">
 	                            <table class="content_edit_table">
@@ -48,7 +48,7 @@
 		                                	<td colspan="3">
 		                                		<input type="text" name="bp_title" id="bp_title" class="table_info" placeholder="제목"
 		                                			onblur="validateEmpty(this, '제목을')"
-		                                			th:value="${selectedPostsDto.bp_title}">
+		                                			th:value="${boardPostsDto.bp_title}">
 	                                        </td>
 		                                </tr>
 		                                
@@ -73,7 +73,7 @@
 		                                	</th>
 		                                	
 		                                	<td colspan="3">
-	                                			<div id="editor" th:utext="${selectedPostsDto.bp_body}"></div>
+	                                			<div id="editor" th:utext="${boardPostsDto.bp_body}"></div>
 	                                			<div id="text_limit">
 	                                				<span id="current_size"></span> / <span id="max_size"></span>
 	                                			</div>
@@ -83,7 +83,7 @@
 	                            </table>
 	
 	                            <div class="btn_list">
-	                            	<div th:if="${selectedPostsDto.bp_no} != null" class="btns delete"
+	                            	<div th:if="${boardPostsDto.bp_no} != null" class="btns delete"
 		                        		 th:onclick="delListData('bp_no')">삭제</div>
 		                        		 
 	                                <div class="btn_list">
