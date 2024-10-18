@@ -195,6 +195,7 @@ CREATE TABLE USER_ACCOUNT (
 	U_IS_PERSONAL 				TINYINT COMMENT "유저 개인회원 OR 기관회원 여부 (개인 = 1, 기관 = 0)",			-- 유저 개인회원 OR 기관회원 여부 (개인 = 1, 기관 = 0)
 	U_SOCIAL_ID 				VARCHAR(200) COMMENT "유저 3자 로그인 ID",									-- 유저 3자 로그인 ID
 	U_IS_BLOCKED 				TINYINT DEFAULT 1 COMMENT "유저 계정 정지 여부 (기본값 = 1. 정지 시 = 0)",		-- 유저 계정 정지 여부 (기본값 = 1. 정지 시 = 0)
+    U_BLOCKED_REASON			VARCHAR(255) COMMENT "유저 계정 정지 사유",									-- 유저 계정 정지 사유
 	U_ISACCOUNTNONEXPIRED 		TINYINT DEFAULT 1 COMMENT "유저 계정 만료 유무(만료X = 1, 만료 = 0)",			-- 유저 계정 만료 유무(만료X = 1, 만료 = 0)
 	U_ISACCOUNTNONLOCKED 		TINYINT DEFAULT 1 COMMENT "유저 계정 잠김 유무(잠김X = 1, 잠김 = 0)",			-- 유저 계정 잠김 유무(잠김X = 1, 잠김 = 0)
 	U_ISCREDENTIALSNONEXPIRED 	TINYINT DEFAULT 1 COMMENT "유저 계정 자격 증명 만료 유무(만료X = 1, 만료 = 0)",	-- 유저 자격 증명 만료 유무(만료X = 1, 만료 = 0)
