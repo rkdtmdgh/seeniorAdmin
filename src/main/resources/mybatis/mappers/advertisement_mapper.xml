@@ -233,8 +233,8 @@
 	
 	</select>
 	
-	<!-- idx값을 중간값으로 입력 시 나머지 idx들 +1 처리 하기 -->
-	<update id="updateAdvertisementIdx"
+	<!-- idx값을 기존 idx들의 중간값 혹은 기존 idx값 보다 작은 값으로 입력 시 나머지 idx들 +1 처리 하기 -->
+	<update id="updateAdvertisementIdxSum"
 			parameterType="Integer">
 			
 		UPDATE 
@@ -242,9 +242,28 @@
 		SET 
 			AD_IDX = AD_IDX + 1 
 		WHERE 
-			AD_CATEGORY_NO = #{ad_category_no} 
+			AD_CATEGORY_NO = #{advertisementDto.ad_category_no} 
 		AND 
-			AD_IDX >= #{ad_idx} 
+			AD_IDX >= #{advertisementDto.ad_idx} 
+		<if test="curIdx != null">
+		AND 
+			#{curIdx} > AD_IDX
+		</if>
+	
+	</update>
+	
+	<!-- idx값을 기존 idx값 보다 큰 값으로 입력 시 나머지 idx들 -1 처리 하기 -->
+	<update id="updateAdvertisementIdxSub"
+			parameterType="Integer">
+			
+		UPDATE 
+			ADVERTISEMENT 
+		SET 
+			AD_IDX = AD_IDX - 1 
+		WHERE 
+			AD_CATEGORY_NO = #{advertisementDto.ad_category_no} 
+		AND 
+			AD_IDX BETWEEN #{curIdx + 1} AND #{advertisementDto.ad_idx}
 	
 	</update>
 
@@ -355,6 +374,20 @@
 	
 	</select>
 	
+	<!-- 기존에 등록 되어 있던 idx 가져오기 -->
+	<select id="getCurrentIdx"
+			parameterType="Integer"
+			resultType="Integer">
+	
+		SELECT 
+			AD_IDX 
+		FROM 
+			ADVERTISEMENT 
+		WHERE 
+			AD_NO = #{ad_no} 
+	
+	</select>
+	
 	<!-- 광고 수정 확인 -->
 	<update id="updateAdvertisement"
 			parameterType="AdvertisementDto">
@@ -362,12 +395,18 @@
 		UPDATE 
 			ADVERTISEMENT 
 		SET 
-			AD_CATEGORY_NO = #{ad_category_no}
-			AD_IMG = #{ad_img}
-			AD_URL = #{ad_url}
-			AD_START_DATE = #{ad_start_date}
-			AD_END_DATE = #{ad_end_date}
-			AD_CLIENT = #{ad_client}
+			AD_CATEGORY_NO = #{ad_category_no} 
+			<if test="ad_img != null">
+			AD_IMG = #{ad_img} 
+			</if>
+			<if test="ad_dir_name != null">
+			AD_DIR_NAME = #{ad_dir_name} 
+			</if>
+			AD_IDX = #{ad_idx} 
+			AD_URL = #{ad_url} 
+			AD_START_DATE = #{ad_start_date} 
+			AD_END_DATE = #{ad_end_date} 
+			AD_CLIENT = #{ad_client} 
 			AD_MOD_DATE = NOW() 
 		WHERE 
 			AD_NO = #{ad_no}
@@ -381,7 +420,8 @@
 		UPDATE 
 			ADVERTISEMENT 
 		SET 
-			AD_IS_DELETED = 0 
+			AD_IS_DELETED = 0, 
+			AD_IDX = 0
 		WHERE 
 			AD_NO = #{ad_no}
 	
