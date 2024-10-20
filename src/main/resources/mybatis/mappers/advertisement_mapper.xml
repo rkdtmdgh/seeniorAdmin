@@ -317,6 +317,36 @@
 	
 	</select>
 	
+	<!-- 변경할 idx값에 있던 항목 current_ad_dix와 매치시키기 -->
+	<update id="matchingModifyAdvertisementIdx"
+			parameterType="Map">
+	
+		UPDATE 
+			ADVERTISEMENT 
+		SET 
+			AD_IDX = #{current_ad_idx} 
+		WHERE 
+			AD_CATEGORY_NO = #{ac_no} 
+		AND 
+			AD_IDX = #{ad_idx}	
+	
+	</update>
+	
+	<!-- idx 변경할 항목을 새로운 ad_idx로 할당하기 -->
+	<update id="targetModifyAdvertisementIdx"
+			parameterType="Map">
+	
+		UPDATE 
+			ADVERTISEMENT 
+		SET 
+			AD_IDX = #{ad_idx} 
+		WHERE 
+			AD_CATEGORY_NO = #{ac_no} 
+		AND 
+			AD_NO = #{ad_no}	
+	
+	</update>
+	
 	<!-- 페이지에 따른 광고 가져오기 (위치별 광고) -->
 	<select id="getAdvertisementListByCategoryWithPage"
 			parameterType="Integer"

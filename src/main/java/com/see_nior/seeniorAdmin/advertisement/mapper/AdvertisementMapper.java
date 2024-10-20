@@ -69,10 +69,10 @@ public interface AdvertisementMapper {
 	// 광고의 총 리스트 개수 구하기(모든 광고)
 	public int getAllAdvertisementCnt();
 	
-	// 광고의 idx 변경()
+	// 변경할 idx값에 있던 항목 current_ad_dix와 매치시키기
 	public int matchingModifyAdvertisementIdx(Map<String, Object> modifyIdxParams);
 	
-	// 광고의 idx 변경()
+	// idx 변경할 항목을 새로운 ad_idx로 할당하기
 	public int targetModifyAdvertisementIdx(Map<String, Object> modifyIdxParams);
 	
 	// 페이지에 따른 광고 가져오기(위치별 광고)

@@ -467,10 +467,12 @@ public class AdvertisementService {
 		
 		try {
 			
+			// 변경할 idx값에 있던 항목 current_ad_dix와 매치시키기
 			modifyIdxResult = advertisementMapper.matchingModifyAdvertisementIdx(modifyIdxParams);
 			
 			if (modifyIdxResult > 0) {
 				
+				// idx 변경할 항목을 새로운 ad_idx로 할당하기
 				modifyIdxResult = advertisementMapper.targetModifyAdvertisementIdx(modifyIdxParams);
 				
 				if (modifyIdxResult <= 0) {
