@@ -41,8 +41,6 @@ public class QnaService {
 		List<AdminAccountDto> qnaDtos = qnaMapper.selectQnaList(pagingParams);
 		pagingList.put("qnaDtos", qnaDtos);
 		
-		log.info("qnaDtos -------> {}", qnaDtos);
-		
 		return pagingList;
 	}
 
