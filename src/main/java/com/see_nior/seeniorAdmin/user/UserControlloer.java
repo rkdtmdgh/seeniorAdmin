@@ -106,10 +106,12 @@ public class UserControlloer {
 	
 	// 일반 멤버 탈퇴 확인 delete_confirm
 	@GetMapping("/info/delete_confirm")
-	public String deleteConfirm() {
+	@ResponseBody
+	public Object deleteConfirm(@RequestParam("u_no") int u_no) {
 		log.info("deleteConfirm()");
 		
-		return new String();
+		 return userService.deleteConfirm(u_no);
+		
 	}
 	
 	

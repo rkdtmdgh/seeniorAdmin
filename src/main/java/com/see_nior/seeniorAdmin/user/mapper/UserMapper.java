@@ -23,4 +23,6 @@ public interface UserMapper {
 
 	public int updateUserAccountInfo(UserAccountDto userAccountDto);
 
+	public int updateUserIsDeletedByNo(int u_no);
+
 }
