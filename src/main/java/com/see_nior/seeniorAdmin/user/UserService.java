@@ -22,6 +22,9 @@ public class UserService {
 	final static public boolean USER_DELETED_SUCCESS = true;
 	final static public boolean USER_DELETED_FAIL = false;
 	
+	final static public boolean USER_BLOCKED_SUCCESS = true;
+	final static public boolean USER_BLOCKED_FAIL = false;
+	
 	private int pageLimit = 10;		// 한 페이지당 보여줄 정보 수
 	private int blockLimit = 5;		// 하단에 보여질 페이지 번호 수
 	
@@ -174,7 +177,22 @@ public class UserService {
 			return USER_DELETED_FAIL;
 			
 	}
-	
-	
+
+	// 일반 멤버 계정 정지 확인
+	public Object blockedConfirm(int u_no, String u_blocked_reason) {
+		log.info("blockedConfirm()");
+		
+		Map<String, Object> params = new HashMap<>();
+		params.put("u_no", u_no);
+		params.put("u_blocked_reason", u_blocked_reason);
+		
+		int result = userMapper.updateUserIsBlockedByNo(params);
+		
+		if (result >= 0) 
+			return USER_BLOCKED_SUCCESS;
+		else
+			return USER_BLOCKED_FAIL;
+		
+	}
 
 }
