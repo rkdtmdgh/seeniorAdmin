@@ -72,10 +72,11 @@
 	</resultMap>
 
 	<select id="selectQnaList"
-			resultType="QnaDto">
+			resultMap="QnaDto">
 	
 		SELECT 
-			* 
+			BQ.*, 
+			U.*  
 		FROM 
 			BOARD_QNA BQ 
 		JOIN 
@@ -84,6 +85,8 @@
 			BQ.BQ_USER_NO = U.U_NO 
 		WHERE 
 			BQ.BQ_IS_DELETED = 1 
+		AND 
+			U.U_IS_DELETED = 1 
 		ORDER BY 
 			${sortValue} ${order} 
 		LIMIT 

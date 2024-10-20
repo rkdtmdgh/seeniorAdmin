@@ -41,7 +41,7 @@ public class QnaController {
 		Map<String, Object> qnaList = qnaService.getQnaPagingList(sortValue, order, page);
 		
 		Map<String, Object> qnaListPage = qnaService.getQnaListPageNum(page);
-		qnaList.put("qnaListPage", qnaListPage);
+		qnaList.put("qnaListPageNum", qnaListPage);
 		qnaList.put("sortValue", sortValue);
 		qnaList.put("order", order);
 		
