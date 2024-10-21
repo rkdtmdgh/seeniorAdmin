@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
+import com.see_nior.seeniorAdmin.dto.QnaAnswerDto;
 import com.see_nior.seeniorAdmin.dto.QnaDto;
 
 @Mapper
@@ -25,5 +26,6 @@ public interface QnaMapper {
 
 	public int insertQnaAnswer(Map<String, Object> params);
 
+	public List<QnaAnswerDto> selectQnaAnswerInfosByBqNo(int bq_no);
 	
 }
