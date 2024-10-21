@@ -186,6 +186,28 @@
 	
 	</select>
 	
+	<!-- qna answers 가져오기 by bq_no -->
+	<select id="selectQnaAnswerInfosByBqNo"
+			resultMap="QnaAnswerDto">
+		
+		SELECT 
+			BQA.*, 
+			A.A_ID, A.A_NAME, A.A_PHONE, A.A_DEPARTMENT, A.A_LEVEL, A.A_POSITION
+		FROM 
+			BOARD_QNA_ANSWER BQA 
+		JOIN 
+			ADMIN_ACCOUNT A 
+		ON 
+			BQA.BQA_ADMIN_ID = A.A_ID 
+		WHERE 
+			BQA.BQA_QNA_NO = #{bq_no} 
+		AND 
+			BQA_IS_DELETED = 1 
+		
+	</select>
+	
+	
+	<!-- qna 답변 확인 -->
 	<update id="insertQnaAnswer">
 		
 		INSERT INTO 
