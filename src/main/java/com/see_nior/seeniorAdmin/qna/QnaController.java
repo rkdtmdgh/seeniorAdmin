@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 
+
 @Log4j2
 @Controller
 @RequiredArgsConstructor
@@ -84,26 +85,23 @@ public class QnaController {
 	}
 	
 	// qna 상세보기 양식
-	@GetMapping("/info/qna_detail_form")
-	public String qnaDetailForm(@RequestParam("bq_no") int bq_no, Model model) {
-		log.info("qnaDetailForm()");
+	@GetMapping("/info/answer_form")
+	public String answerForm(@RequestParam("bq_no") int bq_no, Model model) {
+		log.info("answerForm()");
 	
-		String nextPage = "qna/qna_detail_form";
+		String nextPage = "qna/answer_form";
 		
 		QnaDto qnaDto = qnaService.getQnaInfoByNo(bq_no);
 		List<QnaAnswerDto> QnaAnswerDtos = qnaService.getQnaAnswerInfosByBqNo(bq_no);
 		model.addAttribute("qnaDto", qnaDto);
 		model.addAttribute("QnaAnswerDtos", QnaAnswerDtos);
 		
-		log.info("qnaDto ---- {}", qnaDto);
-		log.info("QnaAnswerDtos ---- {}", QnaAnswerDtos);
-		
 		return nextPage;
 		
 	}
 	
 	// qna 답변 확인
-	@PostMapping("/info/qna_answer_confirm")
+	@PostMapping("/info/answer_confirm")
 	@ResponseBody
 	public Object qnaAnswerConfirm(
 			@RequestParam("bq_no") int bq_no, 
@@ -112,8 +110,21 @@ public class QnaController {
 		log.info("qnaAnswerConfirm()");
 		
 		return qnaService.qnaAnswerConfirm(bq_no, bqa_answer, principal.getName());
+		
 	}
 	
+	// qna 답변 수정 확인
+	@PostMapping("/info/answer_modify_confirm")
+	@ResponseBody
+	public boolean answerModifyConfirm(
+			@RequestParam("bqa_no") int bqa_no, 
+			@RequestParam("bqa_answer") String bqa_answer, 
+			Principal principal) {
+		log.info("answerModifyConfirm()");
+		
+		return qnaService.answerModifyConfirm(bqa_no, bqa_answer);
+		
+	}
 	
 	
 }

@@ -381,7 +381,7 @@ CREATE TABLE BOARD_QNA_ANSWER (
 	BQA_NO			INT	AUTO_INCREMENT COMMENT "Q&A 답변 NO(PK)",						-- Q&A 답변 NO(PK)
 	BQA_QNA_NO		INT	NOT NULL COMMENT "Q&A 답변 Q&A NO(BOARD_QNA TABLE PK)",			-- Q&A 답변 Q&A NO(BOARD_QNA TABLE PK)
 	BQA_ANSWER		TEXT NOT NULL COMMENT "Q&A 답변 내용",								-- Q&A 답변 내용
-	BQA_ADMIN_ID	INT	NOT NULL COMMENT "Q&A 답변 작성자 ID",								-- Q&A 답변 작성자 ID
+	BQA_ADMIN_ID	VARCHAR(100) NOT NULL COMMENT "Q&A 답변 작성자 ID",					-- Q&A 답변 작성자 ID
 	BQA_IS_DELETED	TINYINT DEFAULT 1 COMMENT "Q&A 답변 삭제 여부(기본값 = 1, 삭제 시 = 0)",	-- Q&A 답변 삭제 여부(기본값 = 1, 삭제 시 = 0)
 	BQA_REG_DATE	DATETIME DEFAULT NOW() COMMENT "Q&A 답변 등록일",						-- Q&A 답변 등록일
 	BQA_MOD_DATE	DATETIME DEFAULT NOW() COMMENT "Q&A 답변 수정일",						-- Q&A 답변 수정일
@@ -391,6 +391,17 @@ CREATE TABLE BOARD_QNA_ANSWER (
 SELECT * FROM BOARD_QNA_ANSWER;
 SHOW INDEX FROM BOARD_QNA_ANSWER;
 DROP TABLE BOARD_QNA_ANSWER;
+
+INSERT INTO BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) VALUES(1, "질문 1번 답변 내용입니다.", "admin11@seenior.com");
+INSERT INTO BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) VALUES(1, "질문 1번 답변 내용입니다.", "admin12@seenior.com");
+INSERT INTO BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) VALUES(1, "질문 1번 답변 내용입니다.", "admin13@seenior.com");
+INSERT INTO BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) VALUES(2, "질문 1번 답변 내용입니다.", "admin11@seenior.com");
+INSERT INTO BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) VALUES(2, "질문 1번 답변 내용입니다.", "admin12@seenior.com");
+INSERT INTO BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) VALUES(2, "질문 1번 답변 내용입니다.", "admin13@seenior.com");
+INSERT INTO BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) VALUES(3, "질문 1번 답변 내용입니다.", "admin11@seenior.com");
+INSERT INTO BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) VALUES(3, "질문 1번 답변 내용입니다.", "admin12@seenior.com");
+INSERT INTO BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) VALUES(3, "질문 1번 답변 내용입니다.", "admin13@seenior.com");
+
 
 
 -- Q&A 게시판 공지사항 테이블 --------------------------------------------------------------------------------------------------------------

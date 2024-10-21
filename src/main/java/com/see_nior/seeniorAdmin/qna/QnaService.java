@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 import com.see_nior.seeniorAdmin.dto.QnaAnswerDto;
@@ -21,6 +22,9 @@ public class QnaService {
 
 	final static public boolean QNA_ANSWER_SUCCESS = true;
 	final static public boolean QNA_ANSWER_FAIL = false;
+	
+	final static public boolean QNA_ANSWER_MODIFY_SUCCESS = true;
+	final static public boolean QNA_ANSWER_MODIFY_FAIL = false;
 	
 	private int pageLimit = 10;		// 한 페이지당 보여줄 정보 수
 	private int blockLimit = 5;		// 하단에 보여질 페이지 번호 수
@@ -163,6 +167,7 @@ public class QnaService {
 	}
 
 	// qna 답변 확인
+	@Transactional
 	public Object qnaAnswerConfirm(int bq_no, String bqa_answer, String a_id) {
 		log.info("qnaAnswerConfirm()");
 		
@@ -171,13 +176,42 @@ public class QnaService {
 		params.put("bqa_answer", bqa_answer);
 		params.put("a_id", a_id);
 		
-		int result = qnaMapper.insertQnaAnswer(params);
+		try {
+			
+			int insertResult = qnaMapper.insertQnaAnswer(params);
+			
+			if (insertResult >= 0) {
+				int updateResult = qnaMapper.updateQnaState(bq_no);
+				
+				if (updateResult >= 0) {
+					return QNA_ANSWER_SUCCESS;
+				} else {
+					throw new RuntimeException("qnaAnswerConfirm() updateQnaState fail");
+				}
+				
+			} else {
+				return QNA_ANSWER_FAIL;
+			}			
+			
+		} catch (Exception e) {
+			log.info("qnaAnswerConfirm() Exception!");
+			e.printStackTrace();
+			
+			return QNA_ANSWER_FAIL;
+		}
+		
+	}
+
+	public boolean answerModifyConfirm(int bqa_no, String bqa_answer) {
+		log.info("answerModifyConfirm()");
+		
+		int result = qnaMapper.updateQnaAnswer(bqa_no, bqa_answer);
 		
 		if(result >= 0)
-			return QNA_ANSWER_SUCCESS;
+			return QNA_ANSWER_MODIFY_SUCCESS;
 		else 
-			return QNA_ANSWER_FAIL;
-		
+			return QNA_ANSWER_MODIFY_FAIL;
+
 	}
 
 
