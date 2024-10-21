@@ -193,6 +193,11 @@ async function putUserAccountModify(formName) {
 	);
 }
 
+// 회원 계정 상태 수정
+async function putUserAccountModify(u_no, ) {
+	
+}
+
 // 질환 / 질병 분류 수정
 async function putDiseaseCategoryModify(formName) {
 	const form = document.forms[formName];
