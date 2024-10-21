@@ -23,5 +23,7 @@ public interface QnaMapper {
 
 	public QnaDto selectQnaInfoByNo(int bq_no);
 
+	public int insertQnaAnswer(Map<String, Object> params);
+
 	
 }
