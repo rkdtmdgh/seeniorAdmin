@@ -1,10 +1,12 @@
 package com.see_nior.seeniorAdmin.qna;
 
+import java.security.Principal;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,6 +15,7 @@ import com.see_nior.seeniorAdmin.dto.QnaDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+
 
 @Log4j2
 @Controller
@@ -88,12 +91,21 @@ public class QnaController {
 		QnaDto qnaDto = qnaService.getQnaInfoByNo(bq_no);
 		model.addAttribute("qnaDto", qnaDto);
 		
-		log.info("qnaDto ------ {}",  qnaDto);
-		
 		return nextPage;
 		
 	}
 	
+	// qna 답변 확인
+	@PostMapping("/info/qna_answer_confirm")
+	@ResponseBody
+	public Object qnaAnswerConfirm(
+			@RequestParam("bq_no") int bq_no, 
+			@RequestParam("bqa_answer") String bqa_answer, 
+			Principal principal) {
+		log.info("qnaAnswerConfirm()");
+		
+		return qnaService.qnaAnswerConfirm(bq_no, bqa_answer, principal.getName());
+	}
 	
 	
 }

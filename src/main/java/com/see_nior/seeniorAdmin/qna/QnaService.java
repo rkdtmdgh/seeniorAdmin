@@ -18,6 +18,9 @@ import lombok.extern.log4j.Log4j2;
 @Service
 public class QnaService {
 
+	final static public boolean QNA_ANSWER_SUCCESS = true;
+	final static public boolean QNA_ANSWER_FAIL = false;
+	
 	private int pageLimit = 10;		// 한 페이지당 보여줄 정보 수
 	private int blockLimit = 5;		// 하단에 보여질 페이지 번호 수
 	
@@ -150,6 +153,23 @@ public class QnaService {
 		return qnaMapper.selectQnaInfoByNo(bq_no);
 		
 	}
-	
-	
+
+	// qna 답변 확인
+	public Object qnaAnswerConfirm(int bq_no, String bqa_answer, String a_id) {
+		log.info("qnaAnswerConfirm()");
+		
+		Map<String, Object> params = new HashMap<>();
+		params.put("bq_no", bq_no);
+		params.put("bqa_answer", bqa_answer);
+		params.put("a_id", a_id);
+		
+		int result = qnaMapper.insertQnaAnswer(params);
+		
+		if(result >= 0)
+			return QNA_ANSWER_SUCCESS;
+		else 
+			return QNA_ANSWER_FAIL;
+		
+	}
+
 }

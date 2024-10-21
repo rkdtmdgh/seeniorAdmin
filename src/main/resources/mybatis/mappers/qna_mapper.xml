@@ -186,5 +186,13 @@
 	
 	</select>
 	
+	<update id="insertQnaAnswer">
+		
+		INSERT INTO 
+			BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) 
+		VALUES (#{bq_no}, #{bqa_answer}, #{a_id}) 
+	
+	</update>
+	
 	
 </mapper>
