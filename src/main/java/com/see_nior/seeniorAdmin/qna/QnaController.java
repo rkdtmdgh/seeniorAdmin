@@ -33,7 +33,7 @@ public class QnaController {
 	@GetMapping("/info/get_qna_list")
 	@ResponseBody
 	public Object getQnaList(
-			@RequestParam(value = "sortValue", required = false, defaultValue = "q_no") String sortValue,
+			@RequestParam(value = "sortValue", required = false, defaultValue = "bq_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("getQnaList()");
@@ -41,7 +41,7 @@ public class QnaController {
 		Map<String, Object> qnaList = qnaService.getQnaPagingList(sortValue, order, page);
 		
 		Map<String, Object> qnaListPage = qnaService.getQnaListPageNum(page);
-		qnaList.put("qnaListPage", qnaListPage);
+		qnaList.put("qnaListPageNum", qnaListPage);
 		qnaList.put("sortValue", sortValue);
 		qnaList.put("order", order);
 		

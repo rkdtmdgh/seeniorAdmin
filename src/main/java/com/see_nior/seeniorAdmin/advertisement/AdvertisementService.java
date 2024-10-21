@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -26,21 +27,26 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 public class AdvertisementService {
 	
+	// 이미지 서버 경로
+	private String imgServerPath = "127.0.0.1:8091/seeniorUploadImg/";
+	
 	// 광고 위치 관련
-	final static public boolean ADVERTISEMENT_CATEGORY_CREATE_FAIL = false;
-	final static public boolean ADVERTISEMENT_CATEGORY_CREATE_SUCCESS = true;
-	final static public boolean ADVERTISEMENT_CATEGORY_MODIFY_FAIL = false;
-	final static public boolean ADVERTISEMENT_CATEGORY_MODIFY_SUCCESS = true;
-	final static public boolean ADVERTISEMENT_CATEGORY_DELETE_FAIL = false;
-	final static public boolean ADVERTISEMENT_CATEGORY_DELETE_SUCCESS = true;
+	final static public boolean ADVERTISEMENT_CATEGORY_CREATE_FAIL = false;		// 광고 위치 추가 실패
+	final static public boolean ADVERTISEMENT_CATEGORY_CREATE_SUCCESS = true;	// 광고 위치 추가 성공
+	final static public boolean ADVERTISEMENT_CATEGORY_MODIFY_FAIL = false;		// 광고 위치 수정 실패
+	final static public boolean ADVERTISEMENT_CATEGORY_MODIFY_SUCCESS = true;	// 광고 위치 수정 성공
+	final static public boolean ADVERTISEMENT_CATEGORY_DELETE_FAIL = false;		// 광고 위치 삭제 실패
+	final static public boolean ADVERTISEMENT_CATEGORY_DELETE_SUCCESS = true;	// 광고 위치 삭제 성공
 	
 	// 광고 관련
-	final static public boolean ADVERTISEMENT_CREATE_FAIL = false;		// 광고 추가 실패
-	final static public boolean ADVERTISEMENT_CREATE_SUCCESS = true;	// 광고 추가 성공
-	final static public boolean ADVERTISEMENT_MODIFY_FAIL = false;		// 광고 수정 실패
-	final static public boolean ADVERTISEMENT_MODIFY_SUCCESS = true;	// 광고 수정 성공
-	final static public boolean ADVERTISEMENT_DELETE_FAIL = false;		// 광고 삭제 실패
-	final static public boolean ADVERTISEMENT_DELETE_SUCCESS = true;	// 광고 삭제 성공
+	final static public boolean ADVERTISEMENT_CREATE_FAIL = false;			// 광고 추가 실패
+	final static public boolean ADVERTISEMENT_CREATE_SUCCESS = true;		// 광고 추가 성공
+	final static public boolean ADVERTISEMENT_MODIFY_FAIL = false;			// 광고 수정 실패
+	final static public boolean ADVERTISEMENT_MODIFY_SUCCESS = true;		// 광고 수정 성공
+	final static public boolean ADVERTISEMENT_IDX_MODIFY_FAIL = false;		// 광고 idx 수정 실패
+	final static public boolean ADVERTISEMENT_IDX_MODIFY_SUCCESS = true;	// 광고 idx  수정 성공
+	final static public boolean ADVERTISEMENT_DELETE_FAIL = false;			// 광고 삭제 실패
+	final static public boolean ADVERTISEMENT_DELETE_SUCCESS = true;		// 광고 삭제 성공
 	
 	// 페이지네이션 관련
 	private int pageLimit = 10;	// 한 페이지당 보여줄 항목의 개수
@@ -242,7 +248,7 @@ public class AdvertisementService {
 		
 	}
 	
-	// 질환 카테고리의 총 페이지 개수 구하기(검색한 질환 카테고리)
+	// 광고 카테고리의 총 페이지 개수 구하기(검색한 광고 카테고리)
 	public Map<String, Object> getSearchAdvertisementCategoryListPageNum(String searchPart, String searchString, int page) {
 		log.info("getSearchAdvertisementCategoryListPageNum()");
 		
@@ -330,33 +336,64 @@ public class AdvertisementService {
 	}
 	
 	// 광고 등록 확인
+	@Transactional
 	public boolean createConfirm(AdvertisementDto advertisementDto, String ad_dir_name, String savedFileName) {
 		log.info("createConfirm()");
 		
-		// idx값을 중간값으로 입력 시 나머지 idx들 +1 처리 하기
-		int updateIdxResult = advertisementMapper.updateAdvertisementIdx(advertisementDto);
+		// 광고 디렉토리명과 이미지 URL 세팅
+		advertisementDto.setAd_dir_name(ad_dir_name);
 		
-		if (updateIdxResult <= 0) {
-			log.info("idx 업데이트 실패!!");
+		String newSrc = "http://"
+				+ imgServerPath
+				+"advertisement/"
+				+ advertisementDto.getAd_category_no()
+				+ "/"
+				+ ad_dir_name
+				+ "/"
+				+ savedFileName;
+		
+		advertisementDto.setAd_img(newSrc);
+		
+		// 선택한 광고 위치의 maxIdx값 가져오기
+		int AdvertisementMaxIdx = advertisementMapper.getAdvertisementIdxMaxNumByCategory(advertisementDto.getAd_category_no());
+		
+		try {
 			
-			return ADVERTISEMENT_CREATE_FAIL;
-			
-		} else {
-			
-			advertisementDto.setAd_dir_name(ad_dir_name);
-			advertisementDto.setAd_img(savedFileName);
+			// idx값을 중간값으로 입력 시 나머지 idx들 +1 처리 하기
+			if (advertisementDto.getAd_idx() <= AdvertisementMaxIdx) {
+				
+				Map<String, Object> updateIdxParams = new HashMap<>();
+				
+				updateIdxParams.put("advertisementDto", advertisementDto);
+				updateIdxParams.put("curIdx", null);
+				
+				int updateIdxResult = advertisementMapper.updateAdvertisementIdxSum(updateIdxParams);
+				
+				if (updateIdxResult <= 0) {
+					log.info("idx 업데이트 실패!!");
+					throw new RuntimeException();
+					
+				}
+			}
 			
 			int createResult = advertisementMapper.insertNewAdvertisement(advertisementDto);
 			
 			// DB에 입력 실패
 			if (createResult <= 0) {
-				return ADVERTISEMENT_CREATE_FAIL;
+				log.info("insertNewAdvertisement() error!!");
+				throw new RuntimeException();
 			
 			// DB에 입력 성공
 			} else {
 				return ADVERTISEMENT_CREATE_SUCCESS;
 						
 			}
+			
+		} catch (Exception e) {
+			log.info("createConfirm() Exception 발생!!");
+			e.printStackTrace();
+			
+			return ADVERTISEMENT_CREATE_FAIL;
 			
 		}
 		
@@ -411,6 +448,57 @@ public class AdvertisementService {
 		advertisementListPageNum.put("pageLimit", pageLimit);
 		
 		return advertisementListPageNum;
+		
+	}
+	
+	// 광고 순서 변경(광고 위치 디테일뷰에서)
+	@Transactional
+	public boolean modifyAdvertisementIdx(int ac_no, int ad_no, int current_ad_idx, int ad_idx) {
+		log.info("modifyAdvertisementIdx()");
+		
+		Map<String, Object> modifyIdxParams = new HashMap<>();
+		
+		modifyIdxParams.put("ac_no", ac_no);
+		modifyIdxParams.put("ad_no", ad_no);
+		modifyIdxParams.put("current_ad_idx", current_ad_idx);
+		modifyIdxParams.put("ad_idx", ad_idx);
+		
+		int modifyIdxResult = 0;
+		
+		try {
+			
+			// 변경할 idx값에 있던 항목 current_ad_dix와 매치시키기
+			modifyIdxResult = advertisementMapper.matchingModifyAdvertisementIdx(modifyIdxParams);
+			
+			if (modifyIdxResult > 0) {
+				
+				// idx 변경할 항목을 새로운 ad_idx로 할당하기
+				modifyIdxResult = advertisementMapper.targetModifyAdvertisementIdx(modifyIdxParams);
+				
+				if (modifyIdxResult <= 0) {
+					log.info("targetModifyAdvertisementIdx() error!");
+					throw new RuntimeException();
+					
+				} else {
+					
+					return ADVERTISEMENT_IDX_MODIFY_SUCCESS;
+					
+				}
+				
+			} else {
+				log.info("matchingModifyAdvertisementIdx() error!");
+				throw new RuntimeException();
+				
+			}
+			
+			
+		} catch (Exception e) {
+			log.info("modifyAdvertisementIdx() Exception 발생!!");
+			e.printStackTrace();
+			
+			return ADVERTISEMENT_IDX_MODIFY_FAIL;
+			
+		}
 		
 	}
 	
@@ -476,18 +564,93 @@ public class AdvertisementService {
 	}
 
 	// 광고 수정 확인
-	public boolean modifyConfirm(AdvertisementDto advertisementDto) {
+	@Transactional
+	public boolean modifyConfirm(AdvertisementDto advertisementDto, String ad_dir_name, String savedFileName) {
 		log.info("modifyConfirm()");
 		
-		int modifyResult = advertisementMapper.updateAdvertisement(advertisementDto);
-		
-		// DB에 입력 실패
-		if (modifyResult <= 0) {
+		// 사진 변경이 있을 시
+		if (ad_dir_name != null && savedFileName != null) {
 			
-			return ADVERTISEMENT_MODIFY_FAIL;
+			// 광고 디렉토리명과 이미지 URL 세팅
+			advertisementDto.setAd_dir_name(ad_dir_name);
+			
+			String newSrc = "http://"
+					+ imgServerPath
+					+"advertisement/"
+					+ advertisementDto.getAd_category_no()
+					+ "/"
+					+ ad_dir_name
+					+ "/"
+					+ savedFileName;
+			
+			advertisementDto.setAd_img(newSrc);
+			
+		// 사진 변경이 없을 시
+		} else {
+			
+			advertisementDto.setAd_dir_name(null);
+			advertisementDto.setAd_img(null);
+			
 		}
 		
-		return false;
+		// 기존에 등록되어있던 idx 가져오기
+		Integer curIdx = advertisementMapper.getCurrentIdx(advertisementDto.getAd_no());
+		
+		try {
+			
+			// 새로 입력한 IDX가 기존에 할당되어 있던 IDX 값 보다 작으면
+			if (advertisementDto.getAd_idx() < curIdx) {
+				
+				Map<String, Object> updateIdxParams = new HashMap<>();
+				
+				updateIdxParams.put("advertisementDto", advertisementDto);
+				updateIdxParams.put("curIdx", null);
+					
+				int updateIdxResult = advertisementMapper.updateAdvertisementIdxSum(updateIdxParams);
+				
+				if (updateIdxResult <= 0) {
+					log.info("idx 업데이트 실패!!");
+					throw new RuntimeException();
+					
+				}
+				
+			// 새로 입력한 IDX가 기존에 할당되어 있던 IDX값 보다 크면
+			} else if (advertisementDto.getAd_idx() > curIdx) {
+				
+				Map<String, Object> updateIdxParams = new HashMap<>();
+				
+				updateIdxParams.put("advertisementDto", advertisementDto);
+				updateIdxParams.put("curIdx", null);
+				
+				int updateIdxResult = advertisementMapper.updateAdvertisementIdxSub(updateIdxParams);
+				
+				if (updateIdxResult <= 0) {
+					log.info("idx 업데이트 실패!!");
+					throw new RuntimeException();
+					
+				}
+				
+			}
+			
+			int modifyResult = advertisementMapper.updateAdvertisement(advertisementDto);
+			
+			if (modifyResult <= 0) {
+				log.info("updateAdvertisement() error!!");
+				throw new RuntimeException();
+				
+			} else {
+				
+				return ADVERTISEMENT_MODIFY_SUCCESS;
+			}
+			
+		} catch (Exception e) {
+			log.info("modifyConfirm() Exception 발생!!");
+			e.printStackTrace();
+			
+			return ADVERTISEMENT_MODIFY_FAIL;
+			
+		}
+		
 	}
 
 	// 광고 삭제 확인
@@ -563,8 +726,5 @@ public class AdvertisementService {
 		return searchAdvertisementListPageNum;
 		
 	}
-
-	
-
 	
 }
