@@ -366,13 +366,13 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_id}</a>
 		            </td>
 		            <td>
-		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_authority_role === 'SUB_ADMIN' ? '완료' : '대기'}</a>
+		                <p class="table_info">${data.a_name}</p>
 		            </td>
 		            <td>
 		                <p class="table_info">${data.a_phone}</p>
 		            </td>
 		            <td>
-		                <p class="table_info">${data.a_name}</p>
+		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_authority_role === 'SUB_ADMIN' ? '완료' : '대기'}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.a_reg_date)}</p>
@@ -614,7 +614,11 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 	                	</a>
 		            </td>
 					<td>
-		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
+						${data.bp_account === 'admin' ?
+							`<a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id} (관리자)</a>`
+						:
+							`<a href="/user_account/info/modify_form?u_no=${data.userAccountDto.u_no}" class="table_info">${data.userAccountDto.u_id}</a>`
+						}
 		            </td>
 		            <td>
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_view_cnt}</a>

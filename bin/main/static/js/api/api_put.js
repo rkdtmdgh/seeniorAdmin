@@ -483,7 +483,7 @@ async function putPostsModify(formName) {
 	const errorMessage = `"${bp_title.value}" 게시물 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
 	const formData = new FormData(form);
-	formData.append('bp_body', quill.root.innerHTML); // quill 에디터 내용
+	formData.set('bp_body', quill.root.innerHTML); // quill 에디터 내용
 	
 	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
 	if($imgTags.length) {
@@ -502,7 +502,7 @@ async function putPostsModify(formName) {
 	} else {
 		logger.info('이미지 태그 없음');
 		const emptyBlob = new Blob([], { type: 'application/octet-stream' }); // 빈 Blob 생성
-		formData.append('files', emptyBlob); 
+		formData.set('files', emptyBlob); 
 	}
 	
 	await putIntegSubmit(
@@ -579,17 +579,21 @@ async function putAdvertisementModify(formName) {
 		return false;
 	}
 	
-	const imageSrc = $('.image_file_preview').find('img').attr('src'); 
-	if(!imageSrc) { // 기존 이미지를 제거했는지 확인
-		input = form.ad_img;
-		if(!input.files.length) {
-			alert('이미지 파일을 선택해 주세요.');
-			input.focus();
-			return false;
-		}
+	input = form.files;
+	const $previewContainer = $('.image_file_preview'); // 미리보기 요소
+	if(!input.files.lenth && !$previewContainer.length) { // 기존이미지 제거한 후 이미지 파일이 선택되지 않음
+		alert('이미지 파일을 선택해 주세요.');
+		input.focus();
+		return false;
 	}
 	
 	const formData = new FormData(form); 
+	const isChangedImg = $previewContainer.find('img').attr('src').startsWith('blob:'); // src가 blob으로 시작할 경우 수정됨
+	if(!isChangedImg) { // 이미지 파일이 수점되지 않았을 경우 formData에 files객체 수정
+		const emptyBlob = new Blob([], { type: 'application/octet-stream' }); // 빈 Blob 생성
+		formData.set('files', emptyBlob); 
+	}
+	
 	const successMessage = `"${form.ad_client.value}" 님의 광고가 수정되었습니다.`;
 	const errorMessage = `"${form.ad_client.value}" 님의 광고 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
