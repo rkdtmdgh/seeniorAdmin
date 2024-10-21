@@ -49,7 +49,35 @@ public class QnaController {
 		
 	}
 	
+	// qna 검색 리스트 가져오기 
+	@GetMapping("/info/search_qna_list")
+	@ResponseBody
+	public Object searchQnaList(
+			@RequestParam("searchPart") String searchPart,
+			@RequestParam("searchString") String searchString, 
+			@RequestParam(value = "sortValue", required = false, defaultValue = "bq_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order, 
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("searchQnaList()");
+	
+		Map<String, Object> searchQnaList = 
+				qnaService.searchQnaPagingList(searchPart, searchString, sortValue, order, page);
+		
+		Map<String, Object> searchQnaListPageNum = 
+				qnaService.searchQnaListPageNum(searchPart, searchString, page);
+		
+		searchQnaList.put("searchQnaListPageNum", searchQnaListPageNum);
+		searchQnaList.put("sortValue", sortValue);
+		searchQnaList.put("order", order);
+		searchQnaList.put("searchPart", searchPart);
+		searchQnaList.put("searchString", searchString);
+		
+		return searchQnaList;
+	}
+	
+	
 	// qna 상세보기 양식
+	
 	
 	
 }
