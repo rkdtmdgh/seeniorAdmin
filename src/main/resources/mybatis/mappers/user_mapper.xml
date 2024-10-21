@@ -145,4 +145,31 @@
 	
 	</update>
 	
+	<!-- 일반 멤버 탈퇴 상태 업데이트 BY NO -->
+	<update id="updateUserIsDeletedByNo">
+	
+		UPDATE 
+			USER_ACCOUNT 
+		SET 
+			U_IS_DELETED = 0, 
+			U_MOD_DATE = NOW() 
+		WHERE 
+			U_NO = #{u_no} 
+	
+	</update>
+	
+	<!-- 일반 멤버 계정 정지 확인 by no -->
+	<update id="updateUserIsBlockedByNo">
+	
+		UPDATE 
+			USER_ACCOUNT 
+		SET 
+			U_IS_BLOCKED = #{u_is_blocked}, 
+			U_BLOCKED_REASON = #{u_blocked_reason},  
+			U_MOD_DATE = NOW() 
+		WHERE 
+			U_NO = #{u_no} 
+			
+	</update>
+	
 </mapper>
