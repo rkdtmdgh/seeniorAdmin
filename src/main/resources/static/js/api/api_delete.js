@@ -92,7 +92,7 @@ function mapDeleteObject(value) {
 			
 		case 'u_no': // 회원 계정
 			apiUrl = '/user_account/info/delete_confirm';
-			replace = '/user_account/list/user_account_list_form';
+			replace = '/user_account/info/user_account_list_form';
 			break;
 			
 		case 'dc_no': // 질환/질병 분류
