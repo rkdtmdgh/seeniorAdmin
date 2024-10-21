@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
+import com.see_nior.seeniorAdmin.dto.QnaAnswerDto;
 import com.see_nior.seeniorAdmin.dto.QnaDto;
 import com.see_nior.seeniorAdmin.qna.mapper.QnaMapper;
 
@@ -153,6 +154,13 @@ public class QnaService {
 		return qnaMapper.selectQnaInfoByNo(bq_no);
 		
 	}
+	
+	// qna answers 가져오기 by bq_no
+	public List<QnaAnswerDto> getQnaAnswerInfosByBqNo(int bq_no) {
+		log.info("getQnaAnswerInfosByBqNo()");
+		
+		return qnaMapper.selectQnaAnswerInfosByBqNo(bq_no);
+	}
 
 	// qna 답변 확인
 	public Object qnaAnswerConfirm(int bq_no, String bqa_answer, String a_id) {
@@ -171,5 +179,6 @@ public class QnaService {
 			return QNA_ANSWER_FAIL;
 		
 	}
+
 
 }
