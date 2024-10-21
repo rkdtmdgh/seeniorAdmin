@@ -388,12 +388,26 @@
     
      <!-- 특정 게시물 정보 요청 -->
      <select id="modifyForm" parameterType="int" resultMap="BoardPostsDto">
-     	SELECT
-     		*
-     	FROM
-     		BOARD_POSTS
-     	WHERE 
-     		BP_NO = #{bp_no}
+     	SELECT 
+     		bp.*,
+    		aa.A_NO, aa.A_ID, aa.A_NAME,
+    		ua.U_NO, ua.U_ID, ua.U_NAME
+		FROM 
+		    BOARD_POSTS AS bp
+		LEFT JOIN 
+			ADMIN_ACCOUNT AS aa 
+		ON 
+			bp.BP_WRITER_NO = aa.A_NO 
+		AND 
+			bp.BP_ACCOUNT = 'admin'
+		LEFT JOIN 
+			USER_ACCOUNT AS ua 
+		ON 
+			bp.BP_WRITER_NO = ua.U_NO 
+		AND 
+			bp.BP_ACCOUNT = 'user'
+		WHERE
+			bp.BP_NO = #{bp_no}
      </select>
 
 </mapper>
