@@ -7,7 +7,6 @@
     <th:block th:insert="~{fragments/head.html :: head('회원 정보')}"></th:block>
     <script th:inline="javascript">
 		$(function() {
-			setBoardTitle(/*[[${infoNo}]]*/);
 			logger.info('u_is_blocked:', /*[[${userAccountDto.u_is_blocked}]]*/);
         });
 	</script>
