@@ -425,18 +425,18 @@
 		UPDATE 
 			ADVERTISEMENT 
 		SET 
-			AD_CATEGORY_NO = #{ad_category_no} 
+			AD_CATEGORY_NO = #{ad_category_no}, 
 			<if test="ad_img != null">
-			AD_IMG = #{ad_img} 
+			AD_IMG = #{ad_img}, 
 			</if>
 			<if test="ad_dir_name != null">
-			AD_DIR_NAME = #{ad_dir_name} 
+			AD_DIR_NAME = #{ad_dir_name}, 
 			</if>
-			AD_IDX = #{ad_idx} 
-			AD_URL = #{ad_url} 
-			AD_START_DATE = #{ad_start_date} 
-			AD_END_DATE = #{ad_end_date} 
-			AD_CLIENT = #{ad_client} 
+			AD_IDX = #{ad_idx}, 
+			AD_URL = #{ad_url}, 
+			AD_START_DATE = #{ad_start_date}, 
+			AD_END_DATE = #{ad_end_date}, 
+			AD_CLIENT = #{ad_client}, 
 			AD_MOD_DATE = NOW() 
 		WHERE 
 			AD_NO = #{ad_no}
