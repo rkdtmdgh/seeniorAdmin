@@ -9,6 +9,7 @@
 		$(function() {
 			// 타이틀 설정
 			setBoardTitle(/*[[${infoNo}]]*/);
+			logger.info('boardPostsDto:', /*[[${boardPostsDto}]]*/);
         });
 	</script>
 </head>
@@ -25,7 +26,7 @@
 	                <section class="content_info_wrap">
 	                    <div class="content_top">
 	                        <div class="content_top_info">
-	                            <h2 class="title"></h2>
+	                            <h2 class="title categoty_title"></h2>
 	                        </div>
 	                        <p class="sub_title">게시물 수정</p>
 	                    </div>
