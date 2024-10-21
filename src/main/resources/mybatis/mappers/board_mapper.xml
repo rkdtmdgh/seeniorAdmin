@@ -23,6 +23,30 @@
 		<result column="a_mod_date" property="a_mod_date" />
 		<result column="a_reg_date" property="a_reg_date" />
 	</resultMap>
+	
+	<resultMap type="UserAccountDto" id="UserAccountDto">
+		<id column="u_no" property="u_no"/>
+		<result column="u_id" property="u_id"/>
+		<result column="u_pw" property="u_pw"/>
+		<result column="u_name" property="u_name"/>
+		<result column="u_phone" property="u_phone"/>
+		<result column="u_nickname" property="u_nickname"/>
+		<result column="u_gender" property="u_gender"/>
+		<result column="u_birth" property="u_birth"/>
+		<result column="u_address" property="u_address"/>
+		<result column="u_profile_img" property="u_profile_img"/>
+		<result column="u_company" property="u_company"/>
+		<result column="u_is_personal" property="u_is_personal"/>
+		<result column="u_social_id" property="u_social_id"/>
+		<result column="u_is_blocked" property="u_is_blocked"/>
+		<result column="u_isaccountnonexpired" property="u_isaccountnonexpired"/>
+		<result column="u_isaccountnonlocked" property="u_isaccountnonlocked"/>
+		<result column="u_iscredentialsnonexpired" property="u_iscredentialsnonexpired"/>
+		<result column="u_isenabled" property="u_isenabled"/>
+		<result column="u_is_deleted" property="u_is_deleted"/>
+		<result column="u_reg_date" property="u_reg_date"/>
+		<result column="u_mod_date" property="u_mod_date"/>
+	</resultMap>
 		
 	<resultMap type="BoardCategoryDto" id="BoardCategoryDto">
 		<result column="bc_no" property="bc_no" />
@@ -40,6 +64,7 @@
 		<result column="bp_title" property="bp_title" />
 		<result column="bp_body" property="bp_body" />
 		<result column="bp_writer_no" property="bp_writer_no" />
+		<result column="bp_account" property="bp_account" />
 		<result column="bp_report_state" property="bp_report_state" />
 		<result column="bp_view_cnt" property="bp_view_cnt" />
 		<result column="bp_dir_name" property="bp_dir_name" />
@@ -48,6 +73,7 @@
 		<result column="bp_reg_date" property="bp_reg_date" />
 		<result column="bp_mod_date" property="bp_mod_date" />
 		<collection property="adminAccountDto" resultMap="AdminAccountDto" />
+		<collection property="userAccountDto" resultMap="UserAccountDto" />
 	</resultMap>
 		
 	<resultMap type="BoardReplyDto" id="BoardReplyDto">
@@ -190,28 +216,38 @@
     <insert id="createConfirm" parameterType="com.see_nior.seeniorAdmin.dto.BoardPostsDto">
     	
     	INSERT INTO
-    		BOARD_POSTS(BP_CATEGORY_NO,BP_TITLE,BP_BODY,BP_WRITER_NO,BP_DIR_NAME) 
+    		BOARD_POSTS(BP_CATEGORY_NO,BP_TITLE,BP_BODY,BP_WRITER_NO,BP_ACCOUNT,BP_DIR_NAME) 
     	VALUES
-    		(#{bp_category_no},#{bp_title},#{bp_body},#{bp_writer_no},#{bp_dir_name})
+    		(#{bp_category_no},#{bp_title},#{bp_body},#{bp_writer_no},#{bp_account},#{bp_dir_name})
     	
     </insert>
     
-    <select id="getBoardPostsListWithPage" parameterType="Object" resultMap="BoardPostsDto">
+    <select id="getBoardPostsListWithPage" resultMap="BoardPostsDto">
     
     	SELECT 
-			*
+			bp.*,
+    		aa.A_NO, aa.A_ID,
+    		ua.U_NO, ua.U_ID
 		FROM 
-		    BOARD_POSTS AS BP
-		JOIN 
-			ADMIN_ACCOUNT AS AC
+		    BOARD_POSTS AS bp
+		LEFT JOIN 
+			ADMIN_ACCOUNT AS aa 
 		ON 
-			AC.A_NO = BP.BP_WRITER_NO
+			bp.BP_WRITER_NO = aa.A_NO 
+		AND 
+			bp.BP_ACCOUNT = 'admin'
+		LEFT JOIN 
+			USER_ACCOUNT AS ua 
+		ON 
+			bp.BP_WRITER_NO = ua.U_NO 
+		AND 
+			bp.BP_ACCOUNT = 'user'
 		WHERE
-			BP.BP_CATEGORY_NO = #{bp_category_no}
+			bp.BP_CATEGORY_NO = #{bp_category_no}
 		AND
-		    BP.BP_IS_DELETED = 1 
+		    bp.BP_IS_DELETED = 1 
     	ORDER BY 
-     		BP.${sortValue} ${order} 
+     		bp.${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
     
@@ -349,5 +385,29 @@
     		BC_NO = #{bc_no}    
     		<!-- current_idx로 위 아래 idx들 -1혹은 +1하는 로직 필요 -->
     </update>
+    
+     <!-- 특정 게시물 정보 요청 -->
+     <select id="modifyForm" parameterType="int" resultMap="BoardPostsDto">
+     	SELECT 
+     		bp.*,
+    		aa.A_NO, aa.A_ID, aa.A_NAME,
+    		ua.U_NO, ua.U_ID, ua.U_NAME
+		FROM 
+		    BOARD_POSTS AS bp
+		LEFT JOIN 
+			ADMIN_ACCOUNT AS aa 
+		ON 
+			bp.BP_WRITER_NO = aa.A_NO 
+		AND 
+			bp.BP_ACCOUNT = 'admin'
+		LEFT JOIN 
+			USER_ACCOUNT AS ua 
+		ON 
+			bp.BP_WRITER_NO = ua.U_NO 
+		AND 
+			bp.BP_ACCOUNT = 'user'
+		WHERE
+			bp.BP_NO = #{bp_no}
+     </select>
 
 </mapper>

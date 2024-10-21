@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
+import com.see_nior.seeniorAdmin.dto.QnaAnswerDto;
 import com.see_nior.seeniorAdmin.dto.QnaDto;
 import com.see_nior.seeniorAdmin.qna.mapper.QnaMapper;
 
@@ -18,6 +19,9 @@ import lombok.extern.log4j.Log4j2;
 @Service
 public class QnaService {
 
+	final static public boolean QNA_ANSWER_SUCCESS = true;
+	final static public boolean QNA_ANSWER_FAIL = false;
+	
 	private int pageLimit = 10;		// 한 페이지당 보여줄 정보 수
 	private int blockLimit = 5;		// 하단에 보여질 페이지 번호 수
 	
@@ -83,6 +87,98 @@ public class QnaService {
 		
 		return unansweredQnaDtos;
 	}
+
+	// qna 검색 리스트 가져오기
+	public Map<String, Object> searchQnaPagingList(String searchPart, String searchString, String sortValue,
+			String order, int page) {
+		log.info("searchQnaPagingList()");
+		
+		int pagingStart = (page - 1) * pageLimit;	
+		
+		Map<String, Object> pagingSearchList = new HashMap<>();
+		
+		Map<String, Object> pagingParams = new HashMap<>();
+		pagingParams.put("start", pagingStart);
+		pagingParams.put("limit", pageLimit);
+		pagingParams.put("sortValue", sortValue);
+		pagingParams.put("order", order);
+		pagingParams.put("searchPart", searchPart);
+		pagingParams.put("searchString", searchString);
+
+		List<AdminAccountDto> qnaDtos = qnaMapper.selectSearchQnaList(pagingParams);
+		pagingSearchList.put("qnaDtos", qnaDtos);
+		
+		return pagingSearchList;
+		
+	}
+
+	// 검색 qna 리스트 개수 
+	public Map<String, Object> searchQnaListPageNum(String searchPart, String searchString, int page) {
+		log.info("searchQnaListPageNum()");
+		
+		Map<String, Object> searchQnaPageNum = new HashMap<>();
+		
+		Map<String, Object> searchParams = new HashMap<>();
+		searchParams.put("searchPart", searchPart);
+		searchParams.put("searchString", searchString);
+		
+		// 전체 리스트 개수 조회 
+		int searchQnaListCnt = qnaMapper.selectSearchQnaListCnt(searchParams);
+
+		// 전체 페이지 개수 계산
+		int maxPage = (int) (Math.ceil((double) searchQnaListCnt / pageLimit));
+		
+		// 시작 페이지 값 계산
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
+		
+		// 마지막 페이지 값 계산
+		int endPage = startPage + blockLimit - 1;
+		if (endPage > maxPage) endPage = maxPage;
+		
+		searchQnaPageNum.put("searchQnaListCnt", searchQnaListCnt);
+		searchQnaPageNum.put("page", page);
+		searchQnaPageNum.put("maxPage", maxPage);
+		searchQnaPageNum.put("startPage", startPage);
+		searchQnaPageNum.put("endPage", endPage);
+		searchQnaPageNum.put("pageLimit", pageLimit);
+		searchQnaPageNum.put("blockLimit", blockLimit);
+		
+		return searchQnaPageNum;
+		
+	}
+ 
+	// qna 정보 가져오기 by no
+	public QnaDto getQnaInfoByNo(int bq_no) {
+		log.info("getQnaInfoByNo()");
+		
+		return qnaMapper.selectQnaInfoByNo(bq_no);
+		
+	}
 	
-	
+	// qna answers 가져오기 by bq_no
+	public List<QnaAnswerDto> getQnaAnswerInfosByBqNo(int bq_no) {
+		log.info("getQnaAnswerInfosByBqNo()");
+		
+		return qnaMapper.selectQnaAnswerInfosByBqNo(bq_no);
+	}
+
+	// qna 답변 확인
+	public Object qnaAnswerConfirm(int bq_no, String bqa_answer, String a_id) {
+		log.info("qnaAnswerConfirm()");
+		
+		Map<String, Object> params = new HashMap<>();
+		params.put("bq_no", bq_no);
+		params.put("bqa_answer", bqa_answer);
+		params.put("a_id", a_id);
+		
+		int result = qnaMapper.insertQnaAnswer(params);
+		
+		if(result >= 0)
+			return QNA_ANSWER_SUCCESS;
+		else 
+			return QNA_ANSWER_FAIL;
+		
+	}
+
+
 }

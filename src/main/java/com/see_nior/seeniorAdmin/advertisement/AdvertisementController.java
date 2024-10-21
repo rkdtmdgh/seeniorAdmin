@@ -311,6 +311,21 @@ public class AdvertisementController {
 		
 	}
 	
+	// 광고 순서 변경(광고 위치 디테일뷰에서)
+	@PostMapping("/info/modify_advertisement_idx")
+	@ResponseBody
+	public boolean modifyAdvertisementIdx(
+			@RequestParam(value = "ac_no")int ac_no,
+			@RequestParam(value = "ad_no")int ad_no,
+			@RequestParam(value = "current_ad_idx") int current_ad_idx,
+			@RequestParam(value = "ad_idx") int ad_idx) {
+		log.info("modifyAdvertisementIdx()");
+		
+		boolean modifyIdxResult = advertisementService.modifyAdvertisementIdx(ac_no, ad_no, current_ad_idx, ad_idx);
+		
+		return modifyIdxResult;
+		
+	}
 	
 	// 광고 한개 가져오기
 	@ResponseBody
@@ -342,12 +357,65 @@ public class AdvertisementController {
 	// 광고 수정 확인
 	@ResponseBody
 	@PostMapping("/info/modify_confirm")
-	public boolean modifyConfirm(AdvertisementDto advertisementDto) {
+	public boolean modifyConfirm(
+			@RequestParam(value = "files", required = false) MultipartFile file,
+			AdvertisementDto advertisementDto) {
 		log.info("modifyConfirm()");
+		log.info("files -------> {}", file);
 		
-		boolean modifyResult = advertisementService.modifyConfirm(advertisementDto);
-		
-		return modifyResult;
+		// 사진 변경 시 => 프론트에서 어떻게 넘어오는지 확인하고, 조건 처리 해아함
+		if (file != null && file.getSize() != 0) {
+			
+			// 이미지 서버에 저장된 이미지 파일 이름 가져오기
+			ResponseEntity<String> savedFile = advertisementService.uploadFile(file, advertisementDto);
+			log.info("savedFile ========> {}", savedFile);
+			
+			if (savedFile != null) {
+				log.info("uploadFile SUCCESS!!");
+				
+				ObjectMapper objectMapper = new ObjectMapper();
+				
+				try {
+					Map<String, Object> savedFileObj = objectMapper.readValue(savedFile.getBody(), new TypeReference<Map<String, Object>>() {});
+					
+					String ad_dir_name = (String) savedFileObj.get("dir_name");
+					String savedFileName = (String) savedFileObj.get("savedFileName");
+					log.info("ad_dir_name ----> {}", ad_dir_name);
+					log.info("savedFileName ----> {}", savedFileName);
+					
+					boolean modifyResult = advertisementService.modifyConfirm(advertisementDto, ad_dir_name, savedFileName);
+					
+					return modifyResult;
+					
+				} catch (JsonMappingException e) {
+					log.info("JsonMappingException!!");
+					e.printStackTrace();
+					
+					return false;
+					
+				} catch (JsonProcessingException e) {
+					log.info("JsonProcessingException!!");
+					e.printStackTrace();
+					
+					return false;
+					
+				}
+				
+			} else {
+				log.info("upload file fail!!");
+				
+				return false;
+				
+			}
+			
+		// 사진 변경이 없을 시
+		} else {
+			
+			boolean modifyResult = advertisementService.modifyConfirm(advertisementDto, null, null);
+			
+			return modifyResult;
+			
+		}
 		
 	}
 	

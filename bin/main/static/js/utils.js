@@ -92,6 +92,19 @@ async function setBoardTitle(infoNo) {
 	}
 }
 
+// 콘텐츠 서브 내용 설정
+async function setContentSubInfo(txt) {
+	const $title = $('.categoty_title');
+	let $subInfo = $('.title_other_info_text');
+	
+	if(!$subInfo.length) {
+		$subInfo = $('<span class="title_other_info_text">');
+	}
+	
+	$subInfo.text(`마지막 업데이트 ${txt}`);		
+	$title.append($subInfo);	
+}
+
 // 셀렉트 데이터로 특정 요소 텍스트 변경
 function setSelectGuidelineInfo(selectElement, formName) {
 	const $selectOption = $(selectElement).find('option:selected'); // 선택된 옵션
@@ -106,17 +119,31 @@ function setSelectGuidelineInfo(selectElement, formName) {
 	getMaxIdxAndSetAttribute($(selectElement).attr('name'), $selectOption.val(), formName);
 }
 
-// 콘텐츠 서브 내용 설정
-async function setContentSubInfo(txt) {
-	const $title = $('.categoty_title');
-	let $subInfo = $('.title_other_info_text');
+// 라디오 버튼으로 연계된 요소 제어
+function setInputStateFromRadio(state, targetEle, defaultValue = null) {
+	const placeholderEnabled = $(targetEle).data('placeholder-enabled');
+    const placeholderReadonly = $(targetEle).data('placeholder-readonly');
 	
-	if(!$subInfo.length) {
-		$subInfo = $('<span class="title_other_info_text">');
+	if(!state) {
+		// 타겟 요소의 비활성화 및 값 초기화
+		$(targetEle).val('').attr('readonly', true)
+			.attr('placeholder', placeholderReadonly) // placeholder 설정
+			.off('blur') // 이벤트 제거
+			.siblings('.input_error').remove(); // 형제 에러 요소 제거
+			
+		$(targetEle).closest('.error').removeClass('error'); // 부모 요소 클라스 제거(제이쿼리 체이닝 오류로 추가 작성)
+		
+		// 디버깅용 로그 출력 (부모 요소 확인)
+		console.log($(targetEle).closest('.error')); // .error 클래스가 있는 부모 요소 출력
+		
+	} else {
+		// 타겟 요소를 활성화 및 기본 값 설정
+		$(targetEle).val(defaultValue)
+			.attr('readonly', false).attr('placeholder', placeholderEnabled)
+			.on('blur', function() { // 이벤트 추가
+				validateEmpty(this, `${placeholderEnabled}을(를)`);
+			}).focus(); 
 	}
-	
-	$subInfo.text(`마지막 업데이트 ${txt}`);		
-	$title.append($subInfo);	
 }
 
 // 레시피 내용 레이아웃 설정
@@ -144,6 +171,7 @@ function setRecipeContentInfo(recipeDto) {
 // 최대 텍스트 입력 설정 byte
 const maxSize = {
 	info: 5000,
+	short: 250,
 }; 
 
 // 텍스트 바이트 계산
@@ -517,7 +545,7 @@ function setAccountModifyForm(data) {
                     </tbody>
                 </table>
 
-                <div class="btn_list right">
+                <div class="btn_list f_jc_right">
                     <div class="btn_list">
                         <div onclick="putMyAccountSubmit('modify_form')" class="btns">수정</div>
                     </div>
@@ -586,7 +614,6 @@ $(document).on('click', function(event) {
 	if($openNotificationsEle.length && !isNotificationsTriggerClick) { // 클릭한 요소가 알람 버튼이 아닐 경우
 		$openNotificationsEle.removeClass('active'); // 열려있는 알람 모달창 닫기
 	}
-		
 	
 	// 커스텀 셀렉트 open, close 기능
 	const $openSelectEle = $('.select_option_list.active'); // 열려 있는 셀렉트 옵션 요소

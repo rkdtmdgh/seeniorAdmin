@@ -18,6 +18,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
+import com.see_nior.seeniorAdmin.dto.BoardPostsDto;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -252,7 +253,7 @@ public class BoardController {
 		
 		// 특정 게시판 페이지 번호에 따른 게시물 리스트들 가져오기
 		Map<String, Object> boardPostsListWithPage = boardService.getBoardPostsListWithPage(bp_category_no, page, sortValue, order);
-				
+		log.info("return value: {}",boardPostsListWithPage);
 		// 특정 게시판 게시물 총 페이지 개수 가져오기
 		Map<String, Object> boardPostsListPageNum = boardService.getBoardPostsListPageNum(bp_category_no, page);
 				
@@ -328,9 +329,22 @@ public class BoardController {
 		
 		return result;
 	}
-	
-	
-		
+			
 	//특정 게시물 정보 가져오기
-
+	@GetMapping("/info/modify_form")
+	public String modifyForm(@RequestParam("infoNo") int infoNo, @RequestParam("bp_no") int bp_no, Model model) {
+		log.info("modifyForm()");
+		
+		BoardPostsDto boardPostsDto = boardService.modifyForm(bp_no);
+		
+		log.info("boardPostsDto: {}",boardPostsDto);
+		
+		model.addAttribute("boardPostsDto", boardPostsDto);
+		model.addAttribute("infoNo", infoNo);
+		
+		String nextPage = "board/modify_form";
+		
+		return nextPage;
+	}
+	
 }

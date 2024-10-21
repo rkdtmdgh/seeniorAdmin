@@ -9,7 +9,6 @@
 
     /* font */
     --baseFontFamily: 'Pretendard Variable';
-    --baseFontSize: 16px;
     --subFontSize: 0.9em;
     --smallFontSize: 0.75em;
     --menuFontSize: 0.95em;
@@ -39,21 +38,25 @@
     --subBgColor: #FFF; /* sub */
     --tableTitleBgColor: #F7F7F7;
     --tableDisabledBgColor: #FAFAFA;
+    --dimmedBgColor: rgba(0, 0, 0, .25);
 
     /* element property */
     --logoWidth: 160px;
     --sideMenuWidth: 270px;
     --signFormWidth: 340px;
     --iconsWidth: 20px;
-    --bigIconsWidth: 45px;
+    --bigIconsWidth: 65px;
     --smallThumbWidth: 30px;
     --arrowWidth: 5px; /* X2 (5px = 10px) */
     --arrowButtonWidth: 15px;
+    --contentSubThumbWidth: 200px;
+    --modalWidth: 320px;
     
     --headerHeight: 70px;
     --tableTextareaHeight: 400px;
     --contentThumbHeight: 350px;
-    --contentSubThumbWidth: 200px;
+    --modalHeight: 450px;
+    --borderTextareaHeight: 100px;
 
     --innerPadding: 50px;
     --signFormInnerPadding: 30px;
@@ -61,7 +64,7 @@
     --btnsPadding: 1em 1.5em;
     --smallBtnsPadding: 0.53em 1.1em;
     --tableBtnPadding: 0.3em;
-    --textPadding: 0.7em 1.2em;
+    --textPadding: 1em 1.2em;
     --subTextPadding: 0.3em 1em;
     --subTextIndent: 0 0 0 0.85em;
     --borderInputPadding: 1em 1em 10px;
@@ -107,7 +110,7 @@
 
 html, body {
     font-family: var(--baseFontFamily);
-    font-size: var(--baseFontSize);
+    font-size: 16px;
     background-color: var(--bgColor);
     color: var(--blackColor);
 }
@@ -136,25 +139,11 @@ input[type="text"], input[type="password"], input[type="date"], input[type="numb
     outline: none;
 }
 
-input[type="date"] {
-	line-height: 0.9;
+textarea {
+	resize: none;
 }
 
-input::placeholder, textarea::placeholder {
-    color: var(--middleGrayColor);
-}
-
-input:disabled {
-	cursor: not-allowed;
-	background-color: unset;
-}
-
-.disabled {
-    background-color: var(--tableDisabledBgColor);
-    cursor: not-allowed;
-    color: var(--middleGrayColor);
-}
-
+/* lebel */
 label {
 	&.radio {
 		padding-right: var(--smallGap);
@@ -164,12 +153,27 @@ label {
 	}
 }
 
+/* select */
 select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     padding: var(--selectPadding);
     background: url(/image/icons/gray_arrow.png) right 1.2em center no-repeat;
+}
+
+/* input */
+input[type="date"] {
+	line-height: 0.9;
+}
+
+input::placeholder, textarea::placeholder {
+    color: var(--middleGrayColor);
+}
+
+input:disabled, input[type="text"]:read-only {
+	cursor: not-allowed;
+	background-color: unset;
 }
 
 input:-webkit-autofill,
@@ -218,21 +222,15 @@ table {
         &:last-child {
             border: none;
         }
-        
-        &.vam {
-        	vertical-align: middle;
-        }
     }
 }
 
-/* margin, padding */
-.mb_stepGap {
-	margin-bottom: var(--stepGap);
-}
-
-.pr_baseGap {
-	padding-right: var(--baseGap);
-}
+/* colgroup */
+.col_checkBox { width: 50px; }
+.col_no { width: 70px; }
+.col_default { width: 20%; }
+.col_short { width: 13%; }
+.col_row_title { width: 15%; }
 
 /* accessibility */
 .a11y-hidden {

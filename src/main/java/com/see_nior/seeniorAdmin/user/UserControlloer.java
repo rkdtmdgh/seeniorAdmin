@@ -14,6 +14,7 @@ import com.see_nior.seeniorAdmin.dto.UserAccountDto;
 
 import lombok.extern.log4j.Log4j2;
 
+
 @Log4j2
 @Controller
 @RequestMapping("/user_account")
@@ -71,6 +72,7 @@ public class UserControlloer {
 		
 		Map<String, Object> searchUserAccountListPageNum = 
 				userService.searchUserListPageNum(page, searchPart, searchString);
+		
 		searchUserList.put("searchUserAccountListPageNum", searchUserAccountListPageNum);
 		searchUserList.put("sortValue", sortValue);
 		searchUserList.put("order", order);
@@ -100,16 +102,30 @@ public class UserControlloer {
 	public Object modifyConfirm(UserAccountDto userAccountDto) {
 		log.info("modifyConfirm()");
 		
+		// 프로필 이미지 수정 추가해야함.
+		
 		return userService.userAccountModifyConfirm(userAccountDto);
 		
 	}
 	
 	// 일반 멤버 탈퇴 확인 delete_confirm
-	@GetMapping("/info/delete_confirm")
-	public String deleteConfirm() {
+	@PostMapping("/info/delete_confirm")
+	@ResponseBody
+	public Object deleteConfirm(@RequestParam("u_no") int u_no) {
 		log.info("deleteConfirm()");
 		
-		return new String();
+		 return userService.deleteConfirm(u_no);
+		
+	}
+	
+	// 일반 멤버 계정 정지 확인 
+	@PostMapping("/info/bolcked_confirm")
+	@ResponseBody
+	public Object blockedConfirm(UserAccountDto userAccountDto) {
+		log.info("blockedConfirm()");
+		
+		return userService.blockedConfirm(userAccountDto);
+		
 	}
 	
 	

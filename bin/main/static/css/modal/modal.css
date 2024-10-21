@@ -1,0 +1,57 @@
+.dimmed_wrap {
+	width: 100%;
+	height: 100%;
+	background-color: var(--dimmedBgColor);
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 3;
+}
+
+.modal_wrap {
+	width: max-content;
+	max-height: var(--modalHeight);
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(var(--trslC));
+	z-index: 3;
+	
+	.modal_container {
+		width: max-content;
+		height: max-content;
+		background-color: var(--subBgColor);
+		padding: var(--signFormInnerPadding);
+		border-radius: var(--bdrs);
+		border: 1px solid var(--middleGrayColor);
+		box-shadow: var(--bxsh);
+		
+		.modal_title {
+			display: flex;
+			align-items: center;
+			gap: var(--ssize1);
+			font-size: var(--titleFontSize);
+			color: var(--blackColor);
+			
+            &::before {
+                content: '';
+                display: inline-block;
+                width: 3px;
+                height: 1em;
+                background-color: var(--primaryColor);
+			}
+		}
+		
+		.modal_info{
+			width: var(--modalWidth);
+			display: flex;
+			flex-direction: column;
+			gap: var(--baseGap);
+			
+			.modal_info_list {
+				font-size: var(--subFontSize);
+				text-align: right;
+			}
+		}
+	}
+}

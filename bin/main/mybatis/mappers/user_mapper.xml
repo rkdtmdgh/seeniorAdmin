@@ -13,12 +13,15 @@
 		<result column="u_nickname" property="u_nickname"/>
 		<result column="u_gender" property="u_gender"/>
 		<result column="u_birth" property="u_birth"/>
+		<result column="u_zip_code" property="u_zip_code"/>
 		<result column="u_address" property="u_address"/>
+		<result column="u_detailed_address" property="u_detailed_address"/>
 		<result column="u_profile_img" property="u_profile_img"/>
 		<result column="u_company" property="u_company"/>
 		<result column="u_is_personal" property="u_is_personal"/>
 		<result column="u_social_id" property="u_social_id"/>
 		<result column="u_is_blocked" property="u_is_blocked"/>
+		<result column="u_blocked_reason" property="u_blocked_reason"/>
 		<result column="u_isaccountnonexpired" property="u_isaccountnonexpired"/>
 		<result column="u_isaccountnonlocked" property="u_isaccountnonlocked"/>
 		<result column="u_iscredentialsnonexpired" property="u_iscredentialsnonexpired"/>
@@ -140,6 +143,39 @@
 		WHERE 
 			U_NO = #{u_no} 
 	
+	</update>
+	
+	<!-- 일반 멤버 탈퇴 상태 업데이트 BY NO -->
+	<update id="updateUserIsDeletedByNo">
+	
+		UPDATE 
+			USER_ACCOUNT 
+		SET 
+			U_IS_DELETED = 0, 
+			U_MOD_DATE = NOW() 
+		WHERE 
+			U_NO = #{u_no} 
+	
+	</update>
+	
+	<!-- 일반 멤버 계정 정지 확인 by no -->
+	<update id="updateUserIsBlockedByNo">
+	
+		UPDATE 
+			USER_ACCOUNT 
+		SET 
+			U_IS_BLOCKED = 
+			<if test="u_is_blocked == true">
+				1, 
+			</if>
+			<if test="u_is_blocked == false">
+				0, 
+			</if>
+			U_BLOCKED_REASON = #{u_blocked_reason},  
+			U_MOD_DATE = NOW() 
+		WHERE 
+			U_NO = #{u_no} 
+			
 	</update>
 	
 </mapper>

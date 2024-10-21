@@ -34,6 +34,9 @@ import lombok.extern.log4j.Log4j2;
 @Service
 public class BoardService {
 	
+	// 이미지 서버 경로
+	private String imgServerPath = "127.0.0.1:8091/seeniorUploadImg/";
+	
 	// 페이지네이션 관련
 	private int pageLimit = 10;	// 한 페이지당 보여줄 항목의 개수
 	private int blockLimit = 5;	// 하단에 보여질 페이지 번호의 수
@@ -295,7 +298,16 @@ public class BoardService {
 			
 			while (matcher.find()) {
 				String oldSrc = matcher.group();
-				String newSrc = "img src=\"" + savedFileNames.get(index++) + "\"";
+				String newSrc = "img src=\"http://" 
+						+ imgServerPath 
+						+"board/" 
+						+ bp_category_no 
+						+"/"
+						+ bp_writer_no 
+						+"/"
+						+ bp_dir_name 
+						+"/"
+						+ savedFileNames.get(index++) + "\"";
 				matcher.appendReplacement(new_bp_body, newSrc);
 			}
 			matcher.appendTail(new_bp_body);
@@ -308,6 +320,7 @@ public class BoardService {
  		
  		boardPostsDto.setBp_category_no(bp_category_no);
  		boardPostsDto.setBp_writer_no(bp_writer_no);
+ 		boardPostsDto.setBp_account("admin");
  		boardPostsDto.setBp_title(bp_title);
  		boardPostsDto.setBp_body(bp_body);
  		boardPostsDto.setBp_dir_name(bp_dir_name);
@@ -530,6 +543,23 @@ public class BoardService {
 			}
 			
 		}
+		
+	}
+	
+	//특정 게시물 정보 가져오기
+	public BoardPostsDto modifyForm(int bp_no) {
+		log.info("modifyForm()");
+		
+		//특정 게시물 정보 가져오기 select
+		List<BoardPostsDto> boardPostsDtos = boardMapper.modifyForm(bp_no);
+		log.info("boardPostsDtos: {}",boardPostsDtos);
+		
+		if(boardPostsDtos.size() == 0) {
+			log.info("modifyForm() fail!!");
+			return null;
+		}
+		
+		return boardPostsDtos.get(0);
 		
 	}
 	

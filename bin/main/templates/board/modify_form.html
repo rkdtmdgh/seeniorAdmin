@@ -25,13 +25,13 @@
 	                <section class="content_info_wrap">
 	                    <div class="content_top">
 	                        <div class="content_top_info">
-	                            <h2 class="title"></h2>
+	                            <h2 class="title categoty_title"></h2>
 	                        </div>
 	                        <p class="sub_title">게시물 수정</p>
 	                    </div>
 	
 	                    <form name="posts_modify_form">
-		                    <input type="hidden" name="bp_no" th:value="${postsDto.bp_no}">
+		                    <input type="hidden" name="bp_no" th:value="${boardPostsDto.bp_no}">
 		                    
 	                        <div class="table_wrap">
 	                            <table class="content_edit_table">
@@ -48,14 +48,45 @@
 		                                	<td colspan="3">
 		                                		<input type="text" name="bp_title" id="bp_title" class="table_info" placeholder="제목"
 		                                			onblur="validateEmpty(this, '제목을')"
-		                                			th:value="${postsDto.bp_title}">
+		                                			th:value="${boardPostsDto.bp_title}">
 	                                        </td>
 		                                </tr>
 		                                
 		                                <tr>
-		                                	<th><p class="table_title">작성자</p></th>
-		                                	<td colspan="3" class="disabled">
-	                                			<input type="text" name="writer_id" class="table_info" disabled>
+		                                	<th><p class="table_title">작성자 아이디</p></th>
+		                                	<td class="disabled">
+	                                			<input type="text" class="table_info" disabled
+	                                				th:value="${
+	                                					boardPostsDto.bp_account == 'admin' ? 
+	                                						boardPostsDto.adminAccountDto.a_id + ' (관리자)'
+                                						:
+                                							boardPostsDto.userAccountDto.u_id
+	                                				}">
+	                                        </td>
+	                                        
+	                                        <th><p class="table_title" th:text="${boardPostsDto.bp_account == 'admin' ? '이름' : '이름(닉네임)'}"></p></th>
+		                                	<td class="disabled">
+	                                			<input type="text" name="writer_id" class="table_info" disabled
+	                                				th:value="${
+	                                					boardPostsDto.bp_account == 'admin' ? 
+	                                						boardPostsDto.adminAccountDto.a_name
+                                						:
+                                							boardPostsDto.userAccountDto.u_name	+ ' (' + boardPostsDto.userAccountDto.u_nickname + ')'
+	                                				}">
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>
+	                                        <th><p class="table_title">등록일</p></th>
+		                                	<td class="disabled">
+		                                		<input type="text" class="table_info" disabled
+		                                			th:value="${boardPostsDto.bp_reg_date}">
+	                                        </td>
+	                                        
+	                                        <th><p class="table_title">수정일</p></th>
+		                                	<td class="disabled">
+		                                		<input type="text" class="table_info" disabled
+		                                			th:value="${boardPostsDto.bp_mod_date}">
 	                                        </td>
 		                                </tr>
 		                                
@@ -73,7 +104,7 @@
 		                                	</th>
 		                                	
 		                                	<td colspan="3">
-	                                			<div id="editor" th:utext="${postsDto.bp_body}"></div>
+	                                			<div id="editor" th:utext="${boardPostsDto.bp_body}"></div>
 	                                			<div id="text_limit">
 	                                				<span id="current_size"></span> / <span id="max_size"></span>
 	                                			</div>
@@ -83,7 +114,7 @@
 	                            </table>
 	
 	                            <div class="btn_list">
-	                            	<div th:if="${postsDto.bp_no} != null" class="btns delete"
+	                            	<div th:if="${boardPostsDto.bp_no} != null" class="btns delete"
 		                        		 th:onclick="delListData('bp_no')">삭제</div>
 		                        		 
 	                                <div class="btn_list">

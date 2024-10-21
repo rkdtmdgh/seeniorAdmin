@@ -195,6 +195,7 @@ CREATE TABLE USER_ACCOUNT (
 	U_IS_PERSONAL 				TINYINT COMMENT "유저 개인회원 OR 기관회원 여부 (개인 = 1, 기관 = 0)",			-- 유저 개인회원 OR 기관회원 여부 (개인 = 1, 기관 = 0)
 	U_SOCIAL_ID 				VARCHAR(200) COMMENT "유저 3자 로그인 ID",									-- 유저 3자 로그인 ID
 	U_IS_BLOCKED 				TINYINT DEFAULT 1 COMMENT "유저 계정 정지 여부 (기본값 = 1. 정지 시 = 0)",		-- 유저 계정 정지 여부 (기본값 = 1. 정지 시 = 0)
+    U_BLOCKED_REASON			VARCHAR(255) COMMENT "유저 계정 정지 사유",									-- 유저 계정 정지 사유
 	U_ISACCOUNTNONEXPIRED 		TINYINT DEFAULT 1 COMMENT "유저 계정 만료 유무(만료X = 1, 만료 = 0)",			-- 유저 계정 만료 유무(만료X = 1, 만료 = 0)
 	U_ISACCOUNTNONLOCKED 		TINYINT DEFAULT 1 COMMENT "유저 계정 잠김 유무(잠김X = 1, 잠김 = 0)",			-- 유저 계정 잠김 유무(잠김X = 1, 잠김 = 0)
 	U_ISCREDENTIALSNONEXPIRED 	TINYINT DEFAULT 1 COMMENT "유저 계정 자격 증명 만료 유무(만료X = 1, 만료 = 0)",	-- 유저 자격 증명 만료 유무(만료X = 1, 만료 = 0)
@@ -287,7 +288,8 @@ CREATE TABLE BOARD_POSTS (
 	BP_TITLE			VARCHAR(200) NOT NULL COMMENT "게시물 제목", 										-- 게시물 제목
 	BP_BODY				TEXT NOT NULL COMMENT "게시물 본문", 												-- 게시물 본문
 	BP_WRITER_NO		INT NOT NULL COMMENT "게시물 작성자 NO(USER_ACCOUNT TABLE PK)", 					-- 게시물 작성자 NO(USER_ACCOUNT TABLE PK)
-	BP_REPORT_STATE		TINYINT DEFAULT 1 COMMENT "게시물 신고 진행 상태(기본값 = 1, 처리중 = 2, 처리 완료 = 0)",	-- 게시물 신고 진행 상태(기본값 = 1, 처리중 = 2, 처리 완료 = 0)
+	BP_ACCOUNT			VARCHAR(20) NOT NULL COMMENT "게시물 작성자 유형(admin or user)",					-- 게시물 작성자 유형(admin or user)
+    BP_REPORT_STATE		TINYINT DEFAULT 1 COMMENT "게시물 신고 진행 상태(기본값 = 1, 처리중 = 2, 처리 완료 = 0)",	-- 게시물 신고 진행 상태(기본값 = 1, 처리중 = 2, 처리 완료 = 0)
 	BP_VIEW_CNT			INT DEFAULT 0 COMMENT "게시물 조회수", 												-- 게시물 조회수 
 	BP_DIR_NAME			VARCHAR(20) COMMENT "이미지 저장된 폴더 이름"	,										-- 게시물 이미지 저장된 폴더명
     BP_REPLY_CNT		INT DEFAULT 0 COMMENT "게시물 댓글 갯수",											-- 게시물 댓글 갯수(BOARD_REPLY COUNT(*) WHERE BR_POST_NO)
@@ -350,7 +352,7 @@ CREATE TABLE BOARD_QNA (
 	BQ_NO			INT	AUTO_INCREMENT COMMENT "Q&A NO(PK)",							-- Q&A NO(PK)
 	BQ_TITLE		VARCHAR(200) NOT NULL COMMENT "Q&A 제목",							-- Q&A 제목
 	BQ_BODY			TEXT NOT NULL COMMENT "Q&A 본문",									-- Q&A 본문
-	BQ_USER_NO		VARCHAR(255) NOT NULL COMMENT "Q&A 작성자 NO(USER_ACCOUNT TABLE PK)",	-- Q&A 작성자 NO(USER_ACCOUNT TABLE PK)
+	BQ_USER_NO		INT NOT NULL COMMENT "Q&A 작성자 NO(USER_ACCOUNT TABLE PK)",			-- Q&A 작성자 NO(USER_ACCOUNT TABLE PK)
 	BQ_STATE		TINYINT DEFAULT 1 COMMENT "Q&A 답변 여부(기본값 = 1, 답변 완료 = 0)",		-- Q&A 답변 여부(기본값 = 1, 답변 완료 = 0)
 	BQ_IS_DELETED	TINYINT DEFAULT 1 COMMENT "Q&A 삭제 여부(기본값 = 1, 삭제 시 = 0)",		-- Q&A 삭제 여부(기본값 = 1, 삭제 시 = 0)
 	BQ_REG_DATE		DATETIME DEFAULT NOW() COMMENT "Q&A 등록일",							-- Q&A 등록일
@@ -379,7 +381,7 @@ CREATE TABLE BOARD_QNA_ANSWER (
 	BQA_NO			INT	AUTO_INCREMENT COMMENT "Q&A 답변 NO(PK)",						-- Q&A 답변 NO(PK)
 	BQA_QNA_NO		INT	NOT NULL COMMENT "Q&A 답변 Q&A NO(BOARD_QNA TABLE PK)",			-- Q&A 답변 Q&A NO(BOARD_QNA TABLE PK)
 	BQA_ANSWER		TEXT NOT NULL COMMENT "Q&A 답변 내용",								-- Q&A 답변 내용
-	BQA_ADMIN_NO	INT	NOT NULL COMMENT "Q&A 답변 작성자 NO(ADMIN_ACCOUNT TABLE PK)",		-- Q&A 답변 작성자 NO(ADMIN_ACCOUNT TABLE PK)
+	BQA_ADMIN_ID	VARCHAR(100) NOT NULL COMMENT "Q&A 답변 작성자 ID",					-- Q&A 답변 작성자 ID
 	BQA_IS_DELETED	TINYINT DEFAULT 1 COMMENT "Q&A 답변 삭제 여부(기본값 = 1, 삭제 시 = 0)",	-- Q&A 답변 삭제 여부(기본값 = 1, 삭제 시 = 0)
 	BQA_REG_DATE	DATETIME DEFAULT NOW() COMMENT "Q&A 답변 등록일",						-- Q&A 답변 등록일
 	BQA_MOD_DATE	DATETIME DEFAULT NOW() COMMENT "Q&A 답변 수정일",						-- Q&A 답변 수정일
@@ -389,6 +391,17 @@ CREATE TABLE BOARD_QNA_ANSWER (
 SELECT * FROM BOARD_QNA_ANSWER;
 SHOW INDEX FROM BOARD_QNA_ANSWER;
 DROP TABLE BOARD_QNA_ANSWER;
+
+INSERT INTO BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) VALUES(1, "질문 1번 답변 내용입니다.", "admin11@seenior.com");
+INSERT INTO BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) VALUES(1, "질문 1번 답변 내용입니다.", "admin12@seenior.com");
+INSERT INTO BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) VALUES(1, "질문 1번 답변 내용입니다.", "admin13@seenior.com");
+INSERT INTO BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) VALUES(2, "질문 1번 답변 내용입니다.", "admin11@seenior.com");
+INSERT INTO BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) VALUES(2, "질문 1번 답변 내용입니다.", "admin12@seenior.com");
+INSERT INTO BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) VALUES(2, "질문 1번 답변 내용입니다.", "admin13@seenior.com");
+INSERT INTO BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) VALUES(3, "질문 1번 답변 내용입니다.", "admin11@seenior.com");
+INSERT INTO BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) VALUES(3, "질문 1번 답변 내용입니다.", "admin12@seenior.com");
+INSERT INTO BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) VALUES(3, "질문 1번 답변 내용입니다.", "admin13@seenior.com");
+
 
 
 -- Q&A 게시판 공지사항 테이블 --------------------------------------------------------------------------------------------------------------
