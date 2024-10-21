@@ -301,7 +301,7 @@ async function postNoticeCreate(formName) {
 	const form = document.forms[formName];
 
 	const formData = new FormData(form);
-	formData.append('n_body', quill.root.innerHTML);
+	formData.set('n_body', quill.root.innerHTML);
 
 	const successMessage = '공지사항이 등록되었습니다.';
 	const errorMessage = '공지사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
@@ -321,7 +321,7 @@ async function postQnaNoticeCreate(formName) {
 	const form = document.forms[formName];
 
 	const formData = new FormData(form);
-	formData.append('bqn_body', quill.root.innerHTML);
+	formData.set('bqn_body', quill.root.innerHTML);
 	
 	const successMessage = '질문과 답변 공지사항이 등록되었습니다.';
 	const errorMessage = '질문과 답변 공지사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
@@ -382,7 +382,7 @@ async function postNoticePostsCreate(formName) {
 	const errorMessage = `"${bn_title.value.trim()}" 게시판 공지 사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
 	const formData = new FormData();
-	formData.append('bn_body', quill.root.innerHTML); // quill 에디터 내용
+	formData.set('bn_body', quill.root.innerHTML); // quill 에디터 내용
 	
 	// 이미지 파일 리사이즈 및 압축하여 formData에 담기
 	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
@@ -395,7 +395,7 @@ async function postNoticePostsCreate(formName) {
 			
 			// 설정된 width 크기로 리사이즈 압축 후 flle 개게로 변환하여 formData 추가
 			const resizedImageFile = await resizeImage(blobURL, targetWidth);
-			formData.append('files', resizedImageFile); // 리사이즈된 File객체를 formData에 추가
+			formData.set('files', resizedImageFile); // 리사이즈된 File객체를 formData에 추가
 			URL.revokeObjectURL(blobURL); // blob URL을 브라우저 메모리에서 해제
 		}
 		
@@ -434,7 +434,7 @@ async function postPostsCreate(formName) {
 	const errorMessage = `"${bp_title.value}" 게시물 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
 	const formData = new FormData(form);
-	formData.append('bp_body', quill.root.innerHTML); // quill 에디터 내용
+	formData.set('bp_body', quill.root.innerHTML); // quill 에디터 내용
 	
 	// 이미지 파일 리사이즈 및 압축하여 formData에 담기
 	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
@@ -454,7 +454,7 @@ async function postPostsCreate(formName) {
 	} else {
 		logger.info('이미지 태그 없음');
 		const emptyBlob = new Blob([], { type: 'application/octet-stream' }); // 빈 Blob 생성
-		formData.append('files', emptyBlob); 
+		formData.set('files', emptyBlob); 
 	}
 
 	await postIntegSubmit(

@@ -66,14 +66,16 @@
 		                                	<th><p class="table_title">시작일</p></th>
 		                                	<td>
 		                                		<input type="date" name="ad_start_date" id="ad_start_date" max="9999-12-31" min="1900-01-01" class="table_info"
-	                                            	onchange="validateEmpty(this, '시작일을')" onblur="validateEmpty(this, '시작일을')"
+	                                            	onchange="validateEmpty(this, '시작일을')" 
+	                                            	onblur="validateEmpty(this, '시작일을')"
 	                                            	th:value="${advertisementDto.ad_start_date}">
 		                                	</td>
 		                                	
 		                                	<th><p class="table_title">종료일</p></th>
 		                                	<td>
 		                                		<input type="date" name="ad_end_date" id="ad_end_date" max="9999-12-31" min="1900-01-01" class="table_info"
-	                                            	onchange="validateEmpty(this, '종료일을')" onblur="validateEmpty(this, '종료일을')"
+	                                            	onchange="validateEmpty(this, '종료일을')" 
+	                                            	onblur="validateEmpty(this, '종료일을')"
 	                                            	th:value="${advertisementDto.ad_end_date}">
 		                                	</td>
 	                                	</tr>
@@ -107,7 +109,7 @@
 		                                	<td colspan="2">
 		                                		<div class="table_info">
 		                                			<label class="file_upload_container displayNone">
-		                                				<input type="file" name="ad_img" id="ad_img" accept="image/*"  onchange="setInputFileImageCheck(this)"> 
+		                                				<input type="file" name="files" id="files" accept="image/*"  onchange="setInputFileImageCheck(this)"> 
 		                                				<img src="/image/icons/image_file_upload.png" alt="image file uploader" class="file_upload_img">
 		                                				<span class="file_upload_info">
 			                                				<span class="file_upload_txt">클릭하거나 이미지 파일을 끌어다 놓으세요.</span>
@@ -117,7 +119,7 @@
 		                                			
 		                                			<div class="image_file_preview">
 		                                				<img th:src="${advertisementDto.ad_img}" alt="select image file preview">
-		                                				<div class="close" onclick="setImageFilePreviewInit('ad_img')"></div>
+		                                				<div class="close" onclick="setImageFilePreviewInit('files')"></div>
 	                                				</div>
 		                                		</div>
 		                                	</td>
