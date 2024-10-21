@@ -142,6 +142,14 @@ public class QnaService {
 		return searchQnaPageNum;
 		
 	}
+ 
+	// qna 정보 가져오기 by no
+	public QnaDto getQnaInfoByNo(int bq_no) {
+		log.info("getQnaInfoByNo()");
+		
+		return qnaMapper.selectQnaInfoByNo(bq_no);
+		
+	}
 	
 	
 }
