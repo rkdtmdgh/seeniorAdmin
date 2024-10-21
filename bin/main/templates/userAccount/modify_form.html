@@ -4,7 +4,13 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 	
 <head>
-    <th:block th:insert="~{fragments/head.html :: head('회원 관리')}"></th:block>
+    <th:block th:insert="~{fragments/head.html :: head('회원 정보')}"></th:block>
+    <script th:inline="javascript">
+		$(function() {
+			setBoardTitle(/*[[${infoNo}]]*/);
+			logger.info('u_is_blocked:', /*[[${userAccountDto.u_is_blocked}]]*/);
+        });
+	</script>
 </head>
 
 <body>
@@ -26,7 +32,12 @@
 	                    
 	                    <div class="profile_thumbnail_wrap">
 	           				<div class="profile_thumbnail_container">
-	           					<img src="/image/images/basic_profile_img.jpg" alt="profile thumbnail" class="profile_thumbnail">
+	           					<img alt="profile thumbnail" class="profile_thumbnail" th:src="${
+	           						userAccountDto.u_profile_img == null ? 
+	           							'/image/images/basic_profile_img.jpg' 
+           							:
+           								'userAccountDto.u_profile_img'
+	           					}">
 	           				</div>
 	                    </div>
 	
@@ -173,7 +184,18 @@
 	                                </tbody>
 	                            </table>
 	
-	                            <div class="btn_list f_jc_right">		                        		 
+	                            <div class="btn_list">
+	                            	<div th:if="${userAccountDto.u_no} != null" class="btns delete"
+		                        		 th:onclick="
+	                        			 	delSingleData(
+	                        			 		[[${userAccountDto.u_name}]], 
+	                        			 		'u_no', 
+	                        			 		[[${userAccountDto.u_no}]]
+	                        			 	)
+		                        		 ">삭제</div>	
+		                        		 
+		                        		 
+		                        		                         		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
 	                                    <div onclick="putUserAccountModify('user_account_modify_form')" class="btns">수정</div>

@@ -9,7 +9,6 @@
 		$(function() {
 			// 타이틀 설정
 			setBoardTitle(/*[[${infoNo}]]*/);
-			logger.info('boardPostsDto:', /*[[${boardPostsDto}]]*/);
         });
 	</script>
 </head>
@@ -54,9 +53,40 @@
 		                                </tr>
 		                                
 		                                <tr>
-		                                	<th><p class="table_title">작성자</p></th>
-		                                	<td colspan="3" class="disabled">
-	                                			<input type="text" name="writer_id" class="table_info" disabled>
+		                                	<th><p class="table_title">작성자 아이디</p></th>
+		                                	<td class="disabled">
+	                                			<input type="text" class="table_info" disabled
+	                                				th:value="${
+	                                					boardPostsDto.bp_account == 'admin' ? 
+	                                						boardPostsDto.adminAccountDto.a_id + ' (관리자)'
+                                						:
+                                							boardPostsDto.userAccountDto.u_id
+	                                				}">
+	                                        </td>
+	                                        
+	                                        <th><p class="table_title" th:text="${boardPostsDto.bp_account == 'admin' ? '이름' : '이름(닉네임)'}"></p></th>
+		                                	<td class="disabled">
+	                                			<input type="text" name="writer_id" class="table_info" disabled
+	                                				th:value="${
+	                                					boardPostsDto.bp_account == 'admin' ? 
+	                                						boardPostsDto.adminAccountDto.a_name
+                                						:
+                                							boardPostsDto.userAccountDto.u_name	+ ' (' + boardPostsDto.userAccountDto.u_nickname + ')'
+	                                				}">
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>
+	                                        <th><p class="table_title">등록일</p></th>
+		                                	<td class="disabled">
+		                                		<input type="text" class="table_info" disabled
+		                                			th:value="${boardPostsDto.bp_reg_date}">
+	                                        </td>
+	                                        
+	                                        <th><p class="table_title">수정일</p></th>
+		                                	<td class="disabled">
+		                                		<input type="text" class="table_info" disabled
+		                                			th:value="${boardPostsDto.bp_mod_date}">
 	                                        </td>
 		                                </tr>
 		                                
