@@ -194,8 +194,15 @@ async function putUserAccountModify(formName) {
 }
 
 // 회원 계정 상태 수정
-async function putUserAccountModify(u_no, ) {
+async function putUserAccountModify(formName) {
+	const form = document.forms[formName];
+	let input;
 	
+	input = form.u_blocked_reason;
+	if(!validateEmpty(input, '사유를', true)) {
+		input.focus();
+		return false;
+	}
 }
 
 // 질환 / 질병 분류 수정
