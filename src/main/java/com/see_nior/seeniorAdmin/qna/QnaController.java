@@ -3,10 +3,13 @@ package com.see_nior.seeniorAdmin.qna;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.see_nior.seeniorAdmin.dto.QnaDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -49,7 +52,48 @@ public class QnaController {
 		
 	}
 	
+	// qna 검색 리스트 가져오기 
+	@GetMapping("/info/search_qna_list")
+	@ResponseBody
+	public Object searchQnaList(
+			@RequestParam("searchPart") String searchPart,
+			@RequestParam("searchString") String searchString, 
+			@RequestParam(value = "sortValue", required = false, defaultValue = "bq_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order, 
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("searchQnaList()");
+	
+		Map<String, Object> searchQnaList = 
+				qnaService.searchQnaPagingList(searchPart, searchString, sortValue, order, page);
+		
+		Map<String, Object> searchQnaListPageNum = 
+				qnaService.searchQnaListPageNum(searchPart, searchString, page);
+		
+		searchQnaList.put("searchQnaListPageNum", searchQnaListPageNum);
+		searchQnaList.put("sortValue", sortValue);
+		searchQnaList.put("order", order);
+		searchQnaList.put("searchPart", searchPart);
+		searchQnaList.put("searchString", searchString);
+		
+		return searchQnaList;
+	}
+	
 	// qna 상세보기 양식
+	@GetMapping("/info/qna_detail_form")
+	public String qnaDetailForm(@RequestParam("bq_no") int bq_no, Model model) {
+		log.info("qnaDetailForm()");
+	
+		String nextPage = "qna/qna_detail_form";
+		
+		QnaDto qnaDto = qnaService.getQnaInfoByNo(bq_no);
+		model.addAttribute("qnaDto", qnaDto);
+		
+		log.info("qnaDto ------ {}",  qnaDto);
+		
+		return nextPage;
+		
+	}
+	
 	
 	
 }

@@ -71,6 +71,7 @@
 		<collection property="adminAccountDto" resultMap="AdminAccountDto"/>
 	</resultMap>
 
+	<!-- qna 리스트 가져오기 -->
 	<select id="selectQnaList"
 			resultMap="QnaDto">
 	
@@ -94,6 +95,7 @@
 	
 	</select>
 	
+	<!-- qna 리스트 전체 개수 -->
 	<select id="selectAllQnaListCnt"
 			resultType="Integer">
 		
@@ -106,6 +108,7 @@
 		
 	</select>
 	
+	<!-- 답변 안된 qna 리스트 가져오기 -->
 	<select id="selectUnansweredQuestions"
 			resultMap="QnaDto">
 	
@@ -119,5 +122,69 @@
 			BQ_IS_DELETED = 1
 	
 	</select>
+	
+	<!-- 검색 qna 리스트 가져오기 -->
+	<select id="selectSearchQnaList"
+			resultMap="QnaDto">
+			
+		SELECT 
+			* 
+		FROM 
+			BOARD_QNA BQ 
+		JOIN 
+			USER_ACCOUNT A 
+		ON 
+			BQ.BQ_USER_NO = U.U_NO 
+		WHERE 
+			BQ.BQ_IS_DELETED = 1 
+		AND 
+			U.U_IS_DELETED = 1 
+		<if test="searchPart != null and searchString != null">
+			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%') 
+		</if>
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit} 
+		
+	</select>
+	
+	<!-- 검색 qna 리스트 개수 -->
+	<select id="selectSearchQnaListCnt"
+			resultType="Integer">
+	
+		SELECT 
+			COUNT(BQ_NO) 
+		FROM 
+			BOARD_QNA 
+		WHERE 
+			BQ_IS_DELETED = 1 
+		<if test="searchPart != null and searchString != null">
+			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+		</if>
+	
+	</select>
+	
+	<!-- qna 정보 가져오기 by no -->
+	<select id="selectQnaInfoByNo"
+			resultMap="QnaDto">
+		
+		SELECT 
+			* 
+		FROM 
+			BOARD_QNA BQ 
+		JOIN 
+			USER_ACCOUNT U 
+		ON 
+			BQ.BQ_USER_NO = U.U_NO 
+		WHERE 
+			BQ.BQ_IS_DELETED = 1 
+		AND 
+			U.U_IS_DELETED = 1 
+		AND 
+			BQ.BQ_NO = #{bq_no} 
+	
+	</select>
+	
 	
 </mapper>

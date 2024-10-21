@@ -17,5 +17,11 @@ public interface QnaMapper {
 
 	public List<QnaDto> selectUnansweredQuestions();
 
+	public List<AdminAccountDto> selectSearchQnaList(Map<String, Object> pagingParams);
+
+	public int selectSearchQnaListCnt(Map<String, Object> searchParams);
+
+	public QnaDto selectQnaInfoByNo(int bq_no);
+
 	
 }

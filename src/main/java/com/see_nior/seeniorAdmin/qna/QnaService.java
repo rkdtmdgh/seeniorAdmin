@@ -83,6 +83,73 @@ public class QnaService {
 		
 		return unansweredQnaDtos;
 	}
+
+	// qna 검색 리스트 가져오기
+	public Map<String, Object> searchQnaPagingList(String searchPart, String searchString, String sortValue,
+			String order, int page) {
+		log.info("searchQnaPagingList()");
+		
+		int pagingStart = (page - 1) * pageLimit;	
+		
+		Map<String, Object> pagingSearchList = new HashMap<>();
+		
+		Map<String, Object> pagingParams = new HashMap<>();
+		pagingParams.put("start", pagingStart);
+		pagingParams.put("limit", pageLimit);
+		pagingParams.put("sortValue", sortValue);
+		pagingParams.put("order", order);
+		pagingParams.put("searchPart", searchPart);
+		pagingParams.put("searchString", searchString);
+
+		List<AdminAccountDto> qnaDtos = qnaMapper.selectSearchQnaList(pagingParams);
+		pagingSearchList.put("qnaDtos", qnaDtos);
+		
+		return pagingSearchList;
+		
+	}
+
+	// 검색 qna 리스트 개수 
+	public Map<String, Object> searchQnaListPageNum(String searchPart, String searchString, int page) {
+		log.info("searchQnaListPageNum()");
+		
+		Map<String, Object> searchQnaPageNum = new HashMap<>();
+		
+		Map<String, Object> searchParams = new HashMap<>();
+		searchParams.put("searchPart", searchPart);
+		searchParams.put("searchString", searchString);
+		
+		// 전체 리스트 개수 조회 
+		int searchQnaListCnt = qnaMapper.selectSearchQnaListCnt(searchParams);
+
+		// 전체 페이지 개수 계산
+		int maxPage = (int) (Math.ceil((double) searchQnaListCnt / pageLimit));
+		
+		// 시작 페이지 값 계산
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
+		
+		// 마지막 페이지 값 계산
+		int endPage = startPage + blockLimit - 1;
+		if (endPage > maxPage) endPage = maxPage;
+		
+		searchQnaPageNum.put("searchQnaListCnt", searchQnaListCnt);
+		searchQnaPageNum.put("page", page);
+		searchQnaPageNum.put("maxPage", maxPage);
+		searchQnaPageNum.put("startPage", startPage);
+		searchQnaPageNum.put("endPage", endPage);
+		searchQnaPageNum.put("pageLimit", pageLimit);
+		searchQnaPageNum.put("blockLimit", blockLimit);
+		
+		return searchQnaPageNum;
+		
+	}
+ 
+	// qna 정보 가져오기 by no
+	public QnaDto getQnaInfoByNo(int bq_no) {
+		log.info("getQnaInfoByNo()");
+		
+		return qnaMapper.selectQnaInfoByNo(bq_no);
+		
+	}
 	
 	
 }

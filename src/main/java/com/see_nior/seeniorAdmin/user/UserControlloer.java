@@ -72,6 +72,7 @@ public class UserControlloer {
 		
 		Map<String, Object> searchUserAccountListPageNum = 
 				userService.searchUserListPageNum(page, searchPart, searchString);
+		
 		searchUserList.put("searchUserAccountListPageNum", searchUserAccountListPageNum);
 		searchUserList.put("sortValue", sortValue);
 		searchUserList.put("order", order);
