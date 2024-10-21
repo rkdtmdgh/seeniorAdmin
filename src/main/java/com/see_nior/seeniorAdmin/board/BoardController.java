@@ -253,7 +253,7 @@ public class BoardController {
 		
 		// 특정 게시판 페이지 번호에 따른 게시물 리스트들 가져오기
 		Map<String, Object> boardPostsListWithPage = boardService.getBoardPostsListWithPage(bp_category_no, page, sortValue, order);
-				
+		log.info("return value: {}",boardPostsListWithPage);
 		// 특정 게시판 게시물 총 페이지 개수 가져오기
 		Map<String, Object> boardPostsListPageNum = boardService.getBoardPostsListPageNum(bp_category_no, page);
 				
