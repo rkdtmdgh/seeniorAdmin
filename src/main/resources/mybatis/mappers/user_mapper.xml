@@ -164,7 +164,13 @@
 		UPDATE 
 			USER_ACCOUNT 
 		SET 
-			U_IS_BLOCKED = #{u_is_blocked}, 
+			U_IS_BLOCKED = 
+			<if test="u_is_blocked == true">
+				1, 
+			</if>
+			<if test="u_is_blocked == false">
+				0, 
+			</if>
 			U_BLOCKED_REASON = #{u_blocked_reason},  
 			U_MOD_DATE = NOW() 
 		WHERE 

@@ -179,14 +179,10 @@ public class UserService {
 	}
 
 	// 일반 멤버 계정 정지 확인
-	public Object blockedConfirm(int u_no, String u_blocked_reason) {
+	public Object blockedConfirm(UserAccountDto userAccountDto) {
 		log.info("blockedConfirm()");
 		
-		Map<String, Object> params = new HashMap<>();
-		params.put("u_no", u_no);
-		params.put("u_blocked_reason", u_blocked_reason);
-		
-		int result = userMapper.updateUserIsBlockedByNo(params);
+		int result = userMapper.updateUserIsBlockedByNo(userAccountDto);
 		
 		if (result >= 0) 
 			return USER_BLOCKED_SUCCESS;

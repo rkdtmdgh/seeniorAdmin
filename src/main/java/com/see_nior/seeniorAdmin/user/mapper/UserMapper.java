@@ -25,6 +25,6 @@ public interface UserMapper {
 
 	public int updateUserIsDeletedByNo(int u_no);
 
-	public int updateUserIsBlockedByNo(Map<String, Object> params);
+	public int updateUserIsBlockedByNo(UserAccountDto userAccountDto);
 
 }
