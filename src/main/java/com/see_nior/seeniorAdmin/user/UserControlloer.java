@@ -121,12 +121,10 @@ public class UserControlloer {
 	// 일반 멤버 계정 정지 확인 
 	@PostMapping("/info/bolcked_confirm")
 	@ResponseBody
-	public Object blockedConfirm(
-			@RequestParam("u_no") int u_no, 
-			@RequestParam("u_blocked_reason") String u_blocked_reason) {
+	public Object blockedConfirm(UserAccountDto userAccountDto) {
 		log.info("blockedConfirm()");
 		
-		return userService.blockedConfirm(u_no, u_blocked_reason);
+		return userService.blockedConfirm(userAccountDto);
 		
 	}
 	
