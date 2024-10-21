@@ -28,7 +28,8 @@
     --middleGrayColor: #C1C1C1; /* middle gray */
     --lightGrayColor: #E8E8E8; /* light gray */
     --lightBlueColor: #F3F6FB; /* blue */ 
-    --greenColor: #33D486; /* green */
+    --greenColor: #13ce29; /* green */
+    --lightGreenColor: #26e83d; /* green */
     --yellowColor: #FFC73C; /* yellow */
     --redColor: #FF5B45; /* red */
     --optionColor: #1967D2;
@@ -168,7 +169,7 @@ select {
     -moz-appearance: none;
     appearance: none;
     padding: var(--selectPadding);
-    background: url(/image/icons/gray_arrow.png) right 1em center no-repeat;
+    background: url(/image/icons/gray_arrow.png) right 1.2em center no-repeat;
 }
 
 input:-webkit-autofill,

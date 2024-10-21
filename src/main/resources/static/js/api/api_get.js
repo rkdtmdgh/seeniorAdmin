@@ -1,49 +1,10 @@
-// 로그인 유저 데이터 요청
-async function getAccountInfo(modify=false) {
-	try {
-		const response = await $.ajax({
-			url: '/account/info/get_account_info',
-			method: 'GET',
-		});
-		
-		logger.info('/account/info/get_account_info getAccountInfo() response:', response);
-		
-		if(response && modify) {
-			const $contentInfoWrap = $('.content_info_wrap');
-			$contentInfoWrap.html(setAccountModifyForm(response)); // account/modifyForm SET
-		}
-		
-		return response;
-	
-	} catch(error) {
-		logger.error('/account/info/get_account_info getAccountInfo() error:', error);
-		throw new error('계정 정보를 불러오는 중 오류가 발생했습니다.');
-	}
-}
-
-// 특정 게시판 데이터 요청
-async function getBoardInfo(infoNo) {
-	try {
-		const response = await $.ajax({
-			url: `/board/info/get_board_info?infoNo=${infoNo}`,
-			method: 'GET',
-		});
-		
-		logger.info(' getBoardInfo() response:', response);
-		
-		if(response) {
-			return response;
-		}
-		
-	} catch(error) {
-		logger.error(' getBoardInfo() error:', error);
-		throw new error('게시판 정보를 불러오는 중 오류가 발생했습니다.');
-	}
-}
+// 함수 디바운싱 적용 // 함수, key명
+const getList = debounceAsync(getListProcess, 'getListProcess'); // 콘텐츠 리스트 요청
+const getSearchList = debounceAsync(getSearchListProcess, 'getSearchListProcess'); // 검색 리스트 요청
 
 // 콘텐츠 리스트 요청
-async function getList(apiUrl, sortValue, order, page) {
-	if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+async function getListProcess(apiUrl, sortValue, order, page) {
+	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
 		setAllcheck(); // all_check 체크박스 초기화
 		
 		// 검색 인풋 벨류 삭제
@@ -61,6 +22,9 @@ async function getList(apiUrl, sortValue, order, page) {
 		logger.info('apiUrl:', apiUrl + params);
 		
 		try {
+			// 테스트를 위한 딜레이
+            //await new Promise(resolve => setTimeout(resolve, 2000));
+            
 			const response = await $.ajax({
 				url: apiUrl + params,
 				method: 'GET',
@@ -108,14 +72,14 @@ async function getList(apiUrl, sortValue, order, page) {
 			logger.error(apiUrl + ' error:', error);
 			
 		} finally {
-			setAddLoading(false, 'content_inner'); // 로딩 제거
+			setLoading(false, 'content_inner'); // 로딩 제거
 		}
 	}
 }
 
 // 검색 리스트 요청
-async function getSearchList(event, apiUrl, page) {
-	if(setAddLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
+async function getSearchListProcess(event, apiUrl, page) {
+	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
 		if(event) event.preventDefault();
 		const form = document.forms['search_form'];
 		let input;
@@ -194,7 +158,7 @@ async function getSearchList(event, apiUrl, page) {
 				logger.error(apiUrl + ' searchForm() error:', error);
 				
 			} finally {
-				setAddLoading(false, 'content_inner'); // 로딩 제거
+				setLoading(false, 'content_inner'); // 로딩 제거
 			}
 		}
 	}
@@ -202,9 +166,9 @@ async function getSearchList(event, apiUrl, page) {
 
 // 요청 Api Response 객체 설정 
 function mapApiResponseObject(apiUrl, response) { 
-	let getListDtos;
-	let getListPage;
-	let getListCnt;
+	let getListDtos = null;
+	let getListPage = null;
+	let getListCnt = null;
 	
 	switch(apiUrl) {
 		case '/account/list/get_admin_list': // 관리자 계정 관리
@@ -217,6 +181,18 @@ function mapApiResponseObject(apiUrl, response) {
 			getListDtos = response.adminAccountDtos;
 			getListPage = response.searchAdminListPage;
 			getListCnt = response.searchAdminListPage.searchAdminListCnt;
+			break;
+			
+		case '/user_account/info/get_user_account_list': // 회원 관리
+			getListDtos = response.userAccountDtos;
+			getListPage = response.userAccountListPage;
+			getListCnt = response.userAccountListPage.userAccountListCnt;
+			break;
+			
+		case '/user_account/info/search_user_account_list': // 회원 관리 검색
+			getListDtos = response.userAccountDtos;
+			getListPage = response.searchUserAccountListPageNum;
+			getListCnt = response.searchUserAccountListPageNum.searchUserListCnt;
 			break;
 			
 		case '/disease/info/get_disease_list': // 질환 / 질병 정보 관리
@@ -387,19 +363,79 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <p class="table_info">${listIndex}</p>
 		            </td>
 		            <td>
-		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_id || 'N/A'}</a>
+		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_id}</a>
 		            </td>
 		            <td>
-		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_authority_role == 'SUB_ADMIN' ? '완료' : '대기'}</a>
+		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_authority_role === 'SUB_ADMIN' ? '완료' : '대기'}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${data.a_phone || 'N/A'}</p>
+		                <p class="table_info">${data.a_phone}</p>
 		            </td>
 		            <td>
-		                <p class="table_info">${data.a_name || 'N/A'}</p>
+		                <p class="table_info">${data.a_name}</p>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.a_reg_date || 'N/A')}</p>
+		                <p class="table_info">${setFormatDate(data.a_reg_date)}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/user_account/info/get_user_account_list':  // 회원 관리 리스트 테이블
+		case '/user_account/info/search_user_account_list': // 회원 관리 검색 리스트 테이블
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <p class="table_info">${listIndex}</p>
+		            </td>
+		            
+		            ${data.u_is_deleted === true ? // true = 정상, flase = 탈퇴
+		            `
+			            <td>
+			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_id}</a>
+			            </td>
+			            <td>
+			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_name}(${data.u_nickname})</a>
+			            </td>
+			            <td>
+			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_phone}</a>
+			            </td>
+			            <td>
+			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_company || '-'} </a>
+			            </td>
+			            <td>
+			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">
+			                	${data.u_is_blocked === true ? // // true = 정상, flase = 정지
+			                		'정상' 
+			                	: 
+			                		'정지'
+		                		}
+			                </a>
+			            </td>
+		            `
+		            :
+		            
+		            `
+			            <td>
+			                <p class="table_info">${data.u_id}</p>
+			            </td>
+			            <td>
+			                <p class="table_info">-</p>
+			            </td>
+			            <td>
+			                <p class="table_info">-</p>
+			            </td>
+			            <td>
+			                <p class="table_info">-</p>
+			            </td>
+			            <td>
+			                <p class="table_info">탈퇴</p>
+			            </td>
+		            `
+		            }
+		            
+		            <td>
+		                <p class="table_info">${setFormatDate(data.u_reg_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -420,10 +456,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${data.diseaseCategoryDto.dc_name}</a>
 		            </td>
 		            <td>
-		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${data.d_name || 'N/A'}</a>
+		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${data.d_name}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.d_mod_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.d_mod_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -443,7 +479,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/disease/info/disease_list_form?sortType=1&sortValue=dc_no&order=${data.dc_no}" class="table_info">${data.dc_item_cnt}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.dc_reg_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.dc_reg_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -461,10 +497,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/recipe/info/detail_form?rcp_seq=${data.rcp_seq}" class="table_info">${data.rcp_pat2}</a>
 		            </td>
 		            <td>
-		                <a href="/recipe/info/detail_form?rcp_seq=${data.rcp_seq}" class="table_info">${data.rcp_nm || 'N/A'}</a>
+		                <a href="/recipe/info/detail_form?rcp_seq=${data.rcp_seq}" class="table_info">${data.rcp_nm}</a>
 		            </td>
 		            <td>
-		                <a href="/recipe/info/detail_form?rcp_seq=${data.rcp_seq}" class="table_info">${data.rcp_way2 || 'N/A'}</a>
+		                <a href="/recipe/info/detail_form?rcp_seq=${data.rcp_seq}" class="table_info">${data.rcp_way2}</a>
 		            </td>
 		            <td class="ta_l">
 		                <a href="/recipe/info/detail_form?rcp_seq=${data.rcp_seq}" class="table_info info_data_list">
@@ -497,7 +533,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="${data.v_link}" onclick="setWindowOpenPosition(this.href, 640, 360); return false;" class="table_info">${data.v_link}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.v_mod_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.v_mod_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -516,9 +552,6 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 						</div>
 					</td>
 		            <td>
-		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${listIndex}</a>
-		            </td>
-		            <td>
 		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${data.bc_idx}</a>
 		            </td>
 		            <td>
@@ -528,7 +561,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${data.bc_item_cnt}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.bc_reg_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.bc_reg_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -559,7 +592,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 						</div>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.bn_mod_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.bn_mod_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -592,7 +625,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 						</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.bp_mod_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.bp_mod_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -618,7 +651,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_writer_no} 작성자 아이디</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.n_mod_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.n_mod_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -644,10 +677,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="" class="table_info">${data.bq_user_no}(작성자 아이디)</a>
 		            </td>
 					<td>
-		                <p class="table_info">${setFormatDate(data.bq_reg_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.bq_reg_date)}</p>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.bq_mod_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.bq_mod_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -674,7 +707,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <p class="table_info">${data.ad_client}</p>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.ad_mod_date) || 'N/A'}</p>
+		                <p class="table_info">${setFormatDate(data.ad_mod_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -694,7 +727,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/advertisement/info/advertisement_list_form?sortType=1&sortValue=ac_no&order=${data.ac_no}" class="table_info">${data.ac_item_cnt}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.ac_reg_date) || 'N/A'}</p>
+		                <p class="table_info">${data.ac_note ? data.ac_note : '-'}</p>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.ac_reg_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -792,11 +828,15 @@ function getSortList(event, dbTable, sortValue) {
 
 // sort getList() 요청에 필요한 객체 설정
 function mapSortListApiObject(dbTable) {
-	let apiUrl;
+	let apiUrl = null;
 	
 	switch(dbTable) {			
 		case 'admin_account': // 관리자 계정 관리 페이지
 			apiUrl = '/account/list/get_admin_list';
+			break;
+			
+		case 'user_account': // 회원 관리 페이지
+			apiUrl = '/user_account/info/get_user_account_list';
 			break;
 			
 		case 'disease': // 질환/질병 정보 관리 페이지
@@ -832,7 +872,7 @@ function mapSortListApiObject(dbTable) {
 			break;
 		
 		default:
-			logger.error('mapSortListApiObject() dbTable:', value);
+			logger.error('mapSortListApiObject() not found set DB Table:', value);
 			return false;
 	}
 	
@@ -856,7 +896,7 @@ function getSelectList(event) {
 
 // select getList() 요청에 필요한 객체 설정
 function mapSelectListApiObject(sortValue) {
-	let apiUrl;
+	let apiUrl = null;
 	
 	switch(sortValue) {				
 		case 'dc_no': // 질환/질병 정보 리스트 페이지 질병군별 분류 리스트 요청
@@ -880,44 +920,68 @@ function mapSelectListApiObject(sortValue) {
 }
 
 // 셀렉트 옵션 리스트 요청 및 옵션 생성
-async function getCategoryList(ele, isForm, selectedValue) {
+async function getCategoryList(ele, formName, selectedValue, ) {
 	const $selectEle = $(`#${ele}`); // 셀렉트 요소가 생성될 table th or td
 	const bgc = $selectEle.parent()[0].tagName === 'TH' ? '#F7F7F7' : '#FFFFFF';
 	
-	if(setAddLoading(true, `${ele}_select`, bgc)) { // 로딩 추가 함수 실행이 성공하면 요청 진행 (중복 요청 방지)
-		const { apiUrl, getListDtos, dataNo, dataName } = mapCategorylistObject(ele);
+	if(setLoading(true, `${ele}_select`, bgc)) { // 로딩 추가 함수 실행이 성공하면 요청 진행
+		const categoryConfig = mapCategorylistObject(ele);
 		
 		if($selectEle.length) {
 			try {
 				const response = await $.ajax({
-					url: apiUrl,
+					url: categoryConfig.getCateSelectApiUrl,
 					method: 'GET',
 				});
 				
-				const categoryDto = response[getListDtos];
-				logger.info(`${apiUrl} categoryDto:`, response);
+				const categoryDto = response[categoryConfig.getListDtos];
+				logger.info(`${categoryConfig.getCateSelectApiUrl} categoryDto:`, response);
 				
 				if(categoryDto && categoryDto.length) {
-					if(isForm) {
+					if(formName) {
 						categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
-							let selected = selectedValue ? data[dataNo] === selectedValue ? 'selected' : '' : '';
-							let option = `<option value="${data[dataNo]}" ${selected}>${data[dataName]}</option>`;
+							let selected = selectedValue ? data[categoryConfig.dataNo] === selectedValue ? 'selected' : '' : '';
+							let option = `
+								<option 
+									${selected}
+									value="${data[categoryConfig.dataNo]}" 
+									${data[categoryConfig.dataNote] ?
+										`data-info="${data[categoryConfig.dataNote]}"`
+									:
+										''
+									}
+								>
+									${data[categoryConfig.dataName]}
+								</option>
+							`;
 							
 							if(selected) {
 								$selectEle[0].insertAdjacentHTML('afterbegin', option);
 								
+								// 선택된 참고 사항 노출(처음만 적용)
+								if(data[categoryConfig.dataNote]){
+									logger.info('guideline:', data[categoryConfig.dataNote]);
+									const $guideline = $('#guideline');
+									$guideline.text(data[categoryConfig.dataNote]);									
+								}
+								
 							} else {
 								$selectEle[0].insertAdjacentHTML('beforeend', option);
+							}
+							
+							// dataNote가 있을 경우에 onchange 이벤트 추가
+							if(categoryDto.some(data => data[categoryConfig.dataNote])) {
+								$selectEle.attr("onchange", `setSelectGuidelineInfo(this, '${formName}')`);
 							}
 						});
 						
 					} else {
-						const ceateSelect = `<ul data-sort-value="${dataNo}" class="select_option_list sc"></ul>`;
+						const ceateSelect = `<ul data-sort-value="${categoryConfig.dataNo}" class="select_option_list sc"></ul>`;
 				        $selectEle[0].insertAdjacentHTML('beforeend', ceateSelect);
 				        const $selectOptionlist = $('ul.select_option_list');
 						
 						categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
-							let option = `<li data-order="${data[dataNo]}" class="option" onclick="getSelectList(event);">${data[dataName]}</li>`;
+							let option = `<li data-order="${data[categoryConfig.dataNo]}" class="option" onclick="getSelectList(event);">${data[categoryConfig.dataName]}</li>`;
 							$selectOptionlist[0].insertAdjacentHTML('beforeend', option);
 						});
 					}
@@ -927,33 +991,74 @@ async function getCategoryList(ele, isForm, selectedValue) {
 				}
 				
 			} catch(error) {
-				logger.error(apiUrl + ' error:', error);
+				logger.error(`${categoryConfig.getCateSelectApiUrl} error:`, error);
 				
 			} finally {
-				setAddLoading(false, `${ele}_select`) // 로딩 제거
+				setLoading(false, `${ele}_select`) // 로딩 제거
 			}
+		}
+	}
+}
+
+// 동적으로 순번 max값 적용
+async function getMaxIdxAndSetAttribute(name, value, formName) {
+	logger.info('getMaxIdxAndSetAttribute():', name, value, formName);
+	
+	const { getSelectMaxIdxApiUrl } = mapCategorylistObject(name); // name값에 해당하는 maxIdx값 요청 api
+	
+	if(!getSelectMaxIdxApiUrl) return; // name값에 해당하는 maxIdx값 요청 api가 없을 경우 리턴
+	
+	if(setLoading(true, 'order_number')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
+		try {
+			const response = await $.ajax({
+				url: getSelectMaxIdxApiUrl,
+				method: 'GET',
+				data: {
+					[name]: value,
+				},
+			});
+			
+			logger.info(`${getSelectMaxIdxApiUrl} getMaxIdxAndSetAttribute():`, response);
+			
+			// modify인 경우 최대값 그대로 사용 create일 경우 최대값+1, 기본값은 1
+			let max = response < 1 ? 1 : response;
+			max = formName === 'modify' ? max : max + 1 ;
+			
+			if(formName === 'create') $('#idx_number').val(max); // create form일 경우 최대값으로 설정
+			$('#idx_number').attr('max', max); // 해당 인풋 요소에 max속성, value값 추가/변경
+			
+			// modify인 경우 값이 유지가 되어야하나 max값이 입력값보다 작을 경우에 대비하여 강제로 blur 이벤트 트리거
+			$('#idx_number').focus().trigger('blur'); 
+			
+		} catch(error) {
+			logger.error(`${getSelectMaxIdxApiUrl} getMaxIdxAndSetAttribute() error:`, error);
+			
+		} finally {
+			setLoading(false, `order_number`) // 로딩 제거
 		}
 	}
 }
 
 // 셀렉트 옵션 분류 리스트 요청에 필요한 객체 설정
 function mapCategorylistObject(ele) {
-	let apiUrl;
-	let getListDtos;
-	let dataNo;
-	let dataName;
+	let getCateSelectApiUrl = null;
+	let getSelectMaxIdxApiUrl = null;
+	let getListDtos = null;
+	let dataNo = null;
+	let dataName = null;
+	let dataNote = null;
 	
 	switch(ele) {
 		case 'dc_name': // 질병군별 분류 리스트(분류별 관리o)
 		case 'd_category_no':
-			apiUrl = '/disease/cate_info/get_category_list_select';
+			getCateSelectApiUrl = '/disease/cate_info/get_category_list_select';
 			getListDtos = 'diseaseCategoryDto';
 			dataNo = 'dc_no';
 			dataName = 'dc_name';
 			break;
 			
 		case 'rcp_pat2': // 음식 종류별 분류 리스트(분류별 관리x)
-			apiUrl = '/recipe/info/get_type_list_select';
+			getCateSelectApiUrl = '/recipe/info/get_type_list_select';
 			getListDtos = 'recipeTypeDto';
 			dataNo = 'rcp_pat2';
 			dataName = 'rcp_pat2';
@@ -961,7 +1066,7 @@ function mapCategorylistObject(ele) {
 			
 		case 'bc_name': // 게시판별 분류 리스트(분류별 관리o)
 		case 'bn_category_no':
-			apiUrl = '/board/cate_info/get_category_list_select';
+			getCateSelectApiUrl = '/board/cate_info/get_category_list_select';
 			getListDtos = 'boardCategoryDtos';
 			dataNo = 'bc_no';
 			dataName = 'bc_name';
@@ -969,10 +1074,12 @@ function mapCategorylistObject(ele) {
 			
 		case 'ac_name': // 위치별 분류 리스트(분류별 관리o)
 		case 'ad_category_no':
-			apiUrl = '/advertisement/cate_info/get_category_list_select';
+			getCateSelectApiUrl = '/advertisement/cate_info/get_category_list_select';
+			getSelectMaxIdxApiUrl = '/advertisement/info/create_category_select';
 			getListDtos = 'advertisementCategoryDto';
 			dataNo = 'ac_no';
 			dataName = 'ac_name';
+			dataNote = 'ac_note';
 			break;
 		
 		default:
@@ -980,5 +1087,48 @@ function mapCategorylistObject(ele) {
 			return false;
 	}
 	
-	return { apiUrl, getListDtos, dataNo, dataName };
+	return { getCateSelectApiUrl, getSelectMaxIdxApiUrl, getListDtos, dataNo, dataName, dataNote };
+}
+
+// 로그인 유저 데이터 요청
+async function getAccountInfo(modify=false) {
+	try {
+		const response = await $.ajax({
+			url: '/account/info/get_account_info',
+			method: 'GET',
+		});
+		
+		logger.info('/account/info/get_account_info getAccountInfo() response:', response);
+		
+		if(response && modify) {
+			const $contentInfoWrap = $('.content_info_wrap');
+			$contentInfoWrap.html(setAccountModifyForm(response)); // account/modifyForm SET
+		}
+		
+		return response;
+	
+	} catch(error) {
+		logger.error('/account/info/get_account_info getAccountInfo() error:', error);
+		throw new error('계정 정보를 불러오는 중 오류가 발생했습니다.');
+	}
+}
+
+// 특정 게시판 데이터 요청
+async function getBoardInfo(infoNo) {
+	try {
+		const response = await $.ajax({
+			url: `/board/info/get_board_info?infoNo=${infoNo}`,
+			method: 'GET',
+		});
+		
+		logger.info(' getBoardInfo() response:', response);
+		
+		if(response) {
+			return response;
+		}
+		
+	} catch(error) {
+		logger.error(' getBoardInfo() error:', error);
+		throw new error('게시판 정보를 불러오는 중 오류가 발생했습니다.');
+	}
 }

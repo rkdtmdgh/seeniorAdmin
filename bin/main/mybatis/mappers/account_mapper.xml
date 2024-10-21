@@ -88,7 +88,9 @@
 		FROM 
 			ADMIN_ACCOUNT 
 		WHERE 
-			A_NO = #{a_no}
+			A_NO = #{a_no} 
+		AND 
+			A_IS_DELETED = 1 
 		
 	</select>
 	
@@ -233,7 +235,8 @@
 		<if test="searchPart != null and searchString != null">
 			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 		</if>
-		ORDER BY ${sortValue} ${order} 
+		ORDER BY 
+			${sortValue} ${order}           
 		LIMIT 
 			#{start}, #{limit}
 	
@@ -249,8 +252,8 @@
 			ADMIN_ACCOUNT
 		WHERE 
 			(A_AUTHORITY_ROLE = "SUB_ADMIN" 
-			OR 
-			A_AUTHORITY_ROLE = "NOT_APPROVED")
+			OR        
+			A_AUTHORITY_ROLE = "NOT_APPROVED") 
 		AND 
 			A_IS_DELETED = 1
 		<if test="searchPart != null and searchString != null">

@@ -26,7 +26,6 @@
 					    
 					    <form name="advertisement_category_modify_form">					    	
                       		<input type="hidden" name="ac_no" th:value="${advertisementCategoryDto.ac_no}">
-                      		<input type="hidden" name="current_ac_name" th:value="${advertisementCategoryDto.ac_name}">
                       		
 						    <div class="table_wrap">
 		                        <table class="content_edit_table">
@@ -46,21 +45,28 @@
 		                                			th:value="${advertisementCategoryDto.ac_name}">
 	                                        </td>
 	                                        
-	                                        <th><p class="table_title">광고 수</p></th>
-	                                        <td>
-	                                        	<input type="text" class="table_info" th:value="${advertisementCategoryDto.ac_item_cnt}" disabled>
+	                                        <th><p class="table_title">참고 사항</p></th>
+		                                	<td>
+		                                		<input type="text" name="ac_note" id="ac_note" class="table_info" placeholder="참고 사항"
+		                                			th:value="${advertisementCategoryDto.ac_note}">
 	                                        </td>
 		                                </tr>
 		                            </tbody>
 		                        </table>
 		                        
 		                        <div class="btn_list">
-		                        	<div th:if="${advertisementCategoryDto.ac_no} != null"
-		                        		 th:onclick="delSingleData('ac_no', [[${advertisementCategoryDto.ac_no}]], [[${advertisementCategoryDto.ac_name}]])" class="btns delete">삭제</div>
+		                        	<div th:if="${advertisementCategoryDto.ac_no} != null" class="btns delete"
+		                        		 th:onclick="
+		                        		 	delSingleData(
+		                        		 		[[${advertisementCategoryDto.ac_name}]], 
+		                        		 		'ac_no', 
+		                        		 		[[${advertisementCategoryDto.ac_no}]]
+		                        		 	)
+	                        		 	">삭제</div>
 		                        		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <div onclick="putAdvertisementCategoryModifyForm('advertisement_category_modify_form')" class="btns">수정</div>
+	                                    <div onclick="putAdvertisementCategoryModify('advertisement_category_modify_form')" class="btns">수정</div>
 	                                </div>
 	                            </div>
 		                    </div>

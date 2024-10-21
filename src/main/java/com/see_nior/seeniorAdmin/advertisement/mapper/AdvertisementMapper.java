@@ -51,6 +51,12 @@ public interface AdvertisementMapper {
 	
 	// -------------------------------------------광고 -------------------------------------------
 
+	// 해당 광고 위치의 광고 maxIdx값 구하기
+	public Integer getAdvertisementIdxMaxNumByCategory(int ad_category_no);
+	
+	// idx값을 중간값으로 입력 시 나머지 idx들 +1 처리 하기
+	public int updateAdvertisementIdx(int ad_idx);
+	
 	// 광고 등록
 	public int insertNewAdvertisement(AdvertisementDto advertisementDto);
 
@@ -81,19 +87,6 @@ public interface AdvertisementMapper {
 	// 광고의 총 리스트 개수 구하기(검색한 광고)
 	public int getSearchAdvertisementListCnt(Map<String, Object> pagingParams);
 
-
-
-
-
-
-
-
-
-
-
-
-
-	
 
 
 }

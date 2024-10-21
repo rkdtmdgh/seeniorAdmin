@@ -327,5 +327,27 @@
     	WHERE 
     		BC_NO = #{bc_no}
     </update>
+    
+    <!-- 게시판 카테고리 삭제 요청시 idx -처리 -->
+    <update id="subBoardCategoryIdxForDelete" parameterType="BoardCategoryDto">
+        UPDATE 
+        	BOARD_CATEGORY
+        SET 
+        	BC_IDX = BC_IDX - 1
+        WHERE 
+        	BC_IDX > #{bc_idx}
+    </update>
+    
+    <!-- 게시판 카테고리 삭제 요청 -->
+    <update id="deleteCategoryConfirm" parameterType="BoardCategoryDto">
+    	UPDATE 
+    		BOARD_CATEGORY
+    	SET 
+    		BC_IDX = 0,
+    		BC_IS_DELETED = 0
+    	WHERE
+    		BC_NO = #{bc_no}    
+    		<!-- current_idx로 위 아래 idx들 -1혹은 +1하는 로직 필요 -->
+    </update>
 
 </mapper>

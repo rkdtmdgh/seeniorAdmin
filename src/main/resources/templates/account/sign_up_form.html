@@ -23,12 +23,12 @@
                 </a>
             </div>
 
-            <form name="sign_up_form" onsubmit="postSignUpForm(event, 'sign_up_form')">
+            <form name="sign_up_form" onsubmit="postSignUp(event, 'sign_up_form')">
             	<div class="input_list_container">
 	                <div class="input_list" id="input_list_info">
 	                    <label for="id" class="border_input">
 	                        <span class="input_title">이메일</span>
-	                        <input type="text" name="a_id" id="id" class="id" placeholder="이메일" class="input_txt" 
+	                        <input type="text" name="a_id" id="id" placeholder="이메일" class="input_txt" 
 	                        	oninput="validateEmail(this)" onblur="validateEmail(this, true)">
 	                    </label>
 	
@@ -50,7 +50,7 @@
 	                    <label for="birth" class="border_input">
 	                        <span class="input_title">생년월일</span>
 	                        <input type="date" name="a_birth" id="birth" max="9999-12-31" min="1900-01-01" class="input_txt" 
-	                        	onchange="validateEmpty(this, '생년월일을')" onblur="validateEmpty(this, '생년월일을')">
+	                        	onblur="replaceDate(this)">
 	                    </label>
 						
 						<label for="tel" class="border_input">

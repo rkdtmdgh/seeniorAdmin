@@ -9,7 +9,7 @@
 		$(async function() {
          	// disease category 가져오기
             const selectedCategory = /*[[${diseaseDto.d_category_no}]]*/ // 기본값 설정
-            await getCategoryList('d_category_no', true, selectedCategory); // element id, isForm, selectedValue
+            await getCategoryList('d_category_no', 'modify', selectedCategory); // element id, form 종류, selectedValue
         });
     </script>
 </head>
@@ -95,12 +95,12 @@
 	                            </table>
 	
 	                            <div class="btn_list">
-	                            	<div th:if="${diseaseDto.d_no} != null"
-		                        		 th:onclick="delListData('d_no')" class="btns delete">삭제</div>
+	                            	<div th:if="${diseaseDto.d_no} != null" class="btns delete"
+		                        		 th:onclick="delListData('d_no')">삭제</div>
 		                        		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <div onclick="putDiseaseModifyForm('disease_modify_form')" class="btns">수정</div>
+	                                    <div onclick="putDiseaseModify('disease_modify_form')" class="btns">수정</div>
 	                                </div>
 	                            </div>
 	                        </div>

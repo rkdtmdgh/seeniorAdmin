@@ -17,7 +17,9 @@ public class UserAccountDto {
 	private String u_nickname;
 	private String u_gender;
 	private String u_birth;
+	private String u_zip_code;
 	private String u_address;
+	private String u_detailed_address;
 	private String u_profile_img;
 	private String u_company;
 	private boolean u_is_personal;					// true = 개인, false = 기관

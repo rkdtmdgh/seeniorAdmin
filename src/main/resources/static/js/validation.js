@@ -93,7 +93,7 @@ function validatePhone(input, alertMsg) {
 }
 
 // 데이터 유효값 확인
-function validateEmpty(input, txt, alertMsg,  notViewMsg = false) { // 요소, 텍스트, alert 여부, 에러메세지 요소 표기 여부(false = 노출, ture = 노출X)
+function validateEmpty(input, txt, alertMsg,  notViewMsg = false) { // 요소, 텍스트, alert 여부, 에러메세지 요소 표기 여부(false = 노출, ture = 노출X / 검색폼에서 사용)
 	const errorMessage = txt + " 입력해 주세요.";
 	input.value = input.value.trim(); // 앞뒤 공백 제거 적용
 	if(alertMsg) {

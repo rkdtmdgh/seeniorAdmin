@@ -40,13 +40,13 @@
 		                                <tr>
 		                                	<th><p class="table_title">아이디</p></th>
 		                                	<td class="disabled">
-		                                		<input type="text" name="a_id" id="a_id" class="table_info disabled"
+		                                		<input type="text" name="a_id" id="a_id" class="table_info"
 	                                            	th:value="${selectedAdminDto.a_id}" disabled>
 	                                        </td>
 	                                        
 	                                        <th><p class="table_title">관리자 승인</p></th>
 		                                	<td>
-	                                            <div class="table_info cont_info">
+	                                            <div class="table_info">
 	                                            	<label class="radio">
 	                                            		<input type="radio" name="a_authority_role" value="NOT_APPROVED"
 	                                            			th:checked="${selectedAdminDto.a_authority_role != 'SUB_ADMIN'}"> 미승인
@@ -70,7 +70,7 @@
 	                                        <th><p class="table_title">생년월일</p></th>
 		                                	<td>
 	                                            <input type="date" name="a_birth" id="a_birth" max="9999-12-31" min="1900-01-01" class="table_info"
-	                                            	onchange="validateEmpty(this, '생년월일을')" onblur="validateEmpty(this, '생년월일을')"
+                                            		onblur="replaceDate(this)"
 	                                            	th:value="${selectedAdminDto.a_birth}">
 	                                        </td>
 		                                </tr>
@@ -107,14 +107,20 @@
 		                        </table>
 		                        
 		                        <div class="btn_list">
-		                        	<div th:if="${selectedAdminDto.a_no} != null and ${selectedAdminDto.a_id} != null"
-		                        		 th:onclick="delSingleData('a_no', [[${selectedAdminDto.a_no}]], [[${selectedAdminDto.a_id}]])" class="btns delete">삭제</div>
+		                        	<div th:if="${selectedAdminDto.a_no} != null and ${selectedAdminDto.a_id} != null" class="btns delete"
+		                        		 th:onclick="
+		                        		 	delSingleData(
+		                        		 		[[${selectedAdminDto.a_id}]], 
+		                        		 		'a_no', 
+		                        		 		[[${selectedAdminDto.a_no}]]
+		                        		 	)
+		                        		 ">삭제</div>
 		                        	
 	                                <div class="btn_list">
 	                                	<div th:onclick="putResetPassword([[${selectedAdminDto.a_no}]], [[${selectedAdminDto.a_id}]])"
 	                                       class="btns white">비밀번호 초기화</div>
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <div onclick="putAdminModifyForm('admin_modify_form')" class="btns">수정</div>
+	                                    <div onclick="putAdminModify('admin_modify_form')" class="btns">수정</div>
 	                                </div>
 	                            </div>
 		                    </div>

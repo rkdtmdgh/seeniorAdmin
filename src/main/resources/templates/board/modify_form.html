@@ -31,7 +31,7 @@
 	                    </div>
 	
 	                    <form name="posts_modify_form">
-		                    <input type="hidden" name="bp_no" th:value="${selectedPostsDto.bp_no}">
+		                    <input type="hidden" name="bp_no" th:value="${postsDto.bp_no}">
 		                    
 	                        <div class="table_wrap">
 	                            <table class="content_edit_table">
@@ -48,7 +48,7 @@
 		                                	<td colspan="3">
 		                                		<input type="text" name="bp_title" id="bp_title" class="table_info" placeholder="제목"
 		                                			onblur="validateEmpty(this, '제목을')"
-		                                			th:value="${selectedPostsDto.bp_title}">
+		                                			th:value="${postsDto.bp_title}">
 	                                        </td>
 		                                </tr>
 		                                
@@ -60,9 +60,20 @@
 		                                </tr>
 		                                
 		                                <tr>
-		                                	<th><p class="table_title">내용</p></th>
+		                                	<th>
+		                                		<p class="table_title">
+		                                			내용
+			                                		<span id="guideline">
+			                                			영상: 최대 5개
+			                                			<br>이미지: 최대 10개
+			                                			<br>이미지별 최대 용량: 2MB
+			                                			<br>삽입 가능
+		                                			</span>
+		                                		</p>
+		                                	</th>
+		                                	
 		                                	<td colspan="3">
-	                                			<div id="editor" th:utext="${selectedPostsDto.bp_body}"></div>
+	                                			<div id="editor" th:utext="${postsDto.bp_body}"></div>
 	                                			<div id="text_limit">
 	                                				<span id="current_size"></span> / <span id="max_size"></span>
 	                                			</div>
@@ -72,12 +83,12 @@
 	                            </table>
 	
 	                            <div class="btn_list">
-	                            	<div th:if="${selectedPostsDto.bp_no} != null"
-		                        		 th:onclick="delListData('bp_no')" class="btns delete">삭제</div>
+	                            	<div th:if="${postsDto.bp_no} != null" class="btns delete"
+		                        		 th:onclick="delListData('bp_no')">삭제</div>
 		                        		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <div onclick="putPostsModifyForm('posts_modify_form')" class="btns">수정</div>
+	                                    <div onclick="putPostsModify('posts_modify_form')" class="btns">수정</div>
 	                                </div>
 	                            </div>
 	                        </div>

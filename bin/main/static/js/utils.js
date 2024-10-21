@@ -9,29 +9,50 @@ function setInputFocus(ele) {
 	}
 }
 
+// 디바운싱(리딩 엣지 방식) 상태 관리 유틸 함수 
+const debounceMap = {}; // 각 함수별로 관리되는 디바운스 상태 객체
+function debounceAsync(func, key) { // 비동기 방식 디바운싱 처리
+	return async function(...args) { // 모든 인자
+		if(debounceMap[key]) return; // key에 해당하는 함수가 실행 중일 경우 요청 무시(중복 요청 방지) 
+		
+		// 요청 시작
+		debounceMap[key] = true; // key에 해당하는 함수 디바운싱 상태 처리 추가
+		logger.info(`'${key}' debounceAsync() start`);
+		
+		try {
+			await func(...args); // 요청 함수 실행
+			
+		} finally {
+			// 요청 종료
+			debounceMap[key] = false; // key에 해당하는 함수 디바운싱 상태 제거 
+			logger.info(`'${key}' debounceAsync() end`);
+		}
+	}
+}
+
 // loading set
 let loadingTimeout; // 타이머 변수를 전역으로 선언
-function setAddLoading(loading, parentEleClass, backgroundColor=null) {
+function setLoading(loading, parentEleClass, backgroundColor='var(--whiteColor)') {
 	if(!loading) {
 		clearTimeout(loadingTimeout); // 딜레이 시간 안에 통신 완료 시 로딩 타이머 취소
 		if($(`.${parentEleClass}_loading_wrap`).length) $(`.${parentEleClass}_loading_wrap`).remove(); // 로딩 요소 제거
-		logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: stop loading`);
+		//logger.info(`setLoading() ${parentEleClass}_loading_wrap: stop loading`);
 		return false;
-		
 	}
 	
 	if($(`.${parentEleClass}_loading_wrap`).length.length) { // 이미 로딩 요소가 존재할 경우 
 		alert('현재 요청이 진행 중입니다. 잠시 후 다시 시도해 주세요.');
-		logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: Already loading`);
-		return false; // 이미 요청이 진행 중이면 함수 종료 (중복 요청 방지)
+		//logger.info(`setLoading() ${parentEleClass}_loading_wrap: Already loading`);
+		return false; // 이미 요청이 진행 중이면 함수 종료
 	}
 	
 	loadingTimeout = setTimeout(() => {
 		$(`.${parentEleClass}`).append(`
-			<span class="${parentEleClass}_loading_wrap loading" style="background-color: ${backgroundColor ? backgroundColor : 'var(--whiteColor)'};"></span>
+			<span class="${parentEleClass}_loading_wrap loading" style="background-color: ${backgroundColor};"></span>
 		`); // 해당 컨텐츠에 로딩 요소 추가
 	}, 50);
-	logger.info(`setAddLoading() ${parentEleClass}_loading_wrap: success loading`);
+	
+	//logger.info(`setLoading() ${parentEleClass}_loading_wrap: success loading`);
 	return true; // 로딩 표시 요청 완료
 }
 
@@ -69,6 +90,20 @@ async function setBoardTitle(infoNo) {
 	} else {
 		logger.error('Not found infoNo');
 	}
+}
+
+// 셀렉트 데이터로 특정 요소 텍스트 변경
+function setSelectGuidelineInfo(selectElement, formName) {
+	const $selectOption = $(selectElement).find('option:selected'); // 선택된 옵션
+	const info = $selectOption.data('info'); // 선택된 옵션의 data-info 속성 값 가져오기
+	let $infoEle = $('#guideline'); // 전달받은 요소값으로 참조('.', '#')
+	
+	if($infoEle.length && info) {
+		$infoEle.text(info); // 내용 업데이트
+	}
+	
+	// 동적으로 순번 max값 적용 해당하지 않은 경우 getMaxIdxAndSetAttribute함수에서 종료
+	getMaxIdxAndSetAttribute($(selectElement).attr('name'), $selectOption.val(), formName);
 }
 
 // 콘텐츠 서브 내용 설정
@@ -364,7 +399,7 @@ function setIdentityCheckForm() {
 	    </div>
 	    
 	    <div class="sign_form" id="password_check_form">
-	    	<form name="modify_check_form" onsubmit="postIdentityCheckForm(event, 'modify_check_form')">
+	    	<form name="modify_check_form" onsubmit="postIdentityCheck(event, 'modify_check_form')">
             	<div class="input_list_container">
 	                <div class="input_list" id="input_list_info">					
 	                    <label for="pw" class="border_input">
@@ -452,34 +487,39 @@ function setAccountModifyForm(data) {
                                 	onkeydown="replacePhone(this)" onkeyup="validatePhone(this)" onblur="validatePhone(this)"
                                 	value="${data.a_phone}">
                             </td>
-                        	<th><p class="table_title">부서</p></th>
-                        	<td class="disabled">
-                                <input type="text" name="a_department" id="department" class="table_info" placeholder="부서"
-                                	value="${data.a_department || ''}"
-                                	${data.a_authority_role != 'SUPER_ADMIN' ? 'disabled' : ''}>
-                            </td>
-                        </tr>
-
-                        <tr>
-                        	<th><p class="table_title">직위</p></th>
-                        	<td class="disabled">
-                                <input type="text" name="a_level" id="level" class="table_info" placeholder="직위"
-                                	value="${data.a_level || ''}"
-                                	${data.a_authority_role != 'SUPER_ADMIN' ? 'disabled' : ''}>
-                            </td>
-                        	<th><p class="table_title">직책</p></th>
-                        	<td class="disabled">
-                                <input type="text" name="a_position" id="position" class="table_info" placeholder="직책"
-                                	value="${data.a_position || ''}"
-                                	${data.a_authority_role != 'SUPER_ADMIN' ? 'disabled' : ''}>
-                            </td>
+                            
+                            ${data.a_authority_role != 'SUPER_ADMIN' ? 
+                            	`
+                            	<th><p class="table_title">부서</p></th>
+		                        	<td class="disabled">
+		                                <input type="text" class="table_info" placeholder="부서"
+		                                	value="${data.a_department || ''}" disabled>
+		                            </td>
+		                        </tr>
+		
+		                        <tr>
+		                        	<th><p class="table_title">직위</p></th>
+		                        	<td class="disabled">
+		                                <input type="text" class="table_info" placeholder="직위"
+		                                	value="${data.a_level || ''}" disabled>
+		                            </td>
+		                        	<th><p class="table_title">직책</p></th>
+		                        	<td class="disabled">
+		                                <input type="text" class="table_info" placeholder="직책"
+		                                	value="${data.a_position || ''}" disabled>
+		                            </td>
+                            	` 
+                        	: 
+                            	'<td colspan="2"></td>'
+                            }
+                        	
                         </tr>
                     </tbody>
                 </table>
 
                 <div class="btn_list right">
                     <div class="btn_list">
-                        <div onclick="putModifyForm('modify_form')" class="btns">수정</div>
+                        <div onclick="putMyAccountSubmit('modify_form')" class="btns">수정</div>
                     </div>
                 </div>
             </div>
@@ -507,35 +547,34 @@ function setSelectOptionTopggle(event) {
 function setInputFileImageCheck(input) {
 	const file = input.files[0];
 	if(!file) return false; // 파일이 유효한지 검사
-	setImageFilePreview(file); // 검증 후 미리보기 처리
+	setImageFilePreview(file, input); // 검증 후 미리보기 처리
 }
 
 // 첨부 이미지 파일 미리보기
-function setImageFilePreview(file) {
+function setImageFilePreview(file, input) {
 	if(!validationInputFileImage(file)) return false; // 이미지, 용량 검증
 	
 	// 미리보기 설정
     const imageURL = URL.createObjectURL(file); // blob URL 생성
     const $fileUploadEle = $('.file_upload_container');
     const $imagePreviewEle = $('<div class="image_file_preview">');
-    const $image = $(`<img src="${imageURL}" alt="select image file preview" id="preview_image">`);
+    const $image = $(`<img src="${imageURL}" alt="select image file preview">`);
     
     $imagePreviewEle.append($image);
     $imagePreviewEle.append(`<div class="close" onclick="setImageFilePreviewInit('${input.name}')">`);
-    $fileUploadEle.hide().parent().append($imagePreviewEle);
+    $fileUploadEle.addClass('displayNone').parent().append($imagePreviewEle);
 }
 
 // 첨부 이미지 파일 미리보기 초기화
 function setImageFilePreviewInit(inputName) {
 	const $input = $(`input[name="${inputName}"]`); 
-	const $fileUploadEle = $('.file_upload_container');
-	const $imagePreviewEle = $('.image_file_preview');
-	const imageSrc = $('#preview_image').attr('src');
+	const $fileUploadEle = $input.closest('.file_upload_container');
+	const $imagePreviewEle = $fileUploadEle.siblings('.image_file_preview');
+	const imageSrc = $imagePreviewEle.find('img').attr('src');
 	
 	$input.val(''); // input file 초기화
-	$fileUploadEle.show(); // 파일 업로더 노출
+	$fileUploadEle.removeClass('displayNone'); // 파일 업로더 노출
 	$imagePreviewEle.remove(); // 미리보기 제거
-	
 	if(imageSrc) URL.revokeObjectURL(imageSrc); // blob URL을 브라우저 메모리에서 해제
 }
 
@@ -567,7 +606,7 @@ $(function() {
 	// textarea 텍스트 입력 제한 표시 초기화
 	setTextareatLimitInit();
 	
-	// 이미지 파일 첨부 DnD 유효성 검사, 미리보기 처리
+	// DnD 이미지 파일 첨부 유효성 검사, 미리보기 처리
 	const $fileUploadEle = $('.file_upload_container');
 	$fileUploadEle.on('dragenter dragover', function(e) {
 		e.preventDefault(); // 기본 동작 방지
@@ -579,15 +618,12 @@ $(function() {
 		$(this).removeClass('drag_over'); // 드래그 중 표시 제거
  	});
  	
- 	$fileUploadEle.on('drop', function(e) {
+ 	$fileUploadEle.on('drop', function(e) {		
 		e.preventDefault(); 
-		$(this).removeClass('drag_over'); // 드래그 중 표시 제거
-		
 		const file = e.originalEvent.dataTransfer.files[0]; // 드롭한 파일
+		const $input = $(this).find('input[type="file"]')[0];
 		
-		if(file) {
-			setImageFilePreview(file);
-		}
+		if(file) setImageFilePreview(file, $input);
 	});
 	
 });

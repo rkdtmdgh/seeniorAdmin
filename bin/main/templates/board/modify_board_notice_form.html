@@ -9,7 +9,7 @@
 		$(function() {
          	// board category 가져오기
             const selectedCategory = /*[[${boardboardNoticePostsDto.bn_category_no}]]*/ // 기본값 설정
-            getCategoryList('bn_category_no', true, selectedCategory); // element id, isForm, selectedValue
+            getCategoryList('bn_category_no', 'modify', selectedCategory); // element id, form 종류, selectedValue
         });
     </script>
 </head>
@@ -65,7 +65,7 @@
 		                                <tr>
 		                                	<th><p class="table_title">상태</p></th>
 		                                	<td>
-		                                		<div class="table_info cont_info">
+		                                		<div class="table_info">
 	                                            	<label class="radio">
 	                                            		<input type="radio" name="bn_state" value="1"
 	                                            			th:checked="${boardNoticePostsDto.bn_state == 1}"> 사용
@@ -96,12 +96,18 @@
 	                            </table>
 	
 	                            <div class="btn_list">
-	                            	<div th:if="${boardNoticePostsDto.bn_no} != null"
-		                        		 th:onclick="delSingleData('bn_no', [[${boardNoticePostsDto.bn_no}]], [[${boardNoticePostsDto.bn_title}]])" class="btns delete">삭제</div>
+	                            	<div th:if="${boardNoticePostsDto.bn_no} != null" class="btns delete"
+		                        		 th:onclick="
+		                        		 	delSingleData(
+		                        		 		[[${boardNoticePostsDto.bn_title}]], 
+		                        		 		'bn_no', 
+		                        		 		[[${boardNoticePostsDto.bn_no}]]
+		                        		 	)
+	                        		 	">삭제</div>
 		                        		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <div onclick="putNoticePostsModifyForm('notice_posts_modify_form')" class="btns">수정</div>
+	                                    <div onclick="putNoticePostsModify('notice_posts_modify_form')" class="btns">수정</div>
 	                                </div>
 	                            </div>
 	                        </div>

@@ -8,7 +8,7 @@
 	<script type="text/javascript">
 		$(async function() {
 			// advertisement category 가져오기
-			await getCategoryList('ad_category_no', true); // element id, isForm, selectedValue
+			await getCategoryList('ad_category_no', 'create'); // element id, form 종류, selectedValue
         });
 	</script>
 </head>
@@ -76,14 +76,28 @@
 		                                		<input type="text" name="ad_url" id="ad_url" class="table_info" placeholder="URL"
 	                                				onblur="validateEmpty(this, 'URL 주소를')">
 		                                	</td>
+		                                	
+		                                	<th><p class="table_title">순번</p></th>
+		                                	<td class="order_number">
+		                                		<input type="number" name="ad_idx" id="idx_number" class="table_info" placeholder="순번"
+		                                			min="1"
+		                                			onkeydown="blockEKey(event)"
+		                                			oninput="replaceNumber(this)"
+		                                			value="1">
+		                                	</td>
 	                                	</tr>
 	                                	
 	                                	<tr>
-		                                	<th><p class="table_title">파일 첨부</p></th>
+		                                	<th>
+		                                		<p class="table_title">
+		                                			파일 첨부
+			                                		<span id="guideline"></span>
+		                                		</p>
+		                                	</th>
 		                                	<td colspan="2">
 		                                		<div class="table_info">
 		                                			<label class="file_upload_container">
-		                                				<input type="file" name="ac_img" id="ac_img" accept="image/*"  onchange="setInputFileImageCheck(this)"> 
+		                                				<input type="file" name="files" id="files" accept="image/*"  onchange="setInputFileImageCheck(this)"> 
 		                                				<img src="/image/icons/image_file_upload.png" alt="image file uploader" class="file_upload_img">
 		                                				<span class="file_upload_info">
 			                                				<span class="file_upload_txt">클릭하거나 이미지 파일을 끌어다 놓으세요.</span>
@@ -99,7 +113,7 @@
 		                        <div class="btn_list right">
 	                                <div class="btn_list">
 	                                    <div onclick="history.back();" class="btns cancel">뒤로가기</div>
-	                                    <div onclick="postAdvertisementCreateForm('advertisement_reg_form')" class="btns">등록</div>
+	                                    <div onclick="postAdvertisementCreate('advertisement_reg_form')" class="btns">등록</div>
 	                                </div>
 	                            </div>
 		                    </div>

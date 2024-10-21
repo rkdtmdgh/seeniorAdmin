@@ -264,7 +264,7 @@ public class BoardService {
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
 
             // API 호출
-            String serverURL = "http://localhost:8091/upload_file"; //local
+            String serverURL = "http://localhost:8091/board_upload_file"; //local
             ResponseEntity<String> response = restTemplate.postForEntity(serverURL, requestEntity, String.class);
 
             return response;
@@ -505,6 +505,31 @@ public class BoardService {
 		}
 					
 		return result;
+		
+	}
+	
+	//게시판 카테고리 삭제 요청
+	public boolean deleteCategoryConfirm(BoardCategoryDto boardCategoryDto) {
+		log.info("deleteCategoryConfirm()");
+		
+		int result = -1;
+		
+		result = boardMapper.subBoardCategoryIdxForDelete(boardCategoryDto);
+				
+		if(result < 0) {
+			log.info("subBoardCategoryIdxForDelete fail!!");
+			return false;
+		}else {		
+			result = boardMapper.deleteCategoryConfirm(boardCategoryDto);
+			
+			if(result <= 0) {
+				log.info("deleteCategoryConfirm fail!!");
+				return false;
+			}else {				
+				return true;
+			}
+			
+		}
 		
 	}
 	

@@ -4,7 +4,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.see_nior.seeniorAdmin.advertisement.mapper.AdvertisementMapper;
 import com.see_nior.seeniorAdmin.dto.AdvertisementCategoryDto;
@@ -39,6 +47,7 @@ public class AdvertisementService {
 	private int blockLimit = 5;	// 하단에 보여질 페이지 번호의 수
 	
 	final private AdvertisementMapper advertisementMapper;
+	final private RestTemplate restTemplate;
 	
 	// --------------------------------------------------------- 광고 위치
 	
@@ -273,20 +282,83 @@ public class AdvertisementService {
 	
 	// --------------------------------------------------------- 광고
 
+	// 광고 이미지 저장 후 이미지 이름 가져오기
+	public ResponseEntity<String> uploadFile(MultipartFile file, AdvertisementDto advertisementDto) {
+		log.info("uploadFile()");
+		log.info("file ---> {}", file);
+		
+		try {
+			
+			// Request Header 설정
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+			
+			// Request Body 설정
+			MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
+			
+			requestBody.add("file", file.getResource());
+			requestBody.add("ad_category_no", advertisementDto.getAd_category_no());
+			
+			// Request Entity
+			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);		
+			
+			// API 호출
+//			String serverURL = "http://14.42.124.93:8091/advertisement_upload_file";
+			String serverURL = "http://localhost:8091/advertisement_upload_file";	// local
+			ResponseEntity<String> response = restTemplate.postForEntity(serverURL, requestEntity, String.class);
+			
+			return response;
+			
+		} catch (Exception e) {
+			log.info("광고 이미지 파일 업로드 중 오류 발생 : {}", e.getMessage());
+			
+			return null;
+			
+		}
+		
+	}
+	
+	// 광고 등록 양식에서 광고를 등록할 위치를 선택 했을 시 해당 위치의 maxIdx 가져오기
+	public int getAdvertisementIdxMaxNum(int ad_category_no) {
+		log.info("getAdvertisementIdxMaxNum()");
+		
+		Integer advertisementIdxMaxNum = advertisementMapper.getAdvertisementIdxMaxNumByCategory(ad_category_no);
+		
+		if (advertisementIdxMaxNum == null) advertisementIdxMaxNum = 0;
+		
+		return advertisementIdxMaxNum;
+	}
+	
 	// 광고 등록 확인
-	public boolean createConfirm(AdvertisementDto advertisementDto) {
+	public boolean createConfirm(AdvertisementDto advertisementDto, String ad_dir_name, String savedFileName) {
 		log.info("createConfirm()");
 		
-		int createResult = advertisementMapper.insertNewAdvertisement(advertisementDto);
+		// idx값을 중간값으로 입력 시 나머지 idx들 +1 처리 하기
+		int ad_idx = advertisementDto.getAd_idx();
+		int updateIdxResult = advertisementMapper.updateAdvertisementIdx(ad_idx);
 		
-		// DB에 입력 실패
-		if (createResult <= 0) {
+		if (updateIdxResult <= 0) {
+			log.info("idx 업데이트 실패!!");
+			
 			return ADVERTISEMENT_CREATE_FAIL;
-		
-		// DB에 입력 성공
+			
 		} else {
-			return ADVERTISEMENT_CREATE_SUCCESS;
-					
+			
+			advertisementDto.setAd_dir_name(ad_dir_name);
+			advertisementDto.setAd_img(savedFileName);
+			
+			int createResult = advertisementMapper.insertNewAdvertisement(advertisementDto);
+			
+			// DB에 입력 실패
+			if (createResult <= 0) {
+				return ADVERTISEMENT_CREATE_FAIL;
+			
+			// DB에 입력 성공
+			} else {
+				return ADVERTISEMENT_CREATE_SUCCESS;
+						
+			}
+			
 		}
 		
 	}
@@ -495,6 +567,5 @@ public class AdvertisementService {
 
 	
 
-	
 	
 }

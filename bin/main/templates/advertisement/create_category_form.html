@@ -47,6 +47,11 @@
 		                                		<input type="text" name="ac_name" id="ac_name" class="table_info" placeholder="광고 위치 분류명"
 		                                			onblur="requestDuplicateCheck(this, true);">
 	                                        </td>
+	                                        
+	                                        <th><p class="table_title">참고 사항</p></th>
+		                                	<td>
+		                                		<input type="text" name="ac_note" id="ac_note" class="table_info" placeholder="참고 사항">
+	                                        </td>
 		                                </tr>
 		                            </tbody>
 		                        </table>
@@ -54,7 +59,7 @@
 		                        <div class="btn_list right">
 	                                <div class="btn_list">
 	                                    <div onclick="history.back();" class="btns cancel">뒤로가기</div>
-	                                    <div onclick="postAdvertisementCategoryCreateForm('advertisement_category_reg_form', true)" class="btns">등록</div>
+	                                    <div onclick="postAdvertisementCategoryCreate('advertisement_category_reg_form', true)" class="btns">등록</div>
 	                                </div>
 	                            </div>
 		                    </div>
