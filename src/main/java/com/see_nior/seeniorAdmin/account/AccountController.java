@@ -77,11 +77,11 @@ public class AccountController {
 	
 	// 로그인 결과 확인
 	@GetMapping("/sign_in_result")
-	public String signInNg(
+	public String signInResult(
 			@RequestParam(value = "errMsg", required = false) String errMsg,
 			@RequestParam("result") boolean result,
 			Model model) {
-		log.info("sign_in_result()");
+		log.info("signInResult()");
 		
 		String nextPage = "account/sign_in_result";
 		

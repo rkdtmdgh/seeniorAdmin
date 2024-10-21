@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -20,8 +19,6 @@ import lombok.extern.log4j.Log4j2;
 public class SseService {
 
 	final private QnaService qnaService;
-	
-	private static final Long DEFAULT_TIMEOUT = 600L * 1000 * 60;
 	
 	public SseEmitter subcribe(long a_id) {
 		log.info("subscribe()");

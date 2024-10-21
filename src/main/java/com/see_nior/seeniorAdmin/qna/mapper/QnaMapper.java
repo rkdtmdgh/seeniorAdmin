@@ -27,5 +27,9 @@ public interface QnaMapper {
 	public int insertQnaAnswer(Map<String, Object> params);
 
 	public List<QnaAnswerDto> selectQnaAnswerInfosByBqNo(int bq_no);
+
+	public int updateQnaAnswer(int bqa_no, String bqa_answer);
+
+	public int updateQnaState(int bq_no);
 	
 }

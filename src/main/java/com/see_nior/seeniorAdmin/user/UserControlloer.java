@@ -102,7 +102,7 @@ public class UserControlloer {
 	public Object modifyConfirm(UserAccountDto userAccountDto) {
 		log.info("modifyConfirm()");
 		
-		// 프로필 이미지 수정 추가해야함.
+		// 프로필 이미지 수정 ???
 		
 		return userService.userAccountModifyConfirm(userAccountDto);
 		

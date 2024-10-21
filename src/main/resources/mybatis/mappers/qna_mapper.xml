@@ -208,13 +208,39 @@
 	
 	
 	<!-- qna 답변 확인 -->
-	<update id="insertQnaAnswer">
+	<insert id="insertQnaAnswer">
 		
 		INSERT INTO 
 			BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) 
 		VALUES (#{bq_no}, #{bqa_answer}, #{a_id}) 
 	
+	</insert>
+	
+	<!-- qna 답변 확인 후 state 업데이트 -->
+	<update id="updateQnaState">
+	
+		UPDATE 
+			BOARD_QNA_ANSWER
+		SET 
+			BQ_STATE = 0 
+		WHERE 
+			BQ_NO = #{bq_no} 
+		
 	</update>
+	
+	<!-- qna 답변 수정 확인 -->
+	<update id="updateQnaAnswer">
+	
+		UPDATE 
+			BOARD_QNA_ANSWER 
+		SET 
+			BQA_ANSWER = #{bqa_answer}, 
+			BQA_MOD_DATE = NOW() 
+		WHERE 
+			BQA_NO = #{bqa_no}
+	
+	</update>
+	
 	
 	
 </mapper>
