@@ -21,5 +21,7 @@ public interface QnaMapper {
 
 	public int selectSearchQnaListCnt(Map<String, Object> searchParams);
 
+	public QnaDto selectQnaInfoByNo(int bq_no);
+
 	
 }

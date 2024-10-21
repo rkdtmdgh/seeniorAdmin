@@ -165,6 +165,26 @@
 	
 	</select>
 	
+	<!-- qna 정보 가져오기 by no -->
+	<select id="selectQnaInfoByNo"
+			resultMap="QnaDto">
+		
+		SELECT 
+			* 
+		FROM 
+			BOARD_QNA BQ 
+		JOIN 
+			USER_ACCOUNT U 
+		ON 
+			BQ.BQ_USER_NO = U.U_NO 
+		WHERE 
+			BQ.BQ_IS_DELETED = 1 
+		AND 
+			U.U_IS_DELETED = 1 
+		AND 
+			BQ.BQ_NO = #{bq_no} 
+	
+	</select>
 	
 	
 </mapper>
