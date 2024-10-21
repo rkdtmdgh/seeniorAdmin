@@ -171,6 +171,7 @@ function setRecipeContentInfo(recipeDto) {
 // 최대 텍스트 입력 설정 byte
 const maxSize = {
 	info: 5000,
+	short: 250,
 }; 
 
 // 텍스트 바이트 계산
@@ -544,7 +545,7 @@ function setAccountModifyForm(data) {
                     </tbody>
                 </table>
 
-                <div class="btn_list right">
+                <div class="btn_list f_jc_right">
                     <div class="btn_list">
                         <div onclick="putMyAccountSubmit('modify_form')" class="btns">수정</div>
                     </div>
