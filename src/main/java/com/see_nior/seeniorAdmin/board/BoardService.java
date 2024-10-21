@@ -320,6 +320,7 @@ public class BoardService {
  		
  		boardPostsDto.setBp_category_no(bp_category_no);
  		boardPostsDto.setBp_writer_no(bp_writer_no);
+ 		boardPostsDto.setBp_account("admin");
  		boardPostsDto.setBp_title(bp_title);
  		boardPostsDto.setBp_body(bp_body);
  		boardPostsDto.setBp_dir_name(bp_dir_name);

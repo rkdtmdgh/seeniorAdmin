@@ -14,6 +14,7 @@ public class BoardPostsDto {
 	private String bp_title;			
 	private String bp_body;				
 	private int bp_writer_no;	//ADMIN_ACCOUNT a_no값 테이블 조인
+	private String bp_account;	
 	private int bp_report_state;		
 	private int bp_view_cnt;
 	private String bp_dir_name;
@@ -23,5 +24,6 @@ public class BoardPostsDto {
 	private String bp_mod_date;
 	
 	private AdminAccountDto adminAccountDto;
+	private UserAccountDto userAccountDto;
 	
 }
