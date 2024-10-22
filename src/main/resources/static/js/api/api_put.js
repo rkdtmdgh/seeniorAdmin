@@ -219,16 +219,15 @@ async function putUserAccountBlockModify(formName, u_is_blocked) {
 	
 	const formData = new FormData(form);
 	formData.set('u_is_blocked', u_is_blocked); // 불리언값 입력
-	if(u_is_blocked) formData.set('u_blocked_reason', null); // 정지를 활성화할 경우 사유 제거
-	
-	setFormDataCheckConsoleLog(formData);
-	const isFalse = false;
-	if(!isFalse) return false;
+	if(u_is_blocked) {
+		formData.set('u_blocked_reason', null); // 정지를 활성화할 경우 사유 제거
+		
+	} else {
+		closeModal(); // 모달 닫기
+	}	
 	
 	const successMessage = `"${form.u_id.value}" 정보가 수정되었습니다`;
 	const errorMessage = `"${form.u_id.value}" 정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
-	
-	closeModal(); // 모달 닫기
 	
 	await putIntegSubmit(
 		'/user_account/info/block_confirm', 
