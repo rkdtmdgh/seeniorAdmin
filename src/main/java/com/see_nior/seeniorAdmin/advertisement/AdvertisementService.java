@@ -370,8 +370,7 @@ public class AdvertisementService {
 				int updateIdxResult = advertisementMapper.updateAdvertisementIdxSum(updateIdxParams);
 				
 				if (updateIdxResult <= 0) {
-					log.info("idx 업데이트 실패!!");
-					throw new RuntimeException();
+					throw new RuntimeException("idx 업데이트 실패!!");
 					
 				}
 			}
@@ -380,8 +379,7 @@ public class AdvertisementService {
 			
 			// DB에 입력 실패
 			if (createResult <= 0) {
-				log.info("insertNewAdvertisement() error!!");
-				throw new RuntimeException();
+				throw new RuntimeException("insertNewAdvertisement() error!!");
 			
 			// DB에 입력 성공
 			} else {
@@ -476,8 +474,7 @@ public class AdvertisementService {
 				modifyIdxResult = advertisementMapper.targetModifyAdvertisementIdx(modifyIdxParams);
 				
 				if (modifyIdxResult <= 0) {
-					log.info("targetModifyAdvertisementIdx() error!");
-					throw new RuntimeException();
+					throw new RuntimeException("targetModifyAdvertisementIdx() error!");
 					
 				} else {
 					
@@ -486,8 +483,7 @@ public class AdvertisementService {
 				}
 				
 			} else {
-				log.info("matchingModifyAdvertisementIdx() error!");
-				throw new RuntimeException();
+				throw new RuntimeException("matchingModifyAdvertisementIdx() error!");
 				
 			}
 			
@@ -503,7 +499,7 @@ public class AdvertisementService {
 	}
 	
 	// 페이지에 따른 광고 가져오기(위치별 광고)
-	public Map<String, Object> getAdvertisementListByCategoryWithPage(int page, int ac_no) {
+	public Map<String, Object> getAdvertisementListByCategoryWithPage(int page, String sortValue, String order, int ac_no) {
 		log.info("getAdvertisementListByCategoryWithPage()");
 		
 		int pagingStart = (page - 1) * pageLimit;
@@ -514,6 +510,8 @@ public class AdvertisementService {
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
 		pagingParams.put("ac_no", ac_no);
+		pagingParams.put("sortValue", sortValue);
+		pagingParams.put("order", order);
 		
 		List<AdvertisementDto> advertisementDtos = advertisementMapper.getAdvertisementListByCategoryWithPage(pagingParams);
 		pagingList.put("advertisementDtos", advertisementDtos);
@@ -593,50 +591,70 @@ public class AdvertisementService {
 			
 		}
 		
-		// 기존에 등록되어있던 idx 가져오기
-		Integer curIdx = advertisementMapper.getCurrentIdx(advertisementDto.getAd_no());
+		// 기존에 등록되어있던 ad_category_no와 ad_idx 가져오기
+		AdvertisementDto curAdvertisementDto = advertisementMapper.getAdvertisementByNo(advertisementDto.getAd_no());
+		int curCategoryNo = curAdvertisementDto.getAd_category_no();
+		Integer curIdx = curAdvertisementDto.getAd_idx();
+		
 		
 		try {
 			
-			// 새로 입력한 IDX가 기존에 할당되어 있던 IDX 값 보다 작으면
-			if (advertisementDto.getAd_idx() < curIdx) {
+			// 광고 위치 변경이 없을 시
+			if (curCategoryNo == advertisementDto.getAd_category_no()) {
+				
+				// 새로 입력한 IDX가 기존에 할당되어 있던 IDX 값 보다 작으면
+				if (advertisementDto.getAd_idx() < curIdx) {
+					
+					Map<String, Object> updateIdxParams = new HashMap<>();
+					
+					updateIdxParams.put("advertisementDto", advertisementDto);
+					updateIdxParams.put("curIdx", curIdx);
+						
+					int updateIdxResult = advertisementMapper.updateAdvertisementIdxSum(updateIdxParams);
+					
+					if (updateIdxResult <= 0) {
+						throw new RuntimeException("idx 업데이트 실패!!");
+						
+					}
+					
+				// 새로 입력한 IDX가 기존에 할당되어 있던 IDX값 보다 크면
+				} else if (advertisementDto.getAd_idx() > curIdx) {
+					
+					Map<String, Object> updateIdxParams = new HashMap<>();
+					
+					updateIdxParams.put("advertisementDto", advertisementDto);
+					updateIdxParams.put("curIdx", curIdx);
+					
+					int updateIdxResult = advertisementMapper.updateAdvertisementIdxSub(updateIdxParams);
+					
+					if (updateIdxResult <= 0) {
+						throw new RuntimeException("idx 업데이트 실패!!");
+						
+					}
+					
+				}
+				
+			// 광고 위치 변경 시
+			} else {
 				
 				Map<String, Object> updateIdxParams = new HashMap<>();
 				
 				updateIdxParams.put("advertisementDto", advertisementDto);
-				updateIdxParams.put("curIdx", null);
-					
-				int updateIdxResult = advertisementMapper.updateAdvertisementIdxSum(updateIdxParams);
 				
-				if (updateIdxResult <= 0) {
-					log.info("idx 업데이트 실패!!");
-					throw new RuntimeException();
-					
-				}
-				
-			// 새로 입력한 IDX가 기존에 할당되어 있던 IDX값 보다 크면
-			} else if (advertisementDto.getAd_idx() > curIdx) {
-				
-				Map<String, Object> updateIdxParams = new HashMap<>();
-				
-				updateIdxParams.put("advertisementDto", advertisementDto);
-				updateIdxParams.put("curIdx", null);
-				
-				int updateIdxResult = advertisementMapper.updateAdvertisementIdxSub(updateIdxParams);
-				
-				if (updateIdxResult <= 0) {
-					log.info("idx 업데이트 실패!!");
-					throw new RuntimeException();
-					
-				}
+//				int updateIdxResult = advertisementMapper.updateAdvertisementIdxOtherCategory(updateIdxParams);
+//				
+//				if (updateIdxResult <= 0) {
+//					throw new RuntimeException("idx 업데이트 실패!!");
+//					
+//				}
 				
 			}
+			
 			
 			int modifyResult = advertisementMapper.updateAdvertisement(advertisementDto);
 			
 			if (modifyResult <= 0) {
-				log.info("updateAdvertisement() error!!");
-				throw new RuntimeException();
+				throw new RuntimeException("updateAdvertisement() error!!");
 				
 			} else {
 				

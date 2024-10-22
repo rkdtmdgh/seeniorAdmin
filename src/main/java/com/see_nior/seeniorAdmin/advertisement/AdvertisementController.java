@@ -292,19 +292,21 @@ public class AdvertisementController {
 	@GetMapping("/info/get_advertisement_list_by_category")
 	public Object getAdvertisementListByCategory(
 			@RequestParam(value = "page", required = false, defaultValue = "1")int page,
-			@RequestParam(value = "sortValue", required = false, defaultValue = "all") String sortValue,
-			@RequestParam(value = "order") int ac_no) {
+			@RequestParam(value = "sortValue", required = false, defaultValue = "ad_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
+			@RequestParam(value = "infoNo") int ac_no) {
 		log.info("getAdvertisementListByCategory()");
 		
 		// 페이지 번호에 따른 위치별 광고 리스트들 가져오기
-		Map<String, Object> advertisementListByCategoryWithPage = advertisementService.getAdvertisementListByCategoryWithPage(page, ac_no);
+		Map<String, Object> advertisementListByCategoryWithPage = advertisementService.getAdvertisementListByCategoryWithPage(page, sortValue, order, ac_no);
 		
 		// 위치별 광고 총 페이지 개수 가져오기
 		Map<String, Object> advertisementByCategoryPageNum = advertisementService.getAdvertisementByCategoryPageNum(page, ac_no);
 		
 		advertisementListByCategoryWithPage.put("advertisementByCategoryPageNum", advertisementByCategoryPageNum);
 		advertisementListByCategoryWithPage.put("sortValue", sortValue);
-		advertisementListByCategoryWithPage.put("order", ac_no);
+		advertisementListByCategoryWithPage.put("order", order);
+		advertisementListByCategoryWithPage.put("infoNo", ac_no);
 		
 		return advertisementListByCategoryWithPage;
 		

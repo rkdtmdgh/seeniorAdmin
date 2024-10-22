@@ -368,7 +368,7 @@
 		AND 
 			AD.AD_CATEGORY_NO = #{ac_no} 
 		ORDER BY 
-			AD_NO DESC 
+			${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 	
