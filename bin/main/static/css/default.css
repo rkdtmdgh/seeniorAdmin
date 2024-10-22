@@ -781,10 +781,10 @@
 	border: 1px solid var(--lightGrayColor);
 }
 .profile_thumbnail_container {
-	width: var(--bigIconsWidth);
-	min-width: var(--bigIconsWidth);
-	height: var(--bigIconsWidth);
-	min-height: var(--bigIconsWidth);
+	width: var(--profileThumbWidth);
+	min-width: var(--profileThumbWidth);
+	height: var(--profileThumbWidth);
+	min-height: var(--profileThumbWidth);
 	border-radius: 50%;
 	border: 1px solid var(--lightGrayColor);
 	overflow: hidden;
