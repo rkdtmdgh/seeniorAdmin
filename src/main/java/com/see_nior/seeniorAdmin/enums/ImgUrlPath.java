@@ -12,7 +12,7 @@ public enum ImgUrlPath {
 		this.value = value;
 	}
 	
-	public String getPath() {
+	public String getValue() {
 		return value;
 	}
 	
