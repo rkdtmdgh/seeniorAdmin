@@ -12,6 +12,25 @@ import com.see_nior.seeniorAdmin.user.mapper.UserMapper;
 
 import lombok.extern.log4j.Log4j2;
 
+enum SqlResult {
+	
+	SUCCESS(true),
+	FAIL(false);
+
+	private boolean result;
+	
+	SqlResult(boolean result) {
+		
+		this.result = result;
+	
+	}
+	
+	public boolean getResult() {
+		return result;
+	}
+	
+}
+
 @Log4j2
 @Service
 public class UserService {
@@ -159,9 +178,9 @@ public class UserService {
 		int result =  userMapper.updateUserAccountInfo(userAccountDto);
 		
 		if (result >= 0)
-			return USER_MODIFY_SUCCESS;
+			return SqlResult.SUCCESS;
 		else 
-			return USER_MODIFY_FAIL;
+			return SqlResult.FAIL;
 	
 	}
 
@@ -192,3 +211,5 @@ public class UserService {
 	}
 
 }
+
+
