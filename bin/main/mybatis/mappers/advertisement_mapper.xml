@@ -261,10 +261,24 @@
 		SET 
 			AD_IDX = AD_IDX - 1 
 		WHERE 
+		<if test="curCategoryNo != null">
+			AD_CATEGORY_NO = #{curCategoryNo} 
+		</if>
+		<if test="curCategoryNo == null">
 			AD_CATEGORY_NO = #{advertisementDto.ad_category_no} 
+		</if>
+		<if test="curCategoryNo != null">
 		AND 
-			AD_IDX BETWEEN #{curIdx + 1} AND #{advertisementDto.ad_idx}
-	
+			AD_IDX > #{curIdx} 
+		</if>
+		<if test="curCategoryNo == null">
+		AND 
+			AD_IDX > #{curIdx} 
+		AND 
+			#{advertisementDto.ad_idx} >= AD_IDX 
+		</if>
+		
+			
 	</update>
 
 	<!-- 광고 등록 -->
@@ -368,7 +382,7 @@
 		AND 
 			AD.AD_CATEGORY_NO = #{ac_no} 
 		ORDER BY 
-			AD_NO DESC 
+			${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 	

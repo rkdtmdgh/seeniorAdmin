@@ -51,12 +51,10 @@
     --arrowWidth: 5px; /* X2 (5px = 10px) */
     --arrowButtonWidth: 15px;
     --contentSubThumbWidth: 200px;
-    --modalWidth: 320px;
     
     --headerHeight: 70px;
     --tableTextareaHeight: 400px;
     --contentThumbHeight: 350px;
-    --modalHeight: 450px;
     --borderTextareaHeight: 100px;
 
     --innerPadding: 50px;
