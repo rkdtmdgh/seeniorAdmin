@@ -5,6 +5,13 @@
    
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('광고 분류 수정')}"></th:block>
+	<script th:inline="javascript">
+		logger.info('advertisementCategoryDto:', /*[[${advertisementCategoryDto}]]*/);
+			
+		$(async function() {
+			//await getDetailList('/advertisement/info/get_advertisement_list_by_category', sortValue, order, page);
+        });
+	</script>
 </head>
 
 <body>
@@ -27,7 +34,7 @@
 					    <form name="advertisement_category_modify_form">					    	
                       		<input type="hidden" name="ac_no" th:value="${advertisementCategoryDto.ac_no}">
                       		
-						    <div class="table_wrap">
+						    <div class="table_wrap mb_stepGap">
 		                        <table class="content_edit_table">
 		                            <colgroup>
 	                                    <col class="col_row_title">
@@ -71,6 +78,54 @@
 	                            </div>
 		                    </div>
 	                    </form>
+	                    
+	                    <div class="content_top">
+				            <p class="sub_title">광고</p>
+					    </div>
+					    
+					    <div class="table_wrap">
+	                        <table class="content_table advertisement_list_table">
+	                            <colgroup>
+	                                <col class="col_no">
+	                                <col class="col_no">
+	                                <col>
+	                                <col>
+	                                <col>
+	                            </colgroup>
+	
+	                            <thead>
+	                                <tr>
+	                                    <th></th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">순번</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">시작일</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">종료일</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">클라이언트</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                    	<p class="table_title">등록일</p>
+	                                    </th>
+	                                </tr>
+	                            </thead>
+	
+	                            <tbody>
+	                                <!-- 리스트 테이블 -->
+	                            </tbody>
+	                        </table>
+	                        
+	                        <div class="pagination_wrap"></div>
+	                    </div>
 					</section>
                 </div>
             </div>
