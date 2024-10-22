@@ -40,7 +40,7 @@
 	           				</div>
 	                    </div>
 	
-	                    <form name="user_account_modify_form">
+	                    <form name="user_account_modify_form" id="user_account_modify_form">
 		                    <input type="hidden" name="u_no" th:value="${userAccountDto.u_no}">
 		                    <input type="hidden" name="u_is_blocked" th:value="${userAccountDto.u_is_blocked}">
 		                    
@@ -142,7 +142,7 @@
 		                                				onblur="validateEmpty(this, '우편번호를')"
 		                                				th:value="${userAccountDto.u_zip_code}">
 		                                		
-		                                			<div class="btns small">주소 검색</div>
+		                                			<div onclick="searchPostcode('user_account_modify_form');" class="btns small">주소 검색</div>
 		                                        </div>
 		                                    </td>	
 		                                </tr>
