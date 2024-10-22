@@ -206,9 +206,6 @@ async function putUserAccountBlockModify(formName, u_is_blocked) {
 	const form = document.forms[formName];
 	let input;
 	
-	const isConfirm = confirm(`"${form.u_id.value}" 계정을 ${u_is_blocked ? '활성화' : '정지'}하시겠습니까?`);
-	if(!isConfirm) return false;
-	
 	if(!u_is_blocked) { // 정지할 경우에만 사유 입력
 		input = form.u_blocked_reason;
 		if(!validateEmpty(input, '사유를', true, true)) {
@@ -216,6 +213,9 @@ async function putUserAccountBlockModify(formName, u_is_blocked) {
 			return false;
 		}
 	}
+	
+	const isConfirm = confirm(`"${form.u_id.value}" 계정을 ${u_is_blocked ? '활성화' : '정지'}하시겠습니까?`);
+	if(!isConfirm) return false;
 	
 	const formData = new FormData(form);
 	formData.set('u_is_blocked', u_is_blocked); // 불리언값 입력

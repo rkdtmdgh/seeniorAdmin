@@ -37,7 +37,7 @@ function modalContent(formName, contentFunction) {
 					<p class="modal_title bold">회원 계정 정지 사유</p>
 					
 					<div class="modal_info_list">
-						<textarea name="u_blocked_reason" id="u_blocked_reason" class="border_textarea" placeholder="계정 정지 사유룰 입력하세요"
+						<textarea name="u_blocked_reason" id="u_blocked_reason" class="border_textarea" placeholder="계정 정지 사유를 입력하세요"
 							oninput="setTextLimit(this, 'short')"
 						></textarea>
 						
