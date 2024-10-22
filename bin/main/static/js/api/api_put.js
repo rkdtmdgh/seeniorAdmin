@@ -194,10 +194,41 @@ async function putUserAccountModify(formName) {
 }
 
 // 회원 계정 상태 수정
-async function putUserAccountBlockModify(formName) {
+async function putUserAccountBlockModify(formName, u_is_blocked) {
 	const form = document.forms[formName];
 	let input;
 	
+	const isConfirm = confirm(`"${form.u_id.value}" 계정을 ${u_is_blocked ? '활성화' : '정지'}하시겠습니까?`);
+	if(!isConfirm) return false;
+	
+	if(!u_is_blocked) { // 정지할 경우에만 사유 입력
+		input = form.u_blocked_reason;
+		if(!validateEmpty(input, '사유를', true, true)) {
+			input.focus();
+			return false;
+		}
+	}
+	
+	const formData = new FormData(form);
+	formData.set('u_is_blocked', u_is_blocked); // 불리언값 입력
+	if(u_is_blocked) formData.set('u_blocked_reason', null); // 정지를 활성화할 경우 사유 제거
+	
+	setFormDataCheckConsoleLog(formData);
+	const isFalse = false;
+	if(!isFalse) return false;
+	
+	const successMessage = `"${form.u_id.value}" 정보가 수정되었습니다`;
+	const errorMessage = `"${form.u_id.value}" 정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	closeModal(); // 모달 닫기
+	
+	await putIntegSubmit(
+		'/user_account/info/block_confirm', 
+		formData, 
+		successMessage, 
+		errorMessage,
+		'content_inner'
+	);
 }
 
 // 질환 / 질병 분류 수정
@@ -588,15 +619,15 @@ async function putAdvertisementModify(formName) {
 	
 	input = form.files;
 	const $previewContainer = $('.image_file_preview'); // 미리보기 요소
-	if(!input.files.lenth && !$previewContainer.length) { // 기존이미지 제거한 후 이미지 파일이 선택되지 않음
+	const previewImgSrc = $previewContainer.find('img').attr('src'); // 미리보기 이미지 src
+	if(!previewImgSrc) { // 기존이미지 제거한 후 이미지 파일이 선택되지 않음
 		alert('이미지 파일을 선택해 주세요.');
-		input.focus();
 		return false;
 	}
 	
 	const formData = new FormData(form); 
-	const isChangedImg = $previewContainer.find('img').attr('src').startsWith('blob:'); // src가 blob으로 시작할 경우 수정됨
-	if(!isChangedImg) { // 이미지 파일이 수점되지 않았을 경우 formData에 files객체 수정
+	const isChangedImg = previewImgSrc.startsWith('blob:'); // src가 blob으로 시작할 경우 수정됨
+	if(!isChangedImg) { // 이미지 파일이 수정되지 않았을 경우 formData에 files객체 수정
 		const emptyBlob = new Blob([], { type: 'application/octet-stream' }); // 빈 Blob 생성
 		formData.set('files', emptyBlob); 
 	}

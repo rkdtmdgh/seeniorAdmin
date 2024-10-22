@@ -45,7 +45,8 @@
     --sideMenuWidth: 270px;
     --signFormWidth: 340px;
     --iconsWidth: 20px;
-    --bigIconsWidth: 65px;
+    --bigIconsWidth: 45px;
+    --profileThumbWidth: 65px;
     --smallThumbWidth: 30px;
     --arrowWidth: 5px; /* X2 (5px = 10px) */
     --arrowButtonWidth: 15px;
