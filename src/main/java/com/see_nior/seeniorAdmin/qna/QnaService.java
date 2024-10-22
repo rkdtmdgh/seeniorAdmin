@@ -129,8 +129,7 @@ public class QnaService {
 			}			
 			
 		} catch (Exception e) {
-			log.info("qnaAnswerConfirm() Exception!");
-			e.printStackTrace();
+			log.info("qnaAnswerConfirm() Exception! ---- {}", e);
 			
 			return SqlResult.FAIL.getValue();
 		}

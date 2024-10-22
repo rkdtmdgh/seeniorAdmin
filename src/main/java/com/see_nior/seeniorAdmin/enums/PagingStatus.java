@@ -1,8 +1,5 @@
 package com.see_nior.seeniorAdmin.enums;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public enum PagingStatus {
 
 	PAGE_LIMIT(10),
