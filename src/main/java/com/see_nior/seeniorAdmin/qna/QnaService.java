@@ -136,6 +136,7 @@ public class QnaService {
 		
 	}
 
+	// qna 답변 수정 확인
 	public boolean answerModifyConfirm(int bqa_no, String bqa_answer) {
 		log.info("answerModifyConfirm()");
 		
@@ -146,6 +147,31 @@ public class QnaService {
 		else 
 			return SqlResult.FAIL.getValue();
 
+	}
+
+	// qna 공지사항 가져오기
+	public Map<String, Object> getQnaNoticePagingList(String sortValue, String order, int page) {
+		log.info("getQnaNoticePagingList()");
+		
+		Map<String, Object> pagingNoticeList = new HashMap<>();
+		
+		List<AdminAccountDto> qnaNoticeDtos = 
+				qnaMapper.selectQnaNoticeList(PagingUtil.pagingParams(sortValue, order, page));
+		pagingNoticeList.put("qnaNoticeDtos", qnaNoticeDtos);
+		
+		return pagingNoticeList;
+		
+	}
+
+	// qna 공지사항 총 개수
+	public Map<String, Object> getQnaNoticeListPageNum(int page) {
+		log.info("getQnaNoticeListPageNum()");
+		
+		// 전체 리스트 개수 조회 
+		int qnaNoticeListCnt = qnaMapper.selectAllQnaNoticeListCnt();
+		
+		return PagingUtil.pageNum("qnaNoticeListCnt", qnaNoticeListCnt, page);
+		
 	}
 
 }
