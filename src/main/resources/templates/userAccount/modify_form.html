@@ -62,7 +62,7 @@
 		                                				th:value="${userAccountDto.u_id}">
 		                                		
 		                                			<div th:if="${userAccountDto.u_is_blocked == true}" class="btns small white"
-		                                				onclick="openModal('user_account_modify_form', 'putUserAccountBlockModify');">정상</div>
+		                                				onclick="openModal('user_account_modify_form', 'putUserAccountBlockModify', '#u_blocked_reason');">정상</div>
 	                                				<div th:if="${userAccountDto.u_is_blocked == false}" class="btns small delete"
 		                                				onclick="putUserAccountBlockModify('user_account_modify_form', true);">정지</div>
 		                                        </div>
