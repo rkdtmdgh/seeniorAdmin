@@ -1,4 +1,13 @@
-function searchPostcode() {
+async function searchPostcode(formName) {
+	await openModal(formName, 'searchPostcode'); // 모달 띄우기 완료 후 진행
+	
+	const postcodeModal = $('#postcode_modal')[0]; // 주소 검색 모달 요소 선택
+	
+    if (!postcodeModal) { // postcode_modal 요소가 DOM에 존재하는지 확인
+        console.error('postcode_modal element not found');
+        return;
+    }
+	
     new daum.Postcode({
         oncomplete: function(data) {
             // 각 주소의 노출 규칙에 따라 주소를 조합
@@ -30,14 +39,21 @@ function searchPostcode() {
                 }
             }
             
-            // 주소에 참고사항 붙이기
-            const totalAddress = addr + extraAddr;
+            const totalAddress = addr + extraAddr; // 주소에 참고사항 붙이기
 
-            // 우편번호와 주소 정보를 해당 필드에 넣는다.
+            // 우편번호와 주소 정보를 해당 필드에 입력
             $('#zip_code').val(data.zonecode);
             $('#address').val(totalAddress);
-            // 커서를 상세주소 필드로 이동한다.
+            
+            // 커서를 상세주소 필드로 이동
             $('#detailed_address').focus();
-        }
-    }).open();
+            
+            closeModal(); // 모달 닫기
+        },
+        
+        width: '100%',
+        height: '100%',
+        maxSuggestItems: 5 // 자동완성 항목 개수
+        
+    }).embed(postcodeModal);
 }
