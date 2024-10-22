@@ -116,7 +116,7 @@ public class QnaController {
 	// qna 답변 수정 확인
 	@PostMapping("/info/answer_modify_confirm")
 	@ResponseBody
-	public boolean answerModifyConfirm(
+	public Object answerModifyConfirm(
 			@RequestParam("bqa_no") int bqa_no, 
 			@RequestParam("bqa_answer") String bqa_answer, 
 			Principal principal) {
