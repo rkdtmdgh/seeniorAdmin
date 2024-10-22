@@ -7,7 +7,7 @@
     <th:block th:insert="~{fragments/head.html :: head('회원 정보')}"></th:block>
     <script th:inline="javascript">
 		$(function() {
-			logger.info('u_is_blocked:', /*[[${userAccountDto.u_is_blocked}]]*/);
+			logger.info('userAccountDto:', /*[[${userAccountDto}]]*/);
         });
 	</script>
 </head>
@@ -61,10 +61,11 @@
 		                                			<input type="text" name="u_id" class="table_info" disabled
 		                                				th:value="${userAccountDto.u_id}">
 		                                		
-		                                			<div class="btns small" th:classappend="${userAccountDto.u_is_blocked == true ? 'white' : 'delete'}"
-		                                				th:text="${userAccountDto.u_is_blocked == true ? '정상' : '정지'}"
-		                                				onclick="openModal('user_account_modify_form', 'putUserAccountBlockModify');"
-		                                			></div>
+		                                			<div th:if="${userAccountDto.u_is_blocked == true}" class="btns small white"
+		                                				onclick="openModal('user_account_modify_form', 'putUserAccountBlockModify');">정상</div>
+		                                				
+	                                				<div th:if="${userAccountDto.u_is_blocked == false}" class="btns small delete"
+		                                				onclick="putUserAccountBlockModify('user_account_modify_form', true);">정지</div>
 		                                        </div>
                                 			</td>
                                 			
@@ -73,6 +74,15 @@
 		                                        <input type="text" class="table_info" disabled
 		                                            th:value="${userAccountDto.u_reg_date}">
 		                                    </td>
+                                		</tr>
+                                		
+                                		<tr th:if="${userAccountDto.u_is_blocked == false}">
+											<th><p class="table_title">정지 사유</p></th>
+											<td colspan="3">
+                               					<textarea rows="1" name="u_blocked_reason" id="u_blocked_reason" class="table_textarea small" placeholder='정지 사유'
+		                                    		oninput="setTextareaAutoHeight(this)" 
+		                                    		th:text="${userAccountDto.u_blocked_reason}"></textarea>
+											</td>                                		
                                 		</tr>
                                 		
                                 		<tr>
