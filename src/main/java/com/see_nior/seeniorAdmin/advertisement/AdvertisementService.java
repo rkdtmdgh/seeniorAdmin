@@ -27,8 +27,6 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 public class AdvertisementService {
 	
-	// 이미지 서버 경로
-	private String imgServerPath = "127.0.0.1:8091/seeniorUploadImg/";
 	
 	// 광고 위치 관련
 	final static public boolean ADVERTISEMENT_CATEGORY_CREATE_FAIL = false;		// 광고 위치 추가 실패
@@ -343,6 +341,7 @@ public class AdvertisementService {
 		// 광고 디렉토리명과 이미지 URL 세팅
 		advertisementDto.setAd_dir_name(ad_dir_name);
 		
+		/*
 		String newSrc = "http://"
 				+ imgServerPath
 				+"advertisement/"
@@ -351,8 +350,9 @@ public class AdvertisementService {
 				+ ad_dir_name
 				+ "/"
 				+ savedFileName;
+		*/
 		
-		advertisementDto.setAd_img(newSrc);
+		advertisementDto.setAd_img(savedFileName);
 		
 		// 선택한 광고 위치의 maxIdx값 가져오기
 		int AdvertisementMaxIdx = advertisementMapper.getAdvertisementIdxMaxNumByCategory(advertisementDto.getAd_category_no());
@@ -362,12 +362,12 @@ public class AdvertisementService {
 			// idx값을 중간값으로 입력 시 나머지 idx들 +1 처리 하기
 			if (advertisementDto.getAd_idx() <= AdvertisementMaxIdx) {
 				
-				Map<String, Object> updateIdxParams = new HashMap<>();
+				Map<String, Object> updateIdxSumParams = new HashMap<>();
 				
-				updateIdxParams.put("advertisementDto", advertisementDto);
-				updateIdxParams.put("curIdx", null);
+				updateIdxSumParams.put("advertisementDto", advertisementDto);
+				updateIdxSumParams.put("curIdx", null);
 				
-				int updateIdxResult = advertisementMapper.updateAdvertisementIdxSum(updateIdxParams);
+				int updateIdxResult = advertisementMapper.updateAdvertisementIdxSum(updateIdxSumParams);
 				
 				if (updateIdxResult <= 0) {
 					throw new RuntimeException("idx 업데이트 실패!!");
@@ -572,6 +572,7 @@ public class AdvertisementService {
 			// 광고 디렉토리명과 이미지 URL 세팅
 			advertisementDto.setAd_dir_name(ad_dir_name);
 			
+			/*
 			String newSrc = "http://"
 					+ imgServerPath
 					+"advertisement/"
@@ -580,8 +581,9 @@ public class AdvertisementService {
 					+ ad_dir_name
 					+ "/"
 					+ savedFileName;
+			*/
 			
-			advertisementDto.setAd_img(newSrc);
+			advertisementDto.setAd_img(savedFileName);
 			
 		// 사진 변경이 없을 시
 		} else {
@@ -593,7 +595,7 @@ public class AdvertisementService {
 		
 		// 기존에 등록되어있던 ad_category_no와 ad_idx 가져오기
 		AdvertisementDto curAdvertisementDto = advertisementMapper.getAdvertisementByNo(advertisementDto.getAd_no());
-		int curCategoryNo = curAdvertisementDto.getAd_category_no();
+		Integer curCategoryNo = curAdvertisementDto.getAd_category_no();
 		Integer curIdx = curAdvertisementDto.getAd_idx();
 		
 		
@@ -605,12 +607,12 @@ public class AdvertisementService {
 				// 새로 입력한 IDX가 기존에 할당되어 있던 IDX 값 보다 작으면
 				if (advertisementDto.getAd_idx() < curIdx) {
 					
-					Map<String, Object> updateIdxParams = new HashMap<>();
+					Map<String, Object> updateIdxSumParams = new HashMap<>();
 					
-					updateIdxParams.put("advertisementDto", advertisementDto);
-					updateIdxParams.put("curIdx", curIdx);
+					updateIdxSumParams.put("advertisementDto", advertisementDto);
+					updateIdxSumParams.put("curIdx", curIdx);
 						
-					int updateIdxResult = advertisementMapper.updateAdvertisementIdxSum(updateIdxParams);
+					int updateIdxResult = advertisementMapper.updateAdvertisementIdxSum(updateIdxSumParams);
 					
 					if (updateIdxResult <= 0) {
 						throw new RuntimeException("idx 업데이트 실패!!");
@@ -620,12 +622,13 @@ public class AdvertisementService {
 				// 새로 입력한 IDX가 기존에 할당되어 있던 IDX값 보다 크면
 				} else if (advertisementDto.getAd_idx() > curIdx) {
 					
-					Map<String, Object> updateIdxParams = new HashMap<>();
+					Map<String, Object> updateIdxSubParams = new HashMap<>();
 					
-					updateIdxParams.put("advertisementDto", advertisementDto);
-					updateIdxParams.put("curIdx", curIdx);
+					updateIdxSubParams.put("advertisementDto", advertisementDto);
+					updateIdxSubParams.put("curIdx", curIdx);
+					updateIdxSubParams.put("curCategoryNo", null);
 					
-					int updateIdxResult = advertisementMapper.updateAdvertisementIdxSub(updateIdxParams);
+					int updateIdxResult = advertisementMapper.updateAdvertisementIdxSub(updateIdxSubParams);
 					
 					if (updateIdxResult <= 0) {
 						throw new RuntimeException("idx 업데이트 실패!!");
@@ -637,19 +640,38 @@ public class AdvertisementService {
 			// 광고 위치 변경 시
 			} else {
 				
-				Map<String, Object> updateIdxParams = new HashMap<>();
+				Map<String, Object> updateIdxSumParams = new HashMap<>();
 				
-				updateIdxParams.put("advertisementDto", advertisementDto);
+				updateIdxSumParams.put("advertisementDto", advertisementDto);
+				updateIdxSumParams.put("curIdx", null);
 				
-//				int updateIdxResult = advertisementMapper.updateAdvertisementIdxOtherCategory(updateIdxParams);
-//				
-//				if (updateIdxResult <= 0) {
-//					throw new RuntimeException("idx 업데이트 실패!!");
-//					
-//				}
+				int updateIdxResult = 0;
+				
+				// 변경될 위치에 있는 광고 중 입력한 idx값과 같거나 큰것들 +1
+				updateIdxResult = advertisementMapper.updateAdvertisementIdxSum(updateIdxSumParams);
+				
+				if (updateIdxResult <= 0) {
+					throw new RuntimeException("idx 업데이트 실패!!");
+					
+				} else {
+					
+					Map<String, Object> updateIdxSubParams = new HashMap<>();
+					
+					updateIdxSubParams.put("advertisementDto", advertisementDto);
+					updateIdxSubParams.put("curIdx", curIdx);
+					updateIdxSubParams.put("curCategoryNo", curCategoryNo);
+					
+					// 기존 위치에 있는 광고들 중 기존의 idx값보다 큰 것들 -1
+					updateIdxResult = advertisementMapper.updateAdvertisementIdxSub(updateIdxSubParams);
+					
+					if (updateIdxResult <= 0) {
+						throw new RuntimeException("idx 업데이트 실패!!");
+						
+					}
+					
+				}
 				
 			}
-			
 			
 			int modifyResult = advertisementMapper.updateAdvertisement(advertisementDto);
 			

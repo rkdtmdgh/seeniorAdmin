@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.dto.AdvertisementCategoryDto;
 import com.see_nior.seeniorAdmin.dto.AdvertisementDto;
+import com.see_nior.seeniorAdmin.enums.ImgUrlPath;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -29,6 +30,10 @@ import lombok.extern.log4j.Log4j2;
 public class AdvertisementController {
 
 	final private AdvertisementService advertisementService;
+	
+	// 이미지 서버 경로
+//	final private String advertisementImgServerPath = "http://127.0.0.1:8091/seeniorUploadImg/advertisement/";
+	private String advertisementImgServerPath = "http://" + ImgUrlPath.ADVERTISEMENT_PATH.getValue();
 	
 	// --------------------------------------------------------- 광고 위치
 	
@@ -350,6 +355,7 @@ public class AdvertisementController {
 		AdvertisementDto advertisementDto = advertisementService.getAdvertisement(ad_no);
 		
 		model.addAttribute("advertisementDto", advertisementDto);
+		model.addAttribute("advertisementImgServerPath", advertisementImgServerPath);
 		
 		return nextPage;
 		
