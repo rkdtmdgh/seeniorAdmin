@@ -18,11 +18,11 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @Controller
 @RequestMapping("/user_account")
-public class UserControlloer {
+public class UserController {
 
 	final private UserService userService; 
 	
-	public UserControlloer(UserService userService) {
+	public UserController(UserService userService) {
 		this.userService = userService;
 		
 	}
