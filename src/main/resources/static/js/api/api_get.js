@@ -22,9 +22,6 @@ async function getListProcess(apiUrl, sortValue, order, page) {
 		logger.info('apiUrl:', apiUrl + params);
 		
 		try {
-			// 테스트를 위한 딜레이
-            //await new Promise(resolve => setTimeout(resolve, 2000));
-            
 			const response = await $.ajax({
 				url: apiUrl + params,
 				method: 'GET',
