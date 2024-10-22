@@ -62,8 +62,7 @@
 		                                				th:value="${userAccountDto.u_id}">
 		                                		
 		                                			<div th:if="${userAccountDto.u_is_blocked == true}" class="btns small white"
-		                                				onclick="openModal('user_account_modify_form', 'putUserAccountBlockModify');">정상</div>
-		                                				
+		                                				onclick="openModal('user_account_modify_form', 'putUserAccountBlockModify', '#u_blocked_reason');">정상</div>
 	                                				<div th:if="${userAccountDto.u_is_blocked == false}" class="btns small delete"
 		                                				onclick="putUserAccountBlockModify('user_account_modify_form', true);">정지</div>
 		                                        </div>
@@ -137,7 +136,7 @@
 		                                    <th><p class="table_title">우편번호</p></th>
 		                                    <td>
 		                                    	<div class="cont_info disabled">
-		                                			<input type="text" name="u_zip_code" id="u_zip_code" class="table_info" placeholder="우편번호 5자리"
+		                                			<input type="text" name="u_zip_code" id="zip_code" class="table_info" placeholder="우편번호 5자리"
 		                                				maxlength="5"
 		                                				onkeyup="replaceNumber(this)"
 		                                				onblur="validateEmpty(this, '우편번호를')"
@@ -167,7 +166,7 @@
 		                                    
 		                                    <th><p class="table_title">주소</p></th>
 		                                    <td>
-		                                    	<input type="text" name="u_address" id="u_address" class="table_info" placeholder="주소"
+		                                    	<input type="text" name="u_address" id="address" class="table_info" placeholder="주소"
 		                                				onblur="validateEmpty(this, '주소를')"
 		                                				th:value="${userAccountDto.u_address}">
 		                                    </td>	
@@ -187,7 +186,7 @@
 		                                    
 		                                    <th><p class="table_title">상세주소</p></th>
 		                                    <td>
-		                                    	<input type="text" name="u_detailed_address" id="u_detailed_address" class="table_info" placeholder="상세주소"
+		                                    	<input type="text" name="u_detailed_address" id="detailed_address" class="table_info" placeholder="상세주소"
 		                                				onblur="validateEmpty(this, '상세주소를')"
 		                                				th:value="${userAccountDto.u_detailed_address}">
 		                                    </td>	

@@ -1,5 +1,5 @@
 // 모달 열기
-function openModal(formName, contentFunction) {
+function openModal(formName, contentFunction, focusEle = false) {
 	const $form = $(`form[name="${formName}"]`);
 	const infoForm = modalContent(formName, contentFunction); // info HTML 가져오기
 	const $modalContent = $(`
@@ -18,6 +18,7 @@ function openModal(formName, contentFunction) {
 	$form.append($modalContent); // 모달 추가
 	$('.dimmed_wrap').fadeIn(100);
 	$('.modal_container').fadeIn(300).css('margin-top', 0);
+	if(focusEle) $(`${focusEle}`).focus();
 }
 
 // 모달 닫기
@@ -35,7 +36,7 @@ function modalContent(formName, contentFunction) {
 				<p class="modal_title bold">회원 계정 정지 사유</p>
 				
 				<div class="modal_info_list">
-					<textarea name="u_blocked_reason" class="border_textarea" placeholder="계정 정지 사유룰 입력하세요"
+					<textarea name="u_blocked_reason" id="u_blocked_reason" class="border_textarea" placeholder="계정 정지 사유룰 입력하세요"
 						oninput="setTextLimit(this, 'short')"
 					></textarea>
 					
