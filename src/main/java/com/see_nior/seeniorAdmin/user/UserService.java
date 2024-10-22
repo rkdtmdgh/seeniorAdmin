@@ -18,9 +18,6 @@ import lombok.extern.log4j.Log4j2;
 @Service
 public class UserService {
 	
-	private int pageLimit = 10;		// 한 페이지당 보여줄 정보 수
-	private int blockLimit = 5;		// 하단에 보여질 페이지 번호 수
-	
 	private UserMapper userMapper;
 	
 	public UserService(UserMapper userMapper) {

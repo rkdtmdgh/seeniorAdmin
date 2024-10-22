@@ -34,6 +34,7 @@ public class PagingUtil {
 		
 	}
 	
+	// 리스트 가져오기 params
 	public static Map<String, Object> pagingParams(String sortValue, String order, int page) {
 		
 		Map<String, Object> pagingParams = new HashMap<>();
@@ -49,6 +50,7 @@ public class PagingUtil {
 		
 	}
 	
+	// 검색 리스트 가져오기 params
 	public static Map<String, Object> searchPagingParams(String searchPart, String searchString, String sortValue, String order, int page) {
 		
 		Map<String, Object> searchPagingParams = new HashMap<>();
