@@ -150,6 +150,12 @@ async function putUserAccountModify(formName) {
 	const form = document.forms[formName];
 	let input;
 	
+	input = form.u_blocked_reason;
+	if(input && !validateEmpty(input, '사유를', true)) {
+		input.focus();
+		return false;
+	}
+	
 	input = form.u_name;
 	if(!validateEmpty(input, '이름을', true)) {
 		input.focus();
@@ -180,7 +186,9 @@ async function putUserAccountModify(formName) {
 		return false;
 	}
 	
-	const formData = new FormData(form);	
+	const formData = new FormData(form);
+	if(!form.u_blocked_reason) formData.set('u_blocked_reason', null); // 정지상태가 아닐경우 u_blocked_reason요소가 없기에 빈값 추가
+		
 	const successMessage = `"${form.u_id.value}" 계정 정보가 수정되었습니다`;
 	const errorMessage = `"${form.u_id.value}" 계정 정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 
