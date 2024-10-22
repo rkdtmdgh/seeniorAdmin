@@ -31,5 +31,9 @@ public interface QnaMapper {
 	public int updateQnaAnswer(int bqa_no, String bqa_answer);
 
 	public int updateQnaState(int bq_no);
+
+	public List<AdminAccountDto> selectQnaNoticeList(Map<String, Object> pagingParams);
+
+	public int selectAllQnaNoticeListCnt();
 	
 }

@@ -124,13 +124,51 @@ public class QnaController {
 	}
 	
 	// qna 공지사항 리스트 양식
-	@GetMapping("/info/qna_notice_list_form")
+	@GetMapping("/info/notice_list_form")
 	public String qnaNoticeListForm() {
 		log.info("qnaNoticeListForm()");
 		
+		return PagePath.QNA_NOTICE_LIST_FORM.getValue();
 		
-		return new String();
 	}
+	
+	// qna 공지사항 리스트 가져오기
+	@GetMapping("/info/get_notice_list")
+	@ResponseBody
+	public Object getNoticeList(
+			@RequestParam(value = "sortValue", required = false, defaultValue = "bqn_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("getNoticeList()");
+		
+		Map<String, Object> qnaNoticeList = qnaService.getQnaNoticePagingList(sortValue, order, page);
+		
+		Map<String, Object> qnaNoticeListPageNum = qnaService.getQnaNoticeListPageNum(page);
+		qnaNoticeList.put("qnaNoticeListPageNum", qnaNoticeListPageNum);
+		qnaNoticeList.put("sortValue", sortValue);
+		qnaNoticeList.put("order", order);
+		
+		return qnaNoticeList;
+		
+	}
+	
+	// qna 공지사항 검색 리스트 가져오기
+	
+	
+	// qna 공지사항 등록 양식
+	@GetMapping("/info/notice_create_form")
+	public String noticeCreateForm() {
+		log.info("noticeCreateForm()");
+		
+		return PagePath.QNA_NOTICE_CREATE_FORM.getValue();
+		
+	}
+	
+	// qna 공지사항 수정 양식
+	
+	// qna 공지사항 수정 확인
+	
+	// qna 공지사항 삭제 확인
 	
 	
 	

@@ -70,6 +70,18 @@
 		<collection property="qnaDto"  resultMap="QnaDto"/>
 		<collection property="adminAccountDto" resultMap="AdminAccountDto"/>
 	</resultMap>
+	
+	<resultMap type="QnaNoticeDto" id="QnaNoticeDto">
+		<id column="bqn_no" property="bqn_no"/>	
+		<result column="bqn_title" property="bqn_title"/>
+		<result column="bqn_body" property="bqn_body"/>
+		<result column="bqn_view_cnt" property="bqn_view_cnt"/>
+		<result column="bqn_state" property="bqn_state"/>
+		<result column="bqn_is_deleted" property="bqn_is_deleted"/>
+		<result column="bqn_reg_date" property="bqn_reg_date"/>
+		<result column="bqn_mod_date" property="bqn_mod_date"/>
+		<collection property="adminAccountDto" resultMap="AdminAccountDto"></collection>
+	</resultMap>
 
 	<!-- qna 리스트 가져오기 -->
 	<select id="selectQnaList"
@@ -241,6 +253,41 @@
 	
 	</update>
 	
+	<!-- qna 공지사항 리스트 가져오기 -->
+	<select id="selectQnaNoticeList"
+			resultMap="QnaNoticeDto">
+		
+		SELECT 
+			BQN.*, 
+			A.A_NO, 
+			A.A_ID, 
+			A.A_NAME 
+		FROM 
+			BOARD_QNA_NOTICE BQN
+		JOIN 
+			ADMIN_ACCOUNT A
+		ON 
+			BQN.BQN_WRITER_NO = A.A_NO 
+		WHERE 
+			BQN_IS_DELETED = 1 
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit} 
+	
+	</select>
+	
+	<!-- qna 공지사항 리스트 총 개수 -->
+	<select id="selectAllQnaNoticeListCnt">
+		
+		SELECT 
+			COUNT(BQN_NO) 
+		FROM 
+			BOARD_QNA_NOTICE 
+		WHERE 
+			BQN_IS_DELETED = 1 
+	
+	</select>
 	
 	
 </mapper>
