@@ -11,30 +11,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.see_nior.seeniorAdmin.dto.UserAccountDto;
+import com.see_nior.seeniorAdmin.enums.PagePath;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 
 @Log4j2
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/user_account")
 public class UserController {
 
 	final private UserService userService; 
-	
-	public UserController(UserService userService) {
-		this.userService = userService;
-		
-	}
 	
 	// 일반 멤버 리스트 양식
 	@GetMapping("/info/user_account_list_form")
 	public String userAccountListForm() {
 		log.info("userAccountListForm()");
 		
-		String nextPage = "userAccount/user_account_list_form";
+		return PagePath.USER_ACCOUNT_LIST_FORM.getValue();
 		
-		return nextPage;
 	}
 
 	// 일반 멤버 리스트 가져오기 
@@ -87,13 +84,12 @@ public class UserController {
 	public String modifyForm(@RequestParam("u_no") int u_no, Model model) {
 		log.info("modifyForm()");
 		
-		String nextPage = "userAccount/modify_form";
-		
 		UserAccountDto userAccountDto = userService.getUserAccountByNo(u_no);
 		
 		model.addAttribute(userAccountDto);
 		
-		return nextPage;
+		return PagePath.USER_MODIFY_FORM.getValue();
+		
 	}
 	
 	// 일반 멤버 정보 수정 확인 

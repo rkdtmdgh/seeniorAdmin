@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.see_nior.seeniorAdmin.dto.QnaAnswerDto;
 import com.see_nior.seeniorAdmin.dto.QnaDto;
+import com.see_nior.seeniorAdmin.enums.PagePath;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -33,9 +34,7 @@ public class QnaController {
 	public String qnaListForm() {
 		log.info("qnaListForm()");
 		
-		String nextPage = "qna/qna_list_form";
-		
-		return nextPage;
+		return PagePath.QNA_LIST_FORM.getValue();
 	}
 	
 	// qna 리스트 가져오기 (비동기)
@@ -84,19 +83,17 @@ public class QnaController {
 		return searchQnaList;
 	}
 	
-	// qna 상세보기 양식
+	// qna 답변하기 양식
 	@GetMapping("/info/answer_form")
 	public String answerForm(@RequestParam("bq_no") int bq_no, Model model) {
 		log.info("answerForm()");
 	
-		String nextPage = "qna/answer_form";
-		
 		QnaDto qnaDto = qnaService.getQnaInfoByNo(bq_no);
 		List<QnaAnswerDto> QnaAnswerDtos = qnaService.getQnaAnswerInfosByBqNo(bq_no);
 		model.addAttribute("qnaDto", qnaDto);
 		model.addAttribute("QnaAnswerDtos", QnaAnswerDtos);
 		
-		return nextPage;
+		return PagePath.QNA_ANSWER_FORM.getValue();
 		
 	}
 	
@@ -125,6 +122,16 @@ public class QnaController {
 		return qnaService.answerModifyConfirm(bqa_no, bqa_answer);
 		
 	}
+	
+	// qna 공지사항 리스트 양식
+	@GetMapping("/info/qna_notice_list_form")
+	public String qnaNoticeListForm() {
+		log.info("qnaNoticeListForm()");
+		
+		
+		return new String();
+	}
+	
 	
 	
 }
