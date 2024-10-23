@@ -72,7 +72,7 @@
 /* postcode modal */
 .postcode_info {
 	width: 400px;
-	padding: 1.7em 0.5em;
+	padding: 1.7em 0.5em 0.5em;
 	box-sizing: content-box;
 	position: relative;
 }

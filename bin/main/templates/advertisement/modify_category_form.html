@@ -6,10 +6,10 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('광고 분류 수정')}"></th:block>
 	<script th:inline="javascript">
-		logger.info('advertisementCategoryDto:', /*[[${advertisementCategoryDto}]]*/);
-			
 		$(async function() {
-			//await getDetailList('/advertisement/info/get_advertisement_list_by_category', sortValue, order, page);
+			const infoNo = /*[[${advertisementCategoryDto.ac_no}]]*/
+			logger.info('infoNo:', infoNo);
+			//await getDetailPageList('/advertisement/info/get_advertisement_list_by_category', 'ad_idx', 'asc', infoNo, page);
         });
 	</script>
 </head>

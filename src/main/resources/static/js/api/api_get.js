@@ -103,7 +103,7 @@ async function getSearchListProcess(event, apiUrl, page) {
 			logger.info('searchForm() searchPart:', form.search_part.value);
 			logger.info('searchForm() searchString:', input.value.trim());
 			
-			let params = `?searchPart=${form.search_part.value}&searchString=${input.value.trim()}&page=${intPage}`;
+			let params = `?searchPart=${encodeURIComponent(form.search_part.value)}&searchString=${encodeURIComponent(input.value.trim())}&page=${intPage}`;
 			if(infoNo) params = `${params}&infoNo=${infoNo}`;
 					
 			try {
