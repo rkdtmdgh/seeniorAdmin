@@ -727,7 +727,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page, infoNo) {
 			                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.advertisementCategoryDto.ac_name}</a>
 			            </td>
 						<td>
-			                <p class="table_info">${data.ad_client}</p>
+			                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_client}</a>
 			            </td>
 						<td>
 			                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_start_date)}</a>
