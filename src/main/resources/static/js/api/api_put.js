@@ -43,7 +43,6 @@ async function putOrderModifyProcess(event, idx, page) {
     const current_idx = infoEle.getAttribute('data-idx'); 
     
     // 카테고리 분류 내 순번 수정이 필요한 경우 분류 no값 추출하여 추가 전송
-    const urlParams = new URLSearchParams(window.location.search);
 	const infoNo = urlParams.get('infoNo') || undefined; // 쿼리스트링에 infoNo값 추출
     
     const config = mapOrderModifyObject(name, page); // 요청에 필요한 객체
@@ -56,7 +55,6 @@ async function putOrderModifyProcess(event, idx, page) {
 		formData.append([config.current_idx_key], current_idx); // 기존 순번 값
 		formData.append([config.idx_key], idx); // 변경할 순번 값
 		if(infoNo) formData.append([config.categoryKey], infoNo); // 카테고리 no 값	
-	
 		
 		// setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
 		

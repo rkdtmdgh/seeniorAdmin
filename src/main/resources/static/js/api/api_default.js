@@ -54,7 +54,6 @@ function signOut() {
 // NAV 토글 및 페이지 관련 카테고리 메뉴 선택 표시
 function navActiveToggle() {
 	const currentPath = window.location.pathname.split('/').slice(0,3).join('/'); // 현재 URL에서 1~2번째까지 path 
-	const currentQueryParams = new URLSearchParams(window.location.search); // 쿼리 파라미터
 	//logger.info('URL currentPath:', currentPath);
 
 	const $navMenuBtns = $('.side_menu_list'); // 모든 nav 메뉴 버튼
@@ -71,7 +70,7 @@ function navActiveToggle() {
 		
 		const $navSubMenuList = $navMenu.find('.side_sub_menu_list'); // 서브 메뉴 리스트
 		if($navSubMenuList.length) { // 서브 메뉴가 있는 경우
-			const currentParam = currentQueryParams.get('infoNo'); // 카테고리 구분이 필요할 경우 비교할 값
+			const currentParam = urlParams.get('infoNo'); // 카테고리 구분이 필요할 경우 비교할 값
 		
 			const $navSubMenus = $navSubMenuList.find('.side_sub_menu_btn'); // 서브 메뉴 리스트 포함된 모든 서브 메뉴
 			$navSubMenus.each(function() {
