@@ -8,8 +8,8 @@ async function getListProcess(apiUrl, sortValue, order, page) {
 		setAllcheck(); // all_check 체크박스 초기화
 		
 		// 검색 인풋 벨류 삭제
-		const searchStringInput = document.forms['search_form'].search_string;
-		if(searchStringInput.value.trim().length) searchStringInput.value = ''; // 검색 이력이 남았을 경우에만 삭제
+		const $searchStringInput = $('form[name="search_form"]').find('input[name="search_string"]');
+		if($searchStringInput.length && $searchStringInput.val().trim()) $searchStringInput.val(''); // 검색 이력이 남았을 경우에만 삭제
 		
 		const urlParams = new URLSearchParams(window.location.search);
 		const infoNo = urlParams.get('infoNo') || undefined;
@@ -103,7 +103,7 @@ async function getSearchListProcess(event, apiUrl, page) {
 			logger.info('searchForm() searchPart:', form.search_part.value);
 			logger.info('searchForm() searchString:', input.value.trim());
 			
-			let params = `?searchPart=${form.search_part.value}&searchString=${input.value.trim()}&page=${intPage}`;
+			let params = `?searchPart=${encodeURIComponent(form.search_part.value)}&searchString=${encodeURIComponent(input.value.trim())}&page=${intPage}`;
 			if(infoNo) params = `${params}&infoNo=${infoNo}`;
 					
 			try {
@@ -669,13 +669,13 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.n_title}(댓글 수)</a>
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.bq_state === true ? '대기' : '답변'}</a>
+		            </td>
+					<td class="ta_l">
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.bq_title}</a>
 		            </td>
 					<td>
-		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.n_writer_no} 작성자 아이디</a>
-		            </td>
-					<td>
-		                <a href="" class="table_info">${data.bq_user_no}(작성자 아이디)</a>
+		                <a href="/user_account/info/modify_form?u_no=${data.userAccountDto.u_no}" class="table_info">${data.userAccountDto.u_id}</a>
 		            </td>
 					<td>
 		                <p class="table_info">${setFormatDate(data.bq_reg_date)}</p>
@@ -719,13 +719,13 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			tableTrContent = `
 				<tr>
 		            <td>
-		                <a href="/advertisement/cate_info/modify_category_form?ac_no=${data.ac_no}" class="table_info">${listIndex}</a>
+		                <a href="/advertisement/cate_info/modify_category_form?ac_no=${data.ac_no}&infoNo=${data.ac_no}&sortType=1" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/advertisement/cate_info/modify_category_form?ac_no=${data.ac_no}" class="table_info">${data.ac_name}</a>
+		                <a href="/advertisement/cate_info/modify_category_form?ac_no=${data.ac_no}&infoNo=${data.ac_no}&sortType=1" class="table_info">${data.ac_name}</a>
 		            </td>
 		            <td>
-		                <a href="/advertisement/info/advertisement_list_form?sortType=1&sortValue=ac_no&order=${data.ac_no}" class="table_info">${data.ac_item_cnt}</a>
+		                <a href="/advertisement/info/advertisement_list_form?sortType=1&sortValue=ad_idx&order=asc&infoNo=${data.ac_no}" class="table_info">${data.ac_item_cnt}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${data.ac_note ? data.ac_note : '-'}</p>
@@ -816,7 +816,7 @@ function getSortList(event, dbTable, sortValue) {
 	
     const apiUrl = mapSortListApiObject(dbTable); // 커맨드 가져오기
     const currentSortValue = sortBtn.getAttribute('data-current-sort-value'); // 현재 정렬 값 가져오기 default all
-    const order = currentSortValue === 'asc' ? 'desc' : 'asc'; // 정렬 값 토글
+    const order = currentSortValue === 'all' ? 'desc' : currentSortValue === 'desc' ? 'asc' : 'desc'; // 정렬 값 토글
     sortBtn.setAttribute('data-current-sort-value', order); // 버튼의 data-sort-value 속성 값 업데이트
 	
 	const urlParams = new URLSearchParams(window.location.search);
@@ -850,6 +850,10 @@ function mapSortListApiObject(dbTable) {
 			
 		case 'recipe': // 식단 정보 관리 페이지
 			apiUrl = '/recipe/info/get_recipe_list';
+			break;
+			
+		case 'board_qna': // 질문과 답변 페이지
+			apiUrl = '/qna/info/get_qna_list';
 			break;
 			
 		case 'video': // 영상 정보 관리 페이지

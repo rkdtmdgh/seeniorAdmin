@@ -5,11 +5,15 @@
    
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('광고 분류 수정')}"></th:block>
-	<script th:inline="javascript">
-		logger.info('advertisementCategoryDto:', /*[[${advertisementCategoryDto}]]*/);
-			
+	<script type="text/javascript">
 		$(async function() {
-			//await getDetailList('/advertisement/info/get_advertisement_list_by_category', sortValue, order, page);
+			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
+			
+			switch(sortType) {
+				case '1': // select
+					await getList('/advertisement/info/get_advertisement_list_by_category', 'ad_idx', 'asc', page);
+					break;
+			}
         });
 	</script>
 </head>
