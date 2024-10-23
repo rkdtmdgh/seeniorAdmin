@@ -45,7 +45,7 @@ async function getListProcess(apiUrl, sortValue, order, page) {
 				let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
 				
 				getListDtos.forEach((data) => { 			   
-					$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, getListCnt, listIndex, page));
+					$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, getListCnt, listIndex, page, infoNo));
 					listIndex --;
 				});
 				
@@ -348,7 +348,7 @@ function mapApiResponseObject(apiUrl, response) {
 }
 
 // 콘텐츠 테이블 리스트 생성
-function generateTableList(apiUrl, data, getListCnt, listIndex, page) { 
+function generateTableList(apiUrl, data, getListCnt, listIndex, page, infoNo) { 
 	let tableTrContent = '';
 	
 	switch(apiUrl) {
@@ -539,12 +539,12 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		case '/board/cate_info/get_category_list': // 게시판 관리 리스트 테이블
 		case '/board/cate_info/search_board_category_list': // 게시판 관리 검색 리스트 테이블
 			tableTrContent = `
-				<tr data-bc-no="${data.bc_no}" data-bc-idx="${data.bc_idx}">
+				<tr data-no-name="bc_no" data-no="${data.bc_no}" data-idx="${data.bc_idx}">
 					<td class="va_m">
 						<div class="table_info func_area">
 							${getListCnt > 1 ? `
-								${data.bc_idx !== 1 ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx - 1}, ${page})" class="func_arrow up"></span>` : ''}
-								${data.bc_idx !== getListCnt ? `<span onclick="putBoardCategoryModifyButton(event, ${data.bc_idx + 1}, ${page})" class="func_arrow down"></span>` : ''}
+								${data.bc_idx !== 1 ? `<span onclick="putOrderModify(event, ${data.bc_idx - 1}, ${page})" class="func_arrow up"></span>` : ''}
+								${data.bc_idx !== getListCnt ? `<span onclick="putOrderModify(event, ${data.bc_idx + 1}, ${page})" class="func_arrow down"></span>` : ''}
 							` : ''}
 						</div>
 					</td>
@@ -662,9 +662,6 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		case '/qna/info/search_qna_list': // 질문과 답변 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
-					<td class="va_m">
-		                <div class="table_info func_area"><input type="checkbox" name="bq_no" value="${data.bq_no}"></div>
-		            </td>
 		            <td>
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${listIndex}</a>
 		            </td>
@@ -690,27 +687,60 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		case '/advertisement/info/get_advertisement_list': // 광고 관리 리스트 테이블
 		case '/advertisement/info/search_advertisement_list': // 광고 관리 검색 리스트 테이블
 		case '/advertisement/info/get_advertisement_list_by_category': // 광고 관리 위치별 분류 리스트 테이블
+		// infoNo값이 있다면 상세페이지 내에서 리스트 요청으로 다른 레이아웃 생성
 			tableTrContent = `
-				<tr>
-		            <td>
-		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${listIndex}</a>
-		            </td>
-		            <td>
-		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.advertisementCategoryDto.ac_name}</a>
-		            </td>
-					<td>
-		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_start_date)}</a>
-		            </td>
-					<td>
-		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_end_date)}</a>
-		            </td>
-					<td>
-		                <p class="table_info">${data.ad_client}</p>
-		            </td>
-		            <td>
-		                <p class="table_info">${setFormatDate(data.ad_mod_date)}</p>
-		            </td>
-		        </tr>
+				${infoNo ? 
+					`
+					<tr data-no-name="ad_no" data-no="${data.ad_no}" data-idx="${data.ad_idx}">
+						<td class="va_m">
+							<div class="table_info func_area">
+								${getListCnt > 1 ? `
+									${data.ad_idx !== 1 ? `<span onclick="putOrderModify(event, ${data.ad_idx - 1}, ${page})" class="func_arrow up"></span>` : ''}
+									${data.ad_idx !== getListCnt ? `<span onclick="putOrderModify(event, ${data.ad_idx + 1}, ${page})" class="func_arrow down"></span>` : ''}
+								` : ''}
+							</div>
+						</td>
+			            <td>
+			                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_idx}</a>
+			            </td>
+						<td>
+			                <p class="table_info">${data.ad_client}</p>
+			            </td>
+						<td>
+			                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_start_date)}</a>
+			            </td>
+						<td>
+			                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_end_date)}</a>
+			            </td>
+			            <td>
+			                <p class="table_info">${setFormatDate(data.ad_mod_date)}</p>
+			            </td>
+			        </tr>
+					` 
+				: 
+					`
+					<tr>
+			            <td>
+			                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${listIndex}</a>
+			            </td>
+			            <td>
+			                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.advertisementCategoryDto.ac_name}</a>
+			            </td>
+						<td>
+			                <p class="table_info">${data.ad_client}</p>
+			            </td>
+						<td>
+			                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_start_date)}</a>
+			            </td>
+						<td>
+			                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_end_date)}</a>
+			            </td>
+			            <td>
+			                <p class="table_info">${setFormatDate(data.ad_mod_date)}</p>
+			            </td>
+			        </tr>
+					`
+				}
 			`;
 			break;
 			
@@ -719,10 +749,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			tableTrContent = `
 				<tr>
 		            <td>
-		                <a href="/advertisement/cate_info/modify_category_form?ac_no=${data.ac_no}&infoNo=${data.ac_no}&sortType=1" class="table_info">${listIndex}</a>
+		                <a href="/advertisement/cate_info/modify_category_form?infoNo=${data.ac_no}&sortType=1" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/advertisement/cate_info/modify_category_form?ac_no=${data.ac_no}&infoNo=${data.ac_no}&sortType=1" class="table_info">${data.ac_name}</a>
+		                <a href="/advertisement/cate_info/modify_category_form?infoNo=${data.ac_no}&sortType=1" class="table_info">${data.ac_name}</a>
 		            </td>
 		            <td>
 		                <a href="/advertisement/info/advertisement_list_form?sortType=1&sortValue=ad_idx&order=asc&infoNo=${data.ac_no}" class="table_info">${data.ac_item_cnt}</a>
@@ -1088,7 +1118,7 @@ function mapCategorylistObject(ele) {
 			break;
 		
 		default:
-			logger.error('mapCategorylistObject() value:', value);
+			logger.error('mapCategorylistObject() value:', ele);
 			return false;
 	}
 	

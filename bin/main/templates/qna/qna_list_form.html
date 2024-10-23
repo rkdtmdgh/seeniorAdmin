@@ -44,8 +44,6 @@
 						            
 						            <div class="btn_list">
 						            	<div class="btns small" onclick="getList('/qna/info/get_qna_list', null, null, 1);">전체보기</div>
-						            	<div class="btns small delete" onclick="delListData('bq_no', true)">삭제</div>
-						            	<a href="/qna/info/notice_create_form" class="btns small">공지사항 등록</a>
 						            </div>
 					            </div>
 					        </div>
@@ -54,7 +52,6 @@
 					    <div class="table_wrap">
 	                        <table class="content_table qna_list_table">
 	                            <colgroup>
-	                                <col class="col_checkBox">
 	                                <col class="col_no">
 	                                <col class="col_no">
 	                                <col class="col_long">
@@ -64,12 +61,7 @@
 	                            </colgroup>
 	
 	                            <thead>
-	                                <tr>
-	                                	<th>
-	                                		<div class="table_title"><input type="checkbox" name="all_check" id="all_check" 
-	                                			onchange="setAllCheckBox(this)" value="bq_no" ></div>	                                        
-	                                    </th>
-	                                    
+	                                <tr>	                                    
 	                                    <th>
 	                                        <p class="table_title">No</p>
 	                                    </th>
