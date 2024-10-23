@@ -120,7 +120,7 @@ public class AdvertisementController {
 	
 	// 광고 위치 수정 양식
 	@GetMapping("/cate_info/modify_category_form")
-	public String modifyCategoryForm(@RequestParam(value = "ac_no") int ac_no, Model model) {
+	public String modifyCategoryForm(@RequestParam(value = "infoNo") int ac_no, Model model) {
 		log.info("modifyCategoryForm()");
 		
 		String nextPage = "advertisement/modify_category_form";
