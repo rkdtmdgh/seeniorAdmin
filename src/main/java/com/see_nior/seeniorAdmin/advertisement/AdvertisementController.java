@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.dto.AdvertisementCategoryDto;
 import com.see_nior.seeniorAdmin.dto.AdvertisementDto;
+import com.see_nior.seeniorAdmin.enums.ImgUrlPath;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -29,6 +30,10 @@ import lombok.extern.log4j.Log4j2;
 public class AdvertisementController {
 
 	final private AdvertisementService advertisementService;
+	
+	// 이미지 서버 경로
+//	final private String advertisementImgServerPath = "http://127.0.0.1:8091/seeniorUploadImg/advertisement/";
+	private String advertisementImgServerPath = "http://" + ImgUrlPath.ADVERTISEMENT_PATH.getValue();
 	
 	// --------------------------------------------------------- 광고 위치
 	
@@ -292,19 +297,21 @@ public class AdvertisementController {
 	@GetMapping("/info/get_advertisement_list_by_category")
 	public Object getAdvertisementListByCategory(
 			@RequestParam(value = "page", required = false, defaultValue = "1")int page,
-			@RequestParam(value = "sortValue", required = false, defaultValue = "all") String sortValue,
-			@RequestParam(value = "order") int ac_no) {
+			@RequestParam(value = "sortValue", required = false, defaultValue = "ad_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
+			@RequestParam(value = "infoNo") int ac_no) {
 		log.info("getAdvertisementListByCategory()");
 		
 		// 페이지 번호에 따른 위치별 광고 리스트들 가져오기
-		Map<String, Object> advertisementListByCategoryWithPage = advertisementService.getAdvertisementListByCategoryWithPage(page, ac_no);
+		Map<String, Object> advertisementListByCategoryWithPage = advertisementService.getAdvertisementListByCategoryWithPage(page, sortValue, order, ac_no);
 		
 		// 위치별 광고 총 페이지 개수 가져오기
 		Map<String, Object> advertisementByCategoryPageNum = advertisementService.getAdvertisementByCategoryPageNum(page, ac_no);
 		
 		advertisementListByCategoryWithPage.put("advertisementByCategoryPageNum", advertisementByCategoryPageNum);
 		advertisementListByCategoryWithPage.put("sortValue", sortValue);
-		advertisementListByCategoryWithPage.put("order", ac_no);
+		advertisementListByCategoryWithPage.put("order", order);
+		advertisementListByCategoryWithPage.put("infoNo", ac_no);
 		
 		return advertisementListByCategoryWithPage;
 		
@@ -348,6 +355,7 @@ public class AdvertisementController {
 		AdvertisementDto advertisementDto = advertisementService.getAdvertisement(ad_no);
 		
 		model.addAttribute("advertisementDto", advertisementDto);
+		model.addAttribute("advertisementImgServerPath", advertisementImgServerPath);
 		
 		return nextPage;
 		

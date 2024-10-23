@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.see_nior.seeniorAdmin.dto.VideoDto;
+import com.see_nior.seeniorAdmin.enums.PagePath;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -29,9 +30,8 @@ public class VideoController {
 	public String videoListForm() {
 		log.info("videoListForm()");
 		
-		String nextPage = "video/video_list_form";
+		return PagePath.VIDEO_LIST_FORM.getValue();
 		
-		return nextPage;
 	}
 	
 	// 비디오 리스트 가져오기 (비동기)
@@ -85,9 +85,8 @@ public class VideoController {
 	public String createForm() {
 		log.info("createForm()");
 		
-		String nextPage = "video/create_form";
+		return PagePath.VIDEO_CREATE_FORM.getValue();
 		
-		return nextPage;
 	}
 	
 	// 비디오 등록 확인 (비동기)
@@ -105,12 +104,11 @@ public class VideoController {
 	public String modifyForm(@RequestParam("v_no") int v_no, Model model) {
 		log.info("modifyForm()");
 		
-		String nextPage = "video/modify_form";
-		
 		VideoDto videoDto = videoService.getVideoInfo(v_no);
 		model.addAttribute(videoDto);
 		
-		return nextPage;
+		return PagePath.VIDEO_MODIFY_FORM.getValue();
+		
 	}
 	
 	// 비디오 수정 확인 (비동기)
