@@ -71,6 +71,8 @@ function navActiveToggle() {
 		
 		const $navSubMenuList = $navMenu.find('.side_sub_menu_list'); // 서브 메뉴 리스트
 		if($navSubMenuList.length) { // 서브 메뉴가 있는 경우
+			const currentParam = currentQueryParams.get('infoNo'); // 카테고리 구분이 필요할 경우 비교할 값
+		
 			const $navSubMenus = $navSubMenuList.find('.side_sub_menu_btn'); // 서브 메뉴 리스트 포함된 모든 서브 메뉴
 			$navSubMenus.each(function() {
 				const $navSubMenu = $(this);
@@ -82,11 +84,16 @@ function navActiveToggle() {
 				if (subHrefPath && subHrefPath === currentPath) {
 					// 쿼리 스트링 확인(같은 카테고리에서 구분이 필요할 경우)
 					const subHerfParam = subHrefQueryParams.get('infoNo');
-					const currentParam = currentQueryParams.get('infoNo');
 					
-					if(subHerfParam === currentParam) {
+					if(!subHerfParam) { // subHerfParam에 infoNo가 없을 경우 비교하지 않음
 						$navSubMenu.addClass('on'); // 네비 서브 메뉴 선택
 						$navMenu.addClass('select'); // 네비 버튼 선택
+						
+					} else {
+						if(subHerfParam === currentParam) {
+							$navSubMenu.addClass('on'); 
+							$navMenu.addClass('select'); 
+						}
 					}
 				}
 			});
