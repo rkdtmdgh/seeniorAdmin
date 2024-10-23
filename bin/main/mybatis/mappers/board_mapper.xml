@@ -409,5 +409,57 @@
 		WHERE
 			bp.BP_NO = #{bp_no}
      </select>
+     
+     <!-- 페이지에 따른 질환 가져오기(검색한 질환) -->
+	<select id="getSearchBoardPosts"
+			parameterType="Map"
+			resultMap="BoardPostsDto">
+			
+		SELECT 
+			bp.*,
+    		aa.A_NO, aa.A_ID, aa.A_NAME,
+    		ua.U_NO, ua.U_ID, ua.U_NAME
+		FROM 
+			BOARD_POSTS bp
+		LEFT JOIN 
+			ADMIN_ACCOUNT AS aa 
+		ON 
+			bp.BP_WRITER_NO = aa.A_NO 
+		AND 
+			bp.BP_ACCOUNT = 'admin'
+		LEFT JOIN 
+			USER_ACCOUNT AS ua 
+		ON 
+			bp.BP_WRITER_NO = ua.U_NO 
+		AND 
+			bp.BP_ACCOUNT = 'user' 
+		WHERE 
+			bp.BP_CATEGORY_NO = #{bc_no} 
+		AND 
+			bp.BP_IS_DELETED = 1 
+		AND 
+			bp.${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+		ORDER BY 
+			BP_NO DESC 
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>
+	
+	<!-- 검색한 게시물의 총 리스트 개수 구하기 -->
+	<select id="getSearchBoardPostsListCnt"
+			parameterType="Map"
+			resultType="Integer">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_POSTS 
+		WHERE 
+			BP_IS_DELETED = 1 
+		AND 
+			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+	
+	</select>
 
 </mapper>
