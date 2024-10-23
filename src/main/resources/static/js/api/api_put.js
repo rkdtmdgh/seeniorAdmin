@@ -41,15 +41,22 @@ async function putOrderModifyProcess(event, idx, page) {
     const name = infoEle.getAttribute('data-no-name'); 
     const no = infoEle.getAttribute('data-no'); 
     const current_idx = infoEle.getAttribute('data-idx'); 
+    
+    // 카테고리 분류 내 순번 수정이 필요한 경우 분류 no값 추출하여 추가 전송
+    const urlParams = new URLSearchParams(window.location.search);
+	const infoNo = urlParams.get('infoNo') || undefined; // 쿼리스트링에 infoNo값 추출
+    
     const config = mapOrderModifyObject(name, page); // 요청에 필요한 객체
     
 	// 실시간 비동기 작업으로 리로드 되지 않도록 putIntegSubmit함수 사용하지 않음
 	if(setLoading(true, config.loddingSetEle)) { // 로딩 추가 함수 실행이 성공하면 요청 진행 
 		
 		const formData = new FormData();
-		formData.append(name, no);
-		formData.append([config.current_idx_key], current_idx);
-		formData.append([config.idx_key], idx);
+		formData.append(name, no); // 순번 수정할 데이터 no값
+		formData.append([config.current_idx_key], current_idx); // 기존 순번 값
+		formData.append([config.idx_key], idx); // 변경할 순번 값
+		if(infoNo) formData.append([config.categoryKey], infoNo); // 카테고리 no 값	
+	
 		
 		// setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
 		
@@ -88,6 +95,7 @@ function mapOrderModifyObject(name, page) {
 	let loddingSetEle = null; // 로딩 표시할 요소
 	let current_idx_key = null;
 	let idx_key = null;
+	let categoryKey = null;
 	
 	switch(name) {
 		case 'bc_no': // 게시판 분류 순번 수정
@@ -99,11 +107,12 @@ function mapOrderModifyObject(name, page) {
 			break;
 			
 		case 'ad_no': // 광고 분류 상세페이지 내 광고 순번 수정
-			orderModifyApiURL = '/board/cate_info/modify_category_idx';
+			orderModifyApiURL = '/advertisement/info/modify_advertisement_idx';
 			getListFunc = () => getList('/advertisement/info/get_advertisement_list_by_category', 'ad_idx', 'asc', page);
 			loddingSetEle = 'advertisement_list_table';
 			current_idx_key = 'current_ad_idx';
 			idx_key = 'ad_idx';
+			categoryKey = 'ac_no';
 			break;
 		
 		default:
@@ -111,7 +120,7 @@ function mapOrderModifyObject(name, page) {
 			return false;
 	}
 	
-	return { orderModifyApiURL, getListFunc, loddingSetEle, current_idx_key, idx_key };
+	return { orderModifyApiURL, getListFunc, loddingSetEle, current_idx_key, idx_key, categoryKey };
 }
 
 // 본인 계정 정보 수정
