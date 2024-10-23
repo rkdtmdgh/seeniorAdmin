@@ -11,7 +11,6 @@ async function getListProcess(apiUrl, sortValue, order, page) {
 		const $searchStringInput = $('form[name="search_form"]').find('input[name="search_string"]');
 		if($searchStringInput.length && $searchStringInput.val().trim()) $searchStringInput.val(''); // 검색 이력이 남았을 경우에만 삭제
 		
-		const urlParams = new URLSearchParams(window.location.search);
 		const infoNo = urlParams.get('infoNo') || undefined;
 		
 		const intPage = page || 1
@@ -96,7 +95,6 @@ async function getSearchListProcess(event, apiUrl, page) {
 		if(apiUrl) {
 			setAllcheck(); // all_check 체크박스 초기화
 			
-			const urlParams = new URLSearchParams(window.location.search);
 			const infoNo = urlParams.get('infoNo') || undefined;
 		
 			let intPage = page || 1;
@@ -849,7 +847,6 @@ function getSortList(event, dbTable, sortValue) {
     const order = currentSortValue === 'all' ? 'desc' : currentSortValue === 'desc' ? 'asc' : 'desc'; // 정렬 값 토글
     sortBtn.setAttribute('data-current-sort-value', order); // 버튼의 data-sort-value 속성 값 업데이트
 	
-	const urlParams = new URLSearchParams(window.location.search);
 	urlParams.set('sortType', 0); // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
 	const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 	window.history.replaceState({}, '', newUrl);
@@ -921,7 +918,6 @@ function getSelectList(event) {
 	const order = sortBtn.getAttribute('data-order'); // 정렬할 값
 	const apiUrl = mapSelectListApiObject(sortValue); // 커맨드 가져오기
 	
-	const urlParams = new URLSearchParams(window.location.search);
 	urlParams.set('sortType', 1); // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
 	const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 	window.history.replaceState({}, '', newUrl);
