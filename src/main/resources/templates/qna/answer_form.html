@@ -52,7 +52,7 @@
 		                                
 		                                <tr>
 		                                	<th><p class="table_title">등록일 / 수정일</p></th>
-	                                        <td colspan="3" class="disabled">
+	                                        <td colspan="3">
 	                                        	<p class="table_date_info">
 	                                        		<span th:text="${qnaDto.bq_reg_date}"></span>
 	                                        		<span th:text="${qnaDto.bq_mod_date}"></span>
@@ -71,18 +71,35 @@
 		                                    	<p class="table_info" th:text="${qnaDto.userAccountDto.u_name + ' (' + qnaDto.userAccountDto.u_nickname} + ')'"></p>
 		                                    </td>
 		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">내용</p></th>
+		                                	<td colspan="3" class="ta_l">
+		                                		<p class="content_view_wrap sc" th:text="${qnaDto.bq_body}"></p>
+		                                    </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">답변</p></th>
+		                                	<td colspan="3">
+		                                        <textarea name="bqa_answer" id="bqa_answer" class="table_textarea" 
+		                                        	placeholder="내용을 입력하세요"
+		                                        	data-current-size="textarea"
+		                                        	onkeydown="setTextareaAutoHeight(this)"
+		                                        	oninput="setTextLimit(this, 'short')"></textarea>
+                                            	<div id="text_limit">
+	                                				<span id="current_size"></span> / <span id="max_size"></span>
+	                                			</div>
+		                                    </td>
+		                                </tr>
 	                                </tbody>
 	                            </table>
 	
-	                            <div class="btn_list">
-	                            	<div th:if="${qnaDto.bq_no} != null" class="btns delete"
+                                <div class="btn_list f_jc_right">
+                                	<div th:if="${qnaDto.bq_no} != null" class="btns delete"
 		                        		 th:onclick="delListData('bq_no')">삭제</div>
-		                        		 
-	                                <div class="btn_list">
-	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <div onclick="putDiseaseModify('disease_modify_form')" class="btns">수정</div>
-	                                </div>
-	                            </div>
+                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
+                                </div>
 	                        </div>
 	                    </form>
 	                </section>

@@ -642,7 +642,7 @@ $(document).on('click', function(event) {
 // 문서가 준비된 후 실행
 $(function() {
 	// textarea 입력된 값으로 높이값 조절
-	$('.table_textarea.small').each(function() {
+	$('.table_textarea').each(function() {
 		setTextareaAutoHeight(this);
 	});	
 	

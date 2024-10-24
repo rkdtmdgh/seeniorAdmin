@@ -165,6 +165,7 @@
 .table_textarea {
 	width: 100%;
 	height: var(--tableTextareaHeight);
+	max-height: 350px;
     padding: var(--textPadding);
     
     &.small {
