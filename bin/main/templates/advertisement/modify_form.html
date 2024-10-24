@@ -55,9 +55,19 @@
 		                                    <td>
 		                                        <select class="table_info select ad_category_no_select" name="ad_category_no" id="ad_category_no"></select>
 		                                    </td>
-		
-		                                    <th><p class="table_title">클라이언트</p></th>
-		                                    <td>
+		                                    
+		                                    <th><p class="table_title">등록일 / 수정일</p></th>
+	                                        <td class="disabled">
+	                                        	<p class="table_date_info">
+	                                        		<span th:text="${advertisementDto.ad_reg_date}"></span>
+	                                        		<span th:text="${advertisementDto.ad_mod_date}"></span>
+	                                        	</p>
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">클라이언트</p></th>
+		                                    <td colspan="3">
 		                                        <input type="text" name="ad_client" id="ad_client" class="table_info" placeholder="클라이언트"
 		                                            onblur="validateEmpty(this, '클라이언트를')"
 		                                            th:value="${advertisementDto.ad_client}">

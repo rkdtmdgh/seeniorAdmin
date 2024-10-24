@@ -7,11 +7,7 @@ async function getListProcess(apiUrl, sortValue, order, page, resetParams = fals
 	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
 		setAllcheck(); // all_check 체크박스 초기화
 		
-		if(resetParams) { // 쿼리 파라미터 제거
-			const currentUrl = new URL(window.location.href);
-			currentUrl.search = ''; // 모든 쿼리 파라미터를 제거
-			window.history.replaceState({}, '', currentUrl); // 브라우저 URL 업데이트
-		}
+		if(resetParams) setDelQueryString(); // 쿼리 파라미터 제거
 		
 	    // 검색 인풋 벨류 삭제
 		const $searchStringInput = $('form[name="search_form"]').find('input[name="search_string"]');
@@ -850,7 +846,7 @@ function getSortList(event, dbTable, sortValue) {
     const sortBtn = event.currentTarget.closest('.sort'); // 클릭된 요소가 가장 가까운 부모 요소 중 클래스가 "sort"인 요소를 찾음
 	if(!sortBtn) return; // 만약 sort 요소가 없다면 아무 작업도 하지 않음
 	
-    const apiUrl = mapSortListApiObject(dbTable); // 커맨드 가져오기
+    const config = mapSortListApiObject(dbTable); // 커맨드 가져오기
     const currentSortValue = sortBtn.getAttribute('data-current-sort-value'); // 현재 정렬 값 가져오기 default all
     const order = currentSortValue === 'all' ? 'desc' : currentSortValue === 'desc' ? 'asc' : 'desc'; // 정렬 값 토글
     sortBtn.setAttribute('data-current-sort-value', order); // 버튼의 data-sort-value 속성 값 업데이트
@@ -860,12 +856,13 @@ function getSortList(event, dbTable, sortValue) {
 	const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 	window.history.replaceState({}, '', newUrl);
 	
-    getList(apiUrl, sortValue, order, 1); // 변경된 정렬 값으로 getList 호출
+    getList(config.apiUrl, sortValue, order, 1, config.isResetParams); // 변경된 정렬 값으로 getList 호출
 }
 
 // sort getList() 요청에 필요한 객체 설정
 function mapSortListApiObject(dbTable) {
-	let apiUrl = null;
+	let apiUrl = null; // getList api
+	let isResetParams = false; // 쿼리 파라미터 리셋
 	
 	switch(dbTable) {			
 		case 'admin_account': // 관리자 계정 관리 페이지
@@ -910,6 +907,7 @@ function mapSortListApiObject(dbTable) {
 			
 		case 'advertisement': // 광고 관리 페이지
 			apiUrl = '/advertisement/info/get_advertisement_list';
+			isResetParams = true;
 			break;
 		
 		default:
@@ -917,7 +915,7 @@ function mapSortListApiObject(dbTable) {
 			return false;
 	}
 	
-	return apiUrl;
+	return { apiUrl, isResetParams };
 }
 
 // 선택된 카테고리의 리스트 요청

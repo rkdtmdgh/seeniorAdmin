@@ -56,11 +56,23 @@
 		                                			th:value="${advertisementCategoryDto.ac_name}">
 	                                        </td>
 	                                        
-	                                        <th><p class="table_title">참고 사항</p></th>
+		                                	<th><p class="table_title">등록일 / 수정일</p></th>
+	                                        <td class="disabled">
+	                                        	<p class="table_date_info">
+	                                        		<span th:text="${advertisementCategoryDto.ac_reg_date}"></span>
+	                                        		<span th:text="${advertisementCategoryDto.ac_mod_date}"></span>
+	                                        	</p>
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">참고 사항</p></th>
 		                                	<td>
 		                                		<input type="text" name="ac_note" id="ac_note" class="table_info" placeholder="참고 사항"
 		                                			th:value="${advertisementCategoryDto.ac_note}">
 	                                        </td>
+	                                        
+	                                        <td colspan="2"></td>
 		                                </tr>
 		                            </tbody>
 		                        </table>
