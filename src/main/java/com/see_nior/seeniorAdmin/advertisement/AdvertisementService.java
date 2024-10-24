@@ -509,9 +509,9 @@ public class AdvertisementService {
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
-		pagingParams.put("ac_no", ac_no);
 		pagingParams.put("sortValue", sortValue);
 		pagingParams.put("order", order);
+		pagingParams.put("ac_no", ac_no);
 		
 		List<AdvertisementDto> advertisementDtos = advertisementMapper.getAdvertisementListByCategoryWithPage(pagingParams);
 		pagingList.put("advertisementDtos", advertisementDtos);

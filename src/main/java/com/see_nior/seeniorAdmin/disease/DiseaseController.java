@@ -249,19 +249,21 @@ public class DiseaseController {
 	@GetMapping("/info/get_disease_list_by_category")
 	public Object getDiseaseListByCategory(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-			@RequestParam(value = "sortValue", required = false, defaultValue = "all") String sortValue,
-			@RequestParam(value = "order") int dc_no) {
+			@RequestParam(value = "sortValue", required = false, defaultValue = "d_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
+			@RequestParam(value = "infoNo") int dc_no) {
 		log.info("getDiseaseListByCategory()");
 		
 		// 페이지 번호에 따른 카테고리별 질환 리스트들 가져오기
-		Map<String, Object> diseaseListByCategoryWithPage = diseaseService.getDiseaseListByCategoryWithPage(page, dc_no);
+		Map<String, Object> diseaseListByCategoryWithPage = diseaseService.getDiseaseListByCategoryWithPage(page, sortValue, order, dc_no);
 		
 		// 카테고리별 질환 총 페이지 개수 가져오기
 		Map<String, Object> diseaseListByCategoryPageNum = diseaseService.getDiseaseListByCategoryPageNum(page, dc_no);
 		
 		diseaseListByCategoryWithPage.put("diseaseListByCategoryPageNum", diseaseListByCategoryPageNum);
 		diseaseListByCategoryWithPage.put("sortValue", sortValue);
-		diseaseListByCategoryWithPage.put("order", dc_no);
+		diseaseListByCategoryWithPage.put("order", order);
+		diseaseListByCategoryWithPage.put("infoNo", dc_no);
 		
 		return diseaseListByCategoryWithPage;
 		
