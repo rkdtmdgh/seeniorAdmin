@@ -735,7 +735,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page, infoNo) {
 		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_idx}</a>
 		            </td>
 					<td>
-		                <p class="table_info">${data.ad_client}</p>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_client}</a>
 		            </td>
 					<td>
 		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_start_date)}</a>
@@ -1089,15 +1089,15 @@ async function getMaxIdxAndSetAttribute(name, value, formName) {
 	}
 }
 
-// 셀렉트 옵션 분류 리스트 요청에 필요한 객체 설정
+// 분류별 리스트 요청에 필요한 객체 설정
 function mapCategorylistObject(ele) {
-	let getCateSelectApiUrl = null;
-	let getSelectMaxIdxApiUrl = null;
-	let getListDtos = null;
-	let infoNo = null;
-	let infoName = null;
-	let soltValue = null;
-	let note = null;
+	let getCateSelectApiUrl = null; // 분류별 리스트 요청 api
+	let getSelectMaxIdxApiUrl = null; // 분류 또는 분류에 속한 데이터에 순번 입력이 필요한 경우 max값 요청 api
+	let getListDtos = null; // 객체명
+	let infoNo = null; // 분류 no 값
+	let infoName = null; // 분류 no 값을 가져오기 위한 객체명
+	let soltValue = null; // 정렬 기준값
+	let note = null; // 기타사항이 있을 경우 해당 객체명
 	
 	switch(ele) {
 		case 'dc_name': // 질병군별 분류 리스트(분류별 관리o)
@@ -1112,6 +1112,7 @@ function mapCategorylistObject(ele) {
 		case 'rcp_pat2': // 음식 종류별 분류 리스트(분류별 관리x)
 			getCateSelectApiUrl = '/recipe/info/get_type_list_select';
 			getListDtos = 'recipeTypeDto';
+			infoNo = 'rcp_pat2';
 			infoName = 'rcp_pat2';
 			soltValue = 'rcp_pat2';
 			break;
