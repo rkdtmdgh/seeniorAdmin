@@ -332,6 +332,7 @@ function mapApiResponseObject(apiUrl, response) {
 			break;	
 			
 		case '/advertisement/info/get_advertisement_list_by_category': // 광고 관리 위치별 데이터
+		case '/advertisement/cate_info/get_advertisement_list_by_category': // 광고 분류 상세페이지 내 위치별 데이터
 			getListDtos = response.advertisementDtos;
 			getListPage = response.advertisementByCategoryPageNum;
 			getListCnt = response.advertisementByCategoryPageNum.advertisementListByCategoryCnt;
@@ -696,58 +697,56 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page, infoNo) {
 		case '/advertisement/info/get_advertisement_list_by_category': // 광고 관리 위치별 분류 리스트 테이블
 		// infoNo값이 있다면 상세페이지 내에서 리스트 요청으로 다른 레이아웃 생성
 			tableTrContent = `
-				${!infoNo ? 
-					`
-					<tr>
-			            <td>
-			                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${listIndex}</a>
-			            </td>
-			            <td>
-			                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.advertisementCategoryDto.ac_name}</a>
-			            </td>
-						<td>
-			                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_client}</a>
-			            </td>
-						<td>
-			                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_start_date)}</a>
-			            </td>
-						<td>
-			                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_end_date)}</a>
-			            </td>
-			            <td>
-			                <p class="table_info">${setFormatDate(data.ad_mod_date)}</p>
-			            </td>
-			        </tr>
-					` 
-				: 
-					`
-					<tr data-no-name="ad_no" data-no="${data.ad_no}" data-idx="${data.ad_idx}">
-						<td class="va_m">
-							<div class="table_info func_area">
-								${getListCnt > 1 ? `
-									${data.ad_idx !== 1 ? `<span onclick="putOrderModify(event, ${data.ad_idx - 1}, ${page})" class="func_arrow up"></span>` : ''}
-									${data.ad_idx !== getListCnt ? `<span onclick="putOrderModify(event, ${data.ad_idx + 1}, ${page})" class="func_arrow down"></span>` : ''}
-								` : ''}
-							</div>
-						</td>
-			            <td>
-			                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_idx}</a>
-			            </td>
-						<td>
-			                <p class="table_info">${data.ad_client}</p>
-			            </td>
-						<td>
-			                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_start_date)}</a>
-			            </td>
-						<td>
-			                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_end_date)}</a>
-			            </td>
-			            <td>
-			                <p class="table_info">${setFormatDate(data.ad_mod_date)}</p>
-			            </td>
-			        </tr>
-					`
-				}
+				<tr>
+		            <td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${listIndex}</a>
+		            </td>
+		            <td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.advertisementCategoryDto.ac_name}</a>
+		            </td>
+					<td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_client}</a>
+		            </td>
+					<td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_start_date)}</a>
+		            </td>
+					<td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_end_date)}</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.ad_mod_date)}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/advertisement/cate_info/get_advertisement_list_by_category': // 광고 분류 상세페이지 내 위치별 분류 리스트 테이블	
+			tableTrContent = `
+				<tr data-no-name="ad_no" data-no="${data.ad_no}" data-idx="${data.ad_idx}">
+					<td class="va_m">
+						<div class="table_info func_area">
+							${getListCnt > 1 ? `
+								${data.ad_idx !== 1 ? `<span onclick="putOrderModify(event, ${data.ad_idx - 1}, ${page})" class="func_arrow up"></span>` : ''}
+								${data.ad_idx !== getListCnt ? `<span onclick="putOrderModify(event, ${data.ad_idx + 1}, ${page})" class="func_arrow down"></span>` : ''}
+							` : ''}
+						</div>
+					</td>
+		            <td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_idx}</a>
+		            </td>
+					<td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_client}</a>
+		            </td>
+					<td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_start_date)}</a>
+		            </td>
+					<td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_end_date)}</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.ad_mod_date)}</p>
+		            </td>
+		        </tr>
 			`;
 			break;
 			
@@ -1090,15 +1089,15 @@ async function getMaxIdxAndSetAttribute(name, value, formName) {
 	}
 }
 
-// 셀렉트 옵션 분류 리스트 요청에 필요한 객체 설정
+// 분류별 리스트 요청에 필요한 객체 설정
 function mapCategorylistObject(ele) {
-	let getCateSelectApiUrl = null;
-	let getSelectMaxIdxApiUrl = null;
-	let getListDtos = null;
-	let infoNo = null;
-	let infoName = null;
-	let soltValue = null;
-	let note = null;
+	let getCateSelectApiUrl = null; // 분류별 리스트 요청 api
+	let getSelectMaxIdxApiUrl = null; // 분류 또는 분류에 속한 데이터에 순번 입력이 필요한 경우 max값 요청 api
+	let getListDtos = null; // 객체명
+	let infoNo = null; // 분류 no 값
+	let infoName = null; // 분류 no 값을 가져오기 위한 객체명
+	let soltValue = null; // 정렬 기준값
+	let note = null; // 기타사항이 있을 경우 해당 객체명
 	
 	switch(ele) {
 		case 'dc_name': // 질병군별 분류 리스트(분류별 관리o)
@@ -1113,6 +1112,7 @@ function mapCategorylistObject(ele) {
 		case 'rcp_pat2': // 음식 종류별 분류 리스트(분류별 관리x)
 			getCateSelectApiUrl = '/recipe/info/get_type_list_select';
 			getListDtos = 'recipeTypeDto';
+			infoNo = 'rcp_pat2';
 			infoName = 'rcp_pat2';
 			soltValue = 'rcp_pat2';
 			break;
