@@ -294,7 +294,8 @@ public class AdvertisementController {
 	
 	// 광고 위치에 따른 광고 가져오기(페이지네이션)
 	@ResponseBody
-	@GetMapping("/info/get_advertisement_list_by_category")
+	@GetMapping({"/info/get_advertisement_list_by_category",
+				"/cate_info/get_advertisement_list_by_category"})
 	public Object getAdvertisementListByCategory(
 			@RequestParam(value = "page", required = false, defaultValue = "1")int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "ad_no") String sortValue,
