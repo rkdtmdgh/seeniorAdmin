@@ -374,7 +374,7 @@ public class DiseaseService {
 	}
 	
 	// 페이지에 따른 질환 가져오기(카테고리별 질환)
-	public Map<String, Object> getDiseaseListByCategoryWithPage(int page, int dc_no) {
+	public Map<String, Object> getDiseaseListByCategoryWithPage(int page, String sortValue, String order, int dc_no) {
 		log.info("getDiseaseListByCategoryWithPage()");
 		
 		int pagingStart = (page - 1) * pageLimit;
@@ -384,6 +384,8 @@ public class DiseaseService {
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
+		pagingParams.put("sortValue", sortValue);
+		pagingParams.put("order", order);
 		pagingParams.put("dc_no", dc_no);
 		
 		List<DiseaseDto> diseaseDtos = diseaseMapper.getDiseaseListByCategoryWithPage(pagingParams);

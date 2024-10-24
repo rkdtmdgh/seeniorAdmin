@@ -39,11 +39,12 @@
 					            <h2 class="title">광고 분류 관리</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/advertisement/cate_info/search_advertisement_category_list')" 
-										th:insert="~{fragments/search.html :: search('광고 분류 관리')}"></form>
+									<form name="search_form" onsubmit="getSearchList(event, '/advertisement/cate_info/search_advertisement_category_list')">
+										<th:block th:insert="~{fragments/search.html :: search('광고 분류 관리')}"></th:block>
+									</form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/advertisement/cate_info/get_category_list', null, null, 1);">전체보기</div>
+						            	<div class="btns small" onclick="getList('/advertisement/cate_info/get_category_list', null, null, 1, true);">전체보기</div>
 						            	<a href="/advertisement/cate_info/create_category_form" class="btns small">등록</a>
 						            </div>
 					            </div>

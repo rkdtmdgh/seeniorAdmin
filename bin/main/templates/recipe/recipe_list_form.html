@@ -46,11 +46,12 @@
 					            <h2 class="title categoty_title">식단 정보 관리</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/recipe/info/search_recipe_list')" 
-										th:insert="~{fragments/search.html :: search('식단 정보 관리')}"></form>
+									<form name="search_form" onsubmit="getSearchList(event, '/recipe/info/search_recipe_list')">
+										<th:block th:insert="~{fragments/search.html :: search('식단 정보 관리')}"></th:block>	
+									</form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/recipe/info/get_recipe_list', null, null, 1);">전체보기</div>
+						            	<div class="btns small" onclick="getList('/recipe/info/get_recipe_list', null, null, 1, true);">전체보기</div>
 						            	<div onclick="postRecipeUpdate()" class="btns small">정보 업데이트</div>
 						            </div>
 					            </div>

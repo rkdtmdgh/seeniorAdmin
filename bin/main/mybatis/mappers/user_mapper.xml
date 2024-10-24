@@ -139,6 +139,14 @@
 			<if test="u_is_personal == false">
 				0, 
 			</if>
+			U_IS_BLOCKED = 
+			<if test="u_is_blocked == true">
+				1, 
+			</if>
+			<if test="u_is_blocked == false">
+				0, 
+			</if>
+			U_BLOCKED_REASON = #{u_blocked_reason},
 			U_MOD_DATE = NOW() 
 		WHERE 
 			U_NO = #{u_no} 

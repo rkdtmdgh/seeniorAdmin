@@ -45,7 +45,17 @@
 		                                            th:value="${videoDto.v_title}">
 		                                    </td>
 		                                </tr>
-		
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">등록일 / 수정일</p></th>
+	                                        <td colspan="3" class="disabled">
+	                                        	<p class="table_date_info">
+	                                        		<span th:text="${videoDto.v_reg_date}"></span>
+	                                        		<span th:text="${videoDto.v_mod_date}"></span>
+	                                        	</p>
+	                                        </td>
+										</tr>
+										
 		                                <tr>
 		                                    <th><p class="table_title">URL</p></th>
 		                                    <td colspan="3">
@@ -60,12 +70,19 @@
 		                                </tr>
 		                                
 		                                <tr>
-		                                    <th><p class="table_title">내용</p></th>
-		                                    <td colspan="3">
-	                                			<textarea name="v_text" id="v_text" class="table_textarea" placeholder="내용을 입력하세요"
-	                                				onblur="validateEmpty(this, '내용을')"
-	                                				th:text="${videoDto.v_text}"></textarea>
-	                                        </td>
+		                                    <th><p class="table_title">내용</p></th>	                                        
+	                                        <td colspan="3">
+		                                        <textarea name="v_text" id="v_text" class="table_textarea" 
+		                                        	placeholder="내용을 입력하세요"
+		                                        	data-current-size="textarea"
+		                                        	onkeydown="setTextareaAutoHeight(this)"
+		                                        	oninput="setTextLimit(this, 'short')"
+		                                        	onblur="validateEmpty(this, '내용을')"
+	                                            	th:text="${videoDto.v_text}"></textarea>
+                                            	<div id="text_limit">
+	                                				<span id="current_size"></span> / <span id="max_size"></span>
+	                                			</div>
+		                                    </td>
 		                                </tr>
 	                                </tbody>
 	                            </table>

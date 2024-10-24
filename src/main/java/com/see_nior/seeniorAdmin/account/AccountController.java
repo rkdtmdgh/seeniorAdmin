@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
+import com.see_nior.seeniorAdmin.enums.PagePath;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -34,9 +35,8 @@ public class AccountController {
 	public String signUpForm() {
 		log.info("signUpForm()");
 		
-		String nextPage = "account/sign_up_form";
+		return PagePath.ACCOUNT_SIGN_UP_FORM.getValue();
 		
-		return nextPage;
 	}
 	
 	// 회원 가입 확인
@@ -48,9 +48,7 @@ public class AccountController {
 		
 		model.addAttribute("signUpResult", result);
 		
-		String nextPage = "account/sign_up_result";
-		
-		return nextPage;
+		return PagePath.ACCOUNT_SIGN_UP_RESULT.getValue();
 	}
 	
 	// 아이디 중복 여부 확인
@@ -70,25 +68,22 @@ public class AccountController {
 	public String signInForm(Model model) {
 		log.info("signInForm()");
 		
-		String nextPage = "account/sign_in_form";
-		
-		return nextPage;
+		return PagePath.ACCOUNT_SIGN_IN_FORM.getValue();
 	}
 	
 	// 로그인 결과 확인
 	@GetMapping("/sign_in_result")
-	public String signInNg(
+	public String signInResult(
 			@RequestParam(value = "errMsg", required = false) String errMsg,
 			@RequestParam("result") boolean result,
 			Model model) {
-		log.info("sign_in_result()");
-		
-		String nextPage = "account/sign_in_result";
+		log.info("signInResult()");
 		
 		model.addAttribute("errMsg", errMsg);
 		model.addAttribute("result", result);
 		
-		return nextPage;
+		return PagePath.ACCOUNT_SIGN_IN_RESULT.getValue();
+		
 	}
 	
 	// 내 정보 수정 양식
@@ -96,9 +91,8 @@ public class AccountController {
 	public String modifyForm(Model model, Principal principal) {
 		log.info("modifyForm()");
 		
-		String nextPage = "account/modify_form";
+		return PagePath.ACCOUNT_MODIFY_FORM.getValue();
 		
-		return nextPage;
 	}
 	
 	// 내 정보 가져오기
@@ -172,14 +166,13 @@ public class AccountController {
 	public String adminModifyForm(@RequestParam("a_no") int a_no, Model model) {
 		log.info("adminModifyForm()");
 		
-		String nextPage = "account/admin_modify_form";
-		
 		AdminAccountDto selectedAdminDto = 
 				accountService.getAdminAccountByNo(a_no);
 		
 		model.addAttribute("selectedAdminDto", selectedAdminDto);
 		
-		return nextPage;
+		return PagePath.ACCOUNT_ADMIN_MODIFY_FORM.getValue();
+		
 	}
 	
 	// SUPER_ADMIN - ADMIN 정보 수정 확인
@@ -208,9 +201,8 @@ public class AccountController {
 	public String adminListForm() {
 		log.info("adminListForm()");
 		
-		String nextPage = "account/admin_list_form";
+		return PagePath.ACCOUNT_ADMIN_LIST_FORM.getValue();
 		
-		return nextPage;
 	}
 	
 	// 관리자 리스트 가져오기
@@ -263,11 +255,9 @@ public class AccountController {
 	public String isApproval(@RequestParam("a_no") int a_no, Model model) {
 		log.info("isApproval()");
 		
-		String nextPage = "account/admin_list_form";
-		
 		accountService.isApproval(a_no);
 		
-		return nextPage;
+		return PagePath.ACCOUNT_ADMIN_LIST_FORM.getValue();
 	
 	}
 	
@@ -288,11 +278,9 @@ public class AccountController {
 			Model model) {
 		log.info("accessDeniedPage()");
 		
-		String nextPage = "account/access_denied_page";
-		
 		model.addAttribute("isLogined", isLogined);
 		
-		return nextPage;
+		return PagePath.ACCOUNT_ACCESS_DENIED_PAGE.getValue();
 	
 	}
 	

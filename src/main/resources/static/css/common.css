@@ -45,17 +45,16 @@
     --sideMenuWidth: 270px;
     --signFormWidth: 340px;
     --iconsWidth: 20px;
-    --bigIconsWidth: 65px;
+    --bigIconsWidth: 45px;
+    --profileThumbWidth: 65px;
     --smallThumbWidth: 30px;
     --arrowWidth: 5px; /* X2 (5px = 10px) */
     --arrowButtonWidth: 15px;
     --contentSubThumbWidth: 200px;
-    --modalWidth: 320px;
     
     --headerHeight: 70px;
-    --tableTextareaHeight: 400px;
+    --tableTextareaHeight: 150px;
     --contentThumbHeight: 350px;
-    --modalHeight: 450px;
     --borderTextareaHeight: 100px;
 
     --innerPadding: 50px;
@@ -228,8 +227,10 @@ table {
 /* colgroup */
 .col_checkBox { width: 50px; }
 .col_no { width: 70px; }
+.col_state { width: 120px; }
 .col_default { width: 20%; }
 .col_short { width: 13%; }
+.col_long { width: 35%; }
 .col_row_title { width: 15%; }
 
 /* accessibility */

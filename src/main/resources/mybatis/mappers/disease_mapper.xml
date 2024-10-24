@@ -294,7 +294,7 @@
 		AND 
 			D.D_CATEGORY_NO = #{dc_no} 
 		ORDER BY 
-			D_NO DESC 
+			${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 	

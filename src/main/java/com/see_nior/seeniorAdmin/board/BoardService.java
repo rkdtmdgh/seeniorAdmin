@@ -563,6 +563,60 @@ public class BoardService {
 		
 	}
 	
+	// 페이지 번호에 따른 검색한 게시물 리스트들 가져오기
+	public Map<String, Object> getSearchPostsListWithPage(int bc_no, String searchPart, String searchString, int page) {
+		log.info("getSearchPostsListWithPage()");
+		
+		int pagingStart = (page - 1) * pageLimit;
+		
+		Map<String, Object> pagingList = new HashMap<>();
+		
+		Map<String, Object> pagingParams = new HashMap<>();
+		pagingParams.put("start", pagingStart);
+		pagingParams.put("limit", pageLimit);
+		pagingParams.put("bc_no", bc_no);
+		pagingParams.put("searchPart", searchPart);
+		pagingParams.put("searchString", searchString);
+		
+		List<DiseaseDto> searchBoardPostsDtos = boardMapper.getSearchBoardPosts(pagingParams);
+		pagingList.put("boardPostsDtos", searchBoardPostsDtos);
+		
+		return pagingList;
+	}
+	
+	// 검색 게시물 총 페이지 개수 가져오기
+	public Map<String, Object> getSearchPostsListPageNum(String searchPart, String searchString, int page) {
+		
+		Map<String, Object> searchDiseaseListPageNum = new HashMap<>();
+		
+		Map<String, Object> pagingParams = new HashMap<>();
+		pagingParams.put("searchPart", searchPart);
+		pagingParams.put("searchString", searchString);
+		
+		// 전체 리스트 개수 조회
+		int searchBoardPostsListCnt = boardMapper.getSearchBoardPostsListCnt(pagingParams);
+		
+		// 전체 페이지 개수 계산
+		int maxPage = (int) (Math.ceil((double) searchBoardPostsListCnt / pageLimit));
+		
+		// 시작 페이지 값 계산
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
+		
+		// 마지막 페이지 값 계산
+		int endPage = startPage + blockLimit - 1;
+		if (endPage > maxPage) endPage = maxPage;
+		
+		searchDiseaseListPageNum.put("searchBoardPostsListCnt", searchBoardPostsListCnt);
+		searchDiseaseListPageNum.put("page", page);
+		searchDiseaseListPageNum.put("maxPage", maxPage);
+		searchDiseaseListPageNum.put("startPage", startPage);
+		searchDiseaseListPageNum.put("endPage", endPage);
+		searchDiseaseListPageNum.put("blockLimit", blockLimit);
+		searchDiseaseListPageNum.put("pageLimit", pageLimit);
+		
+		return searchDiseaseListPageNum;
+	}
+	
 
 	
 

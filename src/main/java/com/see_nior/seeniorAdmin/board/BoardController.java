@@ -347,4 +347,50 @@ public class BoardController {
 		return nextPage;
 	}
 	
+	//게시물 검색
+	@GetMapping("/info/search_posts_list")
+	@ResponseBody
+	public Object searchPostsList(
+			@RequestParam(value = "bc_no", required = false, defaultValue = "1") int bc_no,
+			@RequestParam(value = "searchPart") String searchPart,
+			@RequestParam(value = "searchString") String searchString,
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("searchPostsList()");
+		
+		log.info("searchPart: {}",searchPart);
+		log.info("searchString: {}",searchString);
+		log.info("page: {}",page);
+		
+		// 페이지 번호에 따른 검색한 게시물 리스트들 가져오기
+		Map<String, Object> searchBoardPostsListWithPage = boardService.getSearchPostsListWithPage(bc_no, searchPart, searchString, page);
+				
+		// 검색 게시물 총 페이지 개수 가져오기
+		Map<String, Object> searchBoardPostsListPageNum = boardService.getSearchPostsListPageNum(searchPart, searchString, page);
+				
+		searchBoardPostsListWithPage.put("searchBoardPostsListPageNum", searchBoardPostsListPageNum);
+		searchBoardPostsListWithPage.put("searchPart", searchPart);
+		searchBoardPostsListWithPage.put("searchString", searchString);
+		
+		return searchBoardPostsListWithPage;
+	}
+	
+	
+	//특정 게시물 수정 요청
+	@PostMapping("/info/modify_confirm")
+	@ResponseBody
+	public boolean modifyConfirm(BoardPostsDto boardPostsDto, 
+								@RequestParam(value = "files" , required = false) List<MultipartFile> files) {
+		log.info("modifyConfirm()");
+		
+		//file 첨부가 되어 있는지 확인
+		if(files != null && files.size() != 0 && files.get(0).getSize() != 0) {
+			log.info("files in value!!");
+		}else {
+			log.info("files in empty!!");
+		}
+				
+		return true;
+	}
+	
+	
 }

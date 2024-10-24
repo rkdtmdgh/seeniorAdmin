@@ -7,7 +7,7 @@
     <th:block th:insert="~{fragments/head.html :: head('회원 정보')}"></th:block>
     <script th:inline="javascript">
 		$(function() {
-			logger.info('u_is_blocked:', /*[[${userAccountDto.u_is_blocked}]]*/);
+			logger.info('userAccountDto:', /*[[${userAccountDto}]]*/);
         });
 	</script>
 </head>
@@ -61,10 +61,10 @@
 		                                			<input type="text" name="u_id" class="table_info" disabled
 		                                				th:value="${userAccountDto.u_id}">
 		                                		
-		                                			<div class="btns small" th:classappend="${userAccountDto.u_is_blocked == true ? 'white' : 'delete'}"
-		                                				th:text="${userAccountDto.u_is_blocked == true ? '정상' : '정지'}"
-		                                				onclick="openModal('user_account_modify_form', 'putUserAccountBlockModify');"
-		                                			></div>
+		                                			<div th:if="${userAccountDto.u_is_blocked == true}" class="btns small white"
+		                                				onclick="openModal('user_account_modify_form', 'putUserAccountBlockModify', '#u_blocked_reason');">정상</div>
+	                                				<div th:if="${userAccountDto.u_is_blocked == false}" class="btns small delete"
+		                                				onclick="putUserAccountBlockModify('user_account_modify_form', true);">정지</div>
 		                                        </div>
                                 			</td>
                                 			
@@ -73,6 +73,15 @@
 		                                        <input type="text" class="table_info" disabled
 		                                            th:value="${userAccountDto.u_reg_date}">
 		                                    </td>
+                                		</tr>
+                                		
+                                		<tr th:if="${userAccountDto.u_is_blocked == false}">
+											<th><p class="table_title">정지 사유</p></th>
+											<td colspan="3">
+                               					<textarea rows="1" name="u_blocked_reason" id="u_blocked_reason" class="table_textarea small" placeholder='정지 사유'
+		                                    		oninput="setTextareaAutoHeight(this)" 
+		                                    		th:text="${userAccountDto.u_blocked_reason}"></textarea>
+											</td>                                		
                                 		</tr>
                                 		
                                 		<tr>
@@ -127,13 +136,13 @@
 		                                    <th><p class="table_title">우편번호</p></th>
 		                                    <td>
 		                                    	<div class="cont_info disabled">
-		                                			<input type="text" name="u_zip_code" id="u_zip_code" class="table_info" placeholder="우편번호 5자리"
+		                                			<input type="text" name="u_zip_code" id="zip_code" class="table_info" placeholder="우편번호 5자리"
 		                                				maxlength="5"
 		                                				onkeyup="replaceNumber(this)"
 		                                				onblur="validateEmpty(this, '우편번호를')"
 		                                				th:value="${userAccountDto.u_zip_code}">
 		                                		
-		                                			<div class="btns small">주소 검색</div>
+		                                			<div onclick="searchPostcode('user_account_modify_form');" class="btns small">주소 검색</div>
 		                                        </div>
 		                                    </td>	
 		                                </tr>
@@ -157,7 +166,7 @@
 		                                    
 		                                    <th><p class="table_title">주소</p></th>
 		                                    <td>
-		                                    	<input type="text" name="u_address" id="u_address" class="table_info" placeholder="주소"
+		                                    	<input type="text" name="u_address" id="address" class="table_info" placeholder="주소"
 		                                				onblur="validateEmpty(this, '주소를')"
 		                                				th:value="${userAccountDto.u_address}">
 		                                    </td>	
@@ -177,7 +186,7 @@
 		                                    
 		                                    <th><p class="table_title">상세주소</p></th>
 		                                    <td>
-		                                    	<input type="text" name="u_detailed_address" id="u_detailed_address" class="table_info" placeholder="상세주소"
+		                                    	<input type="text" name="u_detailed_address" id="detailed_address" class="table_info" placeholder="상세주소"
 		                                				onblur="validateEmpty(this, '상세주소를')"
 		                                				th:value="${userAccountDto.u_detailed_address}">
 		                                    </td>	

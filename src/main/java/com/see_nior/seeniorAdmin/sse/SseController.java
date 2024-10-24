@@ -21,8 +21,6 @@ public class SseController {
 	public SseEmitter subscribe(@PathVariable(value = "a_id") long a_id) {
 		log.info("subscribe()");
 		
-		SseEmitter emitter = new SseEmitter();
-		
 		return sseService.subcribe(a_id);
 	}
 	

@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.see_nior.seeniorAdmin.account.mapper.AccountMapper;
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
+import com.see_nior.seeniorAdmin.enums.AdminSighUpStatus;
+import com.see_nior.seeniorAdmin.enums.SqlResult;
+import com.see_nior.seeniorAdmin.util.PagingUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -17,16 +20,6 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 @Service
 public class AccountService {
-	
-	final static public int ADMIN_ALREADY = -1;
-	final static public int ADMIN_SIGN_UP_FAIL = 0;
-	final static public int ADMIN_SIGN_UP_SUCCESS = 1;
-	
-	final static public boolean ADMIN_MODIFY_SUCCESS = true;
-	final static public boolean ADMIN_MODIFY_FAIL = false;
-	
-	private int pageLimit = 10;		// 한 페이지당 보여줄 정보 수
-	private int blockLimit = 5;		// 하단에 보여질 페이지 번호 수
 	
 	final private AccountMapper accountMapper;
 	final private PasswordEncoder passwordEncoder;
@@ -55,9 +48,9 @@ public class AccountService {
 				int result = accountMapper.insertNewAdmin(adminAccountDto);
 				
 				if (result <= 0) {
-					return ADMIN_SIGN_UP_FAIL;
+					return AdminSighUpStatus.FAIL.getValue();
 				} else {
-					return ADMIN_SIGN_UP_SUCCESS;
+					return AdminSighUpStatus.SUCCESS.getValue();
 				}
 				
 			} else {
@@ -67,15 +60,15 @@ public class AccountService {
 				int result = accountMapper.insertNewAdmin(adminAccountDto);
 				
 				if (result <= 0) {
-					return ADMIN_SIGN_UP_FAIL;
+					return AdminSighUpStatus.FAIL.getValue();
 				} else {
-					return ADMIN_SIGN_UP_SUCCESS;
+					return AdminSighUpStatus.SUCCESS.getValue();
 				}
 				
 			}
 			
 		} else {
-			return ADMIN_ALREADY;
+			return AdminSighUpStatus.ALREADY.getValue();
 		}
 		
 	}
@@ -116,11 +109,11 @@ public class AccountService {
 		
 		if (modifyResult >= 0) {
 			
-			return ADMIN_MODIFY_SUCCESS;
+			return SqlResult.SUCCESS.getValue();
 			
 		} else {
 			
-			return ADMIN_MODIFY_FAIL;
+			return SqlResult.FAIL.getValue();
 			
 		}
 		
@@ -134,9 +127,9 @@ public class AccountService {
 				accountMapper.updateAdminInfoFromSuper(adminAccountDto);
 		
 		if (result >= 0)
-			return true;
+			return SqlResult.SUCCESS.getValue();
 		else 
-			return false;
+			return SqlResult.FAIL.getValue();
 		
 	}
 	
@@ -148,26 +141,19 @@ public class AccountService {
 				accountMapper.updateAdminIsDeletedByNo(a_no);
 		
 		if (result >= 0) 
-			return true;
+			return SqlResult.SUCCESS.getValue();
 		else
-			return false;
+			return SqlResult.FAIL.getValue();
 	}
 	
 	// 관리자 리스트 가져오기
 	public Map<String, Object> getAdminPagingList(String sortValue, String order, int page) {
 		log.info("getAdminList()");
 		
-		int pagingStart = (page - 1) * pageLimit;	
-		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		Map<String, Object> pagingParams = new HashMap<>();
-		pagingParams.put("start", pagingStart);
-		pagingParams.put("limit", pageLimit);
-		pagingParams.put("sortValue", sortValue);
-		pagingParams.put("order", order);
-
-		List<AdminAccountDto> adminAccountDtos = accountMapper.selectAdminList(pagingParams);
+		List<AdminAccountDto> adminAccountDtos = 
+				accountMapper.selectAdminList(PagingUtil.pagingParams(sortValue, order, page));
 		pagingList.put("adminAccountDtos", adminAccountDtos);
 		
 		return pagingList;
@@ -177,49 +163,20 @@ public class AccountService {
 	public Map<String, Object> getAdminListPageNum(int page) {
 		log.info("getAccountListPageNum()");
 		
-		Map<String, Object> accountListPageNum = new HashMap<>();
-		
 		// 전체 리스트 개수 조회 
 		int accountListCnt = accountMapper.selectAllAccountListCnt();
-
-		// 전체 페이지 개수 계산
-		int maxPage = (int) (Math.ceil((double) accountListCnt / pageLimit));
 		
-		// 시작 페이지 값 계산
-		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
-		
-		// 마지막 페이지 값 계산
-		int endPage = startPage + blockLimit - 1;
-		if (endPage > maxPage) endPage = maxPage;
-		
-		accountListPageNum.put("accountListCnt", accountListCnt);
-		accountListPageNum.put("page", page);
-		accountListPageNum.put("maxPage", maxPage);
-		accountListPageNum.put("startPage", startPage);
-		accountListPageNum.put("endPage", endPage);
-		accountListPageNum.put("blockLimit", blockLimit);
-		accountListPageNum.put("pageLimit", pageLimit);
-		
-		return accountListPageNum;
+		return PagingUtil.pageNum("accountListCnt", accountListCnt, page);
 	}
 	
 	// 관리자 검색 리스트 가져오기
 	public Map<String, Object> searchAdminPagingList(String searchPart, String searchString, String sortValue, String order, int page) {
 		log.info("searchAdminPagingList()");
 		
-		int pagingStart = (page - 1) * pageLimit;
-		
 		Map<String, Object> pagingSearchList = new HashMap<>();
-		
-		Map<String, Object> pagingParams = new HashMap<>();
-		pagingParams.put("start", pagingStart);
-		pagingParams.put("limit", pageLimit);
-		pagingParams.put("sortValue", sortValue);
-		pagingParams.put("order", order);
-		pagingParams.put("searchPart", searchPart);
-		pagingParams.put("searchString", searchString);
 
-		List<AdminAccountDto> adminAccountDtos = accountMapper.selectSearchAdminList(pagingParams);
+		List<AdminAccountDto> adminAccountDtos = 
+				accountMapper.selectSearchAdminList(PagingUtil.searchPagingParams(searchPart, searchString, sortValue, order, page));
 		pagingSearchList.put("adminAccountDtos", adminAccountDtos);
 		
 		return pagingSearchList;
@@ -229,34 +186,14 @@ public class AccountService {
 	public Map<String, Object> searchAdminListPageNum(String searchPart, String searchString, int page) {
 		log.info("searchAdminListPageNum()");
 		
-		Map<String, Object> searchAdminListPageNum = new HashMap<>();
-		
 		Map<String, Object> searchParams = new HashMap<>();
 		searchParams.put("searchPart", searchPart);
 		searchParams.put("searchString", searchString);
 		
 		// 전체 리스트 개수 조회 
 		int searchAdminListCnt = accountMapper.selectSearchAdminListCnt(searchParams);
-
-		// 전체 페이지 개수 계산
-		int maxPage = (int) (Math.ceil((double) searchAdminListCnt / pageLimit));
 		
-		// 시작 페이지 값 계산
-		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
-		
-		// 마지막 페이지 값 계산
-		int endPage = startPage + blockLimit - 1;
-		if (endPage > maxPage) endPage = maxPage;
-		
-		searchAdminListPageNum.put("searchAdminListCnt", searchAdminListCnt);
-		searchAdminListPageNum.put("page", page);
-		searchAdminListPageNum.put("maxPage", maxPage);
-		searchAdminListPageNum.put("startPage", startPage);
-		searchAdminListPageNum.put("endPage", endPage);
-		searchAdminListPageNum.put("blockLimit", blockLimit);
-		searchAdminListPageNum.put("pageLimit", pageLimit);
-		
-		return searchAdminListPageNum;
+		return PagingUtil.pageNum("searchAdminListCnt", searchAdminListCnt, page);
 	}
 	
 	// 관리자 가입 승인
@@ -283,9 +220,9 @@ public class AccountService {
 				accountMapper.updateAdminPwReset(adminAccountDto);
 		
 		if (result >= 0)
-			return true;
+			return SqlResult.SUCCESS.getValue();
 		else 
-			return false;
+			return SqlResult.FAIL.getValue();
 		
 	}
 

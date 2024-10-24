@@ -294,7 +294,7 @@ public class RecipeService {
 	}
 	
 	// 페이지에 따른 식단 가져오기(카테고리별 식단)
-	public Map<String, Object> getRecipeListByTypeWithPage(int page, String rcp_pat2) {
+	public Map<String, Object> getRecipeListByTypeWithPage(int page, String sortValue, String order, String rcp_pat2) {
 		log.info("getRecipeListByTypeWithPage()");
 		
 		int pagingStart = (page - 1) * pageLimit;
@@ -304,6 +304,8 @@ public class RecipeService {
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("start", pagingStart);
 		pagingParams.put("limit", pageLimit);
+		pagingParams.put("sortValue", sortValue);
+		pagingParams.put("order", order);
 		pagingParams.put("rcp_pat2", rcp_pat2);
 		
 		List<RecipeDto> recipeDtos = recipeMapper.getRecipeListByTypeWithPage(pagingParams);

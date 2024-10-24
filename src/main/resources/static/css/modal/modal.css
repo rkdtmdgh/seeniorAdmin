@@ -1,16 +1,21 @@
-.dimmed_wrap {
+/* basic modal */
+.fixed_wrap {
 	width: 100%;
 	height: 100%;
-	background-color: var(--dimmedBgColor);
 	position: fixed;
 	top: 0;
 	left: 0;
 	z-index: 3;
 }
 
+.dimmed_wrap {
+	width: 100%;
+	height: 100%;
+	background-color: var(--dimmedBgColor);
+	display: none;
+}
+
 .modal_wrap {
-	width: max-content;
-	max-height: var(--modalHeight);
 	position: fixed;
 	top: 50%;
 	left: 50%;
@@ -19,12 +24,16 @@
 	
 	.modal_container {
 		width: max-content;
-		height: max-content;
-		background-color: var(--subBgColor);
-		padding: var(--signFormInnerPadding);
+		max-height: 600px;
 		border-radius: var(--bdrs);
 		border: 1px solid var(--middleGrayColor);
 		box-shadow: var(--bxsh);
+		margin-top: 70px;		
+		padding: 0.5em;
+		background-color: var(--subBgColor);
+		visibility: hidden;
+		opacity: 0;
+		transition: margin-top var(--transition), opacity var(--transition);
 		
 		.modal_title {
 			display: flex;
@@ -43,10 +52,14 @@
 		}
 		
 		.modal_info{
-			width: var(--modalWidth);
+			min-width: 320px;
+			max-width: 500px;
+			padding: 1.7em;
 			display: flex;
 			flex-direction: column;
 			gap: var(--baseGap);
+			box-sizing: content-box;
+			position: relative;
 			
 			.modal_info_list {
 				font-size: var(--subFontSize);
@@ -54,4 +67,16 @@
 			}
 		}
 	}
+}
+
+/* postcode modal */
+.postcode_info {
+	width: 400px;
+	padding: 1.7em 0.5em 0.5em;
+	box-sizing: content-box;
+	position: relative;
+}
+
+#postcode_modal {
+	height: 500px;
 }

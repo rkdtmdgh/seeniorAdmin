@@ -5,6 +5,17 @@
    
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('광고 분류 수정')}"></th:block>
+	<script type="text/javascript">
+		$(async function() {
+			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
+			
+			switch(sortType) {
+				case '1': // select
+					await getList('/advertisement/cate_info/get_advertisement_list_by_category', 'ad_idx', 'asc', page);
+					break;
+			}
+        });
+	</script>
 </head>
 
 <body>
@@ -27,7 +38,7 @@
 					    <form name="advertisement_category_modify_form">					    	
                       		<input type="hidden" name="ac_no" th:value="${advertisementCategoryDto.ac_no}">
                       		
-						    <div class="table_wrap">
+						    <div class="table_wrap mb_stepGap">
 		                        <table class="content_edit_table">
 		                            <colgroup>
 	                                    <col class="col_row_title">
@@ -45,11 +56,23 @@
 		                                			th:value="${advertisementCategoryDto.ac_name}">
 	                                        </td>
 	                                        
-	                                        <th><p class="table_title">참고 사항</p></th>
+		                                	<th><p class="table_title">등록일 / 수정일</p></th>
+	                                        <td class="disabled">
+	                                        	<p class="table_date_info">
+	                                        		<span th:text="${advertisementCategoryDto.ac_reg_date}"></span>
+	                                        		<span th:text="${advertisementCategoryDto.ac_mod_date}"></span>
+	                                        	</p>
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">참고 사항</p></th>
 		                                	<td>
 		                                		<input type="text" name="ac_note" id="ac_note" class="table_info" placeholder="참고 사항"
 		                                			th:value="${advertisementCategoryDto.ac_note}">
 	                                        </td>
+	                                        
+	                                        <td colspan="2"></td>
 		                                </tr>
 		                            </tbody>
 		                        </table>
@@ -71,6 +94,54 @@
 	                            </div>
 		                    </div>
 	                    </form>
+	                    
+	                    <div class="content_top">
+				            <p class="sub_title">광고</p>
+					    </div>
+					    
+					    <div class="table_wrap">
+	                        <table class="content_table advertisement_list_table">
+	                            <colgroup>
+	                                <col class="col_no">
+	                                <col class="col_no">
+	                                <col>
+	                                <col>
+	                                <col>
+	                            </colgroup>
+	
+	                            <thead>
+	                                <tr>
+	                                    <th></th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">순번</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">클라이언트</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">시작일</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">종료일</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                    	<p class="table_title">등록일</p>
+	                                    </th>
+	                                </tr>
+	                            </thead>
+	
+	                            <tbody>
+	                                <!-- 리스트 테이블 -->
+	                            </tbody>
+	                        </table>
+	                        
+	                        <div class="pagination_wrap"></div>
+	                    </div>
 					</section>
                 </div>
             </div>
