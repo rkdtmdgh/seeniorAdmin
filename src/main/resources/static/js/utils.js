@@ -2,13 +2,13 @@
 const urlParams = new URLSearchParams(window.location.search);
 
 // input focus
-function setInputFocus(ele) {
-	const $input = $(`input[name="${ele}"]`);
+function setInputFocus(name) {
+	const $input = $(`input[name="${name}"]`);
 	if ($input.length) {
 		$input.focus();
 		
 	} else {
-		logger.info(`No input found with name: ${ele}`);
+		logger.info(`No input found with name: ${name}`);
 	}
 }
 
@@ -336,8 +336,8 @@ function setFormValuesFromUrl() {
 	
 	// 검색어가 있을 경우 검색 폼 사용으로 새로고침 시 재적용
 	if(sortType === '2') { // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
-		$sForm.find('select[name="search_part"]').val(searchPart)
-		$sForm.find('input[name="search_string"]').val(searchString);
+		$sForm.find('select[name="searchPart"]').val(searchPart)
+		$sForm.find('input[name="searchString"]').val(searchString);
 	}
 	
 	return { sortType, sortValue, order, page };

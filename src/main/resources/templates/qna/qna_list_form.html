@@ -39,8 +39,9 @@
 					            <h2 class="title">질문과 답변</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/qna/info/search_qna_list')" 
-										th:insert="~{fragments/search.html :: search('질문과 답변')}"></form>
+									<form name="search_form" onsubmit="getSearchList(event, '/qna/info/search_qna_list')">
+										<th:block th:insert="~{fragments/search.html :: search('질문과 답변')}"></th:block>
+									</form>
 						            
 						            <div class="btn_list">
 						            	<div class="btns small" onclick="getList('/qna/info/get_qna_list', null, null, 1);">전체보기</div>

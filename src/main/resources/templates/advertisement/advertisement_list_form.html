@@ -47,8 +47,9 @@
 					            <h2 class="title">광고 관리</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/advertisement/info/search_advertisement_list')" 
-										th:insert="~{fragments/search.html :: search('광고 관리')}"></form>
+									<form name="search_form" onsubmit="getSearchList(event, '/advertisement/info/search_advertisement_list')">
+										<th:block th:insert="~{fragments/search.html :: search('광고 관리')}"></th:block>
+									</form>
 						            
 						            <div class="btn_list">
 						            	<div class="btns small" onclick="getList('/advertisement/info/get_advertisement_list', null, null, 1);">전체보기</div>

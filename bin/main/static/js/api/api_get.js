@@ -75,7 +75,6 @@ async function getListProcess(apiUrl, sortValue, order, page) {
 
 // 검색 리스트 요청
 async function getSearchListProcess(event, apiUrl, page) {
-	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
 		if(event) event.preventDefault();
 		const form = document.forms['search_form'];
 		let input;
@@ -92,21 +91,24 @@ async function getSearchListProcess(event, apiUrl, page) {
 			return false;
 		}
 		
+	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
 		if(apiUrl) {
 			setAllcheck(); // all_check 체크박스 초기화
 			
-			const infoNo = urlParams.get('infoNo') || undefined;
-		
-			let intPage = page || 1;
-			logger.info('searchForm() searchPart:', form.search_part.value);
-			logger.info('searchForm() searchString:', input.value.trim());
+			const formData = new FormData(form); // form에 모든 정보 가져오기
+			const params = new URLSearchParams(); // URL 쿼리 파라미터 생성
 			
-			let params = `?searchPart=${encodeURIComponent(form.search_part.value)}&searchString=${encodeURIComponent(input.value.trim())}&page=${intPage}`;
-			if(infoNo) params = `${params}&infoNo=${infoNo}`;
+			formData.forEach((value, key) => { // formData의 모든 값을 쿼리 파라미터에 추가
+				params.append(key, value);
+			});
+			
+			params.append('page', page || 1);
+			
+			logger.info('search params:', params.toString());
 					
 			try {
 				const response = await $.ajax({
-					url: apiUrl + params,
+					url: `${apiUrl}?${params.toString()}`,
 					method: 'GET',
 				});
 				
