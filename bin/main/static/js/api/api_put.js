@@ -43,6 +43,7 @@ async function putOrderModifyProcess(event, idx, page) {
     const current_idx = infoEle.getAttribute('data-idx'); 
     
     // 카테고리 분류 내 순번 수정이 필요한 경우 분류 no값 추출하여 추가 전송
+    const urlParams = new URLSearchParams(window.location.search);
 	const infoNo = urlParams.get('infoNo') || undefined; // 쿼리스트링에 infoNo값 추출
     
     const config = mapOrderModifyObject(name, page); // 요청에 필요한 객체
@@ -69,14 +70,14 @@ async function putOrderModifyProcess(event, idx, page) {
 				contentType: false,  // FormData를 문자열로 변환하지 않음
 			});
 			
-			logger.info(`${config.orderModifyApiURL} putOrderModifyButton() response:`, response);
+			logger.info(`${config.orderModifyApiURL} putOrderModify() response:`, response);
 			
 			if(!response) {
 				if(errorMessage) alert(errorMessage);
 			}
 			
 		} catch(error) {
-			logger.error(`${config.orderModifyApiURL} putOrderModifyButton() error:`, error);
+			logger.error(`${config.orderModifyApiURL} putOrderModify() error:`, error);
 			if(errorMessage) alert(errorMessage);
 			
 		} finally {

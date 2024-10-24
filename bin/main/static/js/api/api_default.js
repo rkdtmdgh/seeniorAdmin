@@ -70,7 +70,9 @@ function navActiveToggle() {
 		
 		const $navSubMenuList = $navMenu.find('.side_sub_menu_list'); // 서브 메뉴 리스트
 		if($navSubMenuList.length) { // 서브 메뉴가 있는 경우
-			const currentParam = urlParams.get('infoNo'); // 카테고리 구분이 필요할 경우 비교할 값
+			// 카테고리 구분이 필요할 경우 비교할 값
+			const urlParams = new URLSearchParams(window.location.search);
+			const currentParam = urlParams.get('infoNo'); 
 		
 			const $navSubMenus = $navSubMenuList.find('.side_sub_menu_btn'); // 서브 메뉴 리스트 포함된 모든 서브 메뉴
 			$navSubMenus.each(function() {
