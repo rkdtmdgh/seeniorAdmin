@@ -39,13 +39,12 @@
 					            <h2 class="title">질문과 답변</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/qna/info/search_qna_list')" 
-										th:insert="~{fragments/search.html :: search('질문과 답변')}"></form>
+									<form name="search_form" onsubmit="getSearchList(event, '/qna/info/search_qna_list')">
+										<th:block th:insert="~{fragments/search.html :: search('질문과 답변')}"></th:block>
+									</form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/qna/info/get_qna_list', null, null, 1);">전체보기</div>
-						            	<div class="btns small delete" onclick="delListData('bq_no', true)">삭제</div>
-						            	<a href="/qna/info/create_form" class="btns small">공지사항 등록</a>
+						            	<div class="btns small" onclick="getList('/qna/info/get_qna_list', null, null, 1, true);">전체보기</div>
 						            </div>
 					            </div>
 					        </div>
@@ -54,23 +53,26 @@
 					    <div class="table_wrap">
 	                        <table class="content_table qna_list_table">
 	                            <colgroup>
-	                                <col class="col_checkBox">
 	                                <col class="col_no">
-	                                <col>
+	                                <col class="col_state">
+	                                <col class="col_long">
 	                                <col>
 	                                <col>
 	                                <col>
 	                            </colgroup>
 	
 	                            <thead>
-	                                <tr>
-	                                	<th>
-	                                		<div class="table_title"><input type="checkbox" name="all_check" id="all_check" 
-	                                			onchange="setAllCheckBox(this)" value="bq_no" ></div>	                                        
+	                                <tr>	                                    
+	                                    <th>
+	                                        <p class="table_title">No</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">No</p>
+	                                    	<p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'board_qna', 'bq_state')">
+	                                        	답변
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
 	                                    </th>
 	                                    
 	                                    <th>
@@ -78,19 +80,23 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">답변</p>
-	                                    </th>
-	                                    
-	                                    <th>
 	                                        <p class="table_title">작성자</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">등록일(reg_date)</p>
+	                                    	<p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'board_qna', 'bq_reg_date')">
+	                                        	등록일
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">수정일(mod_date)</p>
+	                                    	<p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'board_qna', 'bq_mod_date')">
+	                                        	수정일
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
 	                                    </th>
 	                                </tr>
 	                            </thead>

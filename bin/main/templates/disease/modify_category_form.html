@@ -46,10 +46,22 @@
 		                                			th:value="${diseaseCategoryDto.dc_name}">
 	                                        </td>
 	                                        
+	                                        <th><p class="table_title">등록일 / 수정일</p></th>
+	                                        <td class="disabled">
+	                                        	<p class="table_date_info">
+	                                        		<span th:text="${diseaseCategoryDto.dc_reg_date}"></span>
+	                                        		<span th:text="${diseaseCategoryDto.dc_mod_date}"></span>
+	                                        	</p>
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>	                                        
 	                                        <th><p class="table_title">질환 / 질병 수</p></th>
 	                                        <td>
 	                                        	<input type="text" class="table_info" th:value="${diseaseCategoryDto.dc_item_cnt}" disabled>
 	                                        </td>
+	                                        
+	                                        <td colspan="2"></td>
 		                                </tr>
 		                            </tbody>
 		                        </table>

@@ -47,7 +47,17 @@
 		                                			th:value="${boardCategoryDtoForModify.bc_name}">
 	                                        </td>
 	                                        
-	                                        <th><p class="table_title">순번</p></th>
+		                                	<th><p class="table_title">등록일 / 수정일</p></th>
+	                                        <td class="disabled">
+	                                        	<p class="table_date_info">
+	                                        		<span th:text="${boardCategoryDtoForModify.bc_reg_date}"></span>
+	                                        		<span th:text="${boardCategoryDtoForModify.bc_mod_date}"></span>
+	                                        	</p>
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">순번</p></th>
 		                                	<td>
 		                                		<input type="number" name="bc_idx" id="bc_idx" class="table_info" placeholder="순번"
 		                                			min="1" th:max="${boardCategoryIdxMaxNum}" 

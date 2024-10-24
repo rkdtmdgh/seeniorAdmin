@@ -50,9 +50,19 @@
 		                                    <td>
 		                                        <select class="table_info select d_category_no_select" name="d_category_no" id="d_category_no"></select>
 		                                    </td>
-		
-		                                    <th><p class="table_title">질환 / 질병명</p></th>
-		                                    <td>
+		                                    
+		                                    <th><p class="table_title">등록일 / 수정일</p></th>
+	                                        <td class="disabled">
+	                                        	<p class="table_date_info">
+	                                        		<span th:text="${diseaseDto.d_reg_date}"></span>
+	                                        		<span th:text="${diseaseDto.d_mod_date}"></span>
+	                                        	</p>
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">질환 / 질병명</p></th>
+		                                    <td colspan="3">
 		                                        <input type="text" name="d_name" id="d_name" class="table_info" placeholder="질환 / 질병명"
 		                                            th:onblur="requestDuplicateCheck(this, true, [[${diseaseDto.d_name}]], null);"
 		                                            th:value="${diseaseDto.d_name}">
@@ -83,6 +93,7 @@
 		                                    <th><p class="table_title">질환 / 질병 정보</p></th>
 		                                    <td colspan="3">
 		                                        <textarea name="d_info" id="d_info" class="table_textarea" data-current-size="textarea" placeholder="내용을 입력하세요"
+		                                        	onkeydown="setTextareaAutoHeight(this)"
 		                                        	oninput="setTextLimit(this, 'info')"
 		                                        	onblur="validateEmpty(this, '내용을')"
 	                                            	th:text="${diseaseDto.d_info}"></textarea>

@@ -5,7 +5,7 @@
 
 <th:block th:fragment="search(option)">
 	<div class="search_input_inner">
-		<select name="search_part" class="search_part">
+		<select name="searchPart" class="search_part">
 			<th:block th:if="${option == '관리자 계정 관리'}">
 				<option value="a_id" selected>아이디</option>
 				<option value="a_name">이름</option>
@@ -38,26 +38,26 @@
 			
 			<th:block th:if="${option == '공지 사항'}">
 				<option value="n_title" selected>제목</option>
-				<option value="n_writer_no">작성자</option>
+				<option value="n_writer_id">작성자</option>
+			</th:block>
+			
+			<th:block th:if="${option == '게시판 공지 사항'}">
+				<option value="bn_title" selected>제목</option>
+				<option value="bn_writer_id" selected>작성자</option>
 			</th:block>
 			
 			<th:block th:if="${option == '질문과 답변'}">
 				<option value="bq_title" selected>제목</option>
-				<option value="bq_user_no">작성자</option>
+				<option value="bq_user_id">작성자</option>
 			</th:block>
 			
 			<th:block th:if="${option == '게시판 관리'}">
 				<option value="bc_name" selected>분류명</option>
 			</th:block>
 			
-			<th:block th:if="${option == '게시판 공지 사항'}">
-				<option value="bn_title" selected>제목</option>
-				<option value="bn_writer_no" selected>작성자</option>
-			</th:block>
-			
 			<th:block th:if="${option == '게시판'}">
 				<option value="bp_title" selected>제목</option>
-				<option value="bp_writer_no">작성자</option>
+				<option value="bp_writer_id">작성자</option>
 			</th:block>
 			
 			<th:block th:if="${option == '광고 분류 관리'}">
@@ -70,7 +70,7 @@
 		</select>
 		
 		<label for="search_string" class="search_input">
-			<input type="text" name="search_string" id="search_string" class="search_string" placeholder="검색">
+			<input type="text" name="searchString" id="search_string" class="search_string" placeholder="검색">
 			<button type="submit" class="func_icon">
 				<svg aria-label="검색" fill="none" class="stroke" x="0px" y="0px" viewBox="0 0 27 27" enable-background="new 0 0 27 27">
 					<circle stroke-width="1.35" stroke-miterlimit="10" cx="12.133" cy="12.133" r="11.339"></circle>

@@ -53,6 +53,16 @@
 		                                </tr>
 		                                
 		                                <tr>
+		                                	<th><p class="table_title">등록일 / 수정일</p></th>
+	                                        <td colspan="3" class="disabled">
+	                                        	<p class="table_date_info">
+	                                        		<span th:text="${boardPostsDto.bp_reg_date}"></span>
+	                                        		<span th:text="${boardPostsDto.bp_mod_date}"></span>
+	                                        	</p>
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>
 		                                	<th><p class="table_title">작성자 아이디</p></th>
 		                                	<td class="disabled">
 	                                			<input type="text" class="table_info" disabled
@@ -73,20 +83,6 @@
                                 						:
                                 							boardPostsDto.userAccountDto.u_name	+ ' (' + boardPostsDto.userAccountDto.u_nickname + ')'
 	                                				}">
-	                                        </td>
-		                                </tr>
-		                                
-		                                <tr>
-	                                        <th><p class="table_title">등록일</p></th>
-		                                	<td class="disabled">
-		                                		<input type="text" class="table_info" disabled
-		                                			th:value="${boardPostsDto.bp_reg_date}">
-	                                        </td>
-	                                        
-	                                        <th><p class="table_title">수정일</p></th>
-		                                	<td class="disabled">
-		                                		<input type="text" class="table_info" disabled
-		                                			th:value="${boardPostsDto.bp_mod_date}">
 	                                        </td>
 		                                </tr>
 		                                

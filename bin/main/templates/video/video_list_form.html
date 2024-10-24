@@ -43,11 +43,12 @@
 					            <h2 class="title">영상 정보 관리</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/video/info/search_video_list')" 
-										th:insert="~{fragments/search.html :: search('영상 정보 관리')}"></form>
+									<form name="search_form" onsubmit="getSearchList(event, '/video/info/search_video_list')">
+										<th:block th:insert="~{fragments/search.html :: search('영상 정보 관리')}"></th:block>
+									</form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/video/info/get_video_list', null, null, 1);">전체보기</div>
+						            	<div class="btns small" onclick="getList('/video/info/get_video_list', null, null, 1, true);">전체보기</div>
 						            	<div class="btns small delete" onclick="delListData('v_no', true)">삭제</div>
 						            	<a href="/video/info/create_form" class="btns small">등록</a>
 						            </div>

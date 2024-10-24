@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
 import com.see_nior.seeniorAdmin.dto.BoardPostsDto;
 import com.see_nior.seeniorAdmin.dto.DiseaseCategoryDto;
+import com.see_nior.seeniorAdmin.dto.DiseaseDto;
 
 @Mapper
 public interface BoardMapper {
@@ -57,6 +58,10 @@ public interface BoardMapper {
 	int subBoardCategoryIdxForDelete(BoardCategoryDto boardCategoryDto);
 
 	List<BoardPostsDto> modifyForm(int bp_no);
+
+	List<DiseaseDto> getSearchBoardPosts(Map<String, Object> pagingParams);
+
+	int getSearchBoardPostsListCnt(Map<String, Object> pagingParams);
 
 	
 
