@@ -354,6 +354,9 @@ CREATE TABLE BOARD_QNA (
 	BQ_BODY			TEXT NOT NULL COMMENT "Q&A 본문",									-- Q&A 본문
 	BQ_USER_NO		INT NOT NULL COMMENT "Q&A 작성자 NO(USER_ACCOUNT TABLE PK)",			-- Q&A 작성자 NO(USER_ACCOUNT TABLE PK)
 	BQ_STATE		TINYINT DEFAULT 1 COMMENT "Q&A 답변 여부(기본값 = 1, 답변 완료 = 0)",		-- Q&A 답변 여부(기본값 = 1, 답변 완료 = 0)
+    BQ_ANSWER		TEXT COMMENT "Q&A 답변 내용",											-- Q&A 답변 내용
+	BQ_ANSWER_ID	VARCHAR(100) COMMENT "Q&A 답변 작성자 ID",								-- Q&A 답변 작성자 ID
+    BQ_ANSWER_DATE 	DATETIME DEFAULT NOW() COMMENT "Q&A 답변일",							-- Q&A 답변일
 	BQ_IS_DELETED	TINYINT DEFAULT 1 COMMENT "Q&A 삭제 여부(기본값 = 1, 삭제 시 = 0)",		-- Q&A 삭제 여부(기본값 = 1, 삭제 시 = 0)
 	BQ_REG_DATE		DATETIME DEFAULT NOW() COMMENT "Q&A 등록일",							-- Q&A 등록일
 	BQ_MOD_DATE		DATETIME DEFAULT NOW() COMMENT "Q&A 수정일",							-- Q&A 수정일
