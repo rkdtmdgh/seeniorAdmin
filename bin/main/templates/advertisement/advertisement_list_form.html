@@ -27,7 +27,7 @@
 			}
 
 			// advertisement category 가져오기
-			await getCategoryList('ac_name'); // element id, form 종류, selectedValue
+			await getCategoryList('ad_category_no'); // element id, form 종류, selectedValue
         });
 	</script>
 </head>
@@ -52,7 +52,7 @@
 									</form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/advertisement/info/get_advertisement_list', null, null, 1);">전체보기</div>
+						            	<div class="btns small" onclick="getList('/advertisement/info/get_advertisement_list', null, null, 1, true);">전체보기</div>
 						            	<a href="/advertisement/info/create_form" class="btns small">등록</a>
 						            </div>
 					            </div>
@@ -77,7 +77,7 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <div class="table_title select ac_name_select" id="ac_name" onclick="setSelectOptionTopggle(event)">분류</div>
+	                                        <div class="table_title select ad_category_no_select" id="ad_category_no" onclick="setSelectOptionTopggle(event)">분류</div>
 	                                    </th>
 	                                    
 	                                    <th>

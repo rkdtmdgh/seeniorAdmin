@@ -1,6 +1,3 @@
-// 쿼리스트링 변수 전역 선언
-const urlParams = new URLSearchParams(window.location.search);
-
 // input focus
 function setInputFocus(name) {
 	const $input = $(`input[name="${name}"]`);
@@ -326,6 +323,7 @@ function setFormatDate(dateString) { // yyyy-mm-dd 형식
 
 // 검색 폼 데이터인지, 정렬된 데이터인지 확인하여 초기화
 function setFormValuesFromUrl() {
+	const urlParams = new URLSearchParams(window.location.search);
     const $sForm = $('form[name="search_form"]');
 	const searchPart = urlParams.get('searchPart') || undefined;
     const searchString = urlParams.get('searchString') || '';
