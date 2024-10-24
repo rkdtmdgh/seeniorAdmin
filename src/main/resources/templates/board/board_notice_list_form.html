@@ -46,8 +46,9 @@
 					            <h2 class="title categoty_title">게시판 공지 사항</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/board/noti_info/search_board_notice_list')" 
-										th:insert="~{fragments/search.html :: search('게시판 공지 사항')}"></form>
+									<form name="search_form" onsubmit="getSearchList(event, '/board/noti_info/search_board_notice_list')">
+										<th:block th:insert="~{fragments/search.html :: search('게시판 공지 사항')}"></th:block>
+									</form>
 						            
 						            <div class="btn_list">
 						            	<div class="btns small" onclick="getList('/board/noti_info/get_board_notice_list', null, null, 1);">전체보기</div>
