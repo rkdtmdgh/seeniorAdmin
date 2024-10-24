@@ -546,6 +546,28 @@
     }
 }
 
+.table_date_info {
+	display: flex;
+	align-items: center;
+	padding: var(--textPadding);
+	color: var(--grayColor);
+	
+	span {
+		&::after {
+			content: '';
+			display: inline-block;
+			width: 1px;
+			height: var(--ssize3);
+			background-color: var(--lightGrayColor);
+			margin: 0 var(--ssize3);
+		}
+		
+		&:last-child::after {
+			display: none;
+		}
+	}
+}
+
 .content_edit_table {
     th, td {
         border-right: 1px solid var(--lightGrayColor);
@@ -840,7 +862,7 @@
 }
 
 .flex {
-	display: flex;
+	display: flex !important;
 }
 
 .disabled {

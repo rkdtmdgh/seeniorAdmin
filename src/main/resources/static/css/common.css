@@ -227,6 +227,7 @@ table {
 /* colgroup */
 .col_checkBox { width: 50px; }
 .col_no { width: 70px; }
+.col_state { width: 120px; }
 .col_default { width: 20%; }
 .col_short { width: 13%; }
 .col_long { width: 35%; }

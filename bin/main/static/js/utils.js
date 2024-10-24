@@ -245,7 +245,6 @@ function setSessionIdentityCheck(loginUser) {
 		sessionStorage.removeItem('checkDate');
 		alert('세션이 만료되었습니다. 다시 확인해 주세요.');
 		return false;
-		
 	}
 	
 	return true;
@@ -319,6 +318,13 @@ function setFormatDate(dateString) { // yyyy-mm-dd 형식
     const month = ('0' + (date.getMonth() + 1)).slice(-2); // 월은 0부터 시작하므로 +1
     const day = ('0' + date.getDate()).slice(-2);
     return `${year}-${month}-${day}`;
+}
+
+// 쿼리 파라미터 제거
+function setDelQueryString() {
+	const url = new URL(window.location); // 현재 url
+	url.search = ''; // 파라미터 비우기
+	window.history.replaceState({}, '', url); // 브라우저 URL 업데이트
 }
 
 // 검색 폼 데이터인지, 정렬된 데이터인지 확인하여 초기화
@@ -480,8 +486,16 @@ function setAccountModifyForm(data) {
                         		<input type="text" name="a_id" id="id" class="table_info disabled"
                                 	value="${data.a_id}" disabled>
                             </td>
+                            
+                            <th><p class="table_title">가입일</p></th>
+                        	<td class="disabled">
+                        		<input type="text" name="a_red_date" id="a_red_date" class="table_info disabled"
+                                	value="${data.a_reg_date}" disabled>
+                            </td>
+                        </tr>
 
-                            <th><p class="table_title">비밀번호</p></th>
+                        <tr>
+                        	<th><p class="table_title">비밀번호</p></th>
                         	<td>
                         		<label class="cont_info">
                         			<input type="password" name="a_pw" id="pw" class="table_info" placeholder="변경 시 입력" autocomplete="off">
@@ -490,58 +504,60 @@ function setAccountModifyForm(data) {
 			                        </span>
                         		</label>
                             </td>
-                        </tr>
-
-                        <tr>
+                            
                         	<th><p class="table_title">이름</p></th>
                         	<td>
                                 <input type="text" name="a_name" id="name" class="table_info" placeholder="이름"
                                 	oninput="validateEmpty(this, '이름을')" onblur="validateEmpty(this, '이름을')"
                                 	value="${data.a_name}">
                             </td>
+                        </tr>
 
+                        <tr>
                         	<th><p class="table_title">생년월일</p></th>
                         	<td>
                                 <input type="date" name="a_birth" id="birth" min="1900-01-01" max="9999-12-31" class="table_info"
                                 	onblur="replaceDate(this)"
                                 	value="${data.a_birth}">
                             </td>
-                        </tr>
-
-                        <tr>
+                            
                         	<th><p class="table_title">연락처</p></th>
                         	<td>
                                 <input type="text" name="a_phone" id="phone" maxlength="13" class="table_info" placeholder="연락처"
                                 	onkeydown="replacePhone(this)" onkeyup="validatePhone(this)" onblur="validatePhone(this)"
                                 	value="${data.a_phone}">
                             </td>
-                            
-                            ${data.a_authority_role != 'SUPER_ADMIN' ? 
-                            	`
-                            	<th><p class="table_title">부서</p></th>
-		                        	<td class="disabled">
-		                                <input type="text" class="table_info" placeholder="부서"
-		                                	value="${data.a_department || ''}" disabled>
-		                            </td>
-		                        </tr>
-		
-		                        <tr>
-		                        	<th><p class="table_title">직위</p></th>
-		                        	<td class="disabled">
-		                                <input type="text" class="table_info" placeholder="직위"
-		                                	value="${data.a_level || ''}" disabled>
-		                            </td>
-		                        	<th><p class="table_title">직책</p></th>
-		                        	<td class="disabled">
-		                                <input type="text" class="table_info" placeholder="직책"
-		                                	value="${data.a_position || ''}" disabled>
-		                            </td>
-                            	` 
-                        	: 
-                            	'<td colspan="2"></td>'
-                            }
-                        	
                         </tr>
+                        
+						${data.a_authority_role != 'SUPER_ADMIN' ? 
+            				`
+                        	<tr>
+                            	<th><p class="table_title">부서</p></th>
+	                        	<td class="disabled">
+	                                <input type="text" class="table_info" placeholder="부서"
+	                                	value="${data.a_department || ''}" disabled>
+	                            </td>
+	                            
+	                            <th><p class="table_title">직위</p></th>
+	                        	<td class="disabled">
+	                                <input type="text" class="table_info" placeholder="직위"
+	                                	value="${data.a_level || ''}" disabled>
+	                            </td>
+	                        </tr>
+		
+	                        <tr>
+	                        	<th><p class="table_title">직책</p></th>
+	                        	<td class="disabled">
+	                                <input type="text" class="table_info" placeholder="직책"
+	                                	value="${data.a_position || ''}" disabled>
+	                            </td>
+	                            
+	                            <td colspan="2"></td>
+                            </tr>
+                        		` 
+                        	: 
+                            	''
+						}						
                     </tbody>
                 </table>
 
