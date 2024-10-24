@@ -30,7 +30,8 @@ public class QnaService {
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		List<AdminAccountDto> qnaDtos = qnaMapper.selectQnaList(PagingUtil.pagingParams(sortValue, order, page));
+		List<AdminAccountDto> qnaDtos = 
+				qnaMapper.selectQnaList(PagingUtil.pagingParams(sortValue, order, page));
 		pagingList.put("qnaDtos", qnaDtos);
 		
 		return pagingList;
