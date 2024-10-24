@@ -85,19 +85,21 @@ public class RecipeController {
 	@GetMapping("info/get_recipe_list_by_type")
 	public Object getRecipeListByType(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-			@RequestParam(value = "sortValue", required = false, defaultValue = "all") String sortValue,
-			@RequestParam(value = "order") String rcp_pat2) {
+			@RequestParam(value = "sortValue", required = false, defaultValue = "rcp_seq") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
+			@RequestParam(value = "infoNo") String rcp_pat2) {
 		log.info("getRecipeListByType()");
 		
 		// 페이지 번호에 따른 카테고리별 식단 리스트들 가져오기
-		Map<String, Object> recipeListByTypeWithPage = recipeService.getRecipeListByTypeWithPage(page, rcp_pat2);
+		Map<String, Object> recipeListByTypeWithPage = recipeService.getRecipeListByTypeWithPage(page, sortValue, order, rcp_pat2);
 		
 		// 카테고리별 식단 총 페이지 개수 가져오기
 		Map<String, Object> recipeListByTypePageNum = recipeService.getRecipeListByTypePageNum(page, rcp_pat2);
 		
 		recipeListByTypeWithPage.put("recipeListByTypePageNum", recipeListByTypePageNum);
 		recipeListByTypeWithPage.put("sortValue", sortValue);
-		recipeListByTypeWithPage.put("order", rcp_pat2);
+		recipeListByTypeWithPage.put("order", order);
+		recipeListByTypeWithPage.put("infoNo", rcp_pat2);
 		
 		return recipeListByTypeWithPage;
 		

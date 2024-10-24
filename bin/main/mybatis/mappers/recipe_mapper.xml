@@ -248,7 +248,7 @@
 		WHERE 
 			RCP_PAT2 = #{rcp_pat2} 
 		ORDER BY 
-			RCP_SEQ DESC 
+			${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 	
