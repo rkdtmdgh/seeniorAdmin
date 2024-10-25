@@ -602,9 +602,6 @@ async function putPostsModify(formName) {
 		});
 	}
 	
-	const isFalse = true;
-	if(isFalse) return;
-	
 	await putIntegSubmit(
 		'/board/info/modify_confirm',
 		formData,
