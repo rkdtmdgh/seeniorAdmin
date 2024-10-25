@@ -162,7 +162,7 @@ public class QnaController {
 ////////////////////////// 공지사항 	
 
 	// qna 공지사항 리스트 양식
-	@GetMapping("/info/notice_list_form")
+	@GetMapping("/noti_info/notice_list_form")
 	public String qnaNoticeListForm() {
 		log.info("qnaNoticeListForm()");
 		
@@ -171,7 +171,7 @@ public class QnaController {
 	}
 	
 	// qna 공지사항 리스트 가져오기
-	@GetMapping("/info/get_notice_list")
+	@GetMapping("/noti_info/get_notice_list")
 	@ResponseBody
 	public Object getNoticeList(
 			@RequestParam(value = "sortValue", required = false, defaultValue = "bqn_no") String sortValue,
@@ -194,9 +194,9 @@ public class QnaController {
 	
 	
 	// qna 공지사항 등록 양식
-	@GetMapping("/info/notice_create_form")
-	public String noticeCreateForm() {
-		log.info("noticeCreateForm()");
+	@GetMapping("/noti_info/create_notice_form")
+	public String createNoticeForm() {
+		log.info("createNoticeForm()");
 		
 		return PagePath.QNA_NOTICE_CREATE_FORM.getValue();
 		
