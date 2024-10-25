@@ -50,7 +50,7 @@
 	                                        <th><p class="table_title">제목</p></th>
 		                                	<td th:classappend="${
 				                               		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
-				                               		(boardPostsDto.bp_account == 'admin' and boardPostsDto.adminAccountDto.a_id !=  #authentication.name) ?
+				                               		(boardPostsDto.bp_account == 'admin' and boardPostsDto.adminAccountDto.a_id != #authentication.name) ?
 				                               		'disabled' : ''
 			                                	}"
 		                                		colspan="3">
