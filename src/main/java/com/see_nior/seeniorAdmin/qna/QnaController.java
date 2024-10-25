@@ -29,6 +29,8 @@ public class QnaController {
 
 	final private QnaService qnaService;
 	
+	// QnaDto 컬럼 추가에 따른 로직 수정. 
+	
 	// qna 리스트 양식 
 	@GetMapping("/info/qna_list_form")
 	public String qnaListForm() {
@@ -169,6 +171,7 @@ public class QnaController {
 	// qna 공지사항 수정 확인
 	
 	// qna 공지사항 삭제 확인
+	
 	
 	
 	
