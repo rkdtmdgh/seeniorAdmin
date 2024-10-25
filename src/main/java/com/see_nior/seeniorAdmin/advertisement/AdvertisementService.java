@@ -355,12 +355,14 @@ public class AdvertisementService {
 		advertisementDto.setAd_img(savedFileName);
 		
 		// 선택한 광고 위치의 maxIdx값 가져오기
-		int AdvertisementMaxIdx = advertisementMapper.getAdvertisementIdxMaxNumByCategory(advertisementDto.getAd_category_no());
+		Integer advertisementMaxIdx = advertisementMapper.getAdvertisementIdxMaxNumByCategory(advertisementDto.getAd_category_no());
+		
+		if(advertisementMaxIdx == null) advertisementMaxIdx = 0;
 		
 		try {
 			
 			// idx값을 중간값으로 입력 시 나머지 idx들 +1 처리 하기
-			if (advertisementDto.getAd_idx() <= AdvertisementMaxIdx) {
+			if (advertisementDto.getAd_idx() <= advertisementMaxIdx) {
 				
 				Map<String, Object> updateIdxSumParams = new HashMap<>();
 				
