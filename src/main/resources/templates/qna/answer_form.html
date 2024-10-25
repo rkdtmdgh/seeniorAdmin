@@ -7,7 +7,9 @@
     <th:block th:insert="~{fragments/head.html :: head('질문과 답변')}"></th:block>
     <script th:inline="javascript">
     	const qnaDto = /*[[${qnaDto}]]*/
-    	logger.info('qnaDto:', qnaDto);
+    	const qnaAnswerDto = /*[[${qnaAnswerDto}]]*/
+    	logger.info('qnaDto:', /*[[${qnaDto}]]*/);
+    	logger.info('qnaAnswerDto:', /*[[${qnaAnswerDto}]]*/);
     </script>
 </head>
 
@@ -30,6 +32,8 @@
 	
 	                    <form name="disease_modify_form">
 		                    <input type="hidden" name="bq_no" th:value="${qnaDto.bq_no}">
+		                    <input type="hidden" name="bqa_no" th:value="${qnaAnswerDto.bqa_no}">
+		                    <input type="hidden" name="bqa_answer_a_no" th:value="${qnaAnswerDto.bqa_answer_a_no}">
 		                    
 	                        <div class="table_wrap">
 	                            <table class="content_edit_table">
@@ -82,12 +86,13 @@
 		                                <tr>
 		                                	<th><p class="table_title">답변</p></th>
 		                                	<td colspan="3">
-		                                        <textarea name="bqa_answer" id="bqa_answer" class="table_textarea" 
-		                                        	placeholder="내용을 입력하세요"
-		                                        	data-current-size="textarea"
-		                                        	onkeydown="setTextareaAutoHeight(this)"
-		                                        	oninput="setTextLimit(this, 'short')"
-		                                        	th:text="${qnaAnswerDtos.bqa_answer}"></textarea>
+		                                		<textarea name="bqa_answer" id="bqa_answer" class="table_textarea" placeholder="내용을 입력하세요"
+	                                				data-limit-target="textarea" 
+	                                				data-limit="short" 
+	                                				onkeyup="setTextareaAutoHeight(this)" 
+	                                				oninput="setTextLimit(this)"
+	                                				onblur="validateEmpty(this, '답변을')"
+	                                				th:text="${qnaAnswerDtos.bqa_answer}"></textarea>
                                             	<div id="text_limit">
 	                                				<span id="current_size"></span> / <span id="max_size"></span>
 	                                			</div>
@@ -98,11 +103,13 @@
 	
                                 <div class="btn_list">
                                 	<div th:if="${qnaDto.bq_no} != null" class="btns delete"
-		                        		 th:onclick="delListData('bq_no')">삭제</div>
+		                        		 th:onclick="delListData('bq_no')">질문 삭제</div>
 		                        		 
                                 	<div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <a href="javascript: history.back();" class="btns">답변 등록</a>
+	                                    <div th:if="${qnaAnswerDto.bqa_no} != null" class="btns delete"
+		                        		 th:onclick="delListData('bqa_no')">답변 삭제</div>
+	                                    <div onclick="putVideoModify('video_modify_form')" class="btns">답변 등록</div>
 	                                </div>
                                 </div>
 	                        </div>

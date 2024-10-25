@@ -7,6 +7,8 @@
     <th:block th:insert="~{fragments/head.html :: head('게시물 수정')}"></th:block>
     <script th:inline="javascript">
 		$(function() {
+	    	logger.info('boardPostsDto:', /*[[${boardPostsDto}]]*/);
+			
 			// 타이틀 설정
 			setBoardTitle(/*[[${infoNo}]]*/);
         });
@@ -32,6 +34,7 @@
 	
 	                    <form name="posts_modify_form">
 		                    <input type="hidden" name="bp_no" th:value="${boardPostsDto.bp_no}">
+		                    <input type="hidden" name="bp_dir_name" th:value="${boardPostsDto.bp_dir_name}">
 		                    
 	                        <div class="table_wrap">
 	                            <table class="content_edit_table">
