@@ -195,9 +195,14 @@
 		
 		SELECT 
 			BQ.*, 
+			BQC.*, 
 			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
 		FROM 
 			BOARD_QNA BQ 
+		JOIN 
+			BOARD_QNA_CATEGORY BQC 
+		ON 
+			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
 		JOIN 
 			USER_ACCOUNT U 
 		ON 
