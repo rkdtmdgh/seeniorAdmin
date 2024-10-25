@@ -150,15 +150,27 @@ public class QnaService {
 	}
 
 	// qna 답변 수정 확인
-	public boolean answerModifyConfirm(int bqa_no, String bqa_answer) {
+	public boolean answerModifyConfirm(String a_id, String loginedId, int bqa_no, String bqa_answer) {
 		log.info("answerModifyConfirm()");
 		
-		int result = qnaMapper.updateQnaAnswer(bqa_no, bqa_answer);
+		AdminAccountDto adminAccountDto =
+				accountMapper.selectAdminAccountById(a_id);
 		
-		if(result >= 0)
-			return SqlResult.SUCCESS.getValue();
-		else 
+		if ((adminAccountDto != null && adminAccountDto.getA_authority_role().equals("SUPER_ADMIN")) 
+				|| a_id.equals(loginedId)) {
+			
+			int result = qnaMapper.updateQnaAnswer(bqa_no, bqa_answer);
+			
+			if(result >= 0)
+				return SqlResult.SUCCESS.getValue();
+			else 
+				return SqlResult.FAIL.getValue();
+			
+		} else {
+			
 			return SqlResult.FAIL.getValue();
+			
+		}
 
 	}
 
@@ -184,6 +196,14 @@ public class QnaService {
 		int qnaNoticeListCnt = qnaMapper.selectAllQnaNoticeListCnt();
 		
 		return PagingUtil.pageNum("qnaNoticeListCnt", qnaNoticeListCnt, page);
+		
+	}
+
+	// qna 카테고리명 중복 확인
+	public boolean isQnaCategory(String bqc_name) {
+		log.info("isQnaCategory()");
+		
+		return qnaMapper.isQnaCategory(bqc_name);
 		
 	}
 

@@ -118,10 +118,49 @@ public class QnaController {
 			Principal principal) {
 		log.info("answerModifyConfirm()");
 		
-		return qnaService.answerModifyConfirm(bqa_no, bqa_answer);
+		return qnaService.answerModifyConfirm(a_id, principal.getName(), bqa_no, bqa_answer);
 		
 	}
 	
+////////////////////////// 카테고리 
+	
+	// qna 카테고리 등록 양식
+	@GetMapping("/cate_info/create_category_form")
+	public String createCategoryForm() {
+		log.info("createCategoryForm()");
+		
+		return PagePath.QNA_CREATE_CATEGORY_FORM.getValue();
+		
+	}
+	
+	// qna 카테고리명 중복 확인
+	@GetMapping("/cate_info/is_qna_category")
+	public boolean isQnaCategory(@RequestParam("bqc_name") String bqc_name) {
+		log.info("isQnaCategory()");
+		
+		return qnaService.isQnaCategory(bqc_name);
+		
+	}
+	
+	// qna 카테고리 등록 확인
+	
+	// qna 카테고리 수정 양식
+	
+	// qna 카테고리 수정 확인
+	
+	// qna 카테고리 삭제 확인
+	
+	// qna 카테고리 리스트 양식
+	
+	// qna 카테고리 모든 리스트 가져오기
+	
+	// qna 카테고리 선택 리스트 가져오기 (select box) 
+	
+	// qna 카테고리 검색 리스트 가져오기 
+	
+	
+////////////////////////// 공지사항 	
+
 	// qna 공지사항 리스트 양식
 	@GetMapping("/info/notice_list_form")
 	public String qnaNoticeListForm() {

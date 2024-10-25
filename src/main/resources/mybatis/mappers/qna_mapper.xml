@@ -195,7 +195,7 @@
 		
 		SELECT 
 			BQ.*, 
-			U.U_NO, U.U_NAME, U.U_NICKNAME 
+			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
 		FROM 
 			BOARD_QNA BQ 
 		JOIN 
@@ -303,5 +303,17 @@
 	
 	</select>
 	
+	<!-- qna 카테고리명 중복 확인 -->
+	<select id="isQnaCategory"
+			resultType="boolean">
+		
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_QNA_CATEGORY 
+		WHERE 
+			BQC_NAME = #{bqc_name} 
+	
+	</select>
 	
 </mapper>
