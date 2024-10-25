@@ -50,17 +50,6 @@
 		<result column="u_mod_date" property="u_mod_date"/>
 	</resultMap>
 	
-	<resultMap type="QnaDto" id="QnaDto">
-		<id column="bq_no" property="bq_no"/>
-		<result column="bq_title" property="bq_title"/>
-		<result column="bq_body" property="bq_body"/>
-		<result column="bq_state" property="bq_state"/>
-		<result column="bq_is_deleted" property="bq_is_deleted"/>
-		<result column="bq_reg_date" property="bq_reg_date"/>
-		<result column="bq_mod_date" property="bq_mod_date"/>
-		<collection property="userAccountDto" resultMap="UserAccountDto"/>
-	</resultMap>
-	
 	<resultMap type="QnaAnswerDto" id="QnaAnswerDto">
 		<id column="bqa_no" property="bqa_no"/>
 		<result column="bqa_answer" property="bqa_answer"/>
@@ -69,6 +58,20 @@
 		<result column="bqa_mod_date" property="bqa_mod_date"/>
 		<collection property="qnaDto"  resultMap="QnaDto"/>
 		<collection property="adminAccountDto" resultMap="AdminAccountDto"/>
+	</resultMap>
+	
+	<resultMap type="QnaDto" id="QnaDto">
+		<id column="bq_no" property="bq_no"/>
+		<result column="bq_category_no" property="bq_category_no"/>
+		<result column="bq_title" property="bq_title"/>
+		<result column="bq_body" property="bq_body"/>
+		<result column="bq_view_cnt" property="bq_view_cnt"/>
+		<result column="bq_state" property="bq_state"/>
+		<result column="bq_is_deleted" property="bq_is_deleted"/>
+		<result column="bq_reg_date" property="bq_reg_date"/>
+		<result column="bq_mod_date" property="bq_mod_date"/>
+		<collection property="qnaAnswerDto" resultMap="QnaAnswerDto"/>
+		<collection property="userAccountDto" resultMap="UserAccountDto"/>
 	</resultMap>
 	
 	<resultMap type="QnaNoticeDto" id="QnaNoticeDto">
