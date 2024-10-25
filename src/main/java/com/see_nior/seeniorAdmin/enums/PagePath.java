@@ -19,6 +19,7 @@ public enum PagePath {
 	VIDEO_MODIFY_FORM("video/modify_form"),
 	
 	QNA_LIST_FORM("qna/qna_list_form"),
+	QNA_CREATE_CATEGORY_FORM("qna/create_category_form"),
 	QNA_NOTICE_LIST_FORM("qna/notice_list_form"),
 	QNA_NOTICE_CREATE_FORM("qna/notice_create_form"),
 	QNA_ANSWER_FORM("qna/answer_form");
