@@ -598,7 +598,7 @@ async function putPostsModify(formName) {
 		
 		deletedImageSrcs.forEach((src) => {
 			const filename = src.split('/').pop(); // src에서 파일명만 추출
-			formData.append('deleteFilesNames', filename);
+			formData.append('deleteFileNames', filename);
 		});
 	}
 	
