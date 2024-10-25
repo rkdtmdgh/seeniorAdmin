@@ -1,5 +1,6 @@
 package com.see_nior.seeniorAdmin.qna;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -150,15 +151,27 @@ public class QnaService {
 	}
 
 	// qna 답변 수정 확인
-	public boolean answerModifyConfirm(int bqa_no, String bqa_answer) {
+	public boolean answerModifyConfirm(String a_id, String loginedId, int bqa_no, String bqa_answer) {
 		log.info("answerModifyConfirm()");
 		
-		int result = qnaMapper.updateQnaAnswer(bqa_no, bqa_answer);
+		AdminAccountDto adminAccountDto =
+				accountMapper.selectAdminAccountById(a_id);
 		
-		if(result >= 0)
-			return SqlResult.SUCCESS.getValue();
-		else 
+		if ((adminAccountDto != null && adminAccountDto.getA_authority_role().equals("SUPER_ADMIN")) 
+				|| a_id.equals(loginedId)) {
+			
+			int result = qnaMapper.updateQnaAnswer(bqa_no, bqa_answer);
+			
+			if(result >= 0)
+				return SqlResult.SUCCESS.getValue();
+			else 
+				return SqlResult.FAIL.getValue();
+			
+		} else {
+			
 			return SqlResult.FAIL.getValue();
+			
+		}
 
 	}
 

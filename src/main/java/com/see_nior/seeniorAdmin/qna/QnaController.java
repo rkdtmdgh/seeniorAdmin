@@ -118,7 +118,7 @@ public class QnaController {
 			Principal principal) {
 		log.info("answerModifyConfirm()");
 		
-		return qnaService.answerModifyConfirm(bqa_no, bqa_answer);
+		return qnaService.answerModifyConfirm(a_id, principal.getName(), bqa_no, bqa_answer);
 		
 	}
 	
