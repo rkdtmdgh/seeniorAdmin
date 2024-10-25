@@ -7,8 +7,8 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.see_nior.seeniorAdmin.account.mapper.AccountMapper;
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
-import com.see_nior.seeniorAdmin.dto.QnaAnswerDto;
 import com.see_nior.seeniorAdmin.dto.QnaDto;
 import com.see_nior.seeniorAdmin.enums.SqlResult;
 import com.see_nior.seeniorAdmin.qna.mapper.QnaMapper;
@@ -23,6 +23,7 @@ import lombok.extern.log4j.Log4j2;
 public class QnaService {
 
 	final private QnaMapper qnaMapper;
+	final private AccountMapper accountMapper;
 	
 	// qna 리스트 가져오기
 	public Map<String, Object> getQnaPagingList(String sortValue, String order, int page) {
@@ -95,46 +96,57 @@ public class QnaService {
 		
 	}
 	
-	// qna answers 가져오기 by bq_no
-	public List<QnaAnswerDto> getQnaAnswerInfosByBqNo(int bq_no) {
-		log.info("getQnaAnswerInfosByBqNo()");
-		
-		return qnaMapper.selectQnaAnswerInfosByBqNo(bq_no);
-	}
-
 	// qna 답변 확인
 	@Transactional
 	public boolean qnaAnswerConfirm(int bq_no, String bqa_answer, String a_id) {
 		log.info("qnaAnswerConfirm()");
 		
-		Map<String, Object> params = new HashMap<>();
-		params.put("bq_no", bq_no);
-		params.put("bqa_answer", bqa_answer);
-		params.put("a_id", a_id);
+		AdminAccountDto adminAccountDto = 
+				accountMapper.selectAdminAccountById(a_id);
 		
+		Map<String, Object> insertParams = new HashMap<>();
+		insertParams.put("bqa_answer", bqa_answer);
+		insertParams.put("a_id", a_id);
+		insertParams.put("a_no", adminAccountDto.getA_no());
+
 		try {
 			
-			int insertResult = qnaMapper.insertQnaAnswer(params);
+			int insertResult = qnaMapper.insertNewAnswer(insertParams);
 			
 			if (insertResult >= 0) {
-				int updateResult = qnaMapper.updateQnaState(bq_no);
+				
+				int bqa_no = qnaMapper.selectQnaAnswerLastNo();
+				
+				Map<String, Object> updateParams = new HashMap<>();
+				updateParams.put("bq_no", bq_no);
+				updateParams.put("bqa_no", bqa_no);
+				
+				int updateResult = 
+						qnaMapper.updateQnaStateByNo(updateParams);
 				
 				if (updateResult >= 0) {
+					
 					return SqlResult.SUCCESS.getValue();
+					
 				} else {
-					throw new RuntimeException("qnaAnswerConfirm() updateQnaState fail");
+					
+					throw new RuntimeException("updateQnaStateByNo() error!!");
+					
 				}
 				
 			} else {
-				return SqlResult.FAIL.getValue();
-			}			
+				
+				throw new RuntimeException("updateQnaStateByNo() error!!");
+				
+			}
 			
 		} catch (Exception e) {
-			log.info("qnaAnswerConfirm() Exception! ---- {}", e);
+			log.info("qnaAnswerConfirm Exception ------ {}", e);
 			
 			return SqlResult.FAIL.getValue();
-		}
 		
+		}
+
 	}
 
 	// qna 답변 수정 확인

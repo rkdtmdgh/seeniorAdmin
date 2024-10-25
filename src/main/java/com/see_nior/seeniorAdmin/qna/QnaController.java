@@ -91,8 +91,6 @@ public class QnaController {
 		QnaDto qnaDto = qnaService.getQnaInfoByNo(bq_no);
 		model.addAttribute("qnaDto", qnaDto);
 		
-		log.info("qnaDto ---- {}", qnaDto);
-		
 		return PagePath.QNA_ANSWER_FORM.getValue();
 		
 	}

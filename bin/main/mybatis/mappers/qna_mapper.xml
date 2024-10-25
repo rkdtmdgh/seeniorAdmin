@@ -204,7 +204,8 @@
 			BQ.BQ_USER_NO = U.U_NO 
 		LEFT JOIN 
 			BOARD_QNA_ANSWER BQA 
-		ON BQ.BQ_ANSWER_NO = BQA.BQA_NO 
+		ON 
+			BQ.BQ_ANSWER_NO = BQA.BQA_NO  
 		WHERE 
 			BQ.BQ_IS_DELETED = 1 
 		AND 
@@ -212,46 +213,45 @@
 	
 	</select>
 	
-	<!-- qna answers 가져오기 by bq_no -->
-	<select id="selectQnaAnswerInfosByBqNo"
-			resultMap="QnaAnswerDto">
-		
-		SELECT 
-			BQA.*, 
-			A.A_ID, A.A_NAME, A.A_PHONE, A.A_DEPARTMENT, A.A_LEVEL, A.A_POSITION
-		FROM 
-			BOARD_QNA_ANSWER BQA 
-		JOIN 
-			ADMIN_ACCOUNT A 
-		ON 
-			BQA.BQA_ADMIN_ID = A.A_ID 
-		WHERE 
-			BQA.BQA_QNA_NO = #{bq_no} 
-		AND 
-			BQA_IS_DELETED = 1 
-		
-	</select>
+	<!-- qna 답변 등록 확인 -->
+	<insert id="insertNewAnswer">
 	
-	
-	<!-- qna 답변 확인 -->
-	<insert id="insertQnaAnswer">
-		
 		INSERT INTO 
-			BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) 
-		VALUES (#{bq_no}, #{bqa_answer}, #{a_id}) 
-	
+			BOARD_QNA_ANSWER(
+				BQA_ANSWER, 
+				BQA_ANSWER_A_NO, 
+				BQA_ANSWER_A_ID 
+			)
+		VALUES(
+			#{bqa_answer}, 
+			#{a_no}, 
+			#{a_id}
+		)
+		
 	</insert>
 	
-	<!-- qna 답변 확인 후 state 업데이트 -->
-	<update id="updateQnaState">
-	
-		UPDATE 
+	<!-- qna answer 마지막 no 값 가져오기 -->
+	<select id="selectQnaAnswerLastNo"
+			resultType="int">
+		
+		SELECT 
+			MAX(BQA_NO) AS LAST_NO
+		FROM 
 			BOARD_QNA_ANSWER
+			
+	</select>
+	
+	<!-- qna 답변 완료 후 bq_state update -->
+	<update id="updateQnaStateByNo">
+		
+		UPDATE 
+			BOARD_QNA 
 		SET 
-			BQ_STATE = 0 
+			BQ_ANSWER_NO = #{bqa_no},
+			BQ_MOD_DATE = NOW() 
 		WHERE 
 			BQ_NO = #{bq_no} 
-		
+	
 	</update>
 	
 	<!-- qna 답변 수정 확인 -->
