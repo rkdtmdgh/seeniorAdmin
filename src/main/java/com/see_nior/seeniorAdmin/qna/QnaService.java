@@ -1,6 +1,5 @@
 package com.see_nior.seeniorAdmin.qna;
 
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -197,6 +196,14 @@ public class QnaService {
 		int qnaNoticeListCnt = qnaMapper.selectAllQnaNoticeListCnt();
 		
 		return PagingUtil.pageNum("qnaNoticeListCnt", qnaNoticeListCnt, page);
+		
+	}
+
+	// qna 카테고리명 중복 확인
+	public boolean isQnaCategory(String bqc_name) {
+		log.info("isQnaCategory()");
+		
+		return qnaMapper.isQnaCategory(bqc_name);
 		
 	}
 

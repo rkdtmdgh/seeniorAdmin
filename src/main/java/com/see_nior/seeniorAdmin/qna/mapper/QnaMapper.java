@@ -34,5 +34,7 @@ public interface QnaMapper {
 	public int selectQnaAnswerLastNo();
 
 	public int updateQnaStateByNo(Map<String, Object> updateParams);
+
+	public boolean isQnaCategory(String bqc_name);
 	
 }
