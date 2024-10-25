@@ -50,19 +50,27 @@
 		<result column="u_mod_date" property="u_mod_date"/>
 	</resultMap>
 	
+	<resultMap type="QnaCategoryDto" id="QnaCategoryDto">
+		<id column="bqc_no" property="bqc_no"/> 
+		<result column="bqc_name" property="bqc_name"/>
+		<result column="bqc_note" property="bqc_note"/>
+		<result column="bqc_is_deleted" property="bqc_is_deleted"/>
+		<result column="bqc_item_cnt" property="bqc_item_cnt"/>
+		<result column="bqc_reg_date" property="bqc_reg_date"/>
+		<result column="bqc_mod_date" property="bqc_mod_date"/>
+	</resultMap>
+	
 	<resultMap type="QnaAnswerDto" id="QnaAnswerDto">
 		<id column="bqa_no" property="bqa_no"/>
 		<result column="bqa_answer" property="bqa_answer"/>
 		<result column="bqa_is_deleted" property="bqa_is_deleted"/>
 		<result column="bqa_reg_date" property="bqa_reg_date"/>
 		<result column="bqa_mod_date" property="bqa_mod_date"/>
-		<collection property="qnaDto"  resultMap="QnaDto"/>
 		<collection property="adminAccountDto" resultMap="AdminAccountDto"/>
 	</resultMap>
 	
 	<resultMap type="QnaDto" id="QnaDto">
 		<id column="bq_no" property="bq_no"/>
-		<result column="bq_category_no" property="bq_category_no"/>
 		<result column="bq_title" property="bq_title"/>
 		<result column="bq_body" property="bq_body"/>
 		<result column="bq_view_cnt" property="bq_view_cnt"/>
@@ -70,6 +78,7 @@
 		<result column="bq_is_deleted" property="bq_is_deleted"/>
 		<result column="bq_reg_date" property="bq_reg_date"/>
 		<result column="bq_mod_date" property="bq_mod_date"/>
+		<collection property="qnaCategoryDto" resultMap="QnaCategoryDto"/>
 		<collection property="qnaAnswerDto" resultMap="QnaAnswerDto"/>
 		<collection property="userAccountDto" resultMap="UserAccountDto"/>
 	</resultMap>
@@ -92,17 +101,19 @@
 	
 		SELECT 
 			BQ.*, 
-			U.*  
+			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
 		FROM 
 			BOARD_QNA BQ 
 		JOIN 
+			BOARD_QNA_CATEGORY BQC 
+		ON 
+			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
+		LEFT JOIN 
 			USER_ACCOUNT U 
 		ON 
 			BQ.BQ_USER_NO = U.U_NO 
 		WHERE 
 			BQ.BQ_IS_DELETED = 1 
-		AND 
-			U.U_IS_DELETED = 1 
 		ORDER BY 
 			${sortValue} ${order} 
 		LIMIT 
@@ -147,13 +158,11 @@
 		FROM 
 			BOARD_QNA BQ 
 		JOIN 
-			USER_ACCOUNT A 
+			USER_ACCOUNT U  
 		ON 
 			BQ.BQ_USER_NO = U.U_NO 
 		WHERE 
 			BQ.BQ_IS_DELETED = 1 
-		AND 
-			U.U_IS_DELETED = 1 
 		<if test="searchPart != null and searchString != null">
 			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%') 
 		</if>
@@ -185,17 +194,19 @@
 			resultMap="QnaDto">
 		
 		SELECT 
-			* 
+			BQ.* 
+			U.U_NO, U.U_NAME, U.U_NICKNAME 
 		FROM 
 			BOARD_QNA BQ 
 		JOIN 
 			USER_ACCOUNT U 
 		ON 
 			BQ.BQ_USER_NO = U.U_NO 
+		LEFT JOIN 
+			BOARD_QNA_ANSWER BQA 
+		ON BQ.BQ_ANSWER_NO = BQA.BQA_NO 
 		WHERE 
 			BQ.BQ_IS_DELETED = 1 
-		AND 
-			U.U_IS_DELETED = 1 
 		AND 
 			BQ.BQ_NO = #{bq_no} 
 	
