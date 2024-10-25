@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 public class QnaDto {
 
 	private int bq_no;
-	private int bq_category_no;
 	private String bq_title;
 	private String bq_body;
 	private int bq_view_cnt;
@@ -18,6 +17,8 @@ public class QnaDto {
 	private boolean bq_is_deleted;
 	private String bq_reg_date;
 	private String bq_mod_date;
+	
+	private QnaCategoryDto qnaCategoryDto;
 	
 	private QnaAnswerDto qnaAnswerDto;
 	

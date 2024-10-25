@@ -7,7 +7,6 @@
     <th:block th:insert="~{fragments/head.html :: head('질문과 답변')}"></th:block>
     <script th:inline="javascript">
     	logger.info('qnaDto:', /*[[${qnaDto}]]*/);
-    	logger.info('qnaAnswerDto:', /*[[${qnaAnswerDto}]]*/);
     </script>
 </head>
 
@@ -30,8 +29,6 @@
 	
 	                    <form name="disease_modify_form">
 		                    <input type="hidden" name="bq_no" th:value="${qnaDto.bq_no}">
-		                    <input type="hidden" name="bqa_no" th:value="${qnaAnswerDto.bqa_no}">
-		                    <input type="hidden" name="bqa_answer_a_no" th:value="${qnaAnswerDto.bqa_answer_a_no}">
 		                    
 	                        <div class="table_wrap">
 	                            <table class="content_edit_table">
@@ -89,8 +86,7 @@
 	                                				data-limit="short" 
 	                                				onkeyup="setTextareaAutoHeight(this)" 
 	                                				oninput="setTextLimit(this)"
-	                                				onblur="validateEmpty(this, '답변을')"
-	                                				th:text="${qnaAnswerDto.bqa_answer}"></textarea>
+	                                				onblur="validateEmpty(this, '답변을')"></textarea>
                                             	<div id="text_limit">
 	                                				<span id="current_size"></span> / <span id="max_size"></span>
 	                                			</div>
@@ -105,7 +101,7 @@
 		                        		 
                                 	<div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <div th:if="${qnaAnswerDto.bqa_no} != null" class="btns delete"
+	                                    <div  class="btns delete"
 		                        		 th:onclick="delListData('bqa_no')">답변 삭제</div>
 	                                    <div onclick="putVideoModify('video_modify_form')" class="btns">답변 등록</div>
 	                                </div>
