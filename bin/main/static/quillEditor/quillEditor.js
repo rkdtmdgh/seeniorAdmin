@@ -1,6 +1,9 @@
 // 전역 변수로 선언
 let quill; // quill 에디터
 
+// 수정폼에서 제거된 이미지의 src를 저장할 배열
+let deletedImageSrcs = []; 
+
 // Quill 에디터에서 blob URL을 허용 설정
 const Image = Quill.import('formats/image'); // Quill의 기본 Image 포맷 가져오기
 const originalSanitize = Image.sanitize; // 기존 sanitize 메서드를 저장
@@ -172,9 +175,7 @@ $(document).ready(function() {
 		});
 	}
 	
-	// quill 텍스트, 영상 입력 제한 및 이미지 삽입, 삭제에 대한 처리
-	let deletedImageSrcs = []; // 제거된 이미지의 src를 저장할 배열
-	
+	// quill 텍스트, 영상 입력 제한 및 이미지 삽입, 삭제에 대한 처리	
 	quill.on('text-change', function(delta, oldDelta, source) { // 변경된 내용, 변경 전 내용, 변경의 출처
 		// 텍스트 리미트 표시 업데이트
 		const text = quill.getText(); // 에디터의 순수 텍스트 가져오기

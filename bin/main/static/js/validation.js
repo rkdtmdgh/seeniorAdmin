@@ -149,11 +149,14 @@ function validateVideo(input, alertMsg) {
     let $previewEle = $input.parent().find('.preview_container'); // 부모 요소 내에 미리보기 요소를 찾음
     if($previewEle.length && $previewEle.find('iframe').attr('src') === url) return; // 수정되지 않았을 경우 리턴
     
+    logger.info('video link:', url);
+    logger.info('video iframe:', $previewEle.find('iframe').attr('src'));
+    
     const platformInfo = extractPlatformInfo(url); // 플랫폼 정보 추출    
     
     if(platformInfo) {	    
 		// 미리보기 요소가 없으면 생성
-    	if (!$previewEle.length) $previewEle = $(`<div class="table_info preview_container}">`); // 요소 생성 및 클래스 추가
+    	if (!$previewEle.length) $previewEle = $(`<div class="table_info preview_container">`); // 요소 생성 및 클래스 추가
     	
     	// iframe 태그에 플랫폼에 맞는 임베디드 URL 삽입하여 preview_container 요소 추가
     	$previewEle.html(`<iframe frameborder="0" allowfullscreen="true" src="${platformInfo.embedUrl}"></iframe>`);
