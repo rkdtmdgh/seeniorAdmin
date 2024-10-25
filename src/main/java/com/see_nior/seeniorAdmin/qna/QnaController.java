@@ -91,8 +91,6 @@ public class QnaController {
 		QnaDto qnaDto = qnaService.getQnaInfoByNo(bq_no);
 		model.addAttribute("qnaDto", qnaDto);
 		
-		log.info("qnaDto ---- {}", qnaDto);
-		
 		return PagePath.QNA_ANSWER_FORM.getValue();
 		
 	}
@@ -116,6 +114,7 @@ public class QnaController {
 	public Object answerModifyConfirm(
 			@RequestParam("bqa_no") int bqa_no, 
 			@RequestParam("bqa_answer") String bqa_answer, 
+			@RequestParam("a_id") String a_id, 
 			Principal principal) {
 		log.info("answerModifyConfirm()");
 		
