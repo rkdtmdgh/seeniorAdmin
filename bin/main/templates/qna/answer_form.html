@@ -6,8 +6,6 @@
 <head>
     <th:block th:insert="~{fragments/head.html :: head('질문과 답변')}"></th:block>
     <script th:inline="javascript">
-    	const qnaDto = /*[[${qnaDto}]]*/
-    	const qnaAnswerDto = /*[[${qnaAnswerDto}]]*/
     	logger.info('qnaDto:', /*[[${qnaDto}]]*/);
     	logger.info('qnaAnswerDto:', /*[[${qnaAnswerDto}]]*/);
     </script>
@@ -92,7 +90,7 @@
 	                                				onkeyup="setTextareaAutoHeight(this)" 
 	                                				oninput="setTextLimit(this)"
 	                                				onblur="validateEmpty(this, '답변을')"
-	                                				th:text="${qnaAnswerDtos.bqa_answer}"></textarea>
+	                                				th:text="${qnaAnswerDto.bqa_answer}"></textarea>
                                             	<div id="text_limit">
 	                                				<span id="current_size"></span> / <span id="max_size"></span>
 	                                			</div>
