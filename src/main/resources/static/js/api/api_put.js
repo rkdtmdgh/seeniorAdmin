@@ -570,17 +570,20 @@ async function putPostsModify(formName) {
 	const formData = new FormData(form);
 	formData.set('bp_body', quill.root.innerHTML); // quill 에디터 내용
 	
-	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
-	if($imgTags.length) {
-		logger.info('이미지 태그 있음');
+	const $newImgTags = $(quill.root).find('img').filter(function() {
+		return $(this).attr('src').startsWith('blob:'); // src가 blob 으로 시작하는 태그 필터링 즉 추가된 이미지 태그
+	});
+	
+	if($newImgTags.length) { // 추가된 이미지가 있을 경우
+		logger.info('추가된 이미지가 있음');
 		
-		for(let img of $imgTags) {
+		for(let img of $newImgTags) {
 			const blobURL= $(img)[0].src; // src 속성에 입력된 blob URL 가져오기
 			const targetWidth = $(img)[0].width; // 리사이즈할 대상 이미지의 너비 가져오기
 			
 			// 설정된 width 크기로 리사이즈 압축 후 flle 객체로 변환하여 formData 추가
 			const resizedImageFile = await resizeImage(blobURL, targetWidth);
-			formData.append('files', resizedImageFile); // 리사이즈된 File객체를 formData에 추가
+			formData.set('files', resizedImageFile); // 리사이즈된 File객체를 formData에 추가
 			URL.revokeObjectURL(blobURL); // blob URL을 브라우저 메모리에서 해제
 		}
 		
@@ -588,6 +591,15 @@ async function putPostsModify(formName) {
 		logger.info('이미지 태그 없음');
 		const emptyBlob = new Blob([], { type: 'application/octet-stream' }); // 빈 Blob 생성
 		formData.set('files', emptyBlob); 
+	}
+	
+	if(deletedImageSrcs.length) { // 제거된 이미지가 있다면
+		logger.info('제거된 이미지가 있음');
+		
+		deletedImageSrcs.forEach((src) => {
+			const filename = src.split('/').pop(); // src에서 파일명만 추출
+			formData.append('deleteFileNames', filename);
+		});
 	}
 	
 	await putIntegSubmit(
