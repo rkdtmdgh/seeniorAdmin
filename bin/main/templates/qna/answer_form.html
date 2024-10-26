@@ -27,7 +27,7 @@
 	                        <p class="sub_title">질문과 답변</p>
 	                    </div>
 	
-	                    <form name="qna_answer_create_form">
+	                    <form name="qna_answer_form">
 		                    <input type="hidden" name="bq_no" th:value="${qnaDto.bq_no}">
 		                    
 	                        <div class="table_wrap">
@@ -124,7 +124,7 @@
 		                        		 
 	                                    <div 
 	                                    	th:if="${qnaDto.qnaAnswerDto == null}"
-	                                    	onclick="putVideoModify('qna_answer_create_form')" class="btns">답변 등록</div>
+	                                    	onclick="postAnswerCreate('qna_answer_form')" class="btns">답변 등록</div>
                                     	
                                     	<div 
 	                                    	th:if="${
@@ -132,7 +132,7 @@
 	                                    		(!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
 	                                    		qnaDto.qnaAnswerDto.bqa_answer_a_id != #authentication.name)
 	                                    	}"
-	                                    	onclick="putVideoModify('qna_answer_create_form')" class="btns">답변 수정</div>
+	                                    	onclick="putAnswerModify('qna_answer_form')" class="btns">답변 수정</div>
 	                                </div>
                                 </div>
 	                        </div>

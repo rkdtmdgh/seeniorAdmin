@@ -469,8 +469,12 @@
 	z-index: 1;
 	
 	.option {
+		width: 100%;
 		padding: var(--optionPadding);
 		font-weight: 400;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 		
 		&:hover {
 			background-color: var(--optionColor);

@@ -341,7 +341,7 @@ function setFormValuesFromUrl() {
     const page = urlParams.get('page') || 1;
 	
 	// 검색어가 있을 경우 검색 폼 사용으로 새로고침 시 재적용
-	if(sortType === '2') { // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
+	if($sForm.length && sortType === '2') { // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
 		$sForm.find('select[name="searchPart"]').val(searchPart)
 		$sForm.find('input[name="searchString"]').val(searchString);
 	}
