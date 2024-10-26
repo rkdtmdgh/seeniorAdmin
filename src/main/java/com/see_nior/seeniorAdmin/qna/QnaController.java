@@ -1,7 +1,6 @@
 package com.see_nior.seeniorAdmin.qna;
 
 import java.security.Principal;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.see_nior.seeniorAdmin.dto.QnaAnswerDto;
 import com.see_nior.seeniorAdmin.dto.QnaDto;
 import com.see_nior.seeniorAdmin.enums.PagePath;
 
@@ -28,6 +26,8 @@ import lombok.extern.log4j.Log4j2;
 public class QnaController {
 
 	final private QnaService qnaService;
+	
+	// QnaDto 컬럼 추가에 따른 로직 수정. 
 	
 	// qna 리스트 양식 
 	@GetMapping("/info/qna_list_form")
@@ -89,9 +89,7 @@ public class QnaController {
 		log.info("answerForm()");
 	
 		QnaDto qnaDto = qnaService.getQnaInfoByNo(bq_no);
-		List<QnaAnswerDto> QnaAnswerDtos = qnaService.getQnaAnswerInfosByBqNo(bq_no);
 		model.addAttribute("qnaDto", qnaDto);
-		model.addAttribute("QnaAnswerDtos", QnaAnswerDtos);
 		
 		return PagePath.QNA_ANSWER_FORM.getValue();
 		
@@ -116,15 +114,55 @@ public class QnaController {
 	public Object answerModifyConfirm(
 			@RequestParam("bqa_no") int bqa_no, 
 			@RequestParam("bqa_answer") String bqa_answer, 
+			@RequestParam("a_id") String a_id, 
 			Principal principal) {
 		log.info("answerModifyConfirm()");
 		
-		return qnaService.answerModifyConfirm(bqa_no, bqa_answer);
+		return qnaService.answerModifyConfirm(a_id, principal.getName(), bqa_no, bqa_answer);
 		
 	}
 	
+////////////////////////// 카테고리 
+	
+	// qna 카테고리 등록 양식
+	@GetMapping("/cate_info/create_category_form")
+	public String createCategoryForm() {
+		log.info("createCategoryForm()");
+		
+		return PagePath.QNA_CREATE_CATEGORY_FORM.getValue();
+		
+	}
+	
+	// qna 카테고리명 중복 확인
+	@GetMapping("/cate_info/is_qna_category")
+	public boolean isQnaCategory(@RequestParam("bqc_name") String bqc_name) {
+		log.info("isQnaCategory()");
+		
+		return qnaService.isQnaCategory(bqc_name);
+		
+	}
+	
+	// qna 카테고리 등록 확인
+	
+	// qna 카테고리 수정 양식
+	
+	// qna 카테고리 수정 확인
+	
+	// qna 카테고리 삭제 확인
+	
+	// qna 카테고리 리스트 양식
+	
+	// qna 카테고리 모든 리스트 가져오기
+	
+	// qna 카테고리 선택 리스트 가져오기 (select box) 
+	
+	// qna 카테고리 검색 리스트 가져오기 
+	
+	
+////////////////////////// 공지사항 	
+
 	// qna 공지사항 리스트 양식
-	@GetMapping("/info/notice_list_form")
+	@GetMapping("/noti_info/notice_list_form")
 	public String qnaNoticeListForm() {
 		log.info("qnaNoticeListForm()");
 		
@@ -133,7 +171,7 @@ public class QnaController {
 	}
 	
 	// qna 공지사항 리스트 가져오기
-	@GetMapping("/info/get_notice_list")
+	@GetMapping("/noti_info/get_notice_list")
 	@ResponseBody
 	public Object getNoticeList(
 			@RequestParam(value = "sortValue", required = false, defaultValue = "bqn_no") String sortValue,
@@ -156,9 +194,9 @@ public class QnaController {
 	
 	
 	// qna 공지사항 등록 양식
-	@GetMapping("/info/notice_create_form")
-	public String noticeCreateForm() {
-		log.info("noticeCreateForm()");
+	@GetMapping("/noti_info/create_notice_form")
+	public String createNoticeForm() {
+		log.info("createNoticeForm()");
 		
 		return PagePath.QNA_NOTICE_CREATE_FORM.getValue();
 		
@@ -169,6 +207,7 @@ public class QnaController {
 	// qna 공지사항 수정 확인
 	
 	// qna 공지사항 삭제 확인
+	
 	
 	
 	

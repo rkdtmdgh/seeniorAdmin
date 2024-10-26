@@ -7,6 +7,8 @@
     <th:block th:insert="~{fragments/head.html :: head('게시물 수정')}"></th:block>
     <script th:inline="javascript">
 		$(function() {
+	    	logger.info('boardPostsDto:', /*[[${boardPostsDto}]]*/);
+			
 			// 타이틀 설정
 			setBoardTitle(/*[[${infoNo}]]*/);
         });
@@ -32,6 +34,7 @@
 	
 	                    <form name="posts_modify_form">
 		                    <input type="hidden" name="bp_no" th:value="${boardPostsDto.bp_no}">
+		                    <input type="hidden" name="bp_dir_name" th:value="${boardPostsDto.bp_dir_name}">
 		                    
 	                        <div class="table_wrap">
 	                            <table class="content_edit_table">
@@ -45,10 +48,19 @@
 	                                <tbody>
 		                                <tr>
 	                                        <th><p class="table_title">제목</p></th>
-		                                	<td colspan="3">
+		                                	<td th:classappend="${
+				                               		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
+				                               		(boardPostsDto.bp_account == 'admin' and boardPostsDto.adminAccountDto.a_id != #authentication.name) ?
+				                               		'disabled' : ''
+			                                	}"
+		                                		colspan="3">
 		                                		<input type="text" name="bp_title" id="bp_title" class="table_info" placeholder="제목"
 		                                			onblur="validateEmpty(this, '제목을')"
-		                                			th:value="${boardPostsDto.bp_title}">
+		                                			th:value="${boardPostsDto.bp_title}"
+		                                			th:disabled="${
+					                               		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
+					                               		(boardPostsDto.bp_account == 'admin' and boardPostsDto.adminAccountDto.a_id !=  #authentication.name)
+				                                	}">
 	                                        </td>
 		                                </tr>
 		                                
@@ -100,22 +112,50 @@
 		                                	</th>
 		                                	
 		                                	<td colspan="3">
-	                                			<div id="editor" th:utext="${boardPostsDto.bp_body}"></div>
-	                                			<div id="text_limit">
-	                                				<span id="current_size"></span> / <span id="max_size"></span>
-	                                			</div>
+		                                		<th:block th:if="${
+				                               		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
+				                               		(boardPostsDto.bp_account == 'admin' and boardPostsDto.adminAccountDto.a_id !=  #authentication.name)
+			                                	}">
+			                                		<div class="ql-editor" th:utext="${boardPostsDto.bp_body}"></div>
+		                                		</th:block>
+		                                		
+		                                		<th:block th:unless="${
+				                               		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
+				                               		(boardPostsDto.bp_account == 'admin' and boardPostsDto.adminAccountDto.a_id !=  #authentication.name)
+			                                	}">
+		                                			<div id="editor" th:utext="${boardPostsDto.bp_body}"></div>
+		                                			<div id="text_limit">
+		                                				<span id="current_size"></span> / <span id="max_size"></span>
+		                                			</div>
+	                                			</th:block>
 	                                        </td>
 		                                </tr>
 		                            </tbody>
 	                            </table>
 	
-	                            <div class="btn_list">
-	                            	<div th:if="${boardPostsDto.bp_no} != null" class="btns delete"
-		                        		 th:onclick="delListData('bp_no')">삭제</div>
+	                            <div th:classappend="${
+	                               		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
+	                               		(boardPostsDto.bp_account == 'admin' and boardPostsDto.adminAccountDto.a_id !=  #authentication.name) ?
+	                               		'f_jc_right' : ''
+                                	}" class="btn_list">
+                                	
+	                            	<div th:if="${
+											#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
+											boardPostsDto.bp_account == 'user' or 
+											(boardPostsDto.bp_account == 'admin' and boardPostsDto.adminAccountDto.a_id ==  #authentication.name)
+										}"
+										th:onclick="delListData('bp_no')" 
+		                        		class="btns delete">삭제</div>
 		                        		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <div onclick="putPostsModify('posts_modify_form')" class="btns">수정</div>
+	                                    
+	                                    <div th:if="${
+	                                    		#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
+		                                    	boardPostsDto.bp_account == 'user' or 
+		                                    	(boardPostsDto.bp_account == 'admin' and boardPostsDto.adminAccountDto.a_id ==  #authentication.name)
+	                                    	}"
+	                                    	onclick="putPostsModify('posts_modify_form')" class="btns">수정</div>
 	                                </div>
 	                            </div>
 	                        </div>

@@ -38,8 +38,8 @@
 }
 
 .ql-editor {
-	min-height: var(--tableTextareaHeight);
-	max-height: calc(var(--tableTextareaHeight) * 1.5);
+	min-height: var(--tablecontentHeight);
+	max-height: calc(var(--tablecontentHeight) * 1.5);
 }
 
 .ql-editor.ql-blank::before {

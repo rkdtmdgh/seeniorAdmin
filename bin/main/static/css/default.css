@@ -164,12 +164,12 @@
 /* textarea */
 .table_textarea {
 	width: 100%;
-	height: var(--tableTextareaHeight);
-	max-height: 350px;
+	min-height: var(--tableTextareaHeight);
+	max-height: 500px;
     padding: var(--textPadding);
     
     &.small {
-    	height: auto;
+    	min-height: 0;
     	max-height: 70px;
     }
 }
@@ -645,8 +645,8 @@
 }
 
 .content_view_wrap {
-	min-height: var(--tableTextareaHeight);
-    max-height: calc(var(--tableTextareaHeight)* 1.5);
+	min-height: var(--tablecontentHeight);
+    max-height: calc(var(--tablecontentHeight)* 1.5);
 	display: flex;
 	flex-direction: column;
 	gap: var(--baseGap);

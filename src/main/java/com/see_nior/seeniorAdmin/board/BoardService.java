@@ -282,7 +282,7 @@ public class BoardService {
     
     // 게시글 DB에 저장 후 결과 값 가져오기
 	public Boolean createConfirm(List<String> savedFileNames, int bp_category_no, int bp_writer_no, String bp_title,
-			String old_bp_body, String bp_dir_name) {
+			String old_bp_body, String bp_dir_name, String bp_writer_id) {
 		log.info("createConfirm()");
 		
 		String bp_body = old_bp_body;
@@ -320,6 +320,7 @@ public class BoardService {
  		
  		boardPostsDto.setBp_category_no(bp_category_no);
  		boardPostsDto.setBp_writer_no(bp_writer_no);
+ 		boardPostsDto.setBp_writer_id(bp_writer_id);
  		boardPostsDto.setBp_account("admin");
  		boardPostsDto.setBp_title(bp_title);
  		boardPostsDto.setBp_body(bp_body);
