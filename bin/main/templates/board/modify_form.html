@@ -6,8 +6,8 @@
 <head>
     <th:block th:insert="~{fragments/head.html :: head('게시물 수정')}"></th:block>
     <script th:inline="javascript">
+			logger.info('boardPostsDto:', /*[[${boardPostsDto}]]*/);
 		$(function() {
-			logget.info('boardPostsDto:', /*[[${boardPostsDto}]]*/);
 			// 타이틀 설정
 			setBoardTitle(/*[[${infoNo}]]*/);
         });
@@ -77,8 +77,8 @@
 		                                	<th><p class="table_title">작성자 아이디</p></th>
 		                                	<td class="disabled">
 	                                			<input type="text" class="table_info" disabled
-	                                				th:value="${boardPostsDto.bp_writer_id + 
-	                                					boardPostsDto.bp_account == 'admin' ? ' (관리자)' : ''
+	                                				th:value="${boardPostsDto.bp_writer_id +
+	                                					(boardPostsDto.bp_account == 'admin' ? ' (관리자)' : '')
 	                                				}">
 	                                        </td>
 	                                        
