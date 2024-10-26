@@ -616,9 +616,9 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page, infoNo) {
 		            </td>
 					<td>
 						${data.bp_account === 'admin' ?
-							`<a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id} (관리자)</a>`
+							`<a href="/account/list/admin_modify_form?a_no=${data.bp_writer_no}" class="table_info">${data.bp_writer_id} (관리자)</a>`
 						:
-							`<a href="/user_account/info/modify_form?u_no=${data.userAccountDto.u_no}" class="table_info">${data.userAccountDto.u_id}</a>`
+							`<a href="/user_account/info/modify_form?u_no=${data.bp_writer_no}" class="table_info">${data.bp_writer_id}</a>`
 						}
 		            </td>
 		            <td>
@@ -1069,8 +1069,7 @@ async function getMaxIdxAndSetAttribute(name, value, formName) {
 			logger.info(`${getSelectMaxIdxApiUrl} getMaxIdxAndSetAttribute():`, response);
 			
 			// modify인 경우 최대값 그대로 사용 create일 경우 최대값+1, 기본값은 1
-			let max = response < 1 ? 1 : response;
-			max = formName === 'modify' ? max : max + 1 ;
+			let max = response < 1 ? 1 : response + (formName === 'create' ? 1 : 0);
 			
 			if(formName === 'create') $('#idx_number').val(max); // create form일 경우 최대값으로 설정
 			$('#idx_number').attr('max', max); // 해당 인풋 요소에 max속성, value값 추가/변경

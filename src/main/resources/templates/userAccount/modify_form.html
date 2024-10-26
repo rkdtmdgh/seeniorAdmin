@@ -5,11 +5,6 @@
 	
 <head>
     <th:block th:insert="~{fragments/head.html :: head('회원 정보')}"></th:block>
-    <script th:inline="javascript">
-		$(function() {
-			logger.info('userAccountDto:', /*[[${userAccountDto}]]*/);
-        });
-	</script>
 </head>
 
 <body>
@@ -135,7 +130,7 @@
 		                                    
 		                                    <th><p class="table_title">우편번호</p></th>
 		                                    <td>
-		                                    	<div class="cont_info disabled">
+		                                    	<div class="cont_info">
 		                                			<input type="text" name="u_zip_code" id="zip_code" class="table_info" placeholder="우편번호 5자리"
 		                                				maxlength="5"
 		                                				onkeyup="replaceNumber(this)"

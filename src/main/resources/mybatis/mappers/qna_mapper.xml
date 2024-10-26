@@ -50,15 +50,14 @@
 		<result column="u_mod_date" property="u_mod_date"/>
 	</resultMap>
 	
-	<resultMap type="QnaDto" id="QnaDto">
-		<id column="bq_no" property="bq_no"/>
-		<result column="bq_title" property="bq_title"/>
-		<result column="bq_body" property="bq_body"/>
-		<result column="bq_state" property="bq_state"/>
-		<result column="bq_is_deleted" property="bq_is_deleted"/>
-		<result column="bq_reg_date" property="bq_reg_date"/>
-		<result column="bq_mod_date" property="bq_mod_date"/>
-		<collection property="userAccountDto" resultMap="UserAccountDto"/>
+	<resultMap type="QnaCategoryDto" id="QnaCategoryDto">
+		<id column="bqc_no" property="bqc_no"/> 
+		<result column="bqc_name" property="bqc_name"/>
+		<result column="bqc_note" property="bqc_note"/>
+		<result column="bqc_is_deleted" property="bqc_is_deleted"/>
+		<result column="bqc_item_cnt" property="bqc_item_cnt"/>
+		<result column="bqc_reg_date" property="bqc_reg_date"/>
+		<result column="bqc_mod_date" property="bqc_mod_date"/>
 	</resultMap>
 	
 	<resultMap type="QnaAnswerDto" id="QnaAnswerDto">
@@ -67,8 +66,21 @@
 		<result column="bqa_is_deleted" property="bqa_is_deleted"/>
 		<result column="bqa_reg_date" property="bqa_reg_date"/>
 		<result column="bqa_mod_date" property="bqa_mod_date"/>
-		<collection property="qnaDto"  resultMap="QnaDto"/>
 		<collection property="adminAccountDto" resultMap="AdminAccountDto"/>
+	</resultMap>
+	
+	<resultMap type="QnaDto" id="QnaDto">
+		<id column="bq_no" property="bq_no"/>
+		<result column="bq_title" property="bq_title"/>
+		<result column="bq_body" property="bq_body"/>
+		<result column="bq_view_cnt" property="bq_view_cnt"/>
+		<result column="bq_state" property="bq_state"/>
+		<result column="bq_is_deleted" property="bq_is_deleted"/>
+		<result column="bq_reg_date" property="bq_reg_date"/>
+		<result column="bq_mod_date" property="bq_mod_date"/>
+		<collection property="qnaCategoryDto" resultMap="QnaCategoryDto"/>
+		<collection property="qnaAnswerDto" resultMap="QnaAnswerDto"/>
+		<collection property="userAccountDto" resultMap="UserAccountDto"/>
 	</resultMap>
 	
 	<resultMap type="QnaNoticeDto" id="QnaNoticeDto">
@@ -89,17 +101,19 @@
 	
 		SELECT 
 			BQ.*, 
-			U.*  
+			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
 		FROM 
 			BOARD_QNA BQ 
 		JOIN 
+			BOARD_QNA_CATEGORY BQC 
+		ON 
+			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
+		LEFT JOIN 
 			USER_ACCOUNT U 
 		ON 
 			BQ.BQ_USER_NO = U.U_NO 
 		WHERE 
 			BQ.BQ_IS_DELETED = 1 
-		AND 
-			U.U_IS_DELETED = 1 
 		ORDER BY 
 			${sortValue} ${order} 
 		LIMIT 
@@ -144,13 +158,11 @@
 		FROM 
 			BOARD_QNA BQ 
 		JOIN 
-			USER_ACCOUNT A 
+			USER_ACCOUNT U  
 		ON 
 			BQ.BQ_USER_NO = U.U_NO 
 		WHERE 
 			BQ.BQ_IS_DELETED = 1 
-		AND 
-			U.U_IS_DELETED = 1 
 		<if test="searchPart != null and searchString != null">
 			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%') 
 		</if>
@@ -182,62 +194,69 @@
 			resultMap="QnaDto">
 		
 		SELECT 
-			* 
+			BQ.*, 
+			BQC.*, 
+			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
 		FROM 
 			BOARD_QNA BQ 
+		JOIN 
+			BOARD_QNA_CATEGORY BQC 
+		ON 
+			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
 		JOIN 
 			USER_ACCOUNT U 
 		ON 
 			BQ.BQ_USER_NO = U.U_NO 
+		LEFT JOIN 
+			BOARD_QNA_ANSWER BQA 
+		ON 
+			BQ.BQ_ANSWER_NO = BQA.BQA_NO  
 		WHERE 
 			BQ.BQ_IS_DELETED = 1 
-		AND 
-			U.U_IS_DELETED = 1 
 		AND 
 			BQ.BQ_NO = #{bq_no} 
 	
 	</select>
 	
-	<!-- qna answers 가져오기 by bq_no -->
-	<select id="selectQnaAnswerInfosByBqNo"
-			resultMap="QnaAnswerDto">
-		
-		SELECT 
-			BQA.*, 
-			A.A_ID, A.A_NAME, A.A_PHONE, A.A_DEPARTMENT, A.A_LEVEL, A.A_POSITION
-		FROM 
-			BOARD_QNA_ANSWER BQA 
-		JOIN 
-			ADMIN_ACCOUNT A 
-		ON 
-			BQA.BQA_ADMIN_ID = A.A_ID 
-		WHERE 
-			BQA.BQA_QNA_NO = #{bq_no} 
-		AND 
-			BQA_IS_DELETED = 1 
-		
-	</select>
+	<!-- qna 답변 등록 확인 -->
+	<insert id="insertNewAnswer">
 	
-	
-	<!-- qna 답변 확인 -->
-	<insert id="insertQnaAnswer">
-		
 		INSERT INTO 
-			BOARD_QNA_ANSWER(BQA_QNA_NO, BQA_ANSWER, BQA_ADMIN_ID) 
-		VALUES (#{bq_no}, #{bqa_answer}, #{a_id}) 
-	
+			BOARD_QNA_ANSWER(
+				BQA_ANSWER, 
+				BQA_ANSWER_A_NO, 
+				BQA_ANSWER_A_ID 
+			)
+		VALUES(
+			#{bqa_answer}, 
+			#{a_no}, 
+			#{a_id}
+		)
+		
 	</insert>
 	
-	<!-- qna 답변 확인 후 state 업데이트 -->
-	<update id="updateQnaState">
-	
-		UPDATE 
+	<!-- qna answer 마지막 no 값 가져오기 -->
+	<select id="selectQnaAnswerLastNo"
+			resultType="int">
+		
+		SELECT 
+			MAX(BQA_NO) AS LAST_NO
+		FROM 
 			BOARD_QNA_ANSWER
+			
+	</select>
+	
+	<!-- qna 답변 완료 후 bq_state update -->
+	<update id="updateQnaStateByNo">
+		
+		UPDATE 
+			BOARD_QNA 
 		SET 
-			BQ_STATE = 0 
+			BQ_ANSWER_NO = #{bqa_no},
+			BQ_MOD_DATE = NOW() 
 		WHERE 
 			BQ_NO = #{bq_no} 
-		
+	
 	</update>
 	
 	<!-- qna 답변 수정 확인 -->
@@ -289,5 +308,17 @@
 	
 	</select>
 	
+	<!-- qna 카테고리명 중복 확인 -->
+	<select id="isQnaCategory"
+			resultType="boolean">
+		
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_QNA_CATEGORY 
+		WHERE 
+			BQC_NAME = #{bqc_name} 
+	
+	</select>
 	
 </mapper>

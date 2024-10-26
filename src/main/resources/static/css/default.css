@@ -164,12 +164,12 @@
 /* textarea */
 .table_textarea {
 	width: 100%;
-	height: var(--tableTextareaHeight);
-	max-height: 350px;
+	min-height: var(--tableTextareaHeight);
+	max-height: 500px;
     padding: var(--textPadding);
     
     &.small {
-    	height: auto;
+    	min-height: 0;
     	max-height: 70px;
     }
 }
@@ -550,6 +550,7 @@
 .table_date_info {
 	display: flex;
 	align-items: center;
+	text-align: left;
 	padding: var(--textPadding);
 	color: var(--grayColor);
 	
@@ -560,7 +561,7 @@
 			width: 1px;
 			height: var(--ssize3);
 			background-color: var(--lightGrayColor);
-			margin: 0 var(--ssize3);
+			margin: 0 var(--ssize2);
 		}
 		
 		&:last-child::after {
@@ -645,8 +646,8 @@
 }
 
 .content_view_wrap {
-	min-height: var(--tableTextareaHeight);
-    max-height: calc(var(--tableTextareaHeight)* 1.5);
+	min-height: var(--tablecontentHeight);
+    max-height: calc(var(--tablecontentHeight)* 1.5);
 	display: flex;
 	flex-direction: column;
 	gap: var(--baseGap);

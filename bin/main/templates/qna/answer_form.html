@@ -6,8 +6,7 @@
 <head>
     <th:block th:insert="~{fragments/head.html :: head('질문과 답변')}"></th:block>
     <script th:inline="javascript">
-    	const qnaDto = /*[[${qnaDto}]]*/
-    	logger.info('qnaDto:', qnaDto);
+    	logger.info('qnaDto:', /*[[${qnaDto}]]*/);
     </script>
 </head>
 
@@ -28,7 +27,7 @@
 	                        <p class="sub_title">질문과 답변</p>
 	                    </div>
 	
-	                    <form name="disease_modify_form">
+	                    <form name="qna_answer_create_form">
 		                    <input type="hidden" name="bq_no" th:value="${qnaDto.bq_no}">
 		                    
 	                        <div class="table_wrap">
@@ -41,10 +40,15 @@
 	                                </colgroup>
 	
 	                                <tbody>
+	                                	<tr>
+		                                    <th><p class="table_title">질문 유형</p></th>
+		                                    <td colspan="3">
+		                                    	<p class="table_info" th:text="${qnaDto.qnaCategoryDto?.bqc_name?: ''}"></p>
+		                                    </td>
+		                                </tr>
+		                                
 		                                <tr>
-		                                    <th>
-		                                    	<p class="table_title">제목</p>
-		                                    </th>
+		                                    <th><p class="table_title">제목</p></th>
 		                                    <td colspan="3">
 		                                    	<p class="table_info" th:text="${qnaDto.bq_title}"></p>
 		                                    </td>
@@ -75,18 +79,25 @@
 		                                <tr>
 		                                	<th><p class="table_title">내용</p></th>
 		                                	<td colspan="3" class="ta_l">
-		                                		<p class="content_view_wrap sc" th:text="${qnaDto.bq_body}"></p>
+		                                		<p class="table_textarea sc" th:text="${qnaDto.bq_body}"></p>
 		                                    </td>
 		                                </tr>
 		                                
 		                                <tr>
 		                                	<th><p class="table_title">답변</p></th>
 		                                	<td colspan="3">
-		                                        <textarea name="bqa_answer" id="bqa_answer" class="table_textarea" 
-		                                        	placeholder="내용을 입력하세요"
-		                                        	data-current-size="textarea"
-		                                        	onkeydown="setTextareaAutoHeight(this)"
-		                                        	oninput="setTextLimit(this, 'short')"></textarea>
+		                                		<textarea name="bqa_answer" id="bqa_answer" class="table_textarea" placeholder="답변을 입력하세요"
+	                                				data-limit-target="textarea" 
+	                                				data-limit="short" 
+	                                				oninput="setTextareaAutoHeight(this)" 
+	                                				onkeyup="setTextLimit(this)"
+	                                				onblur="validateEmpty(this, '답변을')"
+	                                				th:text="${qnaDto.qnaAnswerDto?.bqa_answer ?: ''}"
+	                                				th:readonly="${
+	                                					qnaDto.qnaAnswerDto != null and
+			                                    		(!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
+			                                    		qnaDto.qnaAnswerDto.bqa_answer_a_id != #authentication.name)
+	                                				}"></textarea>
                                             	<div id="text_limit">
 	                                				<span id="current_size"></span> / <span id="max_size"></span>
 	                                			</div>
@@ -95,10 +106,34 @@
 	                                </tbody>
 	                            </table>
 	
-                                <div class="btn_list f_jc_right">
-                                	<div th:if="${qnaDto.bq_no} != null" class="btns delete"
-		                        		 th:onclick="delListData('bq_no')">삭제</div>
-                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
+                                <div class="btn_list">
+                                	<div th:if="${qnaDto.qnaAnswerDto == null}" class="btns delete"
+		                        		 th:onclick="delListData('bq_no')">질문 삭제</div>
+		                        		 
+                                	<div class="btn_list">
+	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
+	                                    
+	                                    <div  
+	                                    	th:if="${
+	                                    		qnaDto.qnaAnswerDto != null and
+	                                    		(#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
+	                                    		qnaDto.qnaAnswerDto.bqa_answer_a_id == #authentication.name)
+	                                    	}"
+		                        			th:onclick="delListData('bqa_no')"
+		                        			class="btns delete">답변 삭제</div>
+		                        		 
+	                                    <div 
+	                                    	th:if="${qnaDto.qnaAnswerDto == null}"
+	                                    	onclick="putVideoModify('qna_answer_create_form')" class="btns">답변 등록</div>
+                                    	
+                                    	<div 
+	                                    	th:if="${
+	                                    		qnaDto.qnaAnswerDto != null and
+	                                    		(!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
+	                                    		qnaDto.qnaAnswerDto.bqa_answer_a_id != #authentication.name)
+	                                    	}"
+	                                    	onclick="putVideoModify('qna_answer_create_form')" class="btns">답변 수정</div>
+	                                </div>
                                 </div>
 	                        </div>
 	                    </form>

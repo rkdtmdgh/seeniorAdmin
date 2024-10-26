@@ -393,7 +393,7 @@ async function postNoticePostsCreate(formName) {
 			const blobURL= $(img)[0].src; // src 속성에 입력된 blob URL 가져오기
 			const targetWidth = $(img)[0].width; // 리사이즈할 대상 이미지의 너비 가져오기
 			
-			// 설정된 width 크기로 리사이즈 압축 후 flle 개게로 변환하여 formData 추가
+			// 설정된 width 크기로 리사이즈 압축 후 flle 객체로 변환하여 formData 추가
 			const resizedImageFile = await resizeImage(blobURL, targetWidth);
 			formData.set('files', resizedImageFile); // 리사이즈된 File객체를 formData에 추가
 			URL.revokeObjectURL(blobURL); // blob URL을 브라우저 메모리에서 해제

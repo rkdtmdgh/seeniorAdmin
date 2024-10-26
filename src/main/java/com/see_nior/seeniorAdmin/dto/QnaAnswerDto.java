@@ -11,8 +11,6 @@ public class QnaAnswerDto {
 	private String bqa_reg_date;
 	private String bqa_mod_date;
 	
-	private QnaDto qnaDto;
-	
 	private AdminAccountDto adminAccountDto;
 	
 }

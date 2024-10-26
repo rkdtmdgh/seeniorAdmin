@@ -186,27 +186,29 @@ let previousText = '';
 
 // textarea 텍스트 입력 제한 표시 초기화
 function setTextareatLimitInit() {
-	const $textareaEle = $('[data-current-size="textarea"]').val(); // 초기값
-	const currentValue = extractionByte($textareaEle); // textarea의 현재 텍스트 값 바이트 크기
+	const $textareaEle = $('[data-limit-target="textarea"]'); // textarea 타겟 선택
+	const limit = $textareaEle.data('limit'); // textarea 타겟의 리미트 값
+	const value = $textareaEle.val(); // 초깃값
+	const currentByte = extractionByte(value); // textarea의 현재 텍스트 값 바이트 크기
 	previousText = $textareaEle; // 기초상태 업데이트
 	
 	const $textLimitEle =  $('#text_limit'); // text_limit 요소 찾기
 	if($textLimitEle.length) {
-		$('#current_size').text(currentValue.toLocaleString()); // 현재 입력된 텍스트의 바이트 크기 표시
-		$('#max_size').text(`${maxSize.info.toLocaleString()} byte`); // 최대 크기 표시
+		$('#current_size').text(currentByte.toLocaleString()); // 현재 입력된 텍스트의 바이트 크기 표시
+		$('#max_size').text(`${maxSize[limit].toLocaleString()} byte`); // 최대 크기 표시
 	}
 }
 
 // 텍스트 입력 제한
-function setTextLimit(ele, maxSizeKey) {
+function setTextLimit(ele) {
 	const value = $(ele).val(); // 입력된 값 가져오기
-	const textSize = extractionByte(value); // 현재 텍스트의 바이트 크기 계산
-	const maxSizeValue = maxSize[maxSizeKey];
+	const limit = $(ele).data('limit'); // 입력된 값 가져오기
+	const currentByte = extractionByte(value); // 현재 텍스트의 바이트 크기 계산
 	
-	$('#current_size').text(textSize.toLocaleString()); // 실시간으로 크기 업데이트
+	$('#current_size').text(currentByte.toLocaleString()); // 실시간으로 크기 업데이트
 	
-	if(textSize > maxSizeValue) { // 최대 크기를 초과한 경우
-		alert(`입력 가능한 최대 텍스트 용량은 ${maxSizeValue.toLocaleString()} byte 입니다.`);
+	if(currentByte > maxSize[limit]) { // 최대 크기를 초과한 경우
+		alert(`입력 가능한 최대 텍스트 용량은 ${maxSize[limit].toLocaleString()} byte 입니다.`);
 		$(ele).val(previousText); // 초과된 부분 제거 후 초과되기 전 값 입력
 		$('#current_size').text(extractionByte(previousText).toLocaleString()); // 다시 계산 하여 표시
 		
@@ -397,12 +399,11 @@ function setTextareaAutoHeight(ele) {
 	const scrollHeight = $textarea[0].scrollHeight; // 자바스크립트로 이벤트가 일어난 DOM요소의 scrollHeight 원시 속성 값 가져오기
 	const clientHeight = $textarea[0].clientHeight; // 현재 textarea의 높이 (padding 포함, 스크롤 바 제외)
 	
-    if (scrollHeight <= clientHeight) { // 스크롤 높이가 클라이언트 높이와 작서나 같다면 내용이 한 줄임
-        return false; // 한 줄만 입력된 경우에는 높이를 auto로 유지하고 종료
-    }
+	// 스크롤 높이가 클라이언트 높이와 작서나 같다면 내용이 한 줄로 종료
+    if (scrollHeight <= clientHeight) return false;
 	
 	const maxHeight = parseInt($textarea.css('max-height')); // css로 설정한 max-height 속성 값 가져오기
-	const newHeight = Math.min(scrollHeight, maxHeight); // 스크롤 높이와 max-height 중 작은 값ㅇ르 높이로 설정	
+	const newHeight = Math.min(scrollHeight, maxHeight); // 스크롤 높이와 max-height 중 작은 값을 높이로 설정	
 	$textarea.height(newHeight + 'px');
 }
 
@@ -641,13 +642,15 @@ $(document).on('click', function(event) {
 
 // 문서가 준비된 후 실행
 $(function() {
-	// textarea 입력된 값으로 높이값 조절
-	$('.table_textarea').each(function() {
-		setTextareaAutoHeight(this);
-	});	
-	
-	// textarea 텍스트 입력 제한 표시 초기화
-	setTextareatLimitInit();
+	// textarea 입력된 값으로 높이값 조절 초기화
+	if($('.table_textarea').length) {
+		$('.table_textarea').each(function() {
+			setTextareaAutoHeight(this);
+		});	
+		
+		// textarea 텍스트 입력 제한 표시 초기화
+		setTextareatLimitInit();
+	}
 	
 	// DnD 이미지 파일 첨부 유효성 검사, 미리보기 처리
 	const $fileUploadEle = $('.file_upload_container');

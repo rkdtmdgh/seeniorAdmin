@@ -7,8 +7,8 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.see_nior.seeniorAdmin.account.mapper.AccountMapper;
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
-import com.see_nior.seeniorAdmin.dto.QnaAnswerDto;
 import com.see_nior.seeniorAdmin.dto.QnaDto;
 import com.see_nior.seeniorAdmin.enums.SqlResult;
 import com.see_nior.seeniorAdmin.qna.mapper.QnaMapper;
@@ -23,6 +23,7 @@ import lombok.extern.log4j.Log4j2;
 public class QnaService {
 
 	final private QnaMapper qnaMapper;
+	final private AccountMapper accountMapper;
 	
 	// qna 리스트 가져오기
 	public Map<String, Object> getQnaPagingList(String sortValue, String order, int page) {
@@ -30,7 +31,8 @@ public class QnaService {
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		List<AdminAccountDto> qnaDtos = qnaMapper.selectQnaList(PagingUtil.pagingParams(sortValue, order, page));
+		List<AdminAccountDto> qnaDtos = 
+				qnaMapper.selectQnaList(PagingUtil.pagingParams(sortValue, order, page));
 		pagingList.put("qnaDtos", qnaDtos);
 		
 		return pagingList;
@@ -94,58 +96,81 @@ public class QnaService {
 		
 	}
 	
-	// qna answers 가져오기 by bq_no
-	public List<QnaAnswerDto> getQnaAnswerInfosByBqNo(int bq_no) {
-		log.info("getQnaAnswerInfosByBqNo()");
-		
-		return qnaMapper.selectQnaAnswerInfosByBqNo(bq_no);
-	}
-
 	// qna 답변 확인
 	@Transactional
 	public boolean qnaAnswerConfirm(int bq_no, String bqa_answer, String a_id) {
 		log.info("qnaAnswerConfirm()");
 		
-		Map<String, Object> params = new HashMap<>();
-		params.put("bq_no", bq_no);
-		params.put("bqa_answer", bqa_answer);
-		params.put("a_id", a_id);
+		AdminAccountDto adminAccountDto = 
+				accountMapper.selectAdminAccountById(a_id);
 		
+		Map<String, Object> insertParams = new HashMap<>();
+		insertParams.put("bqa_answer", bqa_answer);
+		insertParams.put("a_id", a_id);
+		insertParams.put("a_no", adminAccountDto.getA_no());
+
 		try {
 			
-			int insertResult = qnaMapper.insertQnaAnswer(params);
+			int insertResult = qnaMapper.insertNewAnswer(insertParams);
 			
 			if (insertResult >= 0) {
-				int updateResult = qnaMapper.updateQnaState(bq_no);
+				
+				int bqa_no = qnaMapper.selectQnaAnswerLastNo();
+				
+				Map<String, Object> updateParams = new HashMap<>();
+				updateParams.put("bq_no", bq_no);
+				updateParams.put("bqa_no", bqa_no);
+				
+				int updateResult = 
+						qnaMapper.updateQnaStateByNo(updateParams);
 				
 				if (updateResult >= 0) {
+					
 					return SqlResult.SUCCESS.getValue();
+					
 				} else {
-					throw new RuntimeException("qnaAnswerConfirm() updateQnaState fail");
+					
+					throw new RuntimeException("updateQnaStateByNo() error!!");
+					
 				}
 				
 			} else {
-				return SqlResult.FAIL.getValue();
-			}			
+				
+				throw new RuntimeException("updateQnaStateByNo() error!!");
+				
+			}
 			
 		} catch (Exception e) {
-			log.info("qnaAnswerConfirm() Exception! ---- {}", e);
+			log.info("qnaAnswerConfirm Exception ------ {}", e);
 			
 			return SqlResult.FAIL.getValue();
-		}
 		
+		}
+
 	}
 
 	// qna 답변 수정 확인
-	public boolean answerModifyConfirm(int bqa_no, String bqa_answer) {
+	public boolean answerModifyConfirm(String a_id, String loginedId, int bqa_no, String bqa_answer) {
 		log.info("answerModifyConfirm()");
 		
-		int result = qnaMapper.updateQnaAnswer(bqa_no, bqa_answer);
+		AdminAccountDto adminAccountDto =
+				accountMapper.selectAdminAccountById(a_id);
 		
-		if(result >= 0)
-			return SqlResult.SUCCESS.getValue();
-		else 
+		if ((adminAccountDto != null && adminAccountDto.getA_authority_role().equals("SUPER_ADMIN")) 
+				|| a_id.equals(loginedId)) {
+			
+			int result = qnaMapper.updateQnaAnswer(bqa_no, bqa_answer);
+			
+			if(result >= 0)
+				return SqlResult.SUCCESS.getValue();
+			else 
+				return SqlResult.FAIL.getValue();
+			
+		} else {
+			
 			return SqlResult.FAIL.getValue();
+			
+		}
 
 	}
 
@@ -171,6 +196,14 @@ public class QnaService {
 		int qnaNoticeListCnt = qnaMapper.selectAllQnaNoticeListCnt();
 		
 		return PagingUtil.pageNum("qnaNoticeListCnt", qnaNoticeListCnt, page);
+		
+	}
+
+	// qna 카테고리명 중복 확인
+	public boolean isQnaCategory(String bqc_name) {
+		log.info("isQnaCategory()");
+		
+		return qnaMapper.isQnaCategory(bqc_name);
 		
 	}
 

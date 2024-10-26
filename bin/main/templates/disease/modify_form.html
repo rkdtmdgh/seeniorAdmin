@@ -8,8 +8,7 @@
     <script th:inline="javascript">
 		$(async function() {
          	// disease category 가져오기
-            const selectedCategory = /*[[${diseaseDto.d_category_no}]]*/ // 기본값 설정
-            await getCategoryList('d_category_no', 'modify', selectedCategory); // element id, form 종류, selectedValue
+            await getCategoryList('d_category_no', 'modify', /*[[${diseaseDto.d_category_no}]]*/); // element id, form 종류, selectedValue
         });
     </script>
 </head>
@@ -73,7 +72,7 @@
 		                                    <th><p class="table_title">추천 식단 재료</p></th>
 		                                    <td colspan="3">
 		                                    	<textarea rows="1" name="d_good_food" id="d_good_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
-		                                    		onkeydown="setTextareaAddCommaBeforeEnter(this, event)" 
+		                                    		onkeyup="setTextareaAddCommaBeforeEnter(this, event)" 
 		                                    		oninput="setTextareaAutoHeight(this)" 
 		                                    		onblur="validateEmpty(this, '추천 식단 재료를')"
 		                                    		th:text="${diseaseDto.d_good_food}"></textarea>
@@ -83,7 +82,7 @@
 		                                    <th><p class="table_title">비추천 식단 재료</p></th>
 		                                    <td colspan="3">
 		                                    	<textarea rows="1" name="d_bad_food" id="d_bad_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
-		                                    		onkeydown="setTextareaAddCommaBeforeEnter(this, event)" 
+		                                    		onkeyup="setTextareaAddCommaBeforeEnter(this, event)" 
 		                                    		oninput="setTextareaAutoHeight(this)" 
 		                                    		onblur="validateEmpty(this, '추천 식단 재료를')"
 		                                    		th:text="${diseaseDto.d_bad_food}"></textarea>
@@ -92,11 +91,13 @@
 		                                <tr>
 		                                    <th><p class="table_title">질환 / 질병 정보</p></th>
 		                                    <td colspan="3">
-		                                        <textarea name="d_info" id="d_info" class="table_textarea" data-current-size="textarea" placeholder="내용을 입력하세요"
-		                                        	onkeydown="setTextareaAutoHeight(this)"
-		                                        	oninput="setTextLimit(this, 'info')"
-		                                        	onblur="validateEmpty(this, '내용을')"
-	                                            	th:text="${diseaseDto.d_info}"></textarea>
+                                            	<textarea name="d_info" id="d_info" class="table_textarea" placeholder="내용을 입력하세요"
+	                                				data-limit-target="textarea" 
+	                                				data-limit="info" 
+	                                				oninput="setTextareaAutoHeight(this)" 
+	                                				onkeyup="setTextLimit(this)"
+	                                				onblur="validateEmpty(this, '질환 / 질병 정보를')"
+	                                				th:text="${diseaseDto.d_info}"></textarea>
                                             	<div id="text_limit">
 	                                				<span id="current_size"></span> / <span id="max_size"></span>
 	                                			</div>
