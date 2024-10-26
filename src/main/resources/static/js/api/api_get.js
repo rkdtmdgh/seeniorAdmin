@@ -616,9 +616,9 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page, infoNo) {
 		            </td>
 					<td>
 						${data.bp_account === 'admin' ?
-							`<a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id} (관리자)</a>`
+							`<a href="/account/list/admin_modify_form?a_no=${data.bp_writer_no}" class="table_info">${data.bp_writer_id} (관리자)</a>`
 						:
-							`<a href="/user_account/info/modify_form?u_no=${data.userAccountDto.u_no}" class="table_info">${data.userAccountDto.u_id}</a>`
+							`<a href="/user_account/info/modify_form?u_no=${data.bp_writer_no}" class="table_info">${data.bp_writer_id}</a>`
 						}
 		            </td>
 		            <td>

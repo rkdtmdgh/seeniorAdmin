@@ -92,7 +92,12 @@
 	                                				oninput="setTextareaAutoHeight(this)" 
 	                                				onkeyup="setTextLimit(this)"
 	                                				onblur="validateEmpty(this, '답변을')"
-	                                				th:text="${qnaDto.qnaAnswerDto?.bqa_answer ?: ''}"></textarea>
+	                                				th:text="${qnaDto.qnaAnswerDto?.bqa_answer ?: ''}"
+	                                				th:readonly="${
+	                                					qnaDto.qnaAnswerDto != null and
+			                                    		(!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
+			                                    		qnaDto.qnaAnswerDto.bqa_answer_a_id != #authentication.name)
+	                                				}"></textarea>
                                             	<div id="text_limit">
 	                                				<span id="current_size"></span> / <span id="max_size"></span>
 	                                			</div>
@@ -102,14 +107,32 @@
 	                            </table>
 	
                                 <div class="btn_list">
-                                	<div th:if="${qnaDto.bq_no} != null" class="btns delete"
+                                	<div th:if="${qnaDto.qnaAnswerDto == null}" class="btns delete"
 		                        		 th:onclick="delListData('bq_no')">질문 삭제</div>
 		                        		 
                                 	<div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <div  class="btns delete"
-		                        		 th:onclick="delListData('bqa_no')">답변 삭제</div>
-	                                    <div onclick="putVideoModify('qna_answer_create_form')" class="btns">답변 등록</div>
+	                                    
+	                                    <div  
+	                                    	th:if="${
+	                                    		qnaDto.qnaAnswerDto != null and
+	                                    		(#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
+	                                    		qnaDto.qnaAnswerDto.bqa_answer_a_id == #authentication.name)
+	                                    	}"
+		                        			th:onclick="delListData('bqa_no')"
+		                        			class="btns delete">답변 삭제</div>
+		                        		 
+	                                    <div 
+	                                    	th:if="${qnaDto.qnaAnswerDto == null}"
+	                                    	onclick="putVideoModify('qna_answer_create_form')" class="btns">답변 등록</div>
+                                    	
+                                    	<div 
+	                                    	th:if="${
+	                                    		qnaDto.qnaAnswerDto != null and
+	                                    		(!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
+	                                    		qnaDto.qnaAnswerDto.bqa_answer_a_id != #authentication.name)
+	                                    	}"
+	                                    	onclick="putVideoModify('qna_answer_create_form')" class="btns">답변 수정</div>
 	                                </div>
                                 </div>
 	                        </div>
