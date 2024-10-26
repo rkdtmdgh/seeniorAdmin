@@ -1,5 +1,6 @@
 package com.see_nior.seeniorAdmin.board;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -173,7 +174,8 @@ public class BoardController {
 								@RequestParam("bp_category_no") int bp_category_no, 
 								@RequestParam("bp_writer_no") int bp_writer_no,
 								@RequestParam("bp_title") String bp_title,
-								@RequestParam("bp_body") String bp_body) {
+								@RequestParam("bp_body") String bp_body,
+								Principal principal) {
 		log.info("createConfirm()");
 		
 		Boolean result = false;
@@ -199,7 +201,7 @@ public class BoardController {
 					log.info("dir_name : {}",savedFileObj.get("dir_name"));
 					log.info("savedFileNames : {}",savedFileNames);
 					
-					result = boardService.createConfirm(savedFileNames,bp_category_no,bp_writer_no,bp_title,bp_body,bp_dir_name);
+					result = boardService.createConfirm(savedFileNames,bp_category_no,bp_writer_no,bp_title,bp_body,bp_dir_name,principal.getName());
 					
 				} catch (JsonMappingException e) {
 					log.info("savedFiles(string) to savedFileNames(array) fail!");
@@ -219,7 +221,7 @@ public class BoardController {
 		}else {
 			log.info("files empty!");
 			
-			result = boardService.createConfirm(null, bp_category_no, bp_writer_no, bp_title, bp_body, null);
+			result = boardService.createConfirm(null, bp_category_no, bp_writer_no, bp_title, bp_body, null, principal.getName());
 			
 			return result;
 			
@@ -351,7 +353,7 @@ public class BoardController {
 	@GetMapping("/info/search_posts_list")
 	@ResponseBody
 	public Object searchPostsList(
-			@RequestParam(value = "bc_no", required = false, defaultValue = "1") int bc_no,
+			@RequestParam("infoNo") int bc_no,
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
