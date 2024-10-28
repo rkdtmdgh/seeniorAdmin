@@ -8,8 +8,7 @@
     <script th:inline="javascript">
 		$(async function() {
          	// disease category 가져오기
-            const selectedCategory = /*[[${diseaseDto.d_category_no}]]*/ // 기본값 설정
-            await getCategoryList('d_category_no', 'modify', selectedCategory); // element id, form 종류, selectedValue
+            await getCategoryList('d_category_no', 'modify', /*[[${diseaseDto.d_category_no}]]*/); // element id, form 종류, selectedValue
         });
     </script>
 </head>
@@ -108,8 +107,7 @@
 	                            </table>
 	
 	                            <div class="btn_list">
-	                            	<div th:if="${diseaseDto.d_no} != null" class="btns delete"
-		                        		 th:onclick="delListData('d_no')">삭제</div>
+	                            	<div class="btns delete" th:onclick="delListData('d_no')">삭제</div>
 		                        		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>

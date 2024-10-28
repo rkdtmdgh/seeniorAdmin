@@ -212,8 +212,6 @@ public class AdvertisementController {
 			@RequestParam(value = "files") MultipartFile file,
 			AdvertisementDto advertisementDto) {
 		log.info("createConfirm()");
-		log.info("file ---> {}", file);
-		log.info("advertisementDto ---->{}", advertisementDto.getAd_idx());
 		
 		// 이미지 서버에 저장된 이미지 파일 이름 가져오기
 		ResponseEntity<String> savedFile = advertisementService.uploadFile(file, advertisementDto);

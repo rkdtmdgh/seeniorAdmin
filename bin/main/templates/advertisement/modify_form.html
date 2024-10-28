@@ -130,7 +130,14 @@
 		                                			</label>
 		                                			
 		                                			<div class="image_file_preview">
-		                                				<img th:src="${advertisementDto.ad_img}" alt="select image file preview">
+		                                				<img 
+		                                					th:src="${
+		                                						advertisementImgServerPath + 
+		                                						advertisementDto.ad_category_no + '/' +
+		                                						advertisementDto.ad_dir_name + '/' +
+		                                						advertisementDto.ad_img
+		                                					}" 
+		                                					alt="select image file preview">
 		                                				<div class="close" onclick="setImageFilePreviewInit('files')"></div>
 	                                				</div>
 		                                		</div>
@@ -140,7 +147,7 @@
 	                            </table>
 	
 	                            <div class="btn_list">
-	                            	<div th:if="${advertisementDto.ad_no} != null" class="btns delete"
+	                            	<div class="btns delete"
 		                        		 th:onclick="
 		                        		 	delSingleData(
 		                        		 		[[${advertisementDto.ad_client} + '님의 광고']], 

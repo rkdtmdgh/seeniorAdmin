@@ -469,8 +469,12 @@
 	z-index: 1;
 	
 	.option {
+		width: 100%;
 		padding: var(--optionPadding);
 		font-weight: 400;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 		
 		&:hover {
 			background-color: var(--optionColor);
@@ -550,6 +554,7 @@
 .table_date_info {
 	display: flex;
 	align-items: center;
+	text-align: left;
 	padding: var(--textPadding);
 	color: var(--grayColor);
 	
@@ -560,7 +565,7 @@
 			width: 1px;
 			height: var(--ssize3);
 			background-color: var(--lightGrayColor);
-			margin: 0 var(--ssize3);
+			margin: 0 var(--ssize2);
 		}
 		
 		&:last-child::after {

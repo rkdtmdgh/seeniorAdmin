@@ -9,8 +9,7 @@
     <script th:inline="javascript">
 		$(function() {
 	   		// 레시피 내용 추가
-	   		const contentInfo = /*[[${recipeDto}]]*/ '';
-    		setRecipeContentInfo(contentInfo);
+    		setRecipeContentInfo(/*[[${recipeDto}]]*/);
     	});
     </script>
 </head>

@@ -8,8 +8,7 @@
     <script th:inline="javascript">
 		$(function() {
          	// board category 가져오기
-            const selectedCategory = /*[[${boardboardNoticePostsDto.bn_category_no}]]*/ // 기본값 설정
-            getCategoryList('bn_category_no', 'modify', selectedCategory); // element id, form 종류, selectedValue
+            getCategoryList('bn_category_no', 'modify', /*[[${boardboardNoticePostsDto.bn_category_no}]]*/); // element id, form 종류, selectedValue
         });
     </script>
 </head>
@@ -96,7 +95,7 @@
 	                            </table>
 	
 	                            <div class="btn_list">
-	                            	<div th:if="${boardNoticePostsDto.bn_no} != null" class="btns delete"
+	                            	<div class="btns delete"
 		                        		 th:onclick="
 		                        		 	delSingleData(
 		                        		 		[[${boardNoticePostsDto.bn_title}]], 

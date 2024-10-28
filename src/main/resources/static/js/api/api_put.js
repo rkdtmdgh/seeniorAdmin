@@ -593,14 +593,16 @@ async function putPostsModify(formName) {
 		formData.set('files', emptyBlob); 
 	}
 	
+	const deleteFileNames = []; // 제거된 이미지 파일명이 담길 배열
 	if(deletedImageSrcs.length) { // 제거된 이미지가 있다면
 		logger.info('제거된 이미지가 있음');
 		
 		deletedImageSrcs.forEach((src) => {
 			const filename = src.split('/').pop(); // src에서 파일명만 추출
-			formData.append('deleteFileNames', filename);
+			deleteFileNames.push(filename);
 		});
 	}
+	formData.append('deleteFileNames', deleteFileNames);
 	
 	await putIntegSubmit(
 		'/board/info/modify_confirm',
