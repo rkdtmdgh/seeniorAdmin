@@ -311,6 +311,20 @@ public class QnaController {
 		
 	}
 	
+	// qna 공지사항 등록 확인
+	@PostMapping("/noti_info/create_notice_confirm")
+	@ResponseBody
+	public boolean createNoticeConfrim(
+			@RequestParam("bqn_title") String bqn_title, 
+			@RequestParam("bqn_body") String bqn_body, 
+			Principal principal) {
+		log.info("createNoticeConfrim()");
+		
+		return qnaService.createNoticeConfrim(bqn_title, bqn_body, principal.getName());
+		
+	}
+	
+	
 	// qna 공지사항 수정 양식
 	
 	// qna 공지사항 수정 확인

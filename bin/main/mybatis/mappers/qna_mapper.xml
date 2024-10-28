@@ -473,8 +473,18 @@
 		
 	</select>
 	
+	<!-- qna 공지사항 등록 확인 -->
+	<insert id="insertNewQnaNotice">
 	
-	
+		INSERT INTO 
+			BOARD_QNA_NOTICE(
+				BQN_TITLE, BQN_BODY, BQN_WRITER_NO
+			)
+		VALUES(
+			#{bqn_title}, #{bqn_body}, #{a_no}
+		)
+		
+	</insert>
 	
 	
 	
