@@ -23,7 +23,8 @@ public enum PagePath {
 	QNA_CREATE_CATEGORY_FORM("qna/create_category_form"),
 	QNA_MODIFY_CATEGORY_FORM("qna/modify_category_form"),
 	QNA_NOTICE_LIST_FORM("qna/notice_list_form"),
-	QNA_NOTICE_CREATE_FORM("qna/notice_create_form"),
+	QNA_CREATE_NOTICE_FORM("qna/create_notice_form"),
+	QNA_MODIFY_NOTICE_FORM("qna/modify_notice_form"),
 	QNA_ANSWER_FORM("qna/answer_form");
 	
 	

@@ -11,6 +11,7 @@ import com.see_nior.seeniorAdmin.account.mapper.AccountMapper;
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 import com.see_nior.seeniorAdmin.dto.QnaCategoryDto;
 import com.see_nior.seeniorAdmin.dto.QnaDto;
+import com.see_nior.seeniorAdmin.dto.QnaNoticeDto;
 import com.see_nior.seeniorAdmin.enums.SqlResult;
 import com.see_nior.seeniorAdmin.qna.mapper.QnaMapper;
 import com.see_nior.seeniorAdmin.util.PagingUtil;
@@ -300,7 +301,6 @@ public class QnaService {
 	}
 	
 	
-	
 	////////////// 공지사항
 	
 	// qna 공지사항 가져오기
@@ -355,6 +355,80 @@ public class QnaService {
 		int searchQnaNoticeListCnt = qnaMapper.selectSearchQnaNoticeListCnt(searchParams);
 		
 		return PagingUtil.pageNum("searchQnaNoticeListCnt", searchQnaNoticeListCnt, page);
+		
+	}
+
+	// qna 공지사항 등록 확인
+	public boolean createNoticeConfrim(String bqn_title,String bqn_body, String loginedId) {
+		log.info("createNoticeConfrim()");
+			
+		AdminAccountDto adminAccountDto = 
+				accountMapper.selectAdminAccountById(loginedId);
+		
+		Map<String, Object> params = new HashMap<>();
+		params.put("bqn_title", bqn_title);
+		params.put("bqn_body", bqn_body);
+		params.put("a_no", adminAccountDto.getA_no());
+		
+		int insertResult = qnaMapper.insertNewQnaNotice(params);
+			
+			if(insertResult >= 0)
+				return SqlResult.SUCCESS.getValue();
+			else 
+				return SqlResult.FAIL.getValue();
+		
+	}
+
+	// qna 공지사항 정보 가져오기 by no
+	public QnaNoticeDto getQnaNoticeInfoByNo(int bqn_no) {
+		log.info("getQnaNoticeInfoByNo()");
+		
+		return qnaMapper.selectQnaNoticeInfoByNo(bqn_no);
+		
+	}
+
+	// qna 공지사항 수정 확인
+	public boolean modifyNoticeConfirm(
+			int bqn_no, String bqn_title, String bqn_body, int bqn_writer_no, String loginedId) {
+		log.info("modifyNoticeConfirm()");
+		
+		AdminAccountDto adminAccountDto = 
+				accountMapper.selectAdminAccountById(loginedId);
+				
+		if ((adminAccountDto != null && adminAccountDto.getA_authority_role().equals("SUPER_ADMIN")) 
+				|| bqn_writer_no == adminAccountDto.getA_no()) {
+			
+			Map<String, Object> params = new HashMap<>();
+			params.put("bqn_no", bqn_no);
+			params.put("bqn_title", bqn_title);
+			params.put("bqn_body", bqn_body);
+			
+			int updateResult = qnaMapper.updateQnaNotice(params);
+			
+			if (updateResult >= 0) 
+				return SqlResult.SUCCESS.getValue();
+			else 
+				return SqlResult.FAIL.getValue();
+			
+		} else {
+			
+			return SqlResult.FAIL.getValue();
+			
+		}
+		
+	}
+	
+	// qna 공지사항 삭제 확인
+	public boolean deleteNoticeConfrim(int bqn_no) {
+		log.info("deleteNoticeConfrim()");
+		
+		int updateResult = 
+				qnaMapper.updateQnaNoticeIsDeletedByNo(bqn_no);
+		
+		if (updateResult >= 0) 
+			return SqlResult.SUCCESS.getValue();
+		else 
+			return SqlResult.FAIL.getValue();
 		
 	}
 
