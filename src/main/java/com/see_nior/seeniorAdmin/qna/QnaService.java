@@ -219,9 +219,13 @@ public class QnaService {
 	public Object getCategoryListSelect() {
 		log.info("getCategoryListSelect()");
 		
+		Map<String, Object> qnaCategoryMap = new HashMap<>();
+		
 		List<QnaCategoryDto> qnaCategoryDtos = qnaMapper.selectQnaCategoryListForSelectBox(); 
 		
-		return qnaCategoryDtos;
+		qnaCategoryMap.put("qnaCategoryDtos", qnaCategoryDtos);
+		
+		return qnaCategoryMap;
 		
 	}
 
