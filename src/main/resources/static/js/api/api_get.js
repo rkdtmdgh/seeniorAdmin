@@ -255,17 +255,17 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchVideoListPage.searchVideoListCnt;
 			break;	
 			
-		case '/board/cate_info/get_category_list': // 게시판 관리
-			getListDtos = response.boardCategoryDtos;
-			getListPage = response.boardCategoryListPageNum;
-			getListCnt = response.boardCategoryListPageNum.boardCategoryListCnt;
+		case '/notice/info/get_notice_list': // 공지 사항
+			getListDtos = response.noticeDtos;
+			getListPage = response.noticeListPageNum;
+			getListCnt = response.noticeListPageNum.noticeListCnt;
 			break;
 			
-		case '/board/cate_info/search_board_category_list': // 게시판 관리 검색
-			getListDtos = response.boardCategoryDtos;
-			getListPage = response.searchBoardCategoryListPageNum;
-			getListCnt = response.searchBoardCategoryListPageNum.searchBoardCategoryListCnt;
-			break;
+		case '/notice/info/search_notice_list': // 공지 사항 검색
+			getListDtos = response.noticeDtos;
+			getListPage = response.searchNoticeListPageNum;
+			getListCnt = response.searchNoticeListPageNum.searchNoticeListCnt;
+			break;	
 			
 		case '/board/noti_info/get_board_notice_list': // 공지 게시물
 			getListDtos = response.boardNoticePostsDtos;
@@ -279,30 +279,6 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchBoardNoticePostsListPageNum.searchNoticePostsListCnt;
 			break;
 			
-		case '/board/info/get_posts_list': // 일반 게시물
-			getListDtos = response.boardPostsDtos;
-			getListPage = response.boardPostsListPageNum;
-			getListCnt = response.boardPostsListPageNum.boardPostsListCnt;
-			break;
-			
-		case '/board/info/search_posts_list': // 일반 게시물 검색
-			getListDtos = response.boardPostsDtos;
-			getListPage = response.searchBoardPostsListPageNum;
-			getListCnt = response.searchBoardPostsListPageNum.searchBoardPostsListCnt;
-			break;	
-			
-		case '/notice/info/get_notice_list': // 공지 사항
-			getListDtos = response.noticeDtos;
-			getListPage = response.noticeListPageNum;
-			getListCnt = response.noticeListPageNum.noticeListCnt;
-			break;
-			
-		case '/notice/info/search_notice_list': // 공지 사항 검색
-			getListDtos = response.noticeDtos;
-			getListPage = response.searchNoticeListPageNum;
-			getListCnt = response.searchNoticeListPageNum.searchNoticeListCnt;
-			break;	
-			
 		case '/qna/info/get_qna_list': // 질문과 답변
 			getListDtos = response.qnaDtos;
 			getListPage = response.qnaListPageNum;
@@ -313,6 +289,36 @@ function mapApiResponseObject(apiUrl, response) {
 			getListDtos = response.qnaDtos;
 			getListPage = response.searchQnaListPageNum;
 			getListCnt = response.searchQnaListPageNum.searchQnaListCnt;
+			break;	
+			
+		case '/qna/info/get_qna_list_by_category': // 질문 유형별 데이터
+			getListDtos = response.qnaDtos;
+			getListPage = response.qnaListByCategoryPageNum;
+			getListCnt = response.qnaListByCategoryPageNum.qnaListCnt;
+			break;
+			
+		case '/board/cate_info/get_category_list': // 게시판 관리
+			getListDtos = response.boardCategoryDtos;
+			getListPage = response.boardCategoryListPageNum;
+			getListCnt = response.boardCategoryListPageNum.boardCategoryListCnt;
+			break;
+			
+		case '/board/cate_info/search_board_category_list': // 게시판 관리 검색
+			getListDtos = response.boardCategoryDtos;
+			getListPage = response.searchBoardCategoryListPageNum;
+			getListCnt = response.searchBoardCategoryListPageNum.searchBoardCategoryListCnt;
+			break;
+			
+		case '/board/info/get_posts_list': // 일반 게시물
+			getListDtos = response.boardPostsDtos;
+			getListPage = response.boardPostsListPageNum;
+			getListCnt = response.boardPostsListPageNum.boardPostsListCnt;
+			break;
+			
+		case '/board/info/search_posts_list': // 일반 게시물 검색
+			getListDtos = response.boardPostsDtos;
+			getListPage = response.searchBoardPostsListPageNum;
+			getListCnt = response.searchBoardPostsListPageNum.searchBoardPostsListCnt;
 			break;	
 			
 		case '/advertisement/info/get_advertisement_list': // 광고 관리
@@ -664,6 +670,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page, infoNo) {
 			
 		case '/qna/info/get_qna_list': // 질문과 답변 리스트 테이블
 		case '/qna/info/search_qna_list': // 질문과 답변 검색 리스트 테이블
+		case '/qna/info//qna/info/get_qna_list_by_category': // 질문 유형별 분류 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
