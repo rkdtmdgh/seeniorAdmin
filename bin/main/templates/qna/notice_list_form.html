@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
+<head>
+	<th:block th:insert="~{fragments/head.html :: head('질문과 답변 공지 사항')}"></th:block>
+	<script type="text/javascript">
+		$(async function() {
+			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
+			switch(sortType) {
+				case '2': // search
+					await getSearchList(null, '/qna/noti_info/search_notice_list', page);
+					break;
+
+				case '0': // sort
+					await getList('/qna/noti_info/get_notice_list', sortValue, order, page);
+					break;
+					
+				default:
+					await getList('/qna/noti_info/get_notice_list', null, null, page);
+			}
+        });
+	</script>
+</head>
+
+<body>
+	<main class="contents_wrap">
+		<header th:replace="~{fragments/header.html :: header}"></header>
+	
+		<article class="contents_container">
+			<nav th:replace="~{fragments/nav.html :: nav}"></nav>
+			
+			<div class="content">
+                <div class="content_inner sc">
+					<section class="content_info_wrap">
+					    <div class="content_top">
+					        <div class="content_top_info">
+					            <h2 class="title">Q &#38; A 공지 사항</h2>
+					            
+					            <div class="content_top_right">
+									<form name="search_form" onsubmit="getSearchList(event, '/qna/noti_info/search_notice_list')">
+										<th:block th:insert="~{fragments/search.html :: search('질문과 답변 공지 사항')}"></th:block>
+									</form>
+						            
+						            <div class="btn_list">
+						            	<div class="btns small" onclick="getList('/qna/noti_info/get_notice_list', null, null, 1, true);">전체보기</div>
+						            </div>
+					            </div>
+					        </div>
+					    </div>
+					    
+					    <div class="table_wrap">
+	                        <table class="content_table qna_notice_list_table">
+	                            <colgroup>
+	                                <col class="col_no">
+	                                <col class="col_long">
+	                                <col class="col_default">
+	                                <col class="col_no">
+	                                <col class="col_state">
+	                                <col>
+	                                <col>
+	                            </colgroup>
+	
+	                            <thead>
+	                                <tr>	                                    
+	                                    <th>
+	                                        <p class="table_title">No</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                    	<p class="table_title">제목</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                    	<p class="table_title">작성자</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                    	<p class="table_title">조회수</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                    	<p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'board_qna_notice', 'bqn_state')">
+	                                        	상태
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                    	<p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'board_qna_notice', 'bqn_reg_date')">
+	                                        	등록일
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                    	<p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'board_qna_notice', 'bqn_mod_date')">
+	                                        	수정일
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
+	                                    </th>
+	                                </tr>
+	                            </thead>
+	
+	                            <tbody>
+	                                <!-- 리스트 테이블 -->
+	                            </tbody>
+	                        </table>
+	                        
+	                        <div class="pagination_wrap"></div>
+	                    </div>
+					</section>
+                </div>
+            </div>
+		</article>
+	</main>
+</body>
+</html>
