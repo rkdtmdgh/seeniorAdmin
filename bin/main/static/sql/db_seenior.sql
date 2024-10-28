@@ -443,7 +443,6 @@ CREATE TABLE BOARD_QNA_ANSWER (
 	BQA_NO			INT	AUTO_INCREMENT COMMENT "Q&A 답변 NO(PK)",								-- Q&A 답변 NO(PK)
 	BQA_ANSWER		TEXT NOT NULL COMMENT "Q&A 답변 내용",										-- Q&A 답변 내용
     BQA_ANSWER_A_NO	INT NOT NULL COMMENT "Q&A 답변 작성자 NO(ADMIN_ACCOUNT TABLE PK)",				-- Q&A 답변 작성자 NO 
-	BQA_ANSWER_A_ID	VARCHAR(100) NOT NULL COMMENT "Q&A 답변 작성자 ID",							-- Q&A 답변 작성자 ID
 	BQA_IS_DELETED	TINYINT DEFAULT 1 COMMENT "Q&A 답변 삭제 여부(기본값 = 1, 삭제 시 = 0)",			-- Q&A 답변 삭제 여부(기본값 = 1, 삭제 시 = 0)
 	BQA_REG_DATE	DATETIME DEFAULT NOW() COMMENT "Q&A 답변 등록일",								-- Q&A 답변 등록일
 	BQA_MOD_DATE	DATETIME DEFAULT NOW() COMMENT "Q&A 답변 수정일",								-- Q&A 답변 수정일
