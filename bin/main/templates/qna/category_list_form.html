@@ -4,29 +4,22 @@
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
 <head>
-	<th:block th:insert="~{fragments/head.html :: head('질환 / 질병 정보 관리')}"></th:block>
+	<th:block th:insert="~{fragments/head.html :: head('질문 분류 관리')}"></th:block>
 	<script type="text/javascript">
 		$(async function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '2': // search
-					await getSearchList(null, '/disease/info/search_disease_list', page);
+					await getSearchList(null, '/qna/cate_info/search_qna_category_list', page);
 					break;
-
-				case '1': // select
-					await getList('/disease/info/get_disease_list_by_category', sortValue, order, page);
-					break;
-
+					
 				case '0': // sort
-					await getList('/disease/info/get_disease_list', sortValue, order, page);
+					await getList('/qna/cate_info/get_category_list', sortValue, order, page);
 					break;
 					
 				default:
-					await getList('/disease/info/get_disease_list', null, null, page);
+					await getList('/qna/cate_info/get_category_list', null, null, page);
 			}
-
-			// disease category 가져오기
-			await getCategoryList('d_category_no'); // element id, form 종류, selectedValue
         });
 	</script>
 </head>
@@ -43,26 +36,24 @@
 					<section class="content_info_wrap">
 					    <div class="content_top">
 					        <div class="content_top_info">
-					            <h2 class="title">질환 / 질병 정보 관리</h2>
+					            <h2 class="title">질환 / 질병 분류 관리</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/disease/info/search_disease_list')">
-										<th:block th:insert="~{fragments/search.html :: search('질환 / 질병 정보 관리')}"></th:block>
+									<form name="search_form" onsubmit="getSearchList(event, '/qna/cate_info/search_qna_category_list')">
+										<th:block th:insert="~{fragments/search.html :: search('질문 분류 관리')}"></th:block>
 									</form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/disease/info/get_disease_list', null, null, 1, true);">전체보기</div>
-						            	<div class="btns small delete" onclick="delListData('d_no', true)">삭제</div>
-						            	<a href="/disease/info/create_form" class="btns small">등록</a>
+						            	<div class="btns small" onclick="getList('/qna/cate_info/get_category_list', null, null, 1, true);">전체보기</div>
+						            	<a href="/qna/cate_info/create_category_form" class="btns small">등록</a>
 						            </div>
 					            </div>
 					        </div>
 					    </div>
 					    
 					    <div class="table_wrap">
-	                        <table class="content_table disease_list_table">
+	                        <table class="content_table qna_category_list_table">
 	                            <colgroup>
-	                                <col class="col_checkBox">
 	                                <col class="col_no">
 	                                <col>
 	                                <col>
@@ -71,30 +62,21 @@
 	
 	                            <thead>
 	                                <tr>
-	                                	<th>
-	                                		<div class="table_title"><input type="checkbox" name="all_check" id="all_check" 
-	                                			onchange="setAllCheckBox(this)" value="d_no" ></div>	                                        
-	                                    </th>
-	                                    
 	                                    <th>
 	                                        <p class="table_title">No</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <div class="table_title select d_category_no_select" id="d_category_no" onclick="setSelectOptionTopggle(event)">분류</div>
+	                                        <p class="table_title">분류</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p data-current-sort-value="all" class="table_title sort"
-	                                        	onclick="getSortList(event, 'disease', 'd_name')">
-	                                        	질환 / 질병명
-	                                        	<span class="sort_icon"></span>
-	                                        </p>
+	                                        <p class="table_title">질문 수</p>
 	                                    </th>
 	                                    
 	                                    <th>
 	                                    	<p data-current-sort-value="all" class="table_title sort"
-	                                        	onclick="getSortList(event, 'disease', 'd_mod_date')">
+	                                        	onclick="getSortList(event, 'board_qna_category', 'bqc_reg_date')">
 	                                        	등록일
 	                                        	<span class="sort_icon"></span>
 	                                        </p>

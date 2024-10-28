@@ -77,9 +77,7 @@
 		                                	<th><p class="table_title">작성자 아이디</p></th>
 		                                	<td class="disabled">
 	                                			<input type="text" class="table_info" disabled
-	                                				th:value="${boardPostsDto.bp_writer_id +
-	                                					(boardPostsDto.bp_account == 'admin' ? ' (관리자)' : '')
-	                                				}">
+	                                				th:value="${boardPostsDto.bp_writer_id}">
 	                                        </td>
 	                                        
 	                                        <th><p class="table_title" th:text="${boardPostsDto.bp_account == 'admin' ? '이름' : '이름(닉네임)'}"></p></th>
@@ -87,7 +85,7 @@
 	                                			<input type="text" name="writer_id" class="table_info" disabled
 	                                				th:value="${
 	                                					boardPostsDto.bp_account == 'admin' ? 
-	                                						boardPostsDto.adminAccountDto.a_name
+	                                						boardPostsDto.adminAccountDto.a_name + ' (관리자)'
                                 						:
                                 							boardPostsDto.userAccountDto.u_name	+ ' (' + boardPostsDto.userAccountDto.u_nickname + ')'
 	                                				}">

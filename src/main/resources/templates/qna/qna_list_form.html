@@ -20,6 +20,9 @@
 				default:
 					await getList('/qna/info/get_qna_list', null, null, page);
 			}
+			
+			// board qna category 가져오기
+			await getCategoryList('bqc_name'); // element id, form 종류, selectedValue
         });
 	</script>
 </head>
@@ -54,9 +57,10 @@
 	                        <table class="content_table qna_list_table">
 	                            <colgroup>
 	                                <col class="col_no">
+	                                <col class="col_short">
 	                                <col class="col_state">
 	                                <col class="col_long">
-	                                <col>
+	                                <col class="col_default">
 	                                <col>
 	                                <col>
 	                            </colgroup>
@@ -65,6 +69,10 @@
 	                                <tr>	                                    
 	                                    <th>
 	                                        <p class="table_title">No</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <div class="table_title select bqc_name_select" id="bqc_name" onclick="setSelectOptionTopggle(event)">분류</div>
 	                                    </th>
 	                                    
 	                                    <th>

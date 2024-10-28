@@ -549,6 +549,29 @@ async function putNoticePostsModify(formName) {
 	);
 }
 
+// QnA 답변 수정
+async function putAnswerModify(formName) {
+	const form = document.forms[formName];
+	
+	input = form.bqa_answer;
+	if(!validateEmpty(input, '답변을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	const successMessage = `"${form.a_id.value}" 님의 닫변이 수정되었습니다.`;
+	const errorMessage = `"${form.a_id.value}" 님의 답변 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	await putIntegSubmit(
+		'/qna/info/answer_modify_confirm',
+		formData,
+		successMessage,
+		errorMessage,
+		'content_inner'
+	);
+}
+
 // 게시물 수정
 async function putPostsModify(formName) {
 	const form = document.forms[formName];

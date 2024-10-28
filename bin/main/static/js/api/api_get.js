@@ -670,6 +670,9 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page, infoNo) {
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info"></a>
+		            </td>
+		            <td>
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.bq_state === true ? '대기' : '답변'}</a>
 		            </td>
 					<td class="ta_l">
@@ -1097,8 +1100,7 @@ function mapCategorylistObject(ele) {
 	let note = null; // 기타사항이 있을 경우 해당 객체명
 	
 	switch(ele) {
-		case 'dc_name': // 질병군별 분류 리스트(분류별 관리o)
-		case 'd_category_no':
+		case 'd_category_no': // 질병군별 분류 리스트(분류별 관리o)
 			getCateSelectApiUrl = '/disease/cate_info/get_category_list_select';
 			getListDtos = 'diseaseCategoryDto';			
 			infoNo = 'dc_no';
@@ -1112,6 +1114,14 @@ function mapCategorylistObject(ele) {
 			infoNo = 'rcp_pat2';
 			infoName = 'rcp_pat2';
 			soltValue = 'rcp_pat2';
+			break;
+			
+		case 'bq_category_no': // 질문 분류 리스트(분류별 관리o)
+			getCateSelectApiUrl = '/qna/cate_info/get_category_list_select';
+			getListDtos = 'qnaCategoryDto';			
+			infoNo = 'bqc_no';
+			infoName = 'bqc_name';
+			soltValue = 'bq_no';
 			break;
 			
 		case 'ad_category_no': // 위치별 분류 리스트(분류별 관리o)
