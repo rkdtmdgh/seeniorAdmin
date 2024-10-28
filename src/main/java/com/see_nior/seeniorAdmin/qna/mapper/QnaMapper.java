@@ -26,7 +26,7 @@ public interface QnaMapper {
 
 	public QnaDto selectQnaInfoByNo(int bq_no);
 
-	public int updateQnaAnswer(int bqa_no, String bqa_answer);
+	public int updateQnaAnswer(Map<String, Object> params);
 
 	public List<AdminAccountDto> selectQnaNoticeList(Map<String, Object> pagingParams);
 

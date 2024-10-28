@@ -162,7 +162,11 @@ public class QnaService {
 		if ((adminAccountDto != null && adminAccountDto.getA_authority_role().equals("SUPER_ADMIN")) 
 				|| a_id.equals(loginedId)) {
 			
-			int result = qnaMapper.updateQnaAnswer(bqa_no, bqa_answer);
+			Map<String, Object> params = new HashMap<>();
+			params.put("bqa_no", bqa_no);
+			params.put("bqa_answer", bqa_answer);
+			
+			int result = qnaMapper.updateQnaAnswer(params);
 			
 			if(result >= 0)
 				return SqlResult.SUCCESS.getValue();
