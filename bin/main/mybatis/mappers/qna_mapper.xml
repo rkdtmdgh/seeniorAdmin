@@ -212,6 +212,10 @@
 			BOARD_QNA_ANSWER BQA 
 		ON 
 			BQ.BQ_ANSWER_NO = BQA.BQA_NO  
+		LEFT JOIN 
+			ADMIN_ACCOUNT A 
+		ON 
+			BQA.BQA_ANSWER_A_NO = A.A_NO 
 		WHERE 
 			BQ.BQ_IS_DELETED = 1 
 		AND 
@@ -485,6 +489,53 @@
 		)
 		
 	</insert>
+	
+	<!-- qna 공지사항 정보 가져오기 by no -->
+	<select id="selectQnaNoticeInfoByNo"
+			resultMap="QnaNoticeDto">
+	
+		SELECT 
+			BQN.*, 
+			A.A_NO, A.A_ID, A.A_NAME, A.A_DEPARTMENT, A.A_LEVEL, A.A_POSITION 
+		FROM 
+			BOARD_QNA_NOTICE BQN 
+		LEFT JOIN 
+			ADMIN_ACCOUNT A 
+		ON 
+			BQN.BQN_WRITER_NO = A.A_NO 
+		WHERE 
+			BQN.BQN_IS_DELETED = 1, 
+		AND 
+			BQN.BQN_NO = #{bqn_no} 
+	
+	</select>
+	
+	<!-- qna 공지사항 수정 확인 -->
+	<update id="updateQnaNotice">
+	
+		UPDATE 
+			BOARD_QNA_NOTICE 
+		SET 
+			BQN_TITLE = #{bqn_title}, 
+			BQN_BODY = #{bqn_body}, 
+			BQN_MOD_DATE = NOW() 
+		WHERE 
+			BQN_NO = #{bqn_no} 
+	
+	</update>
+	
+	<!-- qna 공지사항 삭제 확인 -->
+	<update id="updateQnaNoticeIsDeletedByNo">
+	
+		UPDATE 
+			BOARD_QNA_NOTICE 
+		SET 
+			BQN_IS_DELETED = 0,  
+			BQN_MOD_DATE = NOW() 
+		WHERE 
+			BQN_NO = #{bqn_no} 
+	
+	</update>
 	
 	
 	

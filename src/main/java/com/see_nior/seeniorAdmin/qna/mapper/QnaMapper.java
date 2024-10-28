@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 import com.see_nior.seeniorAdmin.dto.QnaCategoryDto;
 import com.see_nior.seeniorAdmin.dto.QnaDto;
+import com.see_nior.seeniorAdmin.dto.QnaNoticeDto;
 
 @Mapper
 public interface QnaMapper {
@@ -64,5 +65,11 @@ public interface QnaMapper {
 	public int selectSearchQnaNoticeListCnt(Map<String, Object> searchParams);
 
 	public int insertNewQnaNotice(Map<String, Object> params);
+
+	public QnaNoticeDto selectQnaNoticeInfoByNo(int bqn_no);
+
+	public int updateQnaNotice(Map<String, Object> params);
+
+	public int updateQnaNoticeIsDeletedByNo(int bqn_no);
 	
 }
