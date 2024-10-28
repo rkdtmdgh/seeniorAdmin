@@ -30,6 +30,11 @@
 	                    <form name="qna_answer_form">
 		                    <input type="hidden" name="bq_no" th:value="${qnaDto.bq_no}">
 		                    
+		                    <th:block th:if="${qnaDto.qnaAnswerDto}">
+			                    <input type="hidden" name=bqa_no th:value="${qnaDto.qnaAnswerDto.bqa_no}">
+			                    <input type="hidden" name="a_id" th:value="${qnaDto.qnaAnswerDto.adminAccountDto.a_id}">
+		                    </th:block>
+		                    
 	                        <div class="table_wrap">
 	                            <table class="content_edit_table">
 	                                <colgroup>
@@ -95,8 +100,8 @@
 	                                				th:text="${qnaDto.qnaAnswerDto?.bqa_answer ?: ''}"
 	                                				th:readonly="${
 	                                					qnaDto.qnaAnswerDto != null and
-			                                    		(!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
-			                                    		qnaDto.qnaAnswerDto.bqa_answer_a_id != #authentication.name)
+			                                    		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
+			                                    		qnaDto.qnaAnswerDto.adminAccountDto.a_id != #authentication.name
 	                                				}"></textarea>
                                             	<div id="text_limit">
 	                                				<span id="current_size"></span> / <span id="max_size"></span>
@@ -106,7 +111,7 @@
 	                                </tbody>
 	                            </table>
 	
-                                <div class="btn_list">
+                                <div class="btn_list" th:classappend="${qnaDto.qnaAnswerDto != null ? 'f_jc_right' : ''}">
                                 	<div th:if="${qnaDto.qnaAnswerDto == null}" class="btns delete"
 		                        		 th:onclick="delListData('bq_no')">질문 삭제</div>
 		                        		 
@@ -117,7 +122,7 @@
 	                                    	th:if="${
 	                                    		qnaDto.qnaAnswerDto != null and
 	                                    		(#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
-	                                    		qnaDto.qnaAnswerDto.bqa_answer_a_id == #authentication.name)
+	                                    		qnaDto.qnaAnswerDto.adminAccountDto.a_id == #authentication.name)
 	                                    	}"
 		                        			th:onclick="delListData('bqa_no')"
 		                        			class="btns delete">답변 삭제</div>
@@ -129,8 +134,8 @@
                                     	<div 
 	                                    	th:if="${
 	                                    		qnaDto.qnaAnswerDto != null and
-	                                    		(!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
-	                                    		qnaDto.qnaAnswerDto.bqa_answer_a_id != #authentication.name)
+	                                    		(#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
+	                                    		qnaDto.qnaAnswerDto.adminAccountDto.a_id == #authentication.name)
 	                                    	}"
 	                                    	onclick="putAnswerModify('qna_answer_form')" class="btns">답변 수정</div>
 	                                </div>
