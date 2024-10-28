@@ -322,7 +322,8 @@
 	
 	
 	<!-- qna 카테고리 리스트 가져오기 -->
-	<select id="selectQnaCategoryList">
+	<select id="selectQnaCategoryList"
+			resultMap="QnaCategoryDto">
 	
 		SELECT 
 			* 
