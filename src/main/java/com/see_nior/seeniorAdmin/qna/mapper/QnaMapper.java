@@ -58,6 +58,8 @@ public interface QnaMapper {
 
 	public int updateQnaCategoryIsDeletedByNo(int bqc_no);
 	
+	public List<QnaCategoryDto> selectQnaCategoryListForSelectBox();
+	
 	
 	// notice
 	public List<AdminAccountDto> selectSearchQnaNoticeList(Map<String, Object> searchPagingParams);
@@ -71,5 +73,7 @@ public interface QnaMapper {
 	public int updateQnaNotice(Map<String, Object> params);
 
 	public int updateQnaNoticeIsDeletedByNo(int bqn_no);
+
+	
 	
 }
