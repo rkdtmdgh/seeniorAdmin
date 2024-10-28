@@ -460,6 +460,26 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page, infoNo) {
 			`;
 			break;
 			
+		case '/disease/cate_info/get_category_list': // 질환/질병 분류 관리 리스트 테이블
+		case '/disease/cate_info/search_disease_category_list': // 질환/질병 분류 관리 검색 리스트 테이블
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${listIndex}</a>
+		            </td>
+		            <td>
+		                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${data.dc_name}</a>
+		            </td>
+		            <td>
+		                <a href="/disease/info/disease_list_form?sortType=1&infoNo=${data.dc_no}&sortValue=d_no&order=desc" class="table_info">${data.dc_item_cnt}</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.dc_reg_date)}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
 		case '/disease/info/get_disease_list': // 질환/질병 정보 관리 리스트 테이블
 		case '/disease/info/search_disease_list': // 질환/질병 정보 관리 검색 리스트 테이블
 		case '/disease/info/get_disease_list_by_category': // 질환/질병 정보 관리 질병군별 분류 리스트 테이블
@@ -479,26 +499,6 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page, infoNo) {
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.d_mod_date)}</p>
-		            </td>
-		        </tr>
-			`;
-			break;
-			
-		case '/disease/cate_info/get_category_list': // 질환/질병 분류 관리 리스트 테이블
-		case '/disease/cate_info/search_disease_category_list': // 질환/질병 분류 관리 검색 리스트 테이블
-			tableTrContent = `
-				<tr>
-		            <td>
-		                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${listIndex}</a>
-		            </td>
-		            <td>
-		                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${data.dc_name}</a>
-		            </td>
-		            <td>
-		                <a href="/disease/info/disease_list_form?sortType=1&sortValue=dc_no&order=${data.dc_no}" class="table_info">${data.dc_item_cnt}</a>
-		            </td>
-		            <td>
-		                <p class="table_info">${setFormatDate(data.dc_reg_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -577,7 +577,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page, infoNo) {
 		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${data.bc_name}</a>
 		            </td>
 		            <td>
-		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${data.bc_item_cnt}</a>
+		                <a href="/board/info/posts_list_form?infoNo=${data.bc_no}" class="table_info">${data.bc_item_cnt}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.bc_reg_date)}</p>
@@ -680,6 +680,26 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page, infoNo) {
 			`;
 			break;
 			
+		case '/qna/cate_info/get_category_list': // 질문 유형 분류 관리 리스트 테이블
+		case '/qna/cate_info/search_qna_category_list': // 질문 유형 분류 관리 검색 리스트 테이블
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/qna/cate_info/modify_category_form?dc_no=${data.bqc_no}" class="table_info">${listIndex}</a>
+		            </td>
+		            <td>
+		                <a href="/qna/cate_info/modify_category_form?dc_no=${data.bqc_no}" class="table_info">${data.bqc_name}</a>
+		            </td>
+		            <td>
+		                <a href="/qna/info/qna_list_form?sortType=1&infoNo=${data.bqc_no}&sortValue=bq_no&order=desc" class="table_info">${data.bqc_item_cnt}</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.bqc_reg_date)}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
 		case '/qna/info/get_qna_list': // 질문과 답변 리스트 테이블
 		case '/qna/info/search_qna_list': // 질문과 답변 검색 리스트 테이블
 		case '/qna/info//qna/info/get_qna_list_by_category': // 질문 유형별 분류 리스트 테이블
@@ -689,7 +709,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page, infoNo) {
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info"></a>
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.qnaCategoryDto.bqc_name}</a>
 		            </td>
 		            <td>
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.bq_state === true ? '대기' : '답변'}</a>
