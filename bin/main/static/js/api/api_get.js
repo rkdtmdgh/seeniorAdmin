@@ -917,6 +917,7 @@ function mapSortListApiObject(dbTable) {
 			
 		case 'disease': // 질환/질병 정보 관리 페이지
 			apiUrl = '/disease/info/get_disease_list';
+			isResetParams = true;
 			break;
 		
 		case 'disease_category': // 질환/질병 분류 관리 페이지
@@ -925,10 +926,12 @@ function mapSortListApiObject(dbTable) {
 			
 		case 'recipe': // 식단 정보 관리 페이지
 			apiUrl = '/recipe/info/get_recipe_list';
+			isResetParams = true;
 			break;
 			
 		case 'board_qna': // 질문과 답변 페이지
 			apiUrl = '/qna/info/get_qna_list';
+			isResetParams = true;
 			break;
 			
 		case 'video': // 영상 정보 관리 페이지
