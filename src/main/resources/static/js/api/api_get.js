@@ -278,6 +278,18 @@ function mapApiResponseObject(apiUrl, response) {
 			getListPage = response.searchBoardNoticePostsListPageNum;
 			getListCnt = response.searchBoardNoticePostsListPageNum.searchNoticePostsListCnt;
 			break;
+		
+		case '/qna/cate_info/get_category_list': // 질문 유형 분류 관리
+			getListDtos = response.qnaCategoryDtos;
+			getListPage = response.qnaCategoryListPageNum ;
+			getListCnt = response.qnaCategoryListPageNum .qnaCategoryListCnt;
+			break;
+			
+		case '/qna/cate_info/search_qna_category_list': // 질문 유형 분류 검색
+			getListDtos = response.qnaCategoryDtos;
+			getListPage = response.searchQnaCategoryListPageNum;
+			getListCnt = response.searchQnaCategoryListPageNum.searchQnaCategoryListCnt;
+			break;	
 			
 		case '/qna/info/get_qna_list': // 질문과 답변
 			getListDtos = response.qnaDtos;
@@ -1129,7 +1141,7 @@ function mapCategorylistObject(ele) {
 			
 		case 'bq_category_no': // 질문 분류 리스트(분류별 관리o)
 			getCateSelectApiUrl = '/qna/cate_info/get_category_list_select';
-			getListDtos = 'qnaCategoryDto';			
+			getListDtos = 'qnaCategoryDtos';			
 			infoNo = 'bqc_no';
 			infoName = 'bqc_name';
 			soltValue = 'bq_no';
