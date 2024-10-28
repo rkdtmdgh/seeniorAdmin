@@ -156,7 +156,7 @@ public class QnaService {
 		log.info("answerModifyConfirm()");
 		
 		AdminAccountDto adminAccountDto =
-				accountMapper.selectAdminAccountById(a_id);
+				accountMapper.selectAdminAccountById(loginedId);
 		
 		if ((adminAccountDto != null && adminAccountDto.getA_authority_role().equals("SUPER_ADMIN")) 
 				|| a_id.equals(loginedId)) {
