@@ -17,7 +17,7 @@ async function deleteDataProcess(deleteConfig, data, dataName, errorMessage) {
 			
 		if(response) {
 				alert(`${dataName} 삭제되었습니다.`);
-				location.replace(deleteConfig.replace);
+				deleteConfig.replace ? location.replace(deleteConfig.replace) : location.reload(true);
 				
 			} else {
 				alert(errorMessage);
