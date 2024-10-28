@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.see_nior.seeniorAdmin.account.mapper.AccountMapper;
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
+import com.see_nior.seeniorAdmin.dto.QnaCategoryDto;
 import com.see_nior.seeniorAdmin.dto.QnaDto;
 import com.see_nior.seeniorAdmin.enums.SqlResult;
 import com.see_nior.seeniorAdmin.qna.mapper.QnaMapper;
@@ -36,6 +37,7 @@ public class QnaService {
 		pagingList.put("qnaDtos", qnaDtos);
 		
 		return pagingList;
+		
 	}
 
 	// qna 리스트 총 개수
@@ -154,7 +156,7 @@ public class QnaService {
 		log.info("answerModifyConfirm()");
 		
 		AdminAccountDto adminAccountDto =
-				accountMapper.selectAdminAccountById(a_id);
+				accountMapper.selectAdminAccountById(loginedId);
 		
 		if ((adminAccountDto != null && adminAccountDto.getA_authority_role().equals("SUPER_ADMIN")) 
 				|| a_id.equals(loginedId)) {
@@ -174,6 +176,133 @@ public class QnaService {
 
 	}
 
+	
+	/////////// 카테고리
+	
+	// qna 카테고리명 중복 확인
+	public boolean isQnaCategory(String bqc_name) {
+		log.info("isQnaCategory()");
+		
+		return qnaMapper.isQnaCategory(bqc_name);
+		
+	}
+
+	// qna 카테고리 등록 확인
+	public boolean createCategoryConfirm(String bqc_name) {
+		log.info("createCategoryConfirm()");
+		
+		boolean isQna = qnaMapper.isQnaCategory(bqc_name);
+		
+		if (!isQna) {
+			
+			return SqlResult.FAIL.getValue();
+			
+		} else {
+			
+			int result = qnaMapper.insertNewQnaCategory(bqc_name);
+			
+			if (result >= 0) 
+				return SqlResult.SUCCESS.getValue();
+			else 
+				return SqlResult.FAIL.getValue();
+			
+		}
+		
+	}
+
+	// qna 카테고리 페이징 리스트 가져오기
+	public Map<String, Object> getQnaCategoryPagingList(String sortValue, String order, int page) {
+		log.info("getQnaCategoryPagingList()");
+		
+		Map<String, Object> pagingCategoryList = new HashMap<>();
+		
+		List<AdminAccountDto> qnaCategoryDtos = 
+				qnaMapper.selectQnaCategoryList(PagingUtil.pagingParams(sortValue, order, page));
+		pagingCategoryList.put("qnaCategoryDtos", qnaCategoryDtos);
+		
+		return pagingCategoryList;
+		
+	}
+
+	// qna 카테고리 리스트 총 개수
+	public Map<String, Object> getQnaCategoryListPageNum(int page) {
+		log.info("getQnaCategoryListPageNum()");
+		
+		// 전체 리스트 개수 조회 
+		int qnaCategoryListCnt = qnaMapper.selectAllQnaCategoryListCnt();
+		
+		return PagingUtil.pageNum("qnaCategoryListCnt", qnaCategoryListCnt, page);
+
+	}
+
+	// qna 카테고리 검색 리스트 가져오기
+	public Map<String, Object> searchQnaCategoryPagingList(String searchPart, String searchString, String sortValue,
+			String order, int page) {
+		log.info("searchQnaCategoryPagingList()");
+		
+		Map<String, Object> pagingSearchCategoryList = new HashMap<>();
+		
+		List<AdminAccountDto> qnaCategoryDtos = 
+				qnaMapper.selectSearchQnaCategoryList(PagingUtil.searchPagingParams(searchPart, searchString, sortValue, order, page));
+		pagingSearchCategoryList.put("qnaCategoryDtos", qnaCategoryDtos);
+		
+		return pagingSearchCategoryList;
+		
+	}
+
+	// qna 카테고리 검색 리스트 총 개수
+	public Map<String, Object> searchQnaCategoryListPageNum(String searchPart, String searchString, int page) {
+		log.info("searchQnaCategoryListPageNum()");
+		
+		Map<String, Object> searchParams = new HashMap<>();
+		searchParams.put("searchPart", searchPart);
+		searchParams.put("searchString", searchString);
+		
+		// 전체 리스트 개수 조회 
+		int searchQnaCategoryListCnt = qnaMapper.selectSearchQnaCategoryListCnt(searchParams);
+		
+		return PagingUtil.pageNum("searchQnaCategoryListCnt", searchQnaCategoryListCnt, page);
+		
+	}
+
+	// qna 카테고리 정보 가져오기 by no
+	public QnaCategoryDto getQnaCategoryDtoByNo(int bqc_no) {
+		log.info("getQnaCategoryDtoByNo()");
+		
+		return qnaMapper.selectQnaCategoryDtoByNo(bqc_no);
+		
+	}
+
+	// qna 카테고리 수정 확인
+	public boolean modifyCategoryConfirm(QnaCategoryDto qnaCategoryDto) {
+		log.info("modifyCategoryConfirm()");
+		
+		int result = qnaMapper.updateQnaCategoryInfo(qnaCategoryDto);
+		
+		if (result >= 0)
+			return SqlResult.SUCCESS.getValue();
+		else 
+			return SqlResult.FAIL.getValue();
+		
+	}
+
+	// qna 카테고리 삭제 확인
+	public boolean deleteCategoryConfirm(int bqc_no) {
+		log.info("deleteCategoryConfirm()");
+		
+		int result = qnaMapper.updateQnaCategoryIsDeletedByNo(bqc_no);
+		
+		if (result >= 0)
+			return SqlResult.SUCCESS.getValue();
+		else 
+			return SqlResult.FAIL.getValue();
+		
+	}
+	
+	
+	
+	////////////// 공지사항
+	
 	// qna 공지사항 가져오기
 	public Map<String, Object> getQnaNoticePagingList(String sortValue, String order, int page) {
 		log.info("getQnaNoticePagingList()");
@@ -199,11 +328,33 @@ public class QnaService {
 		
 	}
 
-	// qna 카테고리명 중복 확인
-	public boolean isQnaCategory(String bqc_name) {
-		log.info("isQnaCategory()");
+	// qna 공지사항 검색 리스트 가져오기
+	public Map<String, Object> searchQnaNoticePagingList(String searchPart, String searchString, String sortValue,
+			String order, int page) {
+		log.info("searchQnaNoticePagingList()");
 		
-		return qnaMapper.isQnaCategory(bqc_name);
+		Map<String, Object> pagingSearchQnaNoticeList = new HashMap<>();
+		
+		List<AdminAccountDto> qnaNoticeDtos = 
+				qnaMapper.selectSearchQnaNoticeList(PagingUtil.searchPagingParams(searchPart, searchString, sortValue, order, page));
+		pagingSearchQnaNoticeList.put("qnaNoticeDtos", qnaNoticeDtos);
+		
+		return pagingSearchQnaNoticeList;
+		
+	}
+
+	// qna 공지사항 검색 리스트 총 개수 
+	public Map<String, Object> searchQnaNoticeListPageNum(String searchPart, String searchString, int page) {
+		log.info("searchQnaNoticeListPageNum()");
+		
+		Map<String, Object> searchParams = new HashMap<>();
+		searchParams.put("searchPart", searchPart);
+		searchParams.put("searchString", searchString);
+		
+		// 전체 리스트 개수 조회 
+		int searchQnaNoticeListCnt = qnaMapper.selectSearchQnaNoticeListCnt(searchParams);
+		
+		return PagingUtil.pageNum("searchQnaNoticeListCnt", searchQnaNoticeListCnt, page);
 		
 	}
 

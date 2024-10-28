@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.see_nior.seeniorAdmin.dto.QnaCategoryDto;
 import com.see_nior.seeniorAdmin.dto.QnaDto;
 import com.see_nior.seeniorAdmin.enums.PagePath;
 
@@ -143,20 +144,104 @@ public class QnaController {
 	}
 	
 	// qna 카테고리 등록 확인
-	
-	// qna 카테고리 수정 양식
-	
-	// qna 카테고리 수정 확인
-	
-	// qna 카테고리 삭제 확인
+	@PostMapping("/cate_info/create_category_confirm")
+	@ResponseBody
+	public boolean createCategoryConfirm(@RequestParam("bqc_name") String bqc_name) {
+		log.info("createCategoryConfirm()");
+		
+		return qnaService.createCategoryConfirm(bqc_name);
+		
+	}
 	
 	// qna 카테고리 리스트 양식
+	@GetMapping("/cate_info/category_list_form")
+	public String categoryListForm(@RequestParam String param) {
+		log.info("categoryListForm()");
+		
+		return PagePath.QNA_CATEGORY_LIST_FORM.getValue();
+		
+	}
 	
 	// qna 카테고리 모든 리스트 가져오기
+	@GetMapping("/cate_info/get_category_list")
+	@ResponseBody
+	public Object getCategoryList(
+			@RequestParam(value = "sortValue", required = false, defaultValue = "bqc_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("getCategoryList()");
+		
+		Map<String, Object> qnaCategoryList = qnaService.getQnaCategoryPagingList(sortValue, order, page);
+		
+		Map<String, Object> qnaListPage = qnaService.getQnaCategoryListPageNum(page);
+		qnaCategoryList.put("qnaListPageNum", qnaListPage);
+		qnaCategoryList.put("sortValue", sortValue);
+		qnaCategoryList.put("order", order);
+		
+		return qnaCategoryList;
+		
+	}
 	
-	// qna 카테고리 선택 리스트 가져오기 (select box) 
+	// qna 카테고리 검색 리스트 가져오기
+	@GetMapping("/cate_info/search_category_list")
+	@ResponseBody
+	public Object searchCategoryList(
+			@RequestParam("searchPart") String searchPart,
+			@RequestParam("searchString") String searchString, 
+			@RequestParam(value = "sortValue", required = false, defaultValue = "bqc_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order, 
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("searchCategoryList()");
 	
-	// qna 카테고리 검색 리스트 가져오기 
+		Map<String, Object> searchQnaCategoryList = 
+				qnaService.searchQnaCategoryPagingList(searchPart, searchString, sortValue, order, page);
+		
+		Map<String, Object> searchQnaCategoryListPageNum = 
+				qnaService.searchQnaCategoryListPageNum(searchPart, searchString, page);
+		
+		searchQnaCategoryList.put("searchQnaCategoryListPageNum", searchQnaCategoryListPageNum);
+		searchQnaCategoryList.put("sortValue", sortValue);
+		searchQnaCategoryList.put("order", order);
+		searchQnaCategoryList.put("searchPart", searchPart);
+		searchQnaCategoryList.put("searchString", searchString);
+		
+		return searchQnaCategoryList;
+		
+	}
+	
+	// qna 카테고리 수정 양식
+	@GetMapping("/cate_info/modify_category_form")
+	public String modifyCategoryForm(@RequestParam("bqc_no") int bqc_no, Model model) {
+		log.info("modifyCategoryForm()");
+		
+		QnaCategoryDto qnaCategoryDto = 
+				qnaService.getQnaCategoryDtoByNo(bqc_no);
+		
+		model.addAttribute("qnaCategoryDto", qnaCategoryDto);
+		
+		return PagePath.QNA_MODIFY_CATEGORY_FORM.getValue();
+		
+	}
+	
+	// qna 카테고리 수정 확인
+	@PostMapping("/cate_info/modify_category_confirm")
+	@ResponseBody
+	public boolean modifyCategoryConfirm(QnaCategoryDto qnaCategoryDto) {
+		log.info("modifyCategoryConfirm()");
+		
+		return qnaService.modifyCategoryConfirm(qnaCategoryDto);
+		
+	}
+	
+	// qna 카테고리 삭제 확인
+	@PostMapping("/cate_info/delete_category_confirm")
+	@ResponseBody
+	public boolean deleteCategoryConfirm(@RequestParam("bqc_no") int bqc_no) {
+		log.info("deleteCategoryConfirm()");
+		
+		return qnaService.deleteCategoryConfirm(bqc_no);
+		
+	}
 	
 	
 ////////////////////////// 공지사항 	
@@ -191,7 +276,31 @@ public class QnaController {
 	}
 	
 	// qna 공지사항 검색 리스트 가져오기
-	
+	@GetMapping("/noti_info/search_notice_list")
+	@ResponseBody
+	public Object searchNoticeList(
+			@RequestParam("searchPart") String searchPart,
+			@RequestParam("searchString") String searchString, 
+			@RequestParam(value = "sortValue", required = false, defaultValue = "bqn_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order, 
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("searchNoticeList()");
+		
+		Map<String, Object> searchQnaNoticeList = 
+				qnaService.searchQnaNoticePagingList(searchPart, searchString, sortValue, order, page);
+		
+		Map<String, Object> searchQnaNoticeListPageNum = 
+				qnaService.searchQnaNoticeListPageNum(searchPart, searchString, page);
+		
+		searchQnaNoticeList.put("searchQnaNoticeListPageNum", searchQnaNoticeListPageNum);
+		searchQnaNoticeList.put("sortValue", sortValue);
+		searchQnaNoticeList.put("order", order);
+		searchQnaNoticeList.put("searchPart", searchPart);
+		searchQnaNoticeList.put("searchString", searchString);
+		
+		return searchQnaNoticeList;
+		
+	}
 	
 	// qna 공지사항 등록 양식
 	@GetMapping("/noti_info/create_notice_form")
