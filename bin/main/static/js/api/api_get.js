@@ -281,8 +281,8 @@ function mapApiResponseObject(apiUrl, response) {
 		
 		case '/qna/cate_info/get_category_list': // 질문 유형 분류 관리
 			getListDtos = response.qnaCategoryDtos;
-			getListPage = response.qnaCategoryListPageNum ;
-			getListCnt = response.qnaCategoryListPageNum .qnaCategoryListCnt;
+			getListPage = response.qnaCategoryListPageNum;
+			getListCnt = response.qnaCategoryListPageNum.qnaCategoryListCnt;
 			break;
 			
 		case '/qna/cate_info/search_qna_category_list': // 질문 유형 분류 검색
@@ -712,7 +712,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page, infoNo) {
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.qnaCategoryDto.bqc_name}</a>
 		            </td>
 		            <td>
-		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.bq_state === true ? '대기' : '답변'}</a>
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.qnaAnswerDto ? '답변' : '대기'}</a>
 		            </td>
 					<td class="ta_l">
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.bq_title}</a>
