@@ -161,6 +161,17 @@ public class QnaController {
 		
 	}
 	
+	// qna 카테고리 리스트 가져오기 (select box 용)
+	@GetMapping("/cate_info/get_category_list_select")
+	@ResponseBody
+	public Object getCategoryListSelect() {
+		log.info("getCategoryListSelect()");
+		
+		return qnaService.getCategoryListSelect();
+		
+	}
+	
+	
 	// qna 카테고리 모든 리스트 가져오기
 	@GetMapping("/cate_info/get_category_list")
 	@ResponseBody

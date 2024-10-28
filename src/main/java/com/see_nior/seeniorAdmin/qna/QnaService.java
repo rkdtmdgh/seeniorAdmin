@@ -214,6 +214,16 @@ public class QnaService {
 		}
 		
 	}
+	
+	// qna 카테고리 리스트 가져오기 (select box)
+	public Object getCategoryListSelect() {
+		log.info("getCategoryListSelect()");
+		
+		List<QnaCategoryDto> qnaCategoryDtos = qnaMapper.selectQnaCategoryListForSelectBox(); 
+		
+		return qnaCategoryDtos;
+		
+	}
 
 	// qna 카테고리 페이징 리스트 가져오기
 	public Map<String, Object> getQnaCategoryPagingList(String sortValue, String order, int page) {
@@ -435,5 +445,6 @@ public class QnaService {
 			return SqlResult.FAIL.getValue();
 		
 	}
+
 
 }
