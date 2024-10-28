@@ -81,6 +81,7 @@ public class QnaController {
 		searchQnaList.put("searchString", searchString);
 		
 		return searchQnaList;
+		
 	}
 	
 	// qna 답변하기 양식
