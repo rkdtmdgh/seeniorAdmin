@@ -364,7 +364,4 @@ public class QnaController {
 		
 	}
 	
-	
-	
-	
 }
