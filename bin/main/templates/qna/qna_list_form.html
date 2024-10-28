@@ -12,6 +12,10 @@
 				case '2': // search
 					await getSearchList(null, '/qna/info/search_qna_list', page);
 					break;
+					
+				case '1': // select
+					await getList('/qna/info/get_qna_list_by_category', sortValue, order, page);
+					break;
 
 				case '0': // sort
 					await getList('/qna/info/get_qna_list', sortValue, order, page);

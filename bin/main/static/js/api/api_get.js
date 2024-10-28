@@ -949,6 +949,10 @@ function mapSelectListApiObject(sortValue) {
 		case 'rcp_pat2': // 식단 정보 리스트 페이지 음식 종류별 분류 리스트 요청
 			apiUrl = '/recipe/info/get_recipe_list_by_type';
 			break;
+			
+		case 'bq_no': // QnA 질문 유형별 분류 리스트 요청
+			apiUrl = '/qna/info/get_qna_list_by_category';
+			break;
 		
 		case 'ad_no': // 광고 관리 리스트 페이지 위치별 분류 리스트 요청
 			apiUrl = '/advertisement/info/get_advertisement_list_by_category';
