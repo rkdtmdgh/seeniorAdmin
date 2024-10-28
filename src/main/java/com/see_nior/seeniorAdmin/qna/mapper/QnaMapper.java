@@ -62,5 +62,7 @@ public interface QnaMapper {
 	public List<AdminAccountDto> selectSearchQnaNoticeList(Map<String, Object> searchPagingParams);
 
 	public int selectSearchQnaNoticeListCnt(Map<String, Object> searchParams);
+
+	public int insertNewQnaNotice(Map<String, Object> params);
 	
 }

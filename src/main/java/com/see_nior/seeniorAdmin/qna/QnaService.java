@@ -300,7 +300,6 @@ public class QnaService {
 	}
 	
 	
-	
 	////////////// 공지사항
 	
 	// qna 공지사항 가져오기
@@ -355,6 +354,27 @@ public class QnaService {
 		int searchQnaNoticeListCnt = qnaMapper.selectSearchQnaNoticeListCnt(searchParams);
 		
 		return PagingUtil.pageNum("searchQnaNoticeListCnt", searchQnaNoticeListCnt, page);
+		
+	}
+
+	// qna 공지사항 등록 확인
+	public boolean createNoticeConfrim(String bqn_title,String bqn_body, String loginedId) {
+		log.info("createNoticeConfrim()");
+			
+		AdminAccountDto adminAccountDto = 
+				accountMapper.selectAdminAccountById(loginedId);
+		
+		Map<String, Object> params = new HashMap<>();
+		params.put("bqn_title", bqn_title);
+		params.put("bqn_body", bqn_body);
+		params.put("a_no", adminAccountDto.getA_no());
+		
+		int insertResult = qnaMapper.insertNewQnaNotice(params);
+			
+			if(insertResult >= 0)
+				return SqlResult.SUCCESS.getValue();
+			else 
+				return SqlResult.FAIL.getValue();
 		
 	}
 
