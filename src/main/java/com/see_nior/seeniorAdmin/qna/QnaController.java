@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.see_nior.seeniorAdmin.dto.QnaCategoryDto;
 import com.see_nior.seeniorAdmin.dto.QnaDto;
+import com.see_nior.seeniorAdmin.dto.QnaNoticeDto;
 import com.see_nior.seeniorAdmin.enums.PagePath;
 
 import lombok.RequiredArgsConstructor;
@@ -307,7 +308,7 @@ public class QnaController {
 	public String createNoticeForm() {
 		log.info("createNoticeForm()");
 		
-		return PagePath.QNA_NOTICE_CREATE_FORM.getValue();
+		return PagePath.QNA_CREATE_NOTICE_FORM.getValue();
 		
 	}
 	
@@ -324,12 +325,44 @@ public class QnaController {
 		
 	}
 	
-	
 	// qna 공지사항 수정 양식
+	@GetMapping("/noti_info/modify_notice_form")
+	public String modifyNoticeForm(@RequestParam("bqn_no") int bqn_no, Model model) {
+		log.info("modifyNoticeForm()");
+		
+		QnaNoticeDto qnaNoticeDto = 
+				qnaService.getQnaNoticeInfoByNo(bqn_no);
+		
+		model.addAttribute("qnaNoticeDto", qnaNoticeDto);
+		
+		return PagePath.QNA_MODIFY_NOTICE_FORM.getValue();
+		
+	}
 	
 	// qna 공지사항 수정 확인
+	@PostMapping("/noti_info/modify_notice_confirm")
+	@ResponseBody
+	public boolean modifyNoticeConfirm(
+			@RequestParam("bqn_no") int bqn_no, 
+			@RequestParam("bqn_title") String bqn_title, 
+			@RequestParam("bqn_body") String bqn_body, 
+			@RequestParam("bqn_writer_no") int bqn_writer_no, 
+			Principal principal) {
+		log.info("modifyNoticeConfirm()");
+		
+		return qnaService.modifyNoticeConfirm(bqn_no, bqn_title, bqn_body, bqn_writer_no, principal.getName());
+		
+	}
 	
 	// qna 공지사항 삭제 확인
+	@PostMapping("/noti_info/delete_notice_confirm")
+	@ResponseBody
+	public boolean deleteNoticeConfrim(@RequestParam("bqn_no") int bqn_no) {
+		log.info("deleteNoticeConfrim()");
+		
+		return qnaService.deleteNoticeConfrim(bqn_no);
+		
+	}
 	
 	
 	
