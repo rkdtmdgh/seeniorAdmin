@@ -101,6 +101,7 @@
 	
 		SELECT 
 			BQ.*, 
+			BQC.*, 
 			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
 		FROM 
 			BOARD_QNA BQ 
