@@ -398,7 +398,7 @@
 			BOARD_QNA_CATEGORY 
 		SET 
 			BQC_NAME = #{bqc_name}, 
-			BQC_MOD_DATE = NOW()
+			BQC_MOD_DATE = NOW() 
 		WHERE 
 			BQC_NO = #{bqc_no} 
 	
