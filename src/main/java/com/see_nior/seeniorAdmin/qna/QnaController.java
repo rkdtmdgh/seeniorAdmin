@@ -154,7 +154,7 @@ public class QnaController {
 	
 	// qna 카테고리 리스트 양식
 	@GetMapping("/cate_info/category_list_form")
-	public String categoryListForm(@RequestParam String param) {
+	public String categoryListForm() {
 		log.info("categoryListForm()");
 		
 		return PagePath.QNA_CATEGORY_LIST_FORM.getValue();
@@ -170,7 +170,6 @@ public class QnaController {
 		return qnaService.getCategoryListSelect();
 		
 	}
-	
 	
 	// qna 카테고리 모든 리스트 가져오기
 	@GetMapping("/cate_info/get_category_list")
