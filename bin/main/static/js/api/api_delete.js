@@ -34,7 +34,7 @@ async function deleteDataProcess(deleteConfig, data, dataName, errorMessage) {
 
 // 개별 삭제
 async function delSingleData(dataName, key, noValue, additionalData = {}) { // 추가 인자가 필요할 경우 {} 객체로 additionalData위치에 인자 전달
-	logger.info('delSingleData()', key, noValue, dataName);
+	logger.info('delSingleData()', key, noValue, dataName, additionalData);
 	
 	const isConfirm = confirm(`${dataName}을(를) 삭제하시겠습니까?`);
 	if(!isConfirm) return false;
