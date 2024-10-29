@@ -81,6 +81,7 @@ public class QnaController {
 		searchQnaList.put("searchString", searchString);
 		
 		return searchQnaList;
+		
 	}
 	
 	// qna 답변하기 양식
@@ -182,8 +183,8 @@ public class QnaController {
 		
 		Map<String, Object> qnaCategoryList = qnaService.getQnaCategoryPagingList(sortValue, order, page);
 		
-		Map<String, Object> qnaListPage = qnaService.getQnaCategoryListPageNum(page);
-		qnaCategoryList.put("qnaListPageNum", qnaListPage);
+		Map<String, Object> qnaCategoryListPage = qnaService.getQnaCategoryListPageNum(page);
+		qnaCategoryList.put("qnaCategoryListPageNum", qnaCategoryListPage);
 		qnaCategoryList.put("sortValue", sortValue);
 		qnaCategoryList.put("order", order);
 		
