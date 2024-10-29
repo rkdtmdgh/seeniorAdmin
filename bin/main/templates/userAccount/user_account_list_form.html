@@ -11,7 +11,7 @@
 			
 			switch(sortType) {
 				case '1': // search
-					await getSearchList(null, '/user_account/info/search_user_account_list', page);
+					await getSearchList(null, '/user_account/info/search_user_account_list', sortValue, order, page);
 					break;
 
 				default:  
@@ -41,7 +41,7 @@
 									</form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/user_account/info/get_user_account_list', null, null, 1);">전체보기</div>
+						            	<div class="btns small" onclick="getList('/user_account/info/get_user_account_list', null, null, 1, true);">전체보기</div>
 						            </div>
 					            </div>
 					        </div>

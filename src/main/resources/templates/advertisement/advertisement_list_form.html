@@ -11,7 +11,7 @@
 			
 			switch(sortType) {
 				case '1': // search
-					await getSearchList(null, '/advertisement/info/search_advertisement_list', page);
+					await getSearchList(null, '/advertisement/info/search_advertisement_list', sortValue, order, page);
 					break;
 
 				case '2': // select

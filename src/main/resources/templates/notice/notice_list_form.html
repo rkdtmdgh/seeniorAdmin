@@ -10,7 +10,7 @@
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '1': // search
-					await getSearchList(null, '/notice/info/search_notice_list', page);
+					await getSearchList(null, '/notice/info/search_notice_list', sortValue, order, page);
 					break;
 
 				default: 
@@ -40,7 +40,7 @@
 									</form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/notice/info/get_notice_list', null, null, 1);">전체보기</div>
+						            	<div class="btns small" onclick="getList('/notice/info/get_notice_list', null, null, 1, true);">전체보기</div>
 						            	<a href="/notice/info/create_form" class="btns small">공지사항 등록</a>
 						            </div>
 					            </div>

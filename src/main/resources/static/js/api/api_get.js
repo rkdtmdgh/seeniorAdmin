@@ -10,22 +10,25 @@ async function getListProcess(apiUrl, sortValue, order, page, resetParams = fals
 		if(resetParams) setDelQueryString(); // 쿼리 파라미터 제거
 		
 	    // 검색 인풋 벨류 삭제
-		const $searchStringInput = $('form[name="search_form"]').find('input[name="search_string"]');
+		const $searchStringInput = $('form[name="search_form"]').find('input[name="searchString"]');
 		if($searchStringInput.length && $searchStringInput.val().trim()) $searchStringInput.val(''); // 검색 이력이 남았을 경우에만 삭제
 		
 		const urlParams = new URLSearchParams(window.location.search);
 		const infoNo = urlParams.get('infoNo') || undefined;
 		
-		const intPage = page || 1
-		let params = `?page=${intPage}`;
-		if(sortValue) params = `${params}&sortValue=${encodeURIComponent(sortValue)}&order=${encodeURIComponent(order)}`;
-		if(infoNo) params = `${params}&infoNo=${infoNo}`;
+		const params = new URLSearchParams(); // URL 쿼리 파라미터 생성
+		if(infoNo) params.append('infoNo', infoNo);
+		if(sortValue) { // sort값이 있을 경우 추가
+			params.append('sortValue', sortValue);
+			params.append('order', order);				
+		}
+		params.append('page', page || 1); // 페이지 추가
 		
-		logger.info('apiUrl:', apiUrl + params);
+		logger.info(`apiUrl: ${apiUrl}?${params.toString()}`);
 		
 		try {
 			const response = await $.ajax({
-				url: apiUrl + params,
+				url: `${apiUrl}?${params.toString()}`,
 				method: 'GET',
 			});
 			
@@ -77,22 +80,22 @@ async function getListProcess(apiUrl, sortValue, order, page, resetParams = fals
 }
 
 // 검색 리스트 요청
-async function getSearchListProcess(event, apiUrl, page) {
-		if(event) event.preventDefault();
-		const form = document.forms['search_form'];
-		let input;
-		
-		input = form.search_string;
-		if(!validateEmpty(input, '검색어를', true, true)) { // 요소, text, alert 여부, 에러메세지 미노출 여부
-			input.focus();
-			return false;
-		}
-		
-		if(input.value.trim().length < 2) {
-			alert('검색어는 2자 이상 입력해 주세요.');
-			input.focus();
-			return false;
-		}
+async function getSearchListProcess(event, apiUrl, sortValue, order, page) {
+	if(event) event.preventDefault();
+	const form = document.forms['search_form'];
+	let input;
+	
+	input = form.search_string;
+	if(!validateEmpty(input, '검색어를', true, true)) { // 요소, text, alert 여부, 에러메세지 미노출 여부
+		input.focus();
+		return false;
+	}
+	
+	if(input.value.trim().length < 2) {
+		alert('검색어는 2자 이상 입력해 주세요.');
+		input.focus();
+		return false;
+	}
 		
 	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
 		if(apiUrl) {
@@ -105,7 +108,14 @@ async function getSearchListProcess(event, apiUrl, page) {
 				params.append(key, value);
 			});
 			
-			params.append('page', page || 1);
+			const urlParams = new URLSearchParams(window.location.search);
+			const infoNo = urlParams.get('infoNo') || undefined;
+			if(infoNo) params.append('infoNo', infoNo); // infoNo값이 있을 경우 추가 (분류 no 값)
+			if(sortValue) { // sort값이 있을 경우 추가
+				params.append('sortValue', sortValue);
+				params.append('order', order);				
+			}
+			params.append('page', page || 1); // 페이지 추가
 			
 			logger.info('search params:', params.toString());
 					
@@ -125,7 +135,7 @@ async function getSearchListProcess(event, apiUrl, page) {
 				
 				if(response && getListDtos.length) {
 					// 쿼리스트링 조건 추가
-					setSearchQueryString(getListPage.page, response.searchPart, response.searchString); // page, searchPart, searchString
+					setSearchQueryString(response.searchPart, response.searchString, sortValue, order, getListPage.page); // searchPart, searchString, page
 					
 					if(response.reg_date) setContentSubInfo(response.reg_date); // 타이틀 옆 서브내용 표시(예: 업데이트 날짜 등)
 					
@@ -830,27 +840,23 @@ function generatePagination(pagingValues, sortValue, order, apiUrl, isSearch) { 
 	const maxPage = pagingValues.maxPage; // 마지막 페이지
 	const totalBlocks = Math.ceil(maxPage / blockLimit); // 전체 블록 수
 	const currentBlock = Math.ceil(currentPage / blockLimit); // 현재 블록
+	
+	// 함수명, 인자 생성
 	const handlerFunction = isSearch ? 'getSearchList' : 'getList';
+	const args = `${isSearch ? 'null, ' : ''}'${apiUrl}', '${sortValue || ''}', '${order || ''}'`;
 	
-	// 검색폼일 경우 event 값 null 적용 검색폼이 아닐 경우 getList 커맨드
-	const params1 = isSearch ? null : `'${apiUrl}'`; 
-	
-	// 검색폼일 경우 커맨드 검색폼이 아닐 경우 sortValue, order 값 입력
-	const isSortValue = sortValue || '';
-	const isOrder = order || '';
-	const params2 = isSearch ? `'${apiUrl}'` : `'${isSortValue}', '${isOrder}'`;
 	let paging = '';
 	
 	if(totalBlocks > 1 && currentBlock > 1) { // 블럭이 1개 이상일 경우 2번째 블럭 부터 노출
 		paging += `
-			<div onclick="${handlerFunction}(${params1}, ${params2}, 1)" class="first func_icon">
+			<div onclick="${handlerFunction}(${args}, 1)" class="first func_icon">
 	            <svg aria-label="first" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" enable-background="new 0 0 20 20">
 	                <polygon points="10,5 10,0 0,10 10,20 10,15 5,10 	"/>
 	             <polygon points="15,5 10,10 15,15 20,20 20,0 	"/>
 	            </svg>
 	        </div>
 	        
-	        <div onclick="${handlerFunction}(${params1}, ${params2}, ${startPage - 1})" class="prev func_icon">
+	        <div onclick="${handlerFunction}(${args}, ${startPage - 1})" class="prev func_icon">
 	            <svg aria-label="first" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" enable-background="new 0 0 20 20">
 	                <polygon points="15,0 5,10 15,20 "/>
 	            </svg>
@@ -862,19 +868,19 @@ function generatePagination(pagingValues, sortValue, order, apiUrl, isSearch) { 
 		if(i === currentPage) {
 			paging += `<div class="current">${i}</div>`;
 		} else {
-			paging += `<div class="num" onclick="${handlerFunction}(${params1}, ${params2}, ${i})">${i}</div>`;
+			paging += `<div class="num" onclick="${handlerFunction}(${args}, ${i})">${i}</div>`;
 		}
 	}
 	
 	if(totalBlocks > 1 && currentBlock < totalBlocks) { // 마지막 전 블럭까지 노출
 		paging += `
-			<div onclick="${handlerFunction}(${params1}, ${params2}, ${endPage + 1})" class="next func_icon">
+			<div onclick="${handlerFunction}(${args}, ${endPage + 1})" class="next func_icon">
 	            <svg aria-label="first" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" enable-background="new 0 0 20 20">
 	                <polygon points="15,0 5,10 15,20 "/>
 	            </svg>
 	        </div>
 	        
-	        <div onclick="${handlerFunction}(${params1}, ${params2}, ${maxPage})" class="last func_icon">
+	        <div onclick="${handlerFunction}(${args}, ${maxPage})" class="last func_icon">
 	            <svg aria-label="first" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" enable-background="new 0 0 20 20">
 	                <polygon points="10,5 10,0 0,10 10,20 10,15 5,10 	"/>
 	             <polygon points="15,5 10,10 15,15 20,20 20,0 	"/>
@@ -898,8 +904,15 @@ function getSortList(event, dbTable, sortValue) {
 	const urlParams = new URLSearchParams(window.location.search);
 	const sortType = urlParams.get('sortType') || 0; // 0 = 기본값, 1 = 검색, 2 = 카테고리선택
     const apiUrl = mapSortListApiObject(dbTable, sortType); // 커맨드 가져오기
-	
-    getList(apiUrl, sortValue, order, 1); // 변경된 정렬 값으로 getList 호출
+    
+	if(sortType === '1') { // 검색 리스트인 경우
+		logger.info(`getSearchList() aipUrl: ${apiUrl} sortType: ${sortType}`);
+		getSearchList(null, apiUrl, sortValue, order, 1); // 변경된 정렬 값으로 getSearchList 호출	
+		
+	} else {
+		logger.info(`getList() aipUrl: ${apiUrl} sortType: ${sortType}`);
+	    getList(apiUrl, sortValue, order, 1); // 변경된 정렬 값으로 getList 호출		
+	}
 }
 
 // sortType에 따른 sort getList() 요청 커맨드 설정

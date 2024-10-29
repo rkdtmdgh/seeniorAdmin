@@ -9,16 +9,12 @@
 		$(async function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
-				case '2': // search
-					await getSearchList(null, '/qna/cate_info/search_qna_category_list', page);
+				case '1': // search
+					await getSearchList(null, '/qna/cate_info/search_qna_category_list', sortValue, order, page);
 					break;
 					
-				case '0': // sort
+				default: 
 					await getList('/qna/cate_info/get_category_list', sortValue, order, page);
-					break;
-					
-				default:
-					await getList('/qna/cate_info/get_category_list', null, null, page);
 			}
         });
 	</script>
