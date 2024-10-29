@@ -27,8 +27,13 @@
 	                        <p class="sub_title">질문과 답변</p>
 	                    </div>
 	
-	                    <form name="qna_answer_create_form">
+	                    <form name="qna_answer_form">
 		                    <input type="hidden" name="bq_no" th:value="${qnaDto.bq_no}">
+		                    
+		                    <th:block th:if="${qnaDto.qnaAnswerDto}">
+			                    <input type="hidden" name=bqa_no th:value="${qnaDto.qnaAnswerDto.bqa_no}">
+			                    <input type="hidden" name="a_id" th:value="${qnaDto.qnaAnswerDto.adminAccountDto.a_id}">
+		                    </th:block>
 		                    
 	                        <div class="table_wrap">
 	                            <table class="content_edit_table">
@@ -43,7 +48,7 @@
 	                                	<tr>
 		                                    <th><p class="table_title">질문 유형</p></th>
 		                                    <td colspan="3">
-		                                    	<p class="table_info" th:text="${qnaDto.qnaCategoryDto?.bqc_name?: ''}"></p>
+		                                    	<p class="table_info" th:text="${qnaDto.qnaCategoryDto.bqc_name}"></p>
 		                                    </td>
 		                                </tr>
 		                                
@@ -95,8 +100,8 @@
 	                                				th:text="${qnaDto.qnaAnswerDto?.bqa_answer ?: ''}"
 	                                				th:readonly="${
 	                                					qnaDto.qnaAnswerDto != null and
-			                                    		(!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
-			                                    		qnaDto.qnaAnswerDto.bqa_answer_a_id != #authentication.name)
+			                                    		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
+			                                    		qnaDto.qnaAnswerDto.adminAccountDto.a_id != #authentication.name
 	                                				}"></textarea>
                                             	<div id="text_limit">
 	                                				<span id="current_size"></span> / <span id="max_size"></span>
@@ -106,33 +111,47 @@
 	                                </tbody>
 	                            </table>
 	
-                                <div class="btn_list">
+                                <div class="btn_list" th:classappend="${qnaDto.qnaAnswerDto != null ? 'f_jc_right' : ''}">
                                 	<div th:if="${qnaDto.qnaAnswerDto == null}" class="btns delete"
-		                        		 th:onclick="delListData('bq_no')">질문 삭제</div>
+		                        		 th:onclick="
+		                        		 	delSingleData(
+		                        		 		[[${qnaDto.userAccountDto.u_id} + '님의 질문']],
+		                        		 		'bq_no', 
+		                        		 		[[${qnaDto.bq_no}]]
+		                        		 	)
+	                        		 	">질문 삭제</div>
 		                        		 
                                 	<div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
 	                                    
-	                                    <div  
+	                                    <div class="btns delete"
 	                                    	th:if="${
 	                                    		qnaDto.qnaAnswerDto != null and
 	                                    		(#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
-	                                    		qnaDto.qnaAnswerDto.bqa_answer_a_id == #authentication.name)
+	                                    		qnaDto.qnaAnswerDto.adminAccountDto.a_id == #authentication.name)
 	                                    	}"
-		                        			th:onclick="delListData('bqa_no')"
-		                        			class="btns delete">답변 삭제</div>
+		                        			th:onclick="
+		                        				delSingleData(
+		                        					[[${qnaDto.qnaAnswerDto.adminAccountDto.a_id} + '님의 답변']],
+			                        		 		'bqa_no', 
+			                        		 		[[${qnaDto.qnaAnswerDto.bqa_no}]],
+			                        		 		{
+			                        		 			'bq_no': [[${qnaDto.bq_no}]],
+			                        		 		}
+		                        				)
+		                        			">답변 삭제</div>
 		                        		 
 	                                    <div 
 	                                    	th:if="${qnaDto.qnaAnswerDto == null}"
-	                                    	onclick="putVideoModify('qna_answer_create_form')" class="btns">답변 등록</div>
+	                                    	onclick="postAnswerCreate('qna_answer_form')" class="btns">답변 등록</div>
                                     	
                                     	<div 
 	                                    	th:if="${
 	                                    		qnaDto.qnaAnswerDto != null and
-	                                    		(!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
-	                                    		qnaDto.qnaAnswerDto.bqa_answer_a_id != #authentication.name)
+	                                    		(#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
+	                                    		qnaDto.qnaAnswerDto.adminAccountDto.a_id == #authentication.name)
 	                                    	}"
-	                                    	onclick="putVideoModify('qna_answer_create_form')" class="btns">답변 수정</div>
+	                                    	onclick="putAnswerModify('qna_answer_form')" class="btns">답변 수정</div>
 	                                </div>
                                 </div>
 	                        </div>

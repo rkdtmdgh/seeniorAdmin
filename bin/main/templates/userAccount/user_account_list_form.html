@@ -10,16 +10,12 @@
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			
 			switch(sortType) {
-				case '2': // search
-					await getSearchList(null, '/user_account/info/search_user_account_list', page);
+				case '1': // search
+					await getSearchList(null, '/user_account/info/search_user_account_list', sortValue, order, page);
 					break;
 
-				case '0':  // sort
+				default:  
 					await getList('/user_account/info/get_user_account_list', sortValue, order, page);
-					break;
-					
-				default:
-					await getList('/user_account/info/get_user_account_list', null, null, page);
 			}
         });
 	</script>

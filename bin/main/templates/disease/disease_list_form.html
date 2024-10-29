@@ -9,24 +9,20 @@
 		$(async function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
-				case '2': // search
-					await getSearchList(null, '/disease/info/search_disease_list', page);
+				case '1': // search
+					await getSearchList(null, '/disease/info/search_disease_list', sortValue, order, page);
 					break;
 
-				case '1': // select
+				case '2': // select
 					await getList('/disease/info/get_disease_list_by_category', sortValue, order, page);
 					break;
 
-				case '0': // sort
-					await getList('/disease/info/get_disease_list', sortValue, order, page);
-					break;
-					
 				default:
-					await getList('/disease/info/get_disease_list', null, null, page);
+					await getList('/disease/info/get_disease_list', sortValue, order, page);
 			}
 
 			// disease category 가져오기
-			await getCategoryList('dc_name'); // element id, form 종류, selectedValue
+			await getCategoryList('d_category_no'); // element id, form 종류, selectedValue
         });
 	</script>
 </head>
@@ -81,7 +77,7 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <div class="table_title select dc_name_select" id="dc_name" onclick="setSelectOptionTopggle(event)">분류</div>
+	                                        <div class="table_title select d_category_no_select" id="d_category_no" onclick="setSelectOptionTopggle(event)">분류</div>
 	                                    </th>
 	                                    
 	                                    <th>

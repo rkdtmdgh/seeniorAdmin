@@ -9,20 +9,16 @@
 		$(async function() {			
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
-				case '2': // search
-					await getSearchList(null, '/board/info/search_board_notice_list', page);
+				case '1': // search
+					await getSearchList(null, '/board/info/search_board_notice_list', sortValue, order, page);
 					break;
 				
-				case '1': // select
+				case '2': // select
 					await getList('/board/noti_info/get_board_notice_list', sortValue, order, page);
 					break;
 
-				case '0': // sort
+				default: 
 					await getList('/board/noti_info/get_board_notice_list', sortValue, order, page);
-					break;
-					
-				default:
-					await getList('/board/noti_info/get_board_notice_list', null, null, page);
 			}
 			
 			// board category 가져오기

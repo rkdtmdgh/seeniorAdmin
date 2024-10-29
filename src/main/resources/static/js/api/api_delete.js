@@ -15,9 +15,9 @@ async function deleteDataProcess(deleteConfig, data, dataName, errorMessage) {
 			
 			logger.info(`${deleteConfig.apiUrl} deleteData() response:`, response);
 			
-		if(response) {
+			if(response) {
 				alert(`${dataName} 삭제되었습니다.`);
-				location.replace(deleteConfig.replace);
+				deleteConfig.replace ? location.replace(deleteConfig.replace) : location.reload(true);
 				
 			} else {
 				alert(errorMessage);
@@ -34,9 +34,9 @@ async function deleteDataProcess(deleteConfig, data, dataName, errorMessage) {
 
 // 개별 삭제
 async function delSingleData(dataName, key, noValue, additionalData = {}) { // 추가 인자가 필요할 경우 {} 객체로 additionalData위치에 인자 전달
-	logger.info('delSingleData()', key, noValue, dataName);
+	logger.info('delSingleData()', key, noValue, dataName, additionalData);
 	
-	const isConfirm = confirm(`${dataName} 을(를) 삭제하시겠습니까?`);
+	const isConfirm = confirm(`${dataName}을(를) 삭제하시겠습니까?`);
 	if(!isConfirm) return false;
 	
 	const data = { [key]: noValue };
@@ -44,7 +44,7 @@ async function delSingleData(dataName, key, noValue, additionalData = {}) { // �
 	
 	const deleteConfig = mapDeleteObject(key); // 커맨드와 경로 설정
 	const errorMessage = `${dataName} 삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
-	const delName = dataName + ' 이(가)';
+	const delName =`${dataName}이(가)`;
 		
 	deleteData(deleteConfig, data, delName, errorMessage);
 }
@@ -113,6 +113,15 @@ function mapDeleteObject(value) {
 		case 'n_no': // 공지사항
 			apiUrl = '/notice/info/delete_confirm';
 			replace = '/notice/info/notice_list_form';
+			break;
+		
+		case 'bq_no': // QnA 질문
+			apiUrl = '/qna/info/delete_confirm';
+			replace = '/qna/info/qna_list_form';
+			break;
+			
+		case 'bqa_no': // QnA 답변
+			apiUrl = '/qna/info/answer_delete_confirm';
 			break;
 		
 		case 'bc_no': // 게시판

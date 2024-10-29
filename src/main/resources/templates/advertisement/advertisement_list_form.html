@@ -10,20 +10,16 @@
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			
 			switch(sortType) {
-				case '2': // search
-					await getSearchList(null, '/advertisement/info/search_advertisement_list', page);
+				case '1': // search
+					await getSearchList(null, '/advertisement/info/search_advertisement_list', sortValue, order, page);
 					break;
 
-				case '1': // select
+				case '2': // select
 					await getList('/advertisement/info/get_advertisement_list_by_category', sortValue, order, page);
 					break;
 
-				case '0':  // sort
+				default: 
 					await getList('/advertisement/info/get_advertisement_list', sortValue, order, page);
-					break;
-					
-				default:
-					await getList('/advertisement/info/get_advertisement_list', null, null, page);
 			}
 
 			// advertisement category 가져오기
@@ -65,7 +61,7 @@
 	                                <col class="col_no">
 	                                <col class="col_short">
 	                                <col>
-	                                <col>
+	                                <col class="col_state">
 	                                <col>
 	                                <col>
 	                            </colgroup>
@@ -82,6 +78,14 @@
 	                                    
 	                                    <th>
 	                                        <p class="table_title">클라이언트</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'advertisement', 'ad_state')">
+	                                        	상태
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
 	                                    </th>
 	                                    
 	                                    <th>

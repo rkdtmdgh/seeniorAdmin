@@ -327,11 +327,35 @@ async function postQnaNoticeCreate(formName) {
 	const errorMessage = '질문과 답변 공지사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 	
 	await postIntegSubmit(
-		'/qna/info/qna_notice_create_confirm', 
+		'/qna/noti_info/qna_notice_create_confirm', 
 		formData, 
 		successMessage, 
 		errorMessage, 
 		'/qna/info/qna_list_form',
+		'content_inner'
+	);
+}
+
+// QNA 답변 등록
+async function postAnswerCreate(formName) {
+	const form = document.forms[formName];
+	
+	input = form.bqa_answer;
+	if(!validateEmpty(input, '답변을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	const successMessage = '답변이 등록되었습니다.';
+	const errorMessage = '답변 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
+	
+	await postIntegSubmit(
+		'/qna/info/answer_confirm', 
+		formData, 
+		successMessage, 
+		errorMessage, 
+		null,
 		'content_inner'
 	);
 }

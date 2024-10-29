@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.see_nior.seeniorAdmin.dto.RecipeDto;
+import com.see_nior.seeniorAdmin.enums.PagePath;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -40,9 +41,7 @@ public class RecipeController {
 	public String recipeListForm() {
 		log.info("recipeList()");
 		
-		String nextPage = "recipe/recipe_list_form";
-		
-		return nextPage;
+		return PagePath.RECIPE_LIST_FORM.getValue();
 		
 	}
 	
@@ -111,11 +110,13 @@ public class RecipeController {
 	public Object searchRecipeList(
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
+			@RequestParam(value = "sortValue", required = false, defaultValue = "rcp_seq") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("searchRecipeList()");
 		
 		// 페이지 번호에 따른 검색 식단 리스트들 가져오기
-		Map<String, Object> searchRecipeListWithPage = recipeService.getSearchRecipeListWithPage(searchPart, searchString, page);
+		Map<String, Object> searchRecipeListWithPage = recipeService.getSearchRecipeListWithPage(searchPart, searchString, sortValue, order, page);
 
 		// 검색 식단 총 페이지 개수 가져오기
 		Map<String, Object> searchRecipeListPageNum = recipeService.getSearchRecipeListPageNum(searchPart, searchString, page);
@@ -123,6 +124,8 @@ public class RecipeController {
 		searchRecipeListWithPage.put("searchRecipeListPageNum", searchRecipeListPageNum);
 		searchRecipeListWithPage.put("searchPart", searchPart);
 		searchRecipeListWithPage.put("searchString", searchString);
+		searchRecipeListWithPage.put("sortValue", sortValue);
+		searchRecipeListWithPage.put("order", order);
 		
 		return searchRecipeListWithPage;
 	
@@ -133,13 +136,11 @@ public class RecipeController {
 	public String detailForm(@RequestParam(value = "rcp_seq") int rcp_seq, Model model) {
 		log.info("detailForm()");
 		
-		String nextPage = "recipe/detail_form";
-		
 		RecipeDto recipeDto = recipeService.getRecipe(rcp_seq);
 		
 		model.addAttribute("recipeDto", recipeDto);
 		
-		return nextPage;
+		return PagePath.RECIPE_DETAIL_FORM.getValue();
 		
 	}
 	
