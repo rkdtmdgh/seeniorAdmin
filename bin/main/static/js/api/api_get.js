@@ -904,7 +904,7 @@ function getSortList(event, dbTable, sortValue) {
 
 // sortType에 따른 sort getList() 요청 커맨드 설정
 function mapSortListApiObject(dbTable, sortType) {
-	// dbTable과 sortType 조합에 따른 URL 매핑
+	// dbTable과 sortType 조합에 따른 커맨드 매핑
 	const apiUrlMap = { // 0 = 기본값, 1 = 검색, 2 = 카테고리선택
 		'admin_account': { // 관리자 계정 관리 페이지
 			0: '/account/list/get_admin_list',
@@ -1178,7 +1178,7 @@ function mapCategorylistObject(ele) {
 		case 'ad_category_no': // 위치별 분류 리스트(분류별 관리o)
 			getCateSelectApiUrl = '/advertisement/cate_info/get_category_list_select';
 			getSelectMaxIdxApiUrl = '/advertisement/info/create_category_select';
-			getListDtos = 'advertisementCategoryDto';
+			getListDtos = 'advertisementCategoryDtos';
 			infoNo = 'ac_no';
 			infoName = 'ac_name';
 			soltValue = 'ad_no';
