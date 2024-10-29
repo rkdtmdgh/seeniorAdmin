@@ -352,7 +352,7 @@ function setFormValuesFromUrl() {
 // 페이지 유지를 위한 쿼리 스트링 제어(검색 이력 제거)
 function setListQueryString(sortValue, order, page) {
 	const url = new URL(window.location); // 현재 url
-	const infoNo = url.searchParams.get('infoNo') || undefined; // cateNor가 있을 경우 값 가지고 있기
+	const infoNo = url.searchParams.get('infoNo') || undefined; // infoNo가 있을 경우 값 가지고 있기
 	const sortType = url.searchParams.get('sortType') || undefined; // sortType이 있을 경우 값 가지고 있기
     url.search = ''; // 파라미터 비우기
 	
@@ -373,15 +373,24 @@ function setListQueryString(sortValue, order, page) {
 }
 
 // 검색 후 페이지 유지를 위한 쿼리 스트링 제어(검색 파트, 스트링 재입력)
-function setSearchQueryString(page, searchPart, searchString) {
+function setSearchQueryString(searchPart, searchString, sortValue, order, page) {
 	const url = new URL(window.location);
 	const infoNo = url.searchParams.get('infoNo') || undefined; // cateNor가 있을 경우 값 가지고 있기
-    url.search = '';
     if(infoNo) url.searchParams.set('infoNo', infoNo); 
 	url.searchParams.set('sortType', 1); // 1 = 검색, 2 = 검색카테고리선택
     url.searchParams.set('searchPart', searchPart);
     url.searchParams.set('searchString', searchString);
 	url.searchParams.set('page', page); 
+	
+	if(sortValue) {
+		url.searchParams.set('sortValue', sortValue);
+		url.searchParams.set('order', order);
+		
+	} else {
+		url.searchParams.delete('sortValue');
+		url.searchParams.delete('order');
+	}
+	
 	window.history.replaceState({}, '', url); // 현재 url 변경 및 리로드 제어
 }
 

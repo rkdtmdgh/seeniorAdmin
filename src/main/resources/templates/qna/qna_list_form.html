@@ -10,19 +10,15 @@
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '1': // search
-					await getSearchList(null, '/qna/info/search_qna_list', page);
+					await getSearchList(null, '/qna/info/search_qna_list', sortValue, order, page);
 					break;
 					
 				case '2': // select
 					await getList('/qna/info/get_qna_list_by_category', sortValue, order, page);
 					break;
 
-				case '0': // sort
+				default: 
 					await getList('/qna/info/get_qna_list', sortValue, order, page);
-					break;
-					
-				default:
-					await getList('/qna/info/get_qna_list', null, null, page);
 			}
 			
 			// board qna category 가져오기
