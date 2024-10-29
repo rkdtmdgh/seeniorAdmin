@@ -170,9 +170,10 @@
 		UPDATE 
 			ADVERTISEMENT_CATEGORY 
 		SET 
-			AC_IS_DELETED = 0 
+			AC_IS_DELETED = 0, 
+			AC_MOD_DATE = NOW() 
 		WHERE 
-			AC_NO = #{ac_no}	
+			AC_NO = #{ac_no} 
 	
 	</update>
 	
@@ -190,7 +191,7 @@
 		AND 
 			${searchPart} LIKE CONCAT('%', #{searchString}, '%') 
 		ORDER BY 
-			AC_NAME DESC 
+			${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 	
@@ -240,7 +241,8 @@
 		UPDATE 
 			ADVERTISEMENT 
 		SET 
-			AD_IDX = AD_IDX + 1 
+			AD_IDX = AD_IDX + 1, 
+			AD_MOD_DATE = NOW() 
 		WHERE 
 			AD_CATEGORY_NO = #{advertisementDto.ad_category_no} 
 		AND 
@@ -259,7 +261,8 @@
 		UPDATE 
 			ADVERTISEMENT 
 		SET 
-			AD_IDX = AD_IDX - 1 
+			AD_IDX = AD_IDX - 1, 
+			AD_MOD_DATE = NOW() 
 		WHERE 
 		<if test="curCategoryNo != null">
 			AD_CATEGORY_NO = #{curCategoryNo} 
@@ -338,7 +341,8 @@
 		UPDATE 
 			ADVERTISEMENT 
 		SET 
-			AD_IDX = #{current_ad_idx} 
+			AD_IDX = #{current_ad_idx}, 
+			AD_MOD_DATE = NOW() 
 		WHERE 
 			AD_CATEGORY_NO = #{ac_no} 
 		AND 
@@ -353,7 +357,8 @@
 		UPDATE 
 			ADVERTISEMENT 
 		SET 
-			AD_IDX = #{ad_idx} 
+			AD_IDX = #{ad_idx}, 
+			AD_MOD_DATE = NOW() 
 		WHERE 
 			AD_CATEGORY_NO = #{ac_no} 
 		AND 
@@ -465,7 +470,8 @@
 			ADVERTISEMENT 
 		SET 
 			AD_IS_DELETED = 0, 
-			AD_IDX = 0
+			AD_IDX = 0, 
+			AD_MOD_DATE = NOW() 
 		WHERE 
 			AD_NO = #{ad_no}
 	
@@ -492,7 +498,7 @@
 		AND 
 			AD.${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 		ORDER BY 
-			AD_NO DESC 
+			${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 	

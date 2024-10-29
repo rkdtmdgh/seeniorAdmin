@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.dto.AdvertisementCategoryDto;
 import com.see_nior.seeniorAdmin.dto.AdvertisementDto;
 import com.see_nior.seeniorAdmin.enums.ImgUrlPath;
+import com.see_nior.seeniorAdmin.enums.PagePath;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -42,9 +43,7 @@ public class AdvertisementController {
 	public String createCategoryForm() {
 		log.info("createCategoryForm()");
 		
-		String nextPage = "advertisement/create_category_form";
-		
-		return nextPage;
+		return PagePath.ADVERTISEMENT_CREATE_CATEGORY_FORM.getValue();
 		
 	}
 	
@@ -77,9 +76,7 @@ public class AdvertisementController {
 	public String categoryListForm() {
 		log.info("categoryListForm()");
 		
-		String nextPage = "advertisement/category_list_form";
-		
-		return nextPage;
+		return PagePath.ADVERTISEMENT_CATEGORY_LIST_FORM.getValue();
 		
 	}
 	
@@ -123,13 +120,11 @@ public class AdvertisementController {
 	public String modifyCategoryForm(@RequestParam(value = "infoNo") int ac_no, Model model) {
 		log.info("modifyCategoryForm()");
 		
-		String nextPage = "advertisement/modify_category_form";
-		
 		AdvertisementCategoryDto advertisementCategoryDto = advertisementService.getCategory(ac_no);
 		
 		model.addAttribute("advertisementCategoryDto", advertisementCategoryDto);
 		
-		return nextPage;
+		return PagePath.ADVERTISEMENT_MODIFY_CATEGORY_FORM.getValue();
 		
 	}
 	
@@ -163,11 +158,13 @@ public class AdvertisementController {
 	public Object searchAdvertisementCategoryList(
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
+			@RequestParam(value = "sortValue", required = false, defaultValue = "ac_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("searchAdvertisementCategoryList()");
 		
 		// 페이지 번호에 따른 검색 광고 위치 리스트들 가져오기
-		Map<String, Object> searchAdvertisementCategoryListWithPage = advertisementService.getSearchAdvertisementCategoryListWithPage(searchPart, searchString, page);
+		Map<String, Object> searchAdvertisementCategoryListWithPage = advertisementService.getSearchAdvertisementCategoryListWithPage(searchPart, searchString, sortValue, order, page);
 		
 		// 검색 광고 위치 총 페이지 개수 가져오기
 		Map<String, Object> searchAdvertisementCategoryListPageNum = advertisementService.getSearchAdvertisementCategoryListPageNum(searchPart, searchString, page);
@@ -175,6 +172,8 @@ public class AdvertisementController {
 		searchAdvertisementCategoryListWithPage.put("searchAdvertisementCategoryListPageNum", searchAdvertisementCategoryListPageNum);
 		searchAdvertisementCategoryListWithPage.put("searchPart", searchPart);
 		searchAdvertisementCategoryListWithPage.put("searchString", searchString);
+		searchAdvertisementCategoryListWithPage.put("sortValue", sortValue);
+		searchAdvertisementCategoryListWithPage.put("order", order);
 		
 		return searchAdvertisementCategoryListWithPage;
 		
@@ -187,9 +186,7 @@ public class AdvertisementController {
 	public String createForm() {
 		log.info("createForm()");
 		
-		String nextPage = "advertisement/create_form";
-		
-		return nextPage;
+		return PagePath.ADVERTISEMENT_CREATE_FORM.getValue();
 		
 	}
 	
@@ -262,9 +259,7 @@ public class AdvertisementController {
 	public String advertisementListForm() {
 		log.info("advertisementListForm()");
 		
-		String nextPage = "advertisement/advertisement_list_form";
-		
-		return nextPage;
+		return PagePath.ADVERTISEMENT_LIST_FORM.getValue();
 		
 	}
 	
@@ -350,14 +345,12 @@ public class AdvertisementController {
 	public String modifyForm(@RequestParam(value = "ad_no") int ad_no, Model model) {
 		log.info("modifyForm()");
 		
-		String nextPage = "advertisement/modify_form";
-		
 		AdvertisementDto advertisementDto = advertisementService.getAdvertisement(ad_no);
 		
 		model.addAttribute("advertisementDto", advertisementDto);
 		model.addAttribute("advertisementImgServerPath", advertisementImgServerPath);
 		
-		return nextPage;
+		return PagePath.ADVERTISEMENT_MODIFY_FORM.getValue();
 		
 	}
 	
@@ -444,11 +437,13 @@ public class AdvertisementController {
 	public Object searchAdvertisementList(
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
+			@RequestParam(value = "sortValue", required = false, defaultValue = "ad_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("searchAdvertisementList()");
 		
 		// 페이지 번호에 따른 검색 광고 리스트들 가져오기
-		Map<String, Object> searchAdvertisementListWithPage = advertisementService.getSearchAdvertisementListWithPage(searchPart, searchString, page);
+		Map<String, Object> searchAdvertisementListWithPage = advertisementService.getSearchAdvertisementListWithPage(searchPart, searchString, sortValue, order, page);
 		
 		// 검색 광고 총 페이지 개수 가져오기
 		Map<String, Object> searchAdvertisementListPageNum = advertisementService.getSearchAdvertisementListPageNum(searchPart, searchString, page);
@@ -456,6 +451,8 @@ public class AdvertisementController {
 		searchAdvertisementListWithPage.put("searchAdvertisementListPageNum", searchAdvertisementListPageNum);
 		searchAdvertisementListWithPage.put("searchPart", searchPart);
 		searchAdvertisementListWithPage.put("searchString", searchString);
+		searchAdvertisementListWithPage.put("sortValue", sortValue);
+		searchAdvertisementListWithPage.put("order", order);
 		
 		return searchAdvertisementListWithPage;
 		
