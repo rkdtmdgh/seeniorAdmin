@@ -69,7 +69,7 @@ public class QnaController {
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order, 
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("searchQnaList()");
-	
+
 		Map<String, Object> searchQnaList = 
 				qnaService.searchQnaPagingList(searchPart, searchString, sortValue, order, page);
 		

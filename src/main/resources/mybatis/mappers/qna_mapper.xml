@@ -186,7 +186,14 @@
 		AND 
 			BQC.BQC_IS_DELETED = 1 
 		<if test="searchPart != null and searchString != null">
-			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%') 
+			<choose>
+				<when test="searchPart == 'u_id'">
+					AND U.U_ID LIKE CONCAT('%', #{searchString}, '%') 
+				</when>
+				<otherwise>
+					AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%') 
+				</otherwise>
+			</choose>
 		</if>
 		ORDER BY 
 			${sortValue} ${order} 
@@ -200,13 +207,24 @@
 			resultType="Integer">
 	
 		SELECT 
-			COUNT(BQ_NO) 
+			COUNT(*) 
 		FROM 
-			BOARD_QNA 
+			BOARD_QNA BQ 
+		LEFT JOIN 
+			USER_ACCOUNT U  
+		ON 
+			BQ.BQ_USER_NO = U.U_NO 
 		WHERE 
 			BQ_IS_DELETED = 1 
 		<if test="searchPart != null and searchString != null">
-			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+			<choose>
+				<when test="searchPart == 'u_id'">
+					AND U.U_ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<otherwise>
+					AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+				</otherwise>
+			</choose>
 		</if>
 	
 	</select>
