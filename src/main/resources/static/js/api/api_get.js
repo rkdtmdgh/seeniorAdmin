@@ -796,13 +796,13 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			tableTrContent = `
 				<tr>
 		            <td>
-		                <a href="/advertisement/cate_info/modify_category_form?infoNo=${data.ac_no}&sortType=1" class="table_info">${listIndex}</a>
+		                <a href="/advertisement/cate_info/modify_category_form?infoNo=${data.ac_no}&sortType=2" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/advertisement/cate_info/modify_category_form?infoNo=${data.ac_no}&sortType=1" class="table_info">${data.ac_name}</a>
+		                <a href="/advertisement/cate_info/modify_category_form?infoNo=${data.ac_no}&sortType=2" class="table_info">${data.ac_name}</a>
 		            </td>
 		            <td>
-		                <a href="/advertisement/info/advertisement_list_form?sortType=1&sortValue=ad_idx&order=asc&infoNo=${data.ac_no}" class="table_info">${data.ac_item_cnt}</a>
+		                <a href="/advertisement/info/advertisement_list_form?sortType=2&sortValue=ad_idx&order=asc&infoNo=${data.ac_no}" class="table_info">${data.ac_item_cnt}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${data.ac_note ? data.ac_note : '-'}</p>
@@ -897,94 +897,75 @@ function getSortList(event, dbTable, sortValue) {
 	
 	const urlParams = new URLSearchParams(window.location.search);
 	const sortType = urlParams.get('sortType') || 0; // 0 = 기본값, 1 = 검색, 2 = 카테고리선택
-    const config = mapSortListApiObject(dbTable, sortType); // 커맨드 가져오기
+    const apiUrl = mapSortListApiObject(dbTable, sortType); // 커맨드 가져오기
 	
-    getList(config.apiUrl, sortValue, order, 1); // 변경된 정렬 값으로 getList 호출
+    getList(apiUrl, sortValue, order, 1); // 변경된 정렬 값으로 getList 호출
 }
 
 // sortType에 따른 sort getList() 요청 커맨드 설정
 function mapSortListApiObject(dbTable, sortType) {
 	// dbTable과 sortType 조합에 따른 URL 매핑
-	const apiUrlMap = {
-		'admin_account': {
+	const apiUrlMap = { // 0 = 기본값, 1 = 검색, 2 = 카테고리선택
+		'admin_account': { // 관리자 계정 관리 페이지
 			0: '/account/list/get_admin_list',
+			1: '/account/list/search_admin_list',
 		},
-		'user_account': {
-			0: '/account/list/get_admin_list',
+		'user_account': { // 회원 관리 페이지
+			0: '/user_account/info/get_user_account_list',
+			1: '/user_account/info/search_user_account_list',
 		},
-		'disease': {
-			0: '/account/list/get_admin_list',
-			1: '',
-			2: '',
+		'disease': { // 질환/질병 정보 관리 페이지
+			0: '/disease/info/get_disease_list',
+			1: '/disease/info/search_disease_list',
+			2: '/disease/info/get_disease_list_by_category',
 		},
-		'user_account': {
-			0: '/account/list/get_admin_list',
-			1: '',
-			2: '',
+		'disease_category': { // 질환/질병 분류 관리 페이지
+			0: '/disease/cate_info/get_category_list',
+			1: '/disease/cate_info/search_disease_category_list',
 		},
-		'user_account': {
-			0: '/account/list/get_admin_list',
-			1: '',
-			2: '',
+		'recipe': { // 식단 정보 관리 페이지
+			0: '/recipe/info/get_recipe_list',
+			1: '/recipe/info/search_recipe_list',
+			2: '/recipe/info/get_recipe_list_by_type',
 		},
-		'user_account': {
-			0: '/account/list/get_admin_list',
-			1: '',
-			2: '',
+		'board_qna': { // 질문과 답변 페이지
+			0: '/qna/info/get_qna_list',
+			1: '/qna/info/search_qna_list',
+			2: '/qna/info/get_qna_list_by_category',
+		},
+		'video': { // 영상 정보 관리 페이지
+			0: '/video/info/get_video_list',
+			1: '/video/info/search_video_list',
+		},
+		'board_notice': { // 게시판 공지 사항 페이지
+			0: '/board/noti_info/get_board_notice_list',
+			1: '/board/noti_info/search_board_notice_list',
+			2: '/board/noti_info/get_board_notice_list_by_category',
+		},
+		'board_category': { // 게시판 관리 페이지
+			0: '/board/cate_info/get_category_list',
+			1: '/board/cate_info/search_board_category_list',
+		},
+		'board_posts': { // 특정 게시판 페이지
+			0: '/board/info/get_posts_list',
+			1: '/board/info/search_posts_list',
+		},
+		'advertisement': { // 광고 관리 페이지
+			0: '/advertisement/info/get_advertisement_list',
+			1: '/advertisement/info/search_advertisement_list',
+			2: '/advertisement/info/get_advertisement_list_by_category',
+		},
+		'advertisement_category': { // 광고 위치 분류 관리 페이지
+			0: '/advertisement/cate_info/get_category_list',
+			1: '/advertisement/cate_info/search_advertisement_category_list',
 		},
 	};
 	
-	switch(dbTable) {			
-		case 'admin_account': // 관리자 계정 관리 페이지
-			apiUrl = '/account/list/get_admin_list';
-			break;
-			
-		case 'user_account': // 회원 관리 페이지
-			apiUrl = '/user_account/info/get_user_account_list';
-			break;
-			
-		case 'disease': // 질환/질병 정보 관리 페이지
-			apiUrl = '/disease/info/get_disease_list';
-			break;
-		
-		case 'disease_category': // 질환/질병 분류 관리 페이지
-			apiUrl = '/disease/cate_info/get_category_list';
-			break;
-			
-		case 'recipe': // 식단 정보 관리 페이지
-			apiUrl = '/recipe/info/get_recipe_list';
-			break;
-			
-		case 'board_qna': // 질문과 답변 페이지
-			apiUrl = '/qna/info/get_qna_list';
-			break;
-			
-		case 'video': // 영상 정보 관리 페이지
-			apiUrl = '/video/info/get_video_list';
-			break;
-			
-		case 'board_notice': // 게시판 공지 사항 페이지
-			apiUrl = '/board/noti_info/get_board_notice_list';
-			break;
-			
-		case 'board_category': // 게시판 관리 페이지
-			apiUrl = '/board/cate_info/get_category_list';
-			break;
-			
-		case 'board_posts': // 특정 게시판 페이지
-			apiUrl = '/board/info/get_posts_list';
-			break;
-			
-		case 'advertisement': // 광고 관리 페이지
-			apiUrl = '/advertisement/info/get_advertisement_list';
-			break;
-		
-		default:
-			logger.error('mapSortListApiObject() not found set DB Table:', value);
-			return false;
+	if(!apiUrlMap[dbTable] || !apiUrlMap[dbTable][sortType]) { // 해당 조합이 없을 경우 에러
+		throw new Error(`Invalid dbTable = "${dbTable}" or sortType = "${sortType}"`);
 	}
 	
-	return { apiUrl };
+	return apiUrlMap[dbTable][sortType];
 }
 
 // 선택된 카테고리의 리스트 요청
@@ -1197,7 +1178,7 @@ function mapCategorylistObject(ele) {
 		case 'ad_category_no': // 위치별 분류 리스트(분류별 관리o)
 			getCateSelectApiUrl = '/advertisement/cate_info/get_category_list_select';
 			getSelectMaxIdxApiUrl = '/advertisement/info/create_category_select';
-			getListDtos = 'advertisementCategoryDtos';
+			getListDtos = 'advertisementCategoryDto';
 			infoNo = 'ac_no';
 			infoName = 'ac_name';
 			soltValue = 'ad_no';
