@@ -6,6 +6,7 @@ import lombok.Data;
 public class QnaAnswerDto {
 
 	private int bqa_no;
+	private int bqa_qna_no;
 	private String bqa_answer;
 	private boolean bqa_is_deleted;
 	private String bqa_reg_date;

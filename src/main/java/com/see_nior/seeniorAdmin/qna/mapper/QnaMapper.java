@@ -40,8 +40,16 @@ public interface QnaMapper {
 
 	public int selectQnaAnswerLastNo();
 
-	public int updateQnaStateByNo(Map<String, Object> updateParams);
+	public int updateQnaFromAnswerComplete(Map<String, Object> updateParams);
+	
+	public int updateQnaStateByNo(QnaDto qnaDto);
 
+	public int updateQnaIsDeletedByNo(int bq_no);
+	
+	public int updateQnaAnswerIsDeletedByNo(int bqa_no);
+	
+	public int updateQnaBqAnswerNoDelete(int bq_no);
+	
 	
 	// category
 	public boolean isQnaCategory(String bqc_name);
@@ -77,6 +85,14 @@ public interface QnaMapper {
 	public int updateQnaNotice(Map<String, Object> params);
 
 	public int updateQnaNoticeIsDeletedByNo(int bqn_no);
+
+	
+
+	
+
+
+
+	
 
 
 

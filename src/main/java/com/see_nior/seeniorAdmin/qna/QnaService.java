@@ -149,8 +149,9 @@ public class QnaService {
 				updateParams.put("bq_no", bq_no);
 				updateParams.put("bqa_no", bqa_no);
 				
+				// 답변 완료 후 board_qna 테이블 bq_answer_no(답변 테이블 no) 값 입력
 				int updateResult = 
-						qnaMapper.updateQnaStateByNo(updateParams);
+						qnaMapper.updateQnaFromAnswerComplete(updateParams);
 				
 				if (updateResult >= 0) {
 					
@@ -205,7 +206,70 @@ public class QnaService {
 		}
 
 	}
+	
+	// qna 질문 공개/비공개 변경 확인
+	public boolean modifyQnaState(QnaDto qnaDto) {
+		log.info("modifyQnaState()");
+		
+		int updateResult = 
+				qnaMapper.updateQnaStateByNo(qnaDto);
+		
+		if(updateResult >= 0)
+			return SqlResult.SUCCESS.getValue();
+		else 
+			return SqlResult.FAIL.getValue();
 
+	}
+	
+	// qna 질문 삭제 확인
+	public boolean deleteConfirm(int bq_no) {
+		log.info("deleteConfirm()");
+		
+		int updateResult = 
+				qnaMapper.updateQnaIsDeletedByNo(bq_no);
+		
+		if(updateResult >= 0) 
+			return SqlResult.SUCCESS.getValue();
+		else 
+			return SqlResult.FAIL.getValue();
+		
+	}
+
+	// qna 답변 삭제 확인
+	@Transactional
+	public boolean answerDeleteConfirm(int bq_no, int bqa_no) {
+		log.info("answerDeleteConfirm()");
+		
+		try {
+			
+			int answerUpdateResult = 
+					qnaMapper.updateQnaAnswerIsDeletedByNo(bqa_no);
+			
+			if (answerUpdateResult >= 0) {
+				
+				int result = qnaMapper.updateQnaBqAnswerNoDelete(bq_no);
+				
+				if (result >= 0) 
+					return SqlResult.SUCCESS.getValue();
+				else 
+					throw new RuntimeException("updateQnaBqAnswerNoDelete fail");
+					
+			} else {
+				
+				throw new RuntimeException("updateQnaAnswerIsDeletedByNo fail");
+				
+			}
+			
+		} catch (Exception e) {
+			log.info("answerDeleteConfirm Exception ------- {}", e);
+			
+			return SqlResult.FAIL.getValue();
+		
+		}
+		
+	}
+
+	
 	
 	/////////// 카테고리
 	
@@ -474,6 +538,9 @@ public class QnaService {
 			return SqlResult.FAIL.getValue();
 		
 	}
+
+
+
 
 
 
