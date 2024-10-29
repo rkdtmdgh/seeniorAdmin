@@ -47,7 +47,7 @@ async function getListProcess(apiUrl, sortValue, order, page, resetParams = fals
 				let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
 				
 				getListDtos.forEach((data) => { 			   
-					$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, getListCnt, listIndex, page, infoNo));
+					$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, getListCnt, listIndex, page));
 					listIndex --;
 				});
 				
@@ -370,7 +370,7 @@ function mapApiResponseObject(apiUrl, response) {
 }
 
 // 콘텐츠 테이블 리스트 생성
-function generateTableList(apiUrl, data, getListCnt, listIndex, page, infoNo) { 
+function generateTableList(apiUrl, data, getListCnt, listIndex, page) { 
 	let tableTrContent = '';
 	
 	switch(apiUrl) {
