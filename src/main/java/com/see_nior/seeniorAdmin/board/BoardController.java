@@ -381,8 +381,14 @@ public class BoardController {
 	@PostMapping("/info/modify_confirm")
 	@ResponseBody
 	public boolean modifyConfirm(BoardPostsDto boardPostsDto, 
+								@RequestParam(value = "deleteFileNames", required = false) List<String> deleteFileNames ,
 								@RequestParam(value = "files" , required = false) List<MultipartFile> files) {
 		log.info("modifyConfirm()");
+		
+		log.info("title: {}",boardPostsDto.getBp_title());
+		log.info("bd_dir_name: {}",boardPostsDto.getBp_dir_name());
+		log.info("deleteFileNames: {}",deleteFileNames);
+		log.info("files: {}",files);
 		
 		//file 첨부가 되어 있는지 확인
 		if(files != null && files.size() != 0 && files.get(0).getSize() != 0) {
