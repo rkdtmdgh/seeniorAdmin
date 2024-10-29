@@ -90,6 +90,31 @@ public class QnaService {
 		return PagingUtil.pageNum("searchQnaListCnt", searchQnaListCnt, page);
 		
 	}
+	
+	// qna 카테고리에 따른 리스트 가져오기
+	public Map<String, Object> getQnaListByCategoryWithPage(int page, String sortValue, String order, int bqc_no) {
+		log.info("getQnaListByCategoryWithPage()");
+		
+		Map<String, Object> pagingList = new HashMap<>();
+		
+		List<AdminAccountDto> qnaDtos = 
+				qnaMapper.selectQnaListForSelectBox(PagingUtil.pagingParamsForSelectBox(sortValue, order, page, bqc_no));
+		pagingList.put("qnaDtos", qnaDtos);
+		
+		return pagingList;
+		
+	}
+
+	// qna 카테고리에 따른 리스트 총 개수
+	public Map<String, Object> getQnaByCategoryPageNum(int page, int bqc_no) {
+		log.info("getQnaByCategoryPageNum()");
+
+		// 전체 리스트 개수 조회 
+		int qnaListCnt = qnaMapper.selectAllQnaListCntForSelectBox(bqc_no);
+		
+		return PagingUtil.pageNum("qnaListCnt", qnaListCnt, page);
+		
+	}
  
 	// qna 정보 가져오기 by no
 	public QnaDto getQnaInfoByNo(int bq_no) {
@@ -449,6 +474,8 @@ public class QnaService {
 			return SqlResult.FAIL.getValue();
 		
 	}
+
+
 
 
 }

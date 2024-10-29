@@ -106,7 +106,7 @@
 			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
 		FROM 
 			BOARD_QNA BQ 
-		JOIN 
+		LEFT JOIN 
 			BOARD_QNA_CATEGORY BQC 
 		ON 
 			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
@@ -120,6 +120,8 @@
 			BQA.BQA_NO = BQ.BQ_ANSWER_NO 
 		WHERE 
 			BQ.BQ_IS_DELETED = 1 
+		AND 
+			BQC.BQC_IS_DELETED = 1 
 		ORDER BY 
 			${sortValue} ${order} 
 		LIMIT 
@@ -162,19 +164,26 @@
 		SELECT 
 			BQ.*, 
 			BQC.*, 
+			BQA.* ,
 			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
 		FROM 
 			BOARD_QNA BQ 
-		JOIN 
+		LEFT JOIN 
 			BOARD_QNA_CATEGORY BQC 
 		ON 
 			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
-		JOIN 
+		LEFT JOIN 
 			USER_ACCOUNT U  
 		ON 
 			BQ.BQ_USER_NO = U.U_NO 
+		LEFT JOIN 
+			BOARD_QNA_ANSWER BQA 
+		ON 
+			BQA.BQA_NO = BQ.BQ_ANSWER_NO 
 		WHERE 
 			BQ.BQ_IS_DELETED = 1 
+		AND 
+			BQC.BQC_IS_DELETED = 1 
 		<if test="searchPart != null and searchString != null">
 			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%') 
 		</if>
@@ -198,6 +207,63 @@
 		<if test="searchPart != null and searchString != null">
 			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 		</if>
+	
+	</select>
+	
+	<!-- qna 카테고리에 따른 리스트 가져오기 -->
+	<select id="selectQnaListForSelectBox"
+			resultMap="QnaDto">
+	
+		SELECT 
+			BQ.*, 
+			BQC.*, 
+			BQA.*, 
+			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
+		FROM 
+			BOARD_QNA BQ 
+		LEFT JOIN 
+			BOARD_QNA_CATEGORY BQC 
+		ON 
+			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
+		LEFT JOIN 
+			USER_ACCOUNT U 
+		ON 
+			BQ.BQ_USER_NO = U.U_NO 
+		LEFT JOIN 
+			BOARD_QNA_ANSWER BQA 
+		ON 
+			BQA.BQA_NO = BQ.BQ_ANSWER_NO 
+		WHERE 
+			BQ.BQ_IS_DELETED = 1 
+		AND 
+			BQC.BQC_IS_DELETED = 1 
+		AND 
+			BQ.BQ_CATEGORY_NO = #{infoNo}
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit}
+		
+	
+	</select>
+	
+	<!-- qna 카테고리에 따른 리스트 총 개수 -->
+	<select id="selectAllQnaListCntForSelectBox">
+	
+		SELECT 
+			COUNT(*)
+		FROM 
+			BOARD_QNA BQ 
+		LEFT JOIN 
+			BOARD_QNA_CATEGORY BQC 
+		ON 
+			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
+		WHERE 
+			BQ.BQ_IS_DELETED = 1 
+		AND 
+			BQC.BQC_IS_DELETED = 1 
+		AND 
+			BQ_CATEGORY_NO = #{bqc_no} 
 	
 	</select>
 	
