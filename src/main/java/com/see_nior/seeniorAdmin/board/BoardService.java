@@ -198,31 +198,6 @@ public class BoardService {
 		
 		return boardCategoryDto;
 	}
-
-//	public ResponseEntity<String> uploadFiles(List<MultipartFile> files) {
-//		log.info("uploadFiles()");
-//		log.info("files: {}", files);
-//
-//		// Request Header 설정
-//		HttpHeaders headers = new HttpHeaders();
-//		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-//
-//		// Request body 설정	
-//		MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
-//		
-////	requestBody.add("file", file.getResource());
-//		
-//		// Request Entity
-//		HttpEntity<MultiValueMap<String, Object>> responseEntity = new HttpEntity<>(requestBody, headers);
-//
-//		// API 호출
-////		String severURL = "http://14.42.124.93:8091/upload_file";
-//		String severURL = "http://localhost:8091/upload_file"; //local
-//		ResponseEntity<String> response = restTemplate.postForEntity(severURL, responseEntity, String.class);
-////		Object response = restTemplate.postForEntity(severURL, responseEntity, String.class);
-//		
-//		return response;
-//	}
 	
 	//게시글 이미지 저장 후 이미지 이름 가져오기
     public ResponseEntity<String> uploadFiles(List<MultipartFile> files, int bp_category_no, int bp_writer_no) {
@@ -235,12 +210,7 @@ public class BoardService {
     		// Request Header 설정
     		HttpHeaders headers = new HttpHeaders();
     		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-    		
-    		// Request body 설정	(파일 1개만 보낼 때)
-//    		MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
-//		
-//    		requestBody.add("file", file.getResource());
-    		
+    	    		
     		// Request body 설정 (파일 배열을 보낼 때)
     		MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
     		
@@ -259,15 +229,15 @@ public class BoardService {
     			// 파일을 requestBody에 추가
     			requestBody.add("files", fileResource);
     		}
-    		
-    		requestBody.add("bp_category_no", bp_category_no);
-    		requestBody.add("bp_writer_no", bp_writer_no);
+    		// 파일 저장 경로 생성 후 filePath를 키 값으로 requestBody에 추가 (맨 앞에 상위 폴더 경로 꼭! 추가)
+    		String filePath = "\\board\\"+bp_category_no+"\\"+bp_writer_no+"\\";
+    		requestBody.add("filePath", filePath);
     		
     		// Request Entity
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
 
             // API 호출
-            String serverURL = "http://localhost:8091/board_upload_file"; //local
+            String serverURL = "http://localhost:8091/upload_file"; //local
             ResponseEntity<String> response = restTemplate.postForEntity(serverURL, requestEntity, String.class);
 
             return response;
