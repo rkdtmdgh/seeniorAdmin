@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 
+
 @Log4j2
 @Controller
 @RequiredArgsConstructor
@@ -152,20 +153,30 @@ public class QnaController {
 	}
 	
 	// qna 질문 삭제 확인
+	@PostMapping("/info/delete_confirm")
+	public boolean deleteConfirm(@RequestParam("bq_no") int bq_no) {
+		log.info("deleteConfirm()");
+		
+		return qnaService.deleteConfirm(bq_no);
+		
+	}
 	
-	// qna 답변 삭제 확인 
+	// qna 답변 삭제 확인
+	@PostMapping("/info/answer_delete_confirm")
+	public boolean answerDeleteConfirm(@RequestParam("bq_no") int bq_no, @RequestParam("bqa_no") int bqa_no) {
+		log.info("answerDeleteConfirm");
+		
+		return qnaService.answerDeleteConfirm(bq_no, bqa_no);
+		
+	}
 	
 	// qna 질문 공개/비공개 변경 확인
 	@PostMapping("/info/modify_qna_state")
 	@ResponseBody
-	public boolean modifyQnaState(
-			@RequestParam("bq_no") int bq_no, 
-			@RequestParam("bq_state") int bq_state) {
+	public boolean modifyQnaState(QnaDto qnaDto) {
 		log.info("modifyQnaState()");
 		
-		
-		
-		return false;
+		return qnaService.modifyQnaState(qnaDto);
 		
 	}
 	

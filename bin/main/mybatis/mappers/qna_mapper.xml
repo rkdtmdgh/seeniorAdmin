@@ -62,6 +62,7 @@
 	
 	<resultMap type="QnaAnswerDto" id="QnaAnswerDto">
 		<id column="bqa_no" property="bqa_no"/>
+		<result column="bqa_qna_no" property="bqa_qna_no"/>
 		<result column="bqa_answer" property="bqa_answer"/>
 		<result column="bqa_is_deleted" property="bqa_is_deleted"/>
 		<result column="bqa_reg_date" property="bqa_reg_date"/>
@@ -331,7 +332,7 @@
 	</select>
 	
 	<!-- qna 답변 완료 후 bq_state update -->
-	<update id="updateQnaStateByNo">
+	<update id="updateQnaFromAnswerComplete">
 		
 		UPDATE 
 			BOARD_QNA 
@@ -355,6 +356,60 @@
 			BQA_NO = #{bqa_no}
 	
 	</update>
+	
+	<!-- qna 질문 공개/비공개 변경 확인 -->
+	<update id="updateQnaStateByNo">
+	
+		UPDATE 
+			BOARD_QNA 
+		SET 
+			BQ_STATE = #{bq_state}, 
+			BQ_MOD_DATE = NOW() 
+		WHERE 
+			BQ_NO = #{bq_no} 
+	
+	</update>
+	
+	<!-- qna 질문 삭제 확인. board_qna 테이블 bq_is_deleted 값 update -->
+	<update id="updateQnaIsDeletedByNo">
+	
+		UPDATE 
+			BOARD_QNA 
+		SET 
+			BQ_IS_DELETED = 0, 
+			BQ_MOD_DATE = NOW() 
+		WHERE 
+			BQ_NO = #{bq_no} 
+	
+	</update>
+	
+	<!-- qna 답변 삭제 확인. board_qna_answer 테이블 bqa_is_deleted 값 update -->
+	<update id="updateQnaAnswerIsDeletedByNo">
+	
+		UPDATE 
+			BOARD_QNA_ANSWER 
+		SET 
+			BQA_IS_DELETED = 0, 
+			BQA_MOD_DATE = NOW() 
+		WHRER 
+			BQA_NO = #{bqa_no} 
+	
+	</update>
+	
+	<!-- qna 답변 삭제 후 board_qna 테이블 bq_answer_no 삭제 -->
+	<update id="updateQnaBqAnswerNoDelete">
+		
+		UPDATE 
+			BOARD_QNA 
+		SET 
+			BQ_ANSWER_NO = null, 
+			BQ_MOD_DATE = NOW() 
+		WHERE 
+			BQ_NO = #{bq_no} 
+	
+	</update>
+	
+	
 	
 	<!-- qna 카테고리명 중복 확인 -->
 	<select id="isQnaCategory"
