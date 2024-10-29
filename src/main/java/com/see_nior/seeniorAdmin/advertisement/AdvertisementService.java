@@ -93,7 +93,7 @@ public class AdvertisementService {
 		
 		List<AdvertisementCategoryDto> advertisementCategoryDto = (List<AdvertisementCategoryDto>) advertisementMapper.getAdvertisementCategoryList();
 		
-		advertisementCategoryDtos.put("advertisementCategoryDto", advertisementCategoryDto);	
+		advertisementCategoryDtos.put("advertisementCategoryDtos", advertisementCategoryDto);	
 				
 		return advertisementCategoryDtos;
 		
