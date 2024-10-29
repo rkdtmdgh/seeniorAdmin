@@ -80,7 +80,7 @@ public class DiseaseService {
 		
 		List<DiseaseCategoryDto> diseaseCategoryDto = (List<DiseaseCategoryDto>) diseaseMapper.getDiseaseCategoryList();
 		
-		diseaseCategoryDtos.put("diseaseCategoryDto", diseaseCategoryDto);
+		diseaseCategoryDtos.put("diseaseCategoryDtos", diseaseCategoryDto);
 		
 		return diseaseCategoryDtos;
 		

@@ -201,7 +201,7 @@ public class RecipeService {
  		
  		List<RecipeDto> recipeTypeDto = recipeMapper.getRecipeTypeList();
  		
- 		recipeTypeDtos.put("recipeTypeDto", recipeTypeDto);
+ 		recipeTypeDtos.put("recipeTypeDtos", recipeTypeDto);
  		
  		return recipeTypeDtos;
  	} 	
