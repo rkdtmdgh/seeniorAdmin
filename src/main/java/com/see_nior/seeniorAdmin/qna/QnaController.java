@@ -93,7 +93,7 @@ public class QnaController {
 			@RequestParam(value = "sortValue", required = false, defaultValue = "bq_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-			@RequestParam("info_no") int bqc_no) {
+			@RequestParam("infoNo") int bqc_no) {
 		log.info("getQnaListByCategory()");
 		
 		// 페이지 번호에 따른 위치별 광고 리스트들 가져오기
@@ -154,6 +154,7 @@ public class QnaController {
 	
 	// qna 질문 삭제 확인
 	@PostMapping("/info/delete_confirm")
+	@ResponseBody
 	public boolean deleteConfirm(@RequestParam("bq_no") int bq_no) {
 		log.info("deleteConfirm()");
 		
@@ -163,6 +164,7 @@ public class QnaController {
 	
 	// qna 답변 삭제 확인
 	@PostMapping("/info/answer_delete_confirm")
+	@ResponseBody
 	public boolean answerDeleteConfirm(@RequestParam("bq_no") int bq_no, @RequestParam("bqa_no") int bqa_no) {
 		log.info("answerDeleteConfirm");
 		
