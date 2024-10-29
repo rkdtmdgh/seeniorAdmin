@@ -9,20 +9,16 @@
 		$(async function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
-				case '2': // search
+				case '1': // search
 					await getSearchList(null, '/recipe/info/search_recipe_list', page);
 					break;
 
-				case '1': // select
+				case '2': // select
 					await getList('/recipe/info/get_recipe_list_by_type', sortValue, order, page);
 					break;
 
-				case '0': // sort
-					await getList('/recipe/info/get_recipe_list', sortValue, order, page);
-					break;
-					
 				default:
-					await getList('/recipe/info/get_recipe_list', null, null, page);
+					await getList('/recipe/info/get_recipe_list', sortValue, order, page);
 			}
 
 			// recipe category 가져오기
@@ -62,7 +58,7 @@
 	                        <table class="content_table recipe_list_table">
 	                            <colgroup>
 	                                <col class="col_no">
-	                                <col class="col_default">
+	                                <col class="col_short">
 	                                <col class="col_default">
 	                                <col class="col_short">
 	                                <col>

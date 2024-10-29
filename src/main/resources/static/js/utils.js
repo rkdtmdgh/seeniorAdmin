@@ -333,15 +333,15 @@ function setDelQueryString() {
 function setFormValuesFromUrl() {
 	const urlParams = new URLSearchParams(window.location.search);
     const $sForm = $('form[name="search_form"]');
-	const searchPart = urlParams.get('searchPart') || undefined;
+	const searchPart = urlParams.get('searchPart') || null;
     const searchString = urlParams.get('searchString') || '';
-	const sortType = urlParams.get('sortType') || undefined;
-	const sortValue = urlParams.get('sortValue') || undefined;
-	const order = urlParams.get('order') || undefined;
+	const sortType = urlParams.get('sortType') || null;
+	const sortValue = urlParams.get('sortValue') || null;
+	const order = urlParams.get('order') || null;
     const page = urlParams.get('page') || 1;
 	
 	// 검색어가 있을 경우 검색 폼 사용으로 새로고침 시 재적용
-	if($sForm.length && sortType === '2') { // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
+	if($sForm.length && sortType === '1') { // 1 = 검색, 2 = 카테고리선택
 		$sForm.find('select[name="searchPart"]').val(searchPart)
 		$sForm.find('input[name="searchString"]').val(searchString);
 	}
@@ -378,7 +378,7 @@ function setSearchQueryString(page, searchPart, searchString) {
 	const infoNo = url.searchParams.get('infoNo') || undefined; // cateNor가 있을 경우 값 가지고 있기
     url.search = '';
     if(infoNo) url.searchParams.set('infoNo', infoNo); 
-	url.searchParams.set('sortType', 2); // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
+	url.searchParams.set('sortType', 1); // 1 = 검색, 2 = 검색카테고리선택
     url.searchParams.set('searchPart', searchPart);
     url.searchParams.set('searchString', searchString);
 	url.searchParams.set('page', page); 

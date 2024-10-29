@@ -745,6 +745,9 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 					<td>
 		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_client}</a>
 		            </td>
+		            <td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_state === 1 ? '사용중' : '만료'}</a>
+		            </td>
 					<td>
 		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_start_date)}</a>
 		            </td>
@@ -888,23 +891,48 @@ function getSortList(event, dbTable, sortValue) {
     const sortBtn = event.currentTarget.closest('.sort'); // 클릭된 요소가 가장 가까운 부모 요소 중 클래스가 "sort"인 요소를 찾음
 	if(!sortBtn) return; // 만약 sort 요소가 없다면 아무 작업도 하지 않음
 	
-    const config = mapSortListApiObject(dbTable); // 커맨드 가져오기
     const currentSortValue = sortBtn.getAttribute('data-current-sort-value'); // 현재 정렬 값 가져오기 default all
     const order = currentSortValue === 'all' ? 'desc' : currentSortValue === 'desc' ? 'asc' : 'desc'; // 정렬 값 토글
     sortBtn.setAttribute('data-current-sort-value', order); // 버튼의 data-sort-value 속성 값 업데이트
 	
 	const urlParams = new URLSearchParams(window.location.search);
-	urlParams.set('sortType', 0); // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
-	const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-	window.history.replaceState({}, '', newUrl);
+	const sortType = urlParams.get('sortType') || 0; // 0 = 기본값, 1 = 검색, 2 = 카테고리선택
+    const config = mapSortListApiObject(dbTable, sortType); // 커맨드 가져오기
 	
-    getList(config.apiUrl, sortValue, order, 1, config.isResetParams); // 변경된 정렬 값으로 getList 호출
+    getList(config.apiUrl, sortValue, order, 1); // 변경된 정렬 값으로 getList 호출
 }
 
-// sort getList() 요청에 필요한 객체 설정
-function mapSortListApiObject(dbTable) {
-	let apiUrl = null; // getList api
-	let isResetParams = false; // 쿼리 파라미터 리셋
+// sortType에 따른 sort getList() 요청 커맨드 설정
+function mapSortListApiObject(dbTable, sortType) {
+	// dbTable과 sortType 조합에 따른 URL 매핑
+	const apiUrlMap = {
+		'admin_account': {
+			0: '/account/list/get_admin_list',
+		},
+		'user_account': {
+			0: '/account/list/get_admin_list',
+		},
+		'disease': {
+			0: '/account/list/get_admin_list',
+			1: '',
+			2: '',
+		},
+		'user_account': {
+			0: '/account/list/get_admin_list',
+			1: '',
+			2: '',
+		},
+		'user_account': {
+			0: '/account/list/get_admin_list',
+			1: '',
+			2: '',
+		},
+		'user_account': {
+			0: '/account/list/get_admin_list',
+			1: '',
+			2: '',
+		},
+	};
 	
 	switch(dbTable) {			
 		case 'admin_account': // 관리자 계정 관리 페이지
@@ -917,7 +945,6 @@ function mapSortListApiObject(dbTable) {
 			
 		case 'disease': // 질환/질병 정보 관리 페이지
 			apiUrl = '/disease/info/get_disease_list';
-			isResetParams = true;
 			break;
 		
 		case 'disease_category': // 질환/질병 분류 관리 페이지
@@ -926,12 +953,10 @@ function mapSortListApiObject(dbTable) {
 			
 		case 'recipe': // 식단 정보 관리 페이지
 			apiUrl = '/recipe/info/get_recipe_list';
-			isResetParams = true;
 			break;
 			
 		case 'board_qna': // 질문과 답변 페이지
 			apiUrl = '/qna/info/get_qna_list';
-			isResetParams = true;
 			break;
 			
 		case 'video': // 영상 정보 관리 페이지
@@ -952,7 +977,6 @@ function mapSortListApiObject(dbTable) {
 			
 		case 'advertisement': // 광고 관리 페이지
 			apiUrl = '/advertisement/info/get_advertisement_list';
-			isResetParams = true;
 			break;
 		
 		default:
@@ -960,7 +984,7 @@ function mapSortListApiObject(dbTable) {
 			return false;
 	}
 	
-	return { apiUrl, isResetParams };
+	return { apiUrl };
 }
 
 // 선택된 카테고리의 리스트 요청
@@ -971,7 +995,7 @@ function getSelectList(event) {
 	const apiUrl = mapSelectListApiObject(sortValue); // 커맨드 가져오기
 	
 	const urlParams = new URLSearchParams(window.location.search);
-	urlParams.set('sortType', 1); // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
+	urlParams.set('sortType', 2); // 1 = 검색, 2 = 카테고리선택
 	urlParams.set('infoNo', infoNo); // 분류 값
 	const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
 	window.history.replaceState({}, '', newUrl);
