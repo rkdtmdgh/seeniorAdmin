@@ -1145,6 +1145,7 @@ function mapCategorylistObject(ele) {
 	let getCateSelectApiUrl = null; // 분류별 리스트 요청 api
 	let getSelectMaxIdxApiUrl = null; // 분류 또는 분류에 속한 데이터에 순번 입력이 필요한 경우 max값 요청 api
 	let getListDtos = null; // 객체명
+	let dbtable = null; // db table명
 	let infoNo = null; // 분류 no 값
 	let infoName = null; // 분류 no 값을 가져오기 위한 객체명
 	let soltValue = null; // 정렬 기준값
@@ -1153,7 +1154,8 @@ function mapCategorylistObject(ele) {
 	switch(ele) {
 		case 'd_category_no': // 질병군별 분류 리스트(분류별 관리o)
 			getCateSelectApiUrl = '/disease/cate_info/get_category_list_select';
-			getListDtos = 'diseaseCategoryDtos';			
+			getListDtos = 'diseaseCategoryDtos';	
+			dbtable = 'disease_category';		
 			infoNo = 'dc_no';
 			infoName = 'dc_name';
 			soltValue = 'd_no';
@@ -1162,6 +1164,7 @@ function mapCategorylistObject(ele) {
 		case 'rcp_pat2': // 음식 종류별 분류 리스트(분류별 관리x)
 			getCateSelectApiUrl = '/recipe/info/get_type_list_select';
 			getListDtos = 'recipeTypeDtos';
+			dbtable = 'recipe';	
 			infoNo = 'rcp_pat2';
 			infoName = 'rcp_pat2';
 			soltValue = 'rcp_pat2';
