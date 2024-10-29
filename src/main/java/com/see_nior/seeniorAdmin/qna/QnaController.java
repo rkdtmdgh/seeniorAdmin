@@ -87,7 +87,7 @@ public class QnaController {
 	}
 	
 	// qna 카테고리에 따른 리스트 가져오기
-	@GetMapping("/cate_info/get_qna_list_by_category")
+	@GetMapping("/info/get_qna_list_by_category")
 	@ResponseBody
 	public Object getQnaListByCategory(
 			@RequestParam(value = "sortValue", required = false, defaultValue = "bq_no") String sortValue,
