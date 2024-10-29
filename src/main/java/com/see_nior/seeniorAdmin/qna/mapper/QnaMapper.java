@@ -31,7 +31,11 @@ public interface QnaMapper {
 	public List<AdminAccountDto> selectQnaNoticeList(Map<String, Object> pagingParams);
 
 	public int selectAllQnaNoticeListCnt();
+	
+	public List<AdminAccountDto> selectQnaListForSelectBox(Map<String, Object> pagingParamsForSelectBox);
 
+	public int selectAllQnaListCntForSelectBox(int bqc_no);
+	
 	public int insertNewAnswer(Map<String, Object> params);
 
 	public int selectQnaAnswerLastNo();
@@ -73,6 +77,8 @@ public interface QnaMapper {
 	public int updateQnaNotice(Map<String, Object> params);
 
 	public int updateQnaNoticeIsDeletedByNo(int bqn_no);
+
+
 
 	
 	

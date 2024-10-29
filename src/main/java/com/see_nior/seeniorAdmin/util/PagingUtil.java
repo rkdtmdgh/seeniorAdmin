@@ -68,4 +68,21 @@ public class PagingUtil {
 		
 	}
 	
+	// 리스트 가져오기 params
+	public static Map<String, Object> pagingParamsForSelectBox(String sortValue, String order, int page, int info_no) {
+		
+		Map<String, Object> pagingParams = new HashMap<>();
+		
+		int pagingStart = PagingStatus.PAGE_LIMIT.pagingStart(page);
+		
+		pagingParams.put("start", pagingStart);
+		pagingParams.put("limit", PagingStatus.PAGE_LIMIT.getValue());
+		pagingParams.put("sortValue", sortValue);
+		pagingParams.put("order", order);
+		pagingParams.put("infoNo", info_no);
+		
+		return pagingParams;
+		
+	}
+	
 }

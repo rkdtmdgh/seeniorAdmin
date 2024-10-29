@@ -19,6 +19,7 @@ import com.see_nior.seeniorAdmin.enums.PagePath;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
+
 @Log4j2
 @Controller
 @RequiredArgsConstructor
@@ -84,6 +85,33 @@ public class QnaController {
 		
 	}
 	
+	// qna 카테고리에 따른 리스트 가져오기
+	@GetMapping("/cate_info/get_qna_list_by_category")
+	@ResponseBody
+	public Object getQnaListByCategory(
+			@RequestParam(value = "sortValue", required = false, defaultValue = "bq_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+			@RequestParam("info_no") int bqc_no) {
+		log.info("getQnaListByCategory()");
+		
+		// 페이지 번호에 따른 위치별 광고 리스트들 가져오기
+		Map<String, Object> qnaListByCategoryWithPage = 
+				qnaService.getQnaListByCategoryWithPage(page, sortValue, order, bqc_no);
+				
+		// 위치별 광고 총 페이지 개수 가져오기
+		Map<String, Object> qnaListByCategoryPageNum = 
+				qnaService.getQnaByCategoryPageNum(page, bqc_no);
+		
+		qnaListByCategoryWithPage.put("qnaListByCategoryPageNum", qnaListByCategoryPageNum);
+		qnaListByCategoryWithPage.put("sortValue", sortValue);
+		qnaListByCategoryWithPage.put("order", order);
+		qnaListByCategoryWithPage.put("infoNo", bqc_no);
+		
+		return qnaListByCategoryWithPage;
+		
+	}
+	
 	// qna 답변하기 양식
 	@GetMapping("/info/answer_form")
 	public String answerForm(@RequestParam("bq_no") int bq_no, Model model) {
@@ -122,6 +150,27 @@ public class QnaController {
 		return qnaService.answerModifyConfirm(a_id, principal.getName(), bqa_no, bqa_answer);
 		
 	}
+	
+	// qna 질문 삭제 확인
+	
+	// qna 답변 삭제 확인 
+	
+	// qna 질문 공개/비공개 변경 확인
+	@PostMapping("/info/modify_qna_state")
+	@ResponseBody
+	public boolean modifyQnaState(
+			@RequestParam("bq_no") int bq_no, 
+			@RequestParam("bq_state") int bq_state) {
+		log.info("modifyQnaState()");
+		
+		
+		
+		return false;
+		
+	}
+	
+	
+	
 	
 ////////////////////////// 카테고리 
 	
