@@ -391,7 +391,7 @@
 		SET 
 			BQA_IS_DELETED = 0, 
 			BQA_MOD_DATE = NOW() 
-		WHRER 
+		WHERE 
 			BQA_NO = #{bqa_no} 
 	
 	</update>

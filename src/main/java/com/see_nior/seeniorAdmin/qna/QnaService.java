@@ -261,7 +261,7 @@ public class QnaService {
 			}
 			
 		} catch (Exception e) {
-			log.info("answerDeleteConfirm Exception ------- {}", e);
+			log.info("answerDeleteConfirm Exception ------- {}", e.getMessage());
 			
 			return SqlResult.FAIL.getValue();
 		

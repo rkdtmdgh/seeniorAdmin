@@ -15,7 +15,7 @@ async function deleteDataProcess(deleteConfig, data, dataName, errorMessage) {
 			
 			logger.info(`${deleteConfig.apiUrl} deleteData() response:`, response);
 			
-		if(response) {
+			if(response) {
 				alert(`${dataName} 삭제되었습니다.`);
 				deleteConfig.replace ? location.replace(deleteConfig.replace) : location.reload(true);
 				
@@ -120,7 +120,7 @@ function mapDeleteObject(value) {
 			replace = '/qna/info/qna_list_form';
 			break;
 			
-		case 'bq_no': // QnA 답변
+		case 'bqa_no': // QnA 답변
 			apiUrl = '/qna/info/answer_delete_confirm';
 			break;
 		

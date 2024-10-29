@@ -134,7 +134,10 @@
 		                        				delSingleData(
 		                        					[[${qnaDto.qnaAnswerDto.adminAccountDto.a_id} + '님의 답변']],
 			                        		 		'bqa_no', 
-			                        		 		[[${qnaDto.qnaAnswerDto.bqa_no}]]
+			                        		 		[[${qnaDto.qnaAnswerDto.bqa_no}]],
+			                        		 		{
+			                        		 			'bq_no': [[${qnaDto.bq_no}]],
+			                        		 		}
 		                        				)
 		                        			">답변 삭제</div>
 		                        		 
