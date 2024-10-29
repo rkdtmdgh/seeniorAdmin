@@ -347,7 +347,7 @@ public class RecipeService {
 	}
 
 	// 페이지에 따른 식단 가져오기(검색한 식단)
-	public Map<String, Object> getSearchRecipeListWithPage(String searchPart, String searchString, int page) {
+	public Map<String, Object> getSearchRecipeListWithPage(String searchPart, String searchString, String sortValue, String order, int page) {
 		log.info("getSearchRecipeListWithPage()");
 		
 		int pagingStart = (page - 1) * pageLimit;
@@ -359,6 +359,8 @@ public class RecipeService {
 		pagingParams.put("limit", pageLimit);
 		pagingParams.put("searchPart", searchPart);
 		pagingParams.put("searchString", searchString);
+		pagingParams.put("sortValue", sortValue);
+		pagingParams.put("order", order);
 		
 		List<RecipeDto> searchRecipeDtos = recipeMapper.getSearchRecipe(pagingParams);
 		pagingList.put("recipeDtos", searchRecipeDtos);

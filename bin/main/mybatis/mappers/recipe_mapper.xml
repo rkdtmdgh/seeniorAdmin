@@ -280,7 +280,7 @@
 		WHERE 
 			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 		ORDER BY 
-			RCP_SEQ DESC 
+			${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 	
