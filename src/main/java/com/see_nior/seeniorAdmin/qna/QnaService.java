@@ -228,6 +228,8 @@ public class QnaService {
 		int updateResult = 
 				qnaMapper.updateQnaIsDeletedByNo(bq_no);
 		
+		log.info("updateResult ------- {}", updateResult);
+		
 		if(updateResult >= 0) 
 			return SqlResult.SUCCESS.getValue();
 		else 
