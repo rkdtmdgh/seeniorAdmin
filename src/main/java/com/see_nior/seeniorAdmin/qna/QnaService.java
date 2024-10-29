@@ -228,8 +228,6 @@ public class QnaService {
 		int updateResult = 
 				qnaMapper.updateQnaIsDeletedByNo(bq_no);
 		
-		log.info("updateResult ------- {}", updateResult);
-		
 		if(updateResult >= 0) 
 			return SqlResult.SUCCESS.getValue();
 		else 
@@ -263,7 +261,7 @@ public class QnaService {
 			}
 			
 		} catch (Exception e) {
-			log.info("answerDeleteConfirm Exception ------- {}", e);
+			log.info("answerDeleteConfirm Exception ------- {}", e.getMessage());
 			
 			return SqlResult.FAIL.getValue();
 		
