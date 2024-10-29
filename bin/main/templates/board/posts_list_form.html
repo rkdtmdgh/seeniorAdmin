@@ -12,16 +12,12 @@
 			
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
-				case '2': // search
+				case '1': // search
 					await getSearchList(null, '/board/info/search_posts_list', page);
 					break;
 
-				case '0': // sort
+				default: 
 					await getList('/board/info/get_posts_list', sortValue, order, page);
-					break;
-					
-				default:
-					await getList('/board/info/get_posts_list', null, null, page);
 			}
         });
 	</script>
