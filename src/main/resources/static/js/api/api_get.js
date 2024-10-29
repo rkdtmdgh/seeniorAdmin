@@ -702,7 +702,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			
 		case '/qna/info/get_qna_list': // 질문과 답변 리스트 테이블
 		case '/qna/info/search_qna_list': // 질문과 답변 검색 리스트 테이블
-		case '/qna/info//qna/info/get_qna_list_by_category': // 질문 유형별 분류 리스트 테이블
+		case '/qna/info/get_qna_list_by_category': // 질문 유형별 분류 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
