@@ -1241,7 +1241,7 @@ CREATE TABLE ADVERTISEMENT (
 	AD_START_DATE	DATE NOT NULL COMMENT "광고 시작일",										-- 광고 시작일
 	AD_END_DATE		DATE NOT NULL COMMENT "광고 종료일",										-- 광고 종료일
 	AD_CLIENT		VARCHAR(100) NOT NULL COMMENT "광고주",									-- 광고주 
-    AD_STATE		TINYINT NOT NULL DEFAULT 1 COMMENT "광고 상태(기본값 = 1, 광고 종료 = 0)",	-- 광고 상태(기본값 = 1, 노출 종료 = 0)							--
+    AD_STATE		TINYINT NOT NULL DEFAULT 1 COMMENT "광고 상태(기본값 = 1, 광고 종료 = 0)",	-- 광고 상태(기본값 = 1, 광고 종료 = 0)
 	AD_IS_DELETED	TINYINT DEFAULT 1 COMMENT "광고 삭제 여부(기본값 = 1, 삭제 시 = 0)",			-- 광고 삭제 여부(기본값 = 1, 삭제 시 = 0)
 	AD_REG_DATE		DATETIME DEFAULT NOW() COMMENT "광고 등록일",								-- 광고 등록일
 	AD_MOD_DATE		DATETIME DEFAULT NOW() COMMENT "광고 수정일",								-- 광고 수정일

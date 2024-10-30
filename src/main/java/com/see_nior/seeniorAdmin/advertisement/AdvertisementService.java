@@ -93,7 +93,7 @@ public class AdvertisementService {
 		
 		List<AdvertisementCategoryDto> advertisementCategoryDto = (List<AdvertisementCategoryDto>) advertisementMapper.getAdvertisementCategoryList();
 		
-		advertisementCategoryDtos.put("advertisementCategoryDto", advertisementCategoryDto);	
+		advertisementCategoryDtos.put("advertisementCategoryDtos", advertisementCategoryDto);	
 				
 		return advertisementCategoryDtos;
 		
@@ -214,7 +214,7 @@ public class AdvertisementService {
 	}
 	
 	// 페이지에 따른 광고 위치 가져오기(검색한 광고 위치)
-	public Map<String, Object> getSearchAdvertisementCategoryListWithPage(String searchPart, String searchString, int page) {
+	public Map<String, Object> getSearchAdvertisementCategoryListWithPage(String searchPart, String searchString, String sortValue, String order, int page) {
 		log.info("getSearchAdvertisementCategoryListWithPage()");
 		
 		int pagingStart = (page - 1) * pageLimit;
@@ -226,6 +226,8 @@ public class AdvertisementService {
 		pagingParams.put("limit", pageLimit);
 		pagingParams.put("searchPart", searchPart);
 		pagingParams.put("searchString", searchString);
+		pagingParams.put("sortValue", sortValue);
+		pagingParams.put("order", order);
 		
 		List<AdvertisementCategoryDto> searchAdvertisementCategoryDtos = advertisementMapper.getSearchAdvertisementCategory(pagingParams);
 		
@@ -714,7 +716,7 @@ public class AdvertisementService {
 	}
 
 	// 페이지에 따른 광고 가져오기(검색한 광고)
-	public Map<String, Object> getSearchAdvertisementListWithPage(String searchPart, String searchString, int page) {
+	public Map<String, Object> getSearchAdvertisementListWithPage(String searchPart, String searchString, String sortValue, String order, int page) {
 		log.info("getSearchAdvertisementListWithPage()");
 		
 		int pagingStart = (page - 1) * pageLimit;
@@ -726,6 +728,8 @@ public class AdvertisementService {
 		pagingParams.put("limit", pageLimit);
 		pagingParams.put("searchPart", searchPart);
 		pagingParams.put("searchString", searchString);
+		pagingParams.put("sortValue", sortValue);
+		pagingParams.put("order", order);
 		
 		List<AdvertisementDto> searchAdvertisementDtos = advertisementMapper.getSearchAdvertisement(pagingParams);
 		pagingList.put("advertisementDtos", searchAdvertisementDtos);
