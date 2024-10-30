@@ -104,6 +104,7 @@ public class AccountController {
 				accountService.getAdminAccountById(principal.getName());
 		
 		return loginedAdminDto;
+		
 	}
 	
 	// 내 정보 수정 양식 가기 전 비밀번호 확인
