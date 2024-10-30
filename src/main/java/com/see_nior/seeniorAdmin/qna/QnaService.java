@@ -289,16 +289,17 @@ public class QnaService {
 		
 		if (!isQna) {
 			
-			return SqlResult.FAIL.getValue();
-			
-		} else {
-			
 			int result = qnaMapper.insertNewQnaCategory(bqc_name);
 			
 			if (result >= 0) 
 				return SqlResult.SUCCESS.getValue();
 			else 
 				return SqlResult.FAIL.getValue();
+			
+			
+		} else {
+			
+			return SqlResult.FAIL.getValue();
 			
 		}
 		
