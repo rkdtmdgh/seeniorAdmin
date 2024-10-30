@@ -278,9 +278,9 @@ function mapApiResponseObject(apiUrl, response) {
 			break;	
 			
 		case '/qna/noti_info/get_notice_list': // 질문과 답변 공지 사항
-			getListDtos = response.boardNoticePostsDtos;
-			getListPage = response.boardNoticePostsListPageNum;
-			getListCnt = response.boardNoticePostsListPageNum.boardNoticePostsListCnt;
+			getListDtos = response.qnaNoticeDtos;
+			getListPage = response.qnaNoticeListPageNum;
+			getListCnt = response.qnaNoticeListPageNum.qnaNoticeListCnt;
 			break;
 			
 		case '/qna/noti_info/search_notice_list': // 질문과 답변 공지 사항 검색
