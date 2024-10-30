@@ -196,8 +196,9 @@ public class BoardController {
 					Map<String,Object> savedFileObj = objectMapper.readValue(savedFiles.getBody(), new TypeReference<Map<String,Object>>() {});
 					log.info("savedFiles(string) to savedFileNames(object) success!");
 					
+					@SuppressWarnings("unchecked") //(List<String>) 강제 캐스팅 에러
 					List<String> savedFileNames = (List<String>) savedFileObj.get("savedFileNames");
-					String bp_dir_name = (String) savedFileObj.get("dir_name");
+					String bp_dir_name = String.valueOf(savedFileObj.get("dir_name"));
 					log.info("dir_name : {}",savedFileObj.get("dir_name"));
 					log.info("savedFileNames : {}",savedFileNames);
 					
@@ -286,7 +287,7 @@ public class BoardController {
 	}
 	
 	//게시판 카테고리 검색
-	@GetMapping("/cate_info/search_board_category_list")
+	@GetMapping("/cate_info/search_category_list")
 	@ResponseBody
 	public Object searchBoardCategoryList(
 			@RequestParam(value = "searchPart") String searchPart,
