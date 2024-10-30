@@ -725,7 +725,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.bq_state === true ? '대기' : '답변'}</a>
 		            </td>
 					<td class="ta_l">
-		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.bq_title}</a>
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info table_flex_info">
+		                	
+		                	${data.bq_title}
+		                </a>
 		            </td>
 					<td>
 		                <a href="/user_account/info/modify_form?u_no=${data.userAccountDto.u_no}" class="table_info">${data.userAccountDto.u_id}</a>
@@ -894,7 +897,7 @@ function generatePagination(pagingValues, sortValue, order, apiUrl, isSearch) { 
 
 // 버튼으로 정렬된 리스트 요청
 function getSortList(event, dbTable, sortValue) {
-    const sortBtn = event.currentTarget.closest('.sort'); // 클릭된 요소가 가장 가까운 부모 요소 중 클래스가 "sort"인 요소를 찾음
+    const sortBtn = event.currentTarget.closest('.sort'); // 클릭된 요소가 가장 가까운 부모 요소 중 클래스가 sort인 요소를 찾음
 	if(!sortBtn) return; // 만약 sort 요소가 없다면 아무 작업도 하지 않음
 	
     const currentSortValue = sortBtn.getAttribute('data-current-sort-value'); // 현재 정렬 값 가져오기 default all
