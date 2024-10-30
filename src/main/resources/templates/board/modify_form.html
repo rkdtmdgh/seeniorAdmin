@@ -65,10 +65,11 @@
 		                                <tr>
 		                                	<th><p class="table_title">등록일 / 수정일</p></th>
 	                                        <td colspan="3" class="disabled">
-	                                        	<p class="table_date_info">
-	                                        		<span th:text="${boardPostsDto.bp_reg_date}"></span>
-	                                        		<span th:text="${boardPostsDto.bp_mod_date}"></span>
-	                                        	</p>
+	                                        	<p class="table_date_info" th:utext="|
+	                                        		${boardPostsDto.bp_reg_date}
+	                                        		<span class='divider'></span>
+	                                        		${boardPostsDto.bp_mod_date}
+	                                        	|"></p>
 	                                        </td>
 		                                </tr>
 		                                

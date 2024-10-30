@@ -62,10 +62,11 @@
 		                                <tr>
 		                                	<th><p class="table_title">등록일 / 수정일</p></th>
 	                                        <td colspan="3">
-	                                        	<p class="table_date_info">
-	                                        		<span th:text="${qnaDto.bq_reg_date}"></span>
-	                                        		<span th:text="${qnaDto.bq_mod_date}"></span>
-	                                        	</p>
+	                                        	<p class="table_date_info" th:utext="|
+	                                        		${qnaDto.bq_reg_date}
+	                                        		<span class='divider'></span>
+	                                        		${qnaDto.bq_mod_date}
+	                                        	|"></p>
 	                                        </td>
 										</tr>
 		                                

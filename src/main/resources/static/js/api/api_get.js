@@ -277,13 +277,25 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchNoticeListPageNum.searchNoticeListCnt;
 			break;	
 			
-		case '/board/noti_info/get_board_notice_list': // 공지 게시물
+		case '/qna/noti_info/get_notice_list': // 질문과 답변 공지 사항
 			getListDtos = response.boardNoticePostsDtos;
 			getListPage = response.boardNoticePostsListPageNum;
 			getListCnt = response.boardNoticePostsListPageNum.boardNoticePostsListCnt;
 			break;
 			
-		case '/board/info/search_board_notice_list': // 공지 게시물 검색
+		case '/qna/noti_info/search_notice_list': // 질문과 답변 공지 사항 검색
+			getListDtos = response.boardNoticePostsDtos;
+			getListPage = response.searchBoardNoticePostsListPageNum;
+			getListCnt = response.searchBoardNoticePostsListPageNum.searchNoticePostsListCnt;
+			break;
+			
+		case '/board/noti_info/get_notice_list': // 공지 게시물
+			getListDtos = response.boardNoticePostsDtos;
+			getListPage = response.boardNoticePostsListPageNum;
+			getListCnt = response.boardNoticePostsListPageNum.boardNoticePostsListCnt;
+			break;
+			
+		case '/board/info/search_notice_list': // 공지 게시물 검색
 			getListDtos = response.boardNoticePostsDtos;
 			getListPage = response.searchBoardNoticePostsListPageNum;
 			getListCnt = response.searchBoardNoticePostsListPageNum.searchNoticePostsListCnt;
@@ -948,6 +960,10 @@ function mapSortListApiObject(dbTable, sortType) {
 			0: '/qna/info/get_qna_list',
 			1: '/qna/info/search_qna_list',
 			2: '/qna/info/get_qna_list_by_category',
+		},
+		'board_qna_category': { // 질문 유형 분류 관리 페이지
+			0: '/qna/cate_info/get_category_list',
+			1: '/qna/cate_info/search_qna_category_list',
 		},
 		'video': { // 영상 정보 관리 페이지
 			0: '/video/info/get_video_list',
