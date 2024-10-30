@@ -222,8 +222,10 @@ public class AdvertisementController {
 			try {
 				Map<String, Object> savedFileObj = objectMapper.readValue(savedFile.getBody(), new TypeReference<Map<String, Object>>() {});
 				
-				String ad_dir_name = (String) savedFileObj.get("dir_name");
-				String savedFileName = (String) savedFileObj.get("savedFileName");
+//				String ad_dir_name = (String) savedFileObj.get("dir_name");
+//				String savedFileName = (String) savedFileObj.get("savedFileName");
+				String ad_dir_name = String.valueOf(savedFileObj.get("dir_name"));
+				String savedFileName = String.valueOf(savedFileObj.get("savedFileName"));
 				log.info("ad_dir_name ----> {}", ad_dir_name);
 				log.info("savedFileName ----> {}", savedFileName);
 				
@@ -378,8 +380,10 @@ public class AdvertisementController {
 				try {
 					Map<String, Object> savedFileObj = objectMapper.readValue(savedFile.getBody(), new TypeReference<Map<String, Object>>() {});
 					
-					String ad_dir_name = (String) savedFileObj.get("dir_name");
-					String savedFileName = (String) savedFileObj.get("savedFileName");
+//					String ad_dir_name = (String) savedFileObj.get("dir_name");
+//					String savedFileName = (String) savedFileObj.get("savedFileName");
+					String ad_dir_name = String.valueOf(savedFileObj.get("dir_name"));
+					String savedFileName = String.valueOf(savedFileObj.get("savedFileName"));
 					log.info("ad_dir_name ----> {}", ad_dir_name);
 					log.info("savedFileName ----> {}", savedFileName);
 					
