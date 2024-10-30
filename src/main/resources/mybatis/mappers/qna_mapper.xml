@@ -143,6 +143,20 @@
 		
 	</select>
 	
+	<!-- qna 리스트 중 답변 안 한 개수 -->
+	<select id="selectUnansweredQnaCnt">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_QNA 
+		WHERE 
+			BQ_IS_DELETED = 1 
+		AND 
+			BQ_ANSWER_NO IS NULL 
+	
+	</select>
+	
 	<!-- 답변 안된 qna 리스트 가져오기 -->
 	<select id="selectUnansweredQuestions"
 			resultMap="QnaDto">
@@ -229,6 +243,34 @@
 	
 	</select>
 	
+	<!-- qna 검색 리스트 중 답변 안 한 개수 -->
+	<select id="selectUnansweredSearchQnaCnt">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_QNA BQ 
+		LEFT JOIN 
+			USER_ACCOUNT U  
+		ON 
+			BQ.BQ_USER_NO = U.U_NO 
+		WHERE 
+			BQ_IS_DELETED = 1 
+		<if test="searchPart != null and searchString != null">
+			<choose>
+				<when test="searchPart == 'u_id'">
+					AND U.U_ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<otherwise>
+					AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+				</otherwise>
+			</choose>
+		</if>
+		AND 
+			BQ_ANSWER_NO IS NULL 
+	
+	</select>
+	
 	<!-- qna 카테고리에 따른 리스트 가져오기 -->
 	<select id="selectQnaListForSelectBox"
 			resultMap="QnaDto">
@@ -285,6 +327,23 @@
 			BQ_CATEGORY_NO = #{bqc_no} 
 	
 	</select>
+	
+	<!-- qna 카테고리 리스트 중 답변 안 한 개수 -->
+	<select id="selectUnansweredCategoryQnaCnt">
+		
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_QNA 
+		WHERE 
+			BQ_IS_DELETED = 1 
+		AND 
+			BQ_CATEGORY_NO = #{bqc_no} 
+		AND 
+			BQ_ANSWER_NO IS NULL 
+	
+	</select>
+	
 	
 	<!-- qna 정보 가져오기 by no -->
 	<select id="selectQnaInfoByNo"
