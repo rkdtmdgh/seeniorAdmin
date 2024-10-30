@@ -229,7 +229,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.diseaseCategoryListPageNum.diseaseCategoryListCnt;
 			break;
 			
-		case '/disease/cate_info/search_disease_category_list': // 질환 / 질병 정보 분류 검색
+		case '/disease/cate_info/search_category_list': // 질환 / 질병 정보 분류 검색
 			getListDtos = response.diseaseCategoryDtos;
 			getListPage = response.searchDiseaseCategoryListPageNum;
 			getListCnt = response.searchDiseaseCategoryListPageNum.searchDiseaseCategoryListCnt;
@@ -307,7 +307,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.qnaCategoryListPageNum .qnaCategoryListCnt;
 			break;
 			
-		case '/qna/cate_info/search_qna_category_list': // 질문 유형 분류 검색
+		case '/qna/cate_info/search_category_list': // 질문 유형 분류 검색
 			getListDtos = response.qnaCategoryDtos;
 			getListPage = response.searchQnaCategoryListPageNum;
 			getListCnt = response.searchQnaCategoryListPageNum.searchQnaCategoryListCnt;
@@ -380,7 +380,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.advertisementCategoryListPageNum.advertisementCategoryListCnt;
 			break;
 			
-		case '/advertisement/cate_info/search_advertisement_category_list': // 광고 분류 검색
+		case '/advertisement/cate_info/search_category_list': // 광고 분류 검색
 			getListDtos = response.advertisementCategoryDtos;
 			getListPage = response.searchAdvertisementCategoryListPageNum;
 			getListCnt = response.searchAdvertisementCategoryListPageNum.searchAdvertisementCategoryListCnt;
@@ -483,7 +483,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			break;
 			
 		case '/disease/cate_info/get_category_list': // 질환/질병 분류 관리 리스트 테이블
-		case '/disease/cate_info/search_disease_category_list': // 질환/질병 분류 관리 검색 리스트 테이블
+		case '/disease/cate_info/search_category_list': // 질환/질병 분류 관리 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -703,7 +703,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			break;
 			
 		case '/qna/cate_info/get_category_list': // 질문 유형 분류 관리 리스트 테이블
-		case '/qna/cate_info/search_qna_category_list': // 질문 유형 분류 관리 검색 리스트 테이블
+		case '/qna/cate_info/search_category_list': // 질문 유형 분류 관리 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -817,7 +817,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			break;
 			
 		case '/advertisement/cate_info/get_category_list': // 광고 분류 관리 리스트 테이블
-		case '/advertisement/cate_info/search_advertisement_category_list': // 광고 분류 관리 검색 리스트 테이블
+		case '/advertisement/cate_info/search_category_list': // 광고 분류 관리 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -949,7 +949,7 @@ function mapSortListApiObject(dbTable, sortType) {
 		},
 		'disease_category': { // 질환/질병 분류 관리 페이지
 			0: '/disease/cate_info/get_category_list',
-			1: '/disease/cate_info/search_disease_category_list',
+			1: '/disease/cate_info/search_category_list',
 		},
 		'recipe': { // 식단 정보 관리 페이지
 			0: '/recipe/info/get_recipe_list',
@@ -963,7 +963,7 @@ function mapSortListApiObject(dbTable, sortType) {
 		},
 		'board_qna_category': { // 질문 유형 분류 관리 페이지
 			0: '/qna/cate_info/get_category_list',
-			1: '/qna/cate_info/search_qna_category_list',
+			1: '/qna/cate_info/search_category_list',
 		},
 		'video': { // 영상 정보 관리 페이지
 			0: '/video/info/get_video_list',
@@ -989,7 +989,7 @@ function mapSortListApiObject(dbTable, sortType) {
 		},
 		'advertisement_category': { // 광고 위치 분류 관리 페이지
 			0: '/advertisement/cate_info/get_category_list',
-			1: '/advertisement/cate_info/search_advertisement_category_list',
+			1: '/advertisement/cate_info/search_category_list',
 		},
 	};
 	

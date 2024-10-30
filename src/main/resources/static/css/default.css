@@ -575,7 +575,7 @@
         vertical-align: top;
     }
     
-    td {
+    th, td {
     	position: relative;
     }
 
