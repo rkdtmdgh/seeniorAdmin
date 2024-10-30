@@ -55,13 +55,15 @@
 		                                    <td>
 		                                    	<div class="table_info bq_state">
 	                                            	<label class="radio">
-	                                            		<input type="radio" name="bq_state" data-info="공개" value="1" 
+	                                            		<input type="radio" name="bq_state" data-info="공개" value="true" 
 	                                            			th:checked="${qnaDto.bq_state == true}"
+	                                            			th:attr="onclick=${qnaDto.bq_state != true ? 'putModifyState(this, `qna_answer_form`)' : ''}"
 	                                            		> 공개
 	                                            	</label>
 	                                            	<label class="radio">
-	                                            		<input type="radio" name="bq_state" data-info="비공개" value="0" 
+	                                            		<input type="radio" name="bq_state" data-info="비공개" value="false" 
 	                                            			th:checked="${qnaDto.bq_state == false}"
+	                                            			th:attr="onclick=${qnaDto.bq_state != false ? 'putModifyState(this, `qna_answer_form`)' : ''}"
 	                                            		> 비공개
 	                                            	</label>
 	                                            </div>

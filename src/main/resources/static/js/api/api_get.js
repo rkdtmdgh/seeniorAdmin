@@ -337,7 +337,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.boardCategoryListPageNum.boardCategoryListCnt;
 			break;
 			
-		case '/board/cate_info/search_board_category_list': // 게시판 관리 검색
+		case '/board/cate_info/search_category_list': // 게시판 관리 검색
 			getListDtos = response.boardCategoryDtos;
 			getListPage = response.searchBoardCategoryListPageNum;
 			getListCnt = response.searchBoardCategoryListPageNum.searchBoardCategoryListCnt;
@@ -385,7 +385,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListPage = response.searchAdvertisementCategoryListPageNum;
 			getListCnt = response.searchAdvertisementCategoryListPageNum.searchAdvertisementCategoryListCnt;
 			break;
-						
+			
 	}
 		
 	return { getListDtos, getListPage, getListCnt }
@@ -581,7 +581,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			break;
 			
 		case '/board/cate_info/get_category_list': // 게시판 관리 리스트 테이블
-		case '/board/cate_info/search_board_category_list': // 게시판 관리 검색 리스트 테이블
+		case '/board/cate_info/search_category_list': // 게시판 관리 검색 리스트 테이블
 			tableTrContent = `
 				<tr data-no-name="bc_no" data-no="${data.bc_no}" data-idx="${data.bc_idx}">
 					<td class="va_m">
@@ -976,7 +976,7 @@ function mapSortListApiObject(dbTable, sortType) {
 		},
 		'board_category': { // 게시판 관리 페이지
 			0: '/board/cate_info/get_category_list',
-			1: '/board/cate_info/search_board_category_list',
+			1: '/board/cate_info/search_category_list',
 		},
 		'board_posts': { // 특정 게시판 페이지
 			0: '/board/info/get_posts_list',

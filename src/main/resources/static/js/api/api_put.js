@@ -321,18 +321,23 @@ async function putUserAccountBlockModify(formName, u_is_blocked) {
 	);
 }
 
-// 단순 데이터 상태 토글
+// 단순 데이터 상태 토글 (boolean)
 async function putModifyState(ele, formName) {
 	const info = $(ele).data('info');
+	const name = $(ele).attr('name');
+	const value = JSON.parse($(ele).val()); // boolean으로 변환
+	
 	const isConfirm = confirm(`${info} 처리하시겠습니까?`);
-	if(!isConfirm) return false;
+	if(!isConfirm) {
+		$(`input[name="${name}"][value="${!value}"]`).prop('checked', true);
+		return;
+	}
 	
 	const form = document.forms[formName];
-	const name = $(ele).attr('name');
 	const apiUrl = mapStateModifyObject(name); // apiUrl 가져오기
 		
 	const formData = new FormData(form);
-	formData.append(`${name}`, $(ele).val());
+	formData.set(`${name}`, value);
 	
 	const successMessage = `${info} 처리되었습니다.`;
 	const errorMessage = `${info} 처리에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
