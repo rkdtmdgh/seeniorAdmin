@@ -19,8 +19,6 @@ import com.see_nior.seeniorAdmin.enums.PagePath;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
-
-
 @Log4j2
 @Controller
 @RequiredArgsConstructor
