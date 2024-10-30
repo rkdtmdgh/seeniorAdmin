@@ -47,8 +47,24 @@
 	                                <tbody>
 	                                	<tr>
 		                                    <th><p class="table_title">질문 유형</p></th>
-		                                    <td colspan="3">
+		                                    <td>
 		                                    	<p class="table_info" th:text="${qnaDto.qnaCategoryDto.bqc_name}"></p>
+		                                    </td>
+		                                    
+		                                    <th><p class="table_title">공개 설정</p></th>
+		                                    <td>
+		                                    	<div class="table_info bq_state">
+	                                            	<label class="radio">
+	                                            		<input type="radio" name="bq_state" value="1" 
+	                                            			th:checked="${qnaDto.bq_state == true}"
+	                                            		> 공개
+	                                            	</label>
+	                                            	<label class="radio">
+	                                            		<input type="radio" name="bq_state" value="0" 
+	                                            			th:checked="${qnaDto.bq_state == false}"
+	                                            		> 비공개
+	                                            	</label>
+	                                            </div>
 		                                    </td>
 		                                </tr>
 		                                
@@ -62,10 +78,11 @@
 		                                <tr>
 		                                	<th><p class="table_title">등록일 / 수정일</p></th>
 	                                        <td colspan="3">
-	                                        	<p class="table_date_info">
-	                                        		<span th:text="${qnaDto.bq_reg_date}"></span>
-	                                        		<span th:text="${qnaDto.bq_mod_date}"></span>
-	                                        	</p>
+	                                        	<p class="table_date_info" th:utext="|
+	                                        		${qnaDto.bq_reg_date}
+	                                        		<span class='divider'></span>
+	                                        		${qnaDto.bq_mod_date}
+	                                        	|"></p>
 	                                        </td>
 										</tr>
 		                                

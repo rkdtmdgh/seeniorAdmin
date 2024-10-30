@@ -155,7 +155,7 @@ async function postIntegSubmitProcess(apiUrl, formData, successMessage, errorMes
 }
 
 // 질환/질병 분류 등록
-async function postDiseaseCategoryCreate( formName, nextPage) {
+async function postDiseaseCategoryCreate(formName, nextPage) {
 	const form = document.forms[formName];
 	let input;
 	
@@ -332,6 +332,32 @@ async function postQnaNoticeCreate(formName) {
 		successMessage, 
 		errorMessage, 
 		'/qna/info/qna_list_form',
+		'content_inner'
+	);
+}
+
+// QNA 분류 등록
+async function postQnaCategoryCreate(formName) {
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.bqc_name;
+	if(!(await requestDuplicateCheck(input, true, false, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+		input.focus();
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	
+	const successMessage = `"${input.value}" 분류가 등록되었습니다.`;
+	const errorMessage = `"${input.value}" 분류 등록 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	await postIntegSubmit(
+		'/qna/cate_info/create_category_confirm',
+		formData,
+		successMessage,
+		errorMessage, 																
+		'/qna/cate_info/category_list_form',
 		'content_inner'
 	);
 }

@@ -229,7 +229,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.diseaseCategoryListPageNum.diseaseCategoryListCnt;
 			break;
 			
-		case '/disease/cate_info/search_disease_category_list': // 질환 / 질병 정보 분류 검색
+		case '/disease/cate_info/search_category_list': // 질환 / 질병 정보 분류 검색
 			getListDtos = response.diseaseCategoryDtos;
 			getListPage = response.searchDiseaseCategoryListPageNum;
 			getListCnt = response.searchDiseaseCategoryListPageNum.searchDiseaseCategoryListCnt;
@@ -277,13 +277,25 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.searchNoticeListPageNum.searchNoticeListCnt;
 			break;	
 			
-		case '/board/noti_info/get_board_notice_list': // 공지 게시물
+		case '/qna/noti_info/get_notice_list': // 질문과 답변 공지 사항
+			getListDtos = response.qnaNoticeDtos;
+			getListPage = response.qnaNoticeListPageNum;
+			getListCnt = response.qnaNoticeListPageNum.qnaNoticeListCnt;
+			break;
+			
+		case '/qna/noti_info/search_notice_list': // 질문과 답변 공지 사항 검색
+			getListDtos = response.boardNoticePostsDtos;
+			getListPage = response.searchBoardNoticePostsListPageNum;
+			getListCnt = response.searchBoardNoticePostsListPageNum.searchNoticePostsListCnt;
+			break;
+			
+		case '/board/noti_info/get_notice_list': // 공지 게시물
 			getListDtos = response.boardNoticePostsDtos;
 			getListPage = response.boardNoticePostsListPageNum;
 			getListCnt = response.boardNoticePostsListPageNum.boardNoticePostsListCnt;
 			break;
 			
-		case '/board/info/search_board_notice_list': // 공지 게시물 검색
+		case '/board/info/search_notice_list': // 공지 게시물 검색
 			getListDtos = response.boardNoticePostsDtos;
 			getListPage = response.searchBoardNoticePostsListPageNum;
 			getListCnt = response.searchBoardNoticePostsListPageNum.searchNoticePostsListCnt;
@@ -295,7 +307,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.qnaCategoryListPageNum .qnaCategoryListCnt;
 			break;
 			
-		case '/qna/cate_info/search_qna_category_list': // 질문 유형 분류 검색
+		case '/qna/cate_info/search_category_list': // 질문 유형 분류 검색
 			getListDtos = response.qnaCategoryDtos;
 			getListPage = response.searchQnaCategoryListPageNum;
 			getListCnt = response.searchQnaCategoryListPageNum.searchQnaCategoryListCnt;
@@ -368,7 +380,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListCnt = response.advertisementCategoryListPageNum.advertisementCategoryListCnt;
 			break;
 			
-		case '/advertisement/cate_info/search_advertisement_category_list': // 광고 분류 검색
+		case '/advertisement/cate_info/search_category_list': // 광고 분류 검색
 			getListDtos = response.advertisementCategoryDtos;
 			getListPage = response.searchAdvertisementCategoryListPageNum;
 			getListCnt = response.searchAdvertisementCategoryListPageNum.searchAdvertisementCategoryListCnt;
@@ -471,7 +483,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			break;
 			
 		case '/disease/cate_info/get_category_list': // 질환/질병 분류 관리 리스트 테이블
-		case '/disease/cate_info/search_disease_category_list': // 질환/질병 분류 관리 검색 리스트 테이블
+		case '/disease/cate_info/search_category_list': // 질환/질병 분류 관리 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -691,7 +703,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			break;
 			
 		case '/qna/cate_info/get_category_list': // 질문 유형 분류 관리 리스트 테이블
-		case '/qna/cate_info/search_qna_category_list': // 질문 유형 분류 관리 검색 리스트 테이블
+		case '/qna/cate_info/search_category_list': // 질문 유형 분류 관리 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -725,7 +737,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.bq_state === true ? '대기' : '답변'}</a>
 		            </td>
 					<td class="ta_l">
-		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.bq_title}</a>
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info table_flex_info">
+		                	
+		                	${data.bq_title}
+		                </a>
 		            </td>
 					<td>
 		                <a href="/user_account/info/modify_form?u_no=${data.userAccountDto.u_no}" class="table_info">${data.userAccountDto.u_id}</a>
@@ -802,7 +817,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			break;
 			
 		case '/advertisement/cate_info/get_category_list': // 광고 분류 관리 리스트 테이블
-		case '/advertisement/cate_info/search_advertisement_category_list': // 광고 분류 관리 검색 리스트 테이블
+		case '/advertisement/cate_info/search_category_list': // 광고 분류 관리 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -894,7 +909,7 @@ function generatePagination(pagingValues, sortValue, order, apiUrl, isSearch) { 
 
 // 버튼으로 정렬된 리스트 요청
 function getSortList(event, dbTable, sortValue) {
-    const sortBtn = event.currentTarget.closest('.sort'); // 클릭된 요소가 가장 가까운 부모 요소 중 클래스가 "sort"인 요소를 찾음
+    const sortBtn = event.currentTarget.closest('.sort'); // 클릭된 요소가 가장 가까운 부모 요소 중 클래스가 sort인 요소를 찾음
 	if(!sortBtn) return; // 만약 sort 요소가 없다면 아무 작업도 하지 않음
 	
     const currentSortValue = sortBtn.getAttribute('data-current-sort-value'); // 현재 정렬 값 가져오기 default all
@@ -934,7 +949,7 @@ function mapSortListApiObject(dbTable, sortType) {
 		},
 		'disease_category': { // 질환/질병 분류 관리 페이지
 			0: '/disease/cate_info/get_category_list',
-			1: '/disease/cate_info/search_disease_category_list',
+			1: '/disease/cate_info/search_category_list',
 		},
 		'recipe': { // 식단 정보 관리 페이지
 			0: '/recipe/info/get_recipe_list',
@@ -945,6 +960,10 @@ function mapSortListApiObject(dbTable, sortType) {
 			0: '/qna/info/get_qna_list',
 			1: '/qna/info/search_qna_list',
 			2: '/qna/info/get_qna_list_by_category',
+		},
+		'board_qna_category': { // 질문 유형 분류 관리 페이지
+			0: '/qna/cate_info/get_category_list',
+			1: '/qna/cate_info/search_category_list',
 		},
 		'video': { // 영상 정보 관리 페이지
 			0: '/video/info/get_video_list',
@@ -970,7 +989,7 @@ function mapSortListApiObject(dbTable, sortType) {
 		},
 		'advertisement_category': { // 광고 위치 분류 관리 페이지
 			0: '/advertisement/cate_info/get_category_list',
-			1: '/advertisement/cate_info/search_advertisement_category_list',
+			1: '/advertisement/cate_info/search_category_list',
 		},
 	};
 	

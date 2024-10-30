@@ -19,8 +19,6 @@ import com.see_nior.seeniorAdmin.enums.PagePath;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
-
-
 @Log4j2
 @Controller
 @RequiredArgsConstructor
@@ -198,6 +196,7 @@ public class QnaController {
 	
 	// qna 카테고리명 중복 확인
 	@GetMapping("/cate_info/is_qna_category")
+	@ResponseBody
 	public boolean isQnaCategory(@RequestParam("bqc_name") String bqc_name) {
 		log.info("isQnaCategory()");
 		

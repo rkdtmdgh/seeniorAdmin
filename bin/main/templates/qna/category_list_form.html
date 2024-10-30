@@ -10,7 +10,7 @@
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '1': // search
-					await getSearchList(null, '/qna/cate_info/search_qna_category_list', sortValue, order, page);
+					await getSearchList(null, '/qna/cate_info/search_category_list', sortValue, order, page);
 					break;
 					
 				default: 
@@ -35,7 +35,7 @@
 					            <h2 class="title">질환 / 질병 분류 관리</h2>
 					            
 					            <div class="content_top_right">
-									<form name="search_form" onsubmit="getSearchList(event, '/qna/cate_info/search_qna_category_list')">
+									<form name="search_form" onsubmit="getSearchList(event, '/qna/cate_info/search_category_list')">
 										<th:block th:insert="~{fragments/search.html :: search('질문 분류 관리')}"></th:block>
 									</form>
 						            

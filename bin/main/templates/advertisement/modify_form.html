@@ -58,10 +58,11 @@
 		                                    
 		                                    <th><p class="table_title">등록일 / 수정일</p></th>
 	                                        <td class="disabled">
-	                                        	<p class="table_date_info">
-	                                        		<span th:text="${advertisementDto.ad_reg_date}"></span>
-	                                        		<span th:text="${advertisementDto.ad_mod_date}"></span>
-	                                        	</p>
+	                                        	<p class="table_date_info" th:utext="|
+	                                        		${advertisementDto.ad_reg_date}
+	                                        		<span class='divider'></span>
+                                        			${advertisementDto.ad_mod_date}
+                                        		|"></p>
 	                                        </td>
 		                                </tr>
 		                                
