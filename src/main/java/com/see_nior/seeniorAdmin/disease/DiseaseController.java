@@ -146,7 +146,7 @@ public class DiseaseController {
 	
 	// 질환 카테고리 검색(페이지네이션 => 비동기)
 	@ResponseBody
-	@GetMapping("/cate_info/search_disease_category_list")
+	@GetMapping("/cate_info/search_category_list")
 	public Object searchDiseaseCategoryList(
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
