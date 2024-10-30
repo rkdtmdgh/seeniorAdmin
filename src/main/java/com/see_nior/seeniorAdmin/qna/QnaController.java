@@ -48,10 +48,14 @@ public class QnaController {
 	
 		Map<String, Object> qnaList = qnaService.getQnaPagingList(sortValue, order, page);
 		
+		int unansweredQnaCnt = qnaService.getUnansweredQnaCnt();
+		
 		Map<String, Object> qnaListPage = qnaService.getQnaListPageNum(page);
+		
 		qnaList.put("qnaListPageNum", qnaListPage);
 		qnaList.put("sortValue", sortValue);
 		qnaList.put("order", order);
+		qnaList.put("unansweredQnaCnt", unansweredQnaCnt);
 		
 		return qnaList;
 		
@@ -71,6 +75,8 @@ public class QnaController {
 		Map<String, Object> searchQnaList = 
 				qnaService.searchQnaPagingList(searchPart, searchString, sortValue, order, page);
 		
+		int unansweredSearchQnaCnt = qnaService.getUnansweredSearchQnaCnt(searchPart, searchString);
+		
 		Map<String, Object> searchQnaListPageNum = 
 				qnaService.searchQnaListPageNum(searchPart, searchString, page);
 		
@@ -79,6 +85,7 @@ public class QnaController {
 		searchQnaList.put("order", order);
 		searchQnaList.put("searchPart", searchPart);
 		searchQnaList.put("searchString", searchString);
+		searchQnaList.put("unansweredSearchQnaCnt", unansweredSearchQnaCnt);
 		
 		return searchQnaList;
 		
@@ -94,11 +101,11 @@ public class QnaController {
 			@RequestParam("infoNo") int bqc_no) {
 		log.info("getQnaListByCategory()");
 		
-		// 페이지 번호에 따른 위치별 광고 리스트들 가져오기
 		Map<String, Object> qnaListByCategoryWithPage = 
 				qnaService.getQnaListByCategoryWithPage(page, sortValue, order, bqc_no);
+		
+		int unansweredCategoryQnaCnt = qnaService.getUnansweredCategoryQnaCnt(bqc_no);
 				
-		// 위치별 광고 총 페이지 개수 가져오기
 		Map<String, Object> qnaListByCategoryPageNum = 
 				qnaService.getQnaByCategoryPageNum(page, bqc_no);
 		
@@ -106,6 +113,7 @@ public class QnaController {
 		qnaListByCategoryWithPage.put("sortValue", sortValue);
 		qnaListByCategoryWithPage.put("order", order);
 		qnaListByCategoryWithPage.put("infoNo", bqc_no);
+		qnaListByCategoryWithPage.put("unansweredCategoryQnaCnt", unansweredCategoryQnaCnt);
 		
 		return qnaListByCategoryWithPage;
 		
@@ -433,5 +441,18 @@ public class QnaController {
 		return qnaService.deleteNoticeConfrim(bqn_no);
 		
 	}
+	
+	
+	// qna test 
+	@GetMapping("/test")
+	@ResponseBody
+	public Object qnaTest() {
+		log.info("test()");
+		
+		return qnaService.getUnansweredCategoryQnaCnt(1);
+		
+	}
+	
+	
 	
 }
