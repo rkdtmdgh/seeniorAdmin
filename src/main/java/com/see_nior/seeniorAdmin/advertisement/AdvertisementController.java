@@ -154,7 +154,7 @@ public class AdvertisementController {
 	
 	// 광고 위치 검색(페이지네이션 => 비동기)
 	@ResponseBody
-	@GetMapping("/cate_info/search_advertisement_category_list")
+	@GetMapping("/cate_info/search_category_list")
 	public Object searchAdvertisementCategoryList(
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
