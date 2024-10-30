@@ -38,35 +38,38 @@ public class AccountService {
 		// 아이디 중복 여부
 		boolean isAccount = accountMapper.isAccount(adminAccountDto.getA_id());
 		
+		// 아이디 중복이 아니라면 회원 가입 진행
 		if (!isAccount) {
 			
+			// 처음 SUPER_ADMIN 가입 시 super_admin@seenior.com ID 확인 
 			if (adminAccountDto.getA_id().equals("super_admin@seenior.com")) {
 				
+				// 비밀번호 암호화
 				adminAccountDto.setA_pw(passwordEncoder.encode(adminAccountDto.getA_pw()));
 				adminAccountDto.setA_authority_role("SUPER_ADMIN");
 				
 				int result = accountMapper.insertNewAdmin(adminAccountDto);
 				
-				if (result <= 0) {
+				if (result <= 0) 
 					return AdminSighUpStatus.FAIL.getValue();
-				} else {
+				 else 
 					return AdminSighUpStatus.SUCCESS.getValue();
-				}
 				
 			} else {
 				
+				// 비밀번호 암호화
 				adminAccountDto.setA_pw(passwordEncoder.encode(adminAccountDto.getA_pw()));
 				
 				int result = accountMapper.insertNewAdmin(adminAccountDto);
 				
-				if (result <= 0) {
+				if (result <= 0) 
 					return AdminSighUpStatus.FAIL.getValue();
-				} else {
+				 else 
 					return AdminSighUpStatus.SUCCESS.getValue();
-				}
 				
 			}
 			
+		// 아이디 중복이라면 중단 
 		} else {
 			return AdminSighUpStatus.ALREADY.getValue();
 		}
@@ -91,6 +94,7 @@ public class AccountService {
 				accountMapper.selectAdminAccountByNo(a_no);
 		
 		return adminAccountDto;
+		
 	}
 	
 	// 내 정보 수정 확인
@@ -205,7 +209,7 @@ public class AccountService {
 	}
 
 	
-	// 비밀번호 초기화
+	// 비밀번호 초기화 -- s + 생년월일 8자리 + ! ex : s20091010! 
 	public boolean resetPassword(int a_no) {
 		log.info("resetPassword()");
 		
