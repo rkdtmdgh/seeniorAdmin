@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.see_nior.seeniorAdmin.dto.DiseaseCategoryDto;
 import com.see_nior.seeniorAdmin.dto.DiseaseDto;
+import com.see_nior.seeniorAdmin.enums.PagePath;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -34,9 +35,7 @@ public class DiseaseController {
 	public String createCategoryForm() {
 		log.info("createCategoryForm()");
 		
-		String nextPage = "disease/create_category_form";
-		
-		return nextPage;
+		return PagePath.DISEASE_CREATE_CATEGORY_FORM.getValue();
 		
 	}
 	
@@ -69,9 +68,7 @@ public class DiseaseController {
 	public String categoryListForm() {
 		log.info("categoryListForm()");
 		
-		String nextPage = "disease/category_list_form";
-		
-		return nextPage;
+		return PagePath.DISEASE_CATEGORY_LIST_FORM.getValue();
 		
 	}
 	
@@ -115,13 +112,11 @@ public class DiseaseController {
 	public String modifyCategoryForm(@RequestParam(value = "dc_no") int dc_no, Model model) {
 		log.info("modifyCategoryForm()");
 		
-		String nextPage = "disease/modify_category_form";
-		
 		DiseaseCategoryDto diseaseCategoryDto = diseaseService.getCategory(dc_no);
 		
 		model.addAttribute("diseaseCategoryDto", diseaseCategoryDto);
 		
-		return nextPage;
+		return PagePath.DISEASE_MODIFY_CATEGORY_FORM.getValue();
 		
 	}
 	
@@ -155,11 +150,13 @@ public class DiseaseController {
 	public Object searchDiseaseCategoryList(
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
+			@RequestParam(value = "sortValue", required = false, defaultValue = "dc_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("searchDiseaseCategoryList()");
 		
 		// 페이지 번호에 따른 검색 질환 카테고리 리스트들 가져오기
-		Map<String, Object> searchDiseaseCategoryListWithPage = diseaseService.getSearchDiseaseCategoryListWithPage(searchPart, searchString, page);
+		Map<String, Object> searchDiseaseCategoryListWithPage = diseaseService.getSearchDiseaseCategoryListWithPage(searchPart, searchString, sortValue, order, page);
 		
 		// 검색 질환 카테고리 총 페이지 개수 가져오기
 		Map<String, Object> searchDiseaseCategoryListPageNum = diseaseService.getSearchDiseaseCategoryListPageNum(searchPart, searchString, page);
@@ -167,6 +164,8 @@ public class DiseaseController {
 		searchDiseaseCategoryListWithPage.put("searchDiseaseCategoryListPageNum", searchDiseaseCategoryListPageNum);
 		searchDiseaseCategoryListWithPage.put("searchPart", searchPart);
 		searchDiseaseCategoryListWithPage.put("searchString", searchString);
+		searchDiseaseCategoryListWithPage.put("sortValue", sortValue);
+		searchDiseaseCategoryListWithPage.put("order", order);
 		
 		return searchDiseaseCategoryListWithPage;
 		
@@ -179,9 +178,7 @@ public class DiseaseController {
 	public String createForm() {
 		log.info("createForm()");
 		
-		String nextPage = "disease/create_form";
-		
-		return nextPage;
+		return PagePath.DISEASE_CREATE_FORM.getValue();
 		
 	}
 	
@@ -215,9 +212,7 @@ public class DiseaseController {
 	public String diseaseListForm() {
 		log.info("diseaseListForm()");
 		
-		String nextPage = "disease/disease_list_form";
-		
-		return nextPage;
+		return PagePath.DISEASE_LIST_FORM.getValue();
 		
 	}
 	
@@ -286,13 +281,11 @@ public class DiseaseController {
 	public String modifyForm(@RequestParam(value = "d_no") int d_no, Model model) {
 		log.info("modifyForm()");
 		
-		String nextPage = "disease/modify_form";
-		
 		DiseaseDto diseaseDto = diseaseService.getDisease(d_no);
 		
 		model.addAttribute("diseaseDto", diseaseDto);
 		
-		return nextPage;
+		return PagePath.DISEASE_MODIFY_FORM.getValue();
 		
 	}
 	
@@ -324,11 +317,13 @@ public class DiseaseController {
 	public Object searchDiseaseList(
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
+			@RequestParam(value = "sortValue", required = false, defaultValue = "d_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("searchDiseaseList()");
 		
 		// 페이지 번호에 따른 검색 질환 리스트들 가져오기
-		Map<String, Object> searchDiseaseListWithPage = diseaseService.getSearchDiseaseListWithPage(searchPart, searchString, page);
+		Map<String, Object> searchDiseaseListWithPage = diseaseService.getSearchDiseaseListWithPage(searchPart, searchString, sortValue, order, page);
 		
 		// 검색 질환 총 페이지 개수 가져오기
 		Map<String, Object> searchDiseaseListPageNum = diseaseService.getSearchDiseaseListPageNum(searchPart, searchString, page);
@@ -336,6 +331,8 @@ public class DiseaseController {
 		searchDiseaseListWithPage.put("searchDiseaseListPageNum", searchDiseaseListPageNum);
 		searchDiseaseListWithPage.put("searchPart", searchPart);
 		searchDiseaseListWithPage.put("searchString", searchString);
+		searchDiseaseListWithPage.put("sortValue", sortValue);
+		searchDiseaseListWithPage.put("order", order);
 		
 		return searchDiseaseListWithPage;
 		

@@ -13,7 +13,7 @@
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
 				case '1': // search
-					await getSearchList(null, '/board/info/search_posts_list', page);
+					await getSearchList(null, '/board/info/search_posts_list', sortValue, order, page);
 					break;
 
 				default: 
@@ -44,7 +44,7 @@
 									</form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/board/info/get_posts_list', null, null, 1);">전체보기</div>
+						            	<div class="btns small" onclick="getList('/board/info/get_posts_list', null, null, 1, true);">전체보기</div>
 						            	<div class="btns small delete" onclick="delListData('bp_no', true)">삭제</div>
 						            	<a th:href="@{'/board/info/create_form?infoNo=' + ${infoNo}}" class="btns small">게시물 등록</a>
 						            </div>
