@@ -35,12 +35,6 @@ async function putIntegSubmitProcess(apiUrl, formData, successMessage, errorMess
 	}
 }
 
-// 단순 데이터 상태 토글
-async function putModifyStateProcess(event, noValue, stateValue) {
-	const $eventEle = $(ele); // 이벤트가 일어난 요소
-	const infoEle = event.target.closest('td'); // 클릭된 요소의 가장 가까운 tr 요소 찾기
-}
-
 // 순번 수정
 async function putOrderModifyProcess(event, idx, page) {    
 	const infoEle = event.target.closest('tr'); // 클릭된 요소의 가장 가까운 tr 요소 찾기
@@ -319,12 +313,55 @@ async function putUserAccountBlockModify(formName, u_is_blocked) {
 	const errorMessage = `"${form.u_id.value}" 정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
 	await putIntegSubmit(
-		'/user_account/info/bolcked_confirm', 
-		formData, 
-		successMessage, 
+		'/user_account/info/bolcked_confirm',
+		formData,
+		successMessage,
 		errorMessage,
 		'content_inner'
 	);
+}
+
+// 단순 데이터 상태 토글 (boolean)
+async function putModifyState(ele, formName) {
+	const info = $(ele).data('info');
+	const name = $(ele).attr('name');
+	const value = JSON.parse($(ele).val()); // boolean으로 변환
+	
+	const isConfirm = confirm(`${info} 처리하시겠습니까?`);
+	if(!isConfirm) {
+		$(`input[name="${name}"][value="${!value}"]`).prop('checked', true);
+		return;
+	}
+	
+	const form = document.forms[formName];
+	const apiUrl = mapStateModifyObject(name); // apiUrl 가져오기
+		
+	const formData = new FormData(form);
+	formData.set(`${name}`, value);
+	
+	const successMessage = `${info} 처리되었습니다.`;
+	const errorMessage = `${info} 처리에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	await putIntegSubmit(
+		apiUrl,
+		formData,
+		successMessage,
+		errorMessage,
+		name
+	);
+}
+
+// 단순 데이터 상태 수정 요청에 필요한 객체 설정
+function mapStateModifyObject(name) {
+	let apiUrl = null;
+	
+	switch(name) {
+		case 'bq_state':
+			apiUrl = '/qna/info/modify_qna_state';
+			break;
+	}
+	
+	return apiUrl;
 }
 
 // 질환 / 질병 분류 수정
