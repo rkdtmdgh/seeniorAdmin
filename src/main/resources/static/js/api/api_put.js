@@ -35,6 +35,12 @@ async function putIntegSubmitProcess(apiUrl, formData, successMessage, errorMess
 	}
 }
 
+// 단순 데이터 상태 토글
+async function putModifyStateProcess(event, noValue, stateValue) {
+	const $eventEle = $(ele); // 이벤트가 일어난 요소
+	const infoEle = event.target.closest('td'); // 클릭된 요소의 가장 가까운 tr 요소 찾기
+}
+
 // 순번 수정
 async function putOrderModifyProcess(event, idx, page) {    
 	const infoEle = event.target.closest('tr'); // 클릭된 요소의 가장 가까운 tr 요소 찾기

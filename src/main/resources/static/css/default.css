@@ -552,25 +552,17 @@
 }
 
 .table_date_info {
-	display: flex;
-	align-items: center;
 	text-align: left;
 	padding: var(--textPadding);
 	color: var(--grayColor);
 	
-	span {
-		&::after {
-			content: '';
-			display: inline-block;
-			width: 1px;
-			height: var(--ssize3);
-			background-color: var(--lightGrayColor);
-			margin: 0 var(--ssize2);
-		}
-		
-		&:last-child::after {
-			display: none;
-		}
+	.divider {
+		display: inline-block;
+		width: 1px;
+		height: var(--ssize3);
+		background-color: var(--lightGrayColor);
+		margin: 0 var(--ssize2);
+		vertical-align: middle;
 	}
 }
 
@@ -583,7 +575,7 @@
         vertical-align: top;
     }
     
-    td {
+    th, td {
     	position: relative;
     }
 
