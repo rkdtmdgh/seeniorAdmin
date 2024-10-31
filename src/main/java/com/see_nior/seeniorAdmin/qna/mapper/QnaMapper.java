@@ -17,12 +17,16 @@ public interface QnaMapper {
 	public List<AdminAccountDto> selectQnaList(Map<String, Object> pagingParams);
 
 	public int selectAllQnaListCnt();
+	
+	public int selectUnansweredQnaCnt();
 
 	public List<QnaDto> selectUnansweredQuestions();
 
 	public List<AdminAccountDto> selectSearchQnaList(Map<String, Object> pagingParams);
 
 	public int selectSearchQnaListCnt(Map<String, Object> searchParams);
+	
+	public int selectUnansweredSearchQnaCnt(Map<String, Object> params);
 
 	public QnaDto selectQnaInfoByNo(int bq_no);
 
@@ -35,6 +39,8 @@ public interface QnaMapper {
 	public List<AdminAccountDto> selectQnaListForSelectBox(Map<String, Object> pagingParamsForSelectBox);
 
 	public int selectAllQnaListCntForSelectBox(int bqc_no);
+	
+	public int selectUnansweredCategoryQnaCnt(int bqc_no);
 	
 	public int insertNewAnswer(Map<String, Object> params);
 
@@ -85,6 +91,12 @@ public interface QnaMapper {
 	public int updateQnaNotice(Map<String, Object> params);
 
 	public int updateQnaNoticeIsDeletedByNo(int bqn_no);
+
+	
+
+	
+
+	
 
 	
 

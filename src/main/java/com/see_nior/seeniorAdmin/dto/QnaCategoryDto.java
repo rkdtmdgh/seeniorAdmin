@@ -16,4 +16,6 @@ public class QnaCategoryDto {
 	private String bqc_reg_date;
 	private String bqc_mod_date;
 	
+	private int bqc_unanswered_cnt;
+	
 }
