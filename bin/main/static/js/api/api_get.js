@@ -20,7 +20,7 @@ async function getListProcess(apiUrl, sortValue, order, page, resetParams = fals
 		if(infoNo) params.append('infoNo', infoNo);
 		if(sortValue) { // sort값이 있을 경우 추가
 			params.append('sortValue', sortValue);
-			params.append('order', order);				
+			params.append('order', order);
 		}
 		params.append('page', page || 1); // 페이지 추가
 		
@@ -681,8 +681,8 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			`;
 			break;
 			
-		case '/notice/info/get_notice_list': // 공지 사항 리스트 테이블
-		case '/notice/info/search_notice_category_list': // 공지 사항 검색 리스트 테이블
+		case '/notice/info/get_notice_list': // 전체 공지 사항 리스트 테이블
+		case '/notice/info/search_notice_list': // 전체 공지 사항 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
 					<td class="va_m">
@@ -707,18 +707,42 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			`;
 			break;
 			
+		case '/qna/noti_info/get_notice_list': // 질문과 답변 공지 사항 리스트 테이블
+		case '/qna/noti_info/search_notice_list': // 질문과 답변 공지 사항 검색 리스트 테이블
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="table_info">${listIndex}</a>
+		            </td>
+		            <td>
+		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="table_info">${data.bqn_title}</a>
+		            </td>
+		            <td>
+		                <a href="/qna/info/qna_list_form?sortType=2&infoNo=${data.bqc_no}&sortValue=bq_state&order=asc" class="table_info">
+		                	${data.bqc_item_cnt} ()
+		                </a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.bqc_reg_date)}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
 		case '/qna/cate_info/get_category_list': // 질문 유형 분류 관리 리스트 테이블
 		case '/qna/cate_info/search_category_list': // 질문 유형 분류 관리 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
-		                <a href="/qna/cate_info/modify_category_form?dc_no=${data.bqc_no}" class="table_info">${listIndex}</a>
+		                <a href="/qna/cate_info/modify_category_form?bqc_no=${data.bqc_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/qna/cate_info/modify_category_form?dc_no=${data.bqc_no}" class="table_info">${data.bqc_name}</a>
+		                <a href="/qna/cate_info/modify_category_form?bqc_no=${data.bqc_no}" class="table_info">${data.bqc_name}</a>
 		            </td>
 		            <td>
-		                <a href="/qna/info/qna_list_form?sortType=1&infoNo=${data.bqc_no}&sortValue=bq_no&order=desc" class="table_info">${data.bqc_item_cnt}</a>
+		                <a href="/qna/info/qna_list_form?sortType=2&infoNo=${data.bqc_no}&sortValue=bq_state&order=asc" class="table_info">
+		                	${data.bqc_item_cnt} ()
+		                </a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.bqc_reg_date)}</p>
@@ -739,7 +763,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.qnaCategoryDto.bqc_name}</a>
 		            </td>
 		            <td>
-		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.bq_state === true ? '대기' : '답변'}</a>
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.qnaAnswerDto === null ? '대기' : '답변'}</a>
 		            </td>
 					<td class="ta_l">
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info table_flex_info">

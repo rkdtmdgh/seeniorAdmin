@@ -120,6 +120,11 @@ function mapDeleteObject(value) {
 			replace = '/qna/info/qna_list_form';
 			break;
 			
+		case 'bqc_no': // QnA 질문 유형 분류
+			apiUrl = '/qna/cate_info/delete_category_confirm';
+			replace = '/qna/cate_info/category_list_form';
+			break;
+			
 		case 'bqa_no': // QnA 답변
 			apiUrl = '/qna/info/answer_delete_confirm';
 			break;
