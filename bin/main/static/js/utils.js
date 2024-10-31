@@ -93,16 +93,20 @@ async function setBoardTitle(infoNo) {
 }
 
 // 콘텐츠 서브 내용 설정
-async function setContentSubInfo(txt) {
-	const $title = $('.categoty_title');
-	let $subInfo = $('.title_other_info_text');
+function setContentSubInfo(txt) {
+	logger.info('setContentSubInfo():', txt);
 	
-	if(!$subInfo.length) {
-		$subInfo = $('<span class="title_other_info_text">');
+	const $title = $('.categoty_title'); // 서브 내용이 추가될 부모 요소
+	let $subInfo = $('.title_other_info_text'); // 서브 내용이 추가될 요소
+	
+	if(!txt && $subInfo.length) { // null일 경우 경우 $subInfo 요소 제거
+		$subInfo.remove();
+		
+	} else {
+		if(!$subInfo.length) $subInfo = $('<span class="title_other_info_text">');
+		$subInfo.text(txt);		
+		$title.append($subInfo);	
 	}
-	
-	$subInfo.text(`마지막 업데이트 ${txt}`);		
-	$title.append($subInfo);	
 }
 
 // 셀렉트 데이터로 특정 요소 텍스트 변경

@@ -34,7 +34,7 @@ async function getListProcess(apiUrl, sortValue, order, page, resetParams = fals
 			
 			logger.info(`${apiUrl} getList() response:`, response);
 			
-			const { getListDtos, getListPage, getListCnt } = mapApiResponseObject(apiUrl, response);
+			const { getListDtos, getListPage, getListCnt, otherData } = mapApiResponseObject(apiUrl, response);
 			const $contentTable = $('.content_table tbody'); // 데이터가 나열될 테이블 요소
 			const $pagination = $('.pagination_wrap'); // 페이지 네이션 요소
 			$contentTable.html('');
@@ -44,8 +44,8 @@ async function getListProcess(apiUrl, sortValue, order, page, resetParams = fals
 				// 쿼리스트링 조건 추가
 				setListQueryString(sortValue, order, getListPage.page); // page, sortValue, order
 				
-				if(response.reg_date) setContentSubInfo(response.reg_date); // 타이틀 옆 서브내용 표시(예: 업데이트 날짜 등)
-								
+				setContentSubInfo(otherData); // 타이틀 옆 서브내용 표시(예: 업데이트 날짜 등)
+				
 				let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
 				let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
 				
@@ -127,7 +127,7 @@ async function getSearchListProcess(event, apiUrl, sortValue, order, page) {
 				
 				logger.info(`${apiUrl} searchForm() response:`, response);
 				
-				const { getListDtos, getListPage, getListCnt } = mapApiResponseObject(apiUrl, response);
+				const { getListDtos, getListPage, getListCnt, otherData } = mapApiResponseObject(apiUrl, response);
 				const $contentTable = $('.content_table tbody'); // 데이터가 나열될 테이블 요소
 				const $pagination = $('.pagination_wrap'); // 페이지 네이션 요소
 				$contentTable.html('');
@@ -137,7 +137,7 @@ async function getSearchListProcess(event, apiUrl, sortValue, order, page) {
 					// 쿼리스트링 조건 추가
 					setSearchQueryString(response.searchPart, response.searchString, sortValue, order, getListPage.page); // searchPart, searchString, page
 					
-					if(response.reg_date) setContentSubInfo(response.reg_date); // 타이틀 옆 서브내용 표시(예: 업데이트 날짜 등)
+					setContentSubInfo(otherData); // 타이틀 옆 서브내용 표시(예: 업데이트 날짜 등)
 					
 					let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
 					let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
@@ -179,6 +179,7 @@ function mapApiResponseObject(apiUrl, response) {
 	let getListDtos = null;
 	let getListPage = null;
 	let getListCnt = null;
+	let otherData = null;
 	
 	switch(apiUrl) {
 		case '/account/list/get_admin_list': // 관리자 계정 관리
@@ -239,6 +240,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListDtos = response.recipeDtos;
 			getListPage = response.recipeListPageNum;
 			getListCnt = response.recipeListPageNum.recipeListCnt;
+			otherData = `마지막 업데이트 ${response.reg_date}`;
 			break;
 			
 		case '/recipe/info/search_recipe_list': // 식단 정보 관리 검색
@@ -311,24 +313,27 @@ function mapApiResponseObject(apiUrl, response) {
 			getListDtos = response.qnaCategoryDtos;
 			getListPage = response.searchQnaCategoryListPageNum;
 			getListCnt = response.searchQnaCategoryListPageNum.searchQnaCategoryListCnt;
-			break;	
+			break;
 			
 		case '/qna/info/get_qna_list': // 질문과 답변
 			getListDtos = response.qnaDtos;
 			getListPage = response.qnaListPageNum;
 			getListCnt = response.qnaListPageNum.qnaListCnt;
+			otherData = `${response.unansweredQnaCnt > 0 ? `답변 대기 ${response.unansweredQnaCnt}` : null}`;
 			break;
 			
 		case '/qna/info/search_qna_list': // 질문과 답변 검색
 			getListDtos = response.qnaDtos;
 			getListPage = response.searchQnaListPageNum;
 			getListCnt = response.searchQnaListPageNum.searchQnaListCnt;
+			otherData = `${response.unansweredSearchQnaCnt > 0 ? `답변 대기 ${response.unansweredSearchQnaCnt}` : null}`;
 			break;	
 			
 		case '/qna/info/get_qna_list_by_category': // 질문 유형별 데이터
 			getListDtos = response.qnaDtos;
 			getListPage = response.qnaListByCategoryPageNum;
 			getListCnt = response.qnaListByCategoryPageNum.qnaListCnt;
+			otherData = `${response.unansweredCategoryQnaCnt > 0 ? `답변 대기 ${response.unansweredCategoryQnaCnt}` : null}`;
 			break;
 			
 		case '/board/cate_info/get_category_list': // 게시판 관리
@@ -388,7 +393,7 @@ function mapApiResponseObject(apiUrl, response) {
 			
 	}
 		
-	return { getListDtos, getListPage, getListCnt }
+	return { getListDtos, getListPage, getListCnt, otherData }
 }
 
 // 콘텐츠 테이블 리스트 생성
