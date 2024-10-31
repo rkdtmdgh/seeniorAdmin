@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
 import com.see_nior.seeniorAdmin.dto.BoardPostsDto;
-import com.see_nior.seeniorAdmin.dto.DiseaseCategoryDto;
 import com.see_nior.seeniorAdmin.dto.DiseaseDto;
 
 @Mapper

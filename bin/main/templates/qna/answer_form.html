@@ -5,9 +5,6 @@
 	
 <head>
     <th:block th:insert="~{fragments/head.html :: head('질문과 답변')}"></th:block>
-    <script th:inline="javascript">
-    	logger.info('qnaDto:', /*[[${qnaDto}]]*/);
-    </script>
 </head>
 
 <body>
@@ -33,6 +30,7 @@
 		                    <th:block th:if="${qnaDto.qnaAnswerDto}">
 			                    <input type="hidden" name=bqa_no th:value="${qnaDto.qnaAnswerDto.bqa_no}">
 			                    <input type="hidden" name="a_id" th:value="${qnaDto.qnaAnswerDto.adminAccountDto.a_id}">
+			                    <input type="hidden" name="current_bqa_answer" th:value="${qnaDto.qnaAnswerDto.bqa_answer}">
 		                    </th:block>
 		                    
 	                        <div class="table_wrap">
