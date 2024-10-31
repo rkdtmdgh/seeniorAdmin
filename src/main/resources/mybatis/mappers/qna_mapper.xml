@@ -58,10 +58,12 @@
 		<result column="bqc_item_cnt" property="bqc_item_cnt"/>
 		<result column="bqc_reg_date" property="bqc_reg_date"/>
 		<result column="bqc_mod_date" property="bqc_mod_date"/>
+		<result column="bqc_unanswered_cnt" property="bqc_unanswered_cnt"/>
 	</resultMap>
 	
 	<resultMap type="QnaAnswerDto" id="QnaAnswerDto">
 		<id column="bqa_no" property="bqa_no"/>
+		<result column="bqa_qna_no" property="bqa_qna_no"/>
 		<result column="bqa_answer" property="bqa_answer"/>
 		<result column="bqa_is_deleted" property="bqa_is_deleted"/>
 		<result column="bqa_reg_date" property="bqa_reg_date"/>
@@ -106,7 +108,7 @@
 			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
 		FROM 
 			BOARD_QNA BQ 
-		JOIN 
+		LEFT JOIN 
 			BOARD_QNA_CATEGORY BQC 
 		ON 
 			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
@@ -120,6 +122,8 @@
 			BQA.BQA_NO = BQ.BQ_ANSWER_NO 
 		WHERE 
 			BQ.BQ_IS_DELETED = 1 
+		AND 
+			BQC.BQC_IS_DELETED = 1 
 		ORDER BY 
 			${sortValue} ${order} 
 		LIMIT 
@@ -138,6 +142,20 @@
 		WHERE 
 			BQ_IS_DELETED = 1 
 		
+	</select>
+	
+	<!-- qna 리스트 중 답변 안 한 개수 -->
+	<select id="selectUnansweredQnaCnt">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_QNA 
+		WHERE 
+			BQ_IS_DELETED = 1 
+		AND 
+			BQ_ANSWER_NO IS NULL 
+	
 	</select>
 	
 	<!-- 답변 안된 qna 리스트 가져오기 -->
@@ -162,21 +180,38 @@
 		SELECT 
 			BQ.*, 
 			BQC.*, 
+			BQA.* ,
 			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
 		FROM 
 			BOARD_QNA BQ 
-		JOIN 
+		LEFT JOIN 
 			BOARD_QNA_CATEGORY BQC 
 		ON 
 			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
-		JOIN 
+		LEFT JOIN 
 			USER_ACCOUNT U  
 		ON 
 			BQ.BQ_USER_NO = U.U_NO 
+		LEFT JOIN 
+			BOARD_QNA_ANSWER BQA 
+		ON 
+			BQA.BQA_NO = BQ.BQ_ANSWER_NO 
 		WHERE 
 			BQ.BQ_IS_DELETED = 1 
+		AND 
+			BQC.BQC_IS_DELETED = 1 
 		<if test="searchPart != null and searchString != null">
-			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%') 
+			<choose>
+				<when test="searchPart == 'u_id'">
+					AND U.U_ID LIKE CONCAT('%', #{searchString}, '%') 
+				</when>
+				<when test="searchPart == 'u_name'">
+					AND U.U_NAME LIKE CONCAT('%', #{searchString}, '%') 
+				</when>
+				<otherwise>
+					AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%') 
+				</otherwise>
+			</choose>
 		</if>
 		ORDER BY 
 			${sortValue} ${order} 
@@ -190,16 +225,137 @@
 			resultType="Integer">
 	
 		SELECT 
-			COUNT(BQ_NO) 
+			COUNT(*) 
+		FROM 
+			BOARD_QNA BQ 
+		LEFT JOIN 
+			USER_ACCOUNT U  
+		ON 
+			BQ.BQ_USER_NO = U.U_NO 
+		WHERE 
+			BQ_IS_DELETED = 1 
+		<if test="searchPart != null and searchString != null">
+			<choose>
+				<when test="searchPart == 'u_id'">
+					AND U.U_ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'u_name'">
+					AND U.U_NAME LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<otherwise>
+					AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+				</otherwise>
+			</choose>
+		</if>
+	
+	</select>
+	
+	<!-- qna 검색 리스트 중 답변 안 한 개수 -->
+	<select id="selectUnansweredSearchQnaCnt">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_QNA BQ 
+		LEFT JOIN 
+			USER_ACCOUNT U  
+		ON 
+			BQ.BQ_USER_NO = U.U_NO 
+		WHERE 
+			BQ.BQ_IS_DELETED = 1 
+		AND 
+			U.U_IS_DELETED = 1 
+		<if test="searchPart != null and searchString != null">
+			<choose>
+				<when test="searchPart == 'u_id'">
+					AND U.U_ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'u_name'">
+					AND U.U_NAME LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<otherwise>
+					AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+				</otherwise>
+			</choose>
+		</if>
+		AND 
+			BQ_ANSWER_NO IS NULL 
+	
+	</select>
+	
+	<!-- qna 카테고리에 따른 리스트 가져오기 -->
+	<select id="selectQnaListForSelectBox"
+			resultMap="QnaDto">
+	
+		SELECT 
+			BQ.*, 
+			BQC.*, 
+			BQA.*, 
+			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
+		FROM 
+			BOARD_QNA BQ 
+		LEFT JOIN 
+			BOARD_QNA_CATEGORY BQC 
+		ON 
+			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
+		LEFT JOIN 
+			USER_ACCOUNT U 
+		ON 
+			BQ.BQ_USER_NO = U.U_NO 
+		LEFT JOIN 
+			BOARD_QNA_ANSWER BQA 
+		ON 
+			BQA.BQA_NO = BQ.BQ_ANSWER_NO 
+		WHERE 
+			BQ.BQ_IS_DELETED = 1 
+		AND 
+			BQC.BQC_IS_DELETED = 1 
+		AND 
+			BQ.BQ_CATEGORY_NO = #{infoNo}
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit}
+		
+	
+	</select>
+	
+	<!-- qna 카테고리에 따른 리스트 총 개수 -->
+	<select id="selectAllQnaListCntForSelectBox">
+	
+		SELECT 
+			COUNT(*)
+		FROM 
+			BOARD_QNA BQ 
+		LEFT JOIN 
+			BOARD_QNA_CATEGORY BQC 
+		ON 
+			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
+		WHERE 
+			BQ.BQ_IS_DELETED = 1 
+		AND 
+			BQC.BQC_IS_DELETED = 1 
+		AND 
+			BQ_CATEGORY_NO = #{bqc_no} 
+	
+	</select>
+	
+	<!-- qna 카테고리 리스트 중 답변 안 한 개수 -->
+	<select id="selectUnansweredCategoryQnaCnt">
+		
+		SELECT 
+			COUNT(*) 
 		FROM 
 			BOARD_QNA 
 		WHERE 
 			BQ_IS_DELETED = 1 
-		<if test="searchPart != null and searchString != null">
-			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
-		</if>
+		AND 
+			BQ_CATEGORY_NO = #{bqc_no} 
+		AND 
+			BQ_ANSWER_NO IS NULL 
 	
 	</select>
+	
 	
 	<!-- qna 정보 가져오기 by no -->
 	<select id="selectQnaInfoByNo"
@@ -265,7 +421,7 @@
 	</select>
 	
 	<!-- qna 답변 완료 후 bq_state update -->
-	<update id="updateQnaStateByNo">
+	<update id="updateQnaFromAnswerComplete">
 		
 		UPDATE 
 			BOARD_QNA 
@@ -289,6 +445,60 @@
 			BQA_NO = #{bqa_no}
 	
 	</update>
+	
+	<!-- qna 질문 공개/비공개 변경 확인 -->
+	<update id="updateQnaStateByNo">
+	
+		UPDATE 
+			BOARD_QNA 
+		SET 
+			BQ_STATE = #{bq_state}, 
+			BQ_MOD_DATE = NOW() 
+		WHERE 
+			BQ_NO = #{bq_no} 
+	
+	</update>
+	
+	<!-- qna 질문 삭제 확인. board_qna 테이블 bq_is_deleted 값 update -->
+	<update id="updateQnaIsDeletedByNo">
+	
+		UPDATE 
+			BOARD_QNA 
+		SET 
+			BQ_IS_DELETED = 0, 
+			BQ_MOD_DATE = NOW() 
+		WHERE 
+			BQ_NO = #{bq_no} 
+	
+	</update>
+	
+	<!-- qna 답변 삭제 확인. board_qna_answer 테이블 bqa_is_deleted 값 update -->
+	<update id="updateQnaAnswerIsDeletedByNo">
+	
+		UPDATE 
+			BOARD_QNA_ANSWER 
+		SET 
+			BQA_IS_DELETED = 0, 
+			BQA_MOD_DATE = NOW() 
+		WHERE 
+			BQA_NO = #{bqa_no} 
+	
+	</update>
+	
+	<!-- qna 답변 삭제 후 board_qna 테이블 bq_answer_no 삭제 -->
+	<update id="updateQnaBqAnswerNoDelete">
+		
+		UPDATE 
+			BOARD_QNA 
+		SET 
+			BQ_ANSWER_NO = null, 
+			BQ_MOD_DATE = NOW() 
+		WHERE 
+			BQ_NO = #{bq_no} 
+	
+	</update>
+	
+	
 	
 	<!-- qna 카테고리명 중복 확인 -->
 	<select id="isQnaCategory"
@@ -328,16 +538,32 @@
 	
 	<!-- qna 카테고리 리스트 가져오기 -->
 	<select id="selectQnaCategoryList"
-			resultMap="QnaCategoryDto">
+			resultType="QnaCategoryDto">
 	
 		SELECT 
-			* 
+			BQC.*, 
+			IFNULL(BQ_UNANSWERED_COUNT.BQC_UNANSWERED_CNT, 0) AS BQC_UNANSWERED_CNT
 		FROM 
-			BOARD_QNA_CATEGORY 
+			BOARD_QNA_CATEGORY BQC
+		LEFT JOIN (
+			SELECT 
+				BQ.BQ_CATEGORY_NO, 
+				COUNT(*) AS BQC_UNANSWERED_CNT
+			FROM 
+				BOARD_QNA BQ
+			WHERE 
+				BQ.BQ_IS_DELETED = 1 
+			AND 
+				BQ.BQ_ANSWER_NO IS NULL
+			GROUP BY 
+				BQ.BQ_CATEGORY_NO
+		) AS BQ_UNANSWERED_COUNT ON BQC.BQC_NO = BQ_UNANSWERED_COUNT.BQ_CATEGORY_NO
+		WHERE 
+			BQC.BQC_IS_DELETED = 1 
 		ORDER BY 
 			${sortValue} ${order} 
 		LIMIT 
-			#{start}, #{limit} 
+			#{start}, #{limit}
 	
 	</select>
 	
@@ -394,9 +620,9 @@
 			resultMap="QnaCategoryDto">
 		
 		SELECT 
-			*
+			* 
 		FROM 
-			BOARD_QNA_CATEGORY
+			BOARD_QNA_CATEGORY 
 		WHERE 
 			BQC_IS_DELETED = 1 
 		AND 
@@ -436,9 +662,7 @@
 		
 		SELECT 
 			BQN.*, 
-			A.A_NO, 
-			A.A_ID, 
-			A.A_NAME 
+			A.A_NO, A.A_ID, A.A_NAME, A_DEPARTMENT, A_LEVEL, A_POSITION 
 		FROM 
 			BOARD_QNA_NOTICE BQN
 		JOIN 
@@ -480,8 +704,20 @@
 			BQN.BQN_WRITER_NO = A.A_NO 
 		WHERE 
 			BQN.BQN_IS_DELETED = 1 
+		AND 
+			A.A_IS_DELETED = 1 
 		<if test="searchPart != null and searchString != null">
-			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+			<choose>
+				<when test="searchPart == 'a_id'">
+					AND A.A_ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'a_name'">
+					AND A.A_NAME LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<otherwise>
+					AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+				</otherwise>
+			</choose>
 		</if>
 		ORDER BY 
 			${sortValue} ${order} 
@@ -494,13 +730,29 @@
 	<select id="selectSearchQnaNoticeListCnt">
 		
 		SELECT 
-			COUNT(BQN_NO) 
+			COUNT(*) 
 		FROM 
-			BOARD_QNA_NOTICE 
+			BOARD_QNA_NOTICE BQN 
+		LEFT JOIN 
+			ADMIN_ACCOUNT A 
+		ON 
+			BQN.BQN_WRITER_NO = A.A_NO  
 		WHERE 
-			BQN_IS_DELETED = 1 
+			BQN.BQN_IS_DELETED = 1 
+		AND 
+			A.A_IS_DELETED = 1 
 		<if test="searchPart != null and searchString != null">
-			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+			<choose>
+				<when test="searchPart == 'a_id'">
+					AND A.A_ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'a_name'">
+					AND A.A_NAME LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<otherwise>
+					AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+				</otherwise>
+			</choose>
 		</if>
 		
 	</select>

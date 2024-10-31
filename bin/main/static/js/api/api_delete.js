@@ -15,7 +15,7 @@ async function deleteDataProcess(deleteConfig, data, dataName, errorMessage) {
 			
 			logger.info(`${deleteConfig.apiUrl} deleteData() response:`, response);
 			
-		if(response) {
+			if(response) {
 				alert(`${dataName} 삭제되었습니다.`);
 				deleteConfig.replace ? location.replace(deleteConfig.replace) : location.reload(true);
 				
@@ -34,7 +34,7 @@ async function deleteDataProcess(deleteConfig, data, dataName, errorMessage) {
 
 // 개별 삭제
 async function delSingleData(dataName, key, noValue, additionalData = {}) { // 추가 인자가 필요할 경우 {} 객체로 additionalData위치에 인자 전달
-	logger.info('delSingleData()', key, noValue, dataName);
+	logger.info('delSingleData()', key, noValue, dataName, additionalData);
 	
 	const isConfirm = confirm(`${dataName}을(를) 삭제하시겠습니까?`);
 	if(!isConfirm) return false;
@@ -120,7 +120,12 @@ function mapDeleteObject(value) {
 			replace = '/qna/info/qna_list_form';
 			break;
 			
-		case 'bq_no': // QnA 답변
+		case 'bqc_no': // QnA 질문 유형 분류
+			apiUrl = '/qna/cate_info/delete_category_confirm';
+			replace = '/qna/cate_info/category_list_form';
+			break;
+			
+		case 'bqa_no': // QnA 답변
 			apiUrl = '/qna/info/answer_delete_confirm';
 			break;
 		

@@ -98,6 +98,11 @@ function mapDuplicateCheckObject(value) {
 			apiUrl = '/disease/info/is_disease';
 			break;
 			
+		case 'bqc_name':
+			word = '질문 분류명';
+			apiUrl = '/qna/cate_info/is_qna_category';
+			break;
+			
 		case 'bc_name':
 			word = '게시판명';
 			apiUrl = '/board/cate_info/is_board_category';

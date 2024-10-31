@@ -313,12 +313,55 @@ async function putUserAccountBlockModify(formName, u_is_blocked) {
 	const errorMessage = `"${form.u_id.value}" 정보 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
 	await putIntegSubmit(
-		'/user_account/info/bolcked_confirm', 
-		formData, 
-		successMessage, 
+		'/user_account/info/bolcked_confirm',
+		formData,
+		successMessage,
 		errorMessage,
 		'content_inner'
 	);
+}
+
+// 단순 데이터 상태 토글 (boolean)
+async function putModifyState(ele, formName) {
+	const info = $(ele).data('info');
+	const name = $(ele).attr('name');
+	const value = JSON.parse($(ele).val()); // boolean으로 변환
+	
+	const isConfirm = confirm(`${info} 처리하시겠습니까?`);
+	if(!isConfirm) {
+		$(`input[name="${name}"][value="${!value}"]`).prop('checked', true);
+		return;
+	}
+	
+	const form = document.forms[formName];
+	const apiUrl = mapStateModifyObject(name); // apiUrl 가져오기
+		
+	const formData = new FormData(form);
+	formData.set(`${name}`, value);
+	
+	const successMessage = `${info} 처리되었습니다.`;
+	const errorMessage = `${info} 처리에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	await putIntegSubmit(
+		apiUrl,
+		formData,
+		successMessage,
+		errorMessage,
+		name
+	);
+}
+
+// 단순 데이터 상태 수정 요청에 필요한 객체 설정
+function mapStateModifyObject(name) {
+	let apiUrl = null;
+	
+	switch(name) {
+		case 'bq_state':
+			apiUrl = '/qna/info/modify_qna_state';
+			break;
+	}
+	
+	return apiUrl;
 }
 
 // 질환 / 질병 분류 수정
@@ -549,14 +592,49 @@ async function putNoticePostsModify(formName) {
 	);
 }
 
+// QnA 질문 유형 분류 수정
+async function putQnaCategoryModify(formName) {
+	const form = document.forms[formName];
+	const current_bqc_name = form.current_bqc_name;
+	
+	input = form.bqc_name;
+	if(!validateEmpty(input, '분류명을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(input.value === current_bqc_name.value) {
+		alert('수정된 내용이 없습니다');
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	const successMessage = `"${form.bqc_name.value}" 분류명이 수정되었습니다.`;
+	const errorMessage = `"${form.bqc_name.value}" 분류명 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	setFormDataCheckConsoleLog(formData);
+	await putIntegSubmit(
+		'/qna/cate_info/modify_category_confirm',
+		formData,
+		successMessage,
+		errorMessage,
+		'content_inner'
+	);
+}
+
 // QnA 답변 수정
 async function putAnswerModify(formName) {
 	const form = document.forms[formName];
+	const current_bqa_answer = form.current_bqa_answer;
 	
 	input = form.bqa_answer;
 	if(!validateEmpty(input, '답변을', true)) {
 		input.focus();
 		return false;
+	}
+	
+	if(input.value === current_bqa_answer.value) {
+		alert('수정된 내용이 없습니다');
+		return false;		
 	}
 	
 	const formData = new FormData(form);

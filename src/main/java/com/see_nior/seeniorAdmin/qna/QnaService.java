@@ -52,6 +52,14 @@ public class QnaService {
 		
 	}
 	
+	// qna 리스트 중 답변 안 한 개수
+	public int getUnansweredQnaCnt() {
+		log.info("getUnansweredQnaCnt()");
+		
+		return qnaMapper.selectUnansweredQnaCnt();
+		
+	}
+	
 	// 질문 등록 여부 확인하기
 	public List<QnaDto> getUnansweredQuestions() {
 		log.info("getUnansweredQuestions()");
@@ -90,7 +98,53 @@ public class QnaService {
 		return PagingUtil.pageNum("searchQnaListCnt", searchQnaListCnt, page);
 		
 	}
+	
+	// qna 검색 리스트 중 답변 안 한 개수
+	public int getUnansweredSearchQnaCnt(String searchPart, String searchString) {
+		log.info("getUnansweredSearchQnaCnt()");
+		
+		Map<String, Object> params = new HashMap<>();
+		params.put("searchPart", searchPart);
+		params.put("searchString", searchString);
+		
+		return qnaMapper.selectUnansweredSearchQnaCnt(params);
+		
+	}
+
+	
+	// qna 카테고리에 따른 리스트 가져오기
+	public Map<String, Object> getQnaListByCategoryWithPage(int page, String sortValue, String order, int bqc_no) {
+		log.info("getQnaListByCategoryWithPage()");
+		
+		Map<String, Object> pagingList = new HashMap<>();
+		
+		List<AdminAccountDto> qnaDtos = 
+				qnaMapper.selectQnaListForSelectBox(PagingUtil.pagingParamsForSelectBox(sortValue, order, page, bqc_no));
+		pagingList.put("qnaDtos", qnaDtos);
+		
+		return pagingList;
+		
+	}
+
+	// qna 카테고리에 따른 리스트 총 개수
+	public Map<String, Object> getQnaByCategoryPageNum(int page, int bqc_no) {
+		log.info("getQnaByCategoryPageNum()");
+
+		// 전체 리스트 개수 조회 
+		int qnaListCnt = qnaMapper.selectAllQnaListCntForSelectBox(bqc_no);
+		
+		return PagingUtil.pageNum("qnaListCnt", qnaListCnt, page);
+		
+	}
  
+	// qna 카테고리 리스트 중 답변 안 한 개수
+	public int getUnansweredCategoryQnaCnt(int bqc_no) {
+		log.info("getUnansweredCategoryQnaCnt()");
+		
+		return qnaMapper.selectUnansweredCategoryQnaCnt(bqc_no);
+		
+	}
+	
 	// qna 정보 가져오기 by no
 	public QnaDto getQnaInfoByNo(int bq_no) {
 		log.info("getQnaInfoByNo()");
@@ -124,8 +178,9 @@ public class QnaService {
 				updateParams.put("bq_no", bq_no);
 				updateParams.put("bqa_no", bqa_no);
 				
+				// 답변 완료 후 board_qna 테이블 bq_answer_no(답변 테이블 no) 값 입력
 				int updateResult = 
-						qnaMapper.updateQnaStateByNo(updateParams);
+						qnaMapper.updateQnaFromAnswerComplete(updateParams);
 				
 				if (updateResult >= 0) {
 					
@@ -180,7 +235,70 @@ public class QnaService {
 		}
 
 	}
+	
+	// qna 질문 공개/비공개 변경 확인
+	public boolean modifyQnaState(QnaDto qnaDto) {
+		log.info("modifyQnaState()");
+		
+		int updateResult = 
+				qnaMapper.updateQnaStateByNo(qnaDto);
+		
+		if(updateResult >= 0)
+			return SqlResult.SUCCESS.getValue();
+		else 
+			return SqlResult.FAIL.getValue();
 
+	}
+	
+	// qna 질문 삭제 확인
+	public boolean deleteConfirm(int bq_no) {
+		log.info("deleteConfirm()");
+		
+		int updateResult = 
+				qnaMapper.updateQnaIsDeletedByNo(bq_no);
+		
+		if(updateResult >= 0) 
+			return SqlResult.SUCCESS.getValue();
+		else 
+			return SqlResult.FAIL.getValue();
+		
+	}
+
+	// qna 답변 삭제 확인
+	@Transactional
+	public boolean answerDeleteConfirm(int bq_no, int bqa_no) {
+		log.info("answerDeleteConfirm()");
+		
+		try {
+			
+			int answerUpdateResult = 
+					qnaMapper.updateQnaAnswerIsDeletedByNo(bqa_no);
+			
+			if (answerUpdateResult >= 0) {
+				
+				int result = qnaMapper.updateQnaBqAnswerNoDelete(bq_no);
+				
+				if (result >= 0) 
+					return SqlResult.SUCCESS.getValue();
+				else 
+					throw new RuntimeException("updateQnaBqAnswerNoDelete fail");
+					
+			} else {
+				
+				throw new RuntimeException("updateQnaAnswerIsDeletedByNo fail");
+				
+			}
+			
+		} catch (Exception e) {
+			log.info("answerDeleteConfirm Exception ------- {}", e.getMessage());
+			
+			return SqlResult.FAIL.getValue();
+		
+		}
+		
+	}
+
+	
 	
 	/////////// 카테고리
 	
@@ -200,16 +318,17 @@ public class QnaService {
 		
 		if (!isQna) {
 			
-			return SqlResult.FAIL.getValue();
-			
-		} else {
-			
 			int result = qnaMapper.insertNewQnaCategory(bqc_name);
 			
 			if (result >= 0) 
 				return SqlResult.SUCCESS.getValue();
 			else 
 				return SqlResult.FAIL.getValue();
+			
+			
+		} else {
+			
+			return SqlResult.FAIL.getValue();
 			
 		}
 		
@@ -449,6 +568,16 @@ public class QnaService {
 			return SqlResult.FAIL.getValue();
 		
 	}
+
+
+
+
+
+
+
+
+
+
 
 
 }

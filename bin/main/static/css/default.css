@@ -231,6 +231,7 @@
     padding: var(--btnsPadding);
     font-size: var(--subFontSize);
     font-weight: var(--bold);
+    line-height: var(--basicLineHeight);
     color: var(--whiteColor);
     background-color: var(--primaryColor);
     border: 1px solid var(--primaryColor);
@@ -356,11 +357,11 @@
             
             .title_other_info_text {
             	display: inline-block;
-            	padding: var(--smallBtnsPadding);
-            	font-size: var(--etcFontSize);
+            	padding-left: var(--ssize1);
+            	font-size: var(--smallFontSize);
             	font-weight: normal;
             	border-radius: var(--bdrs);
-            	background-color: var(--bgColor);
+            	color: var(--redColor);
             }
     
             &::before {
@@ -458,6 +459,7 @@
 	display: none;
 	width: 100%;
 	max-height: 260px;
+	line-height: 1.4;
 	border-radius: var(--bdrs);
 	background-color: var(--whiteColor);
 	border: 1px solid var(--lightGrayColor);
@@ -494,8 +496,13 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    
+    .table_info_icons {
+    	width: 1em;
+    	height: 1em;
+    }
 
-    &.func_area {
+    &.flex_area {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -519,6 +526,50 @@
         		background: url(/image/icons/a_down.png) center no-repeat;
         	}
         }
+        
+        .state {
+		   	display: inline-flex;
+		   	justify-content: center;
+		   	align-items: center;
+		   	gap: var(--ssize1);
+		   	padding: 0 1em;
+		   	font-size: var(--subFontSize);
+		   	border-radius: var(--bdrs);
+		   	background-color: var(--greenColor);
+		   	color: var(--whiteColor);
+		   	
+		   	&.icon {
+		   		padding: 0 0.5em;
+		   	
+			   	&::before {
+			   		content: '';
+			   		display: inline-block;
+			   		width: 1em;
+			   		height: 1em;
+			   		background: url(/image/icons/state_check.png) center no-repeat;
+			   		background-size: contain;
+			   	}
+			   	
+			   	&.off {
+			   		background-color: var(--lightGrayColor);
+			   		color: var(--grayColor);
+			   		
+			   		&::before {
+			   			background: url(/image/icons/state_uncheck.png) center no-repeat;
+			   			background-size: contain;
+			   		}
+		   		}
+		   	}
+		   	
+		   	&.off {
+		   		background-color: var(--lightGrayColor);
+		   		color: var(--grayColor);
+		   	}
+		   	
+		   	&.on {
+		   		background-color: var(--primaryColor);
+		   	}
+		}
     }
     
     &.info_data_list {
@@ -552,25 +603,17 @@
 }
 
 .table_date_info {
-	display: flex;
-	align-items: center;
 	text-align: left;
 	padding: var(--textPadding);
 	color: var(--grayColor);
 	
-	span {
-		&::after {
-			content: '';
-			display: inline-block;
-			width: 1px;
-			height: var(--ssize3);
-			background-color: var(--lightGrayColor);
-			margin: 0 var(--ssize2);
-		}
-		
-		&:last-child::after {
-			display: none;
-		}
+	.divider {
+		display: inline-block;
+		width: 1px;
+		height: var(--ssize3);
+		background-color: var(--lightGrayColor);
+		margin: 0 var(--ssize2);
+		vertical-align: middle;
 	}
 }
 
@@ -583,7 +626,7 @@
         vertical-align: top;
     }
     
-    td {
+    th, td {
     	position: relative;
     }
 
@@ -888,6 +931,10 @@
 
 .f_jc_between {
 	justify-content: space-between;
+}
+
+.f_jc_center {
+	justify-content: center;
 }
 
 .f_ai_center {

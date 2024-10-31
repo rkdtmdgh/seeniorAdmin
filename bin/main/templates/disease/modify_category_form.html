@@ -48,10 +48,11 @@
 	                                        
 	                                        <th><p class="table_title">등록일 / 수정일</p></th>
 	                                        <td class="disabled">
-	                                        	<p class="table_date_info">
-	                                        		<span th:text="${diseaseCategoryDto.dc_reg_date}"></span>
-	                                        		<span th:text="${diseaseCategoryDto.dc_mod_date}"></span>
-	                                        	</p>
+	                                        	<p class="table_date_info" th:utext="|
+	                                        		${diseaseCategoryDto.dc_reg_date}
+	                                        		<span class='divider'></span>
+	                                        		${diseaseCategoryDto.dc_mod_date}
+	                                        	|"></p>
 	                                        </td>
 		                                </tr>
 		                                

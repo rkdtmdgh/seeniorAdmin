@@ -31,22 +31,22 @@
 				A_ID, 
 				A_PW, 
 				A_NAME, 
-				A_PHONE,
-				A_BIRTH
+				A_PHONE, 
+				A_BIRTH 
 				<if test="a_authority_role != null">
-					, A_AUTHORITY_ROLE
+					, A_AUTHORITY_ROLE 
 				</if>
-				)
-		VALUES(
+				) 
+		VALUES( 
 			#{a_id}, 
 			#{a_pw}, 
 			#{a_name}, 
-			#{a_phone},
-			#{a_birth}
+			#{a_phone}, 
+			#{a_birth} 
 			<if test="a_authority_role != null">
-				, #{a_authority_role}
+				, #{a_authority_role} 
 			</if>
-			)
+			) 
 		
 	</insert>
 	
@@ -60,7 +60,7 @@
 		FROM 
 			ADMIN_ACCOUNT 
 		WHERE 
-			A_ID = #{a_id};
+			A_ID = #{a_id} 
 	
 	</select>
 	
@@ -70,11 +70,13 @@
 			resultMap="AdminAccountDto">
 		
 		SELECT
-			*
+			* 
 		FROM 
 			ADMIN_ACCOUNT 
 		WHERE 
-			A_ID = #{a_id}
+			A_IS_DELETED = 1 
+		AND 
+			A_ID = #{a_id} 
 		
 	</select>
 	
@@ -84,7 +86,7 @@
 			resultMap="AdminAccountDto">
 		
 		SELECT
-			*
+			* 
 		FROM 
 			ADMIN_ACCOUNT 
 		WHERE 

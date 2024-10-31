@@ -9,16 +9,12 @@
 		$(async function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
-				case '2': // search
-					await getSearchList(null, '/account/list/search_admin_list', page);
+				case '1': // search
+					await getSearchList(null, '/account/list/search_admin_list', sortValue, order, page);
 					break;
 
-				case '0':  // sort
+				default:
 					await getList('/account/list/get_admin_list', sortValue, order, page);
-					break;
-					
-				default: 
-					await getList('/account/list/get_admin_list', null, null, page);
 			}
         });
 	</script>
@@ -54,11 +50,11 @@
 	                        <table class="content_table admin_list_table">
 	                            <colgroup>
 	                                <col class="col_no">
+	                                <col>
 	                                <col class="col_default">
 	                                <col class="col_default">
-	                                <col class="col_default">
-	                                <col class="col_default">
-	                                <col class="col_default">
+	                                <col class="col_state">
+	                                <col class="col_short">
 	                            </colgroup>
 	
 	                            <thead>
@@ -82,7 +78,7 @@
 	                                    <th>
 	                                        <p data-current-sort-value="all" class="table_title sort"
 	                                        	onclick="getSortList(event, 'admin_account', 'a_authority_role')">
-	                                        	관리자 승인
+	                                        	승인
 	                                        	<span class="sort_icon"></span>
 	                                        </p>
 	                                    </th>

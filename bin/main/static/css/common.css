@@ -14,8 +14,10 @@
     --menuFontSize: 0.95em;
     --titleFontSize: 1.3em;
     --tableTextSize: 0.8em;
+    --basicLineHeight: 1.4;
+    --tallLineHeight: 2.3;
     --titleLineHeight: 1.7;
-    --etcFontSize: 11px;
+    --etcFontSize: 12px;
     --bold: 600;
     --thin: 300;
 
@@ -27,8 +29,7 @@
     --middleGrayColor: #C1C1C1; /* middle gray */
     --lightGrayColor: #E8E8E8; /* light gray */
     --lightBlueColor: #F3F6FB; /* blue */ 
-    --greenColor: #13ce29; /* green */
-    --lightGreenColor: #26e83d; /* green */
+    --greenColor: #96c970; /* green */
     --yellowColor: #FFC73C; /* yellow */
     --redColor: #FF5B45; /* red */
     --optionColor: #1967D2;
@@ -62,9 +63,9 @@
     --signFormInnerPadding: 30px;
     --contentInnerPadding: 30px var(--innerPadding);
     --btnsPadding: 1em 1.5em;
-    --smallBtnsPadding: 0.53em 1.1em;
+    --smallBtnsPadding: 0.5em 1em;
     --tableBtnPadding: 0.3em;
-    --textPadding: 1em 1.2em;
+    --textPadding: 0.5em 1.2em;
     --subTextPadding: 0.3em 1em;
     --subTextIndent: 0 0 0 0.85em;
     --borderInputPadding: 1em 1em 10px;
@@ -103,7 +104,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    line-height: 1.4;
+    line-height: inherit;
     vertical-align: top;
     list-style: none;
 }
@@ -111,6 +112,7 @@
 html, body {
     font-family: var(--baseFontFamily);
     font-size: 16px;
+    line-height: var(--basicLineHeight);
     background-color: var(--bgColor);
     color: var(--blackColor);
 }
@@ -164,7 +166,7 @@ select {
 
 /* input */
 input[type="date"] {
-	line-height: 0.9;
+	line-height: 2;
 }
 
 input::placeholder, textarea::placeholder {
@@ -202,6 +204,7 @@ table {
     table-layout: fixed;
     border-collapse: collapse;
     text-align: center;
+    line-height: var(--tallLineHeight);
     font-size: var(--tableTextSize);
 
     tr {
@@ -228,10 +231,10 @@ table {
 /* colgroup */
 .col_checkBox { width: 50px; }
 .col_no { width: 70px; }
-.col_state { width: 7% }
+.col_state { width: 7%; }
 .col_default { width: 20%; }
 .col_short { width: 13%; }
-.col_long { width: 35%; }
+.col_long { width: 30%; }
 .col_row_title { width: 15%; }
 
 /* accessibility */

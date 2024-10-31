@@ -48,10 +48,14 @@ public class QnaController {
 	
 		Map<String, Object> qnaList = qnaService.getQnaPagingList(sortValue, order, page);
 		
+		int unansweredQnaCnt = qnaService.getUnansweredQnaCnt();
+		
 		Map<String, Object> qnaListPage = qnaService.getQnaListPageNum(page);
+		
 		qnaList.put("qnaListPageNum", qnaListPage);
 		qnaList.put("sortValue", sortValue);
 		qnaList.put("order", order);
+		qnaList.put("unansweredQnaCnt", unansweredQnaCnt);
 		
 		return qnaList;
 		
@@ -67,9 +71,11 @@ public class QnaController {
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order, 
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("searchQnaList()");
-	
+
 		Map<String, Object> searchQnaList = 
 				qnaService.searchQnaPagingList(searchPart, searchString, sortValue, order, page);
+		
+		int unansweredSearchQnaCnt = qnaService.getUnansweredSearchQnaCnt(searchPart, searchString);
 		
 		Map<String, Object> searchQnaListPageNum = 
 				qnaService.searchQnaListPageNum(searchPart, searchString, page);
@@ -79,8 +85,37 @@ public class QnaController {
 		searchQnaList.put("order", order);
 		searchQnaList.put("searchPart", searchPart);
 		searchQnaList.put("searchString", searchString);
+		searchQnaList.put("unansweredSearchQnaCnt", unansweredSearchQnaCnt);
 		
 		return searchQnaList;
+		
+	}
+	
+	// qna 카테고리에 따른 리스트 가져오기
+	@GetMapping("/info/get_qna_list_by_category")
+	@ResponseBody
+	public Object getQnaListByCategory(
+			@RequestParam(value = "sortValue", required = false, defaultValue = "bq_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+			@RequestParam("infoNo") int bqc_no) {
+		log.info("getQnaListByCategory()");
+		
+		Map<String, Object> qnaListByCategoryWithPage = 
+				qnaService.getQnaListByCategoryWithPage(page, sortValue, order, bqc_no);
+		
+		int unansweredCategoryQnaCnt = qnaService.getUnansweredCategoryQnaCnt(bqc_no);
+				
+		Map<String, Object> qnaListByCategoryPageNum = 
+				qnaService.getQnaByCategoryPageNum(page, bqc_no);
+		
+		qnaListByCategoryWithPage.put("qnaListByCategoryPageNum", qnaListByCategoryPageNum);
+		qnaListByCategoryWithPage.put("sortValue", sortValue);
+		qnaListByCategoryWithPage.put("order", order);
+		qnaListByCategoryWithPage.put("infoNo", bqc_no);
+		qnaListByCategoryWithPage.put("unansweredCategoryQnaCnt", unansweredCategoryQnaCnt);
+		
+		return qnaListByCategoryWithPage;
 		
 	}
 	
@@ -123,6 +158,39 @@ public class QnaController {
 		
 	}
 	
+	// qna 질문 삭제 확인
+	@PostMapping("/info/delete_confirm")
+	@ResponseBody
+	public boolean deleteConfirm(@RequestParam("bq_no") int bq_no) {
+		log.info("deleteConfirm()");
+		
+		return qnaService.deleteConfirm(bq_no);
+		
+	}
+	
+	// qna 답변 삭제 확인
+	@PostMapping("/info/answer_delete_confirm")
+	@ResponseBody
+	public boolean answerDeleteConfirm(@RequestParam("bq_no") int bq_no, @RequestParam("bqa_no") int bqa_no) {
+		log.info("answerDeleteConfirm");
+		
+		return qnaService.answerDeleteConfirm(bq_no, bqa_no);
+		
+	}
+	
+	// qna 질문 공개/비공개 변경 확인
+	@PostMapping("/info/modify_qna_state")
+	@ResponseBody
+	public boolean modifyQnaState(QnaDto qnaDto) {
+		log.info("modifyQnaState()");
+		
+		return qnaService.modifyQnaState(qnaDto);
+		
+	}
+	
+	
+	
+	
 ////////////////////////// 카테고리 
 	
 	// qna 카테고리 등록 양식
@@ -136,6 +204,7 @@ public class QnaController {
 	
 	// qna 카테고리명 중복 확인
 	@GetMapping("/cate_info/is_qna_category")
+	@ResponseBody
 	public boolean isQnaCategory(@RequestParam("bqc_name") String bqc_name) {
 		log.info("isQnaCategory()");
 		
@@ -184,6 +253,7 @@ public class QnaController {
 		Map<String, Object> qnaCategoryList = qnaService.getQnaCategoryPagingList(sortValue, order, page);
 		
 		Map<String, Object> qnaCategoryListPage = qnaService.getQnaCategoryListPageNum(page);
+		
 		qnaCategoryList.put("qnaCategoryListPageNum", qnaCategoryListPage);
 		qnaCategoryList.put("sortValue", sortValue);
 		qnaCategoryList.put("order", order);
@@ -372,5 +442,30 @@ public class QnaController {
 		return qnaService.deleteNoticeConfrim(bqn_no);
 		
 	}
+	
+	
+	// qna test 
+	@GetMapping("/test")
+	@ResponseBody
+	public Object qnaTest() {
+		log.info("test()");
+		
+		Map<String, Object> searchQnaNoticeList = 
+				qnaService.searchQnaNoticePagingList("a_id", "admin", "bqn_no", "desc", 1);
+		
+		Map<String, Object> searchQnaNoticeListPageNum = 
+				qnaService.searchQnaNoticeListPageNum("bqn_no", "desc", 1);
+		
+		searchQnaNoticeList.put("searchQnaNoticeListPageNum", searchQnaNoticeListPageNum);
+		searchQnaNoticeList.put("sortValue", "bqn_no");
+		searchQnaNoticeList.put("order", "desc");
+		searchQnaNoticeList.put("searchPart", "a_id");
+		searchQnaNoticeList.put("searchString", "admin");
+		
+		return searchQnaNoticeList;
+		
+	}
+	
+	
 	
 }

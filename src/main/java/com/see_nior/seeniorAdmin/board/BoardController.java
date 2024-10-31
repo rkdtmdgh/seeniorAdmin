@@ -22,7 +22,6 @@ import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
 import com.see_nior.seeniorAdmin.dto.BoardPostsDto;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 
@@ -196,8 +195,9 @@ public class BoardController {
 					Map<String,Object> savedFileObj = objectMapper.readValue(savedFiles.getBody(), new TypeReference<Map<String,Object>>() {});
 					log.info("savedFiles(string) to savedFileNames(object) success!");
 					
+					@SuppressWarnings("unchecked") //(List<String>) 강제 캐스팅 에러
 					List<String> savedFileNames = (List<String>) savedFileObj.get("savedFileNames");
-					String bp_dir_name = (String) savedFileObj.get("dir_name");
+					String bp_dir_name = String.valueOf(savedFileObj.get("dir_name"));
 					log.info("dir_name : {}",savedFileObj.get("dir_name"));
 					log.info("savedFileNames : {}",savedFileNames);
 					
@@ -228,22 +228,7 @@ public class BoardController {
 		}			
 		
 	}
-	
-	//작성한 공지 게시물 등록 요청
-	@PostMapping("/info/create_notice_confirm")
-	@ResponseBody
-	public String createNoticeConfirm(@RequestParam("files") List<MultipartFile> files, 
-									@RequestParam("bp_category_no") int bp_category_no, 
-									@RequestParam("bp_writer_no") int bp_writer_no) {
-		log.info("createNoticeConfirm()");
 		
-		log.info("files: {}",files.size());
-		log.info("bp_category_no: {}",bp_category_no);
-		log.info("bp_writer_no: {}",bp_writer_no);
-		
-		return null;
-	}
-	
 	//특정 게시판 게시물 리스트 가져오기
 	@GetMapping("/info/get_posts_list")
 	@ResponseBody
@@ -286,7 +271,7 @@ public class BoardController {
 	}
 	
 	//게시판 카테고리 검색
-	@GetMapping("/cate_info/search_board_category_list")
+	@GetMapping("/cate_info/search_category_list")
 	@ResponseBody
 	public Object searchBoardCategoryList(
 			@RequestParam(value = "searchPart") String searchPart,
@@ -375,14 +360,27 @@ public class BoardController {
 		
 		return searchBoardPostsListWithPage;
 	}
-	
-	
+		
 	//특정 게시물 수정 요청
 	@PostMapping("/info/modify_confirm")
 	@ResponseBody
 	public boolean modifyConfirm(BoardPostsDto boardPostsDto, 
+								@RequestParam(value = "deleteFileNames", required = false) List<String> deleteFileNames ,
 								@RequestParam(value = "files" , required = false) List<MultipartFile> files) {
 		log.info("modifyConfirm()");
+		
+		log.info("boardPostsDto: {}",boardPostsDto);
+		log.info("deleteFileNames: {}",deleteFileNames);
+		log.info("files: {}",files);
+				
+		for(int i = 0; i < deleteFileNames.size(); i++) {
+			log.info("filePath: "
+					+"\\board\\"
+					+boardPostsDto.getBp_category_no()
+					+"\\"+boardPostsDto.getBp_writer_no()
+					+"\\"+boardPostsDto.getBp_dir_name()
+					+"\\"+deleteFileNames.get(i));
+		}
 		
 		//file 첨부가 되어 있는지 확인
 		if(files != null && files.size() != 0 && files.get(0).getSize() != 0) {
@@ -393,6 +391,20 @@ public class BoardController {
 				
 		return true;
 	}
-	
+		
+	//작성한 공지 게시물 등록 요청
+	@PostMapping("/info/create_notice_confirm")
+	@ResponseBody
+	public String createNoticeConfirm(@RequestParam("files") List<MultipartFile> files, 
+									@RequestParam("bp_category_no") int bp_category_no, 
+									@RequestParam("bp_writer_no") int bp_writer_no) {
+		log.info("createNoticeConfirm()");
+		
+		log.info("files: {}",files.size());
+		log.info("bp_category_no: {}",bp_category_no);
+		log.info("bp_writer_no: {}",bp_writer_no);
+		
+		return null;
+	}
 	
 }

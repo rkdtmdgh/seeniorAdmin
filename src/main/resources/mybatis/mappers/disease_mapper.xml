@@ -165,7 +165,8 @@
 		UPDATE 
 			DISEASE_CATEGORY 
 		SET 
-			DC_IS_DELETED = 0 
+			DC_IS_DELETED = 0, 
+			DC_MOD_DATE = NOW() 
 		WHERE 
 			DC_NO = #{dc_no}
 	
@@ -185,7 +186,7 @@
 		AND 
 			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 		ORDER BY 
-			DC_NAME DESC 
+			${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 	
@@ -294,7 +295,7 @@
 		AND 
 			D.D_CATEGORY_NO = #{dc_no} 
 		ORDER BY 
-			${sortValue} ${order} 
+			D.${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 	
@@ -355,7 +356,8 @@
 		UPDATE 
 			DISEASE 
 		SET 
-			D_IS_DELETED = 0 
+			D_IS_DELETED = 0, 
+			D_MOD_DATE = NOW() 
 		WHERE 
 			D_NO = #{d_no}
 	
@@ -382,7 +384,7 @@
 		AND 
 			D.${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 		ORDER BY 
-			D_NO DESC 
+			D.${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 	

@@ -9,16 +9,12 @@
 		$(async function() {
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			switch(sortType) {
-				case '2': // search
-					await getSearchList(null, '/qna/noti_info/search_notice_list', page);
+				case '1': // search
+					await getSearchList(null, '/qna/noti_info/search_notice_list', sortValue, order, page);
 					break;
 
-				case '0': // sort
+				default: 
 					await getList('/qna/noti_info/get_notice_list', sortValue, order, page);
-					break;
-					
-				default:
-					await getList('/qna/noti_info/get_notice_list', null, null, page);
 			}
         });
 	</script>
@@ -54,12 +50,12 @@
 	                        <table class="content_table qna_notice_list_table">
 	                            <colgroup>
 	                                <col class="col_no">
-	                                <col class="col_long">
-	                                <col class="col_default">
+	                                <col>
 	                                <col class="col_no">
+	                                <col>
 	                                <col class="col_state">
-	                                <col>
-	                                <col>
+	                                <col class="col_short">
+	                                <col class="col_short">
 	                            </colgroup>
 	
 	                            <thead>
@@ -73,11 +69,11 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                    	<p class="table_title">작성자</p>
+	                                    	<p class="table_title">조회수</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                    	<p class="table_title">조회수</p>
+	                                    	<p class="table_title">작성자</p>
 	                                    </th>
 	                                    
 	                                    <th>

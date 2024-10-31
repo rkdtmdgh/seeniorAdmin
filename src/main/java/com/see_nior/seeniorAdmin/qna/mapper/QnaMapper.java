@@ -17,12 +17,16 @@ public interface QnaMapper {
 	public List<AdminAccountDto> selectQnaList(Map<String, Object> pagingParams);
 
 	public int selectAllQnaListCnt();
+	
+	public int selectUnansweredQnaCnt();
 
 	public List<QnaDto> selectUnansweredQuestions();
 
 	public List<AdminAccountDto> selectSearchQnaList(Map<String, Object> pagingParams);
 
 	public int selectSearchQnaListCnt(Map<String, Object> searchParams);
+	
+	public int selectUnansweredSearchQnaCnt(Map<String, Object> params);
 
 	public QnaDto selectQnaInfoByNo(int bq_no);
 
@@ -31,13 +35,27 @@ public interface QnaMapper {
 	public List<AdminAccountDto> selectQnaNoticeList(Map<String, Object> pagingParams);
 
 	public int selectAllQnaNoticeListCnt();
+	
+	public List<AdminAccountDto> selectQnaListForSelectBox(Map<String, Object> pagingParamsForSelectBox);
 
+	public int selectAllQnaListCntForSelectBox(int bqc_no);
+	
+	public int selectUnansweredCategoryQnaCnt(int bqc_no);
+	
 	public int insertNewAnswer(Map<String, Object> params);
 
 	public int selectQnaAnswerLastNo();
 
-	public int updateQnaStateByNo(Map<String, Object> updateParams);
+	public int updateQnaFromAnswerComplete(Map<String, Object> updateParams);
+	
+	public int updateQnaStateByNo(QnaDto qnaDto);
 
+	public int updateQnaIsDeletedByNo(int bq_no);
+	
+	public int updateQnaAnswerIsDeletedByNo(int bqa_no);
+	
+	public int updateQnaBqAnswerNoDelete(int bq_no);
+	
 	
 	// category
 	public boolean isQnaCategory(String bqc_name);
@@ -73,6 +91,22 @@ public interface QnaMapper {
 	public int updateQnaNotice(Map<String, Object> params);
 
 	public int updateQnaNoticeIsDeletedByNo(int bqn_no);
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+
 
 	
 	

@@ -10,7 +10,7 @@
 			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
 			
 			switch(sortType) {
-				case '1': // select
+				case '2': // select
 					await getList('/advertisement/cate_info/get_advertisement_list_by_category', 'ad_idx', 'asc', page);
 					break;
 			}
@@ -58,10 +58,11 @@
 	                                        
 		                                	<th><p class="table_title">등록일 / 수정일</p></th>
 	                                        <td class="disabled">
-	                                        	<p class="table_date_info">
-	                                        		<span th:text="${advertisementCategoryDto.ac_reg_date}"></span>
-	                                        		<span th:text="${advertisementCategoryDto.ac_mod_date}"></span>
-	                                        	</p>
+	                                        	<p class="table_date_info" th:utext="|
+	                                        		${advertisementCategoryDto.ac_reg_date}
+	                                        		<span class='divider'></span>
+	                                        		${advertisementCategoryDto.ac_mod_date}
+	                                        	|"></p>
 	                                        </td>
 		                                </tr>
 		                                
@@ -95,53 +96,55 @@
 		                    </div>
 	                    </form>
 	                    
-	                    <div class="content_top">
-				            <p class="sub_title">광고</p>
-					    </div>
-					    
-					    <div class="table_wrap">
-	                        <table class="content_table advertisement_list_table">
-	                            <colgroup>
-	                                <col class="col_no">
-	                                <col class="col_no">
-	                                <col>
-	                                <col>
-	                                <col>
-	                            </colgroup>
-	
-	                            <thead>
-	                                <tr>
-	                                    <th></th>
-	                                    
-	                                    <th>
-	                                        <p class="table_title">순번</p>
-	                                    </th>
-	                                    
-	                                    <th>
-	                                        <p class="table_title">클라이언트</p>
-	                                    </th>
-	                                    
-	                                    <th>
-	                                        <p class="table_title">시작일</p>
-	                                    </th>
-	                                    
-	                                    <th>
-	                                        <p class="table_title">종료일</p>
-	                                    </th>
-	                                    
-	                                    <th>
-	                                    	<p class="table_title">등록일</p>
-	                                    </th>
-	                                </tr>
-	                            </thead>
-	
-	                            <tbody>
-	                                <!-- 리스트 테이블 -->
-	                            </tbody>
-	                        </table>
-	                        
-	                        <div class="pagination_wrap"></div>
-	                    </div>
+	                    <th:block th:if="${advertisementCategoryDto.ac_item_cnt}">
+		                    <div class="content_top">
+					            <p class="sub_title">광고</p>
+						    </div>
+						    
+						    <div class="table_wrap">
+		                        <table class="content_table advertisement_list_table">
+		                            <colgroup>
+		                                <col class="col_no">
+		                                <col class="col_no">
+		                                <col>
+		                                <col>
+		                                <col>
+		                            </colgroup>
+		
+		                            <thead>
+		                                <tr>
+		                                    <th></th>
+		                                    
+		                                    <th>
+		                                        <p class="table_title">순번</p>
+		                                    </th>
+		                                    
+		                                    <th>
+		                                        <p class="table_title">클라이언트</p>
+		                                    </th>
+		                                    
+		                                    <th>
+		                                        <p class="table_title">시작일</p>
+		                                    </th>
+		                                    
+		                                    <th>
+		                                        <p class="table_title">종료일</p>
+		                                    </th>
+		                                    
+		                                    <th>
+		                                    	<p class="table_title">등록일</p>
+		                                    </th>
+		                                </tr>
+		                            </thead>
+		
+		                            <tbody>
+		                                <!-- 리스트 테이블 -->
+		                            </tbody>
+		                        </table>
+		                        
+		                        <div class="pagination_wrap"></div>
+		                    </div>
+	                    </th:block>
 					</section>
                 </div>
             </div>

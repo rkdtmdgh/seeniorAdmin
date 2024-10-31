@@ -93,16 +93,20 @@ async function setBoardTitle(infoNo) {
 }
 
 // 콘텐츠 서브 내용 설정
-async function setContentSubInfo(txt) {
-	const $title = $('.categoty_title');
-	let $subInfo = $('.title_other_info_text');
+function setContentSubInfo(txt) {
+	logger.info('setContentSubInfo():', txt);
 	
-	if(!$subInfo.length) {
-		$subInfo = $('<span class="title_other_info_text">');
+	const $title = $('.categoty_title'); // 서브 내용이 추가될 부모 요소
+	let $subInfo = $('.title_other_info_text'); // 서브 내용이 추가될 요소
+	
+	if(!txt && $subInfo.length) { // null일 경우 경우 $subInfo 요소 제거
+		$subInfo.remove();
+		
+	} else {
+		if(!$subInfo.length) $subInfo = $('<span class="title_other_info_text">');
+		$subInfo.text(txt);		
+		$title.append($subInfo);	
 	}
-	
-	$subInfo.text(`마지막 업데이트 ${txt}`);		
-	$title.append($subInfo);	
 }
 
 // 셀렉트 데이터로 특정 요소 텍스트 변경
@@ -333,15 +337,15 @@ function setDelQueryString() {
 function setFormValuesFromUrl() {
 	const urlParams = new URLSearchParams(window.location.search);
     const $sForm = $('form[name="search_form"]');
-	const searchPart = urlParams.get('searchPart') || undefined;
+	const searchPart = urlParams.get('searchPart') || null;
     const searchString = urlParams.get('searchString') || '';
-	const sortType = urlParams.get('sortType') || undefined;
-	const sortValue = urlParams.get('sortValue') || undefined;
-	const order = urlParams.get('order') || undefined;
+	const sortType = urlParams.get('sortType') || null;
+	const sortValue = urlParams.get('sortValue') || null;
+	const order = urlParams.get('order') || null;
     const page = urlParams.get('page') || 1;
 	
 	// 검색어가 있을 경우 검색 폼 사용으로 새로고침 시 재적용
-	if($sForm.length && sortType === '2') { // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
+	if($sForm.length && sortType === '1') { // 1 = 검색, 2 = 카테고리선택
 		$sForm.find('select[name="searchPart"]').val(searchPart)
 		$sForm.find('input[name="searchString"]').val(searchString);
 	}
@@ -352,7 +356,7 @@ function setFormValuesFromUrl() {
 // 페이지 유지를 위한 쿼리 스트링 제어(검색 이력 제거)
 function setListQueryString(sortValue, order, page) {
 	const url = new URL(window.location); // 현재 url
-	const infoNo = url.searchParams.get('infoNo') || undefined; // cateNor가 있을 경우 값 가지고 있기
+	const infoNo = url.searchParams.get('infoNo') || undefined; // infoNo가 있을 경우 값 가지고 있기
 	const sortType = url.searchParams.get('sortType') || undefined; // sortType이 있을 경우 값 가지고 있기
     url.search = ''; // 파라미터 비우기
 	
@@ -373,15 +377,24 @@ function setListQueryString(sortValue, order, page) {
 }
 
 // 검색 후 페이지 유지를 위한 쿼리 스트링 제어(검색 파트, 스트링 재입력)
-function setSearchQueryString(page, searchPart, searchString) {
+function setSearchQueryString(searchPart, searchString, sortValue, order, page) {
 	const url = new URL(window.location);
 	const infoNo = url.searchParams.get('infoNo') || undefined; // cateNor가 있을 경우 값 가지고 있기
-    url.search = '';
     if(infoNo) url.searchParams.set('infoNo', infoNo); 
-	url.searchParams.set('sortType', 2); // 0 = 올림/내림차순, 1 = 카테고리선택, 2 = 검색
+	url.searchParams.set('sortType', 1); // 1 = 검색, 2 = 검색카테고리선택
     url.searchParams.set('searchPart', searchPart);
     url.searchParams.set('searchString', searchString);
 	url.searchParams.set('page', page); 
+	
+	if(sortValue) {
+		url.searchParams.set('sortValue', sortValue);
+		url.searchParams.set('order', order);
+		
+	} else {
+		url.searchParams.delete('sortValue');
+		url.searchParams.delete('order');
+	}
+	
 	window.history.replaceState({}, '', url); // 현재 url 변경 및 리로드 제어
 }
 
