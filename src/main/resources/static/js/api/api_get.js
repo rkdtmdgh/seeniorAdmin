@@ -760,9 +760,9 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                </a>
 		            </td>
 					<td class="ta_l">
-		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">
-		                	${data.bq_title}
-		                	${data.bq_state === true ? '공개' : '비공개'}
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info table_flex_info">
+		                	<p class="info_text">${data.bq_title}</p>
+		                	${data.bq_state === true ? '<img src="/image/icons/lock.png" alt="비공개글" class="table_info_icons">' : ''}
 		                </a>
 		            </td>
 					<td>

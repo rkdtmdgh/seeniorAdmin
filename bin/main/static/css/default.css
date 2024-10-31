@@ -496,6 +496,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    
+    .table_info_icons {
+    	width: 1em;
+    	height: 1em;
+    }
 
     &.flex_area {
         display: flex;
