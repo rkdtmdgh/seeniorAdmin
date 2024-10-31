@@ -286,9 +286,9 @@ function mapApiResponseObject(apiUrl, response) {
 			break;
 			
 		case '/qna/noti_info/search_notice_list': // 질문과 답변 공지 사항 검색
-			getListDtos = response.boardNoticePostsDtos;
-			getListPage = response.searchBoardNoticePostsListPageNum;
-			getListCnt = response.searchBoardNoticePostsListPageNum.searchNoticePostsListCnt;
+			getListDtos = response.qnaNoticeDtos;
+			getListPage = response.searchQnaNoticeListPageNum;
+			getListCnt = response.searchQnaNoticeListPageNum.searchQnaNoticeListCnt;
 			break;
 			
 		case '/board/noti_info/get_notice_list': // 공지 게시물
@@ -613,8 +613,8 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			`;
 			break;
 			
-		case '/board/noti_info/get_board_notice_list': // 공지 게시물 리스트 테이블
-		case '/board/info/search_board_notice_list': // 공지 게시물 검색 리스트 테이블
+		case '/board/noti_info/get_notice_list': // 공지 게시물 리스트 테이블
+		case '/board/info/search_notice_list': // 공지 게시물 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -718,12 +718,19 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="table_info">${data.bqn_title}</a>
 		            </td>
 		            <td>
-		                <a href="/qna/info/qna_list_form?sortType=2&infoNo=${data.bqc_no}&sortValue=bq_state&order=asc" class="table_info">
-		                	${data.bqc_item_cnt} ()
-		                </a>
+		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="table_info">${data.bqn_view_cnt}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.bqc_reg_date)}</p>
+		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
+		            </td>
+		            <td>
+		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="table_info">${data.bqn_state === true ? '공개' : '숨김'}</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.bqn_reg_date)}</p>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.bqn_mod_date)}</p>
 		            </td>
 		        </tr>
 			`;
@@ -740,7 +747,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/qna/cate_info/modify_category_form?bqc_no=${data.bqc_no}" class="table_info">${data.bqc_name}</a>
 		            </td>
 		            <td>
-		                <a href="/qna/info/qna_list_form?sortType=2&infoNo=${data.bqc_no}&sortValue=bq_state&order=asc" class="table_info">
+		                <a href="/qna/info/qna_list_form?sortType=2&infoNo=${data.bqc_no}&sortValue=bq_answer_no&order=asc" class="table_info">
 		                	${data.bqc_item_cnt} ()
 		                </a>
 		            </td>
@@ -985,6 +992,10 @@ function mapSortListApiObject(dbTable, sortType) {
 			1: '/recipe/info/search_recipe_list',
 			2: '/recipe/info/get_recipe_list_by_type',
 		},
+		'board_qna_notice': { // 질문과 답변 공지 사항 페이지
+			0: '/qna/noti_info/get_notice_list',
+			1: '/qna/noti_info/search_notice_list',
+		},
 		'board_qna': { // 질문과 답변 페이지
 			0: '/qna/info/get_qna_list',
 			1: '/qna/info/search_qna_list',
@@ -999,9 +1010,9 @@ function mapSortListApiObject(dbTable, sortType) {
 			1: '/video/info/search_video_list',
 		},
 		'board_notice': { // 게시판 공지 사항 페이지
-			0: '/board/noti_info/get_board_notice_list',
-			1: '/board/noti_info/search_board_notice_list',
-			2: '/board/noti_info/get_board_notice_list_by_category',
+			0: '/board/noti_info/get_notice_list',
+			1: '/board/noti_info/search_notice_list',
+			2: '/board/noti_info/get_notice_list_by_category',
 		},
 		'board_category': { // 게시판 관리 페이지
 			0: '/board/cate_info/get_category_list',
