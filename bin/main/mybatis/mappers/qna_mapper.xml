@@ -538,7 +538,7 @@
 	
 	<!-- qna 카테고리 리스트 가져오기 -->
 	<select id="selectQnaCategoryList"
-			resultMap="QnaDto">
+			resultMap="QnaCategoryDto">
 	
 		SELECT 
 			BQC.*, 
