@@ -1148,7 +1148,7 @@ function mapCategorylistObject(ele) {
 	switch(ele) {
 		case 'd_category_no': // 질병군별 분류 리스트(분류별 관리o)
 			getCateSelectApiUrl = '/disease/cate_info/get_category_list_select';
-			getListDtos = 'diseaseCategoryDtos';			
+			getListDtos = 'diseaseCategoryDto';			
 			infoNo = 'dc_no';
 			infoName = 'dc_name';
 			soltValue = 'd_no';
@@ -1156,7 +1156,7 @@ function mapCategorylistObject(ele) {
 			
 		case 'rcp_pat2': // 음식 종류별 분류 리스트(분류별 관리x)
 			getCateSelectApiUrl = '/recipe/info/get_type_list_select';
-			getListDtos = 'recipeTypeDtos';
+			getListDtos = 'recipeTypeDto';
 			infoNo = 'rcp_pat2';
 			infoName = 'rcp_pat2';
 			soltValue = 'rcp_pat2';
@@ -1164,7 +1164,7 @@ function mapCategorylistObject(ele) {
 			
 		case 'bq_category_no': // 질문 분류 리스트(분류별 관리o)
 			getCateSelectApiUrl = '/qna/cate_info/get_category_list_select';
-			getListDtos = 'qnaCategoryDtos';			
+			getListDtos = 'qnaCategoryDto';			
 			infoNo = 'bqc_no';
 			infoName = 'bqc_name';
 			soltValue = 'bq_no';
@@ -1173,7 +1173,7 @@ function mapCategorylistObject(ele) {
 		case 'ad_category_no': // 위치별 분류 리스트(분류별 관리o)
 			getCateSelectApiUrl = '/advertisement/cate_info/get_category_list_select';
 			getSelectMaxIdxApiUrl = '/advertisement/info/create_category_select';
-			getListDtos = 'advertisementCategoryDtos';
+			getListDtos = 'advertisementCategoryDto';
 			infoNo = 'ac_no';
 			infoName = 'ac_name';
 			soltValue = 'ad_no';
