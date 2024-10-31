@@ -538,9 +538,34 @@
 	
 	<!-- qna 카테고리 리스트 가져오기 -->
 	<select id="selectQnaCategoryList"
-			resultType="QnaCategoryDto">
+			resultMap="QnaDto">
 	
 		SELECT 
+			BQC.*, 
+			IFNULL(BQ_COUNTS.BQC_UNANSWERED_CNT, 0) AS BQC_UNANSWERED_CNT, 
+			IFNULL(BQ_COUNTS.BQC_ITEM_CNT, 0) AS BQC_ITEM_CNT 
+		FROM 
+			BOARD_QNA_CATEGORY BQC
+		LEFT JOIN (
+			SELECT 
+				BQ.BQ_CATEGORY_NO, 
+				COUNT(*) AS BQC_ITEM_CNT,
+				COUNT(CASE WHEN BQ.BQ_IS_DELETED = 1 AND BQ.BQ_ANSWER_NO IS NULL THEN 1 END) AS BQC_UNANSWERED_CNT
+			FROM 
+				BOARD_QNA BQ
+			WHERE 
+				BQ.BQ_IS_DELETED = 1 
+			GROUP BY 
+				BQ.BQ_CATEGORY_NO
+		) AS BQ_COUNTS ON BQC.BQC_NO = BQ_COUNTS.BQ_CATEGORY_NO
+		WHERE 
+			BQC.BQC_IS_DELETED = 1 
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit} 
+			
+		<!-- SELECT 
 			BQC.*, 
 			IFNULL(BQ_UNANSWERED_COUNT.BQC_UNANSWERED_CNT, 0) AS BQC_UNANSWERED_CNT
 		FROM 
@@ -563,7 +588,7 @@
 		ORDER BY 
 			${sortValue} ${order} 
 		LIMIT 
-			#{start}, #{limit}
+			#{start}, #{limit} -->
 	
 	</select>
 	
@@ -695,7 +720,8 @@
 			resultMap="QnaNoticeDto">
 	
 		SELECT 
-			* 
+			BQN.*, 
+			A.A_NO, A.A_ID, A.A_NAME, A_DEPARTMENT, A_LEVEL, A_POSITION 
 		FROM 
 			BOARD_QNA_NOTICE BQN 
 		LEFT JOIN 
