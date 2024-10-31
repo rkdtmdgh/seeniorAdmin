@@ -421,7 +421,6 @@ CREATE TABLE BOARD_QNA_CATEGORY (
 	BQC_NO			INT	AUTO_INCREMENT COMMENT "Q&A 분류 NO(PK)", 						-- Q&A 분류 NO(PK)
 	BQC_NAME		VARCHAR(100) NOT NULL COMMENT "Q&A 분류 명",							-- Q&A 분류 명
 	BQC_IS_DELETED	TINYINT DEFAULT 1 COMMENT "Q&A 분류 삭제 여부(기본값 = 0, 삭제 시 = 1)",	-- Q&A 분류 삭제 여부(기본값 = 0, 삭제 시 = 1)
-	BQC_ITEM_CNT	INT DEFAULT 0 COMMENT "Q&A 분류에 포함된 질환 개수",						-- Q&A 분류에 포함된 질환 개수
     BQC_REG_DATE	DATETIME DEFAULT NOW() COMMENT "Q&A 분류 등록일",						-- Q&A 분류 등록일
 	BQC_MOD_DATE	DATETIME DEFAULT NOW() COMMENT "Q&A 분류 수정일",						-- Q&A 분류 수정일
     PRIMARY KEY(BQC_NO)
