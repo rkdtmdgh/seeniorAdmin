@@ -417,8 +417,12 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            <td>
 		                <p class="table_info">${data.a_phone}</p>
 		            </td>
-		            <td>
-		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_authority_role === 'SUB_ADMIN' ? '완료' : '대기'}</a>
+		            <td class="va_m">
+		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info flex_area">
+		                	<span class="state icon ${data.a_authority_role === 'SUB_ADMIN' ? '' : 'off'}">
+		                		${data.a_authority_role === 'SUB_ADMIN' ? '완료' : '대기'}
+		                	</span>
+		                </a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.a_reg_date)}</p>
@@ -434,52 +438,25 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            <td>
 		                <p class="table_info">${listIndex}</p>
 		            </td>
-		            
-		            ${data.u_is_deleted === true ? // true = 정상, flase = 탈퇴
-		            `
-			            <td>
-			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_id}</a>
-			            </td>
-			            <td>
-			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_name}(${data.u_nickname})</a>
-			            </td>
-			            <td>
-			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_phone}</a>
-			            </td>
-			            <td>
-			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_company || '-'} </a>
-			            </td>
-			            <td>
-			                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">
-			                	${data.u_is_blocked === true ? // // true = 정상, flase = 정지
-			                		'정상' 
-			                	: 
-			                		'정지'
-		                		}
-			                </a>
-			            </td>
-		            `
-		            :
-		            
-		            `
-			            <td>
-			                <p class="table_info">${data.u_id}</p>
-			            </td>
-			            <td>
-			                <p class="table_info">-</p>
-			            </td>
-			            <td>
-			                <p class="table_info">-</p>
-			            </td>
-			            <td>
-			                <p class="table_info">-</p>
-			            </td>
-			            <td>
-			                <p class="table_info">탈퇴</p>
-			            </td>
-		            `
-		            }
-		            
+		            <td>
+		                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_id}</a>
+		            </td>
+		            <td>
+		                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_name}(${data.u_nickname})</a>
+		            </td>
+		            <td>
+		                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_phone}</a>
+		            </td>
+		            <td>
+		                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_company || '-'} </a>
+		            </td>
+		            <td class="va_m">
+		                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info flex_area">
+		                	<span class="state ${data.u_is_blocked === true ? '' : 'off'}">
+		                		${data.u_is_blocked === true ? '정상' : '정지'}
+		                	</span>
+		                </a>
+		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.u_reg_date)}</p>
 		            </td>
@@ -513,7 +490,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			tableTrContent = `
 				<tr>
 		            <td class="va_m">
-		                <div class="table_info func_area"><input type="checkbox" name="d_no" value="${data.d_no}"></div>
+		                <div class="table_info flex_area"><input type="checkbox" name="d_no" value="${data.d_no}"></div>
 		            </td>
 		            <td>
 		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${listIndex}</a>
@@ -567,7 +544,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			tableTrContent = `
 				<tr>
 		            <td class="va_m">
-		                <div class="table_info func_area"><input type="checkbox" name="v_no" value="${data.v_no}"></div>
+		                <div class="table_info flex_area"><input type="checkbox" name="v_no" value="${data.v_no}"></div>
 		            </td>
 		            <td>
 		                <a href="/video/info/modify_form?v_no=${data.v_no}" class="table_info">${listIndex}</a>
@@ -590,7 +567,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			tableTrContent = `
 				<tr data-no-name="bc_no" data-no="${data.bc_no}" data-idx="${data.bc_idx}">
 					<td class="va_m">
-						<div class="table_info func_area">
+						<div class="table_info flex_area">
 							${getListCnt > 1 ? `
 								${data.bc_idx !== 1 ? `<span onclick="putOrderModify(event, ${data.bc_idx - 1}, ${page})" class="func_arrow up"></span>` : ''}
 								${data.bc_idx !== getListCnt ? `<span onclick="putOrderModify(event, ${data.bc_idx + 1}, ${page})" class="func_arrow down"></span>` : ''}
@@ -649,7 +626,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			tableTrContent = `
 				<tr>
 					<td class="va_m">
-		                <div class="table_info func_area"><input type="checkbox" name="bp_no" value="${data.bp_no}"></div>
+		                <div class="table_info flex_area"><input type="checkbox" name="bp_no" value="${data.bp_no}"></div>
 		            </td>
 		            <td>
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${listIndex}</a>
@@ -669,10 +646,12 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            <td>
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_view_cnt}</a>
 		            </td>
-					<td>
-		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">
-							${data.bp_report_state === 0 ? '처리완료' : data.bp_report_state === 1 ? '정상' : data.bp_report_state === 2 ? '처리중' : 'N/A'}
-						</a>
+		            <td class="va_m">
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info flex_area">
+		                	<span class="state ${data.bp_report_state === 2 ? 'on' : data.bp_report_state === 0 ? 'off' :  ''}">
+		                		${data.bp_report_state === 2 ? '처리중' : data.bp_report_state === 0 ? '처리완료' : '정상'}
+		                	</span>
+		                </a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.bp_mod_date)}</p>
@@ -686,7 +665,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			tableTrContent = `
 				<tr>
 					<td class="va_m">
-		                <div class="table_info func_area"><input type="checkbox" name="d_no" value="${data.n_no}"></div>
+		                <div class="table_info flex_area"><input type="checkbox" name="d_no" value="${data.n_no}"></div>
 		            </td>
 		            <td>
 		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${listIndex}</a>
@@ -723,8 +702,12 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            <td>
 		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
 		            </td>
-		            <td>
-		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="table_info">${data.bqn_state === true ? '공개' : '숨김'}</a>
+		            <td class="va_m">
+		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="table_info flex_area">
+		                	<span class="state ${data.bqn_state === true ? '' : 'off'}">
+		                		${data.bqn_state === true ? '공개' : '숨김'}
+		                	</span>
+		                </a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.bqn_reg_date)}</p>
@@ -769,11 +752,15 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            <td>
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.qnaCategoryDto.bqc_name}</a>
 		            </td>
-		            <td>
-		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.qnaAnswerDto === null ? '대기' : '답변'}</a>
+		            <td class="va_m">
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info flex_area">
+		                	<span class="state icon ${data.qnaAnswerDto === null ? 'off' : ''}">
+		                		${data.qnaAnswerDto === null ? '대기' : '답변'}
+		                	</span>
+		                </a>
 		            </td>
 					<td class="ta_l">
-		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info table_flex_info">
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">
 		                	${data.bq_title}
 		                	${data.bq_state === true ? '공개' : '비공개'}
 		                </a>
@@ -806,8 +793,12 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 					<td>
 		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_client}</a>
 		            </td>
-		            <td>
-		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_state === 1 ? '사용중' : '만료'}</a>
+		            <td class="va_m">
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info flex_area">
+		                	<span class="state ${data.ad_state === 1 ? '' : 'off'}">
+		                		${data.ad_state === 1 ? '사용중' : '만료'}
+		                	</span>
+		                </a>
 		            </td>
 					<td>
 		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_start_date)}</a>
@@ -826,7 +817,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			tableTrContent = `
 				<tr data-no-name="ad_no" data-no="${data.ad_no}" data-idx="${data.ad_idx}">
 					<td class="va_m">
-						<div class="table_info func_area">
+						<div class="table_info flex_area">
 							${getListCnt > 1 ? `
 								${data.ad_idx !== 1 ? `<span onclick="putOrderModify(event, ${data.ad_idx - 1}, ${page})" class="func_arrow up"></span>` : ''}
 								${data.ad_idx !== getListCnt ? `<span onclick="putOrderModify(event, ${data.ad_idx + 1}, ${page})" class="func_arrow down"></span>` : ''}
