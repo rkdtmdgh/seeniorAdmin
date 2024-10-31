@@ -62,7 +62,7 @@
     --signFormInnerPadding: 30px;
     --contentInnerPadding: 30px var(--innerPadding);
     --btnsPadding: 1em 1.5em;
-    --smallBtnsPadding: 0.53em 1.1em;
+    --smallBtnsPadding: 0.5em 1em;
     --tableBtnPadding: 0.3em;
     --textPadding: 1em 1.2em;
     --subTextPadding: 0.3em 1em;
