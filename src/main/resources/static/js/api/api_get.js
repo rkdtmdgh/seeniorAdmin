@@ -774,8 +774,8 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            </td>
 					<td class="ta_l">
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info table_flex_info">
-		                	
 		                	${data.bq_title}
+		                	${data.bq_state === true ? '공개' : '비공개'}
 		                </a>
 		            </td>
 					<td>
