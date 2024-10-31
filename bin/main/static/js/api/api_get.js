@@ -748,7 +748,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            </td>
 		            <td>
 		                <a href="/qna/info/qna_list_form?sortType=2&infoNo=${data.bqc_no}&sortValue=bq_answer_no&order=asc" class="table_info">
-		                	${data.bqc_item_cnt} ()
+		                	${data.bqc_item_cnt} / ${data.bqc_unanswered_cnt}
 		                </a>
 		            </td>
 		            <td>
