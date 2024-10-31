@@ -305,8 +305,8 @@ function mapApiResponseObject(apiUrl, response) {
 		
 		case '/qna/cate_info/get_category_list': // 질문 유형 분류 관리
 			getListDtos = response.qnaCategoryDtos;
-			getListPage = response.qnaCategoryListPageNum ;
-			getListCnt = response.qnaCategoryListPageNum .qnaCategoryListCnt;
+			getListPage = response.qnaCategoryListPageNum;
+			getListCnt = response.qnaCategoryListPageNum.qnaCategoryListCnt;
 			break;
 			
 		case '/qna/cate_info/search_category_list': // 질문 유형 분류 검색
@@ -399,6 +399,8 @@ function mapApiResponseObject(apiUrl, response) {
 // 콘텐츠 테이블 리스트 생성
 function generateTableList(apiUrl, data, getListCnt, listIndex, page) { 
 	let tableTrContent = '';
+	let regDate = null;
+	const nowDate = new Date();
 	
 	switch(apiUrl) {
 		case '/account/list/get_admin_list':  // 관리자 계정 리스트 테이블
@@ -744,6 +746,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		case '/qna/info/get_qna_list': // 질문과 답변 리스트 테이블
 		case '/qna/info/search_qna_list': // 질문과 답변 검색 리스트 테이블
 		case '/qna/info/get_qna_list_by_category': // 질문 유형별 분류 리스트 테이블
+			regDate = new Date(data.bq_reg_date);
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -763,6 +766,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info table_flex_info">
 		                	<p class="info_text">${data.bq_title}</p>
 		                	${data.bq_state === true ? '<img src="/image/icons/lock.png" alt="비공개글" class="table_info_icons">' : ''}
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
 		                </a>
 		            </td>
 					<td>
