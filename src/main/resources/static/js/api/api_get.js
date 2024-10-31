@@ -399,6 +399,8 @@ function mapApiResponseObject(apiUrl, response) {
 // 콘텐츠 테이블 리스트 생성
 function generateTableList(apiUrl, data, getListCnt, listIndex, page) { 
 	let tableTrContent = '';
+	let regDate = null;
+	const nowDate = new Date();
 	
 	switch(apiUrl) {
 		case '/account/list/get_admin_list':  // 관리자 계정 리스트 테이블
@@ -744,6 +746,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		case '/qna/info/get_qna_list': // 질문과 답변 리스트 테이블
 		case '/qna/info/search_qna_list': // 질문과 답변 검색 리스트 테이블
 		case '/qna/info/get_qna_list_by_category': // 질문 유형별 분류 리스트 테이블
+			regDate = new Date(data.bq_reg_date);
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -763,6 +766,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info table_flex_info">
 		                	<p class="info_text">${data.bq_title}</p>
 		                	${data.bq_state === true ? '<img src="/image/icons/lock.png" alt="비공개글" class="table_info_icons">' : ''}
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
 		                </a>
 		            </td>
 					<td>
@@ -1216,7 +1220,7 @@ function mapCategorylistObject(ele) {
 	switch(ele) {
 		case 'd_category_no': // 질병군별 분류 리스트(분류별 관리o)
 			getCateSelectApiUrl = '/disease/cate_info/get_category_list_select';
-			getListDtos = 'diseaseCategoryDto';			
+			getListDtos = 'diseaseCategoryDtos';			
 			infoNo = 'dc_no';
 			infoName = 'dc_name';
 			soltValue = 'd_no';
@@ -1224,7 +1228,7 @@ function mapCategorylistObject(ele) {
 			
 		case 'rcp_pat2': // 음식 종류별 분류 리스트(분류별 관리x)
 			getCateSelectApiUrl = '/recipe/info/get_type_list_select';
-			getListDtos = 'recipeTypeDto';
+			getListDtos = 'recipeTypeDtos';
 			infoNo = 'rcp_pat2';
 			infoName = 'rcp_pat2';
 			soltValue = 'rcp_pat2';
@@ -1232,7 +1236,7 @@ function mapCategorylistObject(ele) {
 			
 		case 'bq_category_no': // 질문 분류 리스트(분류별 관리o)
 			getCateSelectApiUrl = '/qna/cate_info/get_category_list_select';
-			getListDtos = 'qnaCategoryDto';			
+			getListDtos = 'qnaCategoryDtos';			
 			infoNo = 'bqc_no';
 			infoName = 'bqc_name';
 			soltValue = 'bq_no';
@@ -1241,7 +1245,7 @@ function mapCategorylistObject(ele) {
 		case 'ad_category_no': // 위치별 분류 리스트(분류별 관리o)
 			getCateSelectApiUrl = '/advertisement/cate_info/get_category_list_select';
 			getSelectMaxIdxApiUrl = '/advertisement/info/create_category_select';
-			getListDtos = 'advertisementCategoryDto';
+			getListDtos = 'advertisementCategoryDtos';
 			infoNo = 'ac_no';
 			infoName = 'ac_name';
 			soltValue = 'ad_no';
