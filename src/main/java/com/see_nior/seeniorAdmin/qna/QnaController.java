@@ -450,7 +450,19 @@ public class QnaController {
 	public Object qnaTest() {
 		log.info("test()");
 		
-		return qnaService.getUnansweredCategoryQnaCnt(1);
+		Map<String, Object> searchQnaNoticeList = 
+				qnaService.searchQnaNoticePagingList("a_id", "admin", "bqn_no", "desc", 1);
+		
+		Map<String, Object> searchQnaNoticeListPageNum = 
+				qnaService.searchQnaNoticeListPageNum("bqn_no", "desc", 1);
+		
+		searchQnaNoticeList.put("searchQnaNoticeListPageNum", searchQnaNoticeListPageNum);
+		searchQnaNoticeList.put("sortValue", "bqn_no");
+		searchQnaNoticeList.put("order", "desc");
+		searchQnaNoticeList.put("searchPart", "a_id");
+		searchQnaNoticeList.put("searchString", "admin");
+		
+		return searchQnaNoticeList;
 		
 	}
 	
