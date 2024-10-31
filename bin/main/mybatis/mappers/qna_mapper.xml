@@ -58,6 +58,7 @@
 		<result column="bqc_item_cnt" property="bqc_item_cnt"/>
 		<result column="bqc_reg_date" property="bqc_reg_date"/>
 		<result column="bqc_mod_date" property="bqc_mod_date"/>
+		<result column="bqc_unanswered_cnt" property="bqc_unanswered_cnt"/>
 	</resultMap>
 	
 	<resultMap type="QnaAnswerDto" id="QnaAnswerDto">
@@ -537,10 +538,49 @@
 	
 	<!-- qna 카테고리 리스트 가져오기 -->
 	<select id="selectQnaCategoryList"
-			resultMap="QnaCategoryDto">
+			resultType="QnaCategoryDto">
 	
 		SELECT 
-			* 
+			BQC.*, 
+			IFNULL(BQ_UNANSWERED_COUNT.BQC_UNANSWERED_CNT, 0) AS BQC_UNANSWERED_CNT
+		FROM 
+			BOARD_QNA_CATEGORY BQC
+		LEFT JOIN (
+			SELECT 
+				BQ.BQ_CATEGORY_NO, 
+				COUNT(*) AS BQC_UNANSWERED_CNT
+			FROM 
+				BOARD_QNA BQ
+			WHERE 
+				BQ.BQ_IS_DELETED = 1 
+			AND 
+				BQ.BQ_ANSWER_NO IS NULL
+			GROUP BY 
+				BQ.BQ_CATEGORY_NO
+		) AS BQ_UNANSWERED_COUNT ON BQC.BQC_NO = BQ_UNANSWERED_COUNT.BQ_CATEGORY_NO
+		WHERE 
+			BQC.BQC_IS_DELETED = 1 
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit}
+	
+	
+<!-- 		SELECT 
+			* ,
+			(SELECT 
+				COUNT(*) 
+			FROM 
+				BOARD_QNA BQ 
+			JOIN 
+				BOARD_QNA_CATEGORY BQC 
+			ON 
+				BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
+			WHERE 
+				BQ.BQ_IS_DELETED = 1 
+			AND 
+				BQ.BQ_ANSWER_NO IS NULL 
+			) AS BQC_UNANSWERED_CNT 
 		FROM 
 			BOARD_QNA_CATEGORY 
 		WHERE 
@@ -548,7 +588,7 @@
 		ORDER BY 
 			${sortValue} ${order} 
 		LIMIT 
-			#{start}, #{limit} 
+			#{start}, #{limit}  -->
 	
 	</select>
 	
