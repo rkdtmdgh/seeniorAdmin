@@ -117,14 +117,11 @@
 		                        </table>
 		                        
 		                        <div class="btn_list">
-		                        	<div class="btns delete"
-		                        		 th:onclick="
-		                        		 	delSingleData(
-		                        		 		[[${selectedAdminDto.a_id}]], 
-		                        		 		'a_no', 
-		                        		 		[[${selectedAdminDto.a_no}]]
-		                        		 	)
-		                        		 ">삭제</div>
+		                        	<div th:onclick="delSingleData(
+	                       		 		[[${selectedAdminDto.a_id}]], 
+	                       		 		'a_no', 
+	                       		 		[[${selectedAdminDto.a_no}]]
+                        		 	)" class="btns delete">삭제</div>
 		                        	
 	                                <div class="btn_list">
 	                                	<div th:onclick="putResetPassword([[${selectedAdminDto.a_no}]], [[${selectedAdminDto.a_id}]])"

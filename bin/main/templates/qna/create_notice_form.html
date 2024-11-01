@@ -8,7 +8,7 @@
 	<script th:inline="javascript">
 		$(function() {			
 			// 작성자 no 값 설정
-			setLoginUserInfoInputValue('bpn_writer_no', 'a_no');
+			setLoginUserInfoInputValue('bqn_writer_no', 'a_no');
 		});
 	</script>
 </head>
@@ -31,7 +31,7 @@
 					    </div>
 					    
 						<form name="qna_notice_reg_form">					    	
-                       		<input type="hidden" name="bpn_writer_no">
+                       		<input type="hidden" name="bqn_writer_no">
                        		
 						    <div class="table_wrap mb_stepGap">
 		                        <table class="content_edit_table">
@@ -46,7 +46,7 @@
 		                                <tr>
 	                                        <th><p class="table_title">제목</p></th>
 		                                	<td colspan="3">
-		                                		<input type="text" name="bpn_title" id="bpn_title" class="table_info" placeholder="제목"
+		                                		<input type="text" name="bqn_title" id="bqn_title" class="table_info" placeholder="제목"
 		                                			onblur="validateEmpty(this, '제목을')">
 	                                        </td>
 		                                </tr>
