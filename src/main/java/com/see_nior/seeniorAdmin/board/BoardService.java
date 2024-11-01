@@ -547,13 +547,14 @@ public class BoardService {
 	}
 	
 	// 검색 게시물 총 페이지 개수 가져오기
-	public Map<String, Object> getSearchPostsListPageNum(String searchPart, String searchString, int page) {
+	public Map<String, Object> getSearchPostsListPageNum(int bc_no, String searchPart, String searchString, int page) {
 		
 		Map<String, Object> searchDiseaseListPageNum = new HashMap<>();
 		
 		Map<String, Object> pagingParams = new HashMap<>();
 		pagingParams.put("searchPart", searchPart);
 		pagingParams.put("searchString", searchString);
+		pagingParams.put("bc_no", bc_no);
 		
 		// 전체 리스트 개수 조회
 		int searchBoardPostsListCnt = boardMapper.getSearchBoardPostsListCnt(pagingParams);

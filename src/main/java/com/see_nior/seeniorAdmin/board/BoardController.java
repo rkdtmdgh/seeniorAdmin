@@ -352,7 +352,7 @@ public class BoardController {
 		Map<String, Object> searchBoardPostsListWithPage = boardService.getSearchPostsListWithPage(bc_no, searchPart, searchString, page);
 				
 		// 검색 게시물 총 페이지 개수 가져오기
-		Map<String, Object> searchBoardPostsListPageNum = boardService.getSearchPostsListPageNum(searchPart, searchString, page);
+		Map<String, Object> searchBoardPostsListPageNum = boardService.getSearchPostsListPageNum(bc_no, searchPart, searchString, page);
 				
 		searchBoardPostsListWithPage.put("searchBoardPostsListPageNum", searchBoardPostsListPageNum);
 		searchBoardPostsListWithPage.put("searchPart", searchPart);

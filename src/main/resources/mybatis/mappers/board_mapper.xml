@@ -410,91 +410,12 @@
      </select>
      
      <!-- 페이지에 따른 게시물 가져오기(검색한 게시물) -->
-	<select id="getSearchBoardPosts"
-			parameterType="Map"
-			resultMap="BoardPostsDto">
-			
-		SELECT 
-			*
-		FROM 
-			BOARD_POSTS 
-		WHERE 
-			BP_CATEGORY_NO = #{bc_no} 
-		AND 
-			BP_IS_DELETED = 1 
-		AND 
-			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
-		ORDER BY 
-			BP_NO DESC 
-		LIMIT 
-			#{start}, #{limit}
 	
-	</select> 
-	
-	<!--
-	<select id="getSearchBoardPosts" parameterType="Map" resultMap="BoardPostsDto">
-	
-		SELECT 
-    		bp.*,
-    	CASE 
-       		WHEN bp.BP_ACCOUNT = 'admin' 
-       			THEN aa.A_NO, aa.A_ID, aa.A_NAME 
-        	WHEN bp.BP_ACCOUNT = 'user' 
-        		THEN ua.U_NO, ua.U_ID, ua.U_NAME, ua.U_NICKNAME
-    	END AS account_info
-		FROM 
-    		BOARD_POSTS bp
-		LEFT JOIN 
-			ADMIN_ACCOUNT aa 
-		ON 
-			bp.BP_WRITER_NO = aa.A_NO 
-		AND 
-			bp.BP_ACCOUNT = 'admin'
-		LEFT JOIN 
-			USER_ACCOUNT ua 
-		ON 
-			bp.BP_WRITER_NO = ua.U_NO 
-		AND 
-			bp.BP_ACCOUNT = 'user'
-		WHERE 
-    		(
-        		bp.BP_ACCOUNT = 'admin' 
-        		AND 
-        		(
-            		aa.A_NAME LIKE CONCAT('%', #{searchString}, '%')
-            		OR aa.A_ID LIKE CONCAT ('%', #{searchString}, '%')
-        		)
-        		OR bp.BP_ACCOUNT = 'user' 
-        		AND 
-        		(
-            		ua.U_NAME LIKE CONCAT('%', #{searchString}, '%')
-            		OR ua.U_ID LIKE CONCAT ('%', #{searchString}, '%')
-        		)
-        		OR bp.BP_TITLE LIKE CONCAT('%', #{searchString}, '%')
-    		)
-    	AND 
-    		(
-        		#{searchPart} = 'bp_title' OR
-        		#{searchPart} = 'name' OR
-        		#{searchPart} = 'id'
-    		)
-    	ORDER BY 
-			BP_NO DESC 
-		LIMIT 
-			#{start}, #{limit}
-	
-	</select> -->
-	
-	<!-- 
 	<select id="getSearchBoardPosts" parameterType="Map" resultMap="BoardPostsDto">
 		SELECT 
 	    	bp.*,
-	    	CASE 
-	        	WHEN bp.BP_ACCOUNT = 'admin' 
-	        	THEN aa.A_NO, aa.A_ID, aa.A_NAME 
-	        	WHEN bp.BP_ACCOUNT = 'user' 
-	        	THEN ua.U_NO, ua.U_ID, ua.U_NAME, ua.U_NICKNAME
-	    	END AS account_info
+	    	aa.A_NO, aa.A_ID, aa.A_NAME,
+	    	ua.U_NO, ua.U_ID, ua.U_NAME, ua.U_NICKNAME
 		FROM 
 	    	BOARD_POSTS bp
 		LEFT JOIN 
@@ -509,20 +430,23 @@
 			bp.BP_WRITER_NO = ua.U_NO 
 		AND 
 			bp.BP_ACCOUNT = 'user'
-		WHERE 
-	    	CASE 
-	        	WHEN #{searchPart} = 'bp_title' 
-	        	THEN bp.BP_TITLE LIKE CONCAT('%', #{searchString}, '%')
-	        	WHEN #{searchPart} = 'id' 
-	        	THEN (aa.A_ID LIKE CONCAT('%', #{searchString}, '%') OR ua.U_ID LIKE CONCAT('%', #{searchString}, '%'))
-	        	WHEN #{searchPart} = 'name' 
-	        	THEN (aa.A_NAME LIKE CONCAT('%', #{searchString}, '%') OR ua.U_NAME LIKE CONCAT('%', #{searchString}, '%'))
-	    	END
+	    WHERE 
+		    (
+		        (#{searchPart} = 'bp_title' AND bp.BP_TITLE LIKE CONCAT('%', #{searchString}, '%'))
+		        OR
+		        (#{searchPart} = 'id' AND (aa.A_ID LIKE CONCAT('%', #{searchString}, '%') OR ua.U_ID LIKE CONCAT('%', #{searchString}, '%')))
+		        OR
+		        (#{searchPart} = 'name' AND (aa.A_NAME LIKE CONCAT('%', #{searchString}, '%') OR ua.U_NAME LIKE CONCAT('%', #{searchString}, '%')))
+		    )
+		AND 
+			bp.BP_IS_DELETED = 1
+		AND 
+			bp.BP_CATEGORY_NO = #{bc_no}
 	    ORDER BY 
 			BP_NO DESC 
 		LIMIT 
 			#{start}, #{limit}
-	</select> -->
+	</select> 
 	
 	<!-- 검색한 게시물의 총 리스트 개수 구하기 -->
 	<select id="getSearchBoardPostsListCnt"
@@ -532,11 +456,31 @@
 		SELECT 
 			COUNT(*) 
 		FROM 
-			BOARD_POSTS 
-		WHERE 
-			BP_IS_DELETED = 1 
+			BOARD_POSTS bp
+		LEFT JOIN 
+			ADMIN_ACCOUNT aa 
+		ON 
+			bp.BP_WRITER_NO = aa.A_NO 
 		AND 
-			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+			bp.BP_ACCOUNT = 'admin'
+		LEFT JOIN 
+			USER_ACCOUNT ua 
+		ON 
+			bp.BP_WRITER_NO = ua.U_NO 
+		AND 
+			bp.BP_ACCOUNT = 'user'
+	    WHERE 
+		    (
+		        (#{searchPart} = 'bp_title' AND bp.BP_TITLE LIKE CONCAT('%', #{searchString}, '%'))
+		        OR
+		        (#{searchPart} = 'id' AND (aa.A_ID LIKE CONCAT('%', #{searchString}, '%') OR ua.U_ID LIKE CONCAT('%', #{searchString}, '%')))
+		        OR
+		        (#{searchPart} = 'name' AND (aa.A_NAME LIKE CONCAT('%', #{searchString}, '%') OR ua.U_NAME LIKE CONCAT('%', #{searchString}, '%')))
+		    )
+		AND 
+			bp.BP_IS_DELETED = 1
+		AND 
+			bp.BP_CATEGORY_NO = #{bc_no}
 	
 	</select>
 
