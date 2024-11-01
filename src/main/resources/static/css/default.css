@@ -673,6 +673,7 @@
 	display: block;
 	font-size: var(--etcFontSize);
 	font-weight: normal;
+	line-height: var(--basicLineHeight);
 	color: var(--greenColor);
 	padding-top: var(--ssize1);
 	white-space: normal;
