@@ -777,7 +777,7 @@
 				BQN_TITLE, BQN_BODY, BQN_WRITER_NO, BQN_DIR_NAME
 			)
 		VALUES(
-			#{bqn_title}, #{bqn_body}, #{bqn_writer_no}, #{bqn_writer_no}
+			#{bqn_title}, #{bqn_body}, #{bqn_writer_no}, #{bqn_dir_name}
 		) 
 		
 	</insert>
