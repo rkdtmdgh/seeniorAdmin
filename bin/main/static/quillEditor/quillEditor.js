@@ -225,9 +225,9 @@ $(document).ready(function() {
 				});
 			}
 			
-			logger.info('quill editor initialImageSrcs[]:', initialImageSrcs);
-			logger.info('quill editor currentImageSrcs[]:', currentImageSrcs);
-			logger.info('quill editor deletedImageSrcs[]:', deletedImageSrcs);
+			//logger.info('quill editor initialImageSrcs[]:', initialImageSrcs);
+			//logger.info('quill editor currentImageSrcs[]:', currentImageSrcs);
+			//logger.info('quill editor deletedImageSrcs[]:', deletedImageSrcs);
 		});
 	}
 });

@@ -355,6 +355,8 @@ async function postQnaNoticeCreate(formName) {
 	// 이미지 파일 리사이즈 및 압축하여 formData에 담기 (선택된 이미지 요소가 없을 시 빈 파일 객체가 담김)
 	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
 	await addImagesToFormData($imgTags, formData);
+	
+	logger.info('formData files---->', formData.get('files'));
 
 	await postIntegSubmit(
 		'/qna/noti_info/create_notice_confirm', 
