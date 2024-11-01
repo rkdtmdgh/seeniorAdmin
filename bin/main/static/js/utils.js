@@ -503,8 +503,7 @@ function setAccountModifyForm(data) {
                             
                             <th><p class="table_title">가입일</p></th>
                         	<td class="disabled">
-                        		<input type="text" name="a_red_date" id="a_red_date" class="table_info disabled"
-                                	value="${data.a_reg_date}" disabled>
+                        		<p class="table_info">${data.a_reg_date}</p>
                             </td>
                         </tr>
 
