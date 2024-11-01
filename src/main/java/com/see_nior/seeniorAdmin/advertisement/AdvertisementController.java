@@ -1,5 +1,6 @@
 package com.see_nior.seeniorAdmin.advertisement;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
@@ -206,12 +207,12 @@ public class AdvertisementController {
 	@ResponseBody
 	@PostMapping("/info/create_confirm")
 	public boolean createConfirm(
-			@RequestParam(value = "files") MultipartFile file,
+			@RequestParam(value = "files") List<MultipartFile> files,
 			AdvertisementDto advertisementDto) {
 		log.info("createConfirm()");
 		
 		// 이미지 서버에 저장된 이미지 파일 이름 가져오기
-		ResponseEntity<String> savedFile = advertisementService.uploadFile(file, advertisementDto);
+		ResponseEntity<String> savedFile = advertisementService.uploadFile(files, advertisementDto);
 		log.info("savedFile ========> {}", savedFile);
 		
 		if (savedFile != null) {
@@ -360,16 +361,16 @@ public class AdvertisementController {
 	@ResponseBody
 	@PostMapping("/info/modify_confirm")
 	public boolean modifyConfirm(
-			@RequestParam(value = "files", required = false) MultipartFile file,
+			@RequestParam(value = "files", required = false) List<MultipartFile> files,
 			AdvertisementDto advertisementDto) {
 		log.info("modifyConfirm()");
-		log.info("files -------> {}", file);
+		log.info("files -------> {}", files);
 		
 		// 사진 변경 시 => 프론트에서 어떻게 넘어오는지 확인하고, 조건 처리 해아함
-		if (file != null && file.getSize() != 0) {
+		if (files != null && files.size() != 0 && files.get(0).getSize() != 0) {
 			
 			// 이미지 서버에 저장된 이미지 파일 이름 가져오기
-			ResponseEntity<String> savedFile = advertisementService.uploadFile(file, advertisementDto);
+			ResponseEntity<String> savedFile = advertisementService.uploadFile(files, advertisementDto);
 			log.info("savedFile ========> {}", savedFile);
 			
 			if (savedFile != null) {
