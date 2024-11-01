@@ -335,7 +335,7 @@ async function postNoticeCreate(formName) {
 async function postQnaNoticeCreate(formName) {
 	const form = document.forms[formName];
 	
-	input = form.bpn_title;
+	input = form.bqn_title;
 	if(!validateEmpty(input, '제목을', true)) {
 		input.focus();
 		return false;
@@ -350,7 +350,7 @@ async function postQnaNoticeCreate(formName) {
 	const errorMessage = '질문과 답변 공지사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 	
 	const formData = new FormData(form);
-	formData.set('bpn_body', quill.root.innerHTML); // quill 에디터 내용
+	formData.set('bqn_body', quill.root.innerHTML); // quill 에디터 내용
 	
 	// 이미지 파일 리사이즈 및 압축하여 formData에 담기 (선택된 이미지 요소가 없을 시 빈 파일 객체가 담김)
 	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
