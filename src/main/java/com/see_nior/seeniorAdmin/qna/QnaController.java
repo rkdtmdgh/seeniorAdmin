@@ -400,8 +400,7 @@ public class QnaController {
 			@RequestParam(value = "files" , required = false) List<MultipartFile> files, 
 			@RequestParam("bqn_title") String bqn_title, 
 			@RequestParam("bqn_body") String bqn_body, 
-			@RequestParam("bqn_writer_no") int bqn_writer_no, 
-			Principal principal) {
+			@RequestParam("bqn_writer_no") int bqn_writer_no) {
 		log.info("createNoticeConfrim()");
 		
 		return qnaService.createNoticeConfrim(files, bqn_title, bqn_body, bqn_writer_no);
