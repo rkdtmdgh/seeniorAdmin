@@ -399,8 +399,9 @@ function mapApiResponseObject(apiUrl, response) {
 // 콘텐츠 테이블 리스트 생성
 function generateTableList(apiUrl, data, getListCnt, listIndex, page) { 
 	let tableTrContent = '';
-	let regDate = null;
+	let regDate = null; // 날짜 비교 값 저장 변수
 	const nowDate = new Date();
+	const newIconsHours = 1000 * 60 * 60 * 24; // 24시간
 	
 	switch(apiUrl) {
 		case '/account/list/get_admin_list':  // 관리자 계정 리스트 테이블
@@ -444,7 +445,11 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_id}</a>
 		            </td>
 		            <td>
-		                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_name}(${data.u_nickname})</a>
+		                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info table_flex_info f_jc_center">
+		                	<p class="info_text">${data.u_name}</p>
+		                	<span class="divider"></span>
+		                	<p class="info_text">${data.u_nickname}</p>
+		                </a>
 		            </td>
 		            <td>
 		                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_phone}</a>
@@ -625,6 +630,8 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			
 		case '/board/info/get_posts_list': // 일반 게시물 리스트 테이블
 		case '/board/info/search_posts_list': // 일반 게시물 검색 리스트 테이블
+			regDate = new Date(new Date(data.bp_reg_date).getTime() + newIconsHours);
+		
 			tableTrContent = `
 				<tr>
 					<td class="va_m">
@@ -635,12 +642,17 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            </td>
 		            <td>
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info table_flex_info">
-		                	<p class="info_text">${data.bp_title}</p><span class="info_num">(${data.bp_reply_cnt})</span>
+		                	<p class="info_text">${data.bp_title}</p>
+		                	${data.bp_reply_cnt > 0 ? `<span class="info_num">(${data.bp_reply_cnt})</span>` : ''}
+							${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
 	                	</a>
 		            </td>
 					<td>
 						${data.bp_account === 'admin' ?
-							`<a href="/account/list/admin_modify_form?a_no=${data.bp_writer_no}" class="table_info">${data.bp_writer_id} (관리자)</a>`
+							`<a href="/account/list/admin_modify_form?a_no=${data.bp_writer_no}" class="table_info table_flex_info f_jc_center">
+								<p class="info_text">${data.bp_writer_id}</p>
+								<img src="/image/icons/manager.png" alt="관리자" class="table_info_icons">
+							</a>`
 						:
 							`<a href="/user_account/info/modify_form?u_no=${data.bp_writer_no}" class="table_info">${data.bp_writer_id}</a>`
 						}
@@ -746,7 +758,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		case '/qna/info/get_qna_list': // 질문과 답변 리스트 테이블
 		case '/qna/info/search_qna_list': // 질문과 답변 검색 리스트 테이블
 		case '/qna/info/get_qna_list_by_category': // 질문 유형별 분류 리스트 테이블
-			regDate = new Date(data.bq_reg_date);
+			regDate = new Date(new Date(data.bq_reg_date).getTime() + newIconsHours);
 			tableTrContent = `
 				<tr>
 		            <td>

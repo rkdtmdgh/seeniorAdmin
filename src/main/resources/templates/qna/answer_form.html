@@ -76,9 +76,9 @@
 		                                </tr>
 		                                
 		                                <tr>
-		                                	<th><p class="table_title">등록일 / 수정일</p></th>
+		                                	<th><p class="table_title">등록일<span class="divider"></span>수정일</p></th>
 	                                        <td colspan="3">
-	                                        	<p class="table_date_info" th:utext="|
+	                                        	<p class="table_info" th:utext="|
 	                                        		${qnaDto.bq_reg_date}
 	                                        		<span class='divider'></span>
 	                                        		${qnaDto.bq_mod_date}
@@ -92,9 +92,13 @@
 		                                    	<p class="table_info" th:text="${qnaDto.userAccountDto.u_id}"></p>
 		                                    </td>
 		                                    
-		                                    <th><p class="table_title">이름(닉네임)</p></th>
+		                                    <th><p class="table_title">이름<span class="divider"></span>닉네임</p></th>
 		                                    <td>
-		                                    	<p class="table_info" th:text="${qnaDto.userAccountDto.u_name + ' (' + qnaDto.userAccountDto.u_nickname} + ')'"></p>
+		                                    	<p class="table_info" th:utext="|
+		                                    		${qnaDto.userAccountDto.u_name}
+		                                    		<span class='divider'></span>
+		                                    		${qnaDto.userAccountDto.u_nickname}
+	                                    		|"></p>
 		                                    </td>
 		                                </tr>
 		                                

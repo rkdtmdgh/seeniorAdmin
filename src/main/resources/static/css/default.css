@@ -72,6 +72,7 @@
 /* customize file upload */
 .file_upload_container {
 	width: 100%;
+	margin: var(--ssize2)  0;
 	padding: var(--ssize3);
 	aspect-ratio: 16 / 9; /* 비율 유지 (16:9 비율) */
 	background-color: var(--tableTitleBgColor);
@@ -109,6 +110,7 @@
 }
 
 .image_file_preview {
+	margin: var(--ssize2) 0;
 	padding: var(--ssize3);
 	position: relative;
 	
@@ -401,7 +403,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: var(--ssize1);
     padding: var(--textPadding);
     position: relative;
     overflow: hidden;
@@ -497,10 +498,27 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     
+    &.table_flex_info {
+    	display: flex;
+    	align-items: center;
+    	gap: var(--ssize1);	
+    }
+    
     .table_info_icons {
     	width: 1em;
     	height: 1em;
     }
+    
+    .info_text {
+		width: max-content;
+		overflow: hidden;
+	    text-overflow: ellipsis;
+	    white-space: nowrap;
+	} 
+	
+	.info_num {
+		width: max-content;
+	}
 
     &.flex_area {
         display: flex;
@@ -583,38 +601,6 @@
     		}
     	}
     }
-    
-    &.table_flex_info {
-    	display: flex;
-    	align-items: center;
-    	gap: var(--ssize1);
-    	
-		.info_text {
-			width: max-content;
-			overflow: hidden;
-		    text-overflow: ellipsis;
-		    white-space: nowrap;
-		}    
-		
-		.info_num {
-			width: max-content;
-		}	
-    }
-}
-
-.table_date_info {
-	text-align: left;
-	padding: var(--textPadding);
-	color: var(--grayColor);
-	
-	.divider {
-		display: inline-block;
-		width: 1px;
-		height: var(--ssize3);
-		background-color: var(--lightGrayColor);
-		margin: 0 var(--ssize2);
-		vertical-align: middle;
-	}
 }
 
 .content_edit_table {
@@ -917,7 +903,15 @@
 .disabled {
     background-color: var(--tableDisabledBgColor);
     cursor: not-allowed;
-    color: var(--middleGrayColor);
+}
+
+.divider {
+	display: inline-block;
+	width: 1px;
+	height: var(--ssize3);
+	background-color: var(--middleGrayColor);
+	margin: 0 var(--ssize2);
+	vertical-align: middle;
 }
 
 /* flex property */
