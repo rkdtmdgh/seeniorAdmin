@@ -204,6 +204,7 @@ public class AdvertisementController {
 	}
 	
 	// 광고 등록 확인
+	@SuppressWarnings("unchecked")
 	@ResponseBody
 	@PostMapping("/info/create_confirm")
 	public boolean createConfirm(
@@ -223,10 +224,8 @@ public class AdvertisementController {
 			try {
 				Map<String, Object> savedFileObj = objectMapper.readValue(savedFile.getBody(), new TypeReference<Map<String, Object>>() {});
 				
-//				String ad_dir_name = (String) savedFileObj.get("dir_name");
-//				String savedFileName = (String) savedFileObj.get("savedFileName");
 				String ad_dir_name = String.valueOf(savedFileObj.get("dir_name"));
-				String savedFileName = String.valueOf(savedFileObj.get("savedFileName"));
+				String savedFileName = ((List<String>) savedFileObj.get("savedFileNames")).get(0);
 				log.info("ad_dir_name ----> {}", ad_dir_name);
 				log.info("savedFileName ----> {}", savedFileName);
 				
