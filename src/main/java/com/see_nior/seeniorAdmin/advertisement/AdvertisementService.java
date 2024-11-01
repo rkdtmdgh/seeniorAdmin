@@ -117,17 +117,6 @@ public class AdvertisementService {
 		
 		List<AdvertisementCategoryDto> advertisementCategoryDtos = advertisementMapper.getAdvertisementCategoryListWithPage(pagingParams);
 		
-		for (AdvertisementCategoryDto advertisementCategoryDto : advertisementCategoryDtos) {
-			Map<String, Object> itemCntParam = new HashMap<>();
-			int ac_no = advertisementCategoryDto.getAc_no();
-			int item_cnt = advertisementMapper.getCategoryItemCnt(ac_no);
-			itemCntParam.put("ac_no", ac_no);
-			itemCntParam.put("item_cnt", item_cnt);
-			advertisementMapper.updateAdvertisementCategoryItemCnt(itemCntParam);
-			advertisementCategoryDto.setAc_item_cnt(item_cnt);
-			
-		}
-		
 		pagingList.put("advertisementCategoryDtos", advertisementCategoryDtos);
 		
 		return pagingList;
@@ -232,18 +221,7 @@ public class AdvertisementService {
 		pagingParams.put("order", order);
 		
 		List<AdvertisementCategoryDto> searchAdvertisementCategoryDtos = advertisementMapper.getSearchAdvertisementCategory(pagingParams);
-		
-		for (AdvertisementCategoryDto advertisementCategoryDto : searchAdvertisementCategoryDtos) {
-			Map<String, Object> itemCntParam = new HashMap<>();
-			int ac_no = advertisementCategoryDto.getAc_no();
-			int item_cnt = advertisementMapper.getCategoryItemCnt(ac_no);
-			itemCntParam.put("ac_no", ac_no);
-			itemCntParam.put("item_cnt", item_cnt);
-			advertisementMapper.updateAdvertisementCategoryItemCnt(itemCntParam);
-			advertisementCategoryDto.setAc_item_cnt(item_cnt);
-			
-		}
-		
+				
 		pagingList.put("advertisementCategoryDtos", searchAdvertisementCategoryDtos);
 		
 		return pagingList;
