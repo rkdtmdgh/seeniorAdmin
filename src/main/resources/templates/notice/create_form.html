@@ -5,8 +5,8 @@
 	
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('공지 사항 등록')}"></th:block>
-	<script type="text/javascript">
-		$(function() {
+	<script th:inline="javascript">
+		$(function() {			
 			// 작성자 no 값 설정
 			setLoginUserInfoInputValue('n_writer_no', 'a_no');
 		});
@@ -30,10 +30,10 @@
 				            <p class="sub_title">공지 사항 등록</p>
 					    </div>
 					    
-					    <form name="notice_reg_form">					    	
-                      		<input type="hidden" name="n_writer_no">
-                      		
-						    <div class="table_wrap">
+						<form name="notice_reg_form">					    	
+                       		<input type="hidden" name="n_writer_no">
+                       		
+						    <div class="table_wrap mb_stepGap">
 		                        <table class="content_edit_table">
 		                            <colgroup>
 	                                    <col class="col_row_title">
@@ -44,22 +44,38 @@
 	                                
 		                            <tbody>
 		                                <tr>
-		                                	<th><p class="table_title">제목</p></th>
-		                                	<td>
+	                                        <th><p class="table_title">제목</p></th>
+		                                	<td colspan="3">
 		                                		<input type="text" name="n_title" id="n_title" class="table_info" placeholder="제목"
 		                                			onblur="validateEmpty(this, '제목을')">
-	                                        </td>
-	                                        
-	                                        <th><p class="table_title">작성자</p></th>
-		                                	<td class="disabled">
-		                                		<input type="text" class="table_info disabled" th:value="${#authentication.name}" disabled>
 	                                        </td>
 		                                </tr>
 		                                
 		                                <tr>
-		                                	<th><p class="table_title">내용</p></th>
+		                                	<th><p class="table_title">작성자</p></th>
+		                                	<td colspan="3" class="disabled">
+		                                		<p class="table_info" th:text="${#authentication.name}"></p>
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th>
+												<p class="table_title">
+		                                			내용
+			                                		<span id="guideline">
+			                                			영상: 최대 5개
+			                                			<br>이미지: 최대 10개
+			                                			<br>이미지별 최대 용량: 2MB
+			                                			<br>삽입 가능
+		                                			</span>
+		                                		</p>
+	                                		</th>
+		                                	
 		                                	<td colspan="3">
 	                                			<div id="editor"></div>
+	                                			<div id="text_limit">
+	                                				<span id="current_size"></span> / <span id="max_size"></span>
+	                                			</div>
 	                                        </td>
 		                                </tr>
 		                            </tbody>
