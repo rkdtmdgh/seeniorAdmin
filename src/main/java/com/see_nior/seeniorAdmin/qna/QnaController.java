@@ -1,6 +1,7 @@
 package com.see_nior.seeniorAdmin.qna;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.see_nior.seeniorAdmin.dto.QnaCategoryDto;
 import com.see_nior.seeniorAdmin.dto.QnaDto;
@@ -395,12 +397,14 @@ public class QnaController {
 	@PostMapping("/noti_info/create_notice_confirm")
 	@ResponseBody
 	public boolean createNoticeConfrim(
+			@RequestParam(value = "files" , required = false) List<MultipartFile> files, 
 			@RequestParam("bqn_title") String bqn_title, 
 			@RequestParam("bqn_body") String bqn_body, 
+			@RequestParam("bqn_writer_no") int bqn_writer_no, 
 			Principal principal) {
 		log.info("createNoticeConfrim()");
 		
-		return qnaService.createNoticeConfrim(bqn_title, bqn_body, principal.getName());
+		return qnaService.createNoticeConfrim(files, bqn_title, bqn_body, bqn_writer_no);
 		
 	}
 	
@@ -443,7 +447,8 @@ public class QnaController {
 		
 	}
 	
-	
+
+	////////////////////////////////////////////////////////////
 	// qna test 
 	@GetMapping("/test")
 	@ResponseBody
@@ -453,7 +458,5 @@ public class QnaController {
 		return qnaService.getQnaCategoryDtoByNo(1);
 		
 	}
-	
-	
 	
 }
