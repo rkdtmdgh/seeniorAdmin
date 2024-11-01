@@ -564,31 +564,6 @@
 			${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit} 
-			
-		<!-- SELECT 
-			BQC.*, 
-			IFNULL(BQ_UNANSWERED_COUNT.BQC_UNANSWERED_CNT, 0) AS BQC_UNANSWERED_CNT
-		FROM 
-			BOARD_QNA_CATEGORY BQC
-		LEFT JOIN (
-			SELECT 
-				BQ.BQ_CATEGORY_NO, 
-				COUNT(*) AS BQC_UNANSWERED_CNT
-			FROM 
-				BOARD_QNA BQ
-			WHERE 
-				BQ.BQ_IS_DELETED = 1 
-			AND 
-				BQ.BQ_ANSWER_NO IS NULL
-			GROUP BY 
-				BQ.BQ_CATEGORY_NO
-		) AS BQ_UNANSWERED_COUNT ON BQC.BQC_NO = BQ_UNANSWERED_COUNT.BQ_CATEGORY_NO
-		WHERE 
-			BQC.BQC_IS_DELETED = 1 
-		ORDER BY 
-			${sortValue} ${order} 
-		LIMIT 
-			#{start}, #{limit} -->
 	
 	</select>
 	
@@ -645,13 +620,21 @@
 			resultMap="QnaCategoryDto">
 		
 		SELECT 
-			* 
+			BQC.*, 
+			(SELECT 
+				COUNT(*) 
+			FROM 
+				BOARD_QNA BQ 
+			WHERE 
+				BQ.BQ_CATEGORY_NO = BQC.BQC_NO
+			AND 
+				BQ.BQ_IS_DELETED = 1) AS BQC_ITEM_CNT
 		FROM 
-			BOARD_QNA_CATEGORY 
+			BOARD_QNA_CATEGORY BQC 
 		WHERE 
 			BQC_IS_DELETED = 1 
 		AND 
-			BQC_NO = #{bqc_no} 
+			BQC_NO = #{bqc_no}
 	
 	</select>
 	
@@ -792,7 +775,7 @@
 			)
 		VALUES(
 			#{bqn_title}, #{bqn_body}, #{a_no}
-		)
+		) 
 		
 	</insert>
 	
