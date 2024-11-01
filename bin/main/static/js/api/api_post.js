@@ -297,7 +297,7 @@ async function postVideoCreate(formName) {
 }
 
 // 공지사항 등록
-async function postQnaNoticeCreate(formName) {
+async function postNoticeCreate(formName) {
 	const form = document.forms[formName];
 	
 	input = form.n_title;
@@ -357,11 +357,11 @@ async function postQnaNoticeCreate(formName) {
 	await addImagesToFormData($imgTags, formData);
 
 	await postIntegSubmit(
-		'/qna/noti_info/qna_notice_create_confirm', 
+		'/qna/noti_info/create_notice_confirm', 
 		formData, 
 		successMessage, 
 		errorMessage, 
-		'/qna/info/qna_list_form',
+		'/qna/info/notice_list_form',
 		'content_inner'
 	);
 }
