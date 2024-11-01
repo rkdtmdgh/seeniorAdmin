@@ -84,7 +84,7 @@ public interface QnaMapper {
 
 	public int selectSearchQnaNoticeListCnt(Map<String, Object> searchParams);
 
-	public int insertNewQnaNotice(Map<String, Object> params);
+	public int insertNewQnaNotice(Map<String, Object> insertParams);
 
 	public QnaNoticeDto selectQnaNoticeInfoByNo(int bqn_no);
 
