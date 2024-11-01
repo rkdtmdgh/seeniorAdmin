@@ -679,7 +679,7 @@ public class QnaService {
 
 	// qna 공지사항 img 파일 imgageServer에 저장
 	public ResponseEntity<String> uploadNoticeImg(List<MultipartFile> files) {
-		log.info("uploadNoticeImg");
+		log.info("uploadNoticeImg()");
 		
 		try {
 			
