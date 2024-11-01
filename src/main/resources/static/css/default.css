@@ -72,6 +72,7 @@
 /* customize file upload */
 .file_upload_container {
 	width: 100%;
+	margin: var(--ssize2)  0;
 	padding: var(--ssize3);
 	aspect-ratio: 16 / 9; /* 비율 유지 (16:9 비율) */
 	background-color: var(--tableTitleBgColor);
@@ -109,6 +110,7 @@
 }
 
 .image_file_preview {
+	margin: var(--ssize2) 0;
 	padding: var(--ssize3);
 	position: relative;
 	
@@ -231,6 +233,7 @@
     padding: var(--btnsPadding);
     font-size: var(--subFontSize);
     font-weight: var(--bold);
+    line-height: var(--basicLineHeight);
     color: var(--whiteColor);
     background-color: var(--primaryColor);
     border: 1px solid var(--primaryColor);
@@ -400,7 +403,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: var(--ssize1);
     padding: var(--textPadding);
     position: relative;
     overflow: hidden;
@@ -458,6 +460,7 @@
 	display: none;
 	width: 100%;
 	max-height: 260px;
+	line-height: 1.4;
 	border-radius: var(--bdrs);
 	background-color: var(--whiteColor);
 	border: 1px solid var(--lightGrayColor);
@@ -494,8 +497,30 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    
+    &.table_flex_info {
+    	display: flex;
+    	align-items: center;
+    	gap: var(--ssize1);	
+    }
+    
+    .table_info_icons {
+    	width: 1em;
+    	height: 1em;
+    }
+    
+    .info_text {
+		width: max-content;
+		overflow: hidden;
+	    text-overflow: ellipsis;
+	    white-space: nowrap;
+	} 
+	
+	.info_num {
+		width: max-content;
+	}
 
-    &.func_area {
+    &.flex_area {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -519,6 +544,50 @@
         		background: url(/image/icons/a_down.png) center no-repeat;
         	}
         }
+        
+        .state {
+		   	display: inline-flex;
+		   	justify-content: center;
+		   	align-items: center;
+		   	gap: var(--ssize1);
+		   	padding: 0 1em;
+		   	font-size: var(--subFontSize);
+		   	border-radius: var(--bdrs);
+		   	background-color: var(--greenColor);
+		   	color: var(--whiteColor);
+		   	
+		   	&.icon {
+		   		padding: 0 0.5em;
+		   	
+			   	&::before {
+			   		content: '';
+			   		display: inline-block;
+			   		width: 1em;
+			   		height: 1em;
+			   		background: url(/image/icons/state_check.png) center no-repeat;
+			   		background-size: contain;
+			   	}
+			   	
+			   	&.off {
+			   		background-color: var(--lightGrayColor);
+			   		color: var(--grayColor);
+			   		
+			   		&::before {
+			   			background: url(/image/icons/state_uncheck.png) center no-repeat;
+			   			background-size: contain;
+			   		}
+		   		}
+		   	}
+		   	
+		   	&.off {
+		   		background-color: var(--lightGrayColor);
+		   		color: var(--grayColor);
+		   	}
+		   	
+		   	&.on {
+		   		background-color: var(--primaryColor);
+		   	}
+		}
     }
     
     &.info_data_list {
@@ -532,38 +601,6 @@
     		}
     	}
     }
-    
-    &.table_flex_info {
-    	display: flex;
-    	align-items: center;
-    	gap: var(--ssize1);
-    	
-		.info_text {
-			width: max-content;
-			overflow: hidden;
-		    text-overflow: ellipsis;
-		    white-space: nowrap;
-		}    
-		
-		.info_num {
-			width: max-content;
-		}	
-    }
-}
-
-.table_date_info {
-	text-align: left;
-	padding: var(--textPadding);
-	color: var(--grayColor);
-	
-	.divider {
-		display: inline-block;
-		width: 1px;
-		height: var(--ssize3);
-		background-color: var(--lightGrayColor);
-		margin: 0 var(--ssize2);
-		vertical-align: middle;
-	}
 }
 
 .content_edit_table {
@@ -636,6 +673,7 @@
 	display: block;
 	font-size: var(--etcFontSize);
 	font-weight: normal;
+	line-height: var(--basicLineHeight);
 	color: var(--greenColor);
 	padding-top: var(--ssize1);
 	white-space: normal;
@@ -866,7 +904,15 @@
 .disabled {
     background-color: var(--tableDisabledBgColor);
     cursor: not-allowed;
-    color: var(--middleGrayColor);
+}
+
+.divider {
+	display: inline-block;
+	width: 1px;
+	height: var(--ssize3);
+	background-color: var(--middleGrayColor);
+	margin: 0 var(--ssize2);
+	vertical-align: middle;
 }
 
 /* flex property */
@@ -880,6 +926,10 @@
 
 .f_jc_between {
 	justify-content: space-between;
+}
+
+.f_jc_center {
+	justify-content: center;
 }
 
 .f_ai_center {

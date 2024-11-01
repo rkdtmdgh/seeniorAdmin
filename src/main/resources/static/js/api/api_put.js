@@ -592,14 +592,49 @@ async function putNoticePostsModify(formName) {
 	);
 }
 
+// QnA 질문 유형 분류 수정
+async function putQnaCategoryModify(formName) {
+	const form = document.forms[formName];
+	const current_bqc_name = form.current_bqc_name;
+	
+	input = form.bqc_name;
+	if(!validateEmpty(input, '분류명을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(input.value === current_bqc_name.value) {
+		alert('수정된 내용이 없습니다');
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	const successMessage = `"${form.bqc_name.value}" 분류명이 수정되었습니다.`;
+	const errorMessage = `"${form.bqc_name.value}" 분류명 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	setFormDataCheckConsoleLog(formData);
+	await putIntegSubmit(
+		'/qna/cate_info/modify_category_confirm',
+		formData,
+		successMessage,
+		errorMessage,
+		'content_inner'
+	);
+}
+
 // QnA 답변 수정
 async function putAnswerModify(formName) {
 	const form = document.forms[formName];
+	const current_bqa_answer = form.current_bqa_answer;
 	
 	input = form.bqa_answer;
 	if(!validateEmpty(input, '답변을', true)) {
 		input.focus();
 		return false;
+	}
+	
+	if(input.value === current_bqa_answer.value) {
+		alert('수정된 내용이 없습니다');
+		return false;		
 	}
 	
 	const formData = new FormData(form);
@@ -636,28 +671,11 @@ async function putPostsModify(formName) {
 	const formData = new FormData(form);
 	formData.set('bp_body', quill.root.innerHTML); // quill 에디터 내용
 	
+	// 이미지 파일 리사이즈 및 압축하여 formData에 담기 (선택된 이미지 요소가 없을 시 빈 파일 객체가 담김)
 	const $newImgTags = $(quill.root).find('img').filter(function() {
 		return $(this).attr('src').startsWith('blob:'); // src가 blob 으로 시작하는 태그 필터링 즉 추가된 이미지 태그
 	});
-	
-	if($newImgTags.length) { // 추가된 이미지가 있을 경우
-		logger.info('추가된 이미지가 있음');
-		
-		for(let img of $newImgTags) {
-			const blobURL= $(img)[0].src; // src 속성에 입력된 blob URL 가져오기
-			const targetWidth = $(img)[0].width; // 리사이즈할 대상 이미지의 너비 가져오기
-			
-			// 설정된 width 크기로 리사이즈 압축 후 flle 객체로 변환하여 formData 추가
-			const resizedImageFile = await resizeImage(blobURL, targetWidth);
-			formData.set('files', resizedImageFile); // 리사이즈된 File객체를 formData에 추가
-			URL.revokeObjectURL(blobURL); // blob URL을 브라우저 메모리에서 해제
-		}
-		
-	} else {
-		logger.info('이미지 태그 없음');
-		const emptyBlob = new Blob([], { type: 'application/octet-stream' }); // 빈 Blob 생성
-		formData.set('files', emptyBlob); 
-	}
+	await addImagesToFormData($newImgTags, formData);
 	
 	const deleteFileNames = []; // 제거된 이미지 파일명이 담길 배열
 	if(deletedImageSrcs.length) { // 제거된 이미지가 있다면

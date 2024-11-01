@@ -450,7 +450,7 @@ public class QnaController {
 	public Object qnaTest() {
 		log.info("test()");
 		
-		return qnaService.getUnansweredCategoryQnaCnt(1);
+		return qnaService.getQnaCategoryDtoByNo(1);
 		
 	}
 	
