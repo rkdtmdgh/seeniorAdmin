@@ -25,6 +25,8 @@
 	                    </div>
 	
 	                    <form name="notice_modify_form">
+                      		<input type="hidden" name="n_no" th:value="${noticeDto.n_no}">
+                      		<input type="hidden" name="n_dir_name" th:value="${noticeDto.n_dir_name}">
                       		<input type="hidden" name="n_writer_no" th:value="${noticeDto.n_writer_no}">
                             		
 	                        <div class="table_wrap">
@@ -62,7 +64,11 @@
 	                            </table>
 	
 	                            <div class="btn_list">
-	                            	<div class="btns delete" th:onclick="delListData('n_no')">삭제</div>
+	                            	<div th:onclick="delSingleData(
+	                            		'공지 사항',
+	                            		'n_no',
+	                            		[[${noticeDto.n_no}]]
+	                            	)" class="btns delete">삭제</div>
 		                        		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
