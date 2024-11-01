@@ -482,6 +482,7 @@ CREATE TABLE BOARD_QNA_NOTICE (
 	BQN_WRITER_NO	INT	NOT NULL COMMENT "Q&A 공지사항 작성자(ADMIN_ACCOUNT TABLE PK)",			-- Q&A 공지사항 작성자(ADMIN_ACCOUNT TABLE PK)
 	BQN_VIEW_CNT	INT DEFAULT 0 COMMENT "Q&A 공지사항 조회수",			 					-- Q&A 공지사항 조회수
 	BQN_STATE		TINYINT DEFAULT 1 COMMENT "Q&A 공지사항 숨김 상태(기본값 = 1, 숨김 시 = 0)",	-- Q&A 공지사항 숨김 상태(기본값 = 1, 숨김 시 = 0)
+    BQN_DIR_NAME	VARCHAR(20) COMMENT "Q&A 공지사항 이미지 저장된 폴더 이름"	,					-- Q&A 공지사항 이미지 저장된 폴더명
 	BQN_IS_DELETED	TINYINT DEFAULT 1 COMMENT "Q&A 공지사항 삭제 여부(기본값 = 1, 삭제 시 = 0)",	-- Q&A 공지사항 삭제 여부(기본값 = 1, 삭제 시 = 0)
 	BQN_REG_DATE	DATETIME DEFAULT NOW() COMMENT "Q&A 공지사항 등록일",						-- Q&A 공지사항 등록일
 	BQN_MOD_DATE	DATETIME DEFAULT NOW() COMMENT "Q&A 공지사항 수정일",						-- Q&A 공지사항 수정일
