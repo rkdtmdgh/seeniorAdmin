@@ -9,7 +9,6 @@
 		$(function() {
 			// 타이틀 설정
 			setBoardTitle(/*[[${infoNo}]]*/);
-			logger.info(/*[[${boardPostsDto}]]*/);
         });
 	</script>
 </head>
@@ -66,9 +65,9 @@
 		                                </tr>
 		                                
 		                                <tr>
-		                                	<th><p class="table_title">등록일 / 수정일</p></th>
+		                                	<th><p class="table_title">등록일<span class="divider"></span>수정일</p></th>
 	                                        <td colspan="3" class="disabled">
-	                                        	<p class="table_date_info" th:utext="|
+	                                        	<p class="table_info" th:utext="|
 	                                        		${boardPostsDto.bp_reg_date}
 	                                        		<span class='divider'></span>
 	                                        		${boardPostsDto.bp_mod_date}
@@ -79,19 +78,24 @@
 		                                <tr>
 		                                	<th><p class="table_title">작성자 아이디</p></th>
 		                                	<td class="disabled">
-	                                			<input type="text" class="table_info" disabled
-	                                				th:value="${boardPostsDto.bp_writer_id}">
+		                                		<div class="table_info table_flex_info">
+		                                			<p class="info_text" th:text="${boardPostsDto.bp_writer_id}"></p>
+	                                				<img src="/image/icons/manager.png" alt="관리자" class="table_info_icons"
+	                                					th:if="${boardPostsDto.bp_account == 'admin'}">
+		                                		</div>
 	                                        </td>
 	                                        
-	                                        <th><p class="table_title" th:text="${boardPostsDto.bp_account == 'admin' ? '이름' : '이름(닉네임)'}"></p></th>
+	                                        <th>	                                        	
+	                                        	<p th:if="${boardPostsDto.bp_account == 'admin'}" class="table_title">이름</p>
+	                                        	<p th:if="${boardPostsDto.bp_account != 'admin'}" class="table_title">이름<span class='divider'></span>닉네임</p>
+	                                        </th>
 		                                	<td class="disabled">
-	                                			<input type="text" name="writer_id" class="table_info" disabled
-	                                				th:value="${
-	                                					boardPostsDto.bp_account == 'admin' ? 
-	                                						boardPostsDto.adminAccountDto.a_name + ' (관리자)'
-                                						:
-                                							boardPostsDto.userAccountDto.u_name	+ ' (' + boardPostsDto.userAccountDto.u_nickname + ')'
-	                                				}">
+		                                		<p th:if="${boardPostsDto.bp_account == 'admin'}" class="table_info" th:text="${boardPostsDto.adminAccountDto.a_name}"></p>
+	                                        	<p th:if="${boardPostsDto.bp_account != 'admin'}" class="table_info" th:utext="|
+	                                        		${boardPostsDto.userAccountDto.u_name}
+	                                        		<span class='divider'></span>
+	                                        		${boardPostsDto.userAccountDto.u_nickname}
+	                                        	|"></p>
 	                                        </td>
 		                                </tr>
 		                                

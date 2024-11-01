@@ -14,8 +14,29 @@ Image.sanitize = function(url) { // blob URL을 허용하도록 sanitize 메서�
     
     return originalSanitize.call(this, url); // 기존 sanitize 메서드를 호출
 };
-
 Quill.register(Image, true); // 새로운 Image 포맷 등록
+
+// 이미지 파일 리사이즈 및 압축하여 formData에 담기
+async function addImagesToFormData($imgTags, formData) {
+	if($imgTags.length) {
+		logger.info('이미지 태그 있음');
+		
+		for(let img of $imgTags) {
+			const blobURL= $(img)[0].src; // src 속성에 입력된 blob URL 가져오기
+			const targetWidth = $(img)[0].width; // 리사이즈할 대상 이미지의 너비 가져오기
+
+			// 설정된 width 크기로 리사이즈 압축 후 flle 개게로 변환하여 formData 추가
+			const resizedImageFile = await resizeImage(blobURL, targetWidth);
+			formData.append('files', resizedImageFile); // 리사이즈된 File객체를 formData에 추가
+			URL.revokeObjectURL(blobURL); // blob URL을 브라우저 메모리에서 해제
+		}
+		
+	} else {
+		logger.info('이미지 태그 없음');
+		const emptyBlob = new Blob([], { type: 'application/octet-stream' }); // 빈 Blob 생성
+		formData.set('files', emptyBlob); 
+	}
+}
 
 // 이미지 리사이즈 및 객체 반환
 async function resizeImage(blobURL, targetWidth, quality = 0.8) {
