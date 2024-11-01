@@ -47,12 +47,13 @@
 		                                </tr>
 		                                
 		                                <tr>
-		                                	<th><p class="table_title">등록일 / 수정일</p></th>
+		                                	<th><p class="table_title">등록일<span class="divider"></span>수정일</p></th>
 	                                        <td colspan="3" class="disabled">
-	                                        	<p class="table_date_info">
-	                                        		<span th:text="${videoDto.v_reg_date}"></span>
-	                                        		<span th:text="${videoDto.v_mod_date}"></span>
-	                                        	</p>
+	                                        	<p class="table_info" th:utext="|
+	                                        		${videoDto.v_reg_date}
+	                                        		<span class='divider'></span>
+	                                        		${videoDto.v_mod_date}
+	                                        	|"></p>
 	                                        </td>
 										</tr>
 										

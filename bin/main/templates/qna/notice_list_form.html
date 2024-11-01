@@ -41,6 +41,7 @@
 						            
 						            <div class="btn_list">
 						            	<div class="btns small" onclick="getList('/qna/noti_info/get_notice_list', null, null, 1, true);">전체보기</div>
+						            	<a href="/qna/noti_info/create_notice_form" class="btns small">등록</a>
 						            </div>
 					            </div>
 					        </div>
@@ -50,12 +51,12 @@
 	                        <table class="content_table qna_notice_list_table">
 	                            <colgroup>
 	                                <col class="col_no">
-	                                <col class="col_long">
-	                                <col class="col_default">
+	                                <col>
 	                                <col class="col_no">
+	                                <col>
 	                                <col class="col_state">
-	                                <col>
-	                                <col>
+	                                <col class="col_short">
+	                                <col class="col_short">
 	                            </colgroup>
 	
 	                            <thead>
@@ -69,11 +70,11 @@
 	                                    </th>
 	                                    
 	                                    <th>
-	                                    	<p class="table_title">작성자</p>
+	                                    	<p class="table_title">조회수</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                    	<p class="table_title">조회수</p>
+	                                    	<p class="table_title">작성자</p>
 	                                    </th>
 	                                    
 	                                    <th>

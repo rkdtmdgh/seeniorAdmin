@@ -155,7 +155,7 @@ async function postIntegSubmitProcess(apiUrl, formData, successMessage, errorMes
 }
 
 // 질환/질병 분류 등록
-async function postDiseaseCategoryCreate( formName, nextPage) {
+async function postDiseaseCategoryCreate(formName, nextPage) {
 	const form = document.forms[formName];
 	let input;
 	
@@ -319,19 +319,60 @@ async function postNoticeCreate(formName) {
 // QNA 공지사항 등록
 async function postQnaNoticeCreate(formName) {
 	const form = document.forms[formName];
-
-	const formData = new FormData(form);
-	formData.set('bqn_body', quill.root.innerHTML);
+	
+	input = form.bpn_title;
+	if(!validateEmpty(input, '제목을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(!validateQuill(quill)) { // 내용 유효성 및 비속어 검사
+		quill.focus();
+		return false;
+	}
 	
 	const successMessage = '질문과 답변 공지사항이 등록되었습니다.';
 	const errorMessage = '질문과 답변 공지사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 	
+	const formData = new FormData(form);
+	formData.set('bpn_body', quill.root.innerHTML); // quill 에디터 내용
+	
+	// 이미지 파일 리사이즈 및 압축하여 formData에 담기 (선택된 이미지 요소가 없을 시 빈 파일 객체가 담김)
+	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
+	await addImagesToFormData($imgTags, formData);
+
 	await postIntegSubmit(
 		'/qna/noti_info/qna_notice_create_confirm', 
 		formData, 
 		successMessage, 
 		errorMessage, 
 		'/qna/info/qna_list_form',
+		'content_inner'
+	);
+}
+
+// QNA 분류 등록
+async function postQnaCategoryCreate(formName) {
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.bqc_name;
+	if(!(await requestDuplicateCheck(input, true, false, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+		input.focus();
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	
+	const successMessage = `"${input.value}" 분류가 등록되었습니다.`;
+	const errorMessage = `"${input.value}" 분류 등록 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	
+	await postIntegSubmit(
+		'/qna/cate_info/create_category_confirm',
+		formData,
+		successMessage,
+		errorMessage, 																
+		'/qna/cate_info/category_list_form',
 		'content_inner'
 	);
 }
@@ -408,26 +449,9 @@ async function postNoticePostsCreate(formName) {
 	const formData = new FormData();
 	formData.set('bn_body', quill.root.innerHTML); // quill 에디터 내용
 	
-	// 이미지 파일 리사이즈 및 압축하여 formData에 담기
+	// 이미지 파일 리사이즈 및 압축하여 formData에 담기 (선택된 이미지 요소가 없을 시 빈 파일 객체가 담김)
 	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
-	if($imgTags.length) {
-		logger.info('이미지 태그 있음');
-		
-		for(let img of $imgTags) {
-			const blobURL= $(img)[0].src; // src 속성에 입력된 blob URL 가져오기
-			const targetWidth = $(img)[0].width; // 리사이즈할 대상 이미지의 너비 가져오기
-			
-			// 설정된 width 크기로 리사이즈 압축 후 flle 객체로 변환하여 formData 추가
-			const resizedImageFile = await resizeImage(blobURL, targetWidth);
-			formData.set('files', resizedImageFile); // 리사이즈된 File객체를 formData에 추가
-			URL.revokeObjectURL(blobURL); // blob URL을 브라우저 메모리에서 해제
-		}
-		
-	} else {
-		logger.info('이미지 태그 없음');
-		const emptyBlob = new Blob([], { type: 'application/octet-stream' }); // 빈 Blob 생성
-		formData.append('files', emptyBlob); 
-	}
+	await addImagesToFormData($imgTags, formData);
 	
 	await postIntegSubmit(
 		'/board/info/create_board_notice_confirm',
@@ -460,26 +484,9 @@ async function postPostsCreate(formName) {
 	const formData = new FormData(form);
 	formData.set('bp_body', quill.root.innerHTML); // quill 에디터 내용
 	
-	// 이미지 파일 리사이즈 및 압축하여 formData에 담기
+	// 이미지 파일 리사이즈 및 압축하여 formData에 담기 (선택된 이미지 요소가 없을 시 빈 파일 객체가 담김)
 	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
-	if($imgTags.length) {
-		logger.info('이미지 태그 있음');
-		
-		for(let img of $imgTags) {
-			const blobURL= $(img)[0].src; // src 속성에 입력된 blob URL 가져오기
-			const targetWidth = $(img)[0].width; // 리사이즈할 대상 이미지의 너비 가져오기
-
-			// 설정된 width 크기로 리사이즈 압축 후 flle 개게로 변환하여 formData 추가
-			const resizedImageFile = await resizeImage(blobURL, targetWidth);
-			formData.append('files', resizedImageFile); // 리사이즈된 File객체를 formData에 추가
-			URL.revokeObjectURL(blobURL); // blob URL을 브라우저 메모리에서 해제
-		}
-		
-	} else {
-		logger.info('이미지 태그 없음');
-		const emptyBlob = new Blob([], { type: 'application/octet-stream' }); // 빈 Blob 생성
-		formData.set('files', emptyBlob); 
-	}
+	await addImagesToFormData($imgTags, formData);
 
 	await postIntegSubmit(
 		'/board/info/create_confirm',

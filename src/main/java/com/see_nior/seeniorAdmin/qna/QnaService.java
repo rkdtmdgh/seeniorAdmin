@@ -52,6 +52,14 @@ public class QnaService {
 		
 	}
 	
+	// qna 리스트 중 답변 안 한 개수
+	public int getUnansweredQnaCnt() {
+		log.info("getUnansweredQnaCnt()");
+		
+		return qnaMapper.selectUnansweredQnaCnt();
+		
+	}
+	
 	// 질문 등록 여부 확인하기
 	public List<QnaDto> getUnansweredQuestions() {
 		log.info("getUnansweredQuestions()");
@@ -91,6 +99,19 @@ public class QnaService {
 		
 	}
 	
+	// qna 검색 리스트 중 답변 안 한 개수
+	public int getUnansweredSearchQnaCnt(String searchPart, String searchString) {
+		log.info("getUnansweredSearchQnaCnt()");
+		
+		Map<String, Object> params = new HashMap<>();
+		params.put("searchPart", searchPart);
+		params.put("searchString", searchString);
+		
+		return qnaMapper.selectUnansweredSearchQnaCnt(params);
+		
+	}
+
+	
 	// qna 카테고리에 따른 리스트 가져오기
 	public Map<String, Object> getQnaListByCategoryWithPage(int page, String sortValue, String order, int bqc_no) {
 		log.info("getQnaListByCategoryWithPage()");
@@ -116,6 +137,14 @@ public class QnaService {
 		
 	}
  
+	// qna 카테고리 리스트 중 답변 안 한 개수
+	public int getUnansweredCategoryQnaCnt(int bqc_no) {
+		log.info("getUnansweredCategoryQnaCnt()");
+		
+		return qnaMapper.selectUnansweredCategoryQnaCnt(bqc_no);
+		
+	}
+	
 	// qna 정보 가져오기 by no
 	public QnaDto getQnaInfoByNo(int bq_no) {
 		log.info("getQnaInfoByNo()");
@@ -289,16 +318,17 @@ public class QnaService {
 		
 		if (!isQna) {
 			
-			return SqlResult.FAIL.getValue();
-			
-		} else {
-			
 			int result = qnaMapper.insertNewQnaCategory(bqc_name);
 			
 			if (result >= 0) 
 				return SqlResult.SUCCESS.getValue();
 			else 
 				return SqlResult.FAIL.getValue();
+			
+			
+		} else {
+			
+			return SqlResult.FAIL.getValue();
 			
 		}
 		
@@ -538,6 +568,11 @@ public class QnaService {
 			return SqlResult.FAIL.getValue();
 		
 	}
+
+
+
+
+
 
 
 

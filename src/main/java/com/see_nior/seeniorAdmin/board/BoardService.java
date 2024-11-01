@@ -23,7 +23,6 @@ import com.see_nior.seeniorAdmin.board.mapper.BoardMapper;
 import com.see_nior.seeniorAdmin.board.util.BoardItemCntUpdater;
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
 import com.see_nior.seeniorAdmin.dto.BoardPostsDto;
-import com.see_nior.seeniorAdmin.dto.DiseaseCategoryDto;
 import com.see_nior.seeniorAdmin.dto.DiseaseDto;
 
 import lombok.RequiredArgsConstructor;
@@ -45,14 +44,6 @@ public class BoardService {
 	final private BoardMapper boardMapper;
 	final private RestTemplate restTemplate;
 	final private BoardItemCntUpdater boardItemCntUpdater;
-	
-//	public BoardService( BoardMapper boardMapper, 
-//						BoardItemCntUpdater boardItemCntUpdater, 
-//						RestTemplate restTemplate ) {
-//		this.boardMapper = boardMapper;
-//		this.boardItemCntUpdater = boardItemCntUpdater;
-//		this.restTemplate = restTemplate;
-//	}
 	
 	//모든 게시판 항목 가져오기
 	public Object getList() {
