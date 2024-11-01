@@ -22,12 +22,6 @@ public interface DiseaseMapper {
 	// 모든 질환 카테고리 가져오기 (질환 리스트에서 <select>박스 => 비동기)
 	public List<DiseaseCategoryDto> getDiseaseCategoryList();
 	
-	// 카테고리 별 질환의 개수 구하기
-	public int getCategoryItemCnt(int dc_no);
-	
-	// 카테고리 별 질환의 개수 질환 분류 테이블에 update
-	public void updateDiseaseCategoryItemCnt(Map<String, Object> itemCntParam);
-	
 	// 페이지에 따른 질환 카테고리 가져오기
 	public List<DiseaseCategoryDto> getDiseaseCategoryListWithPage(Map<String, Object> pagingParams);
 	

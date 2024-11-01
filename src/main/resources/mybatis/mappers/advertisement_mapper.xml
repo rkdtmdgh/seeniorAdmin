@@ -109,13 +109,21 @@
 			resultMap="AdvertisementCategoryDto">
 			
 		SELECT 
-			* 
+   			AC.*, 
+    		(SELECT 
+    			COUNT(*) 
+   			FROM 
+   				ADVERTISEMENT AS A 
+   			WHERE 
+   				A.AD_CATEGORY_NO = AC.AC_NO 
+   			AND 
+   				A.AD_IS_DELETED = 1) AS AC_ITEM_CNT 
 		FROM 
-			ADVERTISEMENT_CATEGORY 
+			ADVERTISEMENT_CATEGORY AS AC
 		WHERE 
-			AC_IS_DELETED = 1 
+			AC.AC_IS_DELETED = 1 
 		ORDER BY 
-			${sortValue} ${order} 
+			AC.${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 	
@@ -183,15 +191,23 @@
 			resultMap="AdvertisementCategoryDto">
 			
 		SELECT 
-			* 
+   			AC.*, 
+    		(SELECT 
+    			COUNT(*) 
+   			FROM 
+   				ADVERTISEMENT AS A 
+   			WHERE 
+   				A.AD_CATEGORY_NO = AC.AC_NO 
+   			AND 
+   				A.AD_IS_DELETED = 1) AS AC_ITEM_CNT 
 		FROM 
-			ADVERTISEMENT_CATEGORY 
+			ADVERTISEMENT_CATEGORY AS AC
 		WHERE 
-			AC_IS_DELETED = 1 
+			AC.AC_IS_DELETED = 1 
 		AND 
-			${searchPart} LIKE CONCAT('%', #{searchString}, '%') 
+			AC.${searchPart} LIKE CONCAT('%', #{searchString}, '%') 
 		ORDER BY 
-			${sortValue} ${order} 
+			AC.${sortValue} ${order} 
 		LIMIT 
 			#{start}, #{limit}
 	

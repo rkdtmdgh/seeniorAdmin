@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -115,17 +117,6 @@ public class AdvertisementService {
 		
 		List<AdvertisementCategoryDto> advertisementCategoryDtos = advertisementMapper.getAdvertisementCategoryListWithPage(pagingParams);
 		
-		for (AdvertisementCategoryDto advertisementCategoryDto : advertisementCategoryDtos) {
-			Map<String, Object> itemCntParam = new HashMap<>();
-			int ac_no = advertisementCategoryDto.getAc_no();
-			int item_cnt = advertisementMapper.getCategoryItemCnt(ac_no);
-			itemCntParam.put("ac_no", ac_no);
-			itemCntParam.put("item_cnt", item_cnt);
-			advertisementMapper.updateAdvertisementCategoryItemCnt(itemCntParam);
-			advertisementCategoryDto.setAc_item_cnt(item_cnt);
-			
-		}
-		
 		pagingList.put("advertisementCategoryDtos", advertisementCategoryDtos);
 		
 		return pagingList;
@@ -230,18 +221,7 @@ public class AdvertisementService {
 		pagingParams.put("order", order);
 		
 		List<AdvertisementCategoryDto> searchAdvertisementCategoryDtos = advertisementMapper.getSearchAdvertisementCategory(pagingParams);
-		
-		for (AdvertisementCategoryDto advertisementCategoryDto : searchAdvertisementCategoryDtos) {
-			Map<String, Object> itemCntParam = new HashMap<>();
-			int ac_no = advertisementCategoryDto.getAc_no();
-			int item_cnt = advertisementMapper.getCategoryItemCnt(ac_no);
-			itemCntParam.put("ac_no", ac_no);
-			itemCntParam.put("item_cnt", item_cnt);
-			advertisementMapper.updateAdvertisementCategoryItemCnt(itemCntParam);
-			advertisementCategoryDto.setAc_item_cnt(item_cnt);
-			
-		}
-		
+				
 		pagingList.put("advertisementCategoryDtos", searchAdvertisementCategoryDtos);
 		
 		return pagingList;
@@ -289,9 +269,9 @@ public class AdvertisementService {
 	// --------------------------------------------------------- 광고
 
 	// 광고 이미지 저장 후 이미지 이름 가져오기
-	public ResponseEntity<String> uploadFile(MultipartFile file, AdvertisementDto advertisementDto) {
+	public ResponseEntity<String> uploadFile(List<MultipartFile> files, AdvertisementDto advertisementDto) {
 		log.info("uploadFile()");
-		log.info("file ---> {}", file);
+		log.info("files ---> {}", files);
 		
 		try {
 			
@@ -302,15 +282,32 @@ public class AdvertisementService {
 			// Request Body 설정
 			MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
 			
-			requestBody.add("file", file.getResource());
-			requestBody.add("ad_category_no", advertisementDto.getAd_category_no());
+			for (MultipartFile file : files) {
+				// 파일 이름 가져오기
+				String fileName = file.getOriginalFilename();
+				
+				// 파일을 ByteArrayResource로 변환
+				Resource fileResource = new ByteArrayResource(file.getBytes()) {
+    				@Override
+    				public String getFilename() {
+    					return fileName;
+    				}
+    			};
+    			
+				requestBody.add("files", fileResource);
+				
+			}
+			
+			// 파일 저장 경로 생성 후 filePath를 키 값으로 requestBody에 추가 (맨 앞에 상위 폴더 경로 꼭! 추가)
+			String filePath = "\\advertisement\\" + advertisementDto.getAd_category_no() + "\\";
+			requestBody.add("filePath", filePath);
 			
 			// Request Entity
 			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);		
 			
 			// API 호출
-//			String serverURL = "http://14.42.124.93:8091/advertisement_upload_file";
-			String serverURL = "http://localhost:8091/advertisement_upload_file";	// local
+//			String serverURL = "http://14.42.124.93:8091/upload_file";
+			String serverURL = "http://localhost:8091/upload_file";	// local
 			ResponseEntity<String> response = restTemplate.postForEntity(serverURL, requestEntity, String.class);
 			
 			return response;
