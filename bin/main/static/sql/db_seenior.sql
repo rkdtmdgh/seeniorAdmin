@@ -375,6 +375,7 @@ CREATE TABLE BOARD_QNA (
 );
 
 SELECT * FROM BOARD_QNA where bq_is_deleted = 1 and bq_answer_no is null;
+SELECT * FROM BOARD_QNA;
 SHOW INDEX FROM BOARD_QNA;
 DROP TABLE BOARD_QNA;
 
@@ -545,7 +546,6 @@ CREATE TABLE DISEASE_CATEGORY (
 	DC_NO			INT	AUTO_INCREMENT COMMENT "질환 분류 NO(PK)", 						-- 질환 분류 NO(PK)
 	DC_NAME			VARCHAR(100) NOT NULL COMMENT "질환 분류 명",							-- 질환 분류 명
 	DC_IS_DELETED	TINYINT DEFAULT 1 COMMENT "질환 분류 삭제 여부(기본값 = 0, 삭제 시 = 1)",	-- 질환 분류 삭제 여부(기본값 = 0, 삭제 시 = 1)
-	DC_ITEM_CNT		INT DEFAULT 0 COMMENT "질환 분류에 포함된 질환 개수",						-- 질환 분류에 포함된 질환 개수
     DC_REG_DATE		DATETIME DEFAULT NOW() COMMENT "질환 분류 등록일",						-- 질환 분류 등록일
 	DC_MOD_DATE		DATETIME DEFAULT NOW() COMMENT "질환 분류 수정일",						-- 질환 분류 수정일
     PRIMARY KEY(DC_NO)
@@ -1210,7 +1210,6 @@ CREATE TABLE ADVERTISEMENT_CATEGORY (
     AC_NAME 		VARCHAR(100) NOT NULL COMMENT "광고 위치 명",							-- 광고 위치 명
     AC_NOTE			VARCHAR(255) COMMENT "광고 위치 참고사항",								-- 광고 위치 참고사항
     AC_IS_DELETED	TINYINT DEFAULT 1 COMMENT "광고 위치 삭제 여부(기본값 = 0, 삭제 시 = 1)",	-- 광고 위치 삭제 여부(기본값 = 0, 삭제 시 = 1)
-	AC_ITEM_CNT		INT DEFAULT 0 COMMENT "광고 위치에 포함된 광고 개수",						-- 광고 위치에 포함된 광고 개수
     AC_REG_DATE		DATETIME DEFAULT NOW() COMMENT "광고 위치 등록일",						-- 광고 위치 등록일
 	AC_MOD_DATE		DATETIME DEFAULT NOW() COMMENT "광고 위치 수정일",						-- 광고 위치 수정일
     PRIMARY KEY(AC_NO)
