@@ -17,6 +17,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.advertisement.mapper.AdvertisementMapper;
 import com.see_nior.seeniorAdmin.dto.AdvertisementCategoryDto;
 import com.see_nior.seeniorAdmin.dto.AdvertisementDto;
@@ -321,6 +325,59 @@ public class AdvertisementService {
 		
 	}
 	
+	// 광고 이미지 삭제 후 삭제 된 이미지 이름 가져오기
+		public ResponseEntity<String> deleteFile(List<MultipartFile> files, AdvertisementDto advertisementDto) {
+			log.info("deleteFile()");
+			log.info("files ---> {}", files);
+			
+			try {
+				
+				// Request Header 설정
+				HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+				
+				// Request Body 설정
+				MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
+				
+				for (MultipartFile file : files) {
+					// 파일 이름 가져오기
+					String fileName = file.getOriginalFilename();
+					
+					// 파일을 ByteArrayResource로 변환
+					Resource fileResource = new ByteArrayResource(file.getBytes()) {
+	    				@Override
+	    				public String getFilename() {
+	    					return fileName;
+	    				}
+	    			};
+	    			
+					requestBody.add("files", fileResource);
+					
+				}
+				
+				// 파일 저장 경로 생성 후 filePath를 키 값으로 requestBody에 추가 (맨 앞에 상위 폴더 경로 꼭! 추가)
+				String filePath = "\\advertisement\\" + advertisementDto.getAd_category_no() + "\\" + advertisementDto.getAd_dir_name() + "\\";
+				requestBody.add("filePath", filePath);
+				
+				// Request Entity
+				HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);		
+				
+				// API 호출
+//				String serverURL = "http://14.42.124.93:8091/upload_file";
+				String serverURL = "http://localhost:8091/delete_file";	// local
+				ResponseEntity<String> response = restTemplate.postForEntity(serverURL, requestEntity, String.class);
+				
+				return response;
+				
+			} catch (Exception e) {
+				log.info("광고 이미지 파일 삭제 중 오류 발생 : {}", e.getMessage());
+				
+				return null;
+				
+			}
+			
+		}
+	
 	// 광고 등록 양식에서 광고를 등록할 위치를 선택 했을 시 해당 위치의 maxIdx 가져오기
 	public int getAdvertisementIdxMaxNum(int ad_category_no) {
 		log.info("getAdvertisementIdxMaxNum()");
@@ -333,64 +390,87 @@ public class AdvertisementService {
 	}
 	
 	// 광고 등록 확인
+	@SuppressWarnings("unchecked")
 	@Transactional
-	public boolean createConfirm(AdvertisementDto advertisementDto, String ad_dir_name, String savedFileName) {
+	public boolean createConfirm(AdvertisementDto advertisementDto, List<MultipartFile> files) {
 		log.info("createConfirm()");
 		
-		// 광고 디렉토리명과 이미지 URL 세팅
-		advertisementDto.setAd_dir_name(ad_dir_name);
+		ResponseEntity<String> savedFile = uploadFile(files, advertisementDto);
 		
-		/*
-		String newSrc = "http://"
-				+ imgServerPath
-				+"advertisement/"
-				+ advertisementDto.getAd_category_no()
-				+ "/"
-				+ ad_dir_name
-				+ "/"
-				+ savedFileName;
-		*/
-		
-		advertisementDto.setAd_img(savedFileName);
-		
-		// 선택한 광고 위치의 maxIdx값 가져오기
-		Integer advertisementMaxIdx = advertisementMapper.getAdvertisementIdxMaxNumByCategory(advertisementDto.getAd_category_no());
-		
-		if(advertisementMaxIdx == null) advertisementMaxIdx = 0;
-		
-		try {
+		if (savedFile != null) {
+			log.info("uploadFile SUCCESS!!");
 			
-			// idx값을 중간값으로 입력 시 나머지 idx들 +1 처리 하기
-			if (advertisementDto.getAd_idx() <= advertisementMaxIdx) {
+			ObjectMapper objectMapper = new ObjectMapper();
+			
+			try {
+				Map<String, Object> savedFileObj = objectMapper.readValue(savedFile.getBody(), new TypeReference<Map<String, Object>>() {});
+
+				String ad_dir_name = String.valueOf(savedFileObj.get("dir_name"));
+				String savedFileName = ((List<String>) savedFileObj.get("savedFileNames")).get(0);
 				
-				Map<String, Object> updateIdxSumParams = new HashMap<>();
+				// 광고 디렉토리명과 이미지 URL 세팅
+				advertisementDto.setAd_dir_name(ad_dir_name);
+				advertisementDto.setAd_img(savedFileName);
 				
-				updateIdxSumParams.put("advertisementDto", advertisementDto);
-				updateIdxSumParams.put("curIdx", null);
+				// 선택한 광고 위치의 maxIdx값 가져오기
+				Integer advertisementMaxIdx = advertisementMapper.getAdvertisementIdxMaxNumByCategory(advertisementDto.getAd_category_no());
 				
-				int updateIdxResult = advertisementMapper.updateAdvertisementIdxSum(updateIdxSumParams);
+				if(advertisementMaxIdx == null) advertisementMaxIdx = 0;
 				
-				if (updateIdxResult <= 0) {
-					throw new RuntimeException("idx 업데이트 실패!!");
+				try {
+					
+					// idx값을 중간값으로 입력 시 나머지 idx들 +1 처리 하기
+					if (advertisementDto.getAd_idx() <= advertisementMaxIdx) {
+						
+						Map<String, Object> updateIdxSumParams = new HashMap<>();
+						
+						updateIdxSumParams.put("advertisementDto", advertisementDto);
+						updateIdxSumParams.put("curIdx", null);
+						
+						int updateIdxResult = advertisementMapper.updateAdvertisementIdxSum(updateIdxSumParams);
+						
+						if (updateIdxResult <= 0) {
+							throw new RuntimeException("idx 업데이트 실패!!");
+							
+						}
+					}
+					
+					int createResult = advertisementMapper.insertNewAdvertisement(advertisementDto);
+					
+					// DB에 입력 실패
+					if (createResult <= 0) {
+						throw new RuntimeException("insertNewAdvertisement() error!!");
+					
+					// DB에 입력 성공
+					} else {
+						return ADVERTISEMENT_CREATE_SUCCESS;
+								
+					}
+					
+				} catch (Exception e) {
+					log.info("createConfirm() Exception 발생!!");
+					e.printStackTrace();
+					
+					return ADVERTISEMENT_CREATE_FAIL;
 					
 				}
+				
+			} catch (JsonMappingException e) {
+				log.info("JsonMappingException!!");
+				e.printStackTrace();
+				
+				return ADVERTISEMENT_CREATE_FAIL;
+				
+			} catch (JsonProcessingException e) {
+				log.info("JsonProcessingException!!");
+				e.printStackTrace();
+				
+				return ADVERTISEMENT_CREATE_FAIL;
+				
 			}
 			
-			int createResult = advertisementMapper.insertNewAdvertisement(advertisementDto);
-			
-			// DB에 입력 실패
-			if (createResult <= 0) {
-				throw new RuntimeException("insertNewAdvertisement() error!!");
-			
-			// DB에 입력 성공
-			} else {
-				return ADVERTISEMENT_CREATE_SUCCESS;
-						
-			}
-			
-		} catch (Exception e) {
-			log.info("createConfirm() Exception 발생!!");
-			e.printStackTrace();
+		} else {
+			log.info("upload file fail!!");
 			
 			return ADVERTISEMENT_CREATE_FAIL;
 			
@@ -563,29 +643,67 @@ public class AdvertisementService {
 	}
 
 	// 광고 수정 확인
+	@SuppressWarnings("unchecked")
 	@Transactional
-	public boolean modifyConfirm(AdvertisementDto advertisementDto, String ad_dir_name, String savedFileName) {
+	public boolean modifyConfirm(AdvertisementDto advertisementDto, List<String> deleteFileName, List<MultipartFile> files) {
 		log.info("modifyConfirm()");
 		
 		// 사진 변경이 있을 시
-		if (ad_dir_name != null && savedFileName != null) {
+		if (files != null && files.size() != 0 && files.get(0).getSize() != 0) {
+				
+			// 이미지 서버에 저장된 이미지 파일 이름 가져오기
+			ResponseEntity<String> savedFile = uploadFile(files, advertisementDto);
+			log.info("savedFile ========> {}", savedFile);
 			
-			// 광고 디렉토리명과 이미지 URL 세팅
-			advertisementDto.setAd_dir_name(ad_dir_name);
-			
-			/*
-			String newSrc = "http://"
-					+ imgServerPath
-					+"advertisement/"
-					+ advertisementDto.getAd_category_no()
-					+ "/"
-					+ ad_dir_name
-					+ "/"
-					+ savedFileName;
-			*/
-			
-			advertisementDto.setAd_img(savedFileName);
-			
+			if (savedFile != null) {
+				log.info("uploadFile SUCCESS!!");
+				
+				ObjectMapper objectMapper = new ObjectMapper();
+				
+				try {
+					Map<String, Object> savedFileObj = objectMapper.readValue(savedFile.getBody(), new TypeReference<Map<String, Object>>() {});
+					
+					String ad_dir_name = String.valueOf(savedFileObj.get("dir_name"));
+					String savedFileName = ((List<String>) savedFileObj.get("savedFileNames")).get(0);
+					log.info("ad_dir_name ----> {}", ad_dir_name);
+					log.info("savedFileName ----> {}", savedFileName);
+					
+					// 광고 디렉토리명과 이미지 URL 세팅
+					advertisementDto.setAd_dir_name(ad_dir_name);
+					advertisementDto.setAd_img(savedFileName);
+					
+					ResponseEntity<String> deleteFile = deleteFile(files, advertisementDto);
+					
+					if (deleteFile != null) {
+						log.info("deleteFile SUCCESS!!");
+						log.info("deleteFile ----> {} ", deleteFile);
+						
+					} else {
+						log.info("deleteFile FAIL!!");
+						
+					}
+				
+				} catch (JsonMappingException e) {
+					log.info("JsonMappingException!!");
+					e.printStackTrace();
+					
+					return false;
+					
+				} catch (JsonProcessingException e) {
+					log.info("JsonProcessingException!!");
+					e.printStackTrace();
+					
+					return false;
+					
+				}
+				
+			} else {
+					log.info("upload file fail!!");
+					
+					return false;
+					
+				}
+		
 		// 사진 변경이 없을 시
 		} else {
 			
@@ -598,7 +716,6 @@ public class AdvertisementService {
 		AdvertisementDto curAdvertisementDto = advertisementMapper.getAdvertisementByNo(advertisementDto.getAd_no());
 		Integer curCategoryNo = curAdvertisementDto.getAd_category_no();
 		Integer curIdx = curAdvertisementDto.getAd_idx();
-		
 		
 		try {
 			
