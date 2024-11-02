@@ -14,6 +14,7 @@ public class QnaNoticeDto {
 	private String bqn_body;
 	private int bqn_view_cnt;
 	private boolean bqn_state;
+	private String bqn_dir_name;
 	private boolean bqn_is_deleted;
 	private String bqn_reg_date;
 	private String bqn_mod_date;

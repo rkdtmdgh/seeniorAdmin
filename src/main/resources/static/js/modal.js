@@ -62,12 +62,3 @@ function modalContent(formName, contentFunction) {
 			`;
 	}
 }
-
-
-
-
-
-
-
-
-

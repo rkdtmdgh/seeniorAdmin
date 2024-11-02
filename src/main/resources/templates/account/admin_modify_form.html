@@ -46,8 +46,7 @@
 	                                        
 	                                        <th><p class="table_title">가입일</p></th>
 		                                	<td class="disabled">
-		                                		<input type="text" name="a_reg_date" id="a_reg_date" class="table_info"
-	                                            	th:value="${selectedAdminDto.a_reg_date}" disabled>
+		                                		<p class="table_info" th:text="${selectedAdminDto.a_reg_date}"></p>
 	                                        </td>
 		                                </tr>
 		                                
@@ -117,14 +116,11 @@
 		                        </table>
 		                        
 		                        <div class="btn_list">
-		                        	<div class="btns delete"
-		                        		 th:onclick="
-		                        		 	delSingleData(
-		                        		 		[[${selectedAdminDto.a_id}]], 
-		                        		 		'a_no', 
-		                        		 		[[${selectedAdminDto.a_no}]]
-		                        		 	)
-		                        		 ">삭제</div>
+		                        	<div th:onclick="delSingleData(
+	                       		 		[[${selectedAdminDto.a_id}]], 
+	                       		 		'a_no', 
+	                       		 		[[${selectedAdminDto.a_no}]]
+                        		 	)" class="btns delete">삭제</div>
 		                        	
 	                                <div class="btn_list">
 	                                	<div th:onclick="putResetPassword([[${selectedAdminDto.a_no}]], [[${selectedAdminDto.a_id}]])"

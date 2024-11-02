@@ -299,13 +299,28 @@ async function postVideoCreate(formName) {
 // 공지사항 등록
 async function postNoticeCreate(formName) {
 	const form = document.forms[formName];
-
-	const formData = new FormData(form);
-	formData.set('n_body', quill.root.innerHTML);
-
+	
+	input = form.n_title;
+	if(!validateEmpty(input, '제목을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(!validateQuill(quill)) { // 내용 유효성 및 비속어 검사
+		quill.focus();
+		return false;
+	}
+	
 	const successMessage = '공지사항이 등록되었습니다.';
 	const errorMessage = '공지사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 	
+	const formData = new FormData(form);
+	formData.set('bpn_body', quill.root.innerHTML); // quill 에디터 내용
+	
+	// 이미지 파일 리사이즈 및 압축하여 formData에 담기 (선택된 이미지 요소가 없을 시 빈 파일 객체가 담김)
+	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
+	await addImagesToFormData($imgTags, formData);
+
 	await postIntegSubmit(
 		'/notice/info/create_confirm', 
 		formData, 
@@ -320,7 +335,7 @@ async function postNoticeCreate(formName) {
 async function postQnaNoticeCreate(formName) {
 	const form = document.forms[formName];
 	
-	input = form.bpn_title;
+	input = form.bqn_title;
 	if(!validateEmpty(input, '제목을', true)) {
 		input.focus();
 		return false;
@@ -335,18 +350,18 @@ async function postQnaNoticeCreate(formName) {
 	const errorMessage = '질문과 답변 공지사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 	
 	const formData = new FormData(form);
-	formData.set('bpn_body', quill.root.innerHTML); // quill 에디터 내용
+	formData.set('bqn_body', quill.root.innerHTML); // quill 에디터 내용
 	
 	// 이미지 파일 리사이즈 및 압축하여 formData에 담기 (선택된 이미지 요소가 없을 시 빈 파일 객체가 담김)
 	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
 	await addImagesToFormData($imgTags, formData);
 
 	await postIntegSubmit(
-		'/qna/noti_info/qna_notice_create_confirm', 
+		'/qna/noti_info/create_notice_confirm', 
 		formData, 
 		successMessage, 
 		errorMessage, 
-		'/qna/info/qna_list_form',
+		'/qna/noti_info/notice_list_form',
 		'content_inner'
 	);
 }

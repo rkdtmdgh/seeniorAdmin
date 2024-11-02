@@ -41,7 +41,7 @@
 						            
 						            <div class="btn_list">
 						            	<div class="btns small" onclick="getList('/notice/info/get_notice_list', null, null, 1, true);">전체보기</div>
-						            	<a href="/notice/info/create_form" class="btns small">공지사항 등록</a>
+						            	<a href="/notice/info/create_form" class="btns small">등록</a>
 						            </div>
 					            </div>
 					        </div>
@@ -50,39 +50,55 @@
 					    <div class="table_wrap">
 	                        <table class="content_table notice_list_table">
 	                            <colgroup>
-	                                <col class="col_checkBox">
 	                                <col class="col_no">
 	                                <col>
+	                                <col class="col_no">
 	                                <col>
-	                                <col>
-	                                <col>
+	                                <col class="col_state">
+	                                <col class="col_short">
+	                                <col class="col_short">
 	                            </colgroup>
 	
 	                            <thead>
-	                                <tr>
-	                                	<th>
-	                                		<div class="table_title"><input type="checkbox" name="all_check" id="all_check" 
-	                                			onchange="setAllCheckBox(this)" value="n_no" ></div>	                                        
-	                                    </th>
-	                                    
+	                                <tr>	                                    
 	                                    <th>
 	                                        <p class="table_title">No</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">제목(댓글 수)</p>
+	                                    	<p class="table_title">제목</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">조회수</p>
+	                                    	<p class="table_title">조회수</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">작성자</p>
+	                                    	<p class="table_title">작성자</p>
 	                                    </th>
 	                                    
 	                                    <th>
-	                                        <p class="table_title">등록일(mod_date)</p>
+	                                    	<p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'notice', 'n_state')">
+	                                        	상태
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                    	<p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'notice', 'n_reg_date')">
+	                                        	등록일
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                    	<p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'notice', 'n_mod_date')">
+	                                        	수정일
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
 	                                    </th>
 	                                </tr>
 	                            </thead>

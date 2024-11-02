@@ -3,15 +3,30 @@ package com.see_nior.seeniorAdmin.qna;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.account.mapper.AccountMapper;
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 import com.see_nior.seeniorAdmin.dto.QnaCategoryDto;
 import com.see_nior.seeniorAdmin.dto.QnaDto;
 import com.see_nior.seeniorAdmin.dto.QnaNoticeDto;
+import com.see_nior.seeniorAdmin.enums.ImgUrlPath;
 import com.see_nior.seeniorAdmin.enums.SqlResult;
 import com.see_nior.seeniorAdmin.qna.mapper.QnaMapper;
 import com.see_nior.seeniorAdmin.util.PagingUtil;
@@ -26,6 +41,7 @@ public class QnaService {
 
 	final private QnaMapper qnaMapper;
 	final private AccountMapper accountMapper;
+	final private RestTemplate restTemplate;
 	
 	// qna 리스트 가져오기
 	public Map<String, Object> getQnaPagingList(String sortValue, String order, int page) {
@@ -496,23 +512,115 @@ public class QnaService {
 	}
 
 	// qna 공지사항 등록 확인
-	public boolean createNoticeConfrim(String bqn_title,String bqn_body, String loginedId) {
+	public boolean createNoticeConfrim(List<MultipartFile> files, String bqn_title, String old_bqn_body, int bqn_writer_no) {
 		log.info("createNoticeConfrim()");
 			
-		AdminAccountDto adminAccountDto = 
-				accountMapper.selectAdminAccountById(loginedId);
-		
-		Map<String, Object> params = new HashMap<>();
-		params.put("bqn_title", bqn_title);
-		params.put("bqn_body", bqn_body);
-		params.put("a_no", adminAccountDto.getA_no());
-		
-		int insertResult = qnaMapper.insertNewQnaNotice(params);
+		// 첨부된 파일이 있는 경우
+		if (files != null && files.size() != 0 && files.get(0).getSize() != 0) {
+			log.info("files is not empty.");
 			
-			if(insertResult >= 0)
-				return SqlResult.SUCCESS.getValue();
-			else 
+			ResponseEntity<String> savedFiles = 
+					uploadNoticeImg(files);
+			
+			// 이미지 서버 파일 저장 완료
+			if (savedFiles != null) {
+				log.info("uploadNoticeImg success");
+				
+				ObjectMapper objectMapper = new ObjectMapper();
+				
+				try {
+					
+					Map<String, Object> savedFileObj = 
+							objectMapper.readValue(savedFiles.getBody(), new TypeReference<Map<String, Object>>() {});
+					
+					@SuppressWarnings("unchecked")
+					List<String> savedFileNames = (List<String>) savedFileObj.get("savedFileNames");
+					
+					String bqn_dir_name = String.valueOf(savedFileObj.get("dir_name"));
+					String bqn_body = "";
+					
+					// bqn_body img src 경로 수정 (이미지 서버 파일 저장 경로)
+					if (savedFileNames != null) {
+						
+						Pattern pattern = Pattern.compile("img src=\"[^\"]*\"");
+						Matcher matcher = pattern.matcher(old_bqn_body);
+						
+						StringBuilder new_bqn_body = new StringBuilder();
+						int index = 0;
+						
+						while (matcher.find()) {
+							
+//							String oldSrc = matcher.group();
+							
+							String newSrc = "img src=\"http://" 
+									+ ImgUrlPath.QNA_NOTICE_PATH.getValue() 
+									+"/"
+									+ bqn_dir_name 
+									+"/"
+									+ savedFileNames.get(index++) + "\"";
+							
+							matcher.appendReplacement(new_bqn_body, newSrc);
+							
+						}
+						
+						matcher.appendTail(new_bqn_body);
+						
+						bqn_body = new_bqn_body.toString();
+						
+					// List<String> savedFileNames = (List<String>) savedFileObj.get("savedFileNames") 변환 실패한 경우
+					} else {
+						
+						throw new RuntimeException("List<String> savedFileNames 변환 실패");
+						
+					}
+					
+					Map<String, Object> insertParams = new HashMap<>();
+					insertParams.put("bqn_title", bqn_title);
+					insertParams.put("bqn_body", bqn_body);
+					insertParams.put("bqn_writer_no", bqn_writer_no);
+					insertParams.put("bqn_dir_name", bqn_dir_name);
+					
+					int insertResult = 
+							qnaMapper.insertNewQnaNotice(insertParams);
+					
+					if (insertResult >= 0) 
+						return SqlResult.SUCCESS.getValue();
+					else 
+						throw new RuntimeException("insertNewQnaNotice() fail");
+					
+				} catch (Exception e) {
+					log.info("createNoticeConfrim fail ----- {}", e.getMessage());
+
+					return SqlResult.FAIL.getValue();
+					
+				}
+			
+			// 이미지 서버 저장 실패
+			} else {
+				log.info("uploadNoticeImg fail");
+				
 				return SqlResult.FAIL.getValue();
+				
+			}
+		
+		// 첨부된 파일이 없는 경우
+		} else {
+			
+			Map<String, Object> insertParams = new HashMap<>();
+			insertParams.put("bqn_title", bqn_title);
+			insertParams.put("bqn_body", old_bqn_body);
+			insertParams.put("bqn_writer_no", bqn_writer_no);
+			insertParams.put("bqn_dir_name", null);
+			
+			int insertResult = 
+					qnaMapper.insertNewQnaNotice(insertParams);
+			
+			if (insertResult >= 0) 
+				return SqlResult.SUCCESS.getValue();
+			else
+				return SqlResult.FAIL.getValue();
+			
+		}
 		
 	}
 
@@ -569,7 +677,60 @@ public class QnaService {
 		
 	}
 
+	// qna 공지사항 img 파일 imgageServer에 저장
+	public ResponseEntity<String> uploadNoticeImg(List<MultipartFile> files) {
+		log.info("uploadNoticeImg()");
+		
+		try {
+			
+			// Request Header 설정
+    		HttpHeaders headers = new HttpHeaders();
+    		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+    		
+    		// Request body 설정 (파일 배열을 보낼 때)
+    		MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
+    		
+    		for (MultipartFile file : files) {
+    			
+    			// 파일 이름 가져오기
+    			String fileName = file.getOriginalFilename();
+    			
+    			// 파일을 ByteArrayResource로 변환
+    			Resource fileResource = new ByteArrayResource(file.getBytes()) {
+    				
+    				@Override
+    				public String getFilename() {
+    					return fileName;
+    				}
+    				
+    			};
+    			
+    			// 파일을 requestBody에 추가
+    			requestBody.add("files", fileResource);
+    			
+    		}
+    		
+    		// 파일 저장 경로 생성 후 filePath를 키 값으로 requestBody에 추가 (맨 앞에 상위 폴더 경로 꼭! 추가)
+    		String filePath = "\\qna\\notice\\";
+    		requestBody.add("filePath", filePath);
+    		
+    		// Request Entity
+            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
 
+            // API 호출
+            String serverURL = "http://localhost:8091/upload_file"; //local
+            ResponseEntity<String> response = restTemplate.postForEntity(serverURL, requestEntity, String.class);
+
+            return response;
+			
+		} catch (Exception e) {
+			log.info("uploadNoticeImg error ----- {}", e.getMessage());
+		
+			return null;
+			
+		}
+		
+	}
 
 
 
