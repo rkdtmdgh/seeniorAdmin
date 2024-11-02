@@ -325,6 +325,59 @@ public class AdvertisementService {
 		
 	}
 	
+	// 광고 이미지 삭제 후 삭제 된 이미지 이름 가져오기
+		public ResponseEntity<String> deleteFile(List<MultipartFile> files, AdvertisementDto advertisementDto) {
+			log.info("deleteFile()");
+			log.info("files ---> {}", files);
+			
+			try {
+				
+				// Request Header 설정
+				HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+				
+				// Request Body 설정
+				MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
+				
+				for (MultipartFile file : files) {
+					// 파일 이름 가져오기
+					String fileName = file.getOriginalFilename();
+					
+					// 파일을 ByteArrayResource로 변환
+					Resource fileResource = new ByteArrayResource(file.getBytes()) {
+	    				@Override
+	    				public String getFilename() {
+	    					return fileName;
+	    				}
+	    			};
+	    			
+					requestBody.add("files", fileResource);
+					
+				}
+				
+				// 파일 저장 경로 생성 후 filePath를 키 값으로 requestBody에 추가 (맨 앞에 상위 폴더 경로 꼭! 추가)
+				String filePath = "\\advertisement\\" + advertisementDto.getAd_category_no() + "\\" + advertisementDto.getAd_dir_name() + "\\";
+				requestBody.add("filePath", filePath);
+				
+				// Request Entity
+				HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);		
+				
+				// API 호출
+//				String serverURL = "http://14.42.124.93:8091/upload_file";
+				String serverURL = "http://localhost:8091/delete_file";	// local
+				ResponseEntity<String> response = restTemplate.postForEntity(serverURL, requestEntity, String.class);
+				
+				return response;
+				
+			} catch (Exception e) {
+				log.info("광고 이미지 파일 삭제 중 오류 발생 : {}", e.getMessage());
+				
+				return null;
+				
+			}
+			
+		}
+	
 	// 광고 등록 양식에서 광고를 등록할 위치를 선택 했을 시 해당 위치의 maxIdx 가져오기
 	public int getAdvertisementIdxMaxNum(int ad_category_no) {
 		log.info("getAdvertisementIdxMaxNum()");
@@ -618,6 +671,17 @@ public class AdvertisementService {
 					// 광고 디렉토리명과 이미지 URL 세팅
 					advertisementDto.setAd_dir_name(ad_dir_name);
 					advertisementDto.setAd_img(savedFileName);
+					
+					ResponseEntity<String> deleteFile = deleteFile(files, advertisementDto);
+					
+					if (deleteFile != null) {
+						log.info("deleteFile SUCCESS!!");
+						log.info("deleteFile ----> {} ", deleteFile);
+						
+					} else {
+						log.info("deleteFile FAIL!!");
+						
+					}
 				
 				} catch (JsonMappingException e) {
 					log.info("JsonMappingException!!");
@@ -632,10 +696,8 @@ public class AdvertisementService {
 					return false;
 					
 				}
-			}
 				
-				
-				else {
+			} else {
 					log.info("upload file fail!!");
 					
 					return false;
