@@ -144,7 +144,7 @@ async function putMyAccountSubmit(formName) {
 		const isConfirm = confirm('비밀번호를 변경하시겠습니까?\n변경하지 않을 경우 입력한 값을 삭제 후 다시 저장해 주세요.');
 		if(!isConfirm) return false;	
 		
-		if(!validatePw(input, true)) { 
+		if(!validatePw(input, true, true)) { 
 			input.focus();
 			return false;
 		}
@@ -509,34 +509,48 @@ async function putNoticeModify(formName) {
 	);
 }
 
-// 게시판 수정
-async function putBoardCategoryModify(formName) {
+// QnA 공지사항 수정
+async function putQnaNoticeModify(formName) {
 	const form = document.forms[formName];
-	const bc_name = form.bc_name;
-	const bc_idx = form.bc_idx;
-	const current_bc_name = form.current_bc_name;
-	const current_bc_idx = form.current_bc_idx;
 	
-	if(bc_name.value === current_bc_name.value && bc_idx === current_bc_idx.value) {
-		alert('수정된 내용이 없습니다');
-		return false;		
+	input = form.bqn_title;
+	if(!validateEmpty(input, '제목을', true)) {
+		input.focus();
+		return false;
 	}
 	
-	if(bc_name.value !== current_bc_name.value) { // 수정이 되었을 경우
-		if(!(await requestDuplicateCheck(bc_name, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
-			bc_name.focus();
-			return false;
-		}
-	} 
+	if(!validateQuill(quill)) { // 내용 유효성 및 비속어 검사
+		quill.focus();
+		return false;
+	}
+	
+	const successMessage = `"${input.value}" QnA 공지사항이 수정되었습니다.`;
+	const errorMessage = `"${input.value}" QnA 공지사항 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
 	const formData = new FormData(form);
-	const successMessage = `"${bc_name.value}" 이(가) 수정되었습니다`;
-	const errorMessage = `"${bc_name.value}" 이(가) 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
-
+	formData.set('bpn_body', quill.root.innerHTML); // quill 에디터 내용
+	
+	// 이미지 파일 리사이즈 및 압축하여 formData에 담기 (선택된 이미지 요소가 없을 시 빈 파일 객체가 담김)
+	const $newImgTags = $(quill.root).find('img').filter(function() {
+		return $(this).attr('src').startsWith('blob:'); // src가 blob 으로 시작하는 태그 필터링 즉 추가된 이미지 태그
+	});
+	await addImagesToFormData($newImgTags, formData);
+	
+	const deleteFileNames = []; // 제거된 이미지 파일명이 담길 배열
+	if(deletedImageSrcs.length) { // 제거된 이미지가 있다면
+		logger.info('제거된 이미지가 있음');
+		
+		deletedImageSrcs.forEach((src) => {
+			const filename = src.split('/').pop(); // src에서 파일명만 추출
+			deleteFileNames.push(filename);
+		});
+	}
+	formData.append('deleteFileNames', deleteFileNames);
+	
 	await putIntegSubmit(
-		'/board/cate_info/modify_category_confirm', 
-		formData, 
-		successMessage, 
+		'/qna/noti_info/modify_notice_confirm',
+		formData,
+		successMessage,
 		errorMessage,
 		'content_inner'
 	);
@@ -600,6 +614,40 @@ async function putAnswerModify(formName) {
 	);
 }
 
+// 게시판 수정
+async function putBoardCategoryModify(formName) {
+	const form = document.forms[formName];
+	const bc_name = form.bc_name;
+	const bc_idx = form.bc_idx;
+	const current_bc_name = form.current_bc_name;
+	const current_bc_idx = form.current_bc_idx;
+	
+	if(bc_name.value === current_bc_name.value && bc_idx === current_bc_idx.value) {
+		alert('수정된 내용이 없습니다');
+		return false;		
+	}
+	
+	if(bc_name.value !== current_bc_name.value) { // 수정이 되었을 경우
+		if(!(await requestDuplicateCheck(bc_name, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+			bc_name.focus();
+			return false;
+		}
+	} 
+	
+	const formData = new FormData(form);
+	const successMessage = `"${bc_name.value}" 이(가) 수정되었습니다`;
+	const errorMessage = `"${bc_name.value}" 이(가) 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+
+	await putIntegSubmit(
+		'/board/cate_info/modify_category_confirm', 
+		formData, 
+		successMessage, 
+		errorMessage,
+		'content_inner'
+	);
+}
+
+
 // 게시물 수정
 async function putPostsModify(formName) {
 	const form = document.forms[formName];
@@ -615,8 +663,8 @@ async function putPostsModify(formName) {
 		return false;
 	}
 	
-	const successMessage = `"${bp_title.value}" 게시물이 수정되었습니다.`;
-	const errorMessage = `"${bp_title.value}" 게시물 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const successMessage = `"${input.value}" 게시물이 수정되었습니다.`;
+	const errorMessage = `"${input.value}" 게시물 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
 	const formData = new FormData(form);
 	formData.set('bp_body', quill.root.innerHTML); // quill 에디터 내용
