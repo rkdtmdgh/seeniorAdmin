@@ -330,15 +330,6 @@ public class BoardController {
 		log.info("boardPostsDto: {}",boardPostsDto);
 		log.info("deleteFileNames: {}",deleteFileNames);
 		log.info("files: {}",files);
-				
-		for(int i = 0; i < deleteFileNames.size(); i++) {
-			log.info("filePath: "
-					+"\\board\\"
-					+boardPostsDto.getBp_category_no()
-					+"\\"+boardPostsDto.getBp_writer_no()
-					+"\\"+boardPostsDto.getBp_dir_name()
-					+"\\"+deleteFileNames.get(i));
-		}
 		
 		Boolean result = false;
 		

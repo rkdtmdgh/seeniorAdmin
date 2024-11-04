@@ -646,9 +646,9 @@ public class BoardService {
 	//특정 게시물 수정 요청
 	public Boolean modifyConfirm(List<MultipartFile> files, BoardPostsDto boardPostsDto, List<String> deleteFileNames) {
 		log.info("modifyConfirm()");
-		log.info("getBp_dir_name: {}",boardPostsDto.getBp_dir_name().getClass());
+		log.info("getBp_dir_name: {}",boardPostsDto.getBp_dir_name());
 		String filePath = "";
-		if( files != null && (boardPostsDto.getBp_dir_name() == null || boardPostsDto.getBp_dir_name() == " ") ) {
+		if( files != null && boardPostsDto.getBp_dir_name() == null ) {
 			//날짜시간생성
 			log.info("dir_name is null new make dir!");
     		Date now = new Date();	      
