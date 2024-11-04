@@ -114,6 +114,11 @@ function mapDeleteObject(value) {
 			apiUrl = '/notice/info/delete_confirm';
 			replace = '/notice/info/notice_list_form';
 			break;
+			
+		case 'bqn_no': // QnA 공지사항
+			apiUrl = '/qna/noti_info/delete_notice_confirm';
+			replace = '/qna/noti_info/notice_list_form';
+			break;
 		
 		case 'bq_no': // QnA 질문
 			apiUrl = '/qna/info/delete_confirm';

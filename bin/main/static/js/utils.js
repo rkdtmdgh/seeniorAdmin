@@ -497,7 +497,7 @@ function setAccountModifyForm(data) {
                         	<th><p class="table_title">비밀번호</p></th>
                         	<td>
                         		<label class="cont_info">
-                        			<input type="password" name="a_pw" id="pw" class="table_info" placeholder="변경 시 입력" autocomplete="off">
+                        			<input type="password" name="a_pw" id="pw" class="table_info" onblue="validatePw(this)" placeholder="변경 시 입력" autocomplete="off">
                         			<span class="input_icon" onclick="setPwViewToggle(this)">
 			                        	<img src="/image/icons/eye_off.svg" alt="toggle password visibility" class="icon">
 			                        </span>
