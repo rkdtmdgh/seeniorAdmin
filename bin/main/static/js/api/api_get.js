@@ -46,46 +46,6 @@ async function getListProcess(apiUrl, sortValue, order, page, resetParams = fals
 	}
 }
 
-// 요청 성공 시 처리 로직
-function processApiResponse(apiUrl, sortValue, order, response, contentTable = '.content_table tbody') {
-	const { getListDtos, getListPage, getListCnt, otherData } = mapApiResponseObject(apiUrl, response); // 요청 Api Response 객체 설정
-	const searchPart = response.searchPart || null; // 리턴된 searchPart 값
-	const searchString = response.searchString || null; // 리턴된 searchString 값
-	const isSearch = searchString !== null; // searchString 값이 있을 경우 검색 요청
-	const $contentTable = $(contentTable); // 데이터가 나열될 테이블 요소
-	const $pagination = $('.pagination_wrap'); // 페이지 네이션 요소
-	$contentTable.html(''); // 콘텐츠 초기화
-	$pagination.html(''); // 페이지네이션 초기화
-	
-	if(response && getListDtos.length) {
-		setQueryString(sortValue, order, getListPage.page, searchPart, searchString); // 쿼리스트링 조건 추가
-		if(otherData) setContentSubInfo(otherData); // 타이틀 옆 서브내용 표시(예: 업데이트 날짜 등)
-		
-		let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
-		let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
-		
-		getListDtos.forEach((data) => { 			   
-			$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, getListCnt, listIndex, getListPage.page));
-			listIndex --;
-		});
-		
-		// 페이지네이션 생성	
-		const paging = generatePagination(apiUrl, sortValue, order, getListPage, isSearch); // apiUrl, sortValue, order, 페이징벨류값, isSearch
-		$pagination.html(paging);
-		
-	} else {
-		logger.info('데이터가 없거나 유효하지 않습니다.');
-		const maxCols = setTableColumnsNum();
-		$contentTable.html(`
-			<tr>
-                <td colspan="${maxCols}">
-                    <p class="table_info">${isSearch ? '검색된 내용이 없습니다.' : '목록이 없습니다.'}</p>
-                </td>
-            </tr>
-		`);
-	}
-};
-
 // 검색 리스트 요청
 async function getSearchListProcess(event, apiUrl, sortValue, order, page) {
 	if(event) event.preventDefault();
@@ -146,6 +106,46 @@ async function getSearchListProcess(event, apiUrl, sortValue, order, page) {
 		}
 	}
 }
+
+// 요청 성공 시 처리 로직
+function processApiResponse(apiUrl, sortValue, order, response, contentTable = '.content_table tbody') {
+	const { getListDtos, getListPage, getListCnt, otherData } = mapApiResponseObject(apiUrl, response); // 요청 Api Response 객체 설정
+	const searchPart = response.searchPart || null; // 리턴된 searchPart 값
+	const searchString = response.searchString || null; // 리턴된 searchString 값
+	const isSearch = searchString !== null; // searchString 값이 있을 경우 검색 요청
+	const $contentTable = $(contentTable); // 데이터가 나열될 테이블 요소
+	const $pagination = $('.pagination_wrap'); // 페이지 네이션 요소
+	$contentTable.html(''); // 콘텐츠 초기화
+	$pagination.html(''); // 페이지네이션 초기화
+	
+	if(response && getListDtos.length) {
+		setQueryString(sortValue, order, getListPage.page, searchPart, searchString); // 쿼리스트링 조건 추가
+		if(otherData) setContentSubInfo(otherData); // 타이틀 옆 서브내용 표시(예: 업데이트 날짜 등)
+		
+		let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
+		let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
+		
+		getListDtos.forEach((data) => { 			   
+			$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, getListCnt, listIndex, getListPage.page));
+			listIndex --;
+		});
+		
+		// 페이지네이션 생성	
+		const paging = generatePagination(apiUrl, sortValue, order, getListPage, isSearch); // apiUrl, sortValue, order, 페이징벨류값, isSearch
+		$pagination.html(paging);
+		
+	} else {
+		logger.info('데이터가 없거나 유효하지 않습니다.');
+		const maxCols = setTableColumnsNum();
+		$contentTable.html(`
+			<tr>
+                <td colspan="${maxCols}">
+                    <p class="table_info">${isSearch ? '검색된 내용이 없습니다.' : '목록이 없습니다.'}</p>
+                </td>
+            </tr>
+		`);
+	}
+};
 
 // 요청 Api Response 객체 설정 
 function mapApiResponseObject(apiUrl, response) { 
