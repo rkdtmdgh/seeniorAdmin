@@ -454,7 +454,7 @@ public class QnaController {
 	public Object qnaTest() {
 		log.info("test()");
 		
-		return qnaService.getQnaCategoryDtoByNo(1);
+		return qnaService.getQnaNoticeInfoByNo(1);
 		
 	}
 	

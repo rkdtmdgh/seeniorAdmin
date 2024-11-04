@@ -534,7 +534,7 @@
 		WHERE 
 			BQC_IS_DELETED = 1 
 		ORDER BY 
-			BAC_NO DESC 
+			BQC_NO DESC 
 	
 	</select>
 	
@@ -796,7 +796,7 @@
 		ON 
 			BQN.BQN_WRITER_NO = A.A_NO 
 		WHERE 
-			BQN.BQN_IS_DELETED = 1, 
+			BQN.BQN_IS_DELETED = 1 
 		AND 
 			BQN.BQN_NO = #{bqn_no} 
 	
