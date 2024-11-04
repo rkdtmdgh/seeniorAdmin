@@ -777,7 +777,6 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		case '/advertisement/info/get_advertisement_list': // 광고 관리 리스트 테이블
 		case '/advertisement/info/search_advertisement_list': // 광고 관리 검색 리스트 테이블
 		case '/advertisement/info/get_advertisement_list_by_category': // 광고 관리 위치별 분류 리스트 테이블
-		// infoNo값이 있다면 상세페이지 내에서 리스트 요청으로 다른 레이아웃 생성
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -792,7 +791,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            <td class="va_m">
 		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info flex_area">
 		                	<span class="state ${data.ad_state === 1 ? '' : 'off'}">
-		                		${data.ad_state === 1 ? '사용중' : '만료'}
+		                		${data.ad_state === 1 ? '사용' : '만료'}
 		                	</span>
 		                </a>
 		            </td>
