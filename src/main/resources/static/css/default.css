@@ -670,6 +670,7 @@
     	text-align: left;
     	font-size: var(--subFontSize);
     	font-weight: var(--thin);
+    	line-height: var(--basicLineHeight);
     	padding: var(--tableInputErrorPadding);
     	color: var(--redColor);
     }
