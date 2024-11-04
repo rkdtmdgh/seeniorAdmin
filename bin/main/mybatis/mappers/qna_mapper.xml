@@ -91,6 +91,7 @@
 		<result column="bqn_body" property="bqn_body"/>
 		<result column="bqn_view_cnt" property="bqn_view_cnt"/>
 		<result column="bqn_state" property="bqn_state"/>
+		<result column="bqn_dir_name" property="bqn_dir_name"/>
 		<result column="bqn_is_deleted" property="bqn_is_deleted"/>
 		<result column="bqn_reg_date" property="bqn_reg_date"/>
 		<result column="bqn_mod_date" property="bqn_mod_date"/>
@@ -532,6 +533,8 @@
 			BOARD_QNA_CATEGORY 
 		WHERE 
 			BQC_IS_DELETED = 1 
+		ORDER BY 
+			BQC_NO DESC 
 	
 	</select>
 	
@@ -771,10 +774,10 @@
 	
 		INSERT INTO 
 			BOARD_QNA_NOTICE(
-				BQN_TITLE, BQN_BODY, BQN_WRITER_NO
+				BQN_TITLE, BQN_BODY, BQN_WRITER_NO, BQN_DIR_NAME
 			)
 		VALUES(
-			#{bqn_title}, #{bqn_body}, #{a_no}
+			#{bqn_title}, #{bqn_body}, #{bqn_writer_no}, #{bqn_dir_name}
 		) 
 		
 	</insert>
@@ -793,7 +796,7 @@
 		ON 
 			BQN.BQN_WRITER_NO = A.A_NO 
 		WHERE 
-			BQN.BQN_IS_DELETED = 1, 
+			BQN.BQN_IS_DELETED = 1 
 		AND 
 			BQN.BQN_NO = #{bqn_no} 
 	

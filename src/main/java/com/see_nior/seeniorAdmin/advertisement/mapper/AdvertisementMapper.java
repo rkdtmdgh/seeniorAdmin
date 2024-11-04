@@ -22,12 +22,6 @@ public interface AdvertisementMapper {
 	// 모든 광고 위치 가져오기 (광고 리스트에서 select 박스)
 	public List<AdvertisementCategoryDto> getAdvertisementCategoryList();
 	
-	// 광고 위치 별 광고의 개수 구하기
-	public int getCategoryItemCnt(int ac_no);
-	
-	// 광고 위치 별 광고의 개수 광고 위치 테이블에 update
-	public void updateAdvertisementCategoryItemCnt(Map<String, Object> itemCntParam);
-	
 	// 페이지에 따른 광고 위치 리스트 가져오기
 	public List<AdvertisementCategoryDto> getAdvertisementCategoryListWithPage(Map<String, Object> pagingParams);
 	

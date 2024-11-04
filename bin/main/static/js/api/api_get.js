@@ -678,20 +678,27 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		case '/notice/info/search_notice_list': // 전체 공지 사항 검색 리스트 테이블
 			tableTrContent = `
 				<tr>
-					<td class="va_m">
-		                <div class="table_info flex_area"><input type="checkbox" name="d_no" value="${data.n_no}"></div>
-		            </td>
 		            <td>
 		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_title}(댓글 수)</a>
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_title}</a>
 		            </td>
-					<td>
-		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_view_cnt}(조회수)</a>
+		            <td>
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_view_cnt}</a>
 		            </td>
-					<td>
-		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_writer_no} 작성자 아이디</a>
+		            <td>
+		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
+		            </td>
+		            <td class="va_m">
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info flex_area">
+		                	<span class="state ${data.n_state === true ? '' : 'off'}">
+		                		${data.n_state === true ? '공개' : '숨김'}
+		                	</span>
+		                </a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.n_reg_date)}</p>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.n_mod_date)}</p>

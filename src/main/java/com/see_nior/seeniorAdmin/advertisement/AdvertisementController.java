@@ -1,5 +1,6 @@
 package com.see_nior.seeniorAdmin.advertisement;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
@@ -206,51 +207,11 @@ public class AdvertisementController {
 	@ResponseBody
 	@PostMapping("/info/create_confirm")
 	public boolean createConfirm(
-			@RequestParam(value = "files") MultipartFile file,
+			@RequestParam(value = "files") List<MultipartFile> files,
 			AdvertisementDto advertisementDto) {
 		log.info("createConfirm()");
 		
-		// 이미지 서버에 저장된 이미지 파일 이름 가져오기
-		ResponseEntity<String> savedFile = advertisementService.uploadFile(file, advertisementDto);
-		log.info("savedFile ========> {}", savedFile);
-		
-		if (savedFile != null) {
-			log.info("uploadFile SUCCESS!!");
-			
-			ObjectMapper objectMapper = new ObjectMapper();
-			
-			try {
-				Map<String, Object> savedFileObj = objectMapper.readValue(savedFile.getBody(), new TypeReference<Map<String, Object>>() {});
-				
-				String ad_dir_name = (String) savedFileObj.get("dir_name");
-				String savedFileName = (String) savedFileObj.get("savedFileName");
-				log.info("ad_dir_name ----> {}", ad_dir_name);
-				log.info("savedFileName ----> {}", savedFileName);
-				
-				boolean createResult = advertisementService.createConfirm(advertisementDto, ad_dir_name, savedFileName);
-				
-				return createResult;
-				
-			} catch (JsonMappingException e) {
-				log.info("JsonMappingException!!");
-				e.printStackTrace();
-				
-				return false;
-				
-			} catch (JsonProcessingException e) {
-				log.info("JsonProcessingException!!");
-				e.printStackTrace();
-				
-				return false;
-				
-			}
-			
-		} else {
-			log.info("upload file fail!!");
-			
-			return false;
-			
-		}
+		return advertisementService.createConfirm(advertisementDto, files);
 		
 	}
 	
@@ -358,64 +319,12 @@ public class AdvertisementController {
 	@ResponseBody
 	@PostMapping("/info/modify_confirm")
 	public boolean modifyConfirm(
-			@RequestParam(value = "files", required = false) MultipartFile file,
+			@RequestParam(value = "deleteFileNames", required = false) List<String> deleteFileName,
+			@RequestParam(value = "files", required = false) List<MultipartFile> files,
 			AdvertisementDto advertisementDto) {
 		log.info("modifyConfirm()");
-		log.info("files -------> {}", file);
 		
-		// 사진 변경 시 => 프론트에서 어떻게 넘어오는지 확인하고, 조건 처리 해아함
-		if (file != null && file.getSize() != 0) {
-			
-			// 이미지 서버에 저장된 이미지 파일 이름 가져오기
-			ResponseEntity<String> savedFile = advertisementService.uploadFile(file, advertisementDto);
-			log.info("savedFile ========> {}", savedFile);
-			
-			if (savedFile != null) {
-				log.info("uploadFile SUCCESS!!");
-				
-				ObjectMapper objectMapper = new ObjectMapper();
-				
-				try {
-					Map<String, Object> savedFileObj = objectMapper.readValue(savedFile.getBody(), new TypeReference<Map<String, Object>>() {});
-					
-					String ad_dir_name = (String) savedFileObj.get("dir_name");
-					String savedFileName = (String) savedFileObj.get("savedFileName");
-					log.info("ad_dir_name ----> {}", ad_dir_name);
-					log.info("savedFileName ----> {}", savedFileName);
-					
-					boolean modifyResult = advertisementService.modifyConfirm(advertisementDto, ad_dir_name, savedFileName);
-					
-					return modifyResult;
-					
-				} catch (JsonMappingException e) {
-					log.info("JsonMappingException!!");
-					e.printStackTrace();
-					
-					return false;
-					
-				} catch (JsonProcessingException e) {
-					log.info("JsonProcessingException!!");
-					e.printStackTrace();
-					
-					return false;
-					
-				}
-				
-			} else {
-				log.info("upload file fail!!");
-				
-				return false;
-				
-			}
-			
-		// 사진 변경이 없을 시
-		} else {
-			
-			boolean modifyResult = advertisementService.modifyConfirm(advertisementDto, null, null);
-			
-			return modifyResult;
-			
-		}
+		return advertisementService.modifyConfirm(advertisementDto, deleteFileName, files);
 		
 	}
 	

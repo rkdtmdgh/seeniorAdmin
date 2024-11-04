@@ -102,17 +102,6 @@ public class DiseaseService {
 		
 		List<DiseaseCategoryDto> diseaseCategoryDtos = diseaseMapper.getDiseaseCategoryListWithPage(pagingParams);
 		
-		for (DiseaseCategoryDto diseaseCategoryDto : diseaseCategoryDtos) {
-			Map<String, Object> itemCntParam = new HashMap<>();
-			int dc_no = diseaseCategoryDto.getDc_no();
-			int item_cnt = diseaseMapper.getCategoryItemCnt(dc_no);
-			itemCntParam.put("dc_no", dc_no);
-			itemCntParam.put("item_cnt", item_cnt);
-			diseaseMapper.updateDiseaseCategoryItemCnt(itemCntParam);
-			diseaseCategoryDto.setDc_item_cnt(item_cnt);
-			
-		}
-		
 		pagingList.put("diseaseCategoryDtos", diseaseCategoryDtos);
 		
 		return pagingList;
@@ -216,17 +205,6 @@ public class DiseaseService {
 		pagingParams.put("order", order);
 		
 		List<DiseaseCategoryDto> searchDiseaseCategoryDtos = diseaseMapper.getSearchDiseaseCategory(pagingParams);
-		
-		for (DiseaseCategoryDto diseaseCategoryDto : searchDiseaseCategoryDtos) {
-			Map<String, Object> itemCntParam = new HashMap<>();
-			int dc_no = diseaseCategoryDto.getDc_no();
-			int item_cnt = diseaseMapper.getCategoryItemCnt(dc_no);
-			itemCntParam.put("dc_no", dc_no);
-			itemCntParam.put("item_cnt", item_cnt);
-			diseaseMapper.updateDiseaseCategoryItemCnt(itemCntParam);
-			diseaseCategoryDto.setDc_item_cnt(item_cnt);
-			
-		}
 		
 		pagingList.put("diseaseCategoryDtos", searchDiseaseCategoryDtos);
 		
