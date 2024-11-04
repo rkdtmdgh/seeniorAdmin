@@ -113,7 +113,7 @@ function processApiResponse(apiUrl, sortValue, order, response, contentTable = '
 	const searchPart = response.searchPart || null; // 리턴된 searchPart 값
 	const searchString = response.searchString || null; // 리턴된 searchString 값
 	const isSearch = searchString !== null; // searchString 값이 있을 경우 검색 요청
-	const $contentTable = $(`${contentTable}`); // 데이터가 나열될 테이블 요소
+	const $contentTable = $(contentTable); // 데이터가 나열될 테이블 요소
 	const $pagination = $('.pagination_wrap'); // 페이지 네이션 요소
 	$contentTable.html(''); // 콘텐츠 초기화
 	$pagination.html(''); // 페이지네이션 초기화
