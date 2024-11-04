@@ -221,7 +221,6 @@
     					BP_TITLE,
     					BP_BODY,
     					BP_WRITER_NO,
-    					BP_WRITER_ID,
     					BP_ACCOUNT,
     					BP_DIR_NAME) 
     	VALUES
@@ -229,7 +228,6 @@
     		#{bp_title},
     		#{bp_body},
     		#{bp_writer_no},
-    		#{bp_writer_id},
     		#{bp_account},
     		#{bp_dir_name})
     	
@@ -483,5 +481,20 @@
 			bp.BP_CATEGORY_NO = #{bc_no}
 	
 	</select>
+	
+	<!-- 게시물 수정 -->
+	<update id="modifyConfirm" parameterType="BoardPostsDto">
+	
+		UPDATE 
+    		BOARD_POSTS
+    	SET 
+    		BP_TITLE = #{bp_title},
+    		BP_BODY = #{bp_body},
+    		BP_DIR_NAME = #{bp_dir_name},
+    		BP_MOD_DATE = NOW()
+    	WHERE
+    		BP_NO = #{bp_no} 
+	
+	</update>
 
 </mapper>

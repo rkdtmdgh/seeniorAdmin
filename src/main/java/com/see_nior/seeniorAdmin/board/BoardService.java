@@ -1,29 +1,26 @@
 package com.see_nior.seeniorAdmin.board;
 
-import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.board.mapper.BoardMapper;
 import com.see_nior.seeniorAdmin.board.util.BoardItemCntUpdater;
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
 import com.see_nior.seeniorAdmin.dto.BoardPostsDto;
 import com.see_nior.seeniorAdmin.dto.DiseaseDto;
+import com.see_nior.seeniorAdmin.util.ImageFileService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -44,6 +41,7 @@ public class BoardService {
 	final private BoardMapper boardMapper;
 	final private RestTemplate restTemplate;
 	final private BoardItemCntUpdater boardItemCntUpdater;
+	final private ImageFileService imageFileService;
 	
 	//모든 게시판 항목 가져오기
 	public Object getList() {
@@ -191,118 +189,182 @@ public class BoardService {
 	}
 	
 	//게시글 이미지 저장 후 이미지 이름 가져오기
-    public ResponseEntity<String> uploadFiles(List<MultipartFile> files, int bp_category_no, int bp_writer_no) {
-        
-    	try {
+    public Boolean createConfirm(List<MultipartFile> files, BoardPostsDto boardPostsDto) {
+    	log.info("createConfirm()");
+    	
+    	//admin에서 게시물 작성하면 bp_acccount 값은 무조건 "admin"으로 서버에서 설정함
+    	boardPostsDto.setBp_account("admin");
+    	
+    	if(files != null) {
     		
-    		log.info("uploadFiles()");
-    		log.info("files: {}", files);
+    		//이미지 서버에 요청할 파일 저장 경로 생성
+    		Date now = new Date();	      
+    		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+    		String date = dateFormat.format(now);
     		
-    		// Request Header 설정
-    		HttpHeaders headers = new HttpHeaders();
-    		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-    	    		
-    		// Request body 설정 (파일 배열을 보낼 때)
-    		MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
-    		
-    		for (MultipartFile file : files) {
-    			// 파일 이름 가져오기
-    			String fileName = file.getOriginalFilename();
+    		String filePath = "\\board\\"
+    				+boardPostsDto.getBp_category_no()
+    				+"\\"+boardPostsDto.getBp_writer_no()
+    				+"\\"+date;
+    		//이미지 저장 요청
+    		ResponseEntity<String> savedFiles = imageFileService.uploadFiles(files, filePath);
+    	
+    		if(savedFiles != null) {
+    			log.info("uploadFiles succuess!");					
     			
-    			// 파일을 ByteArrayResource로 변환
-    			Resource fileResource = new ByteArrayResource(file.getBytes()) {
-    				@Override
-    				public String getFilename() {
-    					return fileName;
+    			ObjectMapper objectMapper = new ObjectMapper();
+    			
+    			try {
+    				Map<String,Object> savedFileObj = objectMapper.readValue(savedFiles.getBody(), new TypeReference<Map<String,Object>>() {});
+    				log.info("savedFiles(string) to savedFileNames(object) success!");
+    				
+    				@SuppressWarnings("unchecked") //(List<String>) 강제 캐스팅 에러
+    				List<String> savedFileNames = (List<String>) savedFileObj.get("savedFileNames");
+    				log.info("savedFileNames : {}",savedFileNames);
+    				
+    				String bp_body = boardPostsDto.getBp_body();
+    				
+    				if(savedFileNames != null) {
+    					
+    					// 정규 표현식 패턴
+    					Pattern pattern = Pattern.compile("img src=\"[^\"]*\"");
+    					Matcher matcher = pattern.matcher(boardPostsDto.getBp_body());
+    					
+    					StringBuilder new_bp_body = new StringBuilder();
+    					int index = 0;
+    					
+    					while (matcher.find()) {
+    						
+    						String newSrc = "img src=\"http://" 
+    								+ imgServerPath 
+    								+"board/" 
+    								+ boardPostsDto.getBp_category_no() 
+    								+"/"
+    								+ boardPostsDto.getBp_writer_no() 
+    								+"/"
+    								+ date 
+    								+"/"
+    								+ savedFileNames.get(index++) + "\"";
+    						matcher.appendReplacement(new_bp_body, newSrc);
+    					}
+    					matcher.appendTail(new_bp_body);
+    					
+    					bp_body = new_bp_body.toString();
+    					
     				}
-    			};
+    				    				
+    				boardPostsDto.setBp_body(bp_body);
+    				boardPostsDto.setBp_dir_name(date);
+    				
+    				int result = boardMapper.createConfirm(boardPostsDto);
+    				
+    				if(result <= 0) {
+    					log.info("createConfirm() insert fail!!");
+    					return false;
+    				}else {
+    					log.info("createConfirm() insert success!!");
+    					
+    					int bc_item_cnt = boardItemCntUpdater.selectCountBoardPostsByBcNo(boardPostsDto.getBp_category_no());
+    					log.info("bc_item_cnt: "+bc_item_cnt);
+    					Boolean upDateResult = boardItemCntUpdater.updateBoardCategoryForBcItemCntByBcNo(boardPostsDto.getBp_category_no(), bc_item_cnt);
+    					
+    					return upDateResult;
+    				}
+    				
+    			} catch (Exception e) {
+    				log.info("savedFiles(string) to savedFileNames(array) fail!");
+    				e.printStackTrace();
+    			}
     			
-    			// 파일을 requestBody에 추가
-    			requestBody.add("files", fileResource);
+    			return true;
+    		}else {
+    			log.info("uploadFiles fail!");
+    			
+    			return false;
     		}
-    		// 파일 저장 경로 생성 후 filePath를 키 값으로 requestBody에 추가 (맨 앞에 상위 폴더 경로 꼭! 추가)
-    		String filePath = "\\board\\"+bp_category_no+"\\"+bp_writer_no+"\\";
-    		requestBody.add("filePath", filePath);
     		
-    		// Request Entity
-            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
-
-            // API 호출
-            String serverURL = "http://localhost:8091/upload_file"; //local
-            ResponseEntity<String> response = restTemplate.postForEntity(serverURL, requestEntity, String.class);
-
-            return response;
-			
-		} catch (IOException e) {
-			log.error("파일 업로드 중 오류 발생: {}", e.getMessage());
-			
-			return null;
+    	}else {
+    		
+    		int result = boardMapper.createConfirm(boardPostsDto);
+    		if(result <= 0) {
+				log.info("createConfirm() insert fail!!");
+				return false;
+			}else {
+				log.info("createConfirm() insert success!!");
+				
+				int bc_item_cnt = boardItemCntUpdater.selectCountBoardPostsByBcNo(boardPostsDto.getBp_category_no());
+				log.info("bc_item_cnt: "+bc_item_cnt);
+				Boolean upDateResult = boardItemCntUpdater.updateBoardCategoryForBcItemCntByBcNo(boardPostsDto.getBp_category_no(), bc_item_cnt);
+				
+				return upDateResult;
+			}
 		}
-  	        
-    }
+    	
+		  	        
+    }//createConfirm() END
     
     // 게시글 DB에 저장 후 결과 값 가져오기
-	public Boolean createConfirm(List<String> savedFileNames, int bp_category_no, int bp_writer_no, String bp_title,
-			String old_bp_body, String bp_dir_name, String bp_writer_id) {
-		log.info("createConfirm()");
-		
-		String bp_body = old_bp_body;
-		
-		if(savedFileNames != null) {
-			
-			// 정규 표현식 패턴
-			Pattern pattern = Pattern.compile("img src=\"[^\"]*\"");
-			Matcher matcher = pattern.matcher(old_bp_body);
-			
-			StringBuilder new_bp_body = new StringBuilder();
-			int index = 0;
-			
-			while (matcher.find()) {
-				String oldSrc = matcher.group();
-				String newSrc = "img src=\"http://" 
-						+ imgServerPath 
-						+"board/" 
-						+ bp_category_no 
-						+"/"
-						+ bp_writer_no 
-						+"/"
-						+ bp_dir_name 
-						+"/"
-						+ savedFileNames.get(index++) + "\"";
-				matcher.appendReplacement(new_bp_body, newSrc);
-			}
-			matcher.appendTail(new_bp_body);
-			
-			bp_body = new_bp_body.toString();
-			
-		}
-		
- 		BoardPostsDto boardPostsDto = new BoardPostsDto();
- 		
- 		boardPostsDto.setBp_category_no(bp_category_no);
- 		boardPostsDto.setBp_writer_no(bp_writer_no);
- 		boardPostsDto.setBp_writer_id(bp_writer_id);
- 		boardPostsDto.setBp_account("admin");
- 		boardPostsDto.setBp_title(bp_title);
- 		boardPostsDto.setBp_body(bp_body);
- 		boardPostsDto.setBp_dir_name(bp_dir_name);
-		
-		int result = boardMapper.createConfirm(boardPostsDto);
-        
-		if(result <= 0) {
-			log.info("createConfirm() insert fail!!");
-			return false;
-		}else {
-			log.info("createConfirm() insert success!!");
-			
-			int bc_item_cnt = boardItemCntUpdater.selectCountBoardPostsByBcNo(bp_category_no);
-			log.info("bc_item_cnt: "+bc_item_cnt);
-			Boolean upDateResult = boardItemCntUpdater.updateBoardCategoryForBcItemCntByBcNo(bp_category_no, bc_item_cnt);
-			
-			return upDateResult;
-		}
-				
-	}
+//	public Boolean createConfirm(List<String> savedFileNames, int bp_category_no, int bp_writer_no, String bp_title,
+//			String old_bp_body, String bp_dir_name, String bp_writer_id) {
+//		log.info("createConfirm()");
+//		
+//		String bp_body = old_bp_body;
+//		
+//		if(savedFileNames != null) {
+//			
+//			// 정규 표현식 패턴
+//			Pattern pattern = Pattern.compile("img src=\"[^\"]*\"");
+//			Matcher matcher = pattern.matcher(old_bp_body);
+//			
+//			StringBuilder new_bp_body = new StringBuilder();
+//			int index = 0;
+//			
+//			while (matcher.find()) {
+//				
+//				String newSrc = "img src=\"http://" 
+//						+ imgServerPath 
+//						+"board/" 
+//						+ bp_category_no 
+//						+"/"
+//						+ bp_writer_no 
+//						+"/"
+//						+ bp_dir_name 
+//						+"/"
+//						+ savedFileNames.get(index++) + "\"";
+//				matcher.appendReplacement(new_bp_body, newSrc);
+//			}
+//			matcher.appendTail(new_bp_body);
+//			
+//			bp_body = new_bp_body.toString();
+//			
+//		}
+//		
+// 		BoardPostsDto boardPostsDto = new BoardPostsDto();
+// 		
+// 		boardPostsDto.setBp_category_no(bp_category_no);
+// 		boardPostsDto.setBp_writer_no(bp_writer_no);
+// 		boardPostsDto.setBp_writer_id(bp_writer_id);
+// 		boardPostsDto.setBp_account("admin");
+// 		boardPostsDto.setBp_title(bp_title);
+// 		boardPostsDto.setBp_body(bp_body);
+// 		boardPostsDto.setBp_dir_name(bp_dir_name);
+//		
+//		int result = boardMapper.createConfirm(boardPostsDto);
+//        
+//		if(result <= 0) {
+//			log.info("createConfirm() insert fail!!");
+//			return false;
+//		}else {
+//			log.info("createConfirm() insert success!!");
+//			
+//			int bc_item_cnt = boardItemCntUpdater.selectCountBoardPostsByBcNo(bp_category_no);
+//			log.info("bc_item_cnt: "+bc_item_cnt);
+//			Boolean upDateResult = boardItemCntUpdater.updateBoardCategoryForBcItemCntByBcNo(bp_category_no, bc_item_cnt);
+//			
+//			return upDateResult;
+//		}
+//				
+//	}
 	
 	// 특정 게시판 페이지 번호에 따른 게시물 리스트들 가져오기
 	public Map<String, Object> getBoardPostsListWithPage(int bp_category_no, int page, String sortValue, String order) {
@@ -548,6 +610,7 @@ public class BoardService {
 	
 	// 검색 게시물 총 페이지 개수 가져오기
 	public Map<String, Object> getSearchPostsListPageNum(int bc_no, String searchPart, String searchString, int page) {
+		log.info("getSearchPostsListPageNum()");
 		
 		Map<String, Object> searchDiseaseListPageNum = new HashMap<>();
 		
@@ -580,7 +643,168 @@ public class BoardService {
 		return searchDiseaseListPageNum;
 	}
 	
-
+	//특정 게시물 수정 요청
+	public Boolean modifyConfirm(List<MultipartFile> files, BoardPostsDto boardPostsDto, List<String> deleteFileNames) {
+		log.info("modifyConfirm()");
+		log.info("getBp_dir_name: {}",boardPostsDto.getBp_dir_name().getClass());
+		String filePath = "";
+		if( files != null && (boardPostsDto.getBp_dir_name() == null || boardPostsDto.getBp_dir_name() == " ") ) {
+			//날짜시간생성
+			log.info("dir_name is null new make dir!");
+    		Date now = new Date();	      
+    	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+    		String date = dateFormat.format(now);
+    		boardPostsDto.setBp_dir_name(date);
+		}
+		//이미지 서버에 요청할 파일 저장 경로 생성
+		filePath = "\\board\\"
+					+boardPostsDto.getBp_category_no()
+					+"\\"+boardPostsDto.getBp_writer_no()
+					+"\\"+boardPostsDto.getBp_dir_name();
+		
+		//새로운 이미지 저장이 필요 없는 경우
+		if(files == null) {
+			
+			//DB에 업데이트 요청
+			int result = boardMapper.modifyConfirm(boardPostsDto);
+			
+			if(result <= 0) {
+				log.info("boardMapper.modifyConfirm() fail!");
+				return false;
+			}else {
+				//삭제할 이미지가 있는 경우
+				if(deleteFileNames.size() != 0) {
+					
+					//ImageFileService클래스 deleteFiles()요청
+					//파라미터 값 = 문자열 배열(삭제할 파일 이름들), 삭제할 파일이 있는 폴더 경로(filePath)
+					ResponseEntity<String> deletedFiles = imageFileService.deleteFiles(deleteFileNames, filePath);
+					
+					if(deletedFiles != null){
+						ObjectMapper objectMapper = new ObjectMapper();
+						
+						try {
+							Map<String, Object> deletedFileObj = objectMapper.readValue(deletedFiles.getBody(), new TypeReference<Map<String,Object>>() {});
+							log.info("deleteFiles(string) to deleteFileNames(object) success!");
+							
+							@SuppressWarnings("unchecked") //(List<String>) 강제 캐스팅 에러
+							List<String> deletedFileNames = (List<String>) deletedFileObj.get("deletedFileNames");
+							log.info("deletedFileNames : {}",deletedFileNames);
+							
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}			
+						
+					}else {
+						log.info("ImageFileService.deleteFiles() fail!");
+						return false;
+					}
+				}
+				return true;
+			}
+			
+		}
+				
+		//이미지 서버에 새로운 이미지 저장 저장 요청
+		ResponseEntity<String> savedFiles = imageFileService.uploadFiles(files, filePath);
+		
+		//이미지 서버에 새 이미지가 정상적으로 저장 되었다면
+		if(savedFiles != null) {
+			log.info("modifyConfirm() uploadFiles succuess!");					
+			
+			//이미지 서버에서 받은 response값을 Map형식으로 맵핑 할 클래스 생성
+			ObjectMapper objectMapper = new ObjectMapper();
+			
+			try {
+				Map<String,Object> savedFileObj = objectMapper.readValue(savedFiles.getBody(), new TypeReference<Map<String,Object>>() {});
+				log.info("savedFiles(string) to savedFileNames(object) success!");
+				
+				@SuppressWarnings("unchecked") //(List<String>) 강제 캐스팅 에러
+				List<String> savedFileNames = (List<String>) savedFileObj.get("savedFileNames");
+				log.info("savedFileNames : {}",savedFileNames);
+				
+				String bp_body = boardPostsDto.getBp_body();
+				
+				//이미지 서버에 정상적으로 새 이미지가 저장 되었다면
+				if(savedFileNames != null) {
+					
+					// 정규 표현식 패턴
+					Pattern pattern = Pattern.compile("img src=\"blob:[^\"]*\"");
+					Matcher matcher = pattern.matcher(boardPostsDto.getBp_body());
+					
+					StringBuilder new_bp_body = new StringBuilder();
+					int index = 0;
+					
+					while (matcher.find()) {
+						
+						String newSrc = "img src=\"http://" 
+								+ imgServerPath 
+								+"board/" 
+								+ boardPostsDto.getBp_category_no() 
+								+"/"
+								+ boardPostsDto.getBp_writer_no() 
+								+"/"
+								+ boardPostsDto.getBp_dir_name() 
+								+"/"
+								+ savedFileNames.get(index++) + "\"";
+						matcher.appendReplacement(new_bp_body, newSrc);
+					}
+					matcher.appendTail(new_bp_body);
+					
+					bp_body = new_bp_body.toString();
+					
+				}
+				
+		 		BoardPostsDto newBoardPostsDto = new BoardPostsDto();
+		 		
+		 		newBoardPostsDto.setBp_no(boardPostsDto.getBp_no());
+		 		newBoardPostsDto.setBp_title(boardPostsDto.getBp_title());
+		 		newBoardPostsDto.setBp_dir_name(boardPostsDto.getBp_dir_name());
+		 		newBoardPostsDto.setBp_body(bp_body);
+				
+		 		//DB에 업데이트 요청
+				int result = boardMapper.modifyConfirm(newBoardPostsDto);
+				
+				if(result <= 0) {
+					log.info("boardMapper.modifyConfirm() fail!");
+					return false;
+				}
+				
+				if(deleteFileNames.size() != 0) {
+					//ImageFileService클래스 deleteFiles()요청
+					//파라미터 값 = 문자열 배열(삭제할 파일 이름들), 삭제할 파일이 있는 폴더 경로(filePath)
+					ResponseEntity<String> deletedFiles = imageFileService.deleteFiles(deleteFileNames, filePath);
+					if(deletedFiles == null){
+						
+						log.info("ImageFileService.deleteFiles() fail!");
+						return false;
+					}
+					
+					Map<String,Object> deletedFileObj = objectMapper.readValue(deletedFiles.getBody(), new TypeReference<Map<String,Object>>() {});
+					log.info("deleteFiles(string) to deleteFileNames(object) success!");
+					
+					@SuppressWarnings("unchecked") //(List<String>) 강제 캐스팅 에러
+					List<String> deletedFileNames = (List<String>) deletedFileObj.get("deletedFileNames");
+					log.info("deletedFileNames : {}",deletedFileNames);
+				
+				}
+				
+				
+			} catch (Exception e) {
+				log.info("savedFiles(string) to savedFileNames(array) fail!");
+				e.printStackTrace();
+			}
+							
+			return true;
+		}else {
+			log.info("uploadFiles fail!");
+			
+			return false;
+		}
+		
+		
+	}//modifyConfirm() END
+	
 	
 
 }
