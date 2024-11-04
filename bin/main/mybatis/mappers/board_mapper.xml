@@ -235,14 +235,28 @@
     
     <select id="getBoardPostsListWithPage" resultMap="BoardPostsDto">
     
-    	SELECT 
-			*
+     	SELECT 
+     		bp.*,
+    		aa.A_NO, aa.A_ID, aa.A_NAME, 
+    		ua.U_NO, ua.U_NAME, ua.U_ID, ua.U_NICKNAME 
 		FROM 
-		    BOARD_POSTS
+		    BOARD_POSTS AS bp
+		LEFT JOIN 
+			ADMIN_ACCOUNT AS aa 
+		ON 
+			bp.BP_WRITER_NO = aa.A_NO 
+		AND 
+			bp.BP_ACCOUNT = 'admin'
+		LEFT JOIN 
+			USER_ACCOUNT AS ua 
+		ON 
+			bp.BP_WRITER_NO = ua.U_NO 
+		AND 
+			bp.BP_ACCOUNT = 'user'
 		WHERE
-			BP_CATEGORY_NO = #{bp_category_no}
+			bp.BP_CATEGORY_NO = #{bp_category_no}
 		AND
-		    BP_IS_DELETED = 1 
+		    bp.BP_IS_DELETED = 1 
     	ORDER BY 
      		${sortValue} ${order} 
 		LIMIT 
@@ -387,8 +401,8 @@
      <select id="modifyForm" parameterType="int" resultMap="BoardPostsDto">
      	SELECT 
      		bp.*,
-    		aa.A_NO, aa.A_NAME,
-    		ua.U_NO, ua.U_NAME, ua.U_NICKNAME
+    		aa.A_NO, aa.A_ID, aa.A_NAME, 
+    		ua.U_NO, ua.U_NAME, ua.U_ID, ua.U_NICKNAME 
 		FROM 
 		    BOARD_POSTS AS bp
 		LEFT JOIN 
