@@ -353,48 +353,34 @@ function setFormValuesFromUrl() {
 	return { sortType, sortValue, order, page };
 }
 
-// 페이지 유지를 위한 쿼리 스트링 제어(검색 이력 제거)
-function setListQueryString(sortValue, order, page) {
-	const url = new URL(window.location); // 현재 url
-	const infoNo = url.searchParams.get('infoNo') || undefined; // infoNo가 있을 경우 값 가지고 있기
-	const sortType = url.searchParams.get('sortType') || undefined; // sortType이 있을 경우 값 가지고 있기
-    url.search = ''; // 파라미터 비우기
-	
-	// 파라미터 추가
-	if(infoNo) url.searchParams.set('infoNo', infoNo); 
-    if (sortValue) {
-		if(sortType) url.searchParams.set('sortType', sortType); 
-		url.searchParams.set('sortValue', sortValue); 
-		url.searchParams.set('order', order); 
-		
-    } else {
-		// sort 버튼 기본값으로 초기화
-		$('.sort').attr('data-current-sort-value', 'all');
-	}
-	
-	url.searchParams.set('page', page);
-	window.history.replaceState({}, '', url); // 현재 url 변경 및 리로드 제어
-}
-
-// 검색 후 페이지 유지를 위한 쿼리 스트링 제어(검색 파트, 스트링 재입력)
-function setSearchQueryString(searchPart, searchString, sortValue, order, page) {
+// 쿼리 스트링 제어
+function setQueryString(sortValue, order, page, searchPart, searchString) {
 	const url = new URL(window.location);
 	const infoNo = url.searchParams.get('infoNo') || undefined; // cateNor가 있을 경우 값 가지고 있기
-    if(infoNo) url.searchParams.set('infoNo', infoNo); 
-	url.searchParams.set('sortType', 1); // 1 = 검색, 2 = 검색카테고리선택
-    url.searchParams.set('searchPart', searchPart);
-    url.searchParams.set('searchString', searchString);
-	url.searchParams.set('page', page); 
+	let sortType = url.searchParams.get('sortType') || undefined; // sortType이 있을 경우 값 가지고 있기
 	
-	if(sortValue) {
-		url.searchParams.set('sortValue', sortValue);
-		url.searchParams.set('order', order);
+	if(searchString) { // 검색했을 경우
+		sortType = 1; // 1 = 검색, 2 = 검색카테고리선택
+		url.searchParams.set('searchPart', searchPart);
+    	url.searchParams.set('searchString', searchString);
+    	
+	} else {
+		url.searchParams.delete('searchPart');
+		url.searchParams.delete('searchString');
+	}
+	
+	if(sortValue) { // 솔트 기능 사용했을 경우
+		url.searchParams.set('sortValue', sortValue); 
+		url.searchParams.set('order', order); 
 		
 	} else {
 		url.searchParams.delete('sortValue');
 		url.searchParams.delete('order');
 	}
 	
+	if(infoNo) url.searchParams.set('infoNo', infoNo); // 카테고리 no값 설정
+	if(sortType) url.searchParams.set('sortType', sortType); // sortType값이 있을 경우 설정
+	url.searchParams.set('page', page); // 페이지 값 설정
 	window.history.replaceState({}, '', url); // 현재 url 변경 및 리로드 제어
 }
 
