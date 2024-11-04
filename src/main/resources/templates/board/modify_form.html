@@ -32,7 +32,7 @@
 	
 	                    <form name="posts_modify_form">
 		                    <input type="hidden" name="bp_no" th:value="${boardPostsDto.bp_no}">
-		                    <input type="hidden" name="bp_dir_name" th:value="${boardPostsDto.bp_dir_name}">
+		                    <input type="hidden" name="bp_dir_name" th:if="${boardPostsDto.bp_dir_name}" th:value="${boardPostsDto.bp_dir_name}">
 		                    <input type="hidden" name="bp_category_no" th:value="${infoNo}">
 		                    <input type="hidden" name="bp_writer_no" th:value="${boardPostsDto.bp_writer_no}">
 		                    
