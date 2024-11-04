@@ -113,7 +113,7 @@ function processApiResponse(apiUrl, sortValue, order, response, contentTable = '
 	const searchPart = response.searchPart || null; // 리턴된 searchPart 값
 	const searchString = response.searchString || null; // 리턴된 searchString 값
 	const isSearch = searchString !== null; // searchString 값이 있을 경우 검색 요청
-	const $contentTable = $(contentTable); // 데이터가 나열될 테이블 요소
+	const $contentTable = $(`${contentTable}`); // 데이터가 나열될 테이블 요소
 	const $pagination = $('.pagination_wrap'); // 페이지 네이션 요소
 	$contentTable.html(''); // 콘텐츠 초기화
 	$pagination.html(''); // 페이지네이션 초기화
@@ -777,7 +777,6 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		case '/advertisement/info/get_advertisement_list': // 광고 관리 리스트 테이블
 		case '/advertisement/info/search_advertisement_list': // 광고 관리 검색 리스트 테이블
 		case '/advertisement/info/get_advertisement_list_by_category': // 광고 관리 위치별 분류 리스트 테이블
-		// infoNo값이 있다면 상세페이지 내에서 리스트 요청으로 다른 레이아웃 생성
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -792,7 +791,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            <td class="va_m">
 		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info flex_area">
 		                	<span class="state ${data.ad_state === 1 ? '' : 'off'}">
-		                		${data.ad_state === 1 ? '사용중' : '만료'}
+		                		${data.ad_state === 1 ? '사용' : '만료'}
 		                	</span>
 		                </a>
 		            </td>
