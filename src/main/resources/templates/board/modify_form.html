@@ -85,8 +85,6 @@
 	                                					th:text="${boardPostsDto.adminAccountDto.a_id}" class="info_text"></p>
                                 					<p th:if="${boardPostsDto.bp_account != 'admin'}"
 	                                					th:text="${boardPostsDto.userAccountDto.u_id}" class="info_text"></p>
-	                                				<img src="/image/icons/manager.png" alt="관리자" class="table_info_icons"
-	                                					th:if="${boardPostsDto.bp_account == 'admin'}">
 		                                		</div>
 	                                        </td>
 	                                        
@@ -95,7 +93,12 @@
 	                                        	<p th:if="${boardPostsDto.bp_account != 'admin'}" class="table_title">이름<span class='divider'></span>닉네임</p>
 	                                        </th>
 		                                	<td class="disabled">
-		                                		<p th:if="${boardPostsDto.bp_account == 'admin'}" class="table_info" th:text="${boardPostsDto.adminAccountDto.a_name}"></p>
+		                                		<div class="table_info table_flex_info">
+			                                		<p th:if="${boardPostsDto.bp_account == 'admin'}" th:text="${boardPostsDto.adminAccountDto.a_name}"></p>
+			                                		<img src="/image/icons/manager.png" alt="관리자" class="table_info_icons"
+                               						th:if="${boardPostsDto.bp_account == 'admin'}">
+                             					</div>	
+	                                					
 	                                        	<p th:if="${boardPostsDto.bp_account != 'admin'}" class="table_info" th:utext="|
 	                                        		${boardPostsDto.userAccountDto.u_name}
 	                                        		<span class='divider'></span>
