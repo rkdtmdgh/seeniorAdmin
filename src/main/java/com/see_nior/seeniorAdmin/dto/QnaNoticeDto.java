@@ -19,6 +19,7 @@ public class QnaNoticeDto {
 	private String bqn_reg_date;
 	private String bqn_mod_date;
 	
+	private int bqn_writer_no;			// amidn_account table pk 
 	private AdminAccountDto adminAccountDto;
 	
 }
