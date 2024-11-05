@@ -364,7 +364,7 @@ function mapStateModifyObject(name) {
 	return apiUrl;
 }
 
-// 질환 / 질병 분류 수정
+// 질환/질병 분류 수정
 async function putDiseaseCategoryModify(formName) {
 	const form = document.forms[formName];
 	let input;
@@ -559,7 +559,6 @@ async function putQnaNoticeModify(formName) {
 // QnA 질문 유형 분류 수정
 async function putQnaCategoryModify(formName) {
 	const form = document.forms[formName];
-	const current_bqc_name = form.current_bqc_name;
 	
 	input = form.bqc_name;
 	if(!validateEmpty(input, '분류명을', true)) {
@@ -567,14 +566,20 @@ async function putQnaCategoryModify(formName) {
 		return false;
 	}
 	
-	if(input.value === current_bqc_name.value) {
+	if(input.value !== form.current_bqc_name.value) { // 수정이 되었을 경우
+		if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+			input.focus();
+			return false;
+		}
+		
+	} else {
 		alert('수정된 내용이 없습니다');
 		return false;
 	}
 	
 	const formData = new FormData(form);
-	const successMessage = `"${form.bqc_name.value}" 분류명이 수정되었습니다.`;
-	const errorMessage = `"${form.bqc_name.value}" 분류명 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const successMessage = `"${input.value}" 질문 유형 분류명이 수정되었습니다.`;
+	const errorMessage = `"${input.value}" 질문 유형 분류명 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	setFormDataCheckConsoleLog(formData);
 	await putIntegSubmit(
 		'/qna/cate_info/modify_category_confirm',
@@ -695,7 +700,35 @@ async function putPostsModify(formName) {
 	);
 }
 
-// 광고 분류 수정
+// 신고 유형 분류 수정
+async function putReportCategoryModify(formName) {
+	const form = document.forms[formName];
+	
+	input = form.brc_name;
+	if(!validateEmpty(input, '분류명을', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(input.value === form.current_brc_name.value) {
+		alert('수정된 내용이 없습니다');
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	const successMessage = `"${input.value}" 신고 유형 분류명이 수정되었습니다.`;
+	const errorMessage = `"${form.brc_name.value}" 신고 유형 분류명 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	setFormDataCheckConsoleLog(formData);
+	await putIntegSubmit(
+		'/qna/cate_info/modify_category_confirm',
+		formData,
+		successMessage,
+		errorMessage,
+		'content_inner'
+	);
+}
+
+// 광고 위치 분류 수정
 async function putAdvertisementCategoryModify(formName) {
 	const form = document.forms[formName];
 	let input;
@@ -707,8 +740,8 @@ async function putAdvertisementCategoryModify(formName) {
 	}
 	
 	const formData = new FormData(form);
-	const successMessage = `"${input.value}" 광고 분류명이 수정되었습니다`;
-	const errorMessage = `"${input.value}" 광고 분류명 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const successMessage = `"${input.value}" 광고 위치 분류명이 수정되었습니다`;
+	const errorMessage = `"${input.value}" 광고 위치 분류명 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 
 	await putIntegSubmit(
 		'/advertisement/cate_info/modify_category_confirm', 

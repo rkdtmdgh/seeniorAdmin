@@ -507,10 +507,12 @@ INSERT INTO BOARD_QNA_NOTICE(BQN_TITLE, BQN_BODY, BQN_WRITER_NO) VALUES("QNA 공
 CREATE TABLE BOARD_REPORT (
 	BR_NO			INT	AUTO_INCREMENT COMMENT "신고 NO(PK)", 											-- 신고 NO(PK)
 	BR_POST_NO		INT	NOT NULL COMMENT "신고된 게시글 NO(BOARD_POSTS TABLE PK)",							-- 신고된 게시글 NO(BOARD_POSTS TABLE PK)
-	BR_REASON		VARCHAR(255) NOT NULL COMMENT "신고 사유",											-- 신고 사유
+    BR_TITLE 		VARCHAR(255) NOT NULL COMMENT "신고 제목",											-- 신고 제목
+	BR_REASON		VARCHAR(255) NOT NULL COMMENT "신고 상세 사유",											-- 신고 상세 사유
 	BR_REPORTER_NO	VARCHAR(255) NOT NULL COMMENT "신고자 NO(USER_ACCOUNT TABLE PK)",						-- 신고자 NO(USER_ACCOUNT TABLE PK)
 	BR_RESULT		VARCHAR(255) COMMENT "신고 처리 결과(내용)",												-- 신고 처리 결과(내용)
-	BR_STATE		TINYINT DEFAULT 1 COMMENT "신고 진행 상태(기본값 = 1, 처리 중 = 2, 반려 = 3, 처리 완료 = 0)",	-- 신고 진행 상태(기본값 = 1, 처리 중 = 2, 반려 = 3, 처리 완료 = 0)
+    BR_ADMIN_NO		INT COMMENT "신고 처리한 ADMIN NO(ADMIN_ACCOUNT TABLE PK)",							-- 신고 처리한 ADMIN NO(ADMIN_ACCOUNT TABLE PK)
+	BR_STATE		TINYINT DEFAULT 1 COMMENT "신고 진행 상태(기본값 = 1, 처리 완료)",							-- 신고 진행 상태(기본값 = 1, 처리 중 = 2, 반려 = 3, 처리 완료 = 0)
 	BR_IS_DELETED	TINYINT	DEFAULT 1 COMMENT "신고 취소 여부(기본값 = 1, 취소 시 = 0)", 						-- 신고 취소 여부(기본값 = 1, 취소 시 = 0)
 	BR_REG_DATE		DATETIME DEFAULT NOW() COMMENT "신고 등록일",											-- 신고 등록일
 	BR_MOD_DATE		DATETIME DEFAULT NOW() COMMENT "신고 수정일",											-- 신고 수정일
