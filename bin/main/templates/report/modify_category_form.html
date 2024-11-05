@@ -4,10 +4,10 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
 <head>
-	<th:block th:insert="~{fragments/head.html :: head('질환 / 질병 분류 수정')}"></th:block>
+	<th:block th:insert="~{fragments/head.html :: head('신고 분류 수정')}"></th:block>
 	<script th:inline="javascript">
-		logger.info('diseaseCategoryDto --->', /*[[${diseaseCategoryDto}]]*/);
-	</script>
+    	logger.info('reportCategoryDto:', /*[[${reportCategoryDto}]]*/);
+    </script>
 </head>
 
 <body>
@@ -22,14 +22,14 @@
 					<section class="content_info_wrap">
 						<div class="content_top">
 					        <div class="content_top_info">
-					            <h2 class="title">질환 / 질병 분류 관리</h2>
+					            <h2 class="title">신고 분류 관리</h2>
 					        </div>
-				            <p class="sub_title">질환 / 질병 분류 수정</p>
+				            <p class="sub_title">신고 분류 수정</p>
 					    </div>
 					    
-					    <form name="disease_category_modify_form">					    	
-                      		<input type="hidden" name="dc_no" th:value="${diseaseCategoryDto.dc_no}">
-                      		<input type="hidden" name="current_dc_name" th:value="${diseaseCategoryDto.dc_name}">
+					    <form name="report_category_modify_form">					    	
+                      		<input type="hidden" name="brc_no" th:value="${reportCategoryDto.brc_no}">
+                      		<input type="hidden" name="current_brc_name" th:value="${reportCategoryDto.brc_name}">
                       		
 						    <div class="table_wrap">
 		                        <table class="content_edit_table">
@@ -44,25 +44,25 @@
 		                                <tr>
 		                                	<th><p class="table_title">분류명</p></th>
 		                                	<td>
-		                                		<input type="text" name="dc_name" id="dc_name" class="table_info" placeholder="질환 / 질병 분류명"
-		                                			th:onblur="requestDuplicateCheck(this, true, [[${diseaseCategoryDto.dc_name}]], null);"
-		                                			th:value="${diseaseCategoryDto.dc_name}">
+		                                		<input type="text" name="brc_name" id="brc_name" class="table_info" placeholder="신고 유형 분류명"
+		                                			th:onblur="requestDuplicateCheck(this, true, [[${reportCategoryDto.brc_name}]], null);"
+		                                			th:value="${reportCategoryDto.brc_name}">
 	                                        </td>
 	                                        
 	                                        <th><p class="table_title">등록일<span class="divider"></span>수정일</p></th>
 	                                        <td class="disabled">
 	                                        	<p class="table_info" th:utext="|
-	                                        		${diseaseCategoryDto.dc_reg_date}
+	                                        		${reportCategoryDto.brc_reg_date}
 	                                        		<span class='divider'></span>
-	                                        		${diseaseCategoryDto.dc_mod_date}
+	                                        		${reportCategoryDto.brc_mod_date}
 	                                        	|"></p>
 	                                        </td>
 		                                </tr>
 		                                
-		                                <tr>	    
-	                                        <th><p class="table_title">등록 수</p></th>
-		                                	<td class="disabled">
-		                                		<p class="table_info"th:text="${diseaseCategoryDto.dc_item_cnt}"></p>
+		                                <tr>	                                        
+	                                        <th><p class="table_title">질문 수</p></th>
+	                                        <td>
+	                                        	<input type="text" class="table_info" th:value="${reportCategoryDto.brc_item_cnt}" disabled>
 	                                        </td>
 	                                        
 	                                        <td colspan="2"></td>
@@ -72,14 +72,14 @@
 		                        
 		                        <div class="btn_list">
 		                        	<div th:onclick="delSingleData(
-                       			 		[[${diseaseCategoryDto.dc_name}]], 
-                       			 		'dc_no', 
-                       			 		[[${diseaseCategoryDto.dc_no}]]
+                       			 		[[${reportCategoryDto.brc_name}]], 
+                       			 		'brc_no', 
+                       			 		[[${reportCategoryDto.brc_no}]]
                        			 	)" class="btns delete">삭제</div>
 		                        		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <div onclick="putDiseaseCategoryModify('disease_category_modify_form')" class="btns">수정</div>
+	                                    <div onclick="putQnaCategoryModify('qna_category_modify_form')" class="btns">수정</div>
 	                                </div>
 	                            </div>
 		                    </div>
