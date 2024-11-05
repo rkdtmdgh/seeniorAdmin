@@ -4,9 +4,9 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 	
 <head>
-    <th:block th:insert="~{fragments/head.html :: head('질문과 답변')}"></th:block>
+    <th:block th:insert="~{fragments/head.html :: head('신고 관리')}"></th:block>
     <script th:inline="javascript">
-    	logger.info('qnaDto --->', /*[[${qnaDto}]]*/);
+    	logger.info('reportDto:', /*[[${reportDto}]]*/);
     </script>
 </head>
 
@@ -22,18 +22,18 @@
 	                <section class="content_info_wrap">
 	                    <div class="content_top">
 	                        <div class="content_top_info">
-	                            <h2 class="title">질문과 답변</h2>
+	                            <h2 class="title">신고 관리</h2>
 	                        </div>
-	                        <p class="sub_title">질문과 답변</p>
+	                        <p class="sub_title">신고 관리</p>
 	                    </div>
 	
-	                    <form name="qna_answer_form">
-		                    <input type="hidden" name="bq_no" th:value="${qnaDto.bq_no}">
+	                    <form name="report_result_form">
+		                    <input type="hidden" name="br_no" th:value="${reportDto.br_no}">
 		                    
-		                    <th:block th:if="${qnaDto.qnaAnswerDto}">
-			                    <input type="hidden" name=bqa_no th:value="${qnaDto.qnaAnswerDto.bqa_no}">
-			                    <input type="hidden" name="a_id" th:value="${qnaDto.qnaAnswerDto.adminAccountDto.a_id}">
-			                    <input type="hidden" name="current_bqa_answer" th:value="${qnaDto.qnaAnswerDto.bqa_answer}">
+		                    <th:block th:if="${reportDto.reportResultDto}">
+			                    <input type="hidden" name=brr_no th:value="${reportDto.reportResultDto.brr_no}">
+			                    <input type="hidden" name="a_id" th:value="${reportDto.reportResultDto.adminAccountDto.a_id}">
+			                    <input type="hidden" name="current_brr_result" th:value="${reportDto.reportResultDto.brr_result}">
 		                    </th:block>
 		                    
 	                        <div class="table_wrap">
@@ -47,49 +47,31 @@
 	
 	                                <tbody>
 	                                	<tr>
-		                                    <th><p class="table_title">질문 유형</p></th>
+		                                    <th><p class="table_title">신고 유형</p></th>
 		                                    <td>
-		                                    	<p class="table_info" th:text="${qnaDto.qnaCategoryDto.bqc_name}"></p>
-		                                    </td>
-		                                    
-		                                    <th><p class="table_title">공개 설정</p></th>
-		                                    <td>
-		                                    	<div class="table_info bq_state">
-	                                            	<label class="radio">
-	                                            		<input type="radio" name="bq_state" data-info="공개" value="true" 
-	                                            			th:checked="${qnaDto.bq_state == true}"
-	                                            			th:attr="onclick=${qnaDto.bq_state != true ? 'putModifyState(this, `qna_answer_form`)' : ''}"
-	                                            		> 공개
-	                                            	</label>
-	                                            	<label class="radio">
-	                                            		<input type="radio" name="bq_state" data-info="비공개" value="false" 
-	                                            			th:checked="${qnaDto.bq_state == false}"
-	                                            			th:attr="onclick=${qnaDto.bq_state != false ? 'putModifyState(this, `qna_answer_form`)' : ''}"
-	                                            		> 비공개
-	                                            	</label>
-	                                            </div>
+		                                    	<p class="table_info" th:text="${reportDto.reportCategoryDto.brc_name}"></p>
 		                                    </td>
 		                                </tr>
 		                                
 		                                <tr>
 		                                    <th><p class="table_title">제목</p></th>
 		                                    <td colspan="3">
-		                                    	<p class="table_info" th:text="${qnaDto.bq_title}"></p>
+		                                    	<p class="table_info" th:text="${reportDto.br_title}"></p>
 		                                    </td>
 		                                </tr>
 		                                
 		                                <tr>
-		                                    <th><p class="table_title">작성자 아이디</p></th>
+		                                    <th><p class="table_title">신고자 아이디</p></th>
 		                                    <td>
-		                                    	<p class="table_info" th:text="${qnaDto.userAccountDto.u_id}"></p>
+		                                    	<p class="table_info" th:text="${reportDto.userAccountDto.u_id}"></p>
 		                                    </td>
 		                                    
 		                                    <th><p class="table_title">이름<span class="divider"></span>닉네임</p></th>
 		                                    <td>
 		                                    	<p class="table_info" th:utext="|
-		                                    		${qnaDto.userAccountDto.u_name}
+		                                    		${reportDto.userAccountDto.u_name}
 		                                    		<span class='divider'></span>
-		                                    		${qnaDto.userAccountDto.u_nickname}
+		                                    		${reportDto.userAccountDto.u_nickname}
 	                                    		|"></p>
 		                                    </td>
 		                                </tr>
@@ -98,46 +80,46 @@
 		                                	<th><p class="table_title">등록일<span class="divider"></span>수정일</p></th>
 	                                        <td colspan="3">
 	                                        	<p class="table_info" th:utext="|
-	                                        		${qnaDto.bq_reg_date}
+	                                        		${reportDto.br_reg_date}
 	                                        		<span class='divider'></span>
-	                                        		${qnaDto.bq_mod_date}
+	                                        		${reportDto.br_mod_date}
 	                                        	|"></p>
 	                                        </td>
 										</tr>
 		                                
 		                                <tr>
-		                                	<th><p class="table_title">내용</p></th>
+		                                	<th><p class="table_title">신고 내용</p></th>
 		                                	<td colspan="3" class="ta_l">
-		                                		<p class="table_textarea sc" th:text="${qnaDto.bq_body}"></p>
+		                                		<p class="table_textarea sc" th:text="${reportDto.br_reason}"></p>
 		                                    </td>
 		                                </tr>
 		                                
-		                                <tr th:if="${qnaDto.qnaAnswerDto}">
-		                                	<th><p class="table_title">답변자 아이디</p></th>
+		                                <tr th:if="${reportDto.reportResultDto}">
+		                                	<th><p class="table_title">처리자 아이디</p></th>
 		                                    <td>
-		                                    	<p class="table_info" th:text="${qnaDto.qnaAnswerDto.adminAccountDto.a_id}"></p>
+		                                    	<p class="table_info" th:text="${reportDto.reportResultDto.adminAccountDto.a_id}"></p>
 		                                    </td>
 		                                    
 		                                    <th><p class="table_title">이름</p></th>
 		                                    <td>
-		                                    	<p class="table_info" th:text="${qnaDto.qnaAnswerDto.adminAccountDto.a_name}"></p>
+		                                    	<p class="table_info" th:text="${reportDto.reportResultDto.adminAccountDto.a_name}"></p>
 		                                    </td>
 		                                </tr>
 		                                
 		                                <tr>
-		                                	<th><p class="table_title">답변</p></th>
+		                                	<th><p class="table_title">처리 내용</p></th>
 		                                	<td colspan="3">
-		                                		<textarea name="bqa_answer" id="bqa_answer" class="table_textarea" placeholder="답변을 입력하세요"
+		                                		<textarea name="brr_result" id="brr_result" class="table_textarea" placeholder="내용을 입력하세요"
 	                                				data-limit-target="textarea" 
 	                                				data-limit="short" 
 	                                				oninput="setTextareaAutoHeight(this)" 
 	                                				onkeyup="setTextLimit(this)"
-	                                				onblur="validateEmpty(this, '답변을')"
-	                                				th:text="${qnaDto.qnaAnswerDto?.bqa_answer ?: ''}"
+	                                				onblur="validateEmpty(this, '내용을')"
+	                                				th:text="${reportDto.reportResultDto?.brr_result ?: ''}"
 	                                				th:readonly="${
-	                                					qnaDto.qnaAnswerDto != null and
+	                                					reportDto.reportResultDto != null and
 			                                    		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
-			                                    		qnaDto.qnaAnswerDto.adminAccountDto.a_id != #authentication.name
+			                                    		reportDto.reportResultDto.adminAccountDto.a_id != #authentication.name
 	                                				}"></textarea>
                                             	<div id="text_limit">
 	                                				<span id="current_size"></span> / <span id="max_size"></span>
@@ -147,42 +129,42 @@
 	                                </tbody>
 	                            </table>
 	
-                                <div class="btn_list" th:classappend="${qnaDto.qnaAnswerDto != null ? 'f_jc_right' : ''}">
-                                	<div th:if="${qnaDto.qnaAnswerDto == null}"
+                                <div class="btn_list" th:classappend="${reportDto.reportResultDto != null ? 'f_jc_right' : ''}">
+                                	<div th:if="${reportDto.reportResultDto == null}"
 	                        			th:onclick="delSingleData(
-	                        		 		[[${qnaDto.userAccountDto.u_id} + '님의 질문']],
-	                        		 		'bq_no', 
-	                        		 		[[${qnaDto.bq_no}]]
-                        		 		)" class="btns delete">질문 삭제</div>
+	                        		 		[[${reportDto.userAccountDto.u_id} + '님의 신고']],
+	                        		 		'br_no', 
+	                        		 		[[${reportDto.br_no}]]
+                        		 		)" class="btns delete">신고 삭제</div>
 		                        		 
                                 	<div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
 	                                    
 	                                    <div th:if="${
-	                                    		qnaDto.qnaAnswerDto != null and
+	                                    		reportDto.reportResultDto != null and
 	                                    		(#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
-	                                    		qnaDto.qnaAnswerDto.adminAccountDto.a_id == #authentication.name)
+	                                    		reportDto.reportResultDto.adminAccountDto.a_id == #authentication.name)
                                     		}"
 		                        			th:onclick="delSingleData(
-	                        					[[${qnaDto.qnaAnswerDto.adminAccountDto.a_id} + '님의 답변']],
-		                        		 		'bqa_no', 
-		                        		 		[[${qnaDto.qnaAnswerDto.bqa_no}]],
+	                        					[[${reportDto.reportResultDto.adminAccountDto.a_id} + '님의 처리 내용']],
+		                        		 		'brr_no', 
+		                        		 		[[${reportDto.reportResultDto.brr_no}]],
 		                        		 		{
-		                        		 			'bq_no': [[${qnaDto.bq_no}]],
+		                        		 			'br_no': [[${reportDto.br_no}]],
 		                        		 		}
 	                        				)" class="btns delete">답변 삭제</div>
 		                        		 
 	                                    <div 
-	                                    	th:if="${qnaDto.qnaAnswerDto == null}"
-	                                    	onclick="postAnswerCreate('qna_answer_form')" class="btns">답변 등록</div>
+	                                    	th:if="${reportDto.reportResultDto == null}"
+	                                    	onclick="postReportResultCreate('report_result_form')" class="btns">답변 등록</div>
                                     	
                                     	<div 
 	                                    	th:if="${
-	                                    		qnaDto.qnaAnswerDto != null and
+	                                    		reportDto.reportResultDto != null and
 	                                    		(#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
-	                                    		qnaDto.qnaAnswerDto.adminAccountDto.a_id == #authentication.name)
+	                                    		reportDto.reportResultDto.adminAccountDto.a_id == #authentication.name)
 	                                    	}"
-	                                    	onclick="putAnswerModify('qna_answer_form')" class="btns">답변 수정</div>
+	                                    	onclick="putReportResultrModify('report_result_form')" class="btns">답변 수정</div>
 	                                </div>
                                 </div>
 	                        </div>

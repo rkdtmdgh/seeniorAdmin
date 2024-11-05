@@ -936,16 +936,16 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			tableTrContent = `
 				<tr>
 		            <td>
-		                <a href="/advertisement/cate_info/modify_category_form?infoNo=${data.ac_no}&sortType=2&itemCnt=${data.ac_item_cnt}" class="table_info">${listIndex}</a>
+		                <a href="/advertisement/cate_info/modify_category_form?infoNo=${data.ac_no}&sortType=2" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/advertisement/cate_info/modify_category_form?infoNo=${data.ac_no}&sortType=2&itemCnt=${data.ac_item_cnt}" class="table_info">${data.ac_name}</a>
+		                <a href="/advertisement/cate_info/modify_category_form?infoNo=${data.ac_no}&sortType=2" class="table_info">${data.ac_name}</a>
 		            </td>
 		            <td>
 		                <a href="/advertisement/info/advertisement_list_form?sortType=2&sortValue=ad_idx&order=asc&infoNo=${data.ac_no}" class="table_info">${data.ac_item_cnt}</a>
 		            </td>
 		            <td>
-		                <a href="/advertisement/cate_info/modify_category_form?infoNo=${data.ac_no}&sortType=2&itemCnt=${data.ac_item_cnt}" class="table_info">
+		                <a href="/advertisement/cate_info/modify_category_form?infoNo=${data.ac_no}&sortType=2" class="table_info">
 		                	${data.ac_note ? data.ac_note : '-'}
 		                </a>
 		            </td>

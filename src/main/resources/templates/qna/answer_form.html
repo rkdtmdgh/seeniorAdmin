@@ -6,7 +6,7 @@
 <head>
     <th:block th:insert="~{fragments/head.html :: head('질문과 답변')}"></th:block>
     <script th:inline="javascript">
-    	logger.info('qnaDto:', /*[[${qnaDto}]]*/);
+    	logger.info('qnaDto --->', /*[[${qnaDto}]]*/);
     </script>
 </head>
 
@@ -79,17 +79,6 @@
 		                                </tr>
 		                                
 		                                <tr>
-		                                	<th><p class="table_title">등록일<span class="divider"></span>수정일</p></th>
-	                                        <td colspan="3">
-	                                        	<p class="table_info" th:utext="|
-	                                        		${qnaDto.bq_reg_date}
-	                                        		<span class='divider'></span>
-	                                        		${qnaDto.bq_mod_date}
-	                                        	|"></p>
-	                                        </td>
-										</tr>
-		                                
-		                                <tr>
 		                                    <th><p class="table_title">작성자 아이디</p></th>
 		                                    <td>
 		                                    	<p class="table_info" th:text="${qnaDto.userAccountDto.u_id}"></p>
@@ -106,9 +95,32 @@
 		                                </tr>
 		                                
 		                                <tr>
+		                                	<th><p class="table_title">등록일<span class="divider"></span>수정일</p></th>
+	                                        <td colspan="3">
+	                                        	<p class="table_info" th:utext="|
+	                                        		${qnaDto.bq_reg_date}
+	                                        		<span class='divider'></span>
+	                                        		${qnaDto.bq_mod_date}
+	                                        	|"></p>
+	                                        </td>
+										</tr>
+		                                
+		                                <tr>
 		                                	<th><p class="table_title">내용</p></th>
 		                                	<td colspan="3" class="ta_l">
 		                                		<p class="table_textarea sc" th:text="${qnaDto.bq_body}"></p>
+		                                    </td>
+		                                </tr>
+		                                
+		                                <tr th:if="${qnaDto.qnaAnswerDto}">
+		                                	<th><p class="table_title">답변자 아이디</p></th>
+		                                    <td>
+		                                    	<p class="table_info" th:text="${qnaDto.qnaAnswerDto.adminAccountDto.a_id}"></p>
+		                                    </td>
+		                                    
+		                                    <th><p class="table_title">이름</p></th>
+		                                    <td>
+		                                    	<p class="table_info" th:text="${qnaDto.qnaAnswerDto.adminAccountDto.a_name}"></p>
 		                                    </td>
 		                                </tr>
 		                                

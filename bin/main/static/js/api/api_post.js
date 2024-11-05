@@ -166,8 +166,8 @@ async function postDiseaseCategoryCreate(formName, nextPage) {
 	}
 	
 	const formData = new FormData(form);
-	const successMessage = `"${input.value}" 분류가 등록되었습니다.`;
-	const errorMessage = `"${input.value}" 분류 등록 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const successMessage = `"${input.value}" 질환/질병 분류가 등록되었습니다.`;
+	const errorMessage = `"${input.value}" 질환/질병 분류 등록 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
 	await postIntegSubmit(
 		'/disease/cate_info/create_category_confirm', 				// apiUrl
@@ -365,7 +365,7 @@ async function postQnaNoticeCreate(formName) {
 	);
 }
 
-// QNA 분류 등록
+// QnA 질문 유형 분류 등록
 async function postQnaCategoryCreate(formName) {
 	const form = document.forms[formName];
 	let input;
@@ -377,8 +377,8 @@ async function postQnaCategoryCreate(formName) {
 	}
 	
 	const formData = new FormData(form);
-	const successMessage = `"${input.value}" 분류가 등록되었습니다.`;
-	const errorMessage = `"${input.value}" 분류 등록 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const successMessage = `"${input.value}" 질문 유형 분류가 등록되었습니다.`;
+	const errorMessage = `"${input.value}" 질문 유형 분류 등록 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
 	await postIntegSubmit(
 		'/qna/cate_info/create_category_confirm',
@@ -390,7 +390,7 @@ async function postQnaCategoryCreate(formName) {
 	);
 }
 
-// QNA 답변 등록
+// QnA 답변 등록
 async function postAnswerCreate(formName) {
 	const form = document.forms[formName];
 	
@@ -511,7 +511,7 @@ async function postPostsCreate(formName) {
 	);
 }
 
-// 신고 분류 등록
+// 신고 유형 분류 등록
 async function postReportCategoryCreate(formName) {
 	const form = document.forms[formName];
 	let input;
@@ -523,8 +523,8 @@ async function postReportCategoryCreate(formName) {
 	}
 	
 	const formData = new FormData(form);
-	const successMessage = `"${input.value}" 분류가 등록되었습니다.`;
-	const errorMessage = `"${input.value}" 분류 등록 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const successMessage = `"${input.value}" 신고 유형 분류가 등록되었습니다.`;
+	const errorMessage = `"${input.value}" 신고 유형 분류 등록 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
 	await postIntegSubmit(
 		'/report/cate_info/create_category_confirm',
@@ -537,7 +537,7 @@ async function postReportCategoryCreate(formName) {
 }
 
 
-// 광고 분류 등록
+// 광고 위치 분류 등록
 async function postAdvertisementCategoryCreate(formName, nextPage) {
 	const form = document.forms[formName];
 	let input;
@@ -549,8 +549,8 @@ async function postAdvertisementCategoryCreate(formName, nextPage) {
 	}
 	
 	const formData = new FormData(form);
-	const successMessage = `"${input.value}" 분류가 등록되었습니다.`;
-	const errorMessage = `"${input.value}" 분류 등록 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const successMessage = `"${input.value}" 광고 위치 분류가 등록되었습니다.`;
+	const errorMessage = `"${input.value}" 광고 위치 분류 등록 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	
 	await postIntegSubmit(
 		'/advertisement/cate_info/create_category_confirm',
