@@ -148,6 +148,11 @@ function mapDeleteObject(value) {
 			apiUrl = '/board/info/delete_confirm';
 			replace = '/board/info/posts_list_form';
 			break;
+
+		case 'brc_no': // 신고 유형 분류
+			apiUrl = '/report/cate_info/delete_category_confirm';
+			replace = '/report/cate_info/category_list_form';
+			break;
 			
 		case 'ac_no': // 광고 분류
 			apiUrl = '/advertisement/cate_info/delete_category_confirm';
