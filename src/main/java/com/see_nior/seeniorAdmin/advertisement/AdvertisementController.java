@@ -113,14 +113,12 @@ public class AdvertisementController {
 	
 	// 광고 위치 수정 양식
 	@GetMapping("/cate_info/modify_category_form")
-	public String modifyCategoryForm(@RequestParam(value = "infoNo") int ac_no,
-									@RequestParam(value = "itemCnt") int itemCnt,  Model model) {
+	public String modifyCategoryForm(@RequestParam(value = "infoNo") int ac_no, Model model) {
 		log.info("modifyCategoryForm()");
 		
 		AdvertisementCategoryDto advertisementCategoryDto = advertisementService.getCategory(ac_no);
 		
 		model.addAttribute("advertisementCategoryDto", advertisementCategoryDto);
-		model.addAttribute("itemCnt", itemCnt);
 		
 		return PagePath.ADVERTISEMENT_MODIFY_CATEGORY_FORM.getValue();
 		

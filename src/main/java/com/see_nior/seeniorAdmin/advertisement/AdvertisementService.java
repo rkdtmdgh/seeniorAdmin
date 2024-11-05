@@ -1,5 +1,7 @@
 package com.see_nior.seeniorAdmin.advertisement;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.advertisement.mapper.AdvertisementMapper;
 import com.see_nior.seeniorAdmin.dto.AdvertisementCategoryDto;
 import com.see_nior.seeniorAdmin.dto.AdvertisementDto;
+import com.see_nior.seeniorAdmin.util.ImageFileService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -57,6 +60,7 @@ public class AdvertisementService {
 	private int blockLimit = 5;	// 하단에 보여질 페이지 번호의 수
 	
 	final private AdvertisementMapper advertisementMapper;
+	final private ImageFileService imageFileService;
 	final private RestTemplate restTemplate;
 	
 	// --------------------------------------------------------- 광고 위치
@@ -395,7 +399,15 @@ public class AdvertisementService {
 	public boolean createConfirm(AdvertisementDto advertisementDto, List<MultipartFile> files) {
 		log.info("createConfirm()");
 		
-		ResponseEntity<String> savedFile = uploadFile(files, advertisementDto);
+		// 이미지 서버에 요청할 파일 저장 경로 생성
+		Date now = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+		String date = dateFormat.format(now);
+		
+		String filePath = "\\advertisement\\" + advertisementDto.getAd_category_no() + "\\" + date;
+		
+		// 이미지 저장 요청
+		ResponseEntity<String> savedFile = imageFileService.uploadFiles(files, filePath);
 		
 		if (savedFile != null) {
 			log.info("uploadFile SUCCESS!!");
@@ -405,11 +417,10 @@ public class AdvertisementService {
 			try {
 				Map<String, Object> savedFileObj = objectMapper.readValue(savedFile.getBody(), new TypeReference<Map<String, Object>>() {});
 
-				String ad_dir_name = String.valueOf(savedFileObj.get("dir_name"));
 				String savedFileName = ((List<String>) savedFileObj.get("savedFileNames")).get(0);
 				
 				// 광고 디렉토리명과 이미지 URL 세팅
-				advertisementDto.setAd_dir_name(ad_dir_name);
+				advertisementDto.setAd_dir_name(date);
 				advertisementDto.setAd_img(savedFileName);
 				
 				// 선택한 광고 위치의 maxIdx값 가져오기

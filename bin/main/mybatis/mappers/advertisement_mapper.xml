@@ -113,11 +113,11 @@
     		(SELECT 
     			COUNT(*) 
    			FROM 
-   				ADVERTISEMENT AS A 
+   				ADVERTISEMENT AS AD 
    			WHERE 
-   				A.AD_CATEGORY_NO = AC.AC_NO 
+   				AD.AD_CATEGORY_NO = AC.AC_NO 
    			AND 
-   				A.AD_IS_DELETED = 1) AS AC_ITEM_CNT 
+   				AD.AD_IS_DELETED = 1) AS AC_ITEM_CNT 
 		FROM 
 			ADVERTISEMENT_CATEGORY AS AC
 		WHERE 
@@ -148,11 +148,19 @@
 			resultMap="AdvertisementCategoryDto">
 		
 		SELECT 
-			* 
+   			AC.*, 
+    		(SELECT 
+    			COUNT(*) 
+   			FROM 
+   				ADVERTISEMENT AS AD 
+   			WHERE 
+   				AD.AD_CATEGORY_NO = AC.AC_NO 
+   			AND 
+   				AD.AD_IS_DELETED = 1) AS AC_ITEM_CNT 
 		FROM 
-			ADVERTISEMENT_CATEGORY 
+			ADVERTISEMENT_CATEGORY AS AC
 		WHERE 
-			AC_NO = #{ac_no}
+			AC.AC_NO = #{ac_no}
 	
 	</select>
 	
@@ -195,11 +203,11 @@
     		(SELECT 
     			COUNT(*) 
    			FROM 
-   				ADVERTISEMENT AS A 
+   				ADVERTISEMENT AS AD 
    			WHERE 
-   				A.AD_CATEGORY_NO = AC.AC_NO 
+   				AD.AD_CATEGORY_NO = AC.AC_NO 
    			AND 
-   				A.AD_IS_DELETED = 1) AS AC_ITEM_CNT 
+   				AD.AD_IS_DELETED = 1) AS AC_ITEM_CNT 
 		FROM 
 			ADVERTISEMENT_CATEGORY AS AC
 		WHERE 

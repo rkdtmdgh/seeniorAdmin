@@ -115,6 +115,7 @@ public class DiseaseController {
 		DiseaseCategoryDto diseaseCategoryDto = diseaseService.getCategory(dc_no);
 		
 		model.addAttribute("diseaseCategoryDto", diseaseCategoryDto);
+		log.info("개별 질환 카테고리 dto ------> {}", diseaseCategoryDto);
 		
 		return PagePath.DISEASE_MODIFY_CATEGORY_FORM.getValue();
 		
