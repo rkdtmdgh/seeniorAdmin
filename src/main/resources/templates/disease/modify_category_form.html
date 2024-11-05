@@ -5,6 +5,9 @@
    
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('질환 / 질병 분류 수정')}"></th:block>
+	<script th:inline="javascript">
+		logger.info('diseaseCategoryDto --->', /*[[${diseaseCategoryDto}]]*/);
+	</script>
 </head>
 
 <body>
@@ -56,10 +59,10 @@
 	                                        </td>
 		                                </tr>
 		                                
-		                                <tr>	                                        
-	                                        <th><p class="table_title">질환 / 질병 수</p></th>
-	                                        <td>
-	                                        	<input type="text" class="table_info" th:value="${diseaseCategoryDto.dc_item_cnt}" disabled>
+		                                <tr>	    
+	                                        <th><p class="table_title">등록 수</p></th>
+		                                	<td class="disabled">
+		                                		<p class="table_info"th:text="${diseaseCategoryDto.dc_item_cnt}"></p>
 	                                        </td>
 	                                        
 	                                        <td colspan="2"></td>

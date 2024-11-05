@@ -1,5 +1,7 @@
 package com.see_nior.seeniorAdmin.qna;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +31,7 @@ import com.see_nior.seeniorAdmin.dto.QnaNoticeDto;
 import com.see_nior.seeniorAdmin.enums.ImgUrlPath;
 import com.see_nior.seeniorAdmin.enums.SqlResult;
 import com.see_nior.seeniorAdmin.qna.mapper.QnaMapper;
+import com.see_nior.seeniorAdmin.util.ImageFileService;
 import com.see_nior.seeniorAdmin.util.PagingUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -42,6 +45,7 @@ public class QnaService {
 	final private QnaMapper qnaMapper;
 	final private AccountMapper accountMapper;
 	final private RestTemplate restTemplate;
+	final private ImageFileService imageFileService;
 	
 	// qna 리스트 가져오기
 	public Map<String, Object> getQnaPagingList(String sortValue, String order, int page) {
@@ -512,19 +516,26 @@ public class QnaService {
 	}
 
 	// qna 공지사항 등록 확인
-	public boolean createNoticeConfrim(List<MultipartFile> files, String bqn_title, String old_bqn_body, int bqn_writer_no) {
+	public boolean createNoticeConfrim(List<MultipartFile> files, QnaNoticeDto qnaNoticeDto) {
 		log.info("createNoticeConfrim()");
 			
 		// 첨부된 파일이 있는 경우
 		if (files != null && files.size() != 0 && files.get(0).getSize() != 0) {
 			log.info("files is not empty.");
+
+			Date now = new Date();	      
+    		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+    		String date = dateFormat.format(now);
 			
-			ResponseEntity<String> savedFiles = 
-					uploadNoticeImg(files);
-			
+    		String filePath = ImgUrlPath.QNA_NOTICE_FILE_PATH.getValue() + date;
+    		
+    		// 이미지 저장 요청
+    		ResponseEntity<String> savedFiles = 
+    				imageFileService.uploadFiles(files, filePath);
+    		
 			// 이미지 서버 파일 저장 완료
 			if (savedFiles != null) {
-				log.info("uploadNoticeImg success");
+				log.info("uploadNoticeImgFile success");
 				
 				ObjectMapper objectMapper = new ObjectMapper();
 				

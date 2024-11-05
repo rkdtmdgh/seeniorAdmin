@@ -21,7 +21,7 @@ async function requestEmailDuplicateCheck(email) {
 }
 
 // 정규표현식 검사가 필요없는 중복 검사(즉시 에러 메세지 노출)
-async function requestDuplicateCheck(input, nullCheck, defaultValue,  alertMsg) { // 요소, 기본값, alert 여부, 빈값 체크 여부
+async function requestDuplicateCheck(input, nullCheck, defaultValue,  alertMsg) { // 요소, 빈값 체크 여부, 기본값, alert 여부
 	const inputName = input.name;
 	const inputValue = input.value.trim();
 	input.value = inputValue; // 앞뒤 공백 제거 적용
@@ -99,7 +99,7 @@ function mapDuplicateCheckObject(value) {
 			break;
 			
 		case 'bqc_name':
-			word = '질문 분류명';
+			word = '질문 유형 분류명';
 			apiUrl = '/qna/cate_info/is_qna_category';
 			break;
 			
@@ -108,8 +108,13 @@ function mapDuplicateCheckObject(value) {
 			apiUrl = '/board/cate_info/is_board_category';
 			break;
 
+		case 'brc_name':
+			word = '신고 유형 분류명';
+			apiUrl = '/report/cate_info/is_report_category';
+			break;
+			
 		case 'ac_name':
-			word = '광고 위치명';
+			word = '광고 위치 분류명';
 			apiUrl = '/advertisement/cate_info/is_advertisement_category';
 			break;
 			

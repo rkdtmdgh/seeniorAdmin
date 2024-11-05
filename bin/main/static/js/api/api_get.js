@@ -118,10 +118,10 @@ function processApiResponse(apiUrl, sortValue, order, response, contentTable = '
 	$contentTable.html(''); // 콘텐츠 초기화
 	$pagination.html(''); // 페이지네이션 초기화
 	
-	if(response && getListDtos.length) {
-		setQueryString(sortValue, order, getListPage.page, searchPart, searchString); // 쿼리스트링 조건 추가
-		if(otherData) setContentSubInfo(otherData); // 타이틀 옆 서브내용 표시(예: 업데이트 날짜 등)
-		
+	setQueryString(sortValue, order, getListPage.page, searchPart, searchString); // 쿼리스트링 조건 추가
+	setContentSubInfo(otherData); // 타이틀 옆 서브내용 표시(예: 업데이트 날짜 등)
+	
+	if(response && getListDtos.length) {		
 		let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
 		let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
 		
@@ -292,21 +292,21 @@ function mapApiResponseObject(apiUrl, response) {
 			getListDtos = response.qnaDtos;
 			getListPage = response.qnaListPageNum;
 			getListCnt = response.qnaListPageNum.qnaListCnt;
-			otherData = `${response.unansweredQnaCnt > 0 ? `답변 대기 ${response.unansweredQnaCnt}` : null}`;
+			otherData = response.unansweredQnaCnt > 0 ? `답변 대기 ${response.unansweredQnaCnt}` : null;
 			break;
 			
 		case '/qna/info/search_qna_list': // 질문과 답변 검색
 			getListDtos = response.qnaDtos;
 			getListPage = response.searchQnaListPageNum;
 			getListCnt = response.searchQnaListPageNum.searchQnaListCnt;
-			otherData = `${response.unansweredSearchQnaCnt > 0 ? `답변 대기 ${response.unansweredSearchQnaCnt}` : null}`;
+			otherData = response.unansweredSearchQnaCnt > 0 ? `답변 대기 ${response.unansweredSearchQnaCnt}` : null;
 			break;	
 			
 		case '/qna/info/get_qna_list_by_category': // 질문 유형별 데이터
 			getListDtos = response.qnaDtos;
 			getListPage = response.qnaListByCategoryPageNum;
 			getListCnt = response.qnaListByCategoryPageNum.qnaListCnt;
-			otherData = `${response.unansweredCategoryQnaCnt > 0 ? `답변 대기 ${response.unansweredCategoryQnaCnt}` : null}`;
+			otherData = response.unansweredCategoryQnaCnt > 0 ? `답변 대기 ${response.unansweredCategoryQnaCnt}` : null;
 			break;
 			
 		case '/board/cate_info/get_category_list': // 게시판 관리
@@ -331,6 +331,39 @@ function mapApiResponseObject(apiUrl, response) {
 			getListDtos = response.boardPostsDtos;
 			getListPage = response.searchBoardPostsListPageNum;
 			getListCnt = response.searchBoardPostsListPageNum.searchBoardPostsListCnt;
+			break;
+			
+		case '/report/cate_info/get_category_list': // 신고 분류 관리
+			getListDtos = response.reportCategoryDtos;
+			getListPage = response.reportCategoryListPageNum;
+			getListCnt = response.reportCategoryListPageNum.reportCategoryListCnt;
+			break;
+			
+		case '/report/cate_info/search_category_list': // 신고 분류 검색
+			getListDtos = response.reportCategoryDtos;
+			getListPage = response.searchReportCategoryListPageNum;
+			getListCnt = response.searchReportCategoryListPageNum.searchReportCategoryListCnt;
+			break;
+			
+		case '/report/info/get_report_list': // 신고 관리
+			getListDtos = response.reportDtos;
+			getListPage = response.reportListPageNum;
+			getListCnt = response.reportListPageNum.reportListCnt;
+			otherData = response.unresultReportCnt > 0 ? `처리 대기 ${response.unresultReportCnt}` : null;
+			break;
+			
+		case '/report/info/search_report_list': // 신고 관리 검색
+			getListDtos = response.reportDtos;
+			getListPage = response.searchReportListPageNum;
+			getListCnt = response.searchReportListPageNum.searchReportListCnt;
+			otherData = response.unresultSearchReportCnt > 0 ? `처리 대기 ${response.unresultSearchReportCnt}` : null;
+			break;	
+			
+		case '/report/info/get_report_list_by_category': // 신고 유형별 데이터
+			getListDtos = response.reportDtos;
+			getListPage = response.reportListByCategoryPageNum;
+			getListCnt = response.reportListByCategoryPageNum.reportListCnt;
+			otherData = response.unresultCategoryReportCnt > 0 ? `처리 대기 ${response.unresultCategoryReportCnt}` : null;
 			break;	
 			
 		case '/advertisement/info/get_advertisement_list': // 광고 관리
@@ -455,7 +488,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${data.dc_name}</a>
 		            </td>
 		            <td>
-		                <a href="/disease/info/disease_list_form?sortType=1&infoNo=${data.dc_no}&sortValue=d_no&order=desc" class="table_info">${data.dc_item_cnt}</a>
+		                <a href="/disease/info/disease_list_form?sortType=2&infoNo=${data.dc_no}&sortValue=d_no&order=desc" class="table_info">${data.dc_item_cnt}</a>
 		            </td>
 		            <td>
 		                <p class="table_info">${setFormatDate(data.dc_reg_date)}</p>
@@ -774,6 +807,66 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			`;
 			break;
 			
+		case '/report/cate_info/get_category_list': // 신고 유형 분류 관리 리스트 테이블
+		case '/report/cate_info/search_category_list': // 신고 유형 분류 관리 검색 리스트 테이블
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/report/cate_info/modify_category_form?brc_no=${data.brc_no}" class="table_info">${listIndex}</a>
+		            </td>
+		            <td>
+		                <a href="/report/cate_info/modify_category_form?brc_no=${data.brc_no}" class="table_info">${data.brc_name}</a>
+		            </td>
+		            <td>
+		                <a href="/report/info/report_list_form?sortType=2&infoNo=${data.brc_no}&sortValue=br_state&order=asc" class="table_info">
+		                	${data.brc_item_cnt} / ${data.brc_unresult_cnt}
+		                </a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.brc_reg_date)}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/report/info/get_report_list': // 신고 관리 리스트 테이블
+		case '/report/info/search_report_list': // 신고 관리 검색 리스트 테이블
+		case '/report/info/get_report_list_by_category': // 신고 유형별 분류 리스트 테이블
+			regDate = new Date(new Date(data.br_reg_date).getTime() + newIconsHours);
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info">${listIndex}</a>
+		            </td>
+		            <td>
+		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info">${data.reportCategoryDto.bqc_name}</a>
+		            </td>
+		            <td class="va_m">
+		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info flex_area">
+		                	<span class="state icon ${data.br_state === 1 ? 'off' : ''}">
+		                		${data.br_state === 1 ? '대기' : '처리완료'}
+		                	</span>
+		                </a>
+		            </td>
+					<td class="ta_l">
+		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info table_flex_info">
+		                	<p class="info_text">${data.br_title}</p>
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
+		            </td>
+					<td>
+		                <a href="/user_account/info/modify_form?u_no=${data.userAccountDto.u_no}" class="table_info">${data.userAccountDto.u_name}</a>
+		            </td>
+					<td>
+		                <p class="table_info">${setFormatDate(data.br_reg_date)}</p>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.br_mod_date)}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
 		case '/advertisement/info/get_advertisement_list': // 광고 관리 리스트 테이블
 		case '/advertisement/info/search_advertisement_list': // 광고 관리 검색 리스트 테이블
 		case '/advertisement/info/get_advertisement_list_by_category': // 광고 관리 위치별 분류 리스트 테이블
@@ -966,36 +1059,36 @@ function mapSortListApiObject(dbTable, sortType) {
 			0: '/user_account/info/get_user_account_list',
 			1: '/user_account/info/search_user_account_list',
 		},
+		'disease_category': { // 질환/질병 분류 관리 페이지
+			0: '/disease/cate_info/get_category_list',
+			1: '/disease/cate_info/search_category_list',
+		},
 		'disease': { // 질환/질병 정보 관리 페이지
 			0: '/disease/info/get_disease_list',
 			1: '/disease/info/search_disease_list',
 			2: '/disease/info/get_disease_list_by_category',
-		},
-		'disease_category': { // 질환/질병 분류 관리 페이지
-			0: '/disease/cate_info/get_category_list',
-			1: '/disease/cate_info/search_category_list',
 		},
 		'recipe': { // 식단 정보 관리 페이지
 			0: '/recipe/info/get_recipe_list',
 			1: '/recipe/info/search_recipe_list',
 			2: '/recipe/info/get_recipe_list_by_type',
 		},
+		'video': { // 영상 정보 관리 페이지
+			0: '/video/info/get_video_list',
+			1: '/video/info/search_video_list',
+		},
 		'board_qna_notice': { // 질문과 답변 공지 사항 페이지
 			0: '/qna/noti_info/get_notice_list',
 			1: '/qna/noti_info/search_notice_list',
-		},
-		'board_qna': { // 질문과 답변 페이지
-			0: '/qna/info/get_qna_list',
-			1: '/qna/info/search_qna_list',
-			2: '/qna/info/get_qna_list_by_category',
 		},
 		'board_qna_category': { // 질문 유형 분류 관리 페이지
 			0: '/qna/cate_info/get_category_list',
 			1: '/qna/cate_info/search_category_list',
 		},
-		'video': { // 영상 정보 관리 페이지
-			0: '/video/info/get_video_list',
-			1: '/video/info/search_video_list',
+		'board_qna': { // 질문과 답변 페이지
+			0: '/qna/info/get_qna_list',
+			1: '/qna/info/search_qna_list',
+			2: '/qna/info/get_qna_list_by_category',
 		},
 		'board_notice': { // 게시판 공지 사항 페이지
 			0: '/board/noti_info/get_notice_list',
@@ -1010,14 +1103,23 @@ function mapSortListApiObject(dbTable, sortType) {
 			0: '/board/info/get_posts_list',
 			1: '/board/info/search_posts_list',
 		},
-		'advertisement': { // 광고 관리 페이지
-			0: '/advertisement/info/get_advertisement_list',
-			1: '/advertisement/info/search_advertisement_list',
-			2: '/advertisement/info/get_advertisement_list_by_category',
+		'board_report_category': { // 신고 유형 분류 관리 페이지
+			0: '/report/cate_info/get_category_list',
+			1: '/report/cate_info/search_category_list',
+		},
+		'board_report': { // 신고 관리 페이지
+			0: '/report/info/get_report_list',
+			1: '/report/info/search_report_list',
+			2: '/report/info/get_report_list_by_category',
 		},
 		'advertisement_category': { // 광고 위치 분류 관리 페이지
 			0: '/advertisement/cate_info/get_category_list',
 			1: '/advertisement/cate_info/search_category_list',
+		},
+		'advertisement': { // 광고 관리 페이지
+			0: '/advertisement/info/get_advertisement_list',
+			1: '/advertisement/info/search_advertisement_list',
+			2: '/advertisement/info/get_advertisement_list_by_category',
 		},
 	};
 	
@@ -1059,6 +1161,10 @@ function mapSelectListApiObject(sortValue) {
 			
 		case 'bq_no': // QnA 질문 유형별 분류 리스트 요청
 			apiUrl = '/qna/info/get_qna_list_by_category';
+			break;
+			
+		case 'br_no': // 신고 유형별 분류 리스트 요청
+			apiUrl = '/report/info/get_report_list_by_category';
 			break;
 		
 		case 'ad_no': // 광고 관리 리스트 페이지 위치별 분류 리스트 요청
@@ -1227,12 +1333,20 @@ function mapCategorylistObject(ele) {
 			soltValue = 'rcp_pat2';
 			break;
 			
-		case 'bq_category_no': // 질문 분류 리스트(분류별 관리o)
+		case 'bq_category_no': // 질문 유형별 분류 리스트(분류별 관리o)
 			getCateSelectApiUrl = '/qna/cate_info/get_category_list_select';
 			getListDtos = 'qnaCategoryDtos';			
 			infoNo = 'bqc_no';
 			infoName = 'bqc_name';
 			soltValue = 'bq_no';
+			break;
+			
+		case 'br_category_no': // 신고 유형별 분류 리스트(분류별 관리o)
+			getCateSelectApiUrl = '/report/cate_info/get_category_list_select';
+			getListDtos = 'reportCategoryDtos';			
+			infoNo = 'brc_no';
+			infoName = 'brc_name';
+			soltValue = 'br_no';
 			break;
 			
 		case 'ad_category_no': // 위치별 분류 리스트(분류별 관리o)

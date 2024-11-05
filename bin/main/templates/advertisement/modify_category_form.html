@@ -6,9 +6,7 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('광고 분류 수정')}"></th:block>
 	<script th:inline="javascript">
-		logger.info('advertisementCategoryDto', /*[[${advertisementCategoryDto}]]*/);
-	
-		const itemCnt = /*[[${itemCnt}]]*/ 0;
+		const itemCnt = /*[[${advertisementCategoryDto.ac_item_cnt}]]*/ 0;
 		if(itemCnt > 0) {
 			$(async function() {
 				const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
@@ -20,6 +18,10 @@
 				}
 	        });
 		}
+	</script>
+	
+	<script th:inline="javascript">
+		logger.info('advertisementCategoryDto --->', /*[[${advertisementCategoryDto}]]*/);
 	</script>
 </head>
 
@@ -56,7 +58,7 @@
 		                                <tr>
 		                                	<th><p class="table_title">분류명</p></th>
 		                                	<td>
-		                                		<input type="text" name="ac_name" id="ac_name" class="table_info" placeholder="광고 위치명"
+		                                		<input type="text" name="ac_name" id="ac_name" class="table_info" placeholder="광고 위치 분류명"
 		                                			th:onblur="requestDuplicateCheck(this, true, [[${advertisementCategoryDto.ac_name}]], null);"
 		                                			th:value="${advertisementCategoryDto.ac_name}">
 	                                        </td>
@@ -78,7 +80,10 @@
 		                                			th:value="${advertisementCategoryDto.ac_note}">
 	                                        </td>
 	                                        
-	                                        <td colspan="2"></td>
+	                                        <th><p class="table_title">등록 수</p></th>
+		                                	<td class="disabled">
+		                                		<p class="table_info"th:text="${advertisementCategoryDto.ac_item_cnt}"></p>
+	                                        </td>
 		                                </tr>
 		                            </tbody>
 		                        </table>
@@ -98,7 +103,7 @@
 		                    </div>
 	                    </form>
 	                    
-	                    <th:block th:if="${itemCnt > 0}">
+	                    <th:block th:if="${advertisementCategoryDto.ac_item_cnt > 0}">
 		                    <div class="content_top">
 					            <p class="sub_title">광고</p>
 						    </div>

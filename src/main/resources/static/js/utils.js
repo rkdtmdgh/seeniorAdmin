@@ -102,7 +102,7 @@ function setContentSubInfo(txt) {
 	if(!txt && $subInfo.length) { // null일 경우 경우 $subInfo 요소 제거
 		$subInfo.remove();
 		
-	} else {
+	} else if(txt) {
 		if(!$subInfo.length) $subInfo = $('<span class="title_other_info_text">');
 		$subInfo.text(txt);		
 		$title.append($subInfo);	
