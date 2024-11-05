@@ -1,6 +1,7 @@
 package com.see_nior.seeniorAdmin.advertisement;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -276,59 +277,6 @@ public class AdvertisementService {
 	
 	// --------------------------------------------------------- 광고
 
-	// 광고 이미지 저장 후 이미지 이름 가져오기
-	public ResponseEntity<String> uploadFile(List<MultipartFile> files, AdvertisementDto advertisementDto) {
-		log.info("uploadFile()");
-		log.info("files ---> {}", files);
-		
-		try {
-			
-			// Request Header 설정
-			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-			
-			// Request Body 설정
-			MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
-			
-			for (MultipartFile file : files) {
-				// 파일 이름 가져오기
-				String fileName = file.getOriginalFilename();
-				
-				// 파일을 ByteArrayResource로 변환
-				Resource fileResource = new ByteArrayResource(file.getBytes()) {
-    				@Override
-    				public String getFilename() {
-    					return fileName;
-    				}
-    			};
-    			
-				requestBody.add("files", fileResource);
-				
-			}
-			
-			// 파일 저장 경로 생성 후 filePath를 키 값으로 requestBody에 추가 (맨 앞에 상위 폴더 경로 꼭! 추가)
-			String filePath = "\\advertisement\\" + advertisementDto.getAd_category_no() + "\\";
-			requestBody.add("filePath", filePath);
-			
-			// Request Entity
-			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);		
-			
-			// API 호출
-//			String serverURL = "http://14.42.124.93:8091/upload_file";
-			String serverURL = "http://localhost:8091/upload_file";	// local
-			ResponseEntity<String> response = restTemplate.postForEntity(serverURL, requestEntity, String.class);
-			
-			return response;
-			
-		} catch (Exception e) {
-			log.info("광고 이미지 파일 업로드 중 오류 발생 : {}", e.getMessage());
-			
-			return null;
-			
-		}
-		
-	}
-	
 	// 광고 이미지 삭제 후 삭제 된 이미지 이름 가져오기
 		public ResponseEntity<String> deleteFile(List<MultipartFile> files, AdvertisementDto advertisementDto) {
 			log.info("deleteFile()");
@@ -656,14 +604,17 @@ public class AdvertisementService {
 	// 광고 수정 확인
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public boolean modifyConfirm(AdvertisementDto advertisementDto, List<String> deleteFileName, List<MultipartFile> files) {
+	public boolean modifyConfirm(AdvertisementDto advertisementDto, String current_ad_img, List<MultipartFile> files) {
 		log.info("modifyConfirm()");
+		log.info("current_ad_img ---->{}", current_ad_img);
 		
 		// 사진 변경이 있을 시
 		if (files != null && files.size() != 0 && files.get(0).getSize() != 0) {
+			
+			String filePath = "\\advertisement\\" + advertisementDto.getAd_category_no() + "\\" + advertisementDto.getAd_dir_name();
 				
 			// 이미지 서버에 저장된 이미지 파일 이름 가져오기
-			ResponseEntity<String> savedFile = uploadFile(files, advertisementDto);
+			ResponseEntity<String> savedFile = imageFileService.uploadFiles(files, filePath);
 			log.info("savedFile ========> {}", savedFile);
 			
 			if (savedFile != null) {
@@ -674,23 +625,28 @@ public class AdvertisementService {
 				try {
 					Map<String, Object> savedFileObj = objectMapper.readValue(savedFile.getBody(), new TypeReference<Map<String, Object>>() {});
 					
-					String ad_dir_name = String.valueOf(savedFileObj.get("dir_name"));
 					String savedFileName = ((List<String>) savedFileObj.get("savedFileNames")).get(0);
-					log.info("ad_dir_name ----> {}", ad_dir_name);
 					log.info("savedFileName ----> {}", savedFileName);
 					
-					// 광고 디렉토리명과 이미지 URL 세팅
-					advertisementDto.setAd_dir_name(ad_dir_name);
+					// 광고 이미지 URL 세팅
 					advertisementDto.setAd_img(savedFileName);
 					
-					ResponseEntity<String> deleteFile = deleteFile(files, advertisementDto);
-					
-					if (deleteFile != null) {
-						log.info("deleteFile SUCCESS!!");
-						log.info("deleteFile ----> {} ", deleteFile);
+					if (current_ad_img != null) {
 						
-					} else {
-						log.info("deleteFile FAIL!!");
+						List<String> deleteFiles = new ArrayList<>();
+						
+						deleteFiles.add(current_ad_img);
+						
+						ResponseEntity<String> deleteFile = imageFileService.deleteFiles(deleteFiles, filePath);
+						
+						if (deleteFile != null) {
+							log.info("deleteFile SUCCESS!!");
+							log.info("deleteFile ----> {} ", deleteFile);
+							
+						} else {
+							log.info("deleteFile FAIL!!");
+							
+						}
 						
 					}
 				
