@@ -314,12 +314,12 @@ public class AdvertisementController {
 	@ResponseBody
 	@PostMapping("/info/modify_confirm")
 	public boolean modifyConfirm(
-			@RequestParam(value = "deleteFileNames", required = false) List<String> deleteFileName,
+			@RequestParam(value = "current_ad_img", required = false) String current_ad_img,
 			@RequestParam(value = "files", required = false) List<MultipartFile> files,
 			AdvertisementDto advertisementDto) {
 		log.info("modifyConfirm()");
 		
-		return advertisementService.modifyConfirm(advertisementDto, deleteFileName, files);
+		return advertisementService.modifyConfirm(advertisementDto, current_ad_img, files);
 		
 	}
 	
