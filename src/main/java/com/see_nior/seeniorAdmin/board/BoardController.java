@@ -1,10 +1,8 @@
 package com.see_nior.seeniorAdmin.board;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
 import com.see_nior.seeniorAdmin.dto.BoardPostsDto;
 
@@ -170,11 +164,7 @@ public class BoardController {
 	@PostMapping("/info/create_confirm")
 	@ResponseBody
 	public boolean createConfirm(@RequestParam(value = "files" , required = false) List<MultipartFile> files, 
-								@RequestParam("bp_category_no") int bp_category_no, 
-								@RequestParam("bp_writer_no") int bp_writer_no,
-								@RequestParam("bp_title") String bp_title,
-								@RequestParam("bp_body") String bp_body,
-								Principal principal) {
+								BoardPostsDto boardPostsDto) {
 		log.info("createConfirm()");
 		
 		Boolean result = false;
@@ -183,49 +173,17 @@ public class BoardController {
 		if( files != null && files.size() != 0 && files.get(0).getSize() != 0 ) {
 			log.info("files in value!");
 									
-			ResponseEntity<String> savedFiles = 
-					boardService.uploadFiles(files,bp_category_no,bp_writer_no);
-								
-			if(savedFiles != null) {
-				log.info("uploadFiles succuess!");					
-				
-				ObjectMapper objectMapper = new ObjectMapper();
-				
-				try {
-					Map<String,Object> savedFileObj = objectMapper.readValue(savedFiles.getBody(), new TypeReference<Map<String,Object>>() {});
-					log.info("savedFiles(string) to savedFileNames(object) success!");
+			result = boardService.createConfirm(files,boardPostsDto);
 					
-					@SuppressWarnings("unchecked") //(List<String>) 강제 캐스팅 에러
-					List<String> savedFileNames = (List<String>) savedFileObj.get("savedFileNames");
-					String bp_dir_name = String.valueOf(savedFileObj.get("dir_name"));
-					log.info("dir_name : {}",savedFileObj.get("dir_name"));
-					log.info("savedFileNames : {}",savedFileNames);
-					
-					result = boardService.createConfirm(savedFileNames,bp_category_no,bp_writer_no,bp_title,bp_body,bp_dir_name,principal.getName());
-					
-				} catch (JsonMappingException e) {
-					log.info("savedFiles(string) to savedFileNames(array) fail!");
-					e.printStackTrace();
-				} catch (JsonProcessingException e) {
-					log.info("savedFiles(string) to savedFileNames(array) fail!");
-					e.printStackTrace();
-				}
-								
-				return result;
-			}else {
-				log.info("uploadFiles fail!");
-				
-				return false;
-			}
 			
 		}else {
 			log.info("files empty!");
 			
-			result = boardService.createConfirm(null, bp_category_no, bp_writer_no, bp_title, bp_body, null, principal.getName());
+			result = boardService.createConfirm(null, boardPostsDto);
 			
-			return result;
 			
-		}			
+		}
+		return result;			
 		
 	}
 		
@@ -372,24 +330,22 @@ public class BoardController {
 		log.info("boardPostsDto: {}",boardPostsDto);
 		log.info("deleteFileNames: {}",deleteFileNames);
 		log.info("files: {}",files);
-				
-		for(int i = 0; i < deleteFileNames.size(); i++) {
-			log.info("filePath: "
-					+"\\board\\"
-					+boardPostsDto.getBp_category_no()
-					+"\\"+boardPostsDto.getBp_writer_no()
-					+"\\"+boardPostsDto.getBp_dir_name()
-					+"\\"+deleteFileNames.get(i));
-		}
+		
+		Boolean result = false;
 		
 		//file 첨부가 되어 있는지 확인
 		if(files != null && files.size() != 0 && files.get(0).getSize() != 0) {
 			log.info("files in value!!");
+			
+			result = boardService.modifyConfirm(files,boardPostsDto,deleteFileNames);
+			
 		}else {
 			log.info("files in empty!!");
+			
+			result = boardService.modifyConfirm(null,boardPostsDto,deleteFileNames);
 		}
 				
-		return true;
+		return result;
 	}
 		
 	//작성한 공지 게시물 등록 요청

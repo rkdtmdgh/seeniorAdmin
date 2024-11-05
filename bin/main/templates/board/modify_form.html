@@ -6,6 +6,8 @@
 <head>
     <th:block th:insert="~{fragments/head.html :: head('게시물 수정')}"></th:block>
     <script th:inline="javascript">
+    	logger.info('boardPostsDto --->', /*[[${boardPostsDto}]]*/);	
+    
 		$(function() {
 			// 타이틀 설정
 			setBoardTitle(/*[[${infoNo}]]*/);
@@ -32,7 +34,7 @@
 	
 	                    <form name="posts_modify_form">
 		                    <input type="hidden" name="bp_no" th:value="${boardPostsDto.bp_no}">
-		                    <input type="hidden" name="bp_dir_name" th:value="${boardPostsDto.bp_dir_name}">
+		                    <input type="hidden" name="bp_dir_name" th:if="${boardPostsDto.bp_dir_name}" th:value="${boardPostsDto.bp_dir_name}">
 		                    <input type="hidden" name="bp_category_no" th:value="${infoNo}">
 		                    <input type="hidden" name="bp_writer_no" th:value="${boardPostsDto.bp_writer_no}">
 		                    
@@ -79,9 +81,10 @@
 		                                	<th><p class="table_title">작성자 아이디</p></th>
 		                                	<td class="disabled">
 		                                		<div class="table_info table_flex_info">
-		                                			<p class="info_text" th:text="${boardPostsDto.bp_writer_id}"></p>
-	                                				<img src="/image/icons/manager.png" alt="관리자" class="table_info_icons"
-	                                					th:if="${boardPostsDto.bp_account == 'admin'}">
+		                                			<p th:if="${boardPostsDto.bp_account == 'admin'}"
+	                                					th:text="${boardPostsDto.adminAccountDto.a_id}" class="info_text"></p>
+                                					<p th:if="${boardPostsDto.bp_account != 'admin'}"
+	                                					th:text="${boardPostsDto.userAccountDto.u_id}" class="info_text"></p>
 		                                		</div>
 	                                        </td>
 	                                        
@@ -90,7 +93,12 @@
 	                                        	<p th:if="${boardPostsDto.bp_account != 'admin'}" class="table_title">이름<span class='divider'></span>닉네임</p>
 	                                        </th>
 		                                	<td class="disabled">
-		                                		<p th:if="${boardPostsDto.bp_account == 'admin'}" class="table_info" th:text="${boardPostsDto.adminAccountDto.a_name}"></p>
+		                                		<div class="table_info table_flex_info">
+			                                		<p th:if="${boardPostsDto.bp_account == 'admin'}" th:text="${boardPostsDto.adminAccountDto.a_name}"></p>
+			                                		<img src="/image/icons/manager.png" alt="관리자" class="table_info_icons"
+                               						th:if="${boardPostsDto.bp_account == 'admin'}">
+                             					</div>	
+	                                					
 	                                        	<p th:if="${boardPostsDto.bp_account != 'admin'}" class="table_info" th:utext="|
 	                                        		${boardPostsDto.userAccountDto.u_name}
 	                                        		<span class='divider'></span>

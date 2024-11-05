@@ -67,11 +67,12 @@ async function validateEmail(input, usedCheck, alertMsg) {
 }
 
 // 비밀번호 유효성 검사
-function validatePw(input, alertMsg) { 
+function validatePw(input, alertMsg, notViewMsg = false) { 
 	const regEx = /^(?=.*[a-zA-Z])(?=.*[@$!%*?&])[a-zA-Z\d@$!%*?&]{8,16}$/; // 8~16자의 영문 대소문자 중 최소 1개, 특수문자 최소 1개, 숫자 선택 입력
     const errorMessage = "비밀번호는 8~16자의 영문대소문자, 특수문자(@, $, !, %, *, ?, &), 숫자를 사용할 수 있습니다. (필수: 영문대소문자, 특수문자)";
 	const isValid = validateInput(input, regEx, errorMessage);
 	if(alertMsg && !isValid) {
+		if(notViewMsg) setClearErrorMessage(input);
 		alert(errorMessage);
 		return false;
 	}
@@ -93,7 +94,7 @@ function validatePhone(input, alertMsg) {
 }
 
 // 데이터 유효값 확인
-function validateEmpty(input, txt, alertMsg,  notViewMsg = false) { // 요소, 텍스트, alert 여부, 에러메세지 요소 표기 여부(false = 노출, ture = 노출X / 검색폼에서 사용)
+function validateEmpty(input, txt, alertMsg, notViewMsg = false) { // 요소, 텍스트, alert 여부, 에러메세지 요소 표기 여부(false = 노출, ture = 노출X / 검색폼에서 사용)
 	const errorMessage = txt + " 입력해 주세요.";
 	input.value = input.value.trim(); // 앞뒤 공백 제거 적용
 	if(alertMsg) {

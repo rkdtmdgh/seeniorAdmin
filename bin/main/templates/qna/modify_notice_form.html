@@ -6,8 +6,8 @@
 <head>
     <th:block th:insert="~{fragments/head.html :: head('공지 사항 수정')}"></th:block>
     <script th:inline="javascript">
-		logger.info('qnaNoticeDto:', /*[[${qnaNoticeDto}]]*/);
-	</script>
+    	logger.info('qnaNoticeDto --->', /*[[${qnaNoticeDto}]]*/);
+    </script>
 </head>
 
 <body>
@@ -30,7 +30,7 @@
 	                    <form name="qna_notice_modify_form">
 		                    <input type="hidden" name="bqn_no" th:value="${qnaNoticeDto.bqn_no}">
 		                    <input type="hidden" name="bqn_dir_name" th:value="${qnaNoticeDto.bqn_dir_name}">
-		                    <input type="hidden" name="bqn_writer_no" th:value="${qnaNoticeDto.bqn_writer_no}">
+		                    <input type="hidden" name="bqn_writer_no" th:value="${qnaNoticeDto.adminAccountDto.a_no}">
 		                    
 	                        <div class="table_wrap">
 	                            <table class="content_edit_table">
@@ -42,6 +42,29 @@
 	                                </colgroup>
 	
 	                                <tbody>
+	                                	<tr>
+	                                		<th><p class="table_title">공개 설정</th>
+	                                        <td>
+		                                    	<div class="table_info">
+	                                            	<label class="radio">
+	                                            		<input type="radio" name="bqn_state"value="true" th:checked="${qnaNoticeDto.bqn_state == true}"> 공개
+	                                            	</label>
+	                                            	<label class="radio">
+	                                            		<input type="radio" name="bqn_state" value="false" th:checked="${qnaNoticeDto.bqn_state == false}"> 숨김
+	                                            	</label>
+	                                            </div>
+		                                    </td>
+	                                        
+		                                	<th><p class="table_title">등록일<span class="divider"></span>수정일</p></th>
+	                                        <td class="disabled">
+	                                        	<p class="table_info" th:utext="|
+	                                        		${qnaNoticeDto.bqn_reg_date}
+	                                        		<span class='divider'></span>
+	                                        		${qnaNoticeDto.bqn_mod_date}
+	                                        	|"></p>
+	                                        </td>
+		                                </tr>
+		                                
 		                                <tr>
 	                                        <th><p class="table_title">제목</p></th>
 		                                	<td th:classappend="${
@@ -61,21 +84,10 @@
 		                                </tr>
 		                                
 		                                <tr>
-		                                	<th><p class="table_title">등록일<span class="divider"></span>수정일</p></th>
-	                                        <td colspan="3" class="disabled">
-	                                        	<p class="table_info" th:utext="|
-	                                        		${qnaNoticeDto.bqn_reg_date}
-	                                        		<span class='divider'></span>
-	                                        		${qnaNoticeDto.bqn_mod_date}
-	                                        	|"></p>
-	                                        </td>
-		                                </tr>
-		                                
-		                                <tr>
 		                                	<th><p class="table_title">작성자 아이디</p></th>
 		                                	<td class="disabled">
 		                                		<div class="table_info table_flex_info">
-		                                			<p class="info_text" th:text="${qnaNoticeDto.bqn_writer_id}"></p>
+		                                			<p class="info_text" th:text="${qnaNoticeDto.adminAccountDto.a_id}"></p>
 		                                		</div>
 	                                        </td>
 	                                        
@@ -128,14 +140,12 @@
                                 	
 	                            	<div th:if="${
 											#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
-											qnaNoticeDto.bqn_account == 'user' or 
 											(qnaNoticeDto.adminAccountDto.a_id ==  #authentication.name)
 										}"
 										th:onclick="delSingleData(
-											'QnA 공지 사항'
+											'QnA 공지 사항',
 											'bqn_no',
-											[[${qnaNoticeDto.bqn_no}]]
-										)" class="btns delete">삭제</div>
+											[[${qnaNoticeDto.bqn_no}]])" class="btns delete">삭제</div>
 		                        		 
 	                                <div class="btn_list">
 	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>

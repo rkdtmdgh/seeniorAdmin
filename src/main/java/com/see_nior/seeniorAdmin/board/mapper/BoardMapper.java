@@ -62,6 +62,8 @@ public interface BoardMapper {
 
 	int getSearchBoardPostsListCnt(Map<String, Object> pagingParams);
 
+	int modifyConfirm(BoardPostsDto boardPostsDto);
+
 	
 
 }
