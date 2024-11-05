@@ -4,11 +4,11 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    
 <head>
-	<th:block th:insert="~{fragments/head.html :: head('질문 분류 등록')}"></th:block>
+	<th:block th:insert="~{fragments/head.html :: head('신고 분류 등록')}"></th:block>
 	<script type="text/javascript">
 		$(function() {
 			// 포커스 설정
-			setInputFocus('bqc_name');
+			setInputFocus('brc_name');
         });
     </script>
 </head>
@@ -25,12 +25,12 @@
 					<section class="content_info_wrap">
 						<div class="content_top">
 					        <div class="content_top_info">
-					            <h2 class="title">질문 분류 관리</h2>
+					            <h2 class="title">신고 분류 관리</h2>
 					        </div>
-				            <p class="sub_title">질문 분류 등록</p>
+				            <p class="sub_title">신고 분류 등록</p>
 					    </div>
 					    
-					    <form name="qna_category_reg_form" onsubmit="return false">					    	
+					    <form name="report_category_reg_form" onsubmit="return false">					    	
 						    <div class="table_wrap">
 		                        <table class="content_edit_table">
 		                            <colgroup>
@@ -44,7 +44,7 @@
 		                                <tr>
 		                                	<th><p class="table_title">분류명</p></th>
 		                                	<td>
-		                                		<input type="text" name="bqc_name" id="bqc_name" class="table_info" placeholder="질문 유형 분류명"
+		                                		<input type="text" name="brc_name" id="brc_name" class="table_info" placeholder="신고 유형 분류명"
 		                                			onblur="requestDuplicateCheck(this, true);">
 	                                        </td>
 		                                </tr>
@@ -54,7 +54,7 @@
 		                        <div class="btn_list f_jc_right">
 	                                <div class="btn_list">
 	                                    <div onclick="history.back();" class="btns cancel">뒤로가기</div>
-	                                    <div onclick="postQnaCategoryCreate('qna_category_reg_form')" class="btns">등록</div>
+	                                    <div onclick="postReportCategoryCreate('report_category_reg_form')" class="btns">등록</div>
 	                                </div>
 	                            </div>
 		                    </div>

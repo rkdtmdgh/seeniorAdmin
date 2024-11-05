@@ -6,8 +6,8 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('질문 분류 수정')}"></th:block>
 	<script th:inline="javascript">
-    	logger.info('qnaCategoryDto:', /*[[${qnaCategoryDto}]]*/);
-    </script>
+		logger.info('qnaCategoryDto --->', /*[[${qnaCategoryDto}]]*/);
+	</script>
 </head>
 
 <body>
@@ -44,7 +44,7 @@
 		                                <tr>
 		                                	<th><p class="table_title">분류명</p></th>
 		                                	<td>
-		                                		<input type="text" name="bqc_name" id="bqc_name" class="table_info" placeholder="질문 분류명"
+		                                		<input type="text" name="bqc_name" id="bqc_name" class="table_info" placeholder="질문 유형 분류명"
 		                                			th:onblur="requestDuplicateCheck(this, true, [[${qnaCategoryDto.bqc_name}]], null);"
 		                                			th:value="${qnaCategoryDto.bqc_name}">
 	                                        </td>
@@ -61,8 +61,8 @@
 		                                
 		                                <tr>	                                        
 	                                        <th><p class="table_title">질문 수</p></th>
-	                                        <td>
-	                                        	<input type="text" class="table_info" th:value="${qnaCategoryDto.bqc_item_cnt}" disabled>
+	                                        <td class="disabled">
+	                                        	<p class="table_info" th:text="${qnaCategoryDto.bqc_item_cnt}"></p>
 	                                        </td>
 	                                        
 	                                        <td colspan="2"></td>
