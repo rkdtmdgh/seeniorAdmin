@@ -398,12 +398,10 @@ public class QnaController {
 	@ResponseBody
 	public boolean createNoticeConfrim(
 			@RequestParam(value = "files" , required = false) List<MultipartFile> files, 
-			@RequestParam("bqn_title") String bqn_title, 
-			@RequestParam("bqn_body") String bqn_body, 
-			@RequestParam("bqn_writer_no") int bqn_writer_no) {
+			QnaNoticeDto qnaNoticeDto) {
 		log.info("createNoticeConfrim()");
 		
-		return qnaService.createNoticeConfrim(files, bqn_title, bqn_body, bqn_writer_no);
+		return qnaService.createNoticeConfrim(files, QnaNoticeDto qnaNoticeDto);
 		
 	}
 	
