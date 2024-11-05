@@ -3,7 +3,6 @@ package com.see_nior.seeniorAdmin.advertisement;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,10 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.dto.AdvertisementCategoryDto;
 import com.see_nior.seeniorAdmin.dto.AdvertisementDto;
 import com.see_nior.seeniorAdmin.enums.ImgUrlPath;
@@ -118,12 +113,14 @@ public class AdvertisementController {
 	
 	// 광고 위치 수정 양식
 	@GetMapping("/cate_info/modify_category_form")
-	public String modifyCategoryForm(@RequestParam(value = "infoNo") int ac_no, Model model) {
+	public String modifyCategoryForm(@RequestParam(value = "infoNo") int ac_no,
+									@RequestParam(value = "itemCnt") int itemCnt,  Model model) {
 		log.info("modifyCategoryForm()");
 		
 		AdvertisementCategoryDto advertisementCategoryDto = advertisementService.getCategory(ac_no);
 		
 		model.addAttribute("advertisementCategoryDto", advertisementCategoryDto);
+		model.addAttribute("itemCnt", itemCnt);
 		
 		return PagePath.ADVERTISEMENT_MODIFY_CATEGORY_FORM.getValue();
 		
