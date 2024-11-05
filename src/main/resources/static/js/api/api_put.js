@@ -367,10 +367,11 @@ function mapStateModifyObject(name) {
 // 질환/질병 분류 수정
 async function putDiseaseCategoryModify(formName) {
 	const form = document.forms[formName];
+	const current_dc_name = form.current_dc_name;
 	let input;
 	
 	input = form.dc_name;
-	if(input.value !== form.current_dc_name.value) { // 수정이 되었을 경우
+	if(input.value !== current_dc_name.value) { // 수정이 되었을 경우
 		if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 			input.focus();
 			return false;
@@ -397,6 +398,7 @@ async function putDiseaseCategoryModify(formName) {
 // 질환 / 질병 수정
 async function putDiseaseModify(formName) {
 	const form = document.forms[formName];
+	const current_d_name = form.current_d_name;
 	let input;
 	
 	input = form.d_category_no;
@@ -406,7 +408,7 @@ async function putDiseaseModify(formName) {
 	}
 	
 	input = form.d_name;
-	if(input.value !== form.current_d_name.value) { // 수정이 되었을 경우
+	if(input.value !== current_d_name.value) { // 수정이 되었을 경우
 		if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 			input.focus();
 			return false;
@@ -559,6 +561,7 @@ async function putQnaNoticeModify(formName) {
 // QnA 질문 유형 분류 수정
 async function putQnaCategoryModify(formName) {
 	const form = document.forms[formName];
+	const current_bqc_name = form.current_bqc_name;
 	
 	input = form.bqc_name;
 	if(!validateEmpty(input, '분류명을', true)) {
@@ -566,7 +569,7 @@ async function putQnaCategoryModify(formName) {
 		return false;
 	}
 	
-	if(input.value !== form.current_bqc_name.value) { // 수정이 되었을 경우
+	if(input.value !== current_bqc_name.value) { // 수정이 되었을 경우
 		if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
 			input.focus();
 			return false;
@@ -720,7 +723,7 @@ async function putReportCategoryModify(formName) {
 	const errorMessage = `"${form.brc_name.value}" 신고 유형 분류명 수정에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
 	setFormDataCheckConsoleLog(formData);
 	await putIntegSubmit(
-		'/qna/cate_info/modify_category_confirm',
+		'/report/cate_info/modify_category_confirm',
 		formData,
 		successMessage,
 		errorMessage,
