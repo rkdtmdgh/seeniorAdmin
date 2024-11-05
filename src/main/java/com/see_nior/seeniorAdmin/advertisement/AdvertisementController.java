@@ -219,6 +219,18 @@ public class AdvertisementController {
 		
 	}
 	
+	// 홈 화면에서 보여질 광고 가져오기(5개만 가져오기 => 비동기)
+	@ResponseBody
+	@GetMapping("main/get_advertisement_list")
+	public Object getAdvertismentListForMain() {
+		log.info("getAdvertismentListForMain");
+		
+		List<AdvertisementDto> advertisementDtos = advertisementService.getAdvertisementListForMain();
+		
+		return advertisementDtos;
+		
+	}
+	
 	// 모든 광고 가져오기(페이지네이션 => 비동기)
 	@ResponseBody
 	@GetMapping("info/get_advertisement_list")
