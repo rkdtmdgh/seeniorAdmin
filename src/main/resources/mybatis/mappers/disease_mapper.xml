@@ -115,9 +115,17 @@
 			resultMap="DiseaseCategoryDto">
 			
 		SELECT 
-			* 
+   			DC.*, 
+    		(SELECT 
+    			COUNT(*) 
+   			FROM 
+   				DISEASE AS D 
+   			WHERE 
+   				D.D_CATEGORY_NO = DC.DC_NO 
+   			AND 
+   				D.D_IS_DELETED = 1) AS DC_ITEM_CNT 
 		FROM 
-			DISEASE_CATEGORY 
+			DISEASE_CATEGORY AS DC 
 		WHERE 
 			DC_NO = #{dc_no} 
 			
