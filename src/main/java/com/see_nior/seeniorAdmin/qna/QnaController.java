@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.see_nior.seeniorAdmin.account.AccountService;
+import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 import com.see_nior.seeniorAdmin.dto.QnaCategoryDto;
 import com.see_nior.seeniorAdmin.dto.QnaDto;
 import com.see_nior.seeniorAdmin.dto.QnaNoticeDto;
@@ -28,6 +30,7 @@ import lombok.extern.log4j.Log4j2;
 public class QnaController {
 
 	final private QnaService qnaService;
+	final private AccountService accountService;
 	
 	// QnaDto 컬럼 추가에 따른 로직 수정. 
 	
@@ -401,7 +404,7 @@ public class QnaController {
 			QnaNoticeDto qnaNoticeDto) {
 		log.info("createNoticeConfrim()");
 		
-		return qnaService.createNoticeConfrim(files, QnaNoticeDto qnaNoticeDto);
+		return qnaService.createNoticeConfrim(files, qnaNoticeDto);
 		
 	}
 	
@@ -423,14 +426,28 @@ public class QnaController {
 	@PostMapping("/noti_info/modify_notice_confirm")
 	@ResponseBody
 	public boolean modifyNoticeConfirm(
-			@RequestParam("bqn_no") int bqn_no, 
-			@RequestParam("bqn_title") String bqn_title, 
-			@RequestParam("bqn_body") String bqn_body, 
-			@RequestParam("bqn_writer_no") int bqn_writer_no, 
+			@RequestParam(value = "files" , required = false) List<MultipartFile> files, 
+			@RequestParam(value = "deleteFileNames", required = false) List<String> deleteFileNames,
+			QnaNoticeDto qnaNoticeDto, 
 			Principal principal) {
 		log.info("modifyNoticeConfirm()");
 		
-		return qnaService.modifyNoticeConfirm(bqn_no, bqn_title, bqn_body, bqn_writer_no, principal.getName());
+		AdminAccountDto adminAccountDto = 
+				accountService.getAdminAccountById(principal.getName());
+		
+		if ((adminAccountDto != null && adminAccountDto.getA_authority_role().equals("SUPER_ADMIN")) 
+				|| qnaNoticeDto.getBqn_writer_no() == adminAccountDto.getA_no()) {
+			
+			if (files != null && files.size() != 0 && files.get(0).getSize() != 0) 
+				return qnaService.modifyNoticeConfirm(files, deleteFileNames, qnaNoticeDto);
+			 else 
+				return qnaService.modifyNoticeConfirm(null, deleteFileNames, qnaNoticeDto);
+			
+		} else {
+			
+			return false;
+			
+		}
 		
 	}
 	
