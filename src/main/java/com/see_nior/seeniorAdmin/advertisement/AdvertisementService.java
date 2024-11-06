@@ -439,6 +439,7 @@ public class AdvertisementService {
 		return advertisementListPageNum;
 		
 	}
+
 	
 	// 광고 순서 변경(광고 위치 디테일뷰에서)
 	@Transactional
