@@ -119,15 +119,15 @@ function mapDeleteObject(value) {
 			apiUrl = '/qna/noti_info/delete_notice_confirm';
 			replace = '/qna/noti_info/notice_list_form';
 			break;
-		
-		case 'bq_no': // QnA 질문
-			apiUrl = '/qna/info/delete_confirm';
-			replace = '/qna/info/qna_list_form';
-			break;
 			
 		case 'bqc_no': // QnA 질문 유형 분류
 			apiUrl = '/qna/cate_info/delete_category_confirm';
 			replace = '/qna/cate_info/category_list_form';
+			break;
+		
+		case 'bq_no': // QnA 질문
+			apiUrl = '/qna/info/delete_confirm';
+			replace = '/qna/info/qna_list_form';
 			break;
 			
 		case 'bqa_no': // QnA 답변
@@ -140,8 +140,8 @@ function mapDeleteObject(value) {
 			break;
 			
 		case 'bn_no': // 게시판 공지 사항
-			apiUrl = '/board/noti_info/delete_board_notice_confirm';
-			replace = '/board/noti_info/board_notice_list_form';
+			apiUrl = '/board/noti_info/delete_notice_confirm';
+			replace = '/board/noti_info/notice_list_form';
 			break;
 		
 		case 'bp_no': // 게시물
@@ -152,6 +152,15 @@ function mapDeleteObject(value) {
 		case 'brc_no': // 신고 유형 분류
 			apiUrl = '/report/cate_info/delete_category_confirm';
 			replace = '/report/cate_info/category_list_form';
+			break;
+			
+		case 'br_no': // 신고
+			apiUrl = '/report/info/delete_confirm';
+			replace = '/report/info/report_list_form';
+			break;
+			
+		case 'brr_no': // 신고 처리 내용
+			apiUrl = '/report/info/delete_result_confirm';
 			break;
 			
 		case 'ac_no': // 광고 분류

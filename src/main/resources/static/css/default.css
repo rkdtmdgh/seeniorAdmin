@@ -164,11 +164,16 @@
 }
 
 /* textarea */
+.table_content_wrap {
+	line-height: var(--contentLineHeight);
+    padding: var(--textPadding);
+    margin: var(--ssize1) 0;
+}
+
 .table_textarea {
 	width: 100%;
 	min-height: var(--tableTextareaHeight);
 	max-height: 500px;
-    padding: var(--textPadding);
     
     &.small {
     	min-height: 0;
@@ -640,6 +645,8 @@
     .preview_container {
     	width: 100%;
     	max-width: 400px;
+    	padding-top: 0;
+    	margin-bottom: var(--ssize1);
     	aspect-ratio: 16 / 9; /* 비율 유지 (16:9 비율) */
 
     	iframe {
@@ -698,7 +705,9 @@
 	display: flex;
 	flex-direction: column;
 	gap: var(--baseGap);
+	line-height: var(--contentLineHeight);
     padding: var(--textPadding);
+    margin: var(--ssize1) 0;
     
     .content_view_main_thumbnail {
     	display: flex;
@@ -711,6 +720,7 @@
     
     .content_view_table {
     	width: 100%;
+    	padding: var(--textPadding);
     	display: table;
     	table-layout: fixed;
     	border: 1px solid var(--lightGrayColor);
@@ -727,14 +737,14 @@
     		.content_view_th {
     			width: 15%;
     			min-width: 15%;
-    			padding: var(--textPadding);
+    			padding: 1em;
     			font-weight: 600;
     			background-color: var(--tableTitleBgColor);
     		}
     		
     		.content_view_td {
     			width: 100%;
-    			padding: var(--textPadding);
+    			padding: 1em;
     			word-break: keep-all;
     			
     			&.grid {
