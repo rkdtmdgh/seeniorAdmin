@@ -63,20 +63,22 @@
 		                                <tr>
 		                                	<th><p class="table_title">질환 / 질병명</p></th>
 		                                    <td colspan="3">
-		                                        <input type="text" name="d_name" id="d_name" class="table_info" placeholder="질환 / 질병명"
-		                                            th:onblur="requestDuplicateCheck(this, true, [[${diseaseDto.d_name}]], null);"
-		                                            th:value="${diseaseDto.d_name}">
+		                                    	<label class="table_info">
+			                                        <input type="text" name="d_name" id="d_name" placeholder="질환 / 질병명"
+			                                            th:onblur="requestDuplicateCheck(this, true, [[${diseaseDto.d_name}]], null);"
+			                                            th:value="${diseaseDto.d_name}">
+	                        					</label>
 		                                    </td>
 		                                </tr>
 		
 		                                <tr>
 		                                    <th><p class="table_title">추천 식단 재료</p></th>
 		                                    <td colspan="3">
-		                                    	<div class="table_content_wrap">
+		                                    	<div class="table_info">
 			                                    	<textarea rows="1" name="d_good_food" id="d_good_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
 			                                    		onkeyup="setTextareaAddCommaBeforeEnter(this, event)" 
 			                                    		oninput="setTextareaAutoHeight(this)" 
-			                                    		onblur="validateEmpty(this, '추천 식단 재료를')"
+			                                    		onblur="validateEmpty(this, '추천 식단 재료')"
 			                                    		th:text="${diseaseDto.d_good_food}"></textarea>
 	                                    		</div>
 		                                    </td>
@@ -84,11 +86,11 @@
 		                                <tr>
 		                                    <th><p class="table_title">비추천 식단 재료</p></th>
 		                                    <td colspan="3">
-		                                    	<div class="table_content_wrap">
+		                                    	<div class="table_info">
 			                                    	<textarea rows="1" name="d_bad_food" id="d_bad_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
 			                                    		onkeyup="setTextareaAddCommaBeforeEnter(this, event)" 
 			                                    		oninput="setTextareaAutoHeight(this)" 
-			                                    		onblur="validateEmpty(this, '추천 식단 재료를')"
+			                                    		onblur="validateEmpty(this, '추천 식단 재료')"
 			                                    		th:text="${diseaseDto.d_bad_food}"></textarea>
 	                                    		</div>
 		                                    </td>
@@ -96,13 +98,13 @@
 		                                <tr>
 		                                    <th><p class="table_title">질환 / 질병 정보</p></th>
 		                                    <td colspan="3">
-		                                    	<div class="table_content_wrap">
+		                                    	<div class="table_info">
 		                                           	<textarea name="d_info" id="d_info" class="table_textarea" placeholder="내용을 입력하세요"
 		                                				data-limit-target="textarea" 
 		                                				data-limit="info" 
 		                                				oninput="setTextareaAutoHeight(this)" 
 		                                				onkeyup="setTextLimit(this)"
-		                                				onblur="validateEmpty(this, '질환 / 질병 정보를')"
+		                                				onblur="validateEmpty(this, '질환 / 질병 정보')"
 		                                				th:text="${diseaseDto.d_info}"></textarea>
 		                                           	<div id="text_limit">
 		                                				<span id="current_size"></span> / <span id="max_size"></span>

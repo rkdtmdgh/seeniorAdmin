@@ -114,7 +114,7 @@
 	                                				data-limit="short" 
 	                                				oninput="setTextareaAutoHeight(this)" 
 	                                				onkeyup="setTextLimit(this)"
-	                                				onblur="validateEmpty(this, '내용을')"
+	                                				onblur="validateEmpty(this, '내용')"
 	                                				th:text="${reportDto.reportResultDto?.brr_result ?: ''}"
 	                                				th:readonly="${
 	                                					reportDto.reportResultDto != null and

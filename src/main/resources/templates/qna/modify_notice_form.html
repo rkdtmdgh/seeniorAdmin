@@ -73,13 +73,15 @@
 				                               		'disabled' : ''
 			                                	}"
 		                                		colspan="3">
-		                                		<input type="text" name="bqn_title" id="bqn_title" class="table_info" placeholder="제목"
-		                                			onblur="validateEmpty(this, '제목을')"
-		                                			th:value="${qnaNoticeDto.bqn_title}"
-		                                			th:disabled="${
-					                               		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
-					                               		(qnaNoticeDto.adminAccountDto.a_id !=  #authentication.name)
-				                                	}">
+		                                		<label class="table_info">
+			                                		<input type="text" name="bqn_title" id="bqn_title" placeholder="제목"
+			                                			onblur="validateEmpty(this, '제목')"
+			                                			th:value="${qnaNoticeDto.bqn_title}"
+			                                			th:disabled="${
+						                               		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
+						                               		(qnaNoticeDto.adminAccountDto.a_id !=  #authentication.name)
+					                                	}">
+		                                		</label>
 	                                        </td>
 		                                </tr>
 		                                

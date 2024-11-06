@@ -23,7 +23,6 @@
     
                 .side_menu {
                     font-size: var(--menuFontSize);
-                    line-height: var(--tallLineHeight);
                 }
                 
                 &:hover {

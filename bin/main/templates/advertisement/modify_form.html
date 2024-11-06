@@ -70,7 +70,7 @@
 		                                	<th><p class="table_title">클라이언트</p></th>
 		                                    <td colspan="3">
 		                                        <input type="text" name="ad_client" id="ad_client" class="table_info" placeholder="클라이언트"
-		                                            onblur="validateEmpty(this, '클라이언트를')"
+		                                            onblur="validateEmpty(this, '클라이언트')"
 		                                            th:value="${advertisementDto.ad_client}">
 		                                    </td>
 		                                </tr>
@@ -79,16 +79,16 @@
 		                                	<th><p class="table_title">시작일</p></th>
 		                                	<td>
 		                                		<input type="date" name="ad_start_date" id="ad_start_date" max="9999-12-31" min="1900-01-01" class="table_info"
-	                                            	onchange="validateEmpty(this, '시작일을')" 
-	                                            	onblur="validateEmpty(this, '시작일을')"
+	                                            	onchange="validateEmpty(this, '시작일')" 
+	                                            	onblur="validateEmpty(this, '시작일')"
 	                                            	th:value="${advertisementDto.ad_start_date}">
 		                                	</td>
 		                                	
 		                                	<th><p class="table_title">종료일</p></th>
 		                                	<td>
 		                                		<input type="date" name="ad_end_date" id="ad_end_date" max="9999-12-31" min="1900-01-01" class="table_info"
-	                                            	onchange="validateEmpty(this, '종료일을')" 
-	                                            	onblur="validateEmpty(this, '종료일을')"
+	                                            	onchange="validateEmpty(this, '종료일')" 
+	                                            	onblur="validateEmpty(this, '종료일')"
 	                                            	th:value="${advertisementDto.ad_end_date}">
 		                                	</td>
 	                                	</tr>
@@ -97,7 +97,7 @@
 		                                	<th><p class="table_title">URL</p></th>
 		                                	<td>
 		                                		<input type="text" name="ad_url" id="ad_url" class="table_info" placeholder="URL"
-	                                				onblur="validateEmpty(this, 'URL 주소를')"
+	                                				onblur="validateEmpty(this, 'URL 주소')"
                                 					th:value="${advertisementDto.ad_url}">
 		                                	</td>
 		                                	

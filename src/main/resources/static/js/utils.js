@@ -152,7 +152,7 @@ function setInputStateFromRadio(state, targetEle, defaultValue = null) {
 			.attr('readonly', false)
 			.attr('placeholder', placeholderEnabled)
 			.on('blur', function() { // 이벤트 추가
-				validateEmpty(this, `${placeholderEnabled}을(를)`);
+				validateEmpty(this, placeholderEnabled);
 			}).focus(); 
 	}
 }
@@ -513,25 +513,31 @@ function setAccountModifyForm(data) {
                             
                         	<th><p class="table_title">이름</p></th>
                         	<td>
-                                <input type="text" name="a_name" id="name" class="table_info" placeholder="이름"
-                                	oninput="validateEmpty(this, '이름을')" onblur="validateEmpty(this, '이름을')"
-                                	value="${data.a_name}">
+                        		<label class="table_info">
+	                                <input type="text" name="a_name" id="name" placeholder="이름"
+	                                	oninput="validateEmpty(this, '이름')" onblur="validateEmpty(this, '이름')"
+	                                	value="${data.a_name}">
+                        		</label>
                             </td>
                         </tr>
 
                         <tr>
                         	<th><p class="table_title">생년월일</p></th>
                         	<td>
-                                <input type="date" name="a_birth" id="birth" min="1900-01-01" max="9999-12-31" class="table_info"
-                                	onblur="replaceDate(this)"
-                                	value="${data.a_birth}">
+                        		<label class="table_info">
+	                                <input type="date" name="a_birth" id="birth" min="1900-01-01" max="9999-12-31"
+	                                	onblur="replaceDate(this)"
+	                                	value="${data.a_birth}">
+                        		</label>
                             </td>
                             
                         	<th><p class="table_title">연락처</p></th>
                         	<td>
-                                <input type="text" name="a_phone" id="phone" maxlength="13" class="table_info" placeholder="연락처"
-                                	onkeydown="replacePhone(this)" onkeyup="validatePhone(this)" onblur="validatePhone(this)"
-                                	value="${data.a_phone}">
+                        		<label class="table_info">
+	                                <input type="text" name="a_phone" id="phone" maxlength="13" placeholder="연락처"
+	                                	onkeydown="replacePhone(this)" onkeyup="validatePhone(this)" onblur="validatePhone(this)"
+	                                	value="${data.a_phone}">
+                        		</label>
                             </td>
                         </tr>
                         
@@ -560,9 +566,39 @@ function setAccountModifyForm(data) {
 	                            
 	                            <td colspan="2"></td>
                             </tr>
-                        		` 
+                    		` 
                         	: 
-                            	''
+                            `
+                        	<tr>
+                            	<th><p class="table_title">부서</p></th>
+	                        	<td>
+	                        		<label class="table_info">
+		                                <input type="text" placeholder="부서"
+		                                	value="${data.a_department || ''}">
+	                        		</label>
+	                            </td>
+	                            
+	                            <th><p class="table_title">직위</p></th>
+	                        	<td>
+	                        		<label class="table_info">
+		                                <input type="text" placeholder="직위"
+		                                	value="${data.a_level || ''}">
+	                        		</label>
+	                            </td>
+	                        </tr>
+		
+	                        <tr>
+	                        	<th><p class="table_title">직책</p></th>
+	                        	<td>
+	                        		<label class="table_info">
+		                                <input type="text" placeholder="직책"
+		                                	value="${data.a_position || ''}">
+	                        		</label>
+	                            </td>
+	                            
+	                            <td colspan="2"></td>
+                            </tr>
+                            `
 						}						
                     </tbody>
                 </table>

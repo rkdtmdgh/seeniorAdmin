@@ -108,7 +108,7 @@
 		                                <tr>
 		                                	<th><p class="table_title">내용</p></th>
 		                                	<td colspan="3" class="ta_l">
-		                                		<div class="table_content_wrap"> 
+		                                		<div class="table_info"> 
 		                                			<p class="table_textarea sc" th:text="${qnaDto.bq_body}"></p>
 	                                			</div>
 		                                    </td>
@@ -129,13 +129,13 @@
 		                                <tr>
 		                                	<th><p class="table_title">답변</p></th>
 		                                	<td colspan="3">
-		                                		<div class="table_content_wrap"> 
+		                                		<div class="table_info"> 
 			                                		<textarea name="bqa_answer" id="bqa_answer" class="table_textarea" placeholder="답변을 입력하세요"
 		                                				data-limit-target="textarea" 
 		                                				data-limit="short" 
 		                                				oninput="setTextareaAutoHeight(this)" 
 		                                				onkeyup="setTextLimit(this)"
-		                                				onblur="validateEmpty(this, '답변을')"
+		                                				onblur="validateEmpty(this, '답변')"
 		                                				th:text="${qnaDto.qnaAnswerDto?.bqa_answer ?: ''}"
 		                                				th:readonly="${
 		                                					qnaDto.qnaAnswerDto != null and
