@@ -639,16 +639,11 @@ public class QnaService {
 	public boolean modifyNoticeConfirm(
 			List<MultipartFile> files, List<String> deleteFileNames, QnaNoticeDto qnaNoticeDto) {
 		log.info("modifyNoticeConfirm()");
-		
-		log.info("files ------ {}", files);
-		log.info("deleteFileNames ------ {}", deleteFileNames);
-		log.info("qnaNoticeDto ------ {}", qnaNoticeDto);
-		
+
 		String filePath = "";
 		
 		// 기존 저장된 img가 없는데 추가한 img가 있는 경우 dir_name 추가
-		if ((files != null && files.size() != 0 && files.get(0).getSize() != 0) 
-				&& qnaNoticeDto.getBqn_dir_name() == null) {
+		if (files != null && qnaNoticeDto.getBqn_dir_name() == null) {
 			
 			Date now = new Date();	      
     	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -690,30 +685,26 @@ public class QnaService {
 				return SqlResult.FAIL.getValue();
 			}
 			
-		}
-		
-		// 이미지 서버에 새로운 이미지 저장 저장 요청
-		ResponseEntity<String> savedFiles = imageFileService.uploadFiles(files, filePath);
-		
-		// 이미지 서버 파일 저장 완료 
-		if (savedFiles != null) {
-			log.info("imageFileService.uploadFiles() success");
+		} else {
 			
-			ObjectMapper objectMapper = new ObjectMapper();
+			// 이미지 서버에 새로운 이미지 저장 저장 요청
+			ResponseEntity<String> savedFiles = imageFileService.uploadFiles(files, filePath);
 			
-			try {
+			// 이미지 서버 파일 저장 완료 
+			if (savedFiles != null) {
+				log.info("imageFileService.uploadFiles() success");
 				
-				Map<String,Object> savedFileObj = objectMapper.readValue(savedFiles.getBody(), new TypeReference<Map<String,Object>>() {});
-				log.info("savedFiles(string) to savedFileNames(object) success!");
+				ObjectMapper objectMapper = new ObjectMapper();
 				
-				@SuppressWarnings("unchecked") //(List<String>) 강제 캐스팅 에러
-				List<String> savedFileNames = (List<String>) savedFileObj.get("savedFileNames");
-				log.info("savedFileNames : {}",savedFileNames);
-				
-				String bqn_body = qnaNoticeDto.getBqn_body();
-				
-				if (savedFileNames != null) {
+				try {
 					
+					Map<String,Object> savedFileObj = objectMapper.readValue(savedFiles.getBody(), new TypeReference<Map<String,Object>>() {});
+					
+					@SuppressWarnings("unchecked") //(List<String>) 강제 캐스팅 에러
+					List<String> savedFileNames = (List<String>) savedFileObj.get("savedFileNames");
+					
+					String bqn_body = qnaNoticeDto.getBqn_body();
+						
 					Pattern pattern = Pattern.compile("img src=\"blob:[^\"]*\"");
 					Matcher matcher = pattern.matcher(bqn_body);
 					
@@ -731,49 +722,52 @@ public class QnaService {
 						
 						matcher.appendReplacement(new_bqn_body, newSrc);
 						
-					}
+					} 
 					
 					matcher.appendTail(new_bqn_body);
-					
 					bqn_body = new_bqn_body.toString();
 					
+					QnaNoticeDto newQnaNoticeDto = new QnaNoticeDto();
+					newQnaNoticeDto.setBqn_no(qnaNoticeDto.getBqn_no());
+					newQnaNoticeDto.setBqn_title(qnaNoticeDto.getBqn_title());
+					newQnaNoticeDto.setBqn_dir_name(qnaNoticeDto.getBqn_dir_name());
+					newQnaNoticeDto.setBqn_body(bqn_body);
 					
-				} 
-				
-				QnaNoticeDto newQnaNoticeDto = new QnaNoticeDto();
-				newQnaNoticeDto.setBqn_no(qnaNoticeDto.getBqn_no());
-				newQnaNoticeDto.setBqn_title(qnaNoticeDto.getBqn_title());
-				newQnaNoticeDto.setBqn_dir_name(qnaNoticeDto.getBqn_dir_name());
-				newQnaNoticeDto.setBqn_body(bqn_body);
-				
-				int updateResult = qnaMapper.updateQnaNotice(newQnaNoticeDto);
-				
-				if (updateResult >= 0) {
-					log.info("qnaMapper.updateQnaNotice() success");
+					int updateResult = qnaMapper.updateQnaNotice(newQnaNoticeDto);
 					
-					// 삭제할 img가 있을 경우
-					if (deleteFileNames.size() != 0) {
+					if (updateResult >= 0) {
+						log.info("qnaMapper.updateQnaNotice() success");
 						
-						ResponseEntity<String> deletedFiles = 
-								imageFileService.deleteFiles(deleteFileNames, filePath);
-						
-						if (deletedFiles == null) {
-							log.info("imageFileService.deleteFiles() fail");
-							return SqlResult.FAIL.getValue();
+						// 삭제할 img가 있을 경우
+						if (deleteFileNames.size() != 0) {
+							
+							ResponseEntity<String> deletedFiles = 
+									imageFileService.deleteFiles(deleteFileNames, filePath);
+							
+							if (deletedFiles == null) {
+								log.info("imageFileService.deleteFiles() fail");
+								return SqlResult.FAIL.getValue();
+							}
+							
 						}
+						
+						
+					} else {
+						log.info("qnaMapper.updateQnaNotice() fail");
+						
+						return SqlResult.FAIL.getValue();
 						
 					}
 					
 					
-				} else {
-					log.info("qnaMapper.updateQnaNotice() fail");
-					
-					return SqlResult.FAIL.getValue();
-					
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 				
-			} catch (Exception e) {
-				e.printStackTrace();
+			} else {
+				
+				return SqlResult.FAIL.getValue();
+				
 			}
 			
 		}

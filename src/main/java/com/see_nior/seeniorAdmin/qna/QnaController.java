@@ -428,12 +428,9 @@ public class QnaController {
 	public boolean modifyNoticeConfirm(
 			@RequestParam(value = "files" , required = false) List<MultipartFile> files, 
 			@RequestParam(value = "deleteFileNames", required = false) List<String> deleteFileNames,
-			@RequestParam("bqn_body") String bqn_body,
 			QnaNoticeDto qnaNoticeDto, 
 			Principal principal) {
 		log.info("modifyNoticeConfirm()");
-		
-		log.info("bqn_body");
 		
 		AdminAccountDto adminAccountDto = 
 				accountService.getAdminAccountById(principal.getName());
