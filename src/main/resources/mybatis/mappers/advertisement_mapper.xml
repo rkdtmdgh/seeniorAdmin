@@ -258,6 +258,17 @@
 	
 	</select>
 	
+	<!-- 광고 테이블의 maxNo값 구하기 -->
+	<select id="getAdvertisementMaxNo"
+			resultType="Integer">
+			
+		SELECT 
+			MAX(AD_NO) 
+		FROM 
+			ADVERTISEMENT;
+	
+	</select>
+	
 	<!-- idx값을 기존 idx들의 중간값 혹은 기존 idx값 보다 작은 값으로 입력 시 나머지 idx들 +1 처리 하기 -->
 	<update id="updateAdvertisementIdxSum"
 			parameterType="Integer">
@@ -320,6 +331,23 @@
 	
 	</insert>
 	
+	<!-- 홈 화면에서 보여질 광고 가져오기(5개) -->
+	<select id="getAdvertisementListForMain"
+			resultMap="AdvertisementDto">
+			
+		SELECT 
+			* 
+		FROM 
+			ADVERTISEMENT 
+		WHRER 
+			AD_IS_DELETED = 1 
+		AND 
+			AD_STATE = 1 
+		ORDER BY 
+			AD_NO DESC
+	
+	</select>
+
 	<!-- 페이지에 따른 광고 가져오기(모든 광고) -->
 	<select id="getAdvertisementListWithPage"
 			parameterType="Map"
