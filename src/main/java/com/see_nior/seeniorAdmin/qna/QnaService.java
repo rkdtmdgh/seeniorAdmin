@@ -318,6 +318,20 @@ public class QnaService {
 		
 	}
 
+	// qna main 화면 리스트 가져오기
+	public Object getQnaListForMain(int page_limit) {
+		log.info("getQnaListForMain()");
+		
+		Map<String, Object> responseMap = new HashMap<>();
+		
+		List<QnaDto> qnaDtosForMain = qnaMapper.selectQnaListForMain(page_limit);
+		responseMap.put("qnaDtos", qnaDtosForMain);
+		
+		return responseMap;
+		
+	}
+
+	
 	
 	
 	/////////// 카테고리
@@ -844,6 +858,20 @@ public class QnaService {
 		}
 		
 	}
+
+	// qna 공지사항 main 화면 리스트 가져오기
+	public Object getNoticeListForMain(int page_limit) {
+		log.info("getNoticeListForMain()");
+		
+		Map<String, Object> responseMap = new HashMap<>();
+		
+		List<QnaNoticeDto> qnaNoticeDtos = qnaMapper.selectQnaNoticeListForMain(page_limit);
+		responseMap.put("qnaNoticeDtos", qnaNoticeDtos);
+		
+		return responseMap;
+		
+	}
+
 
 
 
