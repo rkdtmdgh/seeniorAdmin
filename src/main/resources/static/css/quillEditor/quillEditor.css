@@ -2,6 +2,7 @@
 .ql-toolbar.ql-snow {
 	display: flex;
 	justify-content: flex-start;
+	line-height: var(--basicLineHeight);
 	padding: var(--textPadding);
 	background-color: #FAFAFA;
 	border: none;

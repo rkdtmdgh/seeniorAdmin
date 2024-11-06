@@ -72,16 +72,18 @@
 		                                
 		                                <tr>
 		                                    <th><p class="table_title">내용</p></th>	                                        
-	                                        <td colspan="3">	                                            	
-                                            	<textarea name="v_text" id="v_text" class="table_textarea" placeholder="내용을 입력하세요"
-	                                				data-limit-target="textarea" 
-	                                				data-limit="short" 
-	                                				oninput="setTextareaAutoHeight(this)" 
-	                                				onkeyup="setTextLimit(this)"
-	                                				onblur="validateEmpty(this, '내용을')"
-	                                				th:text="${videoDto.v_text}"></textarea>
-                                            	<div id="text_limit">
-	                                				<span id="current_size"></span> / <span id="max_size"></span>
+	                                        <td colspan="3">	         
+	                                        	<div class="table_content_wrap">                                   	
+	                                            	<textarea name="v_text" id="v_text" class="table_textarea" placeholder="내용을 입력하세요"
+		                                				data-limit-target="textarea" 
+		                                				data-limit="short" 
+		                                				oninput="setTextareaAutoHeight(this)" 
+		                                				onkeyup="setTextLimit(this)"
+		                                				onblur="validateEmpty(this, '내용을')"
+		                                				th:text="${videoDto.v_text}"></textarea>
+	                                            	<div id="text_limit">
+		                                				<span id="current_size"></span> / <span id="max_size"></span>
+		                                			</div>
 	                                			</div>
 		                                    </td>
 		                                </tr>

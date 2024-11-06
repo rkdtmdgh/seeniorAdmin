@@ -810,6 +810,7 @@
 		SET 
 			BQN_TITLE = #{bqn_title}, 
 			BQN_BODY = #{bqn_body}, 
+			BQN_DIR_NAME = #{bqn_dir_name}, 
 			BQN_MOD_DATE = NOW() 
 		WHERE 
 			BQN_NO = #{bqn_no} 
