@@ -108,7 +108,9 @@
 		                                <tr>
 		                                	<th><p class="table_title">내용</p></th>
 		                                	<td colspan="3" class="ta_l">
-		                                		<p class="table_textarea sc" th:text="${qnaDto.bq_body}"></p>
+		                                		<div class="table_content_wrap"> 
+		                                			<p class="table_textarea sc" th:text="${qnaDto.bq_body}"></p>
+	                                			</div>
 		                                    </td>
 		                                </tr>
 		                                
@@ -127,20 +129,22 @@
 		                                <tr>
 		                                	<th><p class="table_title">답변</p></th>
 		                                	<td colspan="3">
-		                                		<textarea name="bqa_answer" id="bqa_answer" class="table_textarea" placeholder="답변을 입력하세요"
-	                                				data-limit-target="textarea" 
-	                                				data-limit="short" 
-	                                				oninput="setTextareaAutoHeight(this)" 
-	                                				onkeyup="setTextLimit(this)"
-	                                				onblur="validateEmpty(this, '답변을')"
-	                                				th:text="${qnaDto.qnaAnswerDto?.bqa_answer ?: ''}"
-	                                				th:readonly="${
-	                                					qnaDto.qnaAnswerDto != null and
-			                                    		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
-			                                    		qnaDto.qnaAnswerDto.adminAccountDto.a_id != #authentication.name
-	                                				}"></textarea>
-                                            	<div id="text_limit">
-	                                				<span id="current_size"></span> / <span id="max_size"></span>
+		                                		<div class="table_content_wrap"> 
+			                                		<textarea name="bqa_answer" id="bqa_answer" class="table_textarea" placeholder="답변을 입력하세요"
+		                                				data-limit-target="textarea" 
+		                                				data-limit="short" 
+		                                				oninput="setTextareaAutoHeight(this)" 
+		                                				onkeyup="setTextLimit(this)"
+		                                				onblur="validateEmpty(this, '답변을')"
+		                                				th:text="${qnaDto.qnaAnswerDto?.bqa_answer ?: ''}"
+		                                				th:readonly="${
+		                                					qnaDto.qnaAnswerDto != null and
+				                                    		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
+				                                    		qnaDto.qnaAnswerDto.adminAccountDto.a_id != #authentication.name
+		                                				}"></textarea>
+	                                            	<div id="text_limit">
+		                                				<span id="current_size"></span> / <span id="max_size"></span>
+		                                			</div>
 	                                			</div>
 		                                    </td>
 		                                </tr>

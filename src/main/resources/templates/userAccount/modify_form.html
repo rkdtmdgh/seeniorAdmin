@@ -73,9 +73,11 @@
                                 		<tr th:if="${userAccountDto.u_is_blocked == false}">
 											<th><p class="table_title">정지 사유</p></th>
 											<td colspan="3">
-                               					<textarea rows="1" name="u_blocked_reason" id="u_blocked_reason" class="table_textarea small" placeholder='정지 사유'
-		                                    		oninput="setTextareaAutoHeight(this)" 
-		                                    		th:text="${userAccountDto.u_blocked_reason}"></textarea>
+												<div class="table_content_wrap">
+	                               					<textarea rows="1" name="u_blocked_reason" id="u_blocked_reason" class="table_textarea small" placeholder='정지 사유'
+			                                    		oninput="setTextareaAutoHeight(this)" 
+			                                    		th:text="${userAccountDto.u_blocked_reason}"></textarea>
+												</div>
 											</td>                                		
                                 		</tr>
                                 		

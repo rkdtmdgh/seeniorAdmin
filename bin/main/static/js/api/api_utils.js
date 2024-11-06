@@ -77,7 +77,7 @@ async function requestDuplicateCheck(input, nullCheck, defaultValue,  alertMsg) 
 		
 	} catch(error) {
 		logger.error('Error checking for duplicates:', error);
-		alert(`${word} 중복 확인 중 오류가 발생했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`);
+		alert(`${word} 중복 확인 중 오류가 발생했습니다.` + addMsg);
 		location.reload(true);
 	}
 }
