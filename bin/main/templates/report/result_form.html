@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	
+<head>
+    <th:block th:insert="~{fragments/head.html :: head('신고 관리')}"></th:block>
+    <script th:inline="javascript">
+    	logger.info('reportDto:', /*[[${reportDto}]]*/);
+    </script>
+</head>
+
+<body>
+	<main class="contents_wrap">
+	    <header th:replace="~{fragments/header.html :: header}"></header>
+	
+	    <article class="contents_container">
+	        <nav th:replace="~{fragments/nav.html :: nav}"></nav>
+	
+	        <div class="content">
+	            <div class="content_inner sc">
+	                <section class="content_info_wrap">
+	                    <div class="content_top">
+	                        <div class="content_top_info">
+	                            <h2 class="title">신고 관리</h2>
+	                        </div>
+	                        <p class="sub_title">신고 관리</p>
+	                    </div>
+	
+	                    <form name="report_result_form">
+		                    <input type="hidden" name="br_no" th:value="${reportDto.br_no}">
+		                    
+		                    <th:block th:if="${reportDto.reportResultDto}">
+			                    <input type="hidden" name=brr_no th:value="${reportDto.reportResultDto.brr_no}">
+			                    <input type="hidden" name="a_id" th:value="${reportDto.reportResultDto.adminAccountDto.a_id}">
+			                    <input type="hidden" name="current_brr_result" th:value="${reportDto.reportResultDto.brr_result}">
+		                    </th:block>
+		                    
+	                        <div class="table_wrap">
+	                            <table class="content_edit_table">
+	                                <colgroup>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                </colgroup>
+	
+	                                <tbody>
+	                                	<tr>
+		                                    <th><p class="table_title">신고 유형</p></th>
+		                                    <td>
+		                                    	<p class="table_info" th:text="${reportDto.reportCategoryDto.brc_name}"></p>
+		                                    </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                    <th><p class="table_title">제목</p></th>
+		                                    <td colspan="3">
+		                                    	<p class="table_info" th:text="${reportDto.br_title}"></p>
+		                                    </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                    <th><p class="table_title">신고자 아이디</p></th>
+		                                    <td>
+		                                    	<p class="table_info" th:text="${reportDto.userAccountDto.u_id}"></p>
+		                                    </td>
+		                                    
+		                                    <th><p class="table_title">이름<span class="divider"></span>닉네임</p></th>
+		                                    <td>
+		                                    	<p class="table_info" th:utext="|
+		                                    		${reportDto.userAccountDto.u_name}
+		                                    		<span class='divider'></span>
+		                                    		${reportDto.userAccountDto.u_nickname}
+	                                    		|"></p>
+		                                    </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">등록일<span class="divider"></span>수정일</p></th>
+	                                        <td colspan="3">
+	                                        	<p class="table_info" th:utext="|
+	                                        		${reportDto.br_reg_date}
+	                                        		<span class='divider'></span>
+	                                        		${reportDto.br_mod_date}
+	                                        	|"></p>
+	                                        </td>
+										</tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">신고 내용</p></th>
+		                                	<td colspan="3" class="ta_l">
+		                                		<p class="table_textarea sc" th:text="${reportDto.br_reason}"></p>
+		                                    </td>
+		                                </tr>
+		                                
+		                                <tr th:if="${reportDto.reportResultDto}">
+		                                	<th><p class="table_title">처리자 아이디</p></th>
+		                                    <td>
+		                                    	<p class="table_info" th:text="${reportDto.reportResultDto.adminAccountDto.a_id}"></p>
+		                                    </td>
+		                                    
+		                                    <th><p class="table_title">이름</p></th>
+		                                    <td>
+		                                    	<p class="table_info" th:text="${reportDto.reportResultDto.adminAccountDto.a_name}"></p>
+		                                    </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">처리 내용</p></th>
+		                                	<td colspan="3">
+		                                		<textarea name="brr_result" id="brr_result" class="table_textarea" placeholder="내용을 입력하세요"
+	                                				data-limit-target="textarea" 
+	                                				data-limit="short" 
+	                                				oninput="setTextareaAutoHeight(this)" 
+	                                				onkeyup="setTextLimit(this)"
+	                                				onblur="validateEmpty(this, '내용을')"
+	                                				th:text="${reportDto.reportResultDto?.brr_result ?: ''}"
+	                                				th:readonly="${
+	                                					reportDto.reportResultDto != null and
+			                                    		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
+			                                    		reportDto.reportResultDto.adminAccountDto.a_id != #authentication.name
+	                                				}"></textarea>
+                                            	<div id="text_limit">
+	                                				<span id="current_size"></span> / <span id="max_size"></span>
+	                                			</div>
+		                                    </td>
+		                                </tr>
+	                                </tbody>
+	                            </table>
+	
+                                <div class="btn_list" th:classappend="${reportDto.reportResultDto != null ? 'f_jc_right' : ''}">
+                                	<div th:if="${reportDto.reportResultDto == null}"
+	                        			th:onclick="delSingleData(
+	                        		 		[[${reportDto.userAccountDto.u_id} + '님의 신고']],
+	                        		 		'br_no', 
+	                        		 		[[${reportDto.br_no}]]
+                        		 		)" class="btns delete">신고 삭제</div>
+		                        		 
+                                	<div class="btn_list">
+	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
+	                                    
+	                                    <div th:if="${
+	                                    		reportDto.reportResultDto != null and
+	                                    		(#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
+	                                    		reportDto.reportResultDto.adminAccountDto.a_id == #authentication.name)
+                                    		}"
+		                        			th:onclick="delSingleData(
+	                        					[[${reportDto.reportResultDto.adminAccountDto.a_id} + '님의 처리 내용']],
+		                        		 		'brr_no', 
+		                        		 		[[${reportDto.reportResultDto.brr_no}]],
+		                        		 		{
+		                        		 			'br_no': [[${reportDto.br_no}]],
+		                        		 		}
+	                        				)" class="btns delete">답변 삭제</div>
+		                        		 
+	                                    <div 
+	                                    	th:if="${reportDto.reportResultDto == null}"
+	                                    	onclick="postReportResultCreate('report_result_form')" class="btns">답변 등록</div>
+                                    	
+                                    	<div 
+	                                    	th:if="${
+	                                    		reportDto.reportResultDto != null and
+	                                    		(#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
+	                                    		reportDto.reportResultDto.adminAccountDto.a_id == #authentication.name)
+	                                    	}"
+	                                    	onclick="putReportResultrModify('report_result_form')" class="btns">답변 수정</div>
+	                                </div>
+                                </div>
+	                        </div>
+	                    </form>
+	                </section>
+	            </div>
+	        </div>
+	    </article>
+	</main>
+</body>
+</html>

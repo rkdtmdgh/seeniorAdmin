@@ -112,7 +112,7 @@ async function postIdentityCheckProcess(event, formName) {
 			
 		} catch(error) {
 			logger.error('/account/info/modify_check postIdentityCheck() error:', error);
-			alert('본인 확인 오류로 데이터를 불러오는데 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
+			alert('본인 확인 오류로 데이터를 불러오는데 실패했습니다.' + addMsg);
 			location.reload(true);
 			
 		} finally {
@@ -142,13 +142,13 @@ async function postIntegSubmitProcess(apiUrl, formData, successMessage, errorMes
 				redirectUrl ? location.replace(redirectUrl) : location.reload(true);
 				
 			} else {
-				alert(errorMessage);
+				alert(errorMessage + addMsg);
 				location.reload(true);
 			}
 			
 		} catch(error) {
 			logger.error(`${apiUrl} postIntegSubmit() error:`, error);
-			alert(errorMessage);
+			alert(errorMessage + addMsg);
 			location.reload(true);
 		}
 	}
@@ -166,8 +166,8 @@ async function postDiseaseCategoryCreate(formName, nextPage) {
 	}
 	
 	const formData = new FormData(form);
-	const successMessage = `"${input.value}" 분류가 등록되었습니다.`;
-	const errorMessage = `"${input.value}" 분류 등록 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const successMessage = `"${input.value}" 질환/질병 분류가 등록되었습니다.`;
+	const errorMessage = `"${input.value}" 질환/질병 분류 등록 실패했습니다.`;
 	
 	await postIntegSubmit(
 		'/disease/cate_info/create_category_confirm', 				// apiUrl
@@ -216,7 +216,7 @@ async function postDiseaseCreate(formName) {
 	
 	const formData = new FormData(form);
 	const successMessage = `"${form.d_name.value}" 질환/질병 정보가 등록되었습니다.`;
-	const errorMessage = `"${form.d_name.value}" 질환 / 질병 정보 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const errorMessage = `"${form.d_name.value}" 질환 / 질병 정보 등록에 실패했습니다.`;
 	
 	await postIntegSubmit(
 		'/disease/info/create_confirm', 
@@ -246,7 +246,7 @@ async function postRecipeUpdateProcess() {
 				alert('최신 정보로 업데이트하였습니다.');
 				
 			} else {
-				alert('최신 정보 업데이트에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.');
+				alert('최신 정보 업데이트에 실패하였습니다.' + addMsg);
 			}
 			
 		} catch(error) {
@@ -283,7 +283,7 @@ async function postVideoCreate(formName) {
 	
 	const formData = new FormData(form);
 	const successMessage = `"${form.v_title.value}"\n영상 정보가 등록되었습니다.`;
-	const errorMessage = `"${form.v_title.value}"\n영상 정보 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const errorMessage = `"${form.v_title.value}"\n영상 정보 등록에 실패했습니다.`;
 	
 	await postIntegSubmit(
 		'/video/info/create_confirm', 
@@ -311,7 +311,7 @@ async function postNoticeCreate(formName) {
 	}
 	
 	const successMessage = '공지사항이 등록되었습니다.';
-	const errorMessage = '공지사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
+	const errorMessage = '공지사항 등록에 실패했습니다.';
 	
 	const formData = new FormData(form);
 	formData.set('bpn_body', quill.root.innerHTML); // quill 에디터 내용
@@ -346,7 +346,7 @@ async function postQnaNoticeCreate(formName) {
 	}
 	
 	const successMessage = '질문과 답변 공지사항이 등록되었습니다.';
-	const errorMessage = '질문과 답변 공지사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
+	const errorMessage = '질문과 답변 공지사항 등록에 실패했습니다.';
 	
 	const formData = new FormData(form);
 	formData.set('bqn_body', quill.root.innerHTML); // quill 에디터 내용
@@ -365,7 +365,7 @@ async function postQnaNoticeCreate(formName) {
 	);
 }
 
-// QNA 분류 등록
+// QnA 질문 유형 분류 등록
 async function postQnaCategoryCreate(formName) {
 	const form = document.forms[formName];
 	let input;
@@ -377,8 +377,8 @@ async function postQnaCategoryCreate(formName) {
 	}
 	
 	const formData = new FormData(form);
-	const successMessage = `"${input.value}" 분류가 등록되었습니다.`;
-	const errorMessage = `"${input.value}" 분류 등록 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const successMessage = `"${input.value}" 질문 유형 분류가 등록되었습니다.`;
+	const errorMessage = `"${input.value}" 질문 유형 분류 등록 실패했습니다.`;
 	
 	await postIntegSubmit(
 		'/qna/cate_info/create_category_confirm',
@@ -390,7 +390,7 @@ async function postQnaCategoryCreate(formName) {
 	);
 }
 
-// QNA 답변 등록
+// QnA 답변 등록
 async function postAnswerCreate(formName) {
 	const form = document.forms[formName];
 	
@@ -402,7 +402,7 @@ async function postAnswerCreate(formName) {
 	
 	const formData = new FormData(form);
 	const successMessage = '답변이 등록되었습니다.';
-	const errorMessage = '답변 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
+	const errorMessage = '답변 등록에 실패했습니다.';
 	
 	await postIntegSubmit(
 		'/qna/info/answer_confirm', 
@@ -429,7 +429,7 @@ async function postBoardCategoryCreate(formName) {
 	formData.set('bc_idx', replaceNumber(bc_idx)); // 문자열 제외 및 min, max 체크하여 입력값 설정
 	
 	const successMessage = `"${bc_name.value}" 게시판이 등록되었습니다.`;
-	const errorMessage = `"${bc_name.value}" 게시판 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const errorMessage = `"${bc_name.value}" 게시판 등록에 실패했습니다.`;
 	
 	await postIntegSubmit(
 		'/board/cate_info/create_category_confirm', 
@@ -457,7 +457,7 @@ async function postNoticePostsCreate(formName) {
 	}
 	
 	const successMessage = `"${bn_title.value.trim()}" 게시판 공지 사항이 등록되었습니다.`;
-	const errorMessage = `"${bn_title.value.trim()}" 게시판 공지 사항 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const errorMessage = `"${bn_title.value.trim()}" 게시판 공지 사항 등록에 실패했습니다.`;
 	
 	const formData = new FormData();
 	formData.set('bn_body', quill.root.innerHTML); // quill 에디터 내용
@@ -492,7 +492,7 @@ async function postPostsCreate(formName) {
 	}
 	
 	const successMessage = `"${bp_title.value}" 게시물이 등록되었습니다.`;
-	const errorMessage = `"${bp_title.value}" 게시물 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const errorMessage = `"${bp_title.value}" 게시물 등록에 실패했습니다.`;
 	
 	const formData = new FormData(form);
 	formData.set('bp_body', quill.root.innerHTML); // quill 에디터 내용
@@ -511,7 +511,7 @@ async function postPostsCreate(formName) {
 	);
 }
 
-// 신고 분류 등록
+// 신고 유형 분류 등록
 async function postReportCategoryCreate(formName) {
 	const form = document.forms[formName];
 	let input;
@@ -523,8 +523,8 @@ async function postReportCategoryCreate(formName) {
 	}
 	
 	const formData = new FormData(form);
-	const successMessage = `"${input.value}" 분류가 등록되었습니다.`;
-	const errorMessage = `"${input.value}" 분류 등록 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const successMessage = `"${input.value}" 신고 유형 분류가 등록되었습니다.`;
+	const errorMessage = `"${input.value}" 신고 유형 분류 등록 실패했습니다.`;
 	
 	await postIntegSubmit(
 		'/report/cate_info/create_category_confirm',
@@ -537,7 +537,7 @@ async function postReportCategoryCreate(formName) {
 }
 
 
-// 광고 분류 등록
+// 광고 위치 분류 등록
 async function postAdvertisementCategoryCreate(formName, nextPage) {
 	const form = document.forms[formName];
 	let input;
@@ -549,8 +549,8 @@ async function postAdvertisementCategoryCreate(formName, nextPage) {
 	}
 	
 	const formData = new FormData(form);
-	const successMessage = `"${input.value}" 분류가 등록되었습니다.`;
-	const errorMessage = `"${input.value}" 분류 등록 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const successMessage = `"${input.value}" 광고 위치 분류가 등록되었습니다.`;
+	const errorMessage = `"${input.value}" 광고 위치 분류 등록 실패했습니다.`;
 	
 	await postIntegSubmit(
 		'/advertisement/cate_info/create_category_confirm',
@@ -612,7 +612,7 @@ async function postAdvertisementCreate(formName) {
 	
 	const formData = new FormData(form);	
 	const successMessage = `"${form.ad_client.value}" 님의 광고가 등록되었습니다.`;
-	const errorMessage = `"${form.ad_client.value}" 님의 광고 등록에 실패했습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const errorMessage = `"${form.ad_client.value}" 님의 광고 등록에 실패했습니다.`;
 	
 	await postIntegSubmit(
 		'/advertisement/info/create_confirm', 

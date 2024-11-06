@@ -20,13 +20,13 @@ async function deleteDataProcess(deleteConfig, data, dataName, errorMessage) {
 				deleteConfig.replace ? location.replace(deleteConfig.replace) : location.reload(true);
 				
 			} else {
-				alert(errorMessage);
+				alert(errorMessage + addMsg);
 				location.reload(true);
 			}
 			
 		} catch(error) {
 			logger.error(`${deleteConfig.apiUrl} error:`, error);
-			alert(errorMessage);
+			alert(errorMessage + addMsg);
 			location.reload(true);
 		}
 	}
@@ -43,7 +43,7 @@ async function delSingleData(dataName, key, noValue, additionalData = {}) { // �
 	Object.assign(data, additionalData); // 추가 데이터가 필요 시 data에 추가
 	
 	const deleteConfig = mapDeleteObject(key); // 커맨드와 경로 설정
-	const errorMessage = `${dataName} 삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const errorMessage = `${dataName} 삭제에 실패하였습니다.`;
 	const delName =`${dataName}이(가)`;
 		
 	deleteData(deleteConfig, data, delName, errorMessage);
@@ -74,7 +74,7 @@ async function delListData(key, isCheckList) {
 	
 	const data = { [`${key}s`]: deleteArray };
 	const deleteConfig = mapDeleteObject(key); // 커맨드와 경로 설정
-	const errorMessage = '삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
+	const errorMessage = '삭제에 실패하였습니다.';
 	
 	deleteData(deleteConfig, data, '항목이', errorMessage);
 }
@@ -119,15 +119,15 @@ function mapDeleteObject(value) {
 			apiUrl = '/qna/noti_info/delete_notice_confirm';
 			replace = '/qna/noti_info/notice_list_form';
 			break;
-		
-		case 'bq_no': // QnA 질문
-			apiUrl = '/qna/info/delete_confirm';
-			replace = '/qna/info/qna_list_form';
-			break;
 			
 		case 'bqc_no': // QnA 질문 유형 분류
 			apiUrl = '/qna/cate_info/delete_category_confirm';
 			replace = '/qna/cate_info/category_list_form';
+			break;
+		
+		case 'bq_no': // QnA 질문
+			apiUrl = '/qna/info/delete_confirm';
+			replace = '/qna/info/qna_list_form';
 			break;
 			
 		case 'bqa_no': // QnA 답변
@@ -140,13 +140,27 @@ function mapDeleteObject(value) {
 			break;
 			
 		case 'bn_no': // 게시판 공지 사항
-			apiUrl = '/board/noti_info/delete_board_notice_confirm';
-			replace = '/board/noti_info/board_notice_list_form';
+			apiUrl = '/board/noti_info/delete_notice_confirm';
+			replace = '/board/noti_info/notice_list_form';
 			break;
 		
 		case 'bp_no': // 게시물
 			apiUrl = '/board/info/delete_confirm';
 			replace = '/board/info/posts_list_form';
+			break;
+
+		case 'brc_no': // 신고 유형 분류
+			apiUrl = '/report/cate_info/delete_category_confirm';
+			replace = '/report/cate_info/category_list_form';
+			break;
+			
+		case 'br_no': // 신고
+			apiUrl = '/report/info/delete_confirm';
+			replace = '/report/info/report_list_form';
+			break;
+			
+		case 'brr_no': // 신고 처리 내용
+			apiUrl = '/report/info/delete_result_confirm';
 			break;
 			
 		case 'ac_no': // 광고 분류

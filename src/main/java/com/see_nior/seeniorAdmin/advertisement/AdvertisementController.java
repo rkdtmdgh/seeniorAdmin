@@ -113,14 +113,12 @@ public class AdvertisementController {
 	
 	// 광고 위치 수정 양식
 	@GetMapping("/cate_info/modify_category_form")
-	public String modifyCategoryForm(@RequestParam(value = "infoNo") int ac_no,
-									@RequestParam(value = "itemCnt") int itemCnt,  Model model) {
+	public String modifyCategoryForm(@RequestParam(value = "infoNo") int ac_no, Model model) {
 		log.info("modifyCategoryForm()");
 		
 		AdvertisementCategoryDto advertisementCategoryDto = advertisementService.getCategory(ac_no);
 		
 		model.addAttribute("advertisementCategoryDto", advertisementCategoryDto);
-		model.addAttribute("itemCnt", itemCnt);
 		
 		return PagePath.ADVERTISEMENT_MODIFY_CATEGORY_FORM.getValue();
 		
@@ -221,6 +219,18 @@ public class AdvertisementController {
 		
 	}
 	
+	// 홈 화면에서 보여질 광고 가져오기(5개만 가져오기 => 비동기)
+	@ResponseBody
+	@GetMapping("main/get_advertisement_list")
+	public Object getAdvertismentListForMain() {
+		log.info("getAdvertismentListForMain");
+		
+		List<AdvertisementDto> advertisementDtos = advertisementService.getAdvertisementListForMain();
+		
+		return advertisementDtos;
+		
+	}
+	
 	// 모든 광고 가져오기(페이지네이션 => 비동기)
 	@ResponseBody
 	@GetMapping("info/get_advertisement_list")
@@ -316,12 +326,12 @@ public class AdvertisementController {
 	@ResponseBody
 	@PostMapping("/info/modify_confirm")
 	public boolean modifyConfirm(
-			@RequestParam(value = "deleteFileNames", required = false) List<String> deleteFileName,
+			@RequestParam(value = "current_ad_img", required = false) String current_ad_img,
 			@RequestParam(value = "files", required = false) List<MultipartFile> files,
 			AdvertisementDto advertisementDto) {
 		log.info("modifyConfirm()");
 		
-		return advertisementService.modifyConfirm(advertisementDto, deleteFileName, files);
+		return advertisementService.modifyConfirm(advertisementDto, current_ad_img, files);
 		
 	}
 	

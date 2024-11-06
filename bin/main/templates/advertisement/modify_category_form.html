@@ -6,7 +6,7 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('광고 분류 수정')}"></th:block>
 	<script th:inline="javascript">
-		const itemCnt = /*[[${itemCnt}]]*/ 0;
+		const itemCnt = /*[[${advertisementCategoryDto.ac_item_cnt}]]*/ 0;
 		if(itemCnt > 0) {
 			$(async function() {
 				const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
@@ -18,10 +18,6 @@
 				}
 	        });
 		}
-	</script>
-	
-	<script th:inline="javascript">
-		logger.info('advertisementCategoryDto --->', /*[[${advertisementCategoryDto}]]*/);
 	</script>
 </head>
 
@@ -82,7 +78,7 @@
 	                                        
 	                                        <th><p class="table_title">등록 수</p></th>
 		                                	<td class="disabled">
-		                                		<p class="table_info"th:text="${itemCnt}"></p>
+		                                		<p class="table_info"th:text="${advertisementCategoryDto.ac_item_cnt}"></p>
 	                                        </td>
 		                                </tr>
 		                            </tbody>
@@ -103,7 +99,7 @@
 		                    </div>
 	                    </form>
 	                    
-	                    <th:block th:if="${itemCnt > 0}">
+	                    <th:block th:if="${advertisementCategoryDto.ac_item_cnt > 0}">
 		                    <div class="content_top">
 					            <p class="sub_title">광고</p>
 						    </div>

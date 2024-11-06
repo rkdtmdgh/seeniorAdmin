@@ -1,20 +1,15 @@
 package com.see_nior.seeniorAdmin.advertisement;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.advertisement.mapper.AdvertisementMapper;
 import com.see_nior.seeniorAdmin.dto.AdvertisementCategoryDto;
 import com.see_nior.seeniorAdmin.dto.AdvertisementDto;
+import com.see_nior.seeniorAdmin.util.ImageFileService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -57,7 +53,7 @@ public class AdvertisementService {
 	private int blockLimit = 5;	// 하단에 보여질 페이지 번호의 수
 	
 	final private AdvertisementMapper advertisementMapper;
-	final private RestTemplate restTemplate;
+	final private ImageFileService imageFileService;
 	
 	// --------------------------------------------------------- 광고 위치
 	
@@ -271,112 +267,6 @@ public class AdvertisementService {
 	
 	
 	// --------------------------------------------------------- 광고
-
-	// 광고 이미지 저장 후 이미지 이름 가져오기
-	public ResponseEntity<String> uploadFile(List<MultipartFile> files, AdvertisementDto advertisementDto) {
-		log.info("uploadFile()");
-		log.info("files ---> {}", files);
-		
-		try {
-			
-			// Request Header 설정
-			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-			
-			// Request Body 설정
-			MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
-			
-			for (MultipartFile file : files) {
-				// 파일 이름 가져오기
-				String fileName = file.getOriginalFilename();
-				
-				// 파일을 ByteArrayResource로 변환
-				Resource fileResource = new ByteArrayResource(file.getBytes()) {
-    				@Override
-    				public String getFilename() {
-    					return fileName;
-    				}
-    			};
-    			
-				requestBody.add("files", fileResource);
-				
-			}
-			
-			// 파일 저장 경로 생성 후 filePath를 키 값으로 requestBody에 추가 (맨 앞에 상위 폴더 경로 꼭! 추가)
-			String filePath = "\\advertisement\\" + advertisementDto.getAd_category_no() + "\\";
-			requestBody.add("filePath", filePath);
-			
-			// Request Entity
-			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);		
-			
-			// API 호출
-//			String serverURL = "http://14.42.124.93:8091/upload_file";
-			String serverURL = "http://localhost:8091/upload_file";	// local
-			ResponseEntity<String> response = restTemplate.postForEntity(serverURL, requestEntity, String.class);
-			
-			return response;
-			
-		} catch (Exception e) {
-			log.info("광고 이미지 파일 업로드 중 오류 발생 : {}", e.getMessage());
-			
-			return null;
-			
-		}
-		
-	}
-	
-	// 광고 이미지 삭제 후 삭제 된 이미지 이름 가져오기
-		public ResponseEntity<String> deleteFile(List<MultipartFile> files, AdvertisementDto advertisementDto) {
-			log.info("deleteFile()");
-			log.info("files ---> {}", files);
-			
-			try {
-				
-				// Request Header 설정
-				HttpHeaders headers = new HttpHeaders();
-				headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-				
-				// Request Body 설정
-				MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
-				
-				for (MultipartFile file : files) {
-					// 파일 이름 가져오기
-					String fileName = file.getOriginalFilename();
-					
-					// 파일을 ByteArrayResource로 변환
-					Resource fileResource = new ByteArrayResource(file.getBytes()) {
-	    				@Override
-	    				public String getFilename() {
-	    					return fileName;
-	    				}
-	    			};
-	    			
-					requestBody.add("files", fileResource);
-					
-				}
-				
-				// 파일 저장 경로 생성 후 filePath를 키 값으로 requestBody에 추가 (맨 앞에 상위 폴더 경로 꼭! 추가)
-				String filePath = "\\advertisement\\" + advertisementDto.getAd_category_no() + "\\" + advertisementDto.getAd_dir_name() + "\\";
-				requestBody.add("filePath", filePath);
-				
-				// Request Entity
-				HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);		
-				
-				// API 호출
-//				String serverURL = "http://14.42.124.93:8091/upload_file";
-				String serverURL = "http://localhost:8091/delete_file";	// local
-				ResponseEntity<String> response = restTemplate.postForEntity(serverURL, requestEntity, String.class);
-				
-				return response;
-				
-			} catch (Exception e) {
-				log.info("광고 이미지 파일 삭제 중 오류 발생 : {}", e.getMessage());
-				
-				return null;
-				
-			}
-			
-		}
 	
 	// 광고 등록 양식에서 광고를 등록할 위치를 선택 했을 시 해당 위치의 maxIdx 가져오기
 	public int getAdvertisementIdxMaxNum(int ad_category_no) {
@@ -395,7 +285,18 @@ public class AdvertisementService {
 	public boolean createConfirm(AdvertisementDto advertisementDto, List<MultipartFile> files) {
 		log.info("createConfirm()");
 		
-		ResponseEntity<String> savedFile = uploadFile(files, advertisementDto);
+		// 이미지 서버에 요청할 파일 저장 경로 생성
+		Date now = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+		String date = dateFormat.format(now);
+		
+		// advertisement 테이블에서 maxNo값 가져오기
+		int maxNo = advertisementMapper.getAdvertisementMaxNo();
+		
+		String filePath = "\\advertisement\\" + (maxNo + 1) + "\\" + date;
+		
+		// 이미지 저장 요청
+		ResponseEntity<String> savedFile = imageFileService.uploadFiles(files, filePath);
 		
 		if (savedFile != null) {
 			log.info("uploadFile SUCCESS!!");
@@ -405,11 +306,10 @@ public class AdvertisementService {
 			try {
 				Map<String, Object> savedFileObj = objectMapper.readValue(savedFile.getBody(), new TypeReference<Map<String, Object>>() {});
 
-				String ad_dir_name = String.valueOf(savedFileObj.get("dir_name"));
 				String savedFileName = ((List<String>) savedFileObj.get("savedFileNames")).get(0);
 				
 				// 광고 디렉토리명과 이미지 URL 세팅
-				advertisementDto.setAd_dir_name(ad_dir_name);
+				advertisementDto.setAd_dir_name(date);
 				advertisementDto.setAd_img(savedFileName);
 				
 				// 선택한 광고 위치의 maxIdx값 가져오기
@@ -478,6 +378,16 @@ public class AdvertisementService {
 		
 	}
 	
+	// 홈 화면에서 보여질 광고 가져오기(5개)
+	public List<AdvertisementDto> getAdvertisementListForMain() {
+		log.info("getAdvertisementListForMain()");
+		
+		List<AdvertisementDto> advertisementDtos = advertisementMapper.getAdvertisementListForMain();
+		
+		return advertisementDtos;
+		
+	}
+	
 	// 페이지에 따른 광고 가져오기(모든 광고)
 	public Map<String, Object> getAdvertisementListWithPage(int page, String sortValue, String order) {
 		log.info("getAdvertisementListWithPage()");
@@ -529,6 +439,7 @@ public class AdvertisementService {
 		return advertisementListPageNum;
 		
 	}
+
 	
 	// 광고 순서 변경(광고 위치 디테일뷰에서)
 	@Transactional
@@ -645,15 +556,16 @@ public class AdvertisementService {
 	// 광고 수정 확인
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public boolean modifyConfirm(AdvertisementDto advertisementDto, List<String> deleteFileName, List<MultipartFile> files) {
+	public boolean modifyConfirm(AdvertisementDto advertisementDto, String current_ad_img, List<MultipartFile> files) {
 		log.info("modifyConfirm()");
 		
 		// 사진 변경이 있을 시
 		if (files != null && files.size() != 0 && files.get(0).getSize() != 0) {
+			
+			String filePath = "\\advertisement\\" + advertisementDto.getAd_no() + "\\" + advertisementDto.getAd_dir_name();
 				
 			// 이미지 서버에 저장된 이미지 파일 이름 가져오기
-			ResponseEntity<String> savedFile = uploadFile(files, advertisementDto);
-			log.info("savedFile ========> {}", savedFile);
+			ResponseEntity<String> savedFile = imageFileService.uploadFiles(files, filePath);
 			
 			if (savedFile != null) {
 				log.info("uploadFile SUCCESS!!");
@@ -663,23 +575,26 @@ public class AdvertisementService {
 				try {
 					Map<String, Object> savedFileObj = objectMapper.readValue(savedFile.getBody(), new TypeReference<Map<String, Object>>() {});
 					
-					String ad_dir_name = String.valueOf(savedFileObj.get("dir_name"));
 					String savedFileName = ((List<String>) savedFileObj.get("savedFileNames")).get(0);
-					log.info("ad_dir_name ----> {}", ad_dir_name);
-					log.info("savedFileName ----> {}", savedFileName);
 					
-					// 광고 디렉토리명과 이미지 URL 세팅
-					advertisementDto.setAd_dir_name(ad_dir_name);
+					// 광고 이미지 URL 세팅
 					advertisementDto.setAd_img(savedFileName);
 					
-					ResponseEntity<String> deleteFile = deleteFile(files, advertisementDto);
-					
-					if (deleteFile != null) {
-						log.info("deleteFile SUCCESS!!");
-						log.info("deleteFile ----> {} ", deleteFile);
+					if (current_ad_img != null) {
 						
-					} else {
-						log.info("deleteFile FAIL!!");
+						List<String> deleteFiles = new ArrayList<>();
+						
+						deleteFiles.add(current_ad_img);
+						
+						ResponseEntity<String> deleteFile = imageFileService.deleteFiles(deleteFiles, filePath);
+						
+						if (deleteFile != null) {
+							log.info("deleteFile SUCCESS!!");
+							
+						} else {
+							log.info("deleteFile FAIL!!");
+							
+						}
 						
 					}
 				
@@ -780,10 +695,16 @@ public class AdvertisementService {
 					updateIdxSubParams.put("curCategoryNo", curCategoryNo);
 					
 					// 기존 위치에 있는 광고들 중 기존의 idx값보다 큰 것들 -1
-					updateIdxResult = advertisementMapper.updateAdvertisementIdxSub(updateIdxSubParams);
+					Integer advertisementIdxMaxNum = advertisementMapper.getAdvertisementIdxMaxNumByCategory(curCategoryNo);
 					
-					if (updateIdxResult <= 0) {
-						throw new RuntimeException("idx 업데이트 실패!!");
+					if (advertisementIdxMaxNum > curIdx) {
+						
+						updateIdxResult = advertisementMapper.updateAdvertisementIdxSub(updateIdxSubParams);
+						
+						if (updateIdxResult <= 0) {
+							throw new RuntimeException("idx 업데이트 실패!!");
+							
+						}
 						
 					}
 					
@@ -886,5 +807,7 @@ public class AdvertisementService {
 		return searchAdvertisementListPageNum;
 		
 	}
+
+	
 	
 }
