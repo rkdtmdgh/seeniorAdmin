@@ -530,7 +530,7 @@ async function putQnaNoticeModify(formName) {
 	const errorMessage = `"${input.value}" QnA 공지사항 수정에 실패했습니다.`;
 	
 	const formData = new FormData(form);
-	formData.set('bpn_body', quill.root.innerHTML); // quill 에디터 내용
+	formData.set('bqn_body', quill.root.innerHTML); // quill 에디터 내용
 	
 	// 이미지 파일 리사이즈 및 압축하여 formData에 담기 (선택된 이미지 요소가 없을 시 빈 파일 객체가 담김)
 	const $newImgTags = $(quill.root).find('img').filter(function() {

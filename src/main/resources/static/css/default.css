@@ -697,6 +697,7 @@
 	color: var(--greenColor);
 	padding-top: var(--ssize1);
 	white-space: normal;
+	word-break: break-word;
 }
 
 .content_view_wrap {
