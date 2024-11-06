@@ -1294,6 +1294,39 @@ VALUES(4, "advertisementImage44", 4, "www.advertisementURL44.com", 19870904, 298
 INSERT INTO ADVERTISEMENT(AD_CATEGORY_NO, AD_IMG, AD_IDX, AD_URL, AD_START_DATE, AD_END_DATE, AD_CLIENT) 
 VALUES(4, "advertisementImage45", 5, "www.advertisementURL45.com", 19870905, 29870905, "오현우");
 
+-- 만료된 광고 자동으로 AD_STATE = 1 처리 하는 이벤트 스케쥴러 ---------------------------------------------------------------------------
+-- 현재 시간 출력
+SELECT now();
+
+-- MySql 자체적으로 이벤트 스케쥴러 사용이 가능하게끔 설정되어 있는지 확인
+SHOW VARIABLES LIKE 'event%';
+
+-- Value가 OFF로 되어있을 경우 ON으로 변경
+SET GLOBAL event_scheduler = ON;
+
+-- AD_END_DATE가 현재 날짜보다 이전인 컬럼의 AD_STATE를 0으로 설정하는 프로시저
+DELIMITER //
+CREATE PROCEDURE update_ad_state()
+BEGIN
+    UPDATE ADVERTISEMENT
+    SET AD_STATE = 0
+    WHERE AD_END_DATE < CURDATE() AND AD_STATE != 0;
+END //
+DELIMITER ;
+
+-- 이미 생성되어 있는 프로시저 확인 및 드롭
+SHOW PROCEDURE STATUS WHERE Db = 'DB_SEENIOR';
+DROP PROCEDURE update_ad_state;
+
+-- update_ad_state() 프로시저를 매일 0시 00분 정각에 실행하도록 하는 이벤트 스케쥴러
+CREATE EVENT daily_ad_state_update
+ON SCHEDULE EVERY 1 DAY STARTS '2024-11-07 00:01:00'
+DO
+CALL update_ad_state();
+
+-- 이미 생성되어 있는 이벤트 스케쥴러 확인 및 드롭
+SELECT * FROM information_schema.events;
+DROP EVENT daily_ad_state_update;
 
 -- 환자 테이블 -------------------------------------------------------------------------------------------------------------------
 CREATE TABLE CARE_LIST (

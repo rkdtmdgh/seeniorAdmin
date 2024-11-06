@@ -379,10 +379,10 @@ public class AdvertisementService {
 	}
 	
 	// 홈 화면에서 보여질 광고 가져오기(5개)
-	public List<AdvertisementDto> getAdvertisementListForMain() {
+	public List<AdvertisementDto> getAdvertisementListForMain(int page_limit) {
 		log.info("getAdvertisementListForMain()");
 		
-		List<AdvertisementDto> advertisementDtos = advertisementMapper.getAdvertisementListForMain();
+		List<AdvertisementDto> advertisementDtos = advertisementMapper.getAdvertisementListForMain(page_limit);
 		
 		return advertisementDtos;
 		
@@ -678,10 +678,21 @@ public class AdvertisementService {
 				updateIdxSumParams.put("advertisementDto", advertisementDto);
 				updateIdxSumParams.put("curIdx", null);
 				
-				int updateIdxResult = 0;
+				int updateIdxResult = 1;
+				Integer advertisementIdxMaxNum = 0;
 				
-				// 변경될 위치에 있는 광고 중 입력한 idx값과 같거나 큰것들 +1
-				updateIdxResult = advertisementMapper.updateAdvertisementIdxSum(updateIdxSumParams);
+				// 변경될 위치에 있는 광고의 MaxIdx 가져오기
+				advertisementIdxMaxNum = advertisementMapper.getAdvertisementIdxMaxNumByCategory(advertisementDto.getAd_category_no());
+				
+				if (advertisementIdxMaxNum == null) advertisementIdxMaxNum = 0;
+				
+				// 변경될 위치에 있는 광고의 MaxIdx 값이 0보다 크면
+				if (advertisementIdxMaxNum > 0) {
+					
+					// 변경될 위치에 있는 광고 중 입력한 idx값과 같거나 큰것들 +1
+					updateIdxResult = advertisementMapper.updateAdvertisementIdxSum(updateIdxSumParams);
+					
+				}
 				
 				if (updateIdxResult <= 0) {
 					throw new RuntimeException("idx 업데이트 실패!!");
@@ -694,11 +705,14 @@ public class AdvertisementService {
 					updateIdxSubParams.put("curIdx", curIdx);
 					updateIdxSubParams.put("curCategoryNo", curCategoryNo);
 					
-					// 기존 위치에 있는 광고들 중 기존의 idx값보다 큰 것들 -1
-					Integer advertisementIdxMaxNum = advertisementMapper.getAdvertisementIdxMaxNumByCategory(curCategoryNo);
 					
+					// 광고의 기존 위치에서 MaxIdx 가져오기
+					advertisementIdxMaxNum = advertisementMapper.getAdvertisementIdxMaxNumByCategory(curCategoryNo);
+					
+					// 기존 위치의 광고의 MaxIdx 가 기존 Idx 값 보다 크면
 					if (advertisementIdxMaxNum > curIdx) {
 						
+						// 기존 위치에 있는 광고들 중 기존의 Idx 값 보다 큰 것들 -1
 						updateIdxResult = advertisementMapper.updateAdvertisementIdxSub(updateIdxSubParams);
 						
 						if (updateIdxResult <= 0) {

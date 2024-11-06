@@ -61,7 +61,7 @@ public interface AdvertisementMapper {
 	public int insertNewAdvertisement(AdvertisementDto advertisementDto);
 	
 	// 홈 화면에서 보여질 광고 가져오기(5개)
-	public List<AdvertisementDto> getAdvertisementListForMain();
+	public List<AdvertisementDto> getAdvertisementListForMain(int page_limit);
 
 	// 페이지에 따른 광고 가져오기(모든 광고)
 	public List<AdvertisementDto> getAdvertisementListWithPage(Map<String, Object> pagingParams);

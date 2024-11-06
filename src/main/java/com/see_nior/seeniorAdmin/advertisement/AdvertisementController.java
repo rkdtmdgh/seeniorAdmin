@@ -222,10 +222,10 @@ public class AdvertisementController {
 	// 홈 화면에서 보여질 광고 가져오기(5개만 가져오기 => 비동기)
 	@ResponseBody
 	@GetMapping("main/get_advertisement_list")
-	public Object getAdvertismentListForMain() {
+	public Object getAdvertismentListForMain(@RequestParam(value = "page_limit") int page_limit) {
 		log.info("getAdvertismentListForMain");
 		
-		List<AdvertisementDto> advertisementDtos = advertisementService.getAdvertisementListForMain();
+		List<AdvertisementDto> advertisementDtos = advertisementService.getAdvertisementListForMain(page_limit);
 		
 		return advertisementDtos;
 		

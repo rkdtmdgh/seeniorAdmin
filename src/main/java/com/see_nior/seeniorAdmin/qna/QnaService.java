@@ -318,6 +318,20 @@ public class QnaService {
 		
 	}
 
+	// qna main 화면 리스트 가져오기
+	public Object getQnaListForMain(int page_limit) {
+		log.info("getQnaListForMain()");
+		
+		Map<String, Object> responseMap = new HashMap<>();
+		
+		List<QnaDto> qnaDtosForMain = qnaMapper.selectQnaListForMain(page_limit);
+		responseMap.put("qnaDtos", qnaDtosForMain);
+		
+		return responseMap;
+		
+	}
+
+	
 	
 	
 	/////////// 카테고리
@@ -519,19 +533,22 @@ public class QnaService {
 	public boolean createNoticeConfrim(List<MultipartFile> files, QnaNoticeDto qnaNoticeDto) {
 		log.info("createNoticeConfrim()");
 			
+		Date now = new Date();	      
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+		String date = dateFormat.format(now);
+	
 		// 첨부된 파일이 있는 경우
 		if (files != null && files.size() != 0 && files.get(0).getSize() != 0) {
 			log.info("files is not empty.");
 
-			Date now = new Date();	      
-    		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-    		String date = dateFormat.format(now);
+			
 			
     		String filePath = ImgUrlPath.QNA_NOTICE_FILE_PATH.getValue() + date;
     		
     		// 이미지 저장 요청
     		ResponseEntity<String> savedFiles = 
     				imageFileService.uploadFiles(files, filePath);
+    		
     		
 			// 이미지 서버 파일 저장 완료
 			if (savedFiles != null) {
@@ -547,26 +564,23 @@ public class QnaService {
 					@SuppressWarnings("unchecked")
 					List<String> savedFileNames = (List<String>) savedFileObj.get("savedFileNames");
 					
-					String bqn_dir_name = String.valueOf(savedFileObj.get("dir_name"));
-					String bqn_body = "";
+					String bqn_body = qnaNoticeDto.getBqn_body();
 					
 					// bqn_body img src 경로 수정 (이미지 서버 파일 저장 경로)
 					if (savedFileNames != null) {
 						
 						Pattern pattern = Pattern.compile("img src=\"[^\"]*\"");
-						Matcher matcher = pattern.matcher(old_bqn_body);
+						Matcher matcher = pattern.matcher(bqn_body);
 						
 						StringBuilder new_bqn_body = new StringBuilder();
 						int index = 0;
 						
 						while (matcher.find()) {
 							
-//							String oldSrc = matcher.group();
-							
 							String newSrc = "img src=\"http://" 
 									+ ImgUrlPath.QNA_NOTICE_PATH.getValue() 
 									+"/"
-									+ bqn_dir_name 
+									+ date
 									+"/"
 									+ savedFileNames.get(index++) + "\"";
 							
@@ -585,14 +599,11 @@ public class QnaService {
 						
 					}
 					
-					Map<String, Object> insertParams = new HashMap<>();
-					insertParams.put("bqn_title", bqn_title);
-					insertParams.put("bqn_body", bqn_body);
-					insertParams.put("bqn_writer_no", bqn_writer_no);
-					insertParams.put("bqn_dir_name", bqn_dir_name);
+					qnaNoticeDto.setBqn_body(bqn_body);
+					qnaNoticeDto.setBqn_dir_name(date);
 					
 					int insertResult = 
-							qnaMapper.insertNewQnaNotice(insertParams);
+							qnaMapper.insertNewQnaNotice(qnaNoticeDto);
 					
 					if (insertResult >= 0) 
 						return SqlResult.SUCCESS.getValue();
@@ -617,14 +628,8 @@ public class QnaService {
 		// 첨부된 파일이 없는 경우
 		} else {
 			
-			Map<String, Object> insertParams = new HashMap<>();
-			insertParams.put("bqn_title", bqn_title);
-			insertParams.put("bqn_body", old_bqn_body);
-			insertParams.put("bqn_writer_no", bqn_writer_no);
-			insertParams.put("bqn_dir_name", null);
-			
 			int insertResult = 
-					qnaMapper.insertNewQnaNotice(insertParams);
+					qnaMapper.insertNewQnaNotice(qnaNoticeDto);
 			
 			if (insertResult >= 0) 
 				return SqlResult.SUCCESS.getValue();
@@ -644,33 +649,144 @@ public class QnaService {
 	}
 
 	// qna 공지사항 수정 확인
+	@SuppressWarnings("null")
 	public boolean modifyNoticeConfirm(
-			int bqn_no, String bqn_title, String bqn_body, int bqn_writer_no, String loginedId) {
+			List<MultipartFile> files, List<String> deleteFileNames, QnaNoticeDto qnaNoticeDto) {
 		log.info("modifyNoticeConfirm()");
+
+		String filePath = "";
 		
-		AdminAccountDto adminAccountDto = 
-				accountMapper.selectAdminAccountById(loginedId);
+		// 기존 저장된 img가 없는데 추가한 img가 있는 경우 dir_name 추가
+		if (files != null && qnaNoticeDto.getBqn_dir_name() == null) {
+			
+			Date now = new Date();	      
+    	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+    		String date = dateFormat.format(now);
+    		
+    		qnaNoticeDto.setBqn_dir_name(date);
+    		
+		} 
+		
+		// 이미지 서버에 요청할 파일 저장 경로 생성
+		filePath = ImgUrlPath.QNA_NOTICE_FILE_PATH.getValue() + qnaNoticeDto.getBqn_dir_name();
+		
+		// 추가한 이미지가 없는 경우
+		if (files == null) {
+			
+			int updateResult = qnaMapper.updateQnaNotice(qnaNoticeDto);
+			
+			if (updateResult >= 0) {
+				log.info("updateQnaNotice success");
 				
-		if ((adminAccountDto != null && adminAccountDto.getA_authority_role().equals("SUPER_ADMIN")) 
-				|| bqn_writer_no == adminAccountDto.getA_no()) {
-			
-			Map<String, Object> params = new HashMap<>();
-			params.put("bqn_no", bqn_no);
-			params.put("bqn_title", bqn_title);
-			params.put("bqn_body", bqn_body);
-			
-			int updateResult = qnaMapper.updateQnaNotice(params);
-			
-			if (updateResult >= 0) 
-				return SqlResult.SUCCESS.getValue();
-			else 
+				// 삭제할 이미지가 있는 경우
+				if (deleteFileNames.size() != 0) {
+					
+					ResponseEntity<String> deletedFiles = 
+							imageFileService.deleteFiles(deleteFileNames, filePath);
+					
+					if (deletedFiles != null) {
+						log.info("imageFileService.deleteFiles() success");
+						return SqlResult.SUCCESS.getValue();
+					} else {
+						log.info("imageFileService.deleteFiles() fail");
+						return SqlResult.FAIL.getValue();
+					}  
+					
+				} 
+				
+			} else { 
+				log.info("updateQnaNotice fail");
 				return SqlResult.FAIL.getValue();
+			}
 			
 		} else {
 			
-			return SqlResult.FAIL.getValue();
+			// 이미지 서버에 새로운 이미지 저장 저장 요청
+			ResponseEntity<String> savedFiles = imageFileService.uploadFiles(files, filePath);
+			
+			// 이미지 서버 파일 저장 완료 
+			if (savedFiles != null) {
+				log.info("imageFileService.uploadFiles() success");
+				
+				ObjectMapper objectMapper = new ObjectMapper();
+				
+				try {
+					
+					Map<String,Object> savedFileObj = objectMapper.readValue(savedFiles.getBody(), new TypeReference<Map<String,Object>>() {});
+					
+					@SuppressWarnings("unchecked") //(List<String>) 강제 캐스팅 에러
+					List<String> savedFileNames = (List<String>) savedFileObj.get("savedFileNames");
+					
+					String bqn_body = qnaNoticeDto.getBqn_body();
+						
+					Pattern pattern = Pattern.compile("img src=\"blob:[^\"]*\"");
+					Matcher matcher = pattern.matcher(bqn_body);
+					
+					StringBuilder new_bqn_body = new StringBuilder();
+					int index = 0;
+					
+					while (matcher.find()) {
+						
+						String newSrc = "img src=\"http://" 
+								+ ImgUrlPath.QNA_NOTICE_PATH.getValue() 
+								+"/"
+								+ qnaNoticeDto.getBqn_dir_name()
+								+"/"
+								+ savedFileNames.get(index++) + "\"";
+						
+						matcher.appendReplacement(new_bqn_body, newSrc);
+						
+					} 
+					
+					matcher.appendTail(new_bqn_body);
+					bqn_body = new_bqn_body.toString();
+					
+					QnaNoticeDto newQnaNoticeDto = new QnaNoticeDto();
+					newQnaNoticeDto.setBqn_no(qnaNoticeDto.getBqn_no());
+					newQnaNoticeDto.setBqn_title(qnaNoticeDto.getBqn_title());
+					newQnaNoticeDto.setBqn_dir_name(qnaNoticeDto.getBqn_dir_name());
+					newQnaNoticeDto.setBqn_body(bqn_body);
+					
+					int updateResult = qnaMapper.updateQnaNotice(newQnaNoticeDto);
+					
+					if (updateResult >= 0) {
+						log.info("qnaMapper.updateQnaNotice() success");
+						
+						// 삭제할 img가 있을 경우
+						if (deleteFileNames.size() != 0) {
+							
+							ResponseEntity<String> deletedFiles = 
+									imageFileService.deleteFiles(deleteFileNames, filePath);
+							
+							if (deletedFiles == null) {
+								log.info("imageFileService.deleteFiles() fail");
+								return SqlResult.FAIL.getValue();
+							}
+							
+						}
+						
+						
+					} else {
+						log.info("qnaMapper.updateQnaNotice() fail");
+						
+						return SqlResult.FAIL.getValue();
+						
+					}
+					
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+			} else {
+				
+				return SqlResult.FAIL.getValue();
+				
+			}
 			
 		}
+		
+		return SqlResult.SUCCESS.getValue();
 		
 	}
 	
@@ -742,6 +858,20 @@ public class QnaService {
 		}
 		
 	}
+
+	// qna 공지사항 main 화면 리스트 가져오기
+	public Object getNoticeListForMain(int page_limit) {
+		log.info("getNoticeListForMain()");
+		
+		Map<String, Object> responseMap = new HashMap<>();
+		
+		List<QnaNoticeDto> qnaNoticeDtos = qnaMapper.selectQnaNoticeListForMain(page_limit);
+		responseMap.put("qnaNoticeDtos", qnaNoticeDtos);
+		
+		return responseMap;
+		
+	}
+
 
 
 

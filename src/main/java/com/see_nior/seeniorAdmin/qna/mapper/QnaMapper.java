@@ -56,6 +56,8 @@ public interface QnaMapper {
 	
 	public int updateQnaBqAnswerNoDelete(int bq_no);
 	
+	public List<QnaDto> selectQnaListForMain(int page_limit);
+	
 	
 	// category
 	public boolean isQnaCategory(String bqc_name);
@@ -84,13 +86,17 @@ public interface QnaMapper {
 
 	public int selectSearchQnaNoticeListCnt(Map<String, Object> searchParams);
 
-	public int insertNewQnaNotice(Map<String, Object> insertParams);
+	public int insertNewQnaNotice(QnaNoticeDto qnaNoticeDto);
 
 	public QnaNoticeDto selectQnaNoticeInfoByNo(int bqn_no);
 
-	public int updateQnaNotice(Map<String, Object> params);
+	public int updateQnaNotice(QnaNoticeDto qnaNoticeDto);
 
 	public int updateQnaNoticeIsDeletedByNo(int bqn_no);
+
+	public List<QnaNoticeDto> selectQnaNoticeListForMain(int page_limit);
+
+	
 
 	
 
