@@ -15,8 +15,6 @@
     --titleFontSize: 1.3em;
     --tableTextSize: 0.8em;
     --basicLineHeight: 1.4;
-    --contentLineHeight: 1.7;
-    --tallLineHeight: 2.3;
     --titleLineHeight: 1.7;
     --etcFontSize: 12px;
     --bold: 600;
@@ -66,7 +64,7 @@
     --btnsPadding: 1em 1.5em;
     --smallBtnsPadding: 0.5em 1em;
     --tableBtnPadding: 0.3em;
-    --textPadding: 0.5em 1.2em;
+    --textPadding: 0.95em 1.2em;
     --subTextPadding: 0.3em 1em;
     --subTextIndent: 0 0 0 0.85em;
     --borderInputPadding: 1em 1em 10px;
@@ -92,7 +90,7 @@
     /* position */
     --trslC: -50%, -50%; /*translate center*/
     --inputIconTop: 1em;
-    --tableInputIconTop: 0.65em;
+    --tableInputIconTop: 0.8em;
 
     /* small size */
     --ssize1: 0.3em;
@@ -167,7 +165,7 @@ select {
 
 /* input */
 input[type="date"] {
-	line-height: 2;
+	line-height: 1;
 }
 
 input::placeholder, textarea::placeholder {
@@ -205,7 +203,6 @@ table {
     table-layout: fixed;
     border-collapse: collapse;
     text-align: center;
-    line-height: var(--tallLineHeight);
     font-size: var(--tableTextSize);
 
     tr {
