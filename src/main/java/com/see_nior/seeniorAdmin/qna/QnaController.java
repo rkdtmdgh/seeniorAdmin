@@ -193,6 +193,17 @@ public class QnaController {
 		
 	}
 	
+	// qna main 화면 리스트 가져오기
+	@GetMapping("/main/get_qna_list")
+	@ResponseBody
+	public Object getQnaListForMain(@RequestParam("page_limit") int page_limit) {
+		log.info("getQnaListForMain()");
+	
+		return qnaService.getQnaListForMain(page_limit);
+		
+	}
+	
+	
 	
 	
 	
@@ -461,6 +472,19 @@ public class QnaController {
 		
 	}
 	
+	// qna 공지사항 main 화면 리스트 가져오기
+	@GetMapping("/main/get_notice_list")
+	@ResponseBody
+	public Object getNoticeListForMain(@RequestParam("page_limit") int page_limit) {
+		log.info("getNoticeListForMain()");
+		
+		return qnaService.getNoticeListForMain(page_limit);
+		
+	}
+	
+	
+	
+	
 
 	////////////////////////////////////////////////////////////
 	// qna test 
@@ -469,7 +493,7 @@ public class QnaController {
 	public Object qnaTest() {
 		log.info("test()");
 		
-		return qnaService.getQnaNoticeInfoByNo(1);
+		return qnaService.getNoticeListForMain(5);
 		
 	}
 	

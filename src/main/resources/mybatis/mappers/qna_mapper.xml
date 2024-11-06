@@ -830,6 +830,50 @@
 	
 	</update>
 	
+	<select id="selectQnaListForMain"
+			resultMap="QnaDto">
+		
+		SELECT 
+			BQ.*, 
+			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
+		FROM 
+			BOARD_QNA BQ 
+		LEFT JOIN 
+			USER_ACCOUNT U 
+		ON  
+			BQ.BQ_USER_NO = U.U_NO 
+		WHERE 
+			BQ.BQ_IS_DELETED = 1 
+		AND 
+			 BQ_ANSWER_NO IS NULL 
+		ORDER BY 
+			BQ.BQ_NO DESC 
+		LIMIT 
+			#{page_limit}
 	
+	</select>
+	
+	<select id="selectQnaNoticeListForMain"
+			resultMap="QnaNoticeDto">
+	
+		SELECT 
+			BQN.*, 
+			A.A_NO, A.A_ID, A.A_NAME, A.A_DEPARTMENT, A.A_LEVEL, A.A_POSITION 
+		FROM 
+			BOARD_QNA_NOTICE BQN 
+		LEFT JOIN 
+			ADMIN_ACCOUNT A 
+		ON 
+			BQN.BQN_WRITER_NO = A.A_NO 
+		WHERE 
+			BQN.BQN_STATE = 1 
+		AND 
+			BQN.BQN_IS_DELETED = 1 
+		ORDER BY 
+			BQN.BQN_NO DESC 
+		LIMIT 
+			#{page_limit} 
+	
+	</select>
 	
 </mapper>
