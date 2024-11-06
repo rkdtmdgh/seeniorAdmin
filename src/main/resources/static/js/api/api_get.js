@@ -1,6 +1,23 @@
 // 함수 디바운싱 적용 // 함수, key명
+const getMainList = debounceAsync(getMainListProcess, 'getMainListProcess'); // 메인 콘텐츠 리스트 요청
 const getList = debounceAsync(getListProcess, 'getListProcess'); // 콘텐츠 리스트 요청
 const getSearchList = debounceAsync(getSearchListProcess, 'getSearchListProcess'); // 검색 리스트 요청
+
+// 메인 콘텐츠 리스트 요청 함수 실행
+function getMainContentList() {
+	
+}
+
+// 메인 콘텐츠 리스트 요청
+async function getMainListProcess() {
+	
+}
+
+// 메인 신고 현황 콘텐츠 요청 객체 설정
+function mainReportListApiObject() {
+	const apiUrl = '/report/main/get_report_list';
+	const loddingParentEle = '';
+}
 
 // 콘텐츠 리스트 요청
 async function getListProcess(apiUrl, sortValue, order, page, resetParams = false) {
