@@ -73,11 +73,11 @@
                                 		<tr th:if="${userAccountDto.u_is_blocked == false}">
 											<th><p class="table_title">정지 사유</p></th>
 											<td colspan="3">
-												<div class="table_info">
+												<label class="table_info">
 	                               					<textarea rows="1" name="u_blocked_reason" id="u_blocked_reason" class="table_textarea small" placeholder='정지 사유'
 			                                    		oninput="setTextareaAutoHeight(this)" 
 			                                    		th:text="${userAccountDto.u_blocked_reason}"></textarea>
-												</div>
+												</label>
 											</td>                                		
                                 		</tr>
                                 		
@@ -85,7 +85,7 @@
                                 			<th><p class="table_title">이름</p></th>
                                 			<td>
                                 				<label class="table_info">
-			                                        <input type="text" name="u_name" id="u_name"
+			                                        <input type="text" name="u_name" id="u_name" placeholder="이름"
 			                                        	onblur="validateEmpty(this, '이름')"
 			                                            th:value="${userAccountDto.u_name}">
 	                        					</label>

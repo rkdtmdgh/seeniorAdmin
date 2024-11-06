@@ -871,7 +871,6 @@
 	justify-content: flex-end;
 	align-items: center;
 	gap: var(--smallGap);
-	padding: var(--textPadding);
 	
 	#current_size {
 		font-weight: 500;

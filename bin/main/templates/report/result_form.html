@@ -109,21 +109,23 @@
 		                                <tr>
 		                                	<th><p class="table_title">처리 내용</p></th>
 		                                	<td colspan="3">
-		                                		<textarea name="brr_result" id="brr_result" class="table_textarea" placeholder="내용을 입력하세요"
-	                                				data-limit-target="textarea" 
-	                                				data-limit="short" 
-	                                				oninput="setTextareaAutoHeight(this)" 
-	                                				onkeyup="setTextLimit(this)"
-	                                				onblur="validateEmpty(this, '내용')"
-	                                				th:text="${reportDto.reportResultDto?.brr_result ?: ''}"
-	                                				th:readonly="${
-	                                					reportDto.reportResultDto != null and
-			                                    		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
-			                                    		reportDto.reportResultDto.adminAccountDto.a_id != #authentication.name
-	                                				}"></textarea>
-                                            	<div id="text_limit">
-	                                				<span id="current_size"></span> / <span id="max_size"></span>
-	                                			</div>
+		                                		<label class="table_info">
+			                                		<textarea name="brr_result" id="brr_result" class="table_textarea" placeholder="내용을 입력하세요"
+		                                				data-limit-target="textarea" 
+		                                				data-limit="short" 
+		                                				oninput="setTextareaAutoHeight(this)" 
+		                                				onkeyup="setTextLimit(this)"
+		                                				onblur="validateEmpty(this, '내용')"
+		                                				th:text="${reportDto.reportResultDto?.brr_result ?: ''}"
+		                                				th:readonly="${
+		                                					reportDto.reportResultDto != null and
+				                                    		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
+				                                    		reportDto.reportResultDto.adminAccountDto.a_id != #authentication.name
+		                                				}"></textarea>
+	                                            	<span id="text_limit">
+		                                				<span id="current_size"></span> / <span id="max_size"></span>
+		                                			</span>
+		                                		</label>
 		                                    </td>
 		                                </tr>
 	                                </tbody>

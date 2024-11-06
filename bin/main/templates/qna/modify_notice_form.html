@@ -125,8 +125,11 @@
 				                               		(qnaNoticeDto.adminAccountDto.a_id !=  #authentication.name)
 			                                	}">
 		                                			<div id="editor" th:utext="${qnaNoticeDto.bqn_body}"></div>
-		                                			<div id="text_limit">
-		                                				<span id="current_size"></span> / <span id="max_size"></span>
+		                                			
+		                                			<div class="table_info">
+			                                			<div id="text_limit">
+			                                				<span id="current_size"></span> / <span id="max_size"></span>
+			                                			</div>
 		                                			</div>
 	                                			</th:block>
 	                                        </td>

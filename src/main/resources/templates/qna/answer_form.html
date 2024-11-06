@@ -129,7 +129,7 @@
 		                                <tr>
 		                                	<th><p class="table_title">답변</p></th>
 		                                	<td colspan="3">
-		                                		<div class="table_info"> 
+		                                		<label class="table_info"> 
 			                                		<textarea name="bqa_answer" id="bqa_answer" class="table_textarea" placeholder="답변을 입력하세요"
 		                                				data-limit-target="textarea" 
 		                                				data-limit="short" 
@@ -142,10 +142,10 @@
 				                                    		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
 				                                    		qnaDto.qnaAnswerDto.adminAccountDto.a_id != #authentication.name
 		                                				}"></textarea>
-	                                            	<div id="text_limit">
+	                                            	<span id="text_limit">
 		                                				<span id="current_size"></span> / <span id="max_size"></span>
-		                                			</div>
-	                                			</div>
+		                                			</span>
+	                                			</label>
 		                                    </td>
 		                                </tr>
 	                                </tbody>
