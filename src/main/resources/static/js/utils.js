@@ -1,3 +1,6 @@
+// 에러 메세지 추가 내용
+const addMsg = '\n다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
+
 // input focus
 function setInputFocus(name) {
 	const $input = $(`input[name="${name}"]`);
@@ -128,22 +131,26 @@ function setInputStateFromRadio(state, targetEle, defaultValue = null) {
 	const placeholderEnabled = $(targetEle).data('placeholder-enabled');
     const placeholderReadonly = $(targetEle).data('placeholder-readonly');
 	
+	logger.info('setInputStateFromRadio() state --->', state);
+	
 	if(!state) {
 		// 타겟 요소의 비활성화 및 값 초기화
-		$(targetEle).val('').attr('readonly', true)
+		$(targetEle)
+			.val('')
+			.removeAttr('onblur') // HTML에서 직접 지정한 속성 제거(제이쿼리 off로 이벤트 제거 불가하여 attr을 제거)
+			.off('blur') // 제이쿼리로 추가된 이벤트 제거(제이쿼리로 추가된 경우 off로 제거해줘야 이벤트 발생x)
+			.attr('readonly', true)
 			.attr('placeholder', placeholderReadonly) // placeholder 설정
-			.off('blur') // 이벤트 제거
 			.siblings('.input_error').remove(); // 형제 에러 요소 제거
-			
-		$(targetEle).closest('.error').removeClass('error'); // 부모 요소 클라스 제거(제이쿼리 체이닝 오류로 추가 작성)
-		
-		// 디버깅용 로그 출력 (부모 요소 확인)
-		console.log($(targetEle).closest('.error')); // .error 클래스가 있는 부모 요소 출력
+		$(targetEle).closest('.error').removeClass('error'); // 부모 요소 클라스 제거
 		
 	} else {
 		// 타겟 요소를 활성화 및 기본 값 설정
-		$(targetEle).val(defaultValue)
-			.attr('readonly', false).attr('placeholder', placeholderEnabled)
+		$(targetEle)
+			.val(defaultValue)
+			.off('blur') // 기존 이벤트 제거 후 다시 추가
+			.attr('readonly', false)
+			.attr('placeholder', placeholderEnabled)
 			.on('blur', function() { // 이벤트 추가
 				validateEmpty(this, `${placeholderEnabled}을(를)`);
 			}).focus(); 

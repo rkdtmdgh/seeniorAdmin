@@ -20,13 +20,13 @@ async function deleteDataProcess(deleteConfig, data, dataName, errorMessage) {
 				deleteConfig.replace ? location.replace(deleteConfig.replace) : location.reload(true);
 				
 			} else {
-				alert(errorMessage);
+				alert(errorMessage + addMsg);
 				location.reload(true);
 			}
 			
 		} catch(error) {
 			logger.error(`${deleteConfig.apiUrl} error:`, error);
-			alert(errorMessage);
+			alert(errorMessage + addMsg);
 			location.reload(true);
 		}
 	}
@@ -43,7 +43,7 @@ async function delSingleData(dataName, key, noValue, additionalData = {}) { // �
 	Object.assign(data, additionalData); // 추가 데이터가 필요 시 data에 추가
 	
 	const deleteConfig = mapDeleteObject(key); // 커맨드와 경로 설정
-	const errorMessage = `${dataName} 삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.`;
+	const errorMessage = `${dataName} 삭제에 실패하였습니다.`;
 	const delName =`${dataName}이(가)`;
 		
 	deleteData(deleteConfig, data, delName, errorMessage);
@@ -74,7 +74,7 @@ async function delListData(key, isCheckList) {
 	
 	const data = { [`${key}s`]: deleteArray };
 	const deleteConfig = mapDeleteObject(key); // 커맨드와 경로 설정
-	const errorMessage = '삭제에 실패하였습니다. 다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
+	const errorMessage = '삭제에 실패하였습니다.';
 	
 	deleteData(deleteConfig, data, '항목이', errorMessage);
 }
