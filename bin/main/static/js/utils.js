@@ -34,10 +34,14 @@ function debounceAsync(func, key) { // 비동기 방식 디바운싱 처리
 }
 
 // loading set
-let loadingTimeout; // 타이머 변수를 전역으로 선언
+let loadingTimeouts = {}; // 타이머 변수를 전역으로 선언
 function setLoading(loading, parentEleClass, backgroundColor='var(--whiteColor)') {
 	if(!loading) {
-		clearTimeout(loadingTimeout); // 딜레이 시간 안에 통신 완료 시 로딩 타이머 취소
+		if (loadingTimeouts[parentEleClass]) { // 해당 요청의 타이머가 있으면 취소
+			clearTimeout(loadingTimeouts[parentEleClass]);
+			delete loadingTimeouts[parentEleClass];
+		}
+	
 		if($(`.${parentEleClass}_loading_wrap`).length) $(`.${parentEleClass}_loading_wrap`).remove(); // 로딩 요소 제거
 		logger.info(`setLoading() ${parentEleClass}_loading_wrap: stop loading`);
 		return false;
@@ -50,7 +54,7 @@ function setLoading(loading, parentEleClass, backgroundColor='var(--whiteColor)'
 	}
 	
 	logger.info(`setLoading() ${parentEleClass}_loading_wrap: start loading`);
-	loadingTimeout = setTimeout(() => {
+	loadingTimeouts[parentEleClass] = setTimeout(() => {
 		$(`.${parentEleClass}`).append(`
 			<span class="${parentEleClass}_loading_wrap loading" style="background-color: ${backgroundColor};"></span>
 		`); // 해당 컨텐츠에 로딩 요소 추가

@@ -1,14 +1,16 @@
 // 함수 디바운싱 적용 // 함수, key명
-const getMainList = debounceAsync(getMainListProcess, 'getMainListProcess'); // 메인 콘텐츠 리스트 요청
 const getList = debounceAsync(getListProcess, 'getListProcess'); // 콘텐츠 리스트 요청
 const getSearchList = debounceAsync(getSearchListProcess, 'getSearchListProcess'); // 검색 리스트 요청
 
 // 메인 콘텐츠 리스트 요청 함수 실행
 function getMainContentList() {
 	const apiList = [ // 요청할 api, 로딩 요소 객체 배열
-		//{apiUrl: '/report/main/get_report_list' , loddingParentEle: 'main_report_table'}, // 메인 신고 현황 콘텐츠 요청 객체 설정
-		//{apiUrl: '/advertisement/main/get_advertisement_list' , loddingParentEle: 'main_advertisement_table'}, // 메인 광고 현황 콘텐츠 요청 객체 설정
+		{apiUrl: '/report/main/get_report_list' , loddingParentEle: 'main_report_table'}, // 메인 신고 현황 콘텐츠 요청 객체 설정
+		{apiUrl: '/advertisement/main/get_advertisement_list' , loddingParentEle: 'main_advertisement_table'}, // 메인 광고 현황 콘텐츠 요청 객체 설정
 		{apiUrl: '/qna/main/get_qna_list' , loddingParentEle: 'main_qna_table'}, // 메인 QnA 현황 콘텐츠 요청 객체 설정
+		{apiUrl: '/notice/main/get_notice_list' , loddingParentEle: 'main_notice_table'}, // 메인 전체 공지 사항 콘텐츠 요청 객체 설정
+		{apiUrl: '/qna/main/get_notice_list' , loddingParentEle: 'main_qna_notice_table'}, // 메인 QnA 공지 사항 콘텐츠 요청 객체 설정
+		{apiUrl: '/board/main/get_notice_list' , loddingParentEle: 'main_board_notice_table'}, // 메인 게시판 공지 사항 콘텐츠 요청 객체 설정
 	];
 	
 	// 각 요청을 독립적으로 실행하여 개별적으로 응답 처리(응답이 빠른 순서대로 처리)
@@ -16,7 +18,7 @@ function getMainContentList() {
 }
 
 // 메인 콘텐츠 리스트 요청
-async function getMainListProcess(apiUrl, loddingParentEle) {
+async function getMainList(apiUrl, loddingParentEle) {
 	const page_limit = 5; // 데이터 리스트 개수
 	setLoading(true, loddingParentEle); // 로딩 추가
 	try {
@@ -63,7 +65,7 @@ function mainContentApiResponse(apiUrl, response, loddingParentEle) {
             </tr>
 		`);
 	}
-};
+}
 
 // 콘텐츠 리스트 요청
 async function getListProcess(apiUrl, sortValue, order, page, resetParams = false) {
@@ -602,7 +604,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			tableTrContent = `
 				<tr>
 		            <td>
-		                <a href="/qna/info/modify_form?bqn_no=${data.bqn_no}" class="table_info table_flex_info>
+		                <a href="/qna/info/modify_form?bqn_no=${data.bqn_no}" class="table_info table_flex_info">
 		                	<p class="info_text">${data.bqn_title}</p>
 		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
 		                </a>
