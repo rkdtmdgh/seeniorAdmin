@@ -540,8 +540,6 @@ public class QnaService {
 		// 첨부된 파일이 있는 경우
 		if (files != null && files.size() != 0 && files.get(0).getSize() != 0) {
 			log.info("files is not empty.");
-
-			
 			
     		String filePath = ImgUrlPath.QNA_NOTICE_FILE_PATH.getValue() + date;
     		
