@@ -344,7 +344,9 @@
 		AND 
 			AD_STATE = 1 
 		ORDER BY 
-			AD_NO DESC
+			AD_NO DESC 
+		LIMIT 
+			1, #{page_limit}
 	
 	</select>
 

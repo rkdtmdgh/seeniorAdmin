@@ -2,7 +2,7 @@
 const deleteData = debounceAsync(deleteDataProcess, 'deleteDataProcess'); // 삭제 처리
 
 // 삭제 처리
-async function deleteDataProcess(deleteConfig, data, dataName, errorMessage) {
+async function deleteDataProcess(deleteConfig, data, dataName) {
 	logger.info('deleteData()', deleteConfig.apiUrl, data);
 	
 	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
@@ -16,17 +16,17 @@ async function deleteDataProcess(deleteConfig, data, dataName, errorMessage) {
 			logger.info(`${deleteConfig.apiUrl} deleteData() response:`, response);
 			
 			if(response) {
-				alert(`${dataName} 삭제되었습니다.`);
+				alert(`${applyJosa(dataName, '이/가')} 삭제되었습니다.`);
 				deleteConfig.replace ? location.replace(deleteConfig.replace) : location.reload(true);
 				
 			} else {
-				alert(errorMessage + addMsg);
+				alert(`${dataName} 삭제에 실패하였습니다.` + addMsg);
 				location.reload(true);
 			}
 			
 		} catch(error) {
 			logger.error(`${deleteConfig.apiUrl} error:`, error);
-			alert(errorMessage + addMsg);
+			alert(`${dataName} 삭제에 실패하였습니다.` + addMsg);
 			location.reload(true);
 		}
 	}
@@ -36,17 +36,15 @@ async function deleteDataProcess(deleteConfig, data, dataName, errorMessage) {
 async function delSingleData(dataName, key, noValue, additionalData = {}) { // 추가 인자가 필요할 경우 {} 객체로 additionalData위치에 인자 전달
 	logger.info('delSingleData()', key, noValue, dataName, additionalData);
 	
-	const isConfirm = confirm(`${dataName}을(를) 삭제하시겠습니까?`);
+	const isConfirm = confirm(`${applyJosa(dataName, '을/를')} 삭제하시겠습니까?`);
 	if(!isConfirm) return false;
 	
 	const data = { [key]: noValue };
 	Object.assign(data, additionalData); // 추가 데이터가 필요 시 data에 추가
 	
 	const deleteConfig = mapDeleteObject(key); // 커맨드와 경로 설정
-	const errorMessage = `${dataName} 삭제에 실패하였습니다.`;
-	const delName =`${dataName}이(가)`;
 		
-	deleteData(deleteConfig, data, delName, errorMessage);
+	deleteData(deleteConfig, data, dataName);
 }
 
 // 리스트 삭제
@@ -74,9 +72,8 @@ async function delListData(key, isCheckList) {
 	
 	const data = { [`${key}s`]: deleteArray };
 	const deleteConfig = mapDeleteObject(key); // 커맨드와 경로 설정
-	const errorMessage = '삭제에 실패하였습니다.';
 	
-	deleteData(deleteConfig, data, '항목이', errorMessage);
+	deleteData(deleteConfig, data, '항목');
 }
 
 // 삭제 요청에 필요한 객체 설정

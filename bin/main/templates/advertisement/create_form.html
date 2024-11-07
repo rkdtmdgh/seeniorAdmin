@@ -51,39 +51,49 @@
 		                                	
 		                                	<th><p class="table_title">클라이언트</p></th>
 		                                	<td>
-		                                		<input type="text" name="ad_client" id="ad_client" class="table_info" placeholder="클라이언트"
-		                                			onblur="validateEmpty(this, '클라이언트를')">
+		                                		<label class="table_info">
+			                                		<input type="text" name="ad_client" id="ad_client" placeholder="클라이언트"
+			                                			onblur="validateEmpty(this, '클라이언트')">
+	                        					</label>
 		                                	</td>
 	                                	</tr>
 	                                	
 	                                	<tr>
 		                                	<th><p class="table_title">시작일</p></th>
 		                                	<td>
-		                                		<input type="date" name="ad_start_date" id="ad_start_date" max="9999-12-31" min="1900-01-01" class="table_info"
-	                                            	onchange="validateEmpty(this, '시작일을')" onblur="validateEmpty(this, '시작일을')">
+		                                		<label class="table_info">
+			                                		<input type="date" name="ad_start_date" id="ad_start_date" max="9999-12-31" min="1900-01-01"
+		                                            	onchange="validateEmpty(this, '시작일')" onblur="validateEmpty(this, '시작일')">
+	                        					</label>
 		                                	</td>
 		                                	
 		                                	<th><p class="table_title">종료일</p></th>
 		                                	<td>
-		                                		<input type="date" name="ad_end_date" id="ad_end_date" max="9999-12-31" min="1900-01-01" class="table_info"
-	                                            	onchange="validateEmpty(this, '종료일을')" onblur="validateEmpty(this, '종료일을')">
+		                                		<label class="table_info">
+			                                		<input type="date" name="ad_end_date" id="ad_end_date" max="9999-12-31" min="1900-01-01"
+		                                            	onchange="validateEmpty(this, '종료일')" onblur="validateEmpty(this, '종료일')">
+	                        					</label>
 		                                	</td>
 	                                	</tr>
 	                                	
 	                                	<tr>
 		                                	<th><p class="table_title">URL</p></th>
 		                                	<td>
-		                                		<input type="text" name="ad_url" id="ad_url" class="table_info" placeholder="URL"
-	                                				onblur="validateEmpty(this, 'URL 주소를')">
+		                                		<label class="table_info">
+			                                		<input type="text" name="ad_url" id="ad_url" placeholder="URL"
+		                                				onblur="validateEmpty(this, 'URL 주소')">
+	                        					</label>
 		                                	</td>
 		                                	
 		                                	<th><p class="table_title">순번</p></th>
 		                                	<td class="order_number">
-		                                		<input type="number" name="ad_idx" id="idx_number" class="table_info" placeholder="순번"
-		                                			min="1"
-		                                			onkeydown="blockEKey(event)"
-		                                			oninput="replaceNumber(this)"
-		                                			value="1">
+		                                		<label class="table_info">
+			                                		<input type="number" name="ad_idx" id="idx_number" placeholder="순번"
+			                                			min="1"
+			                                			onkeydown="blockEKey(event)"
+			                                			oninput="replaceNumber(this)"
+			                                			value="1">
+	                        					</label>
 		                                	</td>
 	                                	</tr>
 	                                	

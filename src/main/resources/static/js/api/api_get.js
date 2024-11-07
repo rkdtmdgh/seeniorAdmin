@@ -1,6 +1,23 @@
 // 함수 디바운싱 적용 // 함수, key명
+const getMainList = debounceAsync(getMainListProcess, 'getMainListProcess'); // 메인 콘텐츠 리스트 요청
 const getList = debounceAsync(getListProcess, 'getListProcess'); // 콘텐츠 리스트 요청
 const getSearchList = debounceAsync(getSearchListProcess, 'getSearchListProcess'); // 검색 리스트 요청
+
+// 메인 콘텐츠 리스트 요청 함수 실행
+function getMainContentList() {
+	
+}
+
+// 메인 콘텐츠 리스트 요청
+async function getMainListProcess() {
+	
+}
+
+// 메인 신고 현황 콘텐츠 요청 객체 설정
+function mainReportListApiObject() {
+	const apiUrl = '/report/main/get_report_list';
+	const loddingParentEle = '';
+}
 
 // 콘텐츠 리스트 요청
 async function getListProcess(apiUrl, sortValue, order, page, resetParams = false) {
@@ -53,7 +70,7 @@ async function getSearchListProcess(event, apiUrl, sortValue, order, page) {
 	let input;
 	
 	input = form.search_string;
-	if(!validateEmpty(input, '검색어를', true, true)) { // 요소, text, alert 여부, 에러메세지 미노출 여부
+	if(!validateEmpty(input, '검색어', true, true)) { // 요소, text, alert 여부, 에러메세지 미노출 여부
 		input.focus();
 		return false;
 	}
@@ -427,7 +444,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <p class="table_info">${data.a_phone}</p>
 		            </td>
 		            <td class="va_m">
-		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info flex_area">
+		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="flex_area">
 		                	<span class="state icon ${data.a_authority_role === 'SUB_ADMIN' ? '' : 'off'}">
 		                		${data.a_authority_role === 'SUB_ADMIN' ? '승인' : '대기'}
 		                	</span>
@@ -464,7 +481,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_company || '-'} </a>
 		            </td>
 		            <td class="va_m">
-		                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info flex_area">
+		                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="flex_area">
 		                	<span class="state ${data.u_is_blocked === true ? '' : 'off'}">
 		                		${data.u_is_blocked === true ? '정상' : '정지'}
 		                	</span>
@@ -503,7 +520,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			tableTrContent = `
 				<tr>
 		            <td class="va_m">
-		                <div class="table_info flex_area"><input type="checkbox" name="d_no" value="${data.d_no}"></div>
+		                <div class="flex_area"><input type="checkbox" name="d_no" value="${data.d_no}"></div>
 		            </td>
 		            <td>
 		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${listIndex}</a>
@@ -557,7 +574,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			tableTrContent = `
 				<tr>
 		            <td class="va_m">
-		                <div class="table_info flex_area"><input type="checkbox" name="v_no" value="${data.v_no}"></div>
+		                <div class="flex_area"><input type="checkbox" name="v_no" value="${data.v_no}"></div>
 		            </td>
 		            <td>
 		                <a href="/video/info/modify_form?v_no=${data.v_no}" class="table_info">${listIndex}</a>
@@ -580,7 +597,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			tableTrContent = `
 				<tr data-no-name="bc_no" data-no="${data.bc_no}" data-idx="${data.bc_idx}">
 					<td class="va_m">
-						<div class="table_info flex_area">
+						<div class="flex_area">
 							${getListCnt > 1 ? `
 								${data.bc_idx !== 1 ? `<span onclick="putOrderModify(event, ${data.bc_idx - 1}, ${page})" class="func_arrow up"></span>` : ''}
 								${data.bc_idx !== getListCnt ? `<span onclick="putOrderModify(event, ${data.bc_idx + 1}, ${page})" class="func_arrow down"></span>` : ''}
@@ -641,7 +658,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			tableTrContent = `
 				<tr>
 					<td class="va_m">
-		                <div class="table_info flex_area"><input type="checkbox" name="bp_no" value="${data.bp_no}"></div>
+		                <div class="flex_area"><input type="checkbox" name="bp_no" value="${data.bp_no}"></div>
 		            </td>
 		            <td>
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${listIndex}</a>
@@ -667,7 +684,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${data.bp_view_cnt}</a>
 		            </td>
 		            <td class="va_m">
-		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info flex_area">
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="flex_area">
 		                	<span class="state ${data.bp_report_state === 2 ? 'on' : data.bp_report_state === 0 ? 'off' :  ''}">
 		                		${data.bp_report_state === 2 ? '처리중' : data.bp_report_state === 0 ? '처리완료' : '정상'}
 		                	</span>
@@ -697,7 +714,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
 		            </td>
 		            <td class="va_m">
-		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info flex_area">
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="flex_area">
 		                	<span class="state ${data.n_state === true ? '' : 'off'}">
 		                		${data.n_state === true ? '공개' : '숨김'}
 		                	</span>
@@ -730,7 +747,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_name}</a>
 		            </td>
 		            <td class="va_m">
-		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="table_info flex_area">
+		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="flex_area">
 		                	<span class="state ${data.bqn_state === true ? '' : 'off'}">
 		                		${data.bqn_state === true ? '공개' : '숨김'}
 		                	</span>
@@ -781,7 +798,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.qnaCategoryDto.bqc_name}</a>
 		            </td>
 		            <td class="va_m">
-		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info flex_area">
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="flex_area">
 		                	<span class="state icon ${data.qnaAnswerDto === null ? 'off' : ''}">
 		                		${data.qnaAnswerDto === null ? '대기' : '답변'}
 		                	</span>
@@ -842,7 +859,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info">${data.reportCategoryDto.bqc_name}</a>
 		            </td>
 		            <td class="va_m">
-		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info flex_area">
+		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="flex_area">
 		                	<span class="state icon ${data.br_state === 1 ? 'off' : ''}">
 		                		${data.br_state === 1 ? '대기' : '처리완료'}
 		                	</span>
@@ -882,7 +899,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_client}</a>
 		            </td>
 		            <td class="va_m">
-		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info flex_area">
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="flex_area">
 		                	<span class="state ${data.ad_state === 1 ? '' : 'off'}">
 		                		${data.ad_state === 1 ? '사용' : '만료'}
 		                	</span>
@@ -905,7 +922,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			tableTrContent = `
 				<tr data-no-name="ad_no" data-no="${data.ad_no}" data-idx="${data.ad_idx}">
 					<td class="va_m">
-						<div class="table_info flex_area">
+						<div class="flex_area">
 							${getListCnt > 1 ? `
 								${data.ad_idx !== 1 ? `<span onclick="putOrderModify(event, ${data.ad_idx - 1}, ${page})" class="func_arrow up"></span>` : ''}
 								${data.ad_idx !== getListCnt ? `<span onclick="putOrderModify(event, ${data.ad_idx + 1}, ${page})" class="func_arrow down"></span>` : ''}

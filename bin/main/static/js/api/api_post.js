@@ -25,13 +25,13 @@ async function postSignUpProcess(event, formName) {
 	}
 	
 	input = form.a_name;
-	if(!validateEmpty(input, '이름을', true)) {
+	if(!validateEmpty(input, '이름', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_birth;
-	if(!validateEmpty(input, '생년월일을', true)) {
+	if(!validateEmpty(input, '생년월일', true)) {
 		input.focus();
 		return false;
 	}
@@ -57,13 +57,13 @@ function postSignInProcess(event, formName) {
 	let input;
 	
 	input = form.a_id;
-	if(!validateEmpty(input, '이메일을', true, true)) { // 요소, 텍스트, alert 여부, 메세지 요소 미노출 여부
+	if(!validateEmpty(input, '이메일', true, true)) { // 요소, 텍스트, alert 여부, 메세지 요소 미노출 여부
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_pw;
-	if(!validateEmpty(input, '비밀번호를', true, true)) {
+	if(!validateEmpty(input, '비밀번호', true, true)) {
 		input.focus();
 		return false;
 	}
@@ -84,7 +84,7 @@ async function postIdentityCheckProcess(event, formName) {
 		let input;
 		
 		input = form.a_pw;
-		if(!validateEmpty(input, '비밀번호를', true, true)) {
+		if(!validateEmpty(input, '비밀번호', true, true)) {
 			input.focus();
 			setLoading(false, 'content_inner')
 			return false;
@@ -197,19 +197,19 @@ async function postDiseaseCreate(formName) {
 	}
 	
 	input = form.d_good_food;
-	if(!validateEmpty(input, '추천 식단 재료를', true)) {
+	if(!validateEmpty(input, '추천 식단 재료', true)) {
 		input.focus();
 		return false;
 	}
 		
 	input = form.d_bad_food;
-	if(!validateEmpty(input, '비추천 식단 재료를', true)) {
+	if(!validateEmpty(input, '비추천 식단 재료', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.d_info;
-	if(!validateEmpty(input, '질환 / 질병 정보를', true)) {
+	if(!validateEmpty(input, '질환 / 질병 정보', true)) {
 		input.focus();
 		return false;
 	}
@@ -264,19 +264,19 @@ async function postVideoCreate(formName) {
 	let input;
 	
 	input = form.v_title;
-	if(!validateEmpty(input, '제목을', true)) {
+	if(!validateEmpty(input, '제목', true)) {
 		input.focus();
 		return false;
 	}
 		
 	input = form.v_link;
-	if(!validateEmpty(input, 'URL 주소를', true)) {
+	if(!validateEmpty(input, 'URL 주소', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.v_text;
-	if(!validateEmpty(input, '내용을', true)) {
+	if(!validateEmpty(input, '내용', true)) {
 		input.focus();
 		return false;
 	}
@@ -300,7 +300,7 @@ async function postNoticeCreate(formName) {
 	const form = document.forms[formName];
 	
 	input = form.n_title;
-	if(!validateEmpty(input, '제목을', true)) {
+	if(!validateEmpty(input, '제목', true)) {
 		input.focus();
 		return false;
 	}
@@ -335,7 +335,7 @@ async function postQnaNoticeCreate(formName) {
 	const form = document.forms[formName];
 	
 	input = form.bqn_title;
-	if(!validateEmpty(input, '제목을', true)) {
+	if(!validateEmpty(input, '제목', true)) {
 		input.focus();
 		return false;
 	}
@@ -395,7 +395,7 @@ async function postAnswerCreate(formName) {
 	const form = document.forms[formName];
 	
 	input = form.bqa_answer;
-	if(!validateEmpty(input, '답변을', true)) {
+	if(!validateEmpty(input, '답변', true)) {
 		input.focus();
 		return false;
 	}
@@ -446,7 +446,7 @@ async function postNoticePostsCreate(formName) {
 	const form = document.forms[formName];
 	
 	input = form.bn_title;
-	if(!validateEmpty(input, '제목을', true)) {
+	if(!validateEmpty(input, '제목', true)) {
 		input.focus();
 		return false;
 	}
@@ -481,7 +481,7 @@ async function postPostsCreate(formName) {
 	const form = document.forms[formName];
 	
 	input = form.bp_title;
-	if(!validateEmpty(input, '제목을', true)) {
+	if(!validateEmpty(input, '제목', true)) {
 		input.focus();
 		return false;
 	}
@@ -574,19 +574,19 @@ async function postAdvertisementCreate(formName) {
 	}
 	
 	input = form.ad_client;
-	if(!validateEmpty(input, '클라이언트를', true)) {
+	if(!validateEmpty(input, '클라이언트', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.ad_start_date;
-	if(!validateEmpty(input, '시작일을', true)) {
+	if(!validateEmpty(input, '시작일', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.ad_end_date;
-	if(!validateEmpty(input, '종료일을', true)) {
+	if(!validateEmpty(input, '종료일', true)) {
 		input.focus();
 		return false;
 	}
@@ -598,7 +598,7 @@ async function postAdvertisementCreate(formName) {
 	}
 	
 	input = form.ad_url;
-	if(!validateEmpty(input, 'URL 주소를', true)) {
+	if(!validateEmpty(input, 'URL 주소', true)) {
 		input.focus();
 		return false;
 	}
