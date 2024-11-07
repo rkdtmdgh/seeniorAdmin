@@ -4,34 +4,32 @@ const putOrderModify = debounceAsync(putOrderModifyProcess, 'putOrderModifyProce
 
 // put 통합 ajax 요청
 async function putIntegSubmitProcess(apiUrl, formData, successMessage, errorMessage, loddingParentEle) {   
-	if(setLoading(true, loddingParentEle)) { // 로딩 추가 함수 실행이 성공하면 요청 진행 
-		setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
+	setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
+	setLoading(true, loddingParentEle); // 로딩 추가
+	try {
+		const response = await $.ajax({
+			url: apiUrl,
+			method: 'POST',
+			data: formData,
+			processData: false,  // FormData가 자동으로 Content-Type 설정
+			contentType: false,  // FormData를 문자열로 변환하지 않음
+		});
 		
-		try {
-			const response = await $.ajax({
-				url: apiUrl,
-				method: 'POST',
-				data: formData,
-				processData: false,  // FormData가 자동으로 Content-Type 설정
-				contentType: false,  // FormData를 문자열로 변환하지 않음
-			});
+		logger.info(`${apiUrl} putIntegSubmit() response:`, response);
+		
+		if(response) {
+			if(successMessage) alert(successMessage);
 			
-			logger.info(`${apiUrl} putIntegSubmit() response:`, response);
-			
-			if(response) {
-				if(successMessage) alert(successMessage);
-				
-			} else {
-				if(errorMessage) alert(errorMessage + addMsg);
-			}
-			
-		} catch(error) {
-			logger.error(`${apiUrl} putIntegSubmit() error:`, error);
+		} else {
 			if(errorMessage) alert(errorMessage + addMsg);
-			
-		} finally {
-			location.reload(true);
 		}
+		
+	} catch(error) {
+		logger.error(`${apiUrl} putIntegSubmit() error:`, error);
+		if(errorMessage) alert(errorMessage + addMsg);
+		
+	} finally {
+		location.reload(true);
 	}
 }
 
@@ -49,41 +47,36 @@ async function putOrderModifyProcess(event, idx, page) {
     const config = mapOrderModifyObject(name, page); // 요청에 필요한 객체
     
 	// 실시간 비동기 작업으로 리로드 되지 않도록 putIntegSubmit함수 사용하지 않음
-	if(setLoading(true, config.loddingSetEle)) { // 로딩 추가 함수 실행이 성공하면 요청 진행 
+	const formData = new FormData();
+	formData.append(name, no); // 순번 수정할 데이터 no값
+	formData.append([config.current_idx_key], current_idx); // 기존 순번 값
+	formData.append([config.idx_key], idx); // 변경할 순번 값
+	if(infoNo) formData.append([config.categoryKey], infoNo); // 카테고리 no 값	
+	const errorMessage = '순번 수정에 실패했습니다.';
+
+	setLoading(true, config.loddingSetEle); // 로딩 추가
+	try {
+		const response = await $.ajax({
+			url: config.orderModifyApiURL,
+			method: 'POST',
+			data: formData,
+			processData: false,  // FormData가 자동으로 Content-Type 설정
+			contentType: false,  // FormData를 문자열로 변환하지 않음
+		});
 		
-		const formData = new FormData();
-		formData.append(name, no); // 순번 수정할 데이터 no값
-		formData.append([config.current_idx_key], current_idx); // 기존 순번 값
-		formData.append([config.idx_key], idx); // 변경할 순번 값
-		if(infoNo) formData.append([config.categoryKey], infoNo); // 카테고리 no 값	
+		logger.info(`${config.orderModifyApiURL} putOrderModify() response:`, response);
 		
-		//setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
-		
-		const errorMessage = '순번 수정에 실패했습니다.';
-	
-		try {
-			const response = await $.ajax({
-				url: config.orderModifyApiURL,
-				method: 'POST',
-				data: formData,
-				processData: false,  // FormData가 자동으로 Content-Type 설정
-				contentType: false,  // FormData를 문자열로 변환하지 않음
-			});
-			
-			logger.info(`${config.orderModifyApiURL} putOrderModify() response:`, response);
-			
-			if(!response) {
-				if(errorMessage) alert(errorMessage + addMsg);
-			}
-			
-		} catch(error) {
-			logger.error(`${config.orderModifyApiURL} putOrderModify() error:`, error);
+		if(!response) {
 			if(errorMessage) alert(errorMessage + addMsg);
-			
-		} finally {
-			setLoading(false, config.loddingSetEle); // 로딩 종료
-			config.getListFunc(); // 지정된 함수 실행
 		}
+		
+	} catch(error) {
+		logger.error(`${config.orderModifyApiURL} putOrderModify() error:`, error);
+		if(errorMessage) alert(errorMessage + addMsg);
+		
+	} finally {
+		setLoading(false, config.loddingSetEle); // 로딩 종료
+		config.getListFunc(); // 지정된 함수 실행
 	}
 }
 
