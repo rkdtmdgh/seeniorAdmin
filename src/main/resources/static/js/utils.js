@@ -39,16 +39,17 @@ function setLoading(loading, parentEleClass, backgroundColor='var(--whiteColor)'
 	if(!loading) {
 		clearTimeout(loadingTimeout); // 딜레이 시간 안에 통신 완료 시 로딩 타이머 취소
 		if($(`.${parentEleClass}_loading_wrap`).length) $(`.${parentEleClass}_loading_wrap`).remove(); // 로딩 요소 제거
-		//logger.info(`setLoading() ${parentEleClass}_loading_wrap: stop loading`);
+		logger.info(`setLoading() ${parentEleClass}_loading_wrap: stop loading`);
 		return false;
 	}
 	
 	if($(`.${parentEleClass}_loading_wrap`).length.length) { // 이미 로딩 요소가 존재할 경우 
 		alert('현재 요청이 진행 중입니다. 잠시 후 다시 시도해 주세요.');
-		//logger.info(`setLoading() ${parentEleClass}_loading_wrap: Already loading`);
+		logger.info(`setLoading() ${parentEleClass}_loading_wrap: already loading`);
 		return false; // 이미 요청이 진행 중이면 함수 종료
 	}
 	
+	logger.info(`setLoading() ${parentEleClass}_loading_wrap: start loading`);
 	loadingTimeout = setTimeout(() => {
 		$(`.${parentEleClass}`).append(`
 			<span class="${parentEleClass}_loading_wrap loading" style="background-color: ${backgroundColor};"></span>

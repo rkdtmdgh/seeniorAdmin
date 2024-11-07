@@ -5,30 +5,29 @@ const deleteData = debounceAsync(deleteDataProcess, 'deleteDataProcess'); // 삭
 async function deleteDataProcess(deleteConfig, data, dataName) {
 	logger.info('deleteData()', deleteConfig.apiUrl, data);
 	
-	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
-		try {
-			const response = await $.ajax({
-				url: deleteConfig.apiUrl,
-				method: 'POST',
-				data: data,
-			});
+	setLoading(true, 'content_inner'); // 로딩 추가
+	try {
+		const response = await $.ajax({
+			url: deleteConfig.apiUrl,
+			method: 'POST',
+			data: data,
+		});
+		
+		logger.info(`${deleteConfig.apiUrl} deleteData() response:`, response);
+		
+		if(response) {
+			alert(`${applyJosa(dataName, '이/가')} 삭제되었습니다.`);
+			deleteConfig.replace ? location.replace(deleteConfig.replace) : location.reload(true);
 			
-			logger.info(`${deleteConfig.apiUrl} deleteData() response:`, response);
-			
-			if(response) {
-				alert(`${applyJosa(dataName, '이/가')} 삭제되었습니다.`);
-				deleteConfig.replace ? location.replace(deleteConfig.replace) : location.reload(true);
-				
-			} else {
-				alert(`${dataName} 삭제에 실패하였습니다.` + addMsg);
-				location.reload(true);
-			}
-			
-		} catch(error) {
-			logger.error(`${deleteConfig.apiUrl} error:`, error);
+		} else {
 			alert(`${dataName} 삭제에 실패하였습니다.` + addMsg);
 			location.reload(true);
 		}
+		
+	} catch(error) {
+		logger.error(`${deleteConfig.apiUrl} error:`, error);
+		alert(`${dataName} 삭제에 실패하였습니다.` + addMsg);
+		location.reload(true);
 	}
 }
 
