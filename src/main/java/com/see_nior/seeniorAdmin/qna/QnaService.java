@@ -647,7 +647,6 @@ public class QnaService {
 	}
 
 	// qna 공지사항 수정 확인
-	@SuppressWarnings("null")
 	public boolean modifyNoticeConfirm(
 			List<MultipartFile> files, List<String> deleteFileNames, QnaNoticeDto qnaNoticeDto) {
 		log.info("modifyNoticeConfirm()");
@@ -710,7 +709,8 @@ public class QnaService {
 				
 				try {
 					
-					Map<String,Object> savedFileObj = objectMapper.readValue(savedFiles.getBody(), new TypeReference<Map<String,Object>>() {});
+					Map<String,Object> savedFileObj = 
+							objectMapper.readValue(savedFiles.getBody(), new TypeReference<Map<String,Object>>() {});
 					
 					@SuppressWarnings("unchecked") //(List<String>) 강제 캐스팅 에러
 					List<String> savedFileNames = (List<String>) savedFileObj.get("savedFileNames");
