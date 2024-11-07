@@ -498,13 +498,17 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 	
 	switch(apiUrl) {
 		case '/report/main/get_report_list': // 메인 신고 현황 테이블
+			regDate = new Date(new Date(data.br_reg_date).getTime() + newIconsHours);
 			tableTrContent = `
 				<tr>
 		            <td>
 		                <a href="/report/info/result_form?br_no=${data.br_no}" class="table_info">${data.reportCategoryDto.brr_name}</a>
 		            </td>
 		            <td>
-		                <a href="/report/info/result_form?br_no=${data.br_no}" class="table_info">${data.br_title}</a>
+		                <a href="/report/info/result_form?br_no=${data.br_no}" class="table_info table_flex_info">
+		                	<p class="info_text">${data.br_title}</p>
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
 		            </td>
 		            <td>
 		                <a href="/user_account/info/modify_form?u_no=${data.userAccountDto.u_no}" class="table_info">
@@ -512,42 +516,51 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                </a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.br_reg_date)}</p>
+		                <a href="/report/info/result_form?br_no=${data.br_no}" class="table_info">${setFormatDate(data.br_reg_date)}</a>
 		            </td>
 		        </tr>
 			`;
 			break;
 			
 		case '/advertisement/main/get_advertisement_list': // 메인 광고 현황 테이블
+			regDate = new Date(new Date(data.ad_reg_date).getTime() + newIconsHours);
 			tableTrContent = `
 				<tr>
 		            <td>
 		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.advertisementCategoryDto.ac_name}/a>
 		            </td>
 		            <td>
-		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_client}</a>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info table_flex_info">
+		                	<p class="info_text">${data.ad_client}</p>
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.ad_start_date)}</p>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_start_date)}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.ad_end_date)}</p>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_end_date)}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.ad_reg_date)}</p>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_reg_date)}</a>
 		            </td>
 		        </tr>
 			`;
 			break;
 			
 		case '/qna/main/get_qna_list': // 메인 질문과 답변 현황 테이블
+			regDate = new Date(new Date(data.bq_reg_date).getTime() + newIconsHours);
 			tableTrContent = `
 				<tr>
 		            <td>
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.qnaCategoryDto.bqc_name}</a>
 		            </td>
 		            <td>
-		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.bq_title}</a>
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info table_flex_info">
+		                	<p class="info_text">${data.bq_title}</p>
+		                	${data.bq_state === true ? '<img src="/image/icons/lock.png" alt="비공개글" class="table_info_icons">' : ''}
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
 		            </td>
 		            <td>
 		                <a href="/user_account/info/modify_form?u_no=${data.userAccountDto.u_no}" class="table_info">
@@ -555,23 +568,27 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                </a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.bq_reg_date)}</p>
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${setFormatDate(data.bq_reg_date)}</a>
 		            </td>
 		        </tr>
 			`;
 			break;
 			
 		case '/notice/main/get_notice_list': // 메인 전체 공지 사항 테이블
+			regDate = new Date(new Date(data.n_reg_date).getTime() + newIconsHours);
 			tableTrContent = `
 				<tr>
 		            <td>
-		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_title}</a>
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info table_flex_info">
+		                	<p class="info_text">${data.n_title}</p>
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
 		            </td>
 		            <td>
 		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_name}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.n_reg_date)}</p>
+		                <a href="/notice/info/modify_form?n_no=${data.n_no} class="table_info">${setFormatDate(data.n_reg_date)}</a>
 		            </td>
 		            <td>
 		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_view_cnt}</a>
@@ -581,38 +598,46 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			break;
 			
 		case '/qna/main/get_notice_list': // 메인 QnA 공지 사항 테이블
+			regDate = new Date(new Date(data.bqn_reg_date).getTime() + newIconsHours);
 			tableTrContent = `
 				<tr>
 		            <td>
-		                <a href="/notice/info/modify_form?qn_no=${data.qn_no}" class="table_info">${data.qn_title}</a>
+		                <a href="/qna/info/modify_form?bqn_no=${data.bqn_no}" class="table_info table_flex_info>
+		                	<p class="info_text">${data.bqn_title}</p>
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
 		            </td>
 		            <td>
 		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_name}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.qn_reg_date)}</p>
+		                <a href="/qna/info/modify_form?bqn_no=${data.bqn_no}" class="table_info">${setFormatDate(data.bqn_reg_date)}</a>
 		            </td>
 		            <td>
-		                <a href="/notice/info/modify_form?qn_no=${data.qn_no}" class="table_info">${data.qn_view_cnt}</a>
+		                <a href="/qna/info/modify_form?bqn_no=${data.bqn_no}" class="table_info">${data.bqn_view_cnt}</a>
 		            </td>
 		        </tr>
 			`;
 			break;
 			
 		case '/board/main/get_notice_list': // 메인 게시판 공지 사항 테이블
+			regDate = new Date(new Date(data.bn_reg_date).getTime() + newIconsHours);
 			tableTrContent = `
 				<tr>
 		            <td>
-		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_title}</a>
+		                <a href="/board/info/modify_form?bn_no=${data.bn_no}" class="table_info table_flex_info">
+		                	<p class="info_text">${data.bn_title}</p>
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
 		            </td>
 		            <td>
 		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_name}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.br_reg_date)}</p>
+		                <a href="/board/info/modify_form?bn_no=${data.bn_no}" class="table_info">${setFormatDate(data.bn_reg_date)}</a>
 		            </td>
 		            <td>
-		                <a href="qn_no" class="table_info">${data.n_view_cnt}</a>
+		                <a href="/board/info/modify_form?bn_no=${data.bn_no}" class="table_info">${data.bn_view_cnt}</a>
 		            </td>
 		        </tr>
 			`;
@@ -620,19 +645,23 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			
 		case '/account/list/get_admin_list':  // 관리자 계정 리스트 테이블
 		case '/account/list/search_admin_list': // 관리자 계정 검색 리스트 테이블
+			regDate = new Date(new Date(data.a_reg_date).getTime() + newIconsHours);
 			tableTrContent = `
 				<tr>
 		            <td>
 		                <p class="table_info">${listIndex}</p>
 		            </td>
 		            <td>
-		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_id}</a>
+		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info table_flex_info f_jc_center">
+		                	<p class="info_text">${data.a_id}</p>
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
 		            </td>
 		            <td>
-		                <p class="table_info">${data.a_name}</p>
+		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_name}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${data.a_phone}</p>
+		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info">${data.a_phone}</a>
 		            </td>
 		            <td class="va_m">
 		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="flex_area">
@@ -642,7 +671,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                </a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.a_reg_date)}</p>
+		                <a href="/account/list/admin_modify_form?a_no=${data.a_no}" class="table_info">${setFormatDate(data.a_reg_date)}</a>
 		            </td>
 		        </tr>
 			`;
@@ -650,13 +679,17 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			
 		case '/user_account/info/get_user_account_list':  // 회원 관리 리스트 테이블
 		case '/user_account/info/search_user_account_list': // 회원 관리 검색 리스트 테이블
+			regDate = new Date(new Date(data.u_reg_date).getTime() + newIconsHours);
 			tableTrContent = `
 				<tr>
 		            <td>
 		                <p class="table_info">${listIndex}</p>
 		            </td>
 		            <td>
-		                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${data.u_id}</a>
+		                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info table_flex_info f_jc_center">
+		                	<p class="info_text">${data.u_id}</p>
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
 		            </td>
 		            <td>
 		                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info table_flex_info f_jc_center">
@@ -679,7 +712,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                </a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.u_reg_date)}</p>
+		                <a href="/user_account/info/modify_form?u_no=${data.u_no}" class="table_info">${setFormatDate(data.u_reg_date)}</a>
 		            </td>
 		        </tr>
 			`;
@@ -687,19 +720,23 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			
 		case '/disease/cate_info/get_category_list': // 질환/질병 분류 관리 리스트 테이블
 		case '/disease/cate_info/search_category_list': // 질환/질병 분류 관리 검색 리스트 테이블
+			regDate = new Date(new Date(data.dc_reg_date).getTime() + newIconsHours);
 			tableTrContent = `
 				<tr>
 		            <td>
 		                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${data.dc_name}</a>
+		                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info table_flex_info f_jc_center">
+		                	<p class="info_text">${data.dc_name}</p>
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
 		            </td>
 		            <td>
 		                <a href="/disease/info/disease_list_form?sortType=2&infoNo=${data.dc_no}&sortValue=d_no&order=desc" class="table_info">${data.dc_item_cnt}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.dc_reg_date)}</p>
+		                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${setFormatDate(data.dc_reg_date)}</a>
 		            </td>
 		        </tr>
 			`;
@@ -708,6 +745,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		case '/disease/info/get_disease_list': // 질환/질병 정보 관리 리스트 테이블
 		case '/disease/info/search_disease_list': // 질환/질병 정보 관리 검색 리스트 테이블
 		case '/disease/info/get_disease_list_by_category': // 질환/질병 정보 관리 질병군별 분류 리스트 테이블
+			regDate = new Date(new Date(data.d_reg_date).getTime() + newIconsHours);
 			tableTrContent = `
 				<tr>
 		            <td class="va_m">
@@ -720,10 +758,16 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${data.diseaseCategoryDto.dc_name}</a>
 		            </td>
 		            <td>
-		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${data.d_name}</a>
+		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info table_flex_info f_jc_center">
+		                	<p class="info_text">${data.d_name}</p>
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.d_mod_date)}</p>
+		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${setFormatDate(data.d_reg_date)}</a>
+		            </td>
+		            <td>
+		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${setFormatDate(data.d_mod_date)}</a>
 		            </td>
 		        </tr>
 			`;
@@ -762,6 +806,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			
 		case '/video/info/get_video_list': // 영상 정보 관리 리스트 테이블
 		case '/video/info/search_video_list': // 영상 정보 관리 검색 리스트 테이블
+			regDate = new Date(new Date(data.v_reg_date).getTime() + newIconsHours);
 			tableTrContent = `
 				<tr>
 		            <td class="va_m">
@@ -770,14 +815,138 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            <td>
 		                <a href="/video/info/modify_form?v_no=${data.v_no}" class="table_info">${listIndex}</a>
 		            </td>
-		            <td class="ta_l">
-		                <a href="/video/info/modify_form?v_no=${data.v_no}" class="table_info">${data.v_title}</a>
+		            <td>
+		            	<a href="/video/info/modify_form?v_no=${data.v_no}" class="table_info table_flex_info">
+		                	<p class="info_text">${data.v_title}</p>
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
 		            </td>
 		            <td class="ta_l">
 		                <a href="${data.v_link}" onclick="setWindowOpenPosition(this.href, 640, 360); return false;" class="table_info">${data.v_link}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.v_mod_date)}</p>
+		                <a href="/video/info/modify_form?v_no=${data.v_no}" class="table_info">${setFormatDate(data.v_reg_date)}</a>
+		            </td>
+		            <td>
+		                <a href="/video/info/modify_form?v_no=${data.v_no}" class="table_info">${setFormatDate(data.v_mod_date)}</a>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/notice/info/get_notice_list': // 전체 공지 사항 리스트 테이블
+		case '/notice/info/search_notice_list': // 전체 공지 사항 검색 리스트 테이블
+			regDate = new Date(new Date(data.n_reg_date).getTime() + newIconsHours);
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${listIndex}</a>
+		            </td>
+		            <td>
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info table_flex_info">
+		                	<p class="info_text">${data.n_title}</p>
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
+		            </td>
+		            <td>
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_view_cnt}</a>
+		            </td>
+		            <td>
+		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
+		            </td>
+		            <td class="va_m">
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="flex_area">
+		                	<span class="state ${data.n_state === true ? '' : 'off'}">
+		                		${data.n_state === true ? '공개' : '숨김'}
+		                	</span>
+		                </a>
+		            </td>
+		            <td>
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${setFormatDate(data.n_reg_date)}</a>
+		            </td>
+		            <td>
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${setFormatDate(data.n_mod_date)}</a>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/qna/noti_info/get_notice_list': // 질문과 답변 공지 사항 리스트 테이블
+		case '/qna/noti_info/search_notice_list': // 질문과 답변 공지 사항 검색 리스트 테이블
+			regDate = new Date(new Date(data.bqn_reg_date).getTime() + newIconsHours);
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="table_info">${listIndex}</a>
+		            </td>
+		            <td>
+		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="table_info table_flex_info">
+		                	<p class="info_text">${data.bqn_title}</p>
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
+		            </td>
+		            <td>
+		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="table_info">${data.bqn_view_cnt}</a>
+		            </td>
+		            <td>
+		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_name}</a>
+		            </td>
+		            <td class="va_m">
+		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="flex_area">
+		                	<span class="state ${data.bqn_state === true ? '' : 'off'}">
+		                		${data.bqn_state === true ? '공개' : '숨김'}
+		                	</span>
+		                </a>
+		            </td>
+		            <td>
+		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="table_info">${setFormatDate(data.bqn_reg_date)}</a>
+		            </td>
+		            <td>
+		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="table_info">${setFormatDate(data.bqn_mod_date)}</a>
+		            </td>
+		        </tr>
+			`;
+			break;
+		
+		case '/board/noti_info/get_notice_list': // 공지 게시물 리스트 테이블
+		case '/board/info/search_notice_list': // 공지 게시물 검색 리스트 테이블
+			regDate = new Date(new Date(data.bn_reg_date).getTime() + newIconsHours);
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${listIndex}</a>
+		            </td>
+		            <td>
+		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">게시판명</a>
+		            </td>
+		            <td>
+		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info table_flex_info">
+		                	<p class="info_text">${data.bn_title}</p>
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
+		            </td>
+					<td>
+		                <a href="/account/noti_info/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
+		            </td>
+		            <td>
+		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">
+		                	${data.bn_view_cnt}
+		                </a>
+		            </td>
+					<td>
+		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">
+							<span onclick="" class="btns small ${data.bn_state === 1 ? '' : 'white'}">${data.bn_state === 1 ? '사용' : '숨김'}</span>
+						</a>
+		            </td>
+		            <td>
+		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">
+		                	${setFormatDate(data.bn_reg_date)}
+		                </a>
+		            </td>
+		            <td>
+		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">
+		                	${setFormatDate(data.bn_mod_date)}
+		                </a>
 		            </td>
 		        </tr>
 			`;
@@ -785,6 +954,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			
 		case '/board/cate_info/get_category_list': // 게시판 관리 리스트 테이블
 		case '/board/cate_info/search_category_list': // 게시판 관리 검색 리스트 테이블
+			regDate = new Date(new Date(data.bc_reg_date).getTime() + newIconsHours);
 			tableTrContent = `
 				<tr data-no-name="bc_no" data-no="${data.bc_no}" data-idx="${data.bc_idx}">
 					<td class="va_m">
@@ -799,44 +969,16 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${data.bc_idx}</a>
 		            </td>
 		            <td>
-		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info">${data.bc_name}</a>
+		                <a href="/board/cate_info/modify_category_form?bc_no=${data.bc_no}" class="table_info table_flex_info f_jc_center">
+		                	<p class="info_text">${data.bc_name}</p>
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
 		            </td>
 		            <td>
 		                <a href="/board/info/posts_list_form?infoNo=${data.bc_no}" class="table_info">${data.bc_item_cnt}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.bc_reg_date)}</p>
-		            </td>
-		        </tr>
-			`;
-			break;
-			
-		case '/board/noti_info/get_notice_list': // 공지 게시물 리스트 테이블
-		case '/board/info/search_notice_list': // 공지 게시물 검색 리스트 테이블
-			tableTrContent = `
-				<tr>
-		            <td>
-		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${listIndex}</a>
-		            </td>
-		            <td>
-		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">게시판명</a>
-		            </td>
-		            <td>
-		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_title}</a>
-		            </td>
-					<td>
-		                <a href="/account/noti_info/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
-		            </td>
-		            <td>
-		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">${data.bn_view_cnt}</a>
-		            </td>
-					<td>
-		                <div class="table_info">
-							<span onclick="" class="btns small ${data.bn_state === 1 ? '' : 'white'}">${data.bn_state === 1 ? '사용' : '숨김'}</span>
-						</div>
-		            </td>
-		            <td>
-		                <p class="table_info">${setFormatDate(data.bn_mod_date)}</p>
+		                <a href="/board/info/posts_list_form?infoNo=${data.bc_no}" class="table_info">${setFormatDate(data.bc_reg_date)}</a>
 		            </td>
 		        </tr>
 			`;
@@ -845,7 +987,6 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		case '/board/info/get_posts_list': // 일반 게시물 리스트 테이블
 		case '/board/info/search_posts_list': // 일반 게시물 검색 리스트 테이블
 			regDate = new Date(new Date(data.bp_reg_date).getTime() + newIconsHours);
-		
 			tableTrContent = `
 				<tr>
 					<td class="va_m">
@@ -882,73 +1023,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                </a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.bp_mod_date)}</p>
-		            </td>
-		        </tr>
-			`;
-			break;
-			
-		case '/notice/info/get_notice_list': // 전체 공지 사항 리스트 테이블
-		case '/notice/info/search_notice_list': // 전체 공지 사항 검색 리스트 테이블
-			tableTrContent = `
-				<tr>
-		            <td>
-		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${listIndex}</a>
-		            </td>
-		            <td>
-		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_title}</a>
-		            </td>
-		            <td>
-		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_view_cnt}</a>
-		            </td>
-		            <td>
-		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
-		            </td>
-		            <td class="va_m">
-		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="flex_area">
-		                	<span class="state ${data.n_state === true ? '' : 'off'}">
-		                		${data.n_state === true ? '공개' : '숨김'}
-		                	</span>
-		                </a>
-		            </td>
-		            <td>
-		                <p class="table_info">${setFormatDate(data.n_reg_date)}</p>
-		            </td>
-		            <td>
-		                <p class="table_info">${setFormatDate(data.n_mod_date)}</p>
-		            </td>
-		        </tr>
-			`;
-			break;
-			
-		case '/qna/noti_info/get_notice_list': // 질문과 답변 공지 사항 리스트 테이블
-		case '/qna/noti_info/search_notice_list': // 질문과 답변 공지 사항 검색 리스트 테이블
-			tableTrContent = `
-				<tr>
-		            <td>
-		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="table_info">${listIndex}</a>
-		            </td>
-		            <td>
-		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="table_info">${data.bqn_title}</a>
-		            </td>
-		            <td>
-		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="table_info">${data.bqn_view_cnt}</a>
-		            </td>
-		            <td>
-		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_name}</a>
-		            </td>
-		            <td class="va_m">
-		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="flex_area">
-		                	<span class="state ${data.bqn_state === true ? '' : 'off'}">
-		                		${data.bqn_state === true ? '공개' : '숨김'}
-		                	</span>
-		                </a>
-		            </td>
-		            <td>
-		                <p class="table_info">${setFormatDate(data.bqn_reg_date)}</p>
-		            </td>
-		            <td>
-		                <p class="table_info">${setFormatDate(data.bqn_mod_date)}</p>
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${setFormatDate(data.bp_mod_date)}</a>
 		            </td>
 		        </tr>
 			`;
@@ -956,13 +1031,17 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			
 		case '/qna/cate_info/get_category_list': // 질문 유형 분류 관리 리스트 테이블
 		case '/qna/cate_info/search_category_list': // 질문 유형 분류 관리 검색 리스트 테이블
+			regDate = new Date(new Date(data.bqc_reg_date).getTime() + newIconsHours);
 			tableTrContent = `
 				<tr>
 		            <td>
 		                <a href="/qna/cate_info/modify_category_form?bqc_no=${data.bqc_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/qna/cate_info/modify_category_form?bqc_no=${data.bqc_no}" class="table_info">${data.bqc_name}</a>
+		                <a href="/qna/cate_info/modify_category_form?bqc_no=${data.bqc_no}" class="table_info table_flex_info f_jc_center">
+		                	<p class="info_text">${data.bqc_name}</p>
+							${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
 		            </td>
 		            <td>
 		                <a href="/qna/info/qna_list_form?sortType=2&infoNo=${data.bqc_no}&sortValue=bq_answer_no&order=asc" class="table_info">
@@ -970,7 +1049,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                </a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.bqc_reg_date)}</p>
+		                <a href="/qna/cate_info/modify_category_form?bqc_no=${data.bqc_no}" class="table_info">${setFormatDate(data.bqc_reg_date)}</a>
 		            </td>
 		        </tr>
 			`;
@@ -995,7 +1074,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                	</span>
 		                </a>
 		            </td>
-					<td class="ta_l">
+					<td>
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info table_flex_info">
 		                	<p class="info_text">${data.bq_title}</p>
 		                	${data.bq_state === true ? '<img src="/image/icons/lock.png" alt="비공개글" class="table_info_icons">' : ''}
@@ -1006,10 +1085,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/user_account/info/modify_form?u_no=${data.userAccountDto.u_no}" class="table_info">${data.userAccountDto.u_name}</a>
 		            </td>
 					<td>
-		                <p class="table_info">${setFormatDate(data.bq_reg_date)}</p>
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${setFormatDate(data.bq_reg_date)}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.bq_mod_date)}</p>
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${setFormatDate(data.bq_mod_date)}</a>
 		            </td>
 		        </tr>
 			`;
@@ -1017,13 +1096,17 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			
 		case '/report/cate_info/get_category_list': // 신고 유형 분류 관리 리스트 테이블
 		case '/report/cate_info/search_category_list': // 신고 유형 분류 관리 검색 리스트 테이블
+			regDate = new Date(new Date(data.brc_reg_date).getTime() + newIconsHours);
 			tableTrContent = `
 				<tr>
 		            <td>
 		                <a href="/report/cate_info/modify_category_form?brc_no=${data.brc_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/report/cate_info/modify_category_form?brc_no=${data.brc_no}" class="table_info">${data.brc_name}</a>
+		                <a href="/report/cate_info/modify_category_form?brc_no=${data.brc_no}" class="table_info table_flex_info f_jc_center">
+		                	<p class="info_text">${data.brc_name}</p>
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
 		            </td>
 		            <td>
 		                <a href="/report/info/report_list_form?sortType=2&infoNo=${data.brc_no}&sortValue=br_state&order=asc" class="table_info">
@@ -1031,7 +1114,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                </a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.brc_reg_date)}</p>
+		                <a href="/report/cate_info/modify_category_form?brc_no=${data.brc_no}" class="table_info">${setFormatDate(data.brc_reg_date)}</a>
 		            </td>
 		        </tr>
 			`;
@@ -1056,7 +1139,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                	</span>
 		                </a>
 		            </td>
-					<td class="ta_l">
+					<td>
 		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info table_flex_info">
 		                	<p class="info_text">${data.br_title}</p>
 		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
@@ -1066,10 +1149,39 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/user_account/info/modify_form?u_no=${data.userAccountDto.u_no}" class="table_info">${data.userAccountDto.u_name}</a>
 		            </td>
 					<td>
-		                <p class="table_info">${setFormatDate(data.br_reg_date)}</p>
+		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info">${setFormatDate(data.br_reg_date)}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.br_mod_date)}</p>
+		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info">${setFormatDate(data.br_mod_date)}</a>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/advertisement/cate_info/get_category_list': // 광고 분류 관리 리스트 테이블
+		case '/advertisement/cate_info/search_category_list': // 광고 분류 관리 검색 리스트 테이블
+			regDate = new Date(new Date(data.ac_reg_date).getTime() + newIconsHours);
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/advertisement/cate_info/modify_category_form?infoNo=${data.ac_no}&sortType=2" class="table_info">${listIndex}</a>
+		            </td>
+		            <td>
+		                <a href="/advertisement/cate_info/modify_category_form?infoNo=${data.ac_no}&sortType=2" class="table_info table_flex_info f_jc_center">
+		                	<p class="info_text">${data.ac_name}</p>
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
+		            </td>
+		            <td>
+		                <a href="/advertisement/info/advertisement_list_form?sortType=2&sortValue=ad_idx&order=asc&infoNo=${data.ac_no}" class="table_info">${data.ac_item_cnt}</a>
+		            </td>
+		            <td>
+		                <a href="/advertisement/cate_info/modify_category_form?infoNo=${data.ac_no}&sortType=2" class="table_info">
+		                	${data.ac_note ? data.ac_note : '-'}
+		                </a>
+		            </td>
+		            <td>
+		                <a href="/advertisement/cate_info/modify_category_form?infoNo=${data.ac_no}&sortType=2" class="table_info">${setFormatDate(data.ac_reg_date)}</a>
 		            </td>
 		        </tr>
 			`;
@@ -1078,6 +1190,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		case '/advertisement/info/get_advertisement_list': // 광고 관리 리스트 테이블
 		case '/advertisement/info/search_advertisement_list': // 광고 관리 검색 리스트 테이블
 		case '/advertisement/info/get_advertisement_list_by_category': // 광고 관리 위치별 분류 리스트 테이블
+			regDate = new Date(new Date(data.ad_reg_date).getTime() + newIconsHours);
 			tableTrContent = `
 				<tr>
 		            <td>
@@ -1087,7 +1200,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.advertisementCategoryDto.ac_name}</a>
 		            </td>
 					<td>
-		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_client}</a>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info table_flex_info f_jc_center">
+		                	<p class="info_text">${data.ad_client}</p>
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
 		            </td>
 		            <td class="va_m">
 		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="flex_area">
@@ -1103,13 +1219,17 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_end_date)}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.ad_mod_date)}</p>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_reg_date)}</a>
+		            </td>
+		            <td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_mod_date)}</a>
 		            </td>
 		        </tr>
 			`;
 			break;
 			
 		case '/advertisement/cate_info/get_advertisement_list_by_category': // 광고 분류 상세페이지 내 위치별 분류 리스트 테이블	
+			regDate = new Date(new Date(data.ad_reg_date).getTime() + newIconsHours);
 			tableTrContent = `
 				<tr data-no-name="ad_no" data-no="${data.ad_no}" data-idx="${data.ad_idx}">
 					<td class="va_m">
@@ -1124,7 +1244,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_idx}</a>
 		            </td>
 					<td>
-		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_client}</a>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info table_flex_info f_jc_center">
+		                	<p class="info_text">${data.ad_client}</p>
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
 		            </td>
 					<td>
 		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_start_date)}</a>
@@ -1133,32 +1256,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_end_date)}</a>
 		            </td>
 		            <td>
-		                <p class="table_info">${setFormatDate(data.ad_mod_date)}</p>
-		            </td>
-		        </tr>
-			`;
-			break;
-			
-		case '/advertisement/cate_info/get_category_list': // 광고 분류 관리 리스트 테이블
-		case '/advertisement/cate_info/search_category_list': // 광고 분류 관리 검색 리스트 테이블
-			tableTrContent = `
-				<tr>
-		            <td>
-		                <a href="/advertisement/cate_info/modify_category_form?infoNo=${data.ac_no}&sortType=2" class="table_info">${listIndex}</a>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_reg_date)}</a>
 		            </td>
 		            <td>
-		                <a href="/advertisement/cate_info/modify_category_form?infoNo=${data.ac_no}&sortType=2" class="table_info">${data.ac_name}</a>
-		            </td>
-		            <td>
-		                <a href="/advertisement/info/advertisement_list_form?sortType=2&sortValue=ad_idx&order=asc&infoNo=${data.ac_no}" class="table_info">${data.ac_item_cnt}</a>
-		            </td>
-		            <td>
-		                <a href="/advertisement/cate_info/modify_category_form?infoNo=${data.ac_no}&sortType=2" class="table_info">
-		                	${data.ac_note ? data.ac_note : '-'}
-		                </a>
-		            </td>
-		            <td>
-		                <p class="table_info">${setFormatDate(data.ac_reg_date)}</p>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${setFormatDate(data.ad_mod_date)}</a>
 		            </td>
 		        </tr>
 			`;
