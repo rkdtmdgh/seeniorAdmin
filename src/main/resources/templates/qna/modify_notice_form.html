@@ -29,8 +29,8 @@
 	
 	                    <form name="qna_notice_modify_form">
 		                    <input type="hidden" name="bqn_no" th:value="${qnaNoticeDto.bqn_no}">
-		                    <input type="hidden" name="bqn_dir_name" th:value="${qnaNoticeDto.bqn_dir_name}">
 		                    <input type="hidden" name="bqn_writer_no" th:value="${qnaNoticeDto.adminAccountDto.a_no}">
+		                    <input type="hidden" name="bqn_dir_name" th:if="${qnaNoticeDto.bqn_dir_name}" th:value="${qnaNoticeDto.bqn_dir_name}">
 		                    
 	                        <div class="table_wrap">
 	                            <table class="content_edit_table">
