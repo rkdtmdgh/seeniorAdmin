@@ -493,7 +493,7 @@ public class QnaController {
 	public Object qnaTest() {
 		log.info("test()");
 		
-		return qnaService.getNoticeListForMain(5);
+		return qnaService.getQnaListForMain(10);
 		
 	}
 	
