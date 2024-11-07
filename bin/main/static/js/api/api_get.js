@@ -5,62 +5,108 @@ const getSearchList = debounceAsync(getSearchListProcess, 'getSearchListProcess'
 
 // 메인 콘텐츠 리스트 요청 함수 실행
 function getMainContentList() {
+	const apiList = [ // 요청할 api, 로딩 요소 객체 배열
+		//{apiUrl: '/report/main/get_report_list' , loddingParentEle: 'main_report_table'}, // 메인 신고 현황 콘텐츠 요청 객체 설정
+		//{apiUrl: '/advertisement/main/get_advertisement_list' , loddingParentEle: 'main_advertisement_table'}, // 메인 광고 현황 콘텐츠 요청 객체 설정
+		{apiUrl: '/qna/main/get_qna_list' , loddingParentEle: 'main_qna_table'}, // 메인 QnA 현황 콘텐츠 요청 객체 설정
+	];
 	
+	// 각 요청을 독립적으로 실행하여 개별적으로 응답 처리(응답이 빠른 순서대로 처리)
+	apiList.forEach(apiObj => getMainList(apiObj.apiUrl, apiObj.loddingParentEle));
 }
 
 // 메인 콘텐츠 리스트 요청
-async function getMainListProcess() {
-	
+async function getMainListProcess(apiUrl, loddingParentEle) {
+	const page_limit = 5; // 데이터 리스트 개수
+	setLoading(true, loddingParentEle); // 로딩 추가
+	try {
+		const response = await $.ajax({
+			url: `${apiUrl}?page_limit=${page_limit}`,
+			method: 'GET',
+		});
+		
+		logger.info(`${apiUrl} getMainList() response:`, response);
+		
+		// 요청 성공 시 처리 로직 실행
+		mainContentApiResponse(apiUrl, response, loddingParentEle);
+		
+	} catch(error) {
+		logger.error(apiUrl + ' getMainList() error:', error);
+		
+	} finally {
+		setLoading(false, loddingParentEle); // 로딩 제거
+	}
 }
 
-// 메인 신고 현황 콘텐츠 요청 객체 설정
-function mainReportListApiObject() {
-	const apiUrl = '/report/main/get_report_list';
-	const loddingParentEle = '';
-}
+// 메인 콘텐츠 요청 성공 시 처리 로직
+function mainContentApiResponse(apiUrl, response, loddingParentEle) {
+	const { getListDtos } = mapApiResponseObject(apiUrl, response); // 요청 Api Response 객체 설정
+	const $contentTable = $(`.${loddingParentEle} table tbody`); // 데이터가 나열될 테이블 요소
+	$contentTable.html(''); // 콘텐츠 초기화
+	
+	if(response && getListDtos.length) {				
+		getListDtos.forEach((data) => { 			   
+			$contentTable[0].insertAdjacentHTML(
+				'beforeend', 
+				generateTableList(apiUrl, data) // apiUrl, dtoData, listCnt, 현재 페이지 첫번째 index값, page
+			);
+		});
+		
+	} else {
+		logger.info('데이터가 없거나 유효하지 않습니다.');
+		const maxCols = setTableColumnsNum();
+		$contentTable.html(`
+			<tr>
+                <td colspan="${maxCols}">
+                    <p class="table_info">목록이 없습니다.</p>
+                </td>
+            </tr>
+		`);
+	}
+};
 
 // 콘텐츠 리스트 요청
 async function getListProcess(apiUrl, sortValue, order, page, resetParams = false) {
-	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
-		setAllcheck(); // all_check 체크박스 초기화
-		
-		if(resetParams) setDelQueryString(); // 쿼리 파라미터 제거
-		
-	    // 검색 인풋 벨류 삭제
-		const $searchStringInput = $('form[name="search_form"]').find('input[name="searchString"]');
-		if($searchStringInput.length && $searchStringInput.val().trim()) $searchStringInput.val(''); // 검색 이력이 남았을 경우에만 삭제
-		
-		const urlParams = new URLSearchParams(window.location.search);
-		const infoNo = urlParams.get('infoNo') || undefined;
-		
-		const params = new URLSearchParams(); // URL 쿼리 파라미터 생성
-		if(infoNo) params.append('infoNo', infoNo);
-		if(sortValue) { // sort값이 있을 경우 추가
-			params.append('sortValue', sortValue);
-			params.append('order', order);
-		}
-		params.append('page', page || 1); // 페이지 추가
-		
-		logger.info(`apiUrl: ${apiUrl}?${params.toString()}`);
-		
-		try {
-			const response = await $.ajax({
-				url: `${apiUrl}?${params.toString()}`,
-				method: 'GET',
-			});
-			
-			logger.info(`${apiUrl} getList() response:`, response);
-			
-			// 요청 성공 시 처리 로직 실행
-			processApiResponse(apiUrl, sortValue, order, response);
-			
-		} catch(error) {
-			logger.error(apiUrl + ' error:', error);
-			
-		} finally {
-			setLoading(false, 'content_inner'); // 로딩 제거
-		}
+	setAllcheck(); // all_check 체크박스 초기화
+	
+	if(resetParams) setDelQueryString(); // 쿼리 파라미터 제거
+	
+    // 검색 인풋 벨류 삭제
+	const $searchStringInput = $('form[name="search_form"]').find('input[name="searchString"]');
+	if($searchStringInput.length && $searchStringInput.val().trim()) $searchStringInput.val(''); // 검색 이력이 남았을 경우에만 삭제
+	
+	const urlParams = new URLSearchParams(window.location.search);
+	const infoNo = urlParams.get('infoNo') || undefined;
+	
+	const params = new URLSearchParams(); // URL 쿼리 파라미터 생성
+	if(infoNo) params.append('infoNo', infoNo);
+	if(sortValue) { // sort값이 있을 경우 추가
+		params.append('sortValue', sortValue);
+		params.append('order', order);
 	}
+	params.append('page', page || 1); // 페이지 추가
+	
+	logger.info(`apiUrl: ${apiUrl}?${params.toString()}`);
+	
+	setLoading(true, 'content_inner'); // 로딩 추가
+	try {
+		const response = await $.ajax({
+			url: `${apiUrl}?${params.toString()}`,
+			method: 'GET',
+		});
+		
+		logger.info(`${apiUrl} getList() response:`, response);
+		
+		// 요청 성공 시 처리 로직 실행
+		contentApiResponse(apiUrl, sortValue, order, response);
+		
+	} catch(error) {
+		logger.error(apiUrl + ' error:', error);
+		
+	} finally {
+		setLoading(false, 'content_inner'); // 로딩 제거
+	}
+
 }
 
 // 검색 리스트 요청
@@ -81,51 +127,48 @@ async function getSearchListProcess(event, apiUrl, sortValue, order, page) {
 		return false;
 	}
 		
-	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
-		if(apiUrl) {
-			setAllcheck(); // all_check 체크박스 초기화
+	setAllcheck(); // all_check 체크박스 초기화
+	
+	const formData = new FormData(form); // form에 모든 정보 가져오기
+	const params = new URLSearchParams(); // URL 쿼리 파라미터 생성
+	
+	formData.forEach((value, key) => { // formData의 모든 값을 쿼리 파라미터에 추가
+		params.append(key, value);
+	});
+	
+	const urlParams = new URLSearchParams(window.location.search);
+	const infoNo = urlParams.get('infoNo') || undefined;
+	if(infoNo) params.append('infoNo', infoNo); // infoNo값이 있을 경우 추가 (분류 no 값)
+	if(sortValue) { // sort값이 있을 경우 추가
+		params.append('sortValue', sortValue);
+		params.append('order', order);				
+	}
+	params.append('page', page || 1); // 페이지 추가
+	
+	logger.info('search params:', params.toString());
 			
-			const formData = new FormData(form); // form에 모든 정보 가져오기
-			const params = new URLSearchParams(); // URL 쿼리 파라미터 생성
-			
-			formData.forEach((value, key) => { // formData의 모든 값을 쿼리 파라미터에 추가
-				params.append(key, value);
-			});
-			
-			const urlParams = new URLSearchParams(window.location.search);
-			const infoNo = urlParams.get('infoNo') || undefined;
-			if(infoNo) params.append('infoNo', infoNo); // infoNo값이 있을 경우 추가 (분류 no 값)
-			if(sortValue) { // sort값이 있을 경우 추가
-				params.append('sortValue', sortValue);
-				params.append('order', order);				
-			}
-			params.append('page', page || 1); // 페이지 추가
-			
-			logger.info('search params:', params.toString());
-					
-			try {
-				const response = await $.ajax({
-					url: `${apiUrl}?${params.toString()}`,
-					method: 'GET',
-				});
-				
-				logger.info(`${apiUrl} searchForm() response:`, response);
-				
-				// 요청 성공 시 처리 로직 실행
-				processApiResponse(apiUrl, sortValue, order, response);
-				
-			} catch(error) {
-				logger.error(apiUrl + ' searchForm() error:', error);
-				
-			} finally {
-				setLoading(false, 'content_inner'); // 로딩 제거
-			}
-		}
+	setLoading(true, 'content_inner'); // 로딩 추가
+	try {
+		const response = await $.ajax({
+			url: `${apiUrl}?${params.toString()}`,
+			method: 'GET',
+		});
+		
+		logger.info(`${apiUrl} searchForm() response:`, response);
+		
+		// 요청 성공 시 처리 로직 실행
+		contentApiResponse(apiUrl, sortValue, order, response);
+		
+	} catch(error) {
+		logger.error(apiUrl + ' searchForm() error:', error);
+		
+	} finally {
+		setLoading(false, 'content_inner'); // 로딩 제거
 	}
 }
 
-// 요청 성공 시 처리 로직
-function processApiResponse(apiUrl, sortValue, order, response, contentTable = '.content_table tbody') {
+// 콘텐츠 리스트 요청 성공 시 처리 로직
+function contentApiResponse(apiUrl, sortValue, order, response, contentTable = '.content_table tbody') {
 	const { getListDtos, getListPage, getListCnt, otherData } = mapApiResponseObject(apiUrl, response); // 요청 Api Response 객체 설정
 	const searchPart = response.searchPart || null; // 리턴된 searchPart 값
 	const searchString = response.searchString || null; // 리턴된 searchString 값
@@ -143,7 +186,10 @@ function processApiResponse(apiUrl, sortValue, order, response, contentTable = '
 		let listIndex = getListCnt - (pageLimit * (getListPage.page - 1)); // 현재 페이지의 첫번째 리스트 index 값
 		
 		getListDtos.forEach((data) => { 			   
-			$contentTable[0].insertAdjacentHTML('beforeend', generateTableList(apiUrl, data, getListCnt, listIndex, getListPage.page));
+			$contentTable[0].insertAdjacentHTML(
+				'beforeend', 
+				generateTableList(apiUrl, data, getListCnt, listIndex, getListPage.page) // apiUrl, dtoData, listCnt, 현재 페이지 첫번째 index값, page
+			);
 			listIndex --;
 		});
 		
@@ -172,6 +218,30 @@ function mapApiResponseObject(apiUrl, response) {
 	let otherData = null;
 	
 	switch(apiUrl) {
+		case '/report/main/get_report_list': // 메인 신고 현황
+			getListDtos = response.reportDtos;
+			break;
+			
+		case '/advertisement/main/get_advertisement_list': // 메인 광고 현황
+			getListDtos = response.advertisementDtos;
+			break;
+			
+		case '/qna/main/get_qna_list': // 메인 질문과 답변
+			getListDtos = response.qnaDtos;
+			break;
+			
+		case '/notice/main/get_notice_list': // 메인 전체 공지 사항
+			getListDtos = response.noticeDtos;
+			break;
+			
+		case '/qna/main/get_notice_list': // 메인 QnA 공지 사항
+			getListDtos = response.qnaNoticeDtos;
+			break;
+			
+		case '/board/main/get_notice_list': // 메인 게시판 공지 사항
+			getListDtos = response.boardNoticeDtos;
+			break;
+			
 		case '/account/list/get_admin_list': // 관리자 계정 관리
 			getListDtos = response.adminAccountDtos;
 			getListPage = response.adminListPage;
@@ -427,6 +497,127 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 	const newIconsHours = 1000 * 60 * 60 * 24; // 24시간
 	
 	switch(apiUrl) {
+		case '/report/main/get_report_list': // 메인 신고 현황 테이블
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/report/info/result_form?br_no=${data.br_no}" class="table_info">${data.reportCategoryDto.brr_name}</a>
+		            </td>
+		            <td>
+		                <a href="/report/info/result_form?br_no=${data.br_no}" class="table_info">${data.br_title}</a>
+		            </td>
+		            <td>
+		                <a href="/user_account/info/modify_form?u_no=${data.userAccountDto.u_no}" class="table_info">
+		                	${data.userAccountDto.u_name}
+		                </a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.br_reg_date)}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/advertisement/main/get_advertisement_list': // 메인 광고 현황 테이블
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.advertisementCategoryDto.ac_name}/a>
+		            </td>
+		            <td>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.ad_client}</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.ad_start_date)}</p>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.ad_end_date)}</p>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.ad_reg_date)}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/qna/main/get_qna_list': // 메인 질문과 답변 현황 테이블
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.qnaCategoryDto.bqc_name}</a>
+		            </td>
+		            <td>
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.bq_title}</a>
+		            </td>
+		            <td>
+		                <a href="/user_account/info/modify_form?u_no=${data.userAccountDto.u_no}" class="table_info">
+		                	${data.userAccountDto.u_name}
+		                </a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.bq_reg_date)}</p>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/notice/main/get_notice_list': // 메인 전체 공지 사항 테이블
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_title}</a>
+		            </td>
+		            <td>
+		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_name}</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.n_reg_date)}</p>
+		            </td>
+		            <td>
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_view_cnt}</a>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/qna/main/get_notice_list': // 메인 QnA 공지 사항 테이블
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/notice/info/modify_form?qn_no=${data.qn_no}" class="table_info">${data.qn_title}</a>
+		            </td>
+		            <td>
+		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_name}</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.qn_reg_date)}</p>
+		            </td>
+		            <td>
+		                <a href="/notice/info/modify_form?qn_no=${data.qn_no}" class="table_info">${data.qn_view_cnt}</a>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/board/main/get_notice_list': // 메인 게시판 공지 사항 테이블
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_title}</a>
+		            </td>
+		            <td>
+		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_name}</a>
+		            </td>
+		            <td>
+		                <p class="table_info">${setFormatDate(data.br_reg_date)}</p>
+		            </td>
+		            <td>
+		                <a href="qn_no" class="table_info">${data.n_view_cnt}</a>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
 		case '/account/list/get_admin_list':  // 관리자 계정 리스트 테이블
 		case '/account/list/search_admin_list': // 관리자 계정 검색 리스트 테이블
 			tableTrContent = `
@@ -1200,87 +1391,85 @@ function mapSelectListApiObject(sortValue) {
 async function getCategoryList(ele, formName, selectedValue, ) {
 	const $selectEle = $(`#${ele}`); // 셀렉트 요소가 생성될 table th or td
 	const bgc = $selectEle.parent()[0].tagName === 'TH' ? '#F7F7F7' : '#FFFFFF';
+	const categoryConfig = mapCategorylistObject(ele);
 	
-	if(setLoading(true, `${ele}_select`, bgc)) { // 로딩 추가 함수 실행이 성공하면 요청 진행
-		const categoryConfig = mapCategorylistObject(ele);
-		
-		if($selectEle.length) {
-			try {
-				const response = await $.ajax({
-					url: categoryConfig.getCateSelectApiUrl,
-					method: 'GET',
-				});
-				
-				const categoryDto = response[categoryConfig.getListDtos];
-				logger.info(`${categoryConfig.getCateSelectApiUrl} categoryDto:`, response);
-				
-				if(categoryDto && categoryDto.length) {
-					if(formName) {
-						categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
-							let selected = selectedValue ? data[categoryConfig.infoNo] === selectedValue ? 'selected' : '' : '';
-							let option = `
-								<option 
-									${selected}
-									value="${data[categoryConfig.infoNo]}" 
-									${data[categoryConfig.note] ?
-										`data-info="${data[categoryConfig.note]}"`
-									:
-										''
-									}
-								>
-									${data[categoryConfig.infoName]}
-								</option>
-							`;
-							
-							if(selected) {
-								$selectEle[0].insertAdjacentHTML('afterbegin', option);
-								
-								// 선택된 참고 사항 노출(처음만 적용)
-								if(data[categoryConfig.note]){
-									logger.info('guideline:', data[categoryConfig.note]);
-									const $guideline = $('#guideline');
-									$guideline.text(data[categoryConfig.note]);									
+	if($selectEle.length) {
+		setLoading(true, `${ele}_select`, bgc); // 로딩 추가
+		try {
+			const response = await $.ajax({
+				url: categoryConfig.getCateSelectApiUrl,
+				method: 'GET',
+			});
+			
+			const categoryDto = response[categoryConfig.getListDtos];
+			logger.info(`${categoryConfig.getCateSelectApiUrl} categoryDto:`, response);
+			
+			if(categoryDto && categoryDto.length) {
+				if(formName) {
+					categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
+						let selected = selectedValue ? data[categoryConfig.infoNo] === selectedValue ? 'selected' : '' : '';
+						let option = `
+							<option 
+								${selected}
+								value="${data[categoryConfig.infoNo]}" 
+								${data[categoryConfig.note] ?
+									`data-info="${data[categoryConfig.note]}"`
+								:
+									''
 								}
-								
-							} else {
-								$selectEle[0].insertAdjacentHTML('beforeend', option);
-							}
-							
-							// note가 있을 경우에 onchange 이벤트 추가
-							if(categoryDto.some(data => data[categoryConfig.note])) {
-								$selectEle.attr("onchange", `setSelectGuidelineInfo(this, '${formName}')`);
-							}
-						});
-						
-					} else {
-						const ceateSelect = `
-							<ul data-sort-value="${categoryConfig.soltValue}" class="select_option_list sc"></ul>
+							>
+								${data[categoryConfig.infoName]}
+							</option>
 						`;
 						
-				        $selectEle[0].insertAdjacentHTML('beforeend', ceateSelect);
-				        
-				        const $selectOptionlist = $('ul.select_option_list');
-				        
-						categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
-							let option = `
-								<li data-info-no="${data[categoryConfig.infoNo]}" class="option" onclick="getSelectList(event);">
-									${data[categoryConfig.infoName]}
-								</li>
-							`;
-							$selectOptionlist[0].insertAdjacentHTML('beforeend', option);
-						});
-					}
+						if(selected) {
+							$selectEle[0].insertAdjacentHTML('afterbegin', option);
+							
+							// 선택된 참고 사항 노출(처음만 적용)
+							if(data[categoryConfig.note]){
+								logger.info('guideline:', data[categoryConfig.note]);
+								const $guideline = $('#guideline');
+								$guideline.text(data[categoryConfig.note]);									
+							}
+							
+						} else {
+							$selectEle[0].insertAdjacentHTML('beforeend', option);
+						}
+						
+						// note가 있을 경우에 onchange 이벤트 추가
+						if(categoryDto.some(data => data[categoryConfig.note])) {
+							$selectEle.attr("onchange", `setSelectGuidelineInfo(this, '${formName}')`);
+						}
+					});
 					
 				} else {
-					$selectEle.removeClass('select');
+					const ceateSelect = `
+						<ul data-sort-value="${categoryConfig.soltValue}" class="select_option_list sc"></ul>
+					`;
+					
+			        $selectEle[0].insertAdjacentHTML('beforeend', ceateSelect);
+			        
+			        const $selectOptionlist = $('ul.select_option_list');
+			        
+					categoryDto.forEach((data) => { // 커스텀 셀렉트 옵션 항목 추가
+						let option = `
+							<li data-info-no="${data[categoryConfig.infoNo]}" class="option" onclick="getSelectList(event);">
+								${data[categoryConfig.infoName]}
+							</li>
+						`;
+						$selectOptionlist[0].insertAdjacentHTML('beforeend', option);
+					});
 				}
 				
-			} catch(error) {
-				logger.error(`${categoryConfig.getCateSelectApiUrl} error:`, error);
-				
-			} finally {
-				setLoading(false, `${ele}_select`) // 로딩 제거
+			} else {
+				$selectEle.removeClass('select');
 			}
+			
+		} catch(error) {
+			logger.error(`${categoryConfig.getCateSelectApiUrl} error:`, error);
+			
+		} finally {
+			setLoading(false, `${ele}_select`) // 로딩 제거
 		}
 	}
 }
@@ -1288,38 +1477,35 @@ async function getCategoryList(ele, formName, selectedValue, ) {
 // 동적으로 순번 max값 적용
 async function getMaxIdxAndSetAttribute(name, value, formName) {
 	logger.info('getMaxIdxAndSetAttribute():', name, value, formName);
-	
 	const { getSelectMaxIdxApiUrl } = mapCategorylistObject(name); // name값에 해당하는 maxIdx값 요청 api
-	
 	if(!getSelectMaxIdxApiUrl) return; // name값에 해당하는 maxIdx값 요청 api가 없을 경우 리턴
 	
-	if(setLoading(true, 'order_number')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
-		try {
-			const response = await $.ajax({
-				url: getSelectMaxIdxApiUrl,
-				method: 'GET',
-				data: {
-					[name]: value,
-				},
-			});
-			
-			logger.info(`${getSelectMaxIdxApiUrl} getMaxIdxAndSetAttribute():`, response);
-			
-			// modify인 경우 최대값 그대로 사용 create일 경우 최대값+1, 기본값은 1
-			let max = response < 1 ? 1 : response + (formName === 'create' ? 1 : 0);
-			
-			if(formName === 'create') $('#idx_number').val(max); // create form일 경우 최대값으로 설정
-			$('#idx_number').attr('max', max); // 해당 인풋 요소에 max속성, value값 추가/변경
-			
-			// modify인 경우 값이 유지가 되어야하나 max값이 입력값보다 작을 경우에 대비하여 강제로 blur 이벤트 트리거
-			$('#idx_number').focus().trigger('blur'); 
-			
-		} catch(error) {
-			logger.error(`${getSelectMaxIdxApiUrl} getMaxIdxAndSetAttribute() error:`, error);
-			
-		} finally {
-			setLoading(false, `order_number`) // 로딩 제거
-		}
+	setLoading(true, 'order_number'); // 로딩 추가
+	try {
+		const response = await $.ajax({
+			url: getSelectMaxIdxApiUrl,
+			method: 'GET',
+			data: {
+				[name]: value,
+			},
+		});
+		
+		logger.info(`${getSelectMaxIdxApiUrl} getMaxIdxAndSetAttribute():`, response);
+		
+		// modify인 경우 최대값 그대로 사용 create일 경우 최대값+1, 기본값은 1
+		let max = response < 1 ? 1 : response + (formName === 'create' ? 1 : 0);
+		
+		if(formName === 'create') $('#idx_number').val(max); // create form일 경우 최대값으로 설정
+		$('#idx_number').attr('max', max); // 해당 인풋 요소에 max속성, value값 추가/변경
+		
+		// modify인 경우 값이 유지가 되어야하나 max값이 입력값보다 작을 경우에 대비하여 강제로 blur 이벤트 트리거
+		$('#idx_number').focus().trigger('blur'); 
+		
+	} catch(error) {
+		logger.error(`${getSelectMaxIdxApiUrl} getMaxIdxAndSetAttribute() error:`, error);
+		
+	} finally {
+		setLoading(false, `order_number`) // 로딩 제거
 	}
 }
 
