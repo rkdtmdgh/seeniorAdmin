@@ -61,7 +61,8 @@
 	                                <col class="col_default">
 	                                <col class="col_no">
 	                                <col class="col_state">
-	                                <col class="col_default">
+	                                <col class="col_short">
+	                                <col class="col_short">
 	                            </colgroup>
 	
 	                            <thead>
@@ -93,8 +94,16 @@
 	                                    
 	                                    <th>
 	                                    	<p data-current-sort-value="all" class="table_title sort"
-	                                        	onclick="getSortList(event, 'board_posts', 'bp_mod_date')">
+	                                        	onclick="getSortList(event, 'board_posts', 'bp_reg_date')">
 	                                        	등록일
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                    	<p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'board_posts', 'bp_mod_date')">
+	                                        	수정일
 	                                        	<span class="sort_icon"></span>
 	                                        </p>
 	                                    </th>
