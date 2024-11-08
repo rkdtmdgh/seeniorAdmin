@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -806,12 +807,34 @@ public class BoardService {
 	}//modifyConfirm() END
 	
 	//게시글 삭제 요청
+	@Transactional
 	public boolean deleteConfirm(List<Integer> bp_nos) {
 		log.info("deleteConfirm()");
-		
-		
-		return false;
+		   try {
+			   
+			   for (int bp_no : bp_nos) {
+				   
+				   int deleteResult = boardMapper.deleteConfirm(bp_no);
+				   
+				   if (deleteResult <= 0) {
+					   log.info("delete fail to database bp_no: {}", bp_no);
+					   
+					   throw new RuntimeException();
+					   
+				   }
+				   
+			   }
+			
+		   } catch (Exception e) {
+			   log.error("deleteConfirm Error : {}",e);
+			   
+			   return false;
+			   
+		   }
+		   
+		   return true;
 	}//deleteConfirm() END
 	
+		
 	
 }
