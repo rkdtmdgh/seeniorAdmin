@@ -26,4 +26,6 @@ public interface NoticeMapper {
 
 	public int insertNewNotice(NoticeDto noticeDto);
 
+	public int updateNotice(NoticeDto newNoticeDto);
+
 }

@@ -1,5 +1,6 @@
 package com.see_nior.seeniorAdmin.notice;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.see_nior.seeniorAdmin.account.AccountService;
 import com.see_nior.seeniorAdmin.dto.NoticeDto;
 import com.see_nior.seeniorAdmin.enums.PagePath;
 
@@ -25,6 +27,7 @@ import lombok.extern.log4j.Log4j2;
 public class NoticeController {
 
 	private final NoticeService noticeService;
+	private final AccountService accountService;
 	
 	// 전체 공지사항 양식
 	@GetMapping("/info/notice_list_form")
@@ -129,6 +132,33 @@ public class NoticeController {
 	}
 	
 	// 전체 공지사항 수정 확인
+	@PostMapping("/info/modify_confirm")
+	@ResponseBody
+	public boolean modifyConfirm(
+			@RequestParam(value = "files" , required = false) List<MultipartFile> files, 
+			@RequestParam(value = "deleteFileNames", required = false) List<String> deleteFileNames,
+			NoticeDto noticeDto, 
+			Principal principal) {
+		log.info("modifyConfirm()");
+		
+		boolean comparedResult = 
+				accountService.compareId(principal.getName(), noticeDto.getN_writer_no());
+		
+		if (comparedResult) {
+			
+			if (files != null && files.size() != 0 && files.get(0).getSize() != 0) 
+				return noticeService.modifyConfirm(files, deleteFileNames, noticeDto);
+			 else 
+				return noticeService.modifyConfirm(null, deleteFileNames, noticeDto);
+			
+		} else {
+			
+			return false;
+			
+		}
+		
+	}
+	
 	
 	// 전체 공지사항 삭제 확인
 	

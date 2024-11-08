@@ -443,11 +443,10 @@ public class QnaController {
 			Principal principal) {
 		log.info("modifyNoticeConfirm()");
 		
-		AdminAccountDto adminAccountDto = 
-				accountService.getAdminAccountById(principal.getName());
+		boolean comparedResult = 
+				accountService.compareId(principal.getName(), qnaNoticeDto.getBqn_writer_no());
 		
-		if ((adminAccountDto != null && adminAccountDto.getA_authority_role().equals("SUPER_ADMIN")) 
-				|| qnaNoticeDto.getBqn_writer_no() == adminAccountDto.getA_no()) {
+		if (comparedResult) {
 			
 			if (files != null && files.size() != 0 && files.get(0).getSize() != 0) 
 				return qnaService.modifyNoticeConfirm(files, deleteFileNames, qnaNoticeDto);
