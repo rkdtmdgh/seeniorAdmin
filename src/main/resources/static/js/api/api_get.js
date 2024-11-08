@@ -529,10 +529,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			tableTrContent = `
 				<tr>
 		            <td>
-		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.advertisementCategoryDto.ac_name}/a>
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info">${data.advertisementCategoryDto.ac_name}</a>
 		            </td>
 		            <td>
-		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info table_flex_info">
+		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="table_info table_flex_info f_jc_center">
 		                	<p class="info_text">${data.ad_client}</p>
 		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
 		                </a>
@@ -590,7 +590,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_name}</a>
 		            </td>
 		            <td>
-		                <a href="/notice/info/modify_form?n_no=${data.n_no} class="table_info">${setFormatDate(data.n_reg_date)}</a>
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${setFormatDate(data.n_reg_date)}</a>
 		            </td>
 		            <td>
 		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_view_cnt}</a>
@@ -851,10 +851,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                </a>
 		            </td>
 		            <td>
-		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_view_cnt}</a>
+		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
 		            </td>
 		            <td>
-		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_view_cnt}</a>
 		            </td>
 		            <td class="va_m">
 		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="flex_area">
@@ -888,10 +888,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                </a>
 		            </td>
 		            <td>
-		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="table_info">${data.bqn_view_cnt}</a>
+		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_name}</a>
 		            </td>
 		            <td>
-		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_name}</a>
+		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="table_info">${data.bqn_view_cnt}</a>
 		            </td>
 		            <td class="va_m">
 		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="flex_area">
@@ -1023,6 +1023,9 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                		${data.bp_report_state === 2 ? '처리중' : data.bp_report_state === 0 ? '처리완료' : '정상'}
 		                	</span>
 		                </a>
+		            </td>
+		            <td>
+		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${setFormatDate(data.bp_reg_date)}</a>
 		            </td>
 		            <td>
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${setFormatDate(data.bp_mod_date)}</a>
