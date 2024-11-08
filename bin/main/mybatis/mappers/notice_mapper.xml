@@ -37,7 +37,8 @@
 
 	
 	<!-- 전체 공지사항 정보 가져오기 by no -->
-	<select id="selectNoticeInfoByNo">
+	<select id="selectNoticeInfoByNo"
+			resultMap="NoticeDto">
 	
 		SELECT 
 			N.*, 
@@ -60,7 +61,8 @@
 			resultMap="NoticeDto">
 	
 		SELECT 
-			* 
+			N.*, 
+			A.A_NO, A.A_ID, A.A_NAME, A.A_DEPARTMENT, A.A_LEVEL, A.A_POSITION 
 		FROM 
 			NOTICE N 
 		JOIN 
