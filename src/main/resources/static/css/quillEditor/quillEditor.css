@@ -1,4 +1,8 @@
 /* quill editor */
+#editor {
+	overflow: hidden;
+}
+
 .ql-toolbar.ql-snow {
 	display: flex;
 	justify-content: flex-start;

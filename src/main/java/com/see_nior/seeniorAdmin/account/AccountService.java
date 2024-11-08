@@ -245,5 +245,19 @@ public class AccountService {
 		
 		return null;
 	}
+	
+	// loginedId가 SUPER_ADMIN or writer_id 인지 확인 
+	public boolean compareId(String loginedId, int writer_no) {
+		log.info("compareId()");
+		
+		AdminAccountDto adminAccountDto = getAdminAccountById(loginedId);
+		
+		if ((adminAccountDto != null && adminAccountDto.getA_authority_role().equals("SUPER_ADMIN")) 
+				|| writer_no == adminAccountDto.getA_no()) 
+			return true;
+		else 
+			return false;
+		
+	}
 
 }

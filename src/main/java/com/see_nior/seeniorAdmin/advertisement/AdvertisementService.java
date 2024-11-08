@@ -379,12 +379,14 @@ public class AdvertisementService {
 	}
 	
 	// 홈 화면에서 보여질 광고 가져오기(5개)
-	public List<AdvertisementDto> getAdvertisementListForMain(int page_limit) {
+	public Object getAdvertisementListForMain(int page_limit) {
 		log.info("getAdvertisementListForMain()");
 		
-		List<AdvertisementDto> advertisementDtos = advertisementMapper.getAdvertisementListForMain(page_limit);
+		Map<String, Object> responseMap = new HashMap<>();
+		List<AdvertisementDto> advertisementDtosForMain = advertisementMapper.getAdvertisementListForMain(page_limit);
+		responseMap.put("advertisementDtos", advertisementDtosForMain);
 		
-		return advertisementDtos;
+		return responseMap;
 		
 	}
 	
