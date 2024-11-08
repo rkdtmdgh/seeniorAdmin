@@ -336,15 +336,20 @@
 			resultMap="AdvertisementDto">
 			
 		SELECT 
-			* 
+			AD.*, 
+			AC.AC_NAME 
 		FROM 
-			ADVERTISEMENT 
+		    ADVERTISEMENT AD 
+		JOIN 
+		    ADVERTISEMENT_CATEGORY AC 
+		ON 
+		    AD.AD_CATEGORY_NO = AC.AC_NO 
 		WHERE  
-			AD_IS_DELETED = 1 
+			AD.AD_IS_DELETED = 1 
 		AND 
-			AD_STATE = 1 
+			AD.AD_STATE = 1 
 		ORDER BY 
-			AD_NO DESC 
+			AD.AD_NO DESC 
 		LIMIT 
 			1, #{page_limit}
 	
