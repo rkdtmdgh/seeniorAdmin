@@ -590,7 +590,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_name}</a>
 		            </td>
 		            <td>
-		                <a href="/notice/info/modify_form?n_no=${data.n_no} class="table_info">${setFormatDate(data.n_reg_date)}</a>
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${setFormatDate(data.n_reg_date)}</a>
 		            </td>
 		            <td>
 		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_view_cnt}</a>
@@ -851,10 +851,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                </a>
 		            </td>
 		            <td>
-		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_view_cnt}</a>
+		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
 		            </td>
 		            <td>
-		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
+		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_view_cnt}</a>
 		            </td>
 		            <td class="va_m">
 		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="flex_area">
