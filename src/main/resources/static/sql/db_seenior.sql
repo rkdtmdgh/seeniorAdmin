@@ -531,6 +531,7 @@ CREATE TABLE NOTICE (
 	N_WRITER_NO		INT	NOT NULL COMMENT "전체 공지사항 작성자 NO(ADMIN_ACCOUNT TABLE PK)",		-- 전체 공지사항 작성자 NO(ADMIN_ACCOUNT TABLE PK)
 	N_VIEW_CNT		INT DEFAULT 0 COMMENT "전체 공지사항 조회수",			 					-- 전체 공지사항 조회수
 	N_STATE			TINYINT DEFAULT 1 COMMENT "전체 공지사항 숨김 상태(기본값 = 1, 숨김 시 = 0)",	-- 전체 공지사항 숨김 상태(기본값 = 1, 숨김 시 = 0)
+    N_DIR_NAME		VARCHAR(20) COMMENT "공지사항 이미지 저장된 폴더 이름"	,						-- 공지사항 이미지 저장된 폴더명
 	N_IS_DELETED	TINYINT	DEFAULT 1 COMMENT "전체 공지사항 삭제 여부(기본값 = 1, 삭제 시 = 0)",	-- 전체 공지사항 삭제 여부(기본값 = 1, 삭제 시 = 0)
 	N_REG_DATE		DATETIME DEFAULT NOW() COMMENT "전체 공지사항 등록일",						-- 전체 공지사항 등록일
 	N_MOD_DATE		DATETIME DEFAULT NOW() COMMENT "전체 공지사항 수정일",						-- 전체 공지사항 수정일

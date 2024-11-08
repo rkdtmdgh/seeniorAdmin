@@ -547,7 +547,6 @@ public class QnaService {
     		ResponseEntity<String> savedFiles = 
     				imageFileService.uploadFiles(files, filePath);
     		
-    		
 			// 이미지 서버 파일 저장 완료
 			if (savedFiles != null) {
 				log.info("uploadNoticeImgFile success");
