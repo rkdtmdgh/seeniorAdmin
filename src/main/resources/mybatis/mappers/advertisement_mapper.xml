@@ -339,7 +339,7 @@
 			* 
 		FROM 
 			ADVERTISEMENT 
-		WHRER 
+		WHERE  
 			AD_IS_DELETED = 1 
 		AND 
 			AD_STATE = 1 

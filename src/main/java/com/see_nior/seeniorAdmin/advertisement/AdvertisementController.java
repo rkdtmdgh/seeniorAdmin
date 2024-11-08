@@ -211,7 +211,7 @@ public class AdvertisementController {
 	}
 	
 	// 광고 리스트 양식
-	@GetMapping("info/advertisement_list_form")
+	@GetMapping("/info/advertisement_list_form")
 	public String advertisementListForm() {
 		log.info("advertisementListForm()");
 		
@@ -221,7 +221,7 @@ public class AdvertisementController {
 	
 	// 홈 화면에서 보여질 광고 가져오기(5개만 가져오기 => 비동기)
 	@ResponseBody
-	@GetMapping("main/get_advertisement_list")
+	@GetMapping("/main/get_advertisement_list")
 	public Object getAdvertismentListForMain(@RequestParam(value = "page_limit") int page_limit) {
 		log.info("getAdvertismentListForMain");
 		
@@ -233,7 +233,7 @@ public class AdvertisementController {
 	
 	// 모든 광고 가져오기(페이지네이션 => 비동기)
 	@ResponseBody
-	@GetMapping("info/get_advertisement_list")
+	@GetMapping("/info/get_advertisement_list")
 	public Object getAdvertisementList(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "ad_no") String sortValue,
@@ -349,7 +349,7 @@ public class AdvertisementController {
 	
 	// 광고 검색(페이지네이션 => 비동기)
 	@ResponseBody
-	@GetMapping("info/search_advertisement_list")
+	@GetMapping("/info/search_advertisement_list")
 	public Object searchAdvertisementList(
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
