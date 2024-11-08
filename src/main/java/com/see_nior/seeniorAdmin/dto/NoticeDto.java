@@ -19,6 +19,7 @@ public class NoticeDto {
 	private String n_reg_date;
 	private String n_mod_date;
 	
+	private int n_writer_no;
 	private AdminAccountDto adminAccountDto;
 	
 }
