@@ -511,8 +511,16 @@
 	
 	</update>
 	
-	<update id="">
-	
+	<update id="deleteConfirm" parameterType="Integer">
+		
+		UPDATE 
+			BOARD_POSTS
+    	SET 
+    		BP_IS_DELETED = 0, 
+    		BP_MOD_DATE = NOW()
+    	WHERE 
+    		BP_NO = #{bp_no};
+		
 	</update>
 
 </mapper>

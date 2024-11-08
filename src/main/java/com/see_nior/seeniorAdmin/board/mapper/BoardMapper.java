@@ -64,6 +64,8 @@ public interface BoardMapper {
 
 	int modifyConfirm(BoardPostsDto boardPostsDto);
 
+	int deleteConfirm(int bp_no);
+
 	
 
 }
