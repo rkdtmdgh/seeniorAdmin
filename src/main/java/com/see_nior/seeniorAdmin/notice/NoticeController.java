@@ -1,10 +1,13 @@
 package com.see_nior.seeniorAdmin.notice;
 
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.see_nior.seeniorAdmin.dto.NoticeDto;
 import com.see_nior.seeniorAdmin.enums.PagePath;
@@ -29,11 +32,56 @@ public class NoticeController {
 		
 	}
 	
-	// 전체 공지사항 리스트 가져오기 for main 
-	
 	// 전체 공지사항 리스트 가져오기
+	@GetMapping("/info/get_notice_list")
+	@ResponseBody
+	public Object getNoticeList(
+			@RequestParam(value = "sortValue", required = false, defaultValue = "n_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("getNoticeList()");
+		
+		Map<String, Object> noticeList = 
+				noticeService.getNoticePagingList(sortValue, order, page);
+		
+		Map<String, Object> noticeListPageNum = noticeService.getNoticeListPageNum(page);
+		
+		noticeList.put("noticeListPageNum", noticeListPageNum);
+		noticeList.put("sortValue", sortValue);
+		noticeList.put("order", order);
+		
+		return noticeList;
+	}
 	
 	// 전체 공지사항 검색 리스트 가져오기 
+	@GetMapping("/info/search_notice_list")
+	@ResponseBody
+	public Object searchNoticeList(
+			@RequestParam("searchPart") String searchPart,
+			@RequestParam("searchString") String searchString, 
+			@RequestParam(value = "sortValue", required = false, defaultValue = "n_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order, 
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("searchNoticeList()");
+		
+		Map<String, Object> searchNoticeList = 
+				noticeService.searchNoticePagingList(searchPart, searchString, sortValue, order, page);
+		
+		Map<String, Object> searchNoticeListPageNum = 
+				noticeService.searchNoticeListPageNum(searchPart, searchString, page);
+		
+		searchNoticeList.put("searchNoticeListPageNum", searchNoticeListPageNum);
+		searchNoticeList.put("sortValue", sortValue);
+		searchNoticeList.put("order", order);
+		searchNoticeList.put("searchPart", searchPart);
+		searchNoticeList.put("searchString", searchString);
+		
+		return searchNoticeList;
+		
+	}
+	
+	
+	// 전체 공지사항 리스트 가져오기 for main 
 	
 	// 전체 공지사항 등록 양식
 	@GetMapping("/info/create_form")
@@ -63,5 +111,27 @@ public class NoticeController {
 	// 전체 공지사항 수정 확인
 	
 	// 전체 공지사항 삭제 확인
+	
+	
+	////////////////////////////////
+	@GetMapping("/test")
+	@ResponseBody
+	public Object test() {
+		log.info("test()");
+		
+		Map<String, Object> noticeList = 
+				noticeService.getNoticePagingList("n_no", "desc", 1);
+		
+		Map<String, Object> noticeListPageNum = noticeService.getNoticeListPageNum(1);
+		
+		noticeList.put("noticeListPageNum", noticeListPageNum);
+		noticeList.put("n_no", "m_no");
+		noticeList.put("desc", "desc");
+		
+		return noticeList;
+		
+	}
+	
+	
 	
 }
