@@ -43,6 +43,12 @@ public enum PagePath {
 	RECIPE_LIST_FORM("recipe/recipe_list_form"),
 	RECIPE_DETAIL_FORM("recipe/detail_form"),
 	
+	// Notice (전체 공지사항)
+	NOTICE_LIST_FORM("notice/notice_list_form"),
+	NOTICE_CREATE_FORM("notice/create_form"),
+	NOTICE_MODIFY_FORM("notice/modify_form"),
+	
+	
 	// Advertisement
 	ADVERTISEMENT_CREATE_CATEGORY_FORM("advertisement/create_category_form"),
 	ADVERTISEMENT_CATEGORY_LIST_FORM("advertisement/category_list_form"),
