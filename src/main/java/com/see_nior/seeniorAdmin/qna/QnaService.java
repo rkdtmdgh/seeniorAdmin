@@ -540,8 +540,6 @@ public class QnaService {
 		// 첨부된 파일이 있는 경우
 		if (files != null && files.size() != 0 && files.get(0).getSize() != 0) {
 			log.info("files is not empty.");
-
-			
 			
     		String filePath = ImgUrlPath.QNA_NOTICE_FILE_PATH.getValue() + date;
     		
@@ -649,7 +647,6 @@ public class QnaService {
 	}
 
 	// qna 공지사항 수정 확인
-	@SuppressWarnings("null")
 	public boolean modifyNoticeConfirm(
 			List<MultipartFile> files, List<String> deleteFileNames, QnaNoticeDto qnaNoticeDto) {
 		log.info("modifyNoticeConfirm()");
@@ -712,7 +709,8 @@ public class QnaService {
 				
 				try {
 					
-					Map<String,Object> savedFileObj = objectMapper.readValue(savedFiles.getBody(), new TypeReference<Map<String,Object>>() {});
+					Map<String,Object> savedFileObj = 
+							objectMapper.readValue(savedFiles.getBody(), new TypeReference<Map<String,Object>>() {});
 					
 					@SuppressWarnings("unchecked") //(List<String>) 강제 캐스팅 에러
 					List<String> savedFileNames = (List<String>) savedFileObj.get("savedFileNames");

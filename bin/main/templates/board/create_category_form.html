@@ -43,17 +43,21 @@
 		                                <tr>
 		                                	<th><p class="table_title">게시판명</p></th>
 		                                	<td>
-		                                		<input type="text" name="bc_name" id="bc_name" class="table_info" placeholder="게시판명"
-		                                			onblur="requestDuplicateCheck(this, true);">
+		                                		<label class="table_info">
+			                                		<input type="text" name="bc_name" id="bc_name" placeholder="게시판명"
+			                                			onblur="requestDuplicateCheck(this, true);">
+		                                		</label>
 	                                        </td>
 	                                        
 	                                        <th><p class="table_title">순번</p></th>
 		                                	<td>
-		                                		<input type="number" name="bc_idx" id="bc_idx" class="table_info" 
-		                                			min="1" th:max="${boardCategoryIdxMaxNum + 1}" 
-		                                			onkeydown="blockEKey(event)"
-		                                			oninput="replaceNumber(this)"
-		                                			th:value="${boardCategoryIdxMaxNum + 1}">
+		                                		<label class="table_info">
+			                                		<input type="number" name="bc_idx" id="bc_idx" 
+			                                			min="1" th:max="${boardCategoryIdxMaxNum + 1}" 
+			                                			onkeydown="blockEKey(event)"
+			                                			oninput="replaceNumber(this)"
+			                                			th:value="${boardCategoryIdxMaxNum + 1}">
+		                                		</label>
 	                                        </td>
 		                                </tr>
 		                            </tbody>

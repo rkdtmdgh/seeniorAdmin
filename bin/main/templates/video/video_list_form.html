@@ -44,7 +44,7 @@
 									</form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/video/info/get_video_list', null, null, 1, true);">전체보기</div>
+						            	<div class="btns white small" onclick="getList('/video/info/get_video_list', null, null, 1, true);">전체보기</div>
 						            	<div class="btns small delete" onclick="delListData('v_no', true)">삭제</div>
 						            	<a href="/video/info/create_form" class="btns small">등록</a>
 						            </div>
@@ -59,6 +59,7 @@
 	                                <col class="col_no">
 	                                <col>
 	                                <col>
+	                                <col class="col_short">
 	                                <col class="col_short">
 	                            </colgroup>
 	
@@ -83,8 +84,15 @@
 	                                    
 	                                    <th>
 	                                   		<p data-current-sort-value="all" class="table_title sort"
-	                                        	onclick="getSortList(event, 'video', 'v_mod_date')">
+	                                        	onclick="getSortList(event, 'video', 'v_reg_date')">
 	                                        	등록일
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
+	                                    </th>
+	                                    <th>
+	                                   		<p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'video', 'v_mod_date')">
+	                                        	수정일
 	                                        	<span class="sort_icon"></span>
 	                                        </p>
 	                                    </th>

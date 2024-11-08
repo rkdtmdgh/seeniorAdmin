@@ -48,7 +48,7 @@
 									</form>
 						            
 						            <div class="btn_list">
-						            	<div class="btns small" onclick="getList('/advertisement/info/get_advertisement_list', null, null, 1, true);">전체보기</div>
+						            	<div class="btns white small" onclick="getList('/advertisement/info/get_advertisement_list', null, null, 1, true);">전체보기</div>
 						            	<a href="/advertisement/info/create_form" class="btns small">등록</a>
 						            </div>
 					            </div>
@@ -62,6 +62,7 @@
 	                                <col class="col_short">
 	                                <col>
 	                                <col class="col_state">
+	                                <col class="col_short">
 	                                <col class="col_short">
 	                                <col class="col_short">
 	                                <col class="col_short">
@@ -99,8 +100,16 @@
 	                                    
 	                                    <th>
 	                                    	<p data-current-sort-value="all" class="table_title sort"
-	                                        	onclick="getSortList(event, 'advertisement', 'ad_mod_date')">
+	                                        	onclick="getSortList(event, 'advertisement', 'ad_reg_date')">
 	                                        	등록일
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                    	<p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'advertisement', 'ad_mod_date')">
+	                                        	수정일
 	                                        	<span class="sort_icon"></span>
 	                                        </p>
 	                                    </th>

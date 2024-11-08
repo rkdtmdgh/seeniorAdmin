@@ -108,44 +108,57 @@
 		                                <tr>
 		                                	<th><p class="table_title">내용</p></th>
 		                                	<td colspan="3" class="ta_l">
-		                                		<div class="table_content_wrap"> 
+		                                		<div class="table_info"> 
 		                                			<p class="table_textarea sc" th:text="${qnaDto.bq_body}"></p>
 	                                			</div>
 		                                    </td>
 		                                </tr>
 		                                
-		                                <tr th:if="${qnaDto.qnaAnswerDto}">
-		                                	<th><p class="table_title">답변자 아이디</p></th>
-		                                    <td>
-		                                    	<p class="table_info" th:text="${qnaDto.qnaAnswerDto.adminAccountDto.a_id}"></p>
-		                                    </td>
-		                                    
-		                                    <th><p class="table_title">이름</p></th>
-		                                    <td>
-		                                    	<p class="table_info" th:text="${qnaDto.qnaAnswerDto.adminAccountDto.a_name}"></p>
-		                                    </td>
-		                                </tr>
+		                                <th:block th:if="${qnaDto.qnaAnswerDto}">
+			                                <tr>
+			                                	<th><p class="table_title">답변자 아이디</p></th>
+			                                    <td>
+			                                    	<p class="table_info" th:text="${qnaDto.qnaAnswerDto.adminAccountDto.a_id}"></p>
+			                                    </td>
+			                                    
+			                                    <th><p class="table_title">이름</p></th>
+			                                    <td>
+			                                    	<p class="table_info" th:text="${qnaDto.qnaAnswerDto.adminAccountDto.a_name}"></p>
+			                                    </td>
+			                                </tr>
+			                                
+			                                <tr>
+			                                	<th><p class="table_title">등록일<span class="divider"></span>수정일</p></th>
+			                                    <td colspan="3">
+	                                        	<p class="table_info" th:utext="|
+	                                        		${qnaDto.qnaAnswerDto.bqa_reg_date}
+	                                        		<span class='divider'></span>
+	                                        		${qnaDto.qnaAnswerDto.bqa_mod_date}
+	                                        	|"></p>
+	                                        </td>
+			                                </tr>
+		                                </th:block>
 		                                
 		                                <tr>
 		                                	<th><p class="table_title">답변</p></th>
 		                                	<td colspan="3">
-		                                		<div class="table_content_wrap"> 
+		                                		<label class="table_info"> 
 			                                		<textarea name="bqa_answer" id="bqa_answer" class="table_textarea" placeholder="답변을 입력하세요"
 		                                				data-limit-target="textarea" 
 		                                				data-limit="short" 
 		                                				oninput="setTextareaAutoHeight(this)" 
 		                                				onkeyup="setTextLimit(this)"
-		                                				onblur="validateEmpty(this, '답변을')"
+		                                				onblur="validateEmpty(this, '답변')"
 		                                				th:text="${qnaDto.qnaAnswerDto?.bqa_answer ?: ''}"
 		                                				th:readonly="${
 		                                					qnaDto.qnaAnswerDto != null and
 				                                    		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
 				                                    		qnaDto.qnaAnswerDto.adminAccountDto.a_id != #authentication.name
 		                                				}"></textarea>
-	                                            	<div id="text_limit">
+	                                            	<span id="text_limit">
 		                                				<span id="current_size"></span> / <span id="max_size"></span>
-		                                			</div>
-	                                			</div>
+		                                			</span>
+	                                			</label>
 		                                    </td>
 		                                </tr>
 	                                </tbody>

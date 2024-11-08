@@ -38,19 +38,6 @@ async function getBoardList() {
 	}
 }
 
-// 로그아웃
-function signOut() {
-	logger.info('signOut()');
-	
-	const isConfirm = confirm('로그아웃하시겠습니까?');
-	if(!isConfirm) {
-		return false;	
-	}
-	
-	sessionStorage.clear();
-	location.replace('/account/sign_out_confirm');
-}
-
 // NAV 토글 및 페이지 관련 카테고리 메뉴 선택 표시
 function navActiveToggle() {
 	const currentPath = window.location.pathname.split('/').slice(0,3).join('/'); // 현재 URL에서 1~2번째까지 path 
@@ -113,4 +100,17 @@ function navActiveToggle() {
 			});
 		}
 	});
+}
+
+// 로그아웃
+function signOut() {
+	logger.info('signOut()');
+	
+	const isConfirm = confirm('로그아웃하시겠습니까?');
+	if(!isConfirm) {
+		return false;	
+	}
+	
+	sessionStorage.clear();
+	location.replace('/account/sign_out_confirm');
 }

@@ -25,13 +25,13 @@ async function postSignUpProcess(event, formName) {
 	}
 	
 	input = form.a_name;
-	if(!validateEmpty(input, '이름을', true)) {
+	if(!validateEmpty(input, '이름', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_birth;
-	if(!validateEmpty(input, '생년월일을', true)) {
+	if(!validateEmpty(input, '생년월일', true)) {
 		input.focus();
 		return false;
 	}
@@ -43,11 +43,10 @@ async function postSignUpProcess(event, formName) {
 	}
 	
 	// 모든 유효성 검사가 통과되었을 때 폼 제출
-	if(setLoading(true, 'input_list_container')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
-		form.action = "/account/sign_up_confirm"; 
-	    form.method = "post"; 
-	    form.submit()
-	}
+	setLoading(true, 'input_list_container'); // 로딩 추가
+	form.action = "/account/sign_up_confirm"; 
+    form.method = "post"; 
+    form.submit()
 }
 
 // 로그인
@@ -57,100 +56,95 @@ function postSignInProcess(event, formName) {
 	let input;
 	
 	input = form.a_id;
-	if(!validateEmpty(input, '이메일을', true, true)) { // 요소, 텍스트, alert 여부, 메세지 요소 미노출 여부
+	if(!validateEmpty(input, '이메일', true, true)) { // 요소, 텍스트, alert 여부, 메세지 요소 미노출 여부
 		input.focus();
 		return false;
 	}
 	
 	input = form.a_pw;
-	if(!validateEmpty(input, '비밀번호를', true, true)) {
+	if(!validateEmpty(input, '비밀번호', true, true)) {
 		input.focus();
 		return false;
 	}
 	
 	// 모든 유효성 검사가 통과되었을 때 폼 제출
-	if(setLoading(true, 'input_list_container')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
-		form.action = "/account/sign_in_confirm"; 
-	    form.method = "post"; 
-	    form.submit();
-    }
+	setLoading(true, 'input_list_container'); // 로딩 추가
+	form.action = "/account/sign_in_confirm"; 
+    form.method = "post"; 
+    form.submit();
 }
 
 // 본인 확인
 async function postIdentityCheckProcess(event, formName) {   
-	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행
-		if(event) event.preventDefault();
-		const form = document.forms[formName];
-		let input;
-		
-		input = form.a_pw;
-		if(!validateEmpty(input, '비밀번호를', true, true)) {
-			input.focus();
-			setLoading(false, 'content_inner')
-			return false;
-		}
+	if(event) event.preventDefault();
+	const form = document.forms[formName];
+	let input;
 	
-		try {
-			const response = await $.ajax({
-				url: '/account/info/modify_check',
-				method: 'POST',
-				data: {
-					a_pw: input.value.trim(),
-				},
-			});
-			
-			logger.info('/account/info/modify_check postIdentityCheck() response:', response);
-					
-			if(response) {
-				sessionStorage.setItem('loginedId', response.loginedId);
-				sessionStorage.setItem('checkDate', response.checkDate);
-				await getAccountInfo(true); // get_account_info 요청, account modify form set
+	input = form.a_pw;
+	if(!validateEmpty(input, '비밀번호', true, true)) {
+		input.focus();
+		return false;
+	}
+	
+	setLoading(true, 'content_inner'); // 로딩 추가
+	try {
+		const response = await $.ajax({
+			url: '/account/info/modify_check',
+			method: 'POST',
+			data: {
+				a_pw: input.value.trim(),
+			},
+		});
+		
+		logger.info('/account/info/modify_check postIdentityCheck() response:', response);
 				
-			} else {
-				alert('비밀번호가 일치하지 않습니다. 확인 후 다시 시도해 주세요.');
-			}
+		if(response) {
+			sessionStorage.setItem('loginedId', response.loginedId);
+			sessionStorage.setItem('checkDate', response.checkDate);
+			await getAccountInfo(true); // get_account_info 요청, account modify form set
 			
-		} catch(error) {
-			logger.error('/account/info/modify_check postIdentityCheck() error:', error);
-			alert('본인 확인 오류로 데이터를 불러오는데 실패했습니다.' + addMsg);
-			location.reload(true);
-			
-		} finally {
-			setLoading(false, 'content_inner');
+		} else {
+			alert('비밀번호가 일치하지 않습니다. 확인 후 다시 시도해 주세요.');
 		}
+		
+	} catch(error) {
+		logger.error('/account/info/modify_check postIdentityCheck() error:', error);
+		alert('본인 확인 오류로 데이터를 불러오는데 실패했습니다.' + addMsg);
+		location.reload(true);
+		
+	} finally {
+		setLoading(false, 'content_inner');
 	}
 }
 
 // post 통합 ajax 요청
 async function postIntegSubmitProcess(apiUrl, formData, successMessage, errorMessage, redirectUrl = null, loddingParentEle) {
-	if(setLoading(true, loddingParentEle)) { // 로딩 추가 함수 실행이 성공하면 요청 진행 
-		setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
+	setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
+	setLoading(true, loddingParentEle); // 로딩 추가
+	try {
+		const response = await $.ajax({
+			url: apiUrl,
+			method: 'POST',
+			data: formData,
+			processData: false,  // FormData가 자동으로 Content-Type 설정
+			contentType: false,  // FormData를 문자열로 변환하지 않음
+		});
 		
-		try {
-			const response = await $.ajax({
-				url: apiUrl,
-				method: 'POST',
-				data: formData,
-				processData: false,  // FormData가 자동으로 Content-Type 설정
-				contentType: false,  // FormData를 문자열로 변환하지 않음
-			});
+		logger.info(`${apiUrl} postIntegSubmit() response:`, response);
+		
+		if(response) {
+			alert(successMessage);
+			redirectUrl ? location.replace(redirectUrl) : location.reload(true);
 			
-			logger.info(`${apiUrl} postIntegSubmit() response:`, response);
-			
-			if(response) {
-				alert(successMessage);
-				redirectUrl ? location.replace(redirectUrl) : location.reload(true);
-				
-			} else {
-				alert(errorMessage + addMsg);
-				location.reload(true);
-			}
-			
-		} catch(error) {
-			logger.error(`${apiUrl} postIntegSubmit() error:`, error);
+		} else {
 			alert(errorMessage + addMsg);
 			location.reload(true);
 		}
+		
+	} catch(error) {
+		logger.error(`${apiUrl} postIntegSubmit() error:`, error);
+		alert(errorMessage + addMsg);
+		location.reload(true);
 	}
 }
 
@@ -197,19 +191,19 @@ async function postDiseaseCreate(formName) {
 	}
 	
 	input = form.d_good_food;
-	if(!validateEmpty(input, '추천 식단 재료를', true)) {
+	if(!validateEmpty(input, '추천 식단 재료', true)) {
 		input.focus();
 		return false;
 	}
 		
 	input = form.d_bad_food;
-	if(!validateEmpty(input, '비추천 식단 재료를', true)) {
+	if(!validateEmpty(input, '비추천 식단 재료', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.d_info;
-	if(!validateEmpty(input, '질환 / 질병 정보를', true)) {
+	if(!validateEmpty(input, '질환 / 질병 정보', true)) {
 		input.focus();
 		return false;
 	}
@@ -233,28 +227,27 @@ async function postRecipeUpdateProcess() {
 	const isConfirm = confirm('업데이트는 약 10~30초 정도가 소요됩니다. 업데이트하시겠습니까?');
 	if(!isConfirm) return false;
 	
-	if(setLoading(true, 'content_inner')) { // 로딩 추가 함수 실행이 성공하면 요청 진행 
-		try {
-			const response = await $.ajax({
-				url: '/recipe/info/refresh_api_recipe_data',
-				method: 'GET',
-			});
+	setLoading(true, 'content_inner'); // 로딩 추가
+	try {
+		const response = await $.ajax({
+			url: '/recipe/info/refresh_api_recipe_data',
+			method: 'GET',
+		});
+		
+		logger.info('postRecipeUpdate() response:', response);	
+		
+		if(response) {
+			alert('최신 정보로 업데이트하였습니다.');
 			
-			logger.info('postRecipeUpdate() response:', response);	
-			
-			if(response) {
-				alert('최신 정보로 업데이트하였습니다.');
-				
-			} else {
-				alert('최신 정보 업데이트에 실패하였습니다.' + addMsg);
-			}
-			
-		} catch(error) {
-			logger.error('postRecipeUpdate() error:', error);
-			
-		} finally {
-			location.reload(true);
+		} else {
+			alert('최신 정보 업데이트에 실패하였습니다.' + addMsg);
 		}
+		
+	} catch(error) {
+		logger.error('postRecipeUpdate() error:', error);
+		
+	} finally {
+		location.reload(true);
 	}
 }
 
@@ -264,19 +257,19 @@ async function postVideoCreate(formName) {
 	let input;
 	
 	input = form.v_title;
-	if(!validateEmpty(input, '제목을', true)) {
+	if(!validateEmpty(input, '제목', true)) {
 		input.focus();
 		return false;
 	}
 		
 	input = form.v_link;
-	if(!validateEmpty(input, 'URL 주소를', true)) {
+	if(!validateEmpty(input, 'URL 주소', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.v_text;
-	if(!validateEmpty(input, '내용을', true)) {
+	if(!validateEmpty(input, '내용', true)) {
 		input.focus();
 		return false;
 	}
@@ -300,7 +293,7 @@ async function postNoticeCreate(formName) {
 	const form = document.forms[formName];
 	
 	input = form.n_title;
-	if(!validateEmpty(input, '제목을', true)) {
+	if(!validateEmpty(input, '제목', true)) {
 		input.focus();
 		return false;
 	}
@@ -335,7 +328,7 @@ async function postQnaNoticeCreate(formName) {
 	const form = document.forms[formName];
 	
 	input = form.bqn_title;
-	if(!validateEmpty(input, '제목을', true)) {
+	if(!validateEmpty(input, '제목', true)) {
 		input.focus();
 		return false;
 	}
@@ -395,7 +388,7 @@ async function postAnswerCreate(formName) {
 	const form = document.forms[formName];
 	
 	input = form.bqa_answer;
-	if(!validateEmpty(input, '답변을', true)) {
+	if(!validateEmpty(input, '답변', true)) {
 		input.focus();
 		return false;
 	}
@@ -446,7 +439,7 @@ async function postNoticePostsCreate(formName) {
 	const form = document.forms[formName];
 	
 	input = form.bn_title;
-	if(!validateEmpty(input, '제목을', true)) {
+	if(!validateEmpty(input, '제목', true)) {
 		input.focus();
 		return false;
 	}
@@ -481,7 +474,7 @@ async function postPostsCreate(formName) {
 	const form = document.forms[formName];
 	
 	input = form.bp_title;
-	if(!validateEmpty(input, '제목을', true)) {
+	if(!validateEmpty(input, '제목', true)) {
 		input.focus();
 		return false;
 	}
@@ -574,19 +567,19 @@ async function postAdvertisementCreate(formName) {
 	}
 	
 	input = form.ad_client;
-	if(!validateEmpty(input, '클라이언트를', true)) {
+	if(!validateEmpty(input, '클라이언트', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.ad_start_date;
-	if(!validateEmpty(input, '시작일을', true)) {
+	if(!validateEmpty(input, '시작일', true)) {
 		input.focus();
 		return false;
 	}
 	
 	input = form.ad_end_date;
-	if(!validateEmpty(input, '종료일을', true)) {
+	if(!validateEmpty(input, '종료일', true)) {
 		input.focus();
 		return false;
 	}
@@ -598,7 +591,7 @@ async function postAdvertisementCreate(formName) {
 	}
 	
 	input = form.ad_url;
-	if(!validateEmpty(input, 'URL 주소를', true)) {
+	if(!validateEmpty(input, 'URL 주소', true)) {
 		input.focus();
 		return false;
 	}

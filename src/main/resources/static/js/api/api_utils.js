@@ -36,7 +36,7 @@ async function requestDuplicateCheck(input, nullCheck, defaultValue,  alertMsg) 
 			setClearErrorMessage(input);
 			
 		} else {
-			errorMessage = `${word}을(를) 입력해 주세요.`;
+			errorMessage = `${applyJosa(word, '을/를')} 입력해 주세요.`;
 			setAddErrorMessage(input, errorMessage);
 			
 			if(alertMsg) alert(errorMessage);			
