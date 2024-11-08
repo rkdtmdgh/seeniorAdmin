@@ -363,4 +363,16 @@ public class BoardController {
 		return null;
 	}
 	
+	//게시글 삭제 요청
+	@PostMapping("/info/delete_confirm")
+	@ResponseBody
+	public boolean deleteConfirm(@RequestParam("bp_nos") List<Integer> bp_nos) {
+		log.info("deleteConfirm()");
+		log.info("bp_nos: {}",bp_nos);	
+		
+		boolean result = boardService.deleteConfirm(bp_nos);
+		
+		return result;
+	}
+	
 }
