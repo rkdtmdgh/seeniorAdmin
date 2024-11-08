@@ -93,7 +93,8 @@
 			resultMap="NoticeDto">
 	
 		SELECT 
-			* 
+			N.*, 
+			A.A_NO, A.A_ID, A.A_NAME, A.A_DEPARTMENT, A.A_LEVEL, A.A_POSITION 
 		FROM 
 			NOTICE N 
 		JOIN 
@@ -101,7 +102,7 @@
 		ON 
 			N.N_WRITER_NO = A.A_NO 
 		WHERE 
-			N_IS_DELETED = 1 
+			N.N_IS_DELETED = 1 
 		<if test="searchPart != null and searchString != null">
 			<choose>
 				<when test="searchPart == 'a_id'">
@@ -134,7 +135,7 @@
 		ON 
 			N.N_WRITER_NO = A.A_NO 
 		WHERE 
-			N_IS_DELETED = 1 
+			N.N_IS_DELETED = 1 
 		<if test="searchPart != null and searchString != null">
 			<choose>
 				<when test="searchPart == 'a_id'">
@@ -150,6 +151,45 @@
 		</if>
 		
 	</select>
+	
+	<!-- 전체 공지사항 main 화면 리스트 가져오기 -->
+	<select id="selectNoticeListForMain"
+			resultMap="NoticeDto">
+	
+		SELECT 
+			N.*, 
+			A.A_NO, A.A_ID, A.A_NAME, A.A_DEPARTMENT, A.A_LEVEL, A.A_POSITION 
+		FROM 
+			NOTICE N 
+		LEFT JOIN 
+			ADMIN_ACCOUNT A 
+		ON 
+			N.N_WRITER_NO = A.A_NO 
+		WHERE 
+			N.N_IS_DELETED = 1
+		AND 
+			N.N_STATE = 1  
+		ORDER BY 
+			N.N_NO DESC 
+		LIMIT 
+			#{page_limit} 
+			
+	</select>
+	
+	<!-- 공지사항 등록 확인 -->
+	<select id="insertNewNotice">
+	
+		INSERT INTO 
+			NOTICE(
+				N_TITLE, N_BODY, N_WRITER_NO, N_DIR_NAME
+			) 
+		VALUES(
+			#{n_title}, #{n_body}, #{n_writer_no}, #{n_dir_name}
+		);
+	
+	</select>
+	
+	
 	
 
 </mapper>

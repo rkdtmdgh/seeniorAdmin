@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 import com.see_nior.seeniorAdmin.dto.NoticeDto;
+import com.see_nior.seeniorAdmin.dto.QnaNoticeDto;
 
 @Mapper
 public interface NoticeMapper {
@@ -20,5 +21,9 @@ public interface NoticeMapper {
 	public List<AdminAccountDto> selectSearchNoticeList(Map<String, Object> searchPagingParams);
 
 	public int selectSearchNoticeListCnt(Map<String, Object> searchParams);
+
+	public List<QnaNoticeDto> selectNoticeListForMain(int page_limit);
+
+	public int insertNewNotice(NoticeDto noticeDto);
 
 }

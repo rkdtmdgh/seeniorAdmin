@@ -1,13 +1,16 @@
 package com.see_nior.seeniorAdmin.notice;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.see_nior.seeniorAdmin.dto.NoticeDto;
 import com.see_nior.seeniorAdmin.enums.PagePath;
@@ -80,8 +83,15 @@ public class NoticeController {
 		
 	}
 	
-	
 	// 전체 공지사항 리스트 가져오기 for main 
+	@GetMapping("/main/get_notice_list")
+	@ResponseBody
+	public Object getNoticeListForMain(@RequestParam("page_limit") int page_limit) {
+		log.info("getNoticeListForMain()");
+		
+		return noticeService.getNoticeListForMain(page_limit);
+	}
+	
 	
 	// 전체 공지사항 등록 양식
 	@GetMapping("/info/create_form")
@@ -93,6 +103,16 @@ public class NoticeController {
 	}
 	
 	// 전체 공지사항 등록 확인 
+	@PostMapping("/info/create_confirm")
+	@ResponseBody
+	public boolean createConfirm(
+			@RequestParam(value = "files" , required = false) List<MultipartFile> files,
+			NoticeDto noticeDto) {
+		log.info("createConfirm()");
+		
+		return noticeService.createConfirm(files, noticeDto);
+		
+	}
 	
 	// 전체 공지사항 수정 양식
 	@GetMapping("/info/modify_form")
