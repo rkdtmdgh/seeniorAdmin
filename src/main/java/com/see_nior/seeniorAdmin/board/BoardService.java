@@ -805,6 +805,13 @@ public class BoardService {
 		
 	}//modifyConfirm() END
 	
+	//게시글 삭제 요청
+	public boolean deleteConfirm(List<Integer> bp_nos) {
+		log.info("deleteConfirm()");
+		
+		
+		return false;
+	}//deleteConfirm() END
 	
-
+	
 }

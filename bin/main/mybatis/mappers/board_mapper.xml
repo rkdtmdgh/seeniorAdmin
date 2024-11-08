@@ -510,5 +510,9 @@
     		BP_NO = #{bp_no} 
 	
 	</update>
+	
+	<update id="">
+	
+	</update>
 
 </mapper>
