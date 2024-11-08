@@ -1,8 +1,4 @@
 /* quill editor */
-#editor {
-	overflow: hidden;
-}
-
 .ql-toolbar.ql-snow {
 	display: flex;
 	justify-content: flex-start;
@@ -11,6 +7,10 @@
 	background-color: #FAFAFA;
 	border: none;
 	border-bottom: 1px solid var(--lightGrayColor);
+}
+
+.ql-picker-options {
+	border-radius: var(--bdrs);
 }
 
 .ql-toolbar.ql-snow .ql-formats {
@@ -52,9 +52,7 @@
 }
 
 .ql-snow .ql-tooltip {
-	top: 0 !important;
-	left: 0 !important;
-	margin-top: 0 !important;
+	left: 1em !important;
 }
 
 .ql-editor iframe {
