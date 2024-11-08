@@ -225,9 +225,7 @@ public class AdvertisementController {
 	public Object getAdvertismentListForMain(@RequestParam(value = "page_limit") int page_limit) {
 		log.info("getAdvertismentListForMain");
 		
-		List<AdvertisementDto> advertisementDtos = advertisementService.getAdvertisementListForMain(page_limit);
-		
-		return advertisementDtos;
+		return advertisementService.getAdvertisementListForMain(page_limit);
 		
 	}
 	
