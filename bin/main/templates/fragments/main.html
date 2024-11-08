@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html 
+   xmlns:th="http://www.thymeleaf.org" 
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<th:block th:fragment="mainSection(section)">
+	<div class="content_top">
+	    <div class="content_top_info">
+	        <h2 class="title"
+	        	th:text="${
+	        		section == 'main_report_table' ? '신고 현황' :
+	        		section == 'main_advertisement_table' ? '광고 현황' :
+	        		section == 'main_qna_table' ? '질문과 답변' :
+	        		section == 'main_notice_table' ? '전체 공지 사항' :
+	        		section == 'main_qna_notice_table' ? 'Q &#38; A 공지 사항' :
+	        		section == 'main_board_notice_table' ? '게시판 공지 사항' :
+	        		''
+	        	}"
+	        ></h2>
+	        
+	        <a th:href="${
+	        	section == 'main_report_table' ? '/report/info/report_list_form' :
+	        	section == 'main_advertisement_table' ? '/advertisement/info/advertisement_list_form' :
+	        	section == 'main_qna_table' ? '/qna/info/qna_list_form' :
+	        	section == 'main_notice_table' ? '/notice/info/notice_list_form' :
+	        	section == 'main_notice_table' ? '/qna/noti_info/notice_list_form' :
+	        	section == 'main_board_notice_table' ? '/board/noti_info/board_notice_list_form' :
+	        	''
+	        }"
+	         class="btns white small">전체보기</a>
+	    </div>
+	</div>
+	
+	<div class="table_wrap" th:classappend="${section}">
+	    <table class="content_table">
+       		<th:block th:if="${section == 'main_report_table'}">
+				<colgroup>
+				    <col class="col_default">
+				    <col>
+				    <col class="col_default">
+				    <col class="col_default">
+				</colgroup>
+		        <thead>
+		            <tr>
+		                <th>
+		                    <p class="table_title">신고 유형</p>
+		                </th>
+		                <th>
+		                    <p class="table_title">제목</p>
+		                </th>
+		                <th>
+		                    <p class="table_title">신고자</p>
+		                </th>
+		                <th>
+		                    <p class="table_title">등록일</p>
+		                </th>
+		            </tr>
+		        </thead>
+        	</th:block>
+        	
+        	<th:block th:if="${section == 'main_advertisement_table'}">
+        		<colgroup>
+				    <col class="col_short">
+				    <col>
+				    <col class="col_default">
+				    <col class="col_default">
+				    <col class="col_default">
+				</colgroup>
+				
+				<thead>
+				    <tr>
+				        <th>
+				            <p class="table_title">위치</p>
+				        </th>
+				        <th>
+				            <p class="table_title">클라이언트</p>
+				        </th>
+				        <th>
+				            <p class="table_title">시작일</p>
+				        </th>
+				        <th>
+				            <p class="table_title">종료일</p>
+				        </th>
+				        <th>
+				            <p class="table_title">등록일</p>
+				        </th>
+				    </tr>
+				</thead>
+			</th:block>
+			
+			<th:block th:if="${section == 'main_qna_table'}">
+				<colgroup>
+				    <col class="col_default">
+				    <col>
+				    <col class="col_default">
+				    <col class="col_default">
+				</colgroup>
+				
+				<thead>
+				    <tr>
+				        <th>
+				            <p class="table_title">질문 유형</p>
+				        </th>
+				        <th>
+				            <p class="table_title">제목</p>
+				        </th>
+				        <th>
+				            <p class="table_title">작성자</p>
+				        </th>
+				        <th>
+				            <p class="table_title">등록일</p>
+				        </th>
+				    </tr>
+				</thead>
+			</th:block>
+			
+			<th:block th:if="${section == 'main_notice_table'}">
+				<colgroup>
+				    <col>
+				    <col class="col_default">
+				    <col class="col_default">
+				    <col class="col_short">
+				</colgroup>
+				
+				<thead>
+				    <tr>
+				        <th>
+				            <p class="table_title">제목</p>
+				        </th>
+				        <th>
+				            <p class="table_title">작성자</p>
+				        </th>
+				        <th>
+				            <p class="table_title">등록일</p>
+				        </th>
+				        <th>
+				            <p class="table_title">조회수</p>
+				        </th>
+				    </tr>
+				</thead>
+			</th:block>
+			
+			<th:block th:if="${section == 'main_qna_notice_table'}">
+				<colgroup>
+				    <col>
+				    <col class="col_default">
+				    <col class="col_default">
+				    <col class="col_short">
+				</colgroup>
+				
+				<thead>
+				    <tr>
+				        <th>
+				            <p class="table_title">제목</p>
+				        </th>
+				        <th>
+				            <p class="table_title">작성자</p>
+				        </th>
+				        <th>
+				            <p class="table_title">등록일</p>
+				        </th>
+				        <th>
+				            <p class="table_title">조회수</p>
+				        </th>
+				    </tr>
+				</thead>
+			</th:block>
+			
+			<th:block th:if="${section == 'main_board_notice_table'}">
+				<colgroup>
+				    <col>
+				    <col class="col_default">
+				    <col class="col_default">
+				    <col class="col_short">
+				</colgroup>
+				
+				<thead>
+				    <tr>
+				        <th>
+				            <p class="table_title">제목</p>
+				        </th>
+				        <th>
+				            <p class="table_title">작성자</p>
+				        </th>
+				        <th>
+				            <p class="table_title">등록일</p>
+				        </th>
+				        <th>
+				            <p class="table_title">조회수</p>
+				        </th>
+				    </tr>
+				</thead>
+			</th:block>
+			
+			<tbody>
+			</tbody>
+	    </table>
+	</div>
+</th:block>
+</html>
