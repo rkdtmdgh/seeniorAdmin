@@ -14,6 +14,7 @@ public class NoticeDto {
 	private String n_body;
 	private int n_view_cnt;
 	private boolean n_state;
+	private String n_dir_name;	
 	private boolean n_is_deleted;	
 	private String n_reg_date;
 	private String n_mod_date;
