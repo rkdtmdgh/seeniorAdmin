@@ -314,6 +314,58 @@ SHOW INDEX FROM BOARD_POSTS;
 DROP TABLE BOARD_POSTS;
 DELETE FROM BOARD_POSTS;
 
+UPDATE BOARD_POSTS
+    SET BP_IS_DELETED = 1, BP_MOD_DATE = NOW()
+    WHERE BP_NO = 2;
+
+-- 게시물 삭제 트리거 -------------------------------------------------------------------------------------------------------------------
+DELIMITER //
+CREATE TRIGGER TR_UPDATE_POST_ON_DELETE
+AFTER UPDATE ON BOARD_POSTS
+FOR EACH ROW
+BEGIN
+    IF OLD.BP_IS_DELETED = 0 AND NEW.BP_IS_DELETED = 1 THEN
+        -- 게시글이 복원된 경우에는 DELETE_BOARD_POSTS 테이블에서 해당 레코드 삭제
+        DELETE FROM DELETE_BOARD_POSTS WHERE DBP_POST_NO = OLD.BP_NO;
+    ELSEIF OLD.BP_IS_DELETED = 1 AND NEW.BP_IS_DELETED = 0 THEN
+        -- 게시글이 삭제된 경우에는 DELETE_BOARD_POSTS 테이블에 새로운 레코드 삽입
+        INSERT INTO DELETE_BOARD_POSTS (
+            DBP_POST_NO,
+            DBP_CATEGORY_NO,
+            DBP_WRITER_NO,
+            DBP_DIR_NAME,
+            DBP_REQUEST_TIME,
+            DBP_DELETE_AT_TIME
+        )
+        VALUES (
+            OLD.BP_NO,
+            OLD.BP_CATEGORY_NO,
+            OLD.BP_WRITER_NO,
+            OLD.BP_DIR_NAME,
+            NOW(),
+            DATE_ADD(NOW(), INTERVAL 30 DAY)
+        );
+    END IF;
+END//
+DELIMITER ;
+
+DROP TRIGGER TR_UPDATE_POST_ON_DELETE;
+
+-- 삭제된 게시물 테이블 -----------------------------------------------------------------------------------------------------------------
+CREATE TABLE DELETE_BOARD_POSTS (
+	DBP_NO						INT	AUTO_INCREMENT COMMENT "삭제 테이블 NO(PK)",									-- 삭제 테이블 NO(PK)
+	DBP_POST_NO					INT NOT NULL COMMENT "삭제할 게시물 NO(BOARD_POSTS TABLE PK)",						-- 삭제할 게시물 NO(BOARD_POSTS TABLE PK)
+    DBP_CATEGORY_NO				INT NOT NULL COMMENT "게시물 게시판 NO(BOARD_CATEGORY TABLE PK)",					-- 게시물 게시판 NO(BOARD_CATEGORY TABLE PK)
+	DBP_WRITER_NO				INT NOT NULL COMMENT "게시물 작성자 NO(USER_ACCOUNT TABLE PK)", 					-- 게시물 작성자 NO(USER_ACCOUNT TABLE PK)
+	DBP_DIR_NAME				VARCHAR(20) COMMENT "이미지 저장된 폴더 이름"	,										-- 게시물 이미지 저장된 폴더명
+    DBP_IS_DELETED				TINYINT DEFAULT 1 COMMENT "게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)",			-- 게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)
+	DBP_DELETE_AT_TIME			DATETIME COMMENT "30일 뒤 삭제 될 시간",											-- 게시물 등록일
+	DBP_REQUEST_TIME			DATETIME DEFAULT NOW() COMMENT "게시물 삭제 요청 시간",								-- 게시물 수정일
+    PRIMARY KEY(DBP_NO)
+);
+SELECT * FROM DELETE_BOARD_POSTS;
+DROP TABLE DELETE_BOARD_POSTS;
+DELETE FROM DELETE_BOARD_POSTS;
 
 
 -- 일반 게시판 댓글 테이블 ------------------------------------------------------------------------------------------------------------------
