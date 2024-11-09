@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.see_nior.seeniorAdmin.report.mapper.ReportMapper">
+
+	<resultMap type="ReportCategoryDto" id="ReportCategoryDto">
+		<id column="brc_no" property="brc_no"></id>
+		<result column="brc_name" property="brc_name"></result>
+		<result column="brc_is_deleted" property="brc_is_deleted"></result>
+		<result column="brc_reg_date" property="brc_reg_date"></result>
+		<result column="brc_mod_date" property="brc_mod_date"></result>
+	</resultMap>
+	
+	<resultMap type="ReportDto" id="ReportDto">
+		<id column="br_no" property="br_no"></id>
+		<result column="br_category_no" property="br_category_no"></result>
+		<result column="br_post_no" property="br_post_no"></result>
+		<result column="br_title" property="br_title"></result>
+		<result column="br_reason" property="br_reason"></result>
+		<result column="br_reporter_no" property="br_reporter_no"></result>
+		<result column="br_result_no" property="br_result_no"></result>
+		<result column="br_state" property="br_state"></result>
+		<result column="br_is_deleted" property="br_is_deleted"></result>
+		<result column="br_reg_date" property="br_reg_date"></result>
+		<result column="br_reg_date" property="br_reg_date"></result>
+	</resultMap>
+	
+	<resultMap type="ReportResultDto" id="ReportResultDto">
+		<id column="brr_no" property="brr_no"></id>
+		<result column="brr_report_no" property="brr_report_no"></result>
+		<result column="brr_result" property="brr_result"></result>
+		<result column="brr_answer_a_no" property="brr_answer_a_no"></result>
+		<result column="brr_is_deleted" property="brr_is_deleted"></result>
+		<result column="brr_reg_date" property="brr_reg_date"></result>
+		<result column="brr_mod_date" property="brr_mod_date"></result>
+	</resultMap>
+	
+	<!-- 신고 카테고리 관련 -->
+	
+	
+	
+	
+	<!-- 신고 관련 -->
+	
+	
+	
+	
+	<!-- 신고 답변 관련 -->
+
+
+</mapper>
