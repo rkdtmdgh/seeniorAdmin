@@ -334,16 +334,14 @@ BEGIN
             DBP_CATEGORY_NO,
             DBP_WRITER_NO,
             DBP_DIR_NAME,
-            DBP_REQUEST_TIME,
-            DBP_DELETE_AT_TIME
+            DBP_REQUEST_TIME
         )
         VALUES (
             OLD.BP_NO,
             OLD.BP_CATEGORY_NO,
             OLD.BP_WRITER_NO,
             OLD.BP_DIR_NAME,
-            NOW(),
-            DATE_ADD(NOW(), INTERVAL 30 DAY)
+            NOW()
         );
     END IF;
 END//
@@ -359,7 +357,6 @@ CREATE TABLE DELETE_BOARD_POSTS (
 	DBP_WRITER_NO				INT NOT NULL COMMENT "게시물 작성자 NO(USER_ACCOUNT TABLE PK)", 					-- 게시물 작성자 NO(USER_ACCOUNT TABLE PK)
 	DBP_DIR_NAME				VARCHAR(20) COMMENT "이미지 저장된 폴더 이름"	,										-- 게시물 이미지 저장된 폴더명
     DBP_IS_DELETED				TINYINT DEFAULT 1 COMMENT "게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)",			-- 게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)
-	DBP_DELETE_AT_TIME			DATETIME COMMENT "30일 뒤 삭제 될 시간",											-- 게시물 등록일
 	DBP_REQUEST_TIME			DATETIME DEFAULT NOW() COMMENT "게시물 삭제 요청 시간",								-- 게시물 수정일
     PRIMARY KEY(DBP_NO)
 );
@@ -367,6 +364,25 @@ SELECT * FROM DELETE_BOARD_POSTS;
 DROP TABLE DELETE_BOARD_POSTS;
 DELETE FROM DELETE_BOARD_POSTS;
 
+-- 삭제 요청 후 30일 경과된 정보 완전 삭제 프로시저(함수) -----------------------------------------------------------------------------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE DELETE_EXPIRED_POSTS()
+BEGIN
+    UPDATE DELETE_BOARD_POSTS
+    SET DBP_IS_DELETED = 0
+    WHERE DBP_REQUEST_TIME < DATE_SUB(NOW(), INTERVAL 30 DAY);
+END //
+
+DELIMITER ;
+
+-- 프로시저(함수) 실행 부분 -----------------------------------------------------------------------------------------------------------------
+CREATE EVENT DELETE_EXPIRED_POSTS_EVENT
+ON SCHEDULE EVERY 1 DAY 
+STARTS '2024-11-10 00:00:00'  -- 시작 날짜와 시간 설정 (필요에 따라 수정)
+ON COMPLETION PRESERVE
+DO
+    CALL DELETE_EXPIRED_POSTS();
 
 -- 일반 게시판 댓글 테이블 ------------------------------------------------------------------------------------------------------------------
 CREATE TABLE BOARD_REPLY (

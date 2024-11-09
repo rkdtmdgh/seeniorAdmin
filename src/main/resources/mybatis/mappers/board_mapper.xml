@@ -522,5 +522,5 @@
     		BP_NO = #{bp_no};
 		
 	</update>
-
+	
 </mapper>
