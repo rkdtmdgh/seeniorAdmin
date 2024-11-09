@@ -48,15 +48,20 @@ public enum PagePath {
 	NOTICE_CREATE_FORM("notice/create_form"),
 	NOTICE_MODIFY_FORM("notice/modify_form"),
 	
-	
 	// Advertisement
 	ADVERTISEMENT_CREATE_CATEGORY_FORM("advertisement/create_category_form"),
 	ADVERTISEMENT_CATEGORY_LIST_FORM("advertisement/category_list_form"),
 	ADVERTISEMENT_MODIFY_CATEGORY_FORM("advertisement/modify_category_form"),
 	ADVERTISEMENT_CREATE_FORM("advertisement/create_form"),
 	ADVERTISEMENT_LIST_FORM("advertisement/advertisement_list_form"),
-	ADVERTISEMENT_MODIFY_FORM("advertisement/modify_form");
+	ADVERTISEMENT_MODIFY_FORM("advertisement/modify_form"),
 	
+	// Report
+	REPORT_CREATE_CATEGORY_FORM("report/create_category_form"),
+	REPORT_CATEGORY_LIST_FORM("report/category_list_form"),
+	REPORT_MODIFY_CATEGORY_FORM("report/modify_category_form"),
+	REPORT_LIST_FORM("report/report_list_form"),
+	REPORT_RESULT_FORM("report/result_form");
 	
 	private String value;
 	

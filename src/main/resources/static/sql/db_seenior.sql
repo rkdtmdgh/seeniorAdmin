@@ -590,7 +590,7 @@ CREATE TABLE BOARD_REPORT (
 	BR_POST_NO		INT	NOT NULL COMMENT "신고된 게시글 NO(BOARD_POSTS TABLE PK)",							-- 신고된 게시글 NO(BOARD_POSTS TABLE PK)
     BR_TITLE 		VARCHAR(255) NOT NULL COMMENT "신고 제목",											-- 신고 제목
 	BR_REASON		VARCHAR(255) NOT NULL COMMENT "신고 상세 사유",											-- 신고 상세 사유
-	BR_REPORTER_NO	VARCHAR(255) NOT NULL COMMENT "신고자 NO(USER_ACCOUNT TABLE PK)",						-- 신고자 NO(USER_ACCOUNT TABLE PK)
+	BR_REPORTER_NO	INT NOT NULL COMMENT "신고자 NO(USER_ACCOUNT TABLE PK)",								-- 신고자 NO(USER_ACCOUNT TABLE PK)
     BR_RESULT_NO	INT NOT NULL COMMENT "신고 처리 결과 NO (BOARD_REPORT_RESULT PK)",						-- 신고 처리 결과 NO (BOARD_REPORT_RESULT PK)
 	BR_STATE		TINYINT DEFAULT 1 COMMENT "신고 진행 상태(기본값 = 1, 처리 완료 = 0)",						-- 신고 진행 상태(기본값 = 1, 처리 완료 = 0)
 	BR_IS_DELETED	TINYINT	DEFAULT 1 COMMENT "신고 취소 여부(기본값 = 1, 취소 시 = 0)", 						-- 신고 취소 여부(기본값 = 1, 취소 시 = 0)
@@ -606,7 +606,7 @@ DROP TABLE BOARD_REPORT;
 -- 신고 처리 결과 테이블 ----------------------------------------------------------------------------------------------------------------
 CREATE TABLE BOARD_REPORT_RESULT (
 	BRR_NO			INT	AUTO_INCREMENT COMMENT "신고 처리 결과 NO(PK)",								-- 신고 처리 결과 NO(PK)
-    BRR_QNA_NO		INT NOT NULL COMMENT "신고 NO(BOARD_REPORT TABLE PK)",						-- 신고 NO(BOARD_REPORT TABLE PK)
+    BRR_REPORT_NO		INT NOT NULL COMMENT "신고 NO(BOARD_REPORT TABLE PK)",						-- 신고 NO(BOARD_REPORT TABLE PK)
 	BRR_RESULT		TEXT NOT NULL COMMENT "신고 처리 결과 내용",										-- 신고 처리 결과 내용
     BRR_ANSWER_A_NO	INT NOT NULL COMMENT "신고 처리 결과 작성자 NO(ADMIN_ACCOUNT TABLE PK)",			-- 신고 처리 결과 작성자 NO(ADMIN_ACCOUNT TABLE PK)
 	BRR_IS_DELETED	TINYINT DEFAULT 1 COMMENT "신고 처리 결과 삭제 여부(기본값 = 1, 삭제 시 = 0)",		-- 신고 처리 결과 삭제 여부(기본값 = 1, 삭제 시 = 0)
