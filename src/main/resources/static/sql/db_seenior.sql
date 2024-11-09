@@ -569,17 +569,46 @@ INSERT INTO BOARD_QNA_NOTICE(BQN_TITLE, BQN_BODY, BQN_WRITER_NO) VALUES("QNA 공
 INSERT INTO BOARD_QNA_NOTICE(BQN_TITLE, BQN_BODY, BQN_WRITER_NO) VALUES("QNA 공지사항 7번", "QNA 공지사항 77번 내용입니다.", 8);
 INSERT INTO BOARD_QNA_NOTICE(BQN_TITLE, BQN_BODY, BQN_WRITER_NO) VALUES("QNA 공지사항 8번", "QNA 공지사항 88번 내용입니다.", 9);
 
+-- 신고 분류 테이블 ---------------------------------------------------------------------------------------------------------------
+CREATE TABLE BOARD_REPORT_CATEGORY(
+	BRC_NO			INT	AUTO_INCREMENT COMMENT "신고 분류 NO(PK)", 						-- 신고 분류 NO(PK)
+	BRC_NAME		VARCHAR(100) NOT NULL COMMENT "신고 분류 명",							-- 신고 분류 명
+	BRC_IS_DELETED	TINYINT DEFAULT 1 COMMENT "신고 분류 삭제 여부(기본값 = 0, 삭제 시 = 1)",	-- 신고 분류 삭제 여부(기본값 = 0, 삭제 시 = 1)
+    BRC_REG_DATE	DATETIME DEFAULT NOW() COMMENT "신고 분류 등록일",						-- 신고 분류 등록일
+	BRC_MOD_DATE	DATETIME DEFAULT NOW() COMMENT "신고 분류 수정일",						-- 신고 분류 수정일
+    PRIMARY KEY(BRC_NO)
+    );
+    
+SELECT * FROM BOARD_REPORT_CATEGORY;
+SHOW INDEX FROM BOARD_REPORT_CATEGORY;
+DROP TABLE BOARD_REPORT_CATEGORY;
+
+INSERT INTO BOARD_REPORT_CATEGORY(BRC_NAME) VALUES("욕설 및 비방성1");
+INSERT INTO BOARD_REPORT_CATEGORY(BRC_NAME) VALUES("광고성1");
+INSERT INTO BOARD_REPORT_CATEGORY(BRC_NAME) VALUES("음란성1");
+INSERT INTO BOARD_REPORT_CATEGORY(BRC_NAME) VALUES("욕설 및 비방성2");
+INSERT INTO BOARD_REPORT_CATEGORY(BRC_NAME) VALUES("광고성2");
+INSERT INTO BOARD_REPORT_CATEGORY(BRC_NAME) VALUES("음란성2");
+INSERT INTO BOARD_REPORT_CATEGORY(BRC_NAME) VALUES("욕설 및 비방성3");
+INSERT INTO BOARD_REPORT_CATEGORY(BRC_NAME) VALUES("광고성3");
+INSERT INTO BOARD_REPORT_CATEGORY(BRC_NAME) VALUES("음란성3");
+INSERT INTO BOARD_REPORT_CATEGORY(BRC_NAME) VALUES("욕설 및 비방성4");
+INSERT INTO BOARD_REPORT_CATEGORY(BRC_NAME) VALUES("광고성4");
+INSERT INTO BOARD_REPORT_CATEGORY(BRC_NAME) VALUES("음란성4");
+INSERT INTO BOARD_REPORT_CATEGORY(BRC_NAME) VALUES("욕설 및 비방성5");
+INSERT INTO BOARD_REPORT_CATEGORY(BRC_NAME) VALUES("광고성5");
+INSERT INTO BOARD_REPORT_CATEGORY(BRC_NAME) VALUES("음란성5");
 
 -- 신고 게시판 테이블 -----------------------------------------------------------------------------------------------------------------
 CREATE TABLE BOARD_REPORT (
 	BR_NO			INT	AUTO_INCREMENT COMMENT "신고 NO(PK)", 											-- 신고 NO(PK)
+    BR_CATEGORY_NO	INT NOT NULL COMMENT "신고 분류 NO (BOARD_REPORT_CATEGORY TABLE PK)",					-- 신고 분류 NO (BOARD_REPORT_CATEGORY TABLE PK)
 	BR_POST_NO		INT	NOT NULL COMMENT "신고된 게시글 NO(BOARD_POSTS TABLE PK)",							-- 신고된 게시글 NO(BOARD_POSTS TABLE PK)
     BR_TITLE 		VARCHAR(255) NOT NULL COMMENT "신고 제목",											-- 신고 제목
 	BR_REASON		VARCHAR(255) NOT NULL COMMENT "신고 상세 사유",											-- 신고 상세 사유
-	BR_REPORTER_NO	VARCHAR(255) NOT NULL COMMENT "신고자 NO(USER_ACCOUNT TABLE PK)",						-- 신고자 NO(USER_ACCOUNT TABLE PK)
-	BR_RESULT		VARCHAR(255) COMMENT "신고 처리 결과(내용)",												-- 신고 처리 결과(내용)
-    BR_ADMIN_NO		INT COMMENT "신고 처리한 ADMIN NO(ADMIN_ACCOUNT TABLE PK)",							-- 신고 처리한 ADMIN NO(ADMIN_ACCOUNT TABLE PK)
-	BR_STATE		TINYINT DEFAULT 1 COMMENT "신고 진행 상태(기본값 = 1, 처리 완료)",							-- 신고 진행 상태(기본값 = 1, 처리 중 = 2, 반려 = 3, 처리 완료 = 0)
+	BR_REPORTER_NO	INT NOT NULL COMMENT "신고자 NO(USER_ACCOUNT TABLE PK)",								-- 신고자 NO(USER_ACCOUNT TABLE PK)
+    BR_RESULT_NO	INT NOT NULL COMMENT "신고 처리 결과 NO (BOARD_REPORT_RESULT PK)",						-- 신고 처리 결과 NO (BOARD_REPORT_RESULT PK)
+	BR_STATE		TINYINT DEFAULT 1 COMMENT "신고 진행 상태(기본값 = 1, 처리 완료 = 0)",						-- 신고 진행 상태(기본값 = 1, 처리 완료 = 0)
 	BR_IS_DELETED	TINYINT	DEFAULT 1 COMMENT "신고 취소 여부(기본값 = 1, 취소 시 = 0)", 						-- 신고 취소 여부(기본값 = 1, 취소 시 = 0)
 	BR_REG_DATE		DATETIME DEFAULT NOW() COMMENT "신고 등록일",											-- 신고 등록일
 	BR_MOD_DATE		DATETIME DEFAULT NOW() COMMENT "신고 수정일",											-- 신고 수정일
@@ -590,6 +619,21 @@ SELECT * FROM BOARD_REPORT;
 SHOW INDEX FROM BOARD_REPORT;
 DROP TABLE BOARD_REPORT;
 
+-- 신고 처리 결과 테이블 ----------------------------------------------------------------------------------------------------------------
+CREATE TABLE BOARD_REPORT_RESULT (
+	BRR_NO			INT	AUTO_INCREMENT COMMENT "신고 처리 결과 NO(PK)",								-- 신고 처리 결과 NO(PK)
+    BRR_REPORT_NO		INT NOT NULL COMMENT "신고 NO(BOARD_REPORT TABLE PK)",						-- 신고 NO(BOARD_REPORT TABLE PK)
+	BRR_RESULT		TEXT NOT NULL COMMENT "신고 처리 결과 내용",										-- 신고 처리 결과 내용
+    BRR_ANSWER_A_NO	INT NOT NULL COMMENT "신고 처리 결과 작성자 NO(ADMIN_ACCOUNT TABLE PK)",			-- 신고 처리 결과 작성자 NO(ADMIN_ACCOUNT TABLE PK)
+	BRR_IS_DELETED	TINYINT DEFAULT 1 COMMENT "신고 처리 결과 삭제 여부(기본값 = 1, 삭제 시 = 0)",		-- 신고 처리 결과 삭제 여부(기본값 = 1, 삭제 시 = 0)
+	BRR_REG_DATE	DATETIME DEFAULT NOW() COMMENT "신고 처리 결과 등록일",							-- 신고 처리 결과 등록일
+	BRR_MOD_DATE	DATETIME DEFAULT NOW() COMMENT "신고 처리 결과 수정일",							-- 신고 처리 결과 수정일
+    PRIMARY KEY(BRR_NO)
+);
+
+SELECT * FROM BOARD_REPORT_RESULT;
+SHOW INDEX FROM BOARD_REPORT_RESULT;
+DROP TABLE BOARD_REPORT_RESULT;
 
 -- 전체 공지사항 테이블 -----------------------------------------------------------------------------------------------------------------
 CREATE TABLE NOTICE (
