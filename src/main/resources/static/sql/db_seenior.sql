@@ -384,6 +384,8 @@ ON COMPLETION PRESERVE
 DO
     CALL DELETE_EXPIRED_POSTS();
 
+DROP EVENT DELETE_EXPIRED_POSTS_EVENT;
+
 -- 일반 게시판 댓글 테이블 ------------------------------------------------------------------------------------------------------------------
 CREATE TABLE BOARD_REPLY (
 	BR_NO			INT AUTO_INCREMENT COMMENT "댓글 NO(PK)", 							-- 댓글 NO(PK)
