@@ -1,6 +1,7 @@
 package com.see_nior.seeniorAdmin.board;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -20,6 +22,7 @@ import com.see_nior.seeniorAdmin.board.mapper.BoardMapper;
 import com.see_nior.seeniorAdmin.board.util.BoardItemCntUpdater;
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
 import com.see_nior.seeniorAdmin.dto.BoardPostsDto;
+import com.see_nior.seeniorAdmin.dto.DeleteBoardPostsDto;
 import com.see_nior.seeniorAdmin.dto.DiseaseDto;
 import com.see_nior.seeniorAdmin.util.ImageFileService;
 
@@ -834,6 +837,36 @@ public class BoardService {
 		   
 		   return true;
 	}//deleteConfirm() END
+	
+	//게시물 삭제 요청 30일 경과 후 이미지 삭제요청
+	//초 분 시 일 월 요일 년 (각 자리에 *는 모든 값을 의미)
+	@Scheduled(cron = "0 0 0 * * ?") // 매일 자정 실행	
+	public void deleteFolderRequest() {
+		log.info("deleteFolderRequest()");
+		
+		List<DeleteBoardPostsDto> deleteBoardPostsDtos = boardMapper.getDeleteBoardPostsValid();  
+		
+		if(deleteBoardPostsDtos.size() != 0) {
+			log.info("deleteBoardPostsDtos: {}",deleteBoardPostsDtos);
+			
+			List<String> deleteFolderPaths = new ArrayList();
+			
+			for(int i = 0; i < deleteBoardPostsDtos.size(); i++){
+				String folderPath = "\\board\\"
+				+deleteBoardPostsDtos.get(i).getDbp_category_no()
+				+"\\"+deleteBoardPostsDtos.get(i).getDbp_writer_no()
+				+"\\"+deleteBoardPostsDtos.get(i).getDbp_dir_name();
+				deleteFolderPaths.add(folderPath);
+			}
+
+			ResponseEntity<String> deletedFolders = imageFileService.deleteFolders(deleteFolderPaths);
+			log.info("deletedFolders: {}",deletedFolders.getBody());
+		}else {
+			log.info("deleteBoardPostsDtos is null: {}",deleteBoardPostsDtos);
+		}
+		
+		
+	}//deleteFolderRequest() END
 	
 		
 	

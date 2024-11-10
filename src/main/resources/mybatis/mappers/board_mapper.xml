@@ -89,6 +89,18 @@
 		<result column="br_mod_date" property="br_mod_date" />
 		<collection property="boardPostsDto" resultMap="BoardPostsDto" />
 	</resultMap>
+	
+	<resultMap type="DeleteBoardPostsDto" id="DeleteBoardPostsDto">
+		<result column="dbp_no" property="dbp_no" />
+		<result column="dbp_post_no" property="dbp_post_no" />		
+		<result column="dbp_category_no" property="dbp_category_no" />
+		<result column="dbp_writer_no" property="dbp_writer_no" />
+		<result column="dbp_dir_name" property="dbp_dir_name" />
+		<result column="dbp_is_valid" property="dbp_is_valid" />
+		<result column="dbp_is_deleted" property="dbp_is_deleted" />
+		<result column="dbp_request_time" property="dbp_request_time" />
+		<collection property="deleteBoardPostsDto" resultMap="DeleteBoardPostsDto" />
+	</resultMap>
 
 	<select id="getList" resultType="com.see_nior.seeniorAdmin.dto.BoardCategoryDto">
 	
@@ -522,5 +534,18 @@
     		BP_NO = #{bp_no};
 		
 	</update>
+	
+	<select id="getDeleteBoardPostsValid">
+		
+		SELECT 
+			*
+		FROM
+			DELETE_BOARD_POSTS
+		WHERE
+			DBP_IS_VALID = 0
+		AND
+			DBP_IS_DELETED = 1	
+	
+	</select>
 	 
 </mapper>
