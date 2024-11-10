@@ -314,10 +314,6 @@ SHOW INDEX FROM BOARD_POSTS;
 DROP TABLE BOARD_POSTS;
 DELETE FROM BOARD_POSTS;
 
-UPDATE BOARD_POSTS
-    SET BP_IS_DELETED = 1, BP_MOD_DATE = NOW()
-    WHERE BP_NO = 2;
-
 -- 게시물 삭제 트리거 -------------------------------------------------------------------------------------------------------------------
 DELIMITER //
 CREATE TRIGGER TR_UPDATE_POST_ON_DELETE
@@ -365,6 +361,7 @@ SELECT * FROM DELETE_BOARD_POSTS;
 DROP TABLE DELETE_BOARD_POSTS;
 DELETE FROM DELETE_BOARD_POSTS;
 
+
 -- 삭제 요청 후 30일 경과된 정보 완전 삭제 프로시저(함수) -----------------------------------------------------------------------------------------------------------------
 DELIMITER //
 
@@ -376,6 +373,8 @@ BEGIN
 END //
 
 DELIMITER ;
+
+DROP PROCEDURE DELETE_EXPIRED_POSTS;
 
 -- 프로시저(함수) 실행 부분 -----------------------------------------------------------------------------------------------------------------
 CREATE EVENT DELETE_EXPIRED_POSTS_EVENT

@@ -314,10 +314,6 @@ SHOW INDEX FROM BOARD_POSTS;
 DROP TABLE BOARD_POSTS;
 DELETE FROM BOARD_POSTS;
 
-UPDATE BOARD_POSTS
-    SET BP_IS_DELETED = 1, BP_MOD_DATE = NOW()
-    WHERE BP_NO = 2;
-
 -- 게시물 삭제 트리거 -------------------------------------------------------------------------------------------------------------------
 DELIMITER //
 CREATE TRIGGER TR_UPDATE_POST_ON_DELETE
@@ -356,6 +352,7 @@ CREATE TABLE DELETE_BOARD_POSTS (
     DBP_CATEGORY_NO				INT NOT NULL COMMENT "게시물 게시판 NO(BOARD_CATEGORY TABLE PK)",					-- 게시물 게시판 NO(BOARD_CATEGORY TABLE PK)
 	DBP_WRITER_NO				INT NOT NULL COMMENT "게시물 작성자 NO(USER_ACCOUNT TABLE PK)", 					-- 게시물 작성자 NO(USER_ACCOUNT TABLE PK)
 	DBP_DIR_NAME				VARCHAR(20) COMMENT "이미지 저장된 폴더 이름"	,										-- 게시물 이미지 저장된 폴더명
+    DBP_IS_VALID				TINYINT DEFAULT 1 COMMENT "게시물 삭제요청 후 30일 경과 여부(기본값 = 1, 경과 시 = 0)",	-- 게시물 삭제요청 후 30일 경과 여부(기본값 = 1, 경과 시 = 0)
     DBP_IS_DELETED				TINYINT DEFAULT 1 COMMENT "게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)",			-- 게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)
 	DBP_REQUEST_TIME			DATETIME DEFAULT NOW() COMMENT "게시물 삭제 요청 시간",								-- 게시물 수정일
     PRIMARY KEY(DBP_NO)
@@ -364,17 +361,20 @@ SELECT * FROM DELETE_BOARD_POSTS;
 DROP TABLE DELETE_BOARD_POSTS;
 DELETE FROM DELETE_BOARD_POSTS;
 
+
 -- 삭제 요청 후 30일 경과된 정보 완전 삭제 프로시저(함수) -----------------------------------------------------------------------------------------------------------------
 DELIMITER //
 
 CREATE PROCEDURE DELETE_EXPIRED_POSTS()
 BEGIN
     UPDATE DELETE_BOARD_POSTS
-    SET DBP_IS_DELETED = 0
+    SET DBP_IS_VALID = 0
     WHERE DBP_REQUEST_TIME < DATE_SUB(NOW(), INTERVAL 30 DAY);
 END //
 
 DELIMITER ;
+
+DROP PROCEDURE DELETE_EXPIRED_POSTS;
 
 -- 프로시저(함수) 실행 부분 -----------------------------------------------------------------------------------------------------------------
 CREATE EVENT DELETE_EXPIRED_POSTS_EVENT
