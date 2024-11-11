@@ -191,7 +191,20 @@
 	
 	</select>
 	
-	
+	<!-- 공지사항 수정 확인 -->
+	<update id="updateNotice">
+		
+		UPDATE 
+			NOTICE N 
+		SET 
+			N_TITLE = #{n_title}, 
+			N_BODY = #{n_body}, 
+			N_DIR_NAME = #{n_dir_name}, 
+			N_MOD_DATE = NOW()  
+		WHERE 
+			N_NO = #{n_no} 
+			
+	</update>
 	
 
 </mapper>
