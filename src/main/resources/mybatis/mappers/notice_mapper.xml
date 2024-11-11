@@ -199,6 +199,13 @@
 		SET 
 			N_TITLE = #{n_title}, 
 			N_BODY = #{n_body}, 
+			N_STATE = 
+			<if test="n_state == true">
+				1, 
+			</if>
+			<if test="n_state == false">
+				0, 
+			</if>
 			N_DIR_NAME = #{n_dir_name}, 
 			N_MOD_DATE = NOW()  
 		WHERE 
