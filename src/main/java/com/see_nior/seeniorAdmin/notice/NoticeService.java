@@ -9,12 +9,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
+import com.see_nior.seeniorAdmin.dto.DeleteNoticeDto;
 import com.see_nior.seeniorAdmin.dto.NoticeDto;
 import com.see_nior.seeniorAdmin.dto.QnaNoticeDto;
 import com.see_nior.seeniorAdmin.enums.ImgUrlPath;
@@ -236,7 +238,7 @@ public class NoticeService {
 		} 
 		
 		// 이미지 서버에 요청할 파일 저장 경로 생성
-		filePath = ImgUrlPath.QNA_NOTICE_FILE_PATH.getValue() + noticeDto.getN_dir_name();
+		filePath = ImgUrlPath.NOTICE_FILE_PATH.getValue() + noticeDto.getN_dir_name();
 		
 		// 추가한 이미지가 없는 경우
 		if (files == null) {
@@ -297,7 +299,7 @@ public class NoticeService {
 					while (matcher.find()) {
 						
 						String newSrc = "img src=\"http://" 
-								+ ImgUrlPath.QNA_NOTICE_PATH.getValue() 
+								+ ImgUrlPath.NOTICE_PATH.getValue() 
 								+"/"
 								+ noticeDto.getN_dir_name()
 								+"/"
@@ -358,6 +360,37 @@ public class NoticeService {
 		return SqlResult.SUCCESS.getValue();
 		
 	}
+
+	// 전체 공지사항 삭제 확인
+	public boolean deleteConfirm(int n_no) {
+		log.info("deleteConfirm()");
+		
+		int updateResult = 
+				noticeMapper.updateIsDeletedByNo(n_no);
+		
+		if (updateResult >= 0) 
+			return SqlResult.SUCCESS.getValue();	
+		else 
+			return SqlResult.FAIL.getValue();
+		
+	}
+	
+	// 전체 공지사항 삭제(is_deleted 값 update) 한달 후 img 저장 폴더 삭제 스케쥴러
+	@Scheduled(cron = "0 0 0 * * ?")
+	public void deleteImgFolder() {
+		log.info("deleteImgFolder()");
+		
+		List<DeleteNoticeDto> dleteNoticeDots = 
+				noticeMapper.selectDeleteNoticeInfo();
+		
+		if (dleteNoticeDots.size() != 0) {
+			
+			
+			
+		}
+		
+	}
+	
 	
 	
 	

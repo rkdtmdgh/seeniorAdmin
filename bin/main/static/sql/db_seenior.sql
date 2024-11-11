@@ -674,6 +674,74 @@ INSERT INTO NOTICE(N_TITLE, N_BODY, N_WRITER_NO) VALUES("전체 공지사항 15�
 INSERT INTO NOTICE(N_TITLE, N_BODY, N_WRITER_NO) VALUES("전체 공지사항 16번", "전체 공지사항 16번 내용", 2);
 
 
+-- 전체 공지사항 삭제 트리거 -------------------------------------------------------------------------------------------------------------------
+DELIMITER //
+CREATE TRIGGER TR_UPDATE_NOTICE_ON_DELETE
+AFTER UPDATE ON NOTICE
+FOR EACH ROW
+BEGIN
+    IF OLD.N_IS_DELETED = 0 AND NEW.N_IS_DELETED = 1 THEN
+        -- 공지사항이 복원된 경우에는 DELETE_NOTICE 테이블에서 해당 레코드 삭제
+        DELETE FROM DELETE_NOTICE WHERE DN_NOTICE_NO = OLD.N_NO;
+    ELSEIF OLD.N_IS_DELETED = 1 AND NEW.N_IS_DELETED = 0 THEN
+        -- 게시글이 삭제된 경우에는 DELETE_NOTICE 테이블에 새로운 레코드 삽입
+        INSERT INTO DELETE_NOTICE (
+            DN_NOTICE_NO,
+            DN_DIR_NAME,
+            DN_REQUEST_TIME
+        )
+        VALUES (
+            OLD.N_NO,
+            OLD.N_DIR_NAME,
+            NOW()
+        );
+    END IF;
+END//
+DELIMITER ;
+
+DROP TRIGGER TR_UPDATE_POST_ON_DELETE;
+
+
+-- 삭제된 전체 공지사항 테이블 -----------------------------------------------------------------------------------------------------------------
+CREATE TABLE DELETE_NOTICE (
+	DN_NO					INT	AUTO_INCREMENT COMMENT "삭제 테이블 NO(PK)",									-- 삭제 테이블 NO(PK)
+	DN_NOTICE_NO			INT NOT NULL COMMENT "삭제할 전체 공지사항 NO(NOTICE TABLE PK)",						-- 삭제할 전체 공지사항 NO(NOTICE TABLE PK)
+	DN_DIR_NAME				VARCHAR(20) COMMENT "이미지 저장된 폴더 이름"	,										-- 게시물 이미지 저장된 폴더명
+    DN_IS_VALID				TINYINT DEFAULT 1 COMMENT "게시물 삭제요청 후 30일 경과 여부(기본값 = 1, 경과 시 = 0)",	-- 게시물 삭제요청 후 30일 경과 여부(기본값 = 1, 경과 시 = 0)
+    DN_IS_DELETED			TINYINT DEFAULT 1 COMMENT "게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)",			-- 게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)
+	DN_REQUEST_TIME			DATETIME DEFAULT NOW() COMMENT "게시물 삭제 요청 시간",								-- 게시물 수정일
+    PRIMARY KEY(DN_NO)
+);
+SELECT * FROM DELETE_NOTICE;
+DROP TABLE DELETE_NOTICE;
+DELETE FROM DELETE_NOTICE;
+
+
+-- 삭제 요청 후 30일 경과된 정보 완전 삭제 프로시저(함수) -----------------------------------------------------------------------------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE DELETE_EXPIRED_NOTICE()
+BEGIN
+    UPDATE DELETE_NOTICE
+    SET DN_IS_VALID = 0
+    WHERE DN_REQUEST_TIME < DATE_SUB(NOW(), INTERVAL 30 DAY);
+END //
+
+DELIMITER ;
+
+DROP PROCEDURE DELETE_EXPIRED_NOTICE;
+
+-- 프로시저(함수) 실행 부분 -----------------------------------------------------------------------------------------------------------------
+CREATE EVENT DELETE_EXPIRED_NOTICE_EVENT
+ON SCHEDULE EVERY 1 DAY 
+STARTS '2024-11-10 00:00:00'  -- 시작 날짜와 시간 설정 (필요에 따라 수정)
+ON COMPLETION PRESERVE
+DO
+    CALL DELETE_EXPIRED_NOTICE();
+
+DROP EVENT DELETE_EXPIRED_NOTICE_EVENT;
+
+
 -- 질환 카테고리 테이블 --------------------------------------------------------------------------------------------------------------
 CREATE TABLE DISEASE_CATEGORY (
 	DC_NO			INT	AUTO_INCREMENT COMMENT "질환 분류 NO(PK)", 						-- 질환 분류 NO(PK)

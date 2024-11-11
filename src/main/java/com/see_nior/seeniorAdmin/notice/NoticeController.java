@@ -159,8 +159,16 @@ public class NoticeController {
 		
 	}
 	
+	// 전체 공지사항 삭제 확인 
+	@PostMapping("/info/delete_confirm")
+	@ResponseBody
+	public boolean deleteConfirm(@RequestParam("n_no") int n_no) {
+		log.info("deleteConfirm()");
+		
+		return noticeService.deleteConfirm(n_no);
+		
+	}
 	
-	// 전체 공지사항 삭제 확인
 	
 	
 	////////////////////////////////
