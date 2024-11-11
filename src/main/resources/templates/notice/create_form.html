@@ -9,6 +9,9 @@
 		$(function() {			
 			// 작성자 no 값 설정
 			setLoginUserInfoInputValue('n_writer_no', 'a_no');
+			
+			// 가이드라인 설정
+			setSelectGuidelineInfo();
 		});
 	</script>
 </head>
@@ -64,12 +67,7 @@
 		                                	<th>
 												<p class="table_title">
 		                                			내용
-			                                		<span id="guideline">
-			                                			영상: 최대 5개
-			                                			<br>이미지: 최대 10개
-			                                			<br>이미지별 최대 용량: 2MB
-			                                			<br>삽입 가능
-		                                			</span>
+			                                		<span id="guideline"></span>
 		                                		</p>
 	                                		</th>
 		                                	
