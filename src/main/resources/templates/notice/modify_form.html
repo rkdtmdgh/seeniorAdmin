@@ -6,7 +6,12 @@
 <head>
     <th:block th:insert="~{fragments/head.html :: head('공지 사항 수정')}"></th:block>
     <script th:inline="javascript">
-    	logger.info('noticeDto --->', /*[[${noticeDto}]]*/);
+    	logger.info('dto check noticeDto --->', /*[[${noticeDto}]]*/);
+    	
+		$(function() {
+			// 가이드라인 설정
+			setSelectGuidelineInfo();
+		});
     </script>
 </head>
 
@@ -27,7 +32,7 @@
 	                        <p class="sub_title">공지 사항 수정</p>
 	                    </div>
 	
-	                    <form name="qna_notice_modify_form">
+	                    <form name="notice_modify_form">
 		                    <input type="hidden" name="n_no" th:value="${noticeDto.n_no}">
 		                    <input type="hidden" name="n_writer_no" th:value="${noticeDto.adminAccountDto.a_no}">
 		                    <input type="hidden" name="n_dir_name" th:if="${noticeDto.n_dir_name}" th:value="${noticeDto.n_dir_name}">
@@ -103,12 +108,7 @@
 		                                	<th>
 		                                		<p class="table_title">
 		                                			내용
-			                                		<span id="guideline">
-			                                			영상: 최대 5개
-			                                			<br>이미지: 최대 10개
-			                                			<br>이미지별 최대 용량: 2MB
-			                                			<br>삽입 가능
-		                                			</span>
+			                                		<span id="guideline"></span>
 		                                		</p>
 		                                	</th>
 		                                	
@@ -148,7 +148,7 @@
 											(noticeDto.adminAccountDto.a_id ==  #authentication.name)
 										}"
 										th:onclick="delSingleData(
-											'QnA 공지 사항',
+											'공지 사항',
 											'n_no',
 											[[${noticeDto.n_no}]])" class="btns delete">삭제</div>
 		                        		 
@@ -159,7 +159,7 @@
 	                                    		#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
 		                                    	(noticeDto.adminAccountDto.a_id ==  #authentication.name)
 	                                    	}"
-	                                    	onclick="putQnaNoticeModify('qna_notice_modify_form')" class="btns">수정</div>
+	                                    	onclick="putNoticeModify('notice_modify_form')" class="btns">수정</div>
 	                                </div>
 	                            </div>
 	                        </div>

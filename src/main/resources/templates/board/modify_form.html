@@ -6,11 +6,14 @@
 <head>
     <th:block th:insert="~{fragments/head.html :: head('게시물 수정')}"></th:block>
     <script th:inline="javascript">
-    	logger.info('boardPostsDto --->', /*[[${boardPostsDto}]]*/);	
+    	logger.info('dto check boardPostsDto --->', /*[[${boardPostsDto}]]*/);	
     
 		$(function() {
 			// 타이틀 설정
 			setBoardTitle(/*[[${infoNo}]]*/);
+			
+			// 가이드라인 설정
+			setSelectGuidelineInfo();
         });
 	</script>
 </head>
@@ -113,12 +116,7 @@
 		                                	<th>
 		                                		<p class="table_title">
 		                                			내용
-			                                		<span id="guideline">
-			                                			영상: 최대 5개
-			                                			<br>이미지: 최대 10개
-			                                			<br>이미지별 최대 용량: 2MB
-			                                			<br>삽입 가능
-		                                			</span>
+			                                		<span id="guideline"></span>
 		                                		</p>
 		                                	</th>
 		                                	

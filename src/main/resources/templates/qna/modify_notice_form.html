@@ -6,7 +6,12 @@
 <head>
     <th:block th:insert="~{fragments/head.html :: head('공지 사항 수정')}"></th:block>
     <script th:inline="javascript">
-    	logger.info('qnaNoticeDto --->', /*[[${qnaNoticeDto}]]*/);
+    	logger.info('dto check qnaNoticeDto --->', /*[[${qnaNoticeDto}]]*/);
+    	
+    	$(function() {
+			// 가이드라인 설정
+			setSelectGuidelineInfo();
+		});
     </script>
 </head>
 
@@ -47,7 +52,7 @@
 	                                        <td>
 		                                    	<div class="table_info">
 	                                            	<label class="radio">
-	                                            		<input type="radio" name="bqn_state"value="true" th:checked="${qnaNoticeDto.bqn_state == true}"> 공개
+	                                            		<input type="radio" name="bqn_state" value="true" th:checked="${qnaNoticeDto.bqn_state == true}"> 공개
 	                                            	</label>
 	                                            	<label class="radio">
 	                                            		<input type="radio" name="bqn_state" value="false" th:checked="${qnaNoticeDto.bqn_state == false}"> 숨김
@@ -103,12 +108,7 @@
 		                                	<th>
 		                                		<p class="table_title">
 		                                			내용
-			                                		<span id="guideline">
-			                                			영상: 최대 5개
-			                                			<br>이미지: 최대 10개
-			                                			<br>이미지별 최대 용량: 2MB
-			                                			<br>삽입 가능
-		                                			</span>
+			                                		<span id="guideline"></span>
 		                                		</p>
 		                                	</th>
 		                                	
