@@ -158,7 +158,7 @@
 											boardPostsDto.bp_account == 'user' or 
 											(boardPostsDto.bp_account == 'admin' and boardPostsDto.adminAccountDto.a_id ==  #authentication.name)
 										}"
-										th:onclick="delListData('bp_no')" 
+										th:onclick="delListData('bp_no', false, {'infoNo': [[${infoNo}]]})" 
 		                        		class="btns delete">삭제</div>
 		                        		 
 	                                <div class="btn_list">
