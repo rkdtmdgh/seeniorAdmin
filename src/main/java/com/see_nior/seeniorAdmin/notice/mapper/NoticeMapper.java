@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
+import com.see_nior.seeniorAdmin.dto.DeleteNoticeDto;
 import com.see_nior.seeniorAdmin.dto.NoticeDto;
 import com.see_nior.seeniorAdmin.dto.QnaNoticeDto;
 
@@ -27,5 +28,9 @@ public interface NoticeMapper {
 	public int insertNewNotice(NoticeDto noticeDto);
 
 	public int updateNotice(NoticeDto newNoticeDto);
+
+	public int updateIsDeletedByNo(int n_no);
+
+	public List<DeleteNoticeDto> selectDeleteNoticeInfo();
 
 }
