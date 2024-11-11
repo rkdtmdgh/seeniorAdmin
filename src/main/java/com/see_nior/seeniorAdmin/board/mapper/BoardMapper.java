@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
 import com.see_nior.seeniorAdmin.dto.BoardPostsDto;
+import com.see_nior.seeniorAdmin.dto.DeleteBoardPostsDto;
 import com.see_nior.seeniorAdmin.dto.DiseaseDto;
 
 @Mapper
@@ -63,6 +64,10 @@ public interface BoardMapper {
 	int getSearchBoardPostsListCnt(Map<String, Object> pagingParams);
 
 	int modifyConfirm(BoardPostsDto boardPostsDto);
+
+	int deleteConfirm(int bp_no);
+
+	List<DeleteBoardPostsDto> getDeleteBoardPostsValid();
 
 	
 

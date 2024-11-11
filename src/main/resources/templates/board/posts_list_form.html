@@ -45,7 +45,7 @@
 						            
 						            <div class="btn_list">
 						            	<div class="btns white small" onclick="getList('/board/info/get_posts_list', null, null, 1);">전체보기</div>
-						            	<div class="btns small delete" onclick="delListData('bp_no', true)">삭제</div>
+						            	<div class="btns small delete" th:onclick="delListData('bp_no', true, {'infoNo': [[${infoNo}]]})">삭제</div>
 						            	<a th:href="@{'/board/info/create_form?infoNo=' + ${infoNo}}" class="btns small">게시물 등록</a>
 						            </div>
 					            </div>

@@ -47,7 +47,7 @@ async function delSingleData(dataName, key, noValue, additionalData = {}) { // �
 }
 
 // 리스트 삭제
-async function delListData(key, isCheckList) {
+async function delListData(key, isCheckList, additionalData = {}) {
 	let deleteArray = []; // 삭제할 데이터의 배열이 들어갈 변수
 	
 	if(isCheckList) { // 삭제 처리 페이지가 체크리스트인 경우
@@ -67,16 +67,17 @@ async function delListData(key, isCheckList) {
 		deleteArray = [$delData.val()];
 	}
 	
-	logger.info(`delListData() ${key}s:`, deleteArray);
-	
 	const data = { [`${key}s`]: deleteArray };
-	const deleteConfig = mapDeleteObject(key); // 커맨드와 경로 설정
+	Object.assign(data, additionalData); // 추가 데이터가 필요 시 data에 추가
 	
+	const deleteConfig = mapDeleteObject(key, additionalData.infoNo); // 커맨드와 경로 설정
+	
+	logger.info(`delListData() ${key}s:`, deleteArray);
 	deleteData(deleteConfig, data, '항목');
 }
 
 // 삭제 요청에 필요한 객체 설정
-function mapDeleteObject(value) { 
+function mapDeleteObject(value, infoNo) { 
 	let apiUrl = null;
 	let replace = null;
 	
@@ -142,7 +143,7 @@ function mapDeleteObject(value) {
 		
 		case 'bp_no': // 게시물
 			apiUrl = '/board/info/delete_confirm';
-			replace = '/board/info/posts_list_form';
+			replace = `/board/info/posts_list_form?infoNo=${infoNo}`;
 			break;
 
 		case 'brc_no': // 신고 유형 분류
