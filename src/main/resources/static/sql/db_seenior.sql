@@ -606,7 +606,7 @@ DROP TABLE BOARD_REPORT;
 -- 신고 처리 결과 테이블 ----------------------------------------------------------------------------------------------------------------
 CREATE TABLE BOARD_REPORT_RESULT (
 	BRR_NO			INT	AUTO_INCREMENT COMMENT "신고 처리 결과 NO(PK)",								-- 신고 처리 결과 NO(PK)
-    BRR_REPORT_NO		INT NOT NULL COMMENT "신고 NO(BOARD_REPORT TABLE PK)",						-- 신고 NO(BOARD_REPORT TABLE PK)
+    BRR_REPORT_NO	INT NOT NULL COMMENT "신고 NO(BOARD_REPORT TABLE PK)",						-- 신고 NO(BOARD_REPORT TABLE PK)
 	BRR_RESULT		TEXT NOT NULL COMMENT "신고 처리 결과 내용",										-- 신고 처리 결과 내용
     BRR_ANSWER_A_NO	INT NOT NULL COMMENT "신고 처리 결과 작성자 NO(ADMIN_ACCOUNT TABLE PK)",			-- 신고 처리 결과 작성자 NO(ADMIN_ACCOUNT TABLE PK)
 	BRR_IS_DELETED	TINYINT DEFAULT 1 COMMENT "신고 처리 결과 삭제 여부(기본값 = 1, 삭제 시 = 0)",		-- 신고 처리 결과 삭제 여부(기본값 = 1, 삭제 시 = 0)
