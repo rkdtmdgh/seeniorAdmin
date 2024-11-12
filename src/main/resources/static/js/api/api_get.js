@@ -626,20 +626,31 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			regDate = new Date(new Date(data.bn_reg_date).getTime() + newIconsHours);
 			tableTrContent = `
 				<tr>
+					<td>
+		                <a href="/board/noti_info/modify_notice_form?infoNo=${data.bn_category_no}bn_no=${data.bn_no}" class="table_info">
+		                	${data.boardCategoryDto.bc_name}
+		                </a>
+		            </td>
 		            <td>
-		                <a href="/board/noti_info/modify_notice_form?bn_no=${data.bn_no}" class="table_info table_flex_info">
+		                <a href="/board/noti_info/modify_notice_form?infoNo=${data.bn_category_no}bn_no=${data.bn_no}" class="table_info table_flex_info">
 		                	<p class="info_text">${data.bn_title}</p>
 		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
 		                </a>
 		            </td>
 		            <td>
-		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_name}</a>
+		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">
+		               		${data.adminAccountDto.a_name}
+		                </a>
 		            </td>
 		            <td>
-		                <a href="/board/noti_info/modify_notice_form?bn_no=${data.bn_no}" class="table_info">${setFormatDate(data.bn_reg_date)}</a>
+		                <a href="/board/noti_info/modify_notice_form?infoNo=${data.bn_category_no}bn_no=${data.bn_no}" class="table_info">
+		                	${setFormatDate(data.bn_reg_date)}
+		                </a>
 		            </td>
 		            <td>
-		                <a href="/board/noti_info/modify_notice_form?bn_no=${data.bn_no}" class="table_info">${data.bn_view_cnt}</a>
+		                <a href="/board/noti_info/modify_notice_form?infoNo=${data.bn_category_no}bn_no=${data.bn_no}" class="table_info">
+		                	${data.bn_view_cnt}
+		                </a>
 		            </td>
 		        </tr>
 			`;

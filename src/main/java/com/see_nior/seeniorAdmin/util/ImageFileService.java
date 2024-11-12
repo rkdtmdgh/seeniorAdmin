@@ -105,5 +105,31 @@ public class ImageFileService {
 		return response;
 	}
     
+    public ResponseEntity<String> deleteFolders(List<String> deleteDirs) {
+        
+    	log.info("deleteFolders()");
+		log.info("deleteDirs: {}", deleteDirs);
+		
+		// Request Header 설정
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+				
+		// Request body 설정 (파일 배열을 보낼 때)
+		MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
+		
+		// 파라미터로 받은 삭제할 폴더 경로를 deleteDirs키 값으로 requestBody에 추가 
+		for(int i = 0; i < deleteDirs.size(); i++) {
+			requestBody.add("deleteDirs", deleteDirs.get(i));
+		}
+				
+		// Request Entity
+		HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+
+		// API 호출
+		String serverURL = "http://localhost:8091/delete_folder"; //local
+		ResponseEntity<String> response = restTemplate.postForEntity(serverURL, requestEntity, String.class);
+
+		return response;
+	}
 	
 }

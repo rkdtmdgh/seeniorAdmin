@@ -478,31 +478,50 @@ async function putVideoModify(formName) {
 // 공지사항 수정
 async function putNoticeModify(formName) {
 	const form = document.forms[formName];
-	let input;
-		
+	
 	input = form.n_title;
 	if(!validateEmpty(input, '제목', true)) {
 		input.focus();
 		return false;
 	}
-		
-	input = form.n_body;
-	if(!validateEmpty(input, '내용', true)) {
+	
+	if(!validateQuill(quill)) { // 내용 유효성 및 비속어 검사
+		quill.focus();
 		return false;
 	}
 	
+	const successMessage = `"${input.value}" 공지사항이 수정되었습니다.`;
+	const errorMessage = `"${input.value}" 공지사항 수정에 실패했습니다.`;
+	
 	const formData = new FormData(form);
-	const successMessage = '수정되었습니다';
-	const errorMessage = '수정에 실패했습니다.';
-
+	formData.set('n_body', quill.root.innerHTML); // quill 에디터 내용
+	
+	// 이미지 파일 리사이즈 및 압축하여 formData에 담기 (선택된 이미지 요소가 없을 시 빈 파일 객체가 담김)
+	const $newImgTags = $(quill.root).find('img').filter(function() {
+		return $(this).attr('src').startsWith('blob:'); // src가 blob 으로 시작하는 태그 필터링 즉 추가된 이미지 태그
+	});
+	await addImagesToFormData($newImgTags, formData);
+	
+	const deleteFileNames = []; // 제거된 이미지 파일명이 담길 배열
+	if(deletedImageSrcs.length) { // 제거된 이미지가 있다면
+		logger.info('제거된 이미지가 있음');
+		
+		deletedImageSrcs.forEach((src) => {
+			const filename = src.split('/').pop(); // src에서 파일명만 추출
+			deleteFileNames.push(filename);
+		});
+	}
+	formData.append('deleteFileNames', deleteFileNames);
+	
 	await putIntegSubmit(
-		'/notice/info/modify_confirm', 
-		formData, 
-		successMessage, 
+		'/notice/info/modify_confirm',
+		formData,
+		successMessage,
 		errorMessage,
 		'content_inner'
 	);
 }
+
 
 // QnA 공지사항 수정
 async function putQnaNoticeModify(formName) {

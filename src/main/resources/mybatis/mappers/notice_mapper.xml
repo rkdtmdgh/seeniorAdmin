@@ -179,7 +179,7 @@
 	</select>
 	
 	<!-- 공지사항 등록 확인 -->
-	<select id="insertNewNotice">
+	<insert id="insertNewNotice">
 	
 		INSERT INTO 
 			NOTICE(
@@ -187,7 +187,57 @@
 			) 
 		VALUES(
 			#{n_title}, #{n_body}, #{n_writer_no}, #{n_dir_name}
-		);
+		)
+	
+	</insert>
+	
+	<!-- 공지사항 수정 확인 -->
+	<update id="updateNotice">
+		
+		UPDATE 
+			NOTICE N 
+		SET 
+			N_TITLE = #{n_title}, 
+			N_BODY = #{n_body}, 
+			N_STATE = 
+			<if test="n_state == true">
+				1, 
+			</if>
+			<if test="n_state == false">
+				0, 
+			</if>
+			N_DIR_NAME = #{n_dir_name}, 
+			N_MOD_DATE = NOW()  
+		WHERE 
+			N_NO = #{n_no} 
+			
+	</update>
+	
+	<!-- 전체 공지사항 삭제 확인 -->
+	<update id="updateIsDeletedByNo">
+	
+		UPDATE 
+			NOTICE 
+		SET 
+			N_IS_DELETED = 0, 
+			N_MOD_DATE = NOW()  
+		WHERE 
+			N_NO = #{n_no} 
+	
+	</update>
+	
+	<!-- 삭제된 공지사항 정보 가져오기  -->
+	<select id="selectDeleteNoticeInfo"
+			resultType="DeleteNoticeDto">
+	
+		SELECT 
+			* 
+		FROM 
+			DELETE_NOTICE 
+		WHERE 
+			DN_IS_VALID = 0 
+		AND 
+			DN_IS_DELETED = 1 
 	
 	</select>
 	
