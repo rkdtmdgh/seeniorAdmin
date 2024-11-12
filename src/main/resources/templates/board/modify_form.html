@@ -150,49 +150,61 @@
 	                        </div>
 	                    </form>
 
-                        <div th:classappend="${
-                           		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
-                           		(boardPostsDto.bp_account == 'admin' and boardPostsDto.adminAccountDto.a_id !=  #authentication.name) ?
-                           		'f_jc_right' : ''
-                           	}" class="btn_list_wrap mb_stepGap">
+                        <div class="btn_list_wrap mb_stepGap">
+                           	<form name="posts_reply_form">
+						    	<input type="hidden" name="a_no">
+						    	<input type="hidden" name="bp_no" th:value="${boardPostsDto.bp_no}">
+						    
+						    	<div class="reply_content_wrap">
+						    		 <div class="content_top">
+							            <p class="sub_title">댓글 <span class="reply_title_num">123</span></p>
+								    </div>
+								    
+						    		<div class="reply_content_container sc">
+						    			<div class="reply_content_list">
+				    						<div class="reply_top_info">
+				    							<a href="" class="reply_profile">
+				    								<span class="profile_thumbnail">
+					    								<img src="/image/images/basic_profile_img.jpg" alt="profile image" class="profile_thumbnail_img">
+				    								</span>
+				    								
+				    								<span class="reply_profile_info">
+				    									<span class="reply_profilce_id">userTest10@seenior.com</span>
+				    									<span class="reply_profilce_name">user10<span class="divider"></span>user_nick_11</span>
+				    								</span>
+				    							</a>
+				    							
+				    							<div class="">
+				    								수정 삭제
+				    							</div>
+				    						</div>
+				    						
+						    			</div>
+						    			
+						    			<div id="last_scroll"></div>
+						    		</div>
+						    	</div>
+						    </form>
                            	
-                        	<div th:if="${
+                            <div class="btn_list">
+                                <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
+                                
+                                <div th:if="${
 									#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
 									boardPostsDto.bp_account == 'user' or 
 									(boardPostsDto.bp_account == 'admin' and boardPostsDto.adminAccountDto.a_id ==  #authentication.name)
 								}"
 								th:onclick="delListData('bp_no', false, {'infoNo': [[${infoNo}]]})" 
-                     			class="btns delete">삭제</div>
-                     		 
-                            <div class="btn_list">
-                                <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
+                     			class="btns delete">게시물 삭제</div>
                                 
                                 <div th:if="${
                                 		#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
                                  	boardPostsDto.bp_account == 'user' or 
                                  	(boardPostsDto.bp_account == 'admin' and boardPostsDto.adminAccountDto.a_id ==  #authentication.name)
                                 	}"
-                                	onclick="putPostsModify('posts_modify_form')" class="btns">수정</div>
+                                	onclick="putPostsModify('posts_modify_form')" class="btns">게시물 수정</div>
                             </div>
                         </div>
-	                    
-	                    <div class="content_top">
-				            <p class="sub_title">댓글(댓글 수)</p>
-					    </div>
-					    
-					    <form name="posts_reply_form">
-					    	<input type="hidden" name="a_no">
-					    
-					    	<div class="reply_content_wrap">
-					    		<div class="reply_content_container sc">
-					    			<div class="reply_content_list">
-					    				<div class="reply_content">
-					    					
-					    				</div>
-					    			</div>
-					    		</div>
-					    	</div>
-					    </form>
 	                </section>
 	            </div>
 	        </div>
