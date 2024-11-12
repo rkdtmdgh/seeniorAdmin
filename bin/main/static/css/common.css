@@ -208,6 +208,24 @@ table {
     
     thead {
     	border-bottom: 1px solid var(--lightGrayColor);
+    	
+    	th:first-child {
+    		border-radius: var(--bdrs) 0 0 0;
+    	}
+    	
+    	th:last-child {
+    		border-radius: 0 var(--bdrs) 0 0;
+    	}
+    }
+    
+    tbody {
+    	tr:first-child th {
+    		border-radius: var(--bdrs) 0 0 0;
+    	}
+    	
+    	tr:last-child th {
+    		border-radius: 0 0 0 var(--bdrs);
+    	}
     }
 	
 	tr {

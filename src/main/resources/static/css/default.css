@@ -418,7 +418,6 @@
     flex-direction: column;
     border: 1px solid var(--lightGrayColor);
     border-radius: var(--bdrs);
-    overflow: hidden;
     position: relative;
 }
 
