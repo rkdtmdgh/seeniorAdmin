@@ -53,8 +53,9 @@
     --contentSubThumbWidth: 200px;
     
     --headerHeight: 70px;
-    --tableTextareaHeight: 150px;
-    --tablecontentHeight: 350px;
+    --shortContentHeight: 150px;
+    --longContentHeight: 350px;
+    --contentMaxHeight: 525px;
     --contentThumbHeight: 350px;
     --borderTextareaHeight: 103px;
 
@@ -204,10 +205,18 @@ table {
     border-collapse: collapse;
     text-align: center;
     font-size: var(--tableTextSize);
-
-    tr {
-        border-bottom: 1px solid var(--lightGrayColor);
+    
+    thead {
+    	border-bottom: 1px solid var(--lightGrayColor);
     }
+	
+	tr {
+        border-top: 1px solid var(--lightGrayColor);
+		
+		&:first-child {
+			border: none;
+		}
+	}
 
     th {
         vertical-align: middle;
@@ -267,7 +276,6 @@ table {
     overflow-x: hidden;
 	
 	&::-webkit-scrollbar-thumb {
-	    border-radius: var(--bdrs);
 	    background-color: transparent;
 	}
 

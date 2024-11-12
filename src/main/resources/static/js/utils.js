@@ -615,14 +615,15 @@ function setAccountModifyForm(data) {
 						}						
                     </tbody>
                 </table>
-
-                <div class="btn_list f_jc_right">
-                    <div class="btn_list">
-                        <div onclick="putMyAccountSubmit('modify_form')" class="btns">수정</div>
-                    </div>
-                </div>
             </div>
         </form>
+        
+		<div class="btn_list_wrap f_jc_right">
+            <div class="btn_list">
+                <div onclick="putMyAccountSubmit('modify_form')" class="btns">수정</div>
+            </div>
+        </div>
+        
 	`;
 	
 	return dataFormContent;
