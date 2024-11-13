@@ -32,7 +32,7 @@ public class AdvertisementController {
 //	final private String advertisementImgServerPath = "http://127.0.0.1:8091/seeniorUploadImg/advertisement/";
 	private String advertisementImgServerPath = "http://" + ImgUrlPath.ADVERTISEMENT_PATH.getValue();
 	
-	// --------------------------------------------------------- 광고 위치
+////////////////////////////////////////////////////////// 광고 위치
 	
 	// 광고 위치 등록 양식
 	@GetMapping("/cate_info/create_category_form")
@@ -98,7 +98,7 @@ public class AdvertisementController {
 		log.info("getCategoryList()");
 		
 		// 페이지 번호에 따른 광고 위치 리스트들 가져오기
-		Map<String, Object> advertisementCategoryListWithPage = advertisementService.getCategoryListWithPage(page, sortValue, order);
+		Map<String, Object> advertisementCategoryListWithPage = advertisementService.getAdvertisementCategoryListWithPage(page, sortValue, order);
 		
 		// 광고 위치 총 페이지 개수 가져오기
 		Map<String, Object> advertisementCategoryListPageNum = advertisementService.getAdvertisementCategoryListPageNum(page);
@@ -175,7 +175,7 @@ public class AdvertisementController {
 		
 	}
 	
-	// --------------------------------------------------------- 광고
+////////////////////////////////////////////////////////// 광고
 	
 	// 광고 등록 양식
 	@GetMapping("/info/create_form")

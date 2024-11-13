@@ -28,7 +28,7 @@ public class DiseaseController {
 
 	final private DiseaseService diseaseService;
 	
-	// ----------------------------------------------------------------질환 카테고리
+////////////////////////////////////////////////////////// 질환 카테고리
 	
 	// 질환 카테고리 등록 양식
 	@GetMapping("/cate_info/create_category_form")
@@ -54,7 +54,7 @@ public class DiseaseController {
 	// 질환 카테고리 등록 확인
 	@ResponseBody
 	@PostMapping("/cate_info/create_category_confirm")
-	public boolean createCategoryConfirmW(DiseaseCategoryDto diseaseCategoryDto) {
+	public boolean createCategoryConfirm(DiseaseCategoryDto diseaseCategoryDto) {
 		log.info("createCategoryConfirm()");
 		
 		boolean createCategoryResult = diseaseService.createCategoryConfirm(diseaseCategoryDto);
@@ -94,7 +94,7 @@ public class DiseaseController {
 		log.info("getCategoryList()");
 		
 		// 페이지 번호에 따른 질환 카테고리 리스트들 가져오기
-		Map<String, Object> diseaseCategoryListWithPage = diseaseService.getCategoryListWithPage(page, sortValue, order);
+		Map<String, Object> diseaseCategoryListWithPage = diseaseService.getDiseaseCategoryListWithPage(page, sortValue, order);
 		
 		// 질환 카테고리 총 페이지 개수 가져오기
 		Map<String, Object> diseaseCategoryListPageNum = diseaseService.getDiseaseCategoryListPageNum(page);
@@ -115,7 +115,6 @@ public class DiseaseController {
 		DiseaseCategoryDto diseaseCategoryDto = diseaseService.getCategory(dc_no);
 		
 		model.addAttribute("diseaseCategoryDto", diseaseCategoryDto);
-		log.info("개별 질환 카테고리 dto ------> {}", diseaseCategoryDto);
 		
 		return PagePath.DISEASE_MODIFY_CATEGORY_FORM.getValue();
 		
@@ -172,7 +171,7 @@ public class DiseaseController {
 		
 	}
 	
-	// ----------------------------------------------------------------질환
+////////////////////////////////////////////////////////// 질환
 	
 	// 질환 등록 양식
 	@GetMapping("/info/create_form")
