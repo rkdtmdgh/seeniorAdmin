@@ -438,21 +438,21 @@ function mapApiResponseObject(apiUrl, response) {
 			getListDtos = response.reportDtos;
 			getListPage = response.reportListPageNum;
 			getListCnt = response.reportListPageNum.reportListCnt;
-			otherData = response.unresultReportCnt > 0 ? `처리 대기 ${response.unresultReportCnt}` : null;
+			otherData = response.unresuledtReportCnt > 0 ? `처리 대기 ${response.unresultedReportCnt}` : null;
 			break;
 			
 		case '/report/info/search_report_list': // 신고 관리 검색
 			getListDtos = response.reportDtos;
 			getListPage = response.searchReportListPageNum;
 			getListCnt = response.searchReportListPageNum.searchReportListCnt;
-			otherData = response.unresultSearchReportCnt > 0 ? `처리 대기 ${response.unresultSearchReportCnt}` : null;
+			otherData = response.unresultedSearchReportCnt > 0 ? `처리 대기 ${response.unresultedSearchReportCnt}` : null;
 			break;	
 			
 		case '/report/info/get_report_list_by_category': // 신고 유형별 데이터
 			getListDtos = response.reportDtos;
 			getListPage = response.reportListByCategoryPageNum;
 			getListCnt = response.reportListByCategoryPageNum.reportListCnt;
-			otherData = response.unresultCategoryReportCnt > 0 ? `처리 대기 ${response.unresultCategoryReportCnt}` : null;
+			otherData = response.unresultedCategoryReportCnt > 0 ? `처리 대기 ${response.unresultedCategoryReportCnt}` : null;
 			break;	
 			
 		case '/advertisement/info/get_advertisement_list': // 광고 관리
@@ -1126,7 +1126,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            </td>
 		            <td>
 		                <a href="/report/info/report_list_form?sortType=2&infoNo=${data.brc_no}&sortValue=br_state&order=asc" class="table_info">
-		                	${data.brc_item_cnt} / ${data.brc_unresult_cnt}
+		                	${data.brc_item_cnt} / ${data.brc_unresulted_cnt}
 		                </a>
 		            </td>
 		            <td>

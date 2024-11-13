@@ -1050,13 +1050,6 @@
 	vertical-align: middle;
 }
 
-#last_scroll {
-	height: var(--iconsWidth);
-	padding: 1em 0;
-	box-sizing: content-box;
-	position: relative;
-}
-
 /* flex property */
 .f_jc_left {
 	justify-content: flex-start;
