@@ -47,6 +47,33 @@ public interface ReportMapper {
 	
 	// 페이지 번호에 따른 신고 리스트들 가져오기 (모든 신고)
 	public List<ReportDto> getReportListWithPage(Map<String, Object> pagingParams);
+
+	// 신고의 총 리스트 개수 구하기 (모든 신고)
+	public int getAllReportCnt();
+
+	// 처리되지 않은 신고의 개수 가져오기 (모든 신고)
+	public int getUnresultedReportCnt();
+
+	// 신고 한 개 가져오기
+	public ReportDto getReport(int br_no);
+
+	// 페이지에 따른 신고 가져오기(카테고리별 신고)
+	public List<ReportDto> getReportListByCategoryWithPage(Map<String, Object> pagingParams);
+
+	// 신고의 총 리스트 개수 구하기 (카테고리별 신고)
+	public int getReportCntByCategory(int brc_no);
+
+	// 처리되지 않은 신고의 개수 가져오기 (카테고리별 신고)
+	public int getUnresultedReportCntByCategory(int brc_no);
+
+	// 페이지에 따른 신고 가져오기 (검색한 신고)
+	public List<ReportDto> getSearchReport(Map<String, Object> pagingParams);
+
+	// 신고의 총 리스트 개수 구하기 (검색한 신고)
+	public int getSearchReportListCnt(Map<String, Object> pagingParams);
+
+	// 처리되지 않은 신고의 개수 가져오기 (검색한 신고)
+	public int getUnresultedReportCntBySearch(Map<String, Object> pagingParams);
 	
 
 }

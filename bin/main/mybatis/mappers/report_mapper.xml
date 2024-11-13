@@ -83,28 +83,9 @@
 		<result column="br_state" property="br_state"></result>
 		<result column="br_is_deleted" property="br_is_deleted"></result>
 		<result column="br_reg_date" property="br_reg_date"></result>
-		<result column="br_reg_date" property="br_reg_date"></result>
+		<result column="br_mod_date" property="br_mod_date"></result>
 		<collection property="reportCategoryDto" resultMap="ReportCategoryDto" />
 		<collection property="reportResultDto" resultMap="ReportResultDto" />
-		<collection property="userAccountDto" resultMap="UserAccountDto" />
-	</resultMap>
-	
-	<resultMap type="BoardPostsDto" id="BoardPostsDto">
-		<result column="bp_no" property="bp_no" />
-		<result column="bp_category_no" property="bp_category_no" />		
-		<result column="bp_title" property="bp_title" />
-		<result column="bp_body" property="bp_body" />
-		<result column="bp_writer_no" property="bp_writer_no" />
-		<result column="bp_writer_id" property="bp_writer_id" />
-		<result column="bp_account" property="bp_account" />
-		<result column="bp_report_state" property="bp_report_state" />
-		<result column="bp_view_cnt" property="bp_view_cnt" />
-		<result column="bp_dir_name" property="bp_dir_name" />
-		<result column="bp_reply_cnt" property="bp_reply_cnt" />
-		<result column="bp_is_deleted" property="bp_is_deleted" />
-		<result column="bp_reg_date" property="bp_reg_date" />
-		<result column="bp_mod_date" property="bp_mod_date" />
-		<collection property="adminAccountDto" resultMap="AdminAccountDto" />
 		<collection property="userAccountDto" resultMap="UserAccountDto" />
 	</resultMap>
 	
@@ -303,7 +284,7 @@
 			BRR.*, 
 			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
 		FROM 
-			BORAD_REPORT AS BR 
+			BOARD_REPORT AS BR 
 		LEFT JOIN 
 			BOARD_REPORT_CATEGORY AS BRC 
 		ON 
@@ -311,19 +292,223 @@
 		LEFT JOIN 
 			USER_ACCOUNT AS U 
 		ON 
+			BR.BR_REPORTER_NO = U.U_NO 
+		LEFT JOIN 
+			BOARD_REPORT_RESULT AS BRR 
+		ON 
 			BRR.BRR_NO = BR.BR_RESULT_NO 
 		WHERE 
 			BR.BR_IS_DELETED = 1 
 		AND 
 			BRC.BRC_IS_DELETED = 1 
 		ORDER BY
-			${sortValue} ${order} 
+			BR.${sortValue} ${order} 
 		LIMIT 
-			#{start} #{limit}
+			#{start}, #{limit}
 	
 	</select>
 	
+	<!-- 신고의 총 리스트 개수 구하기 (모든 신고) -->
+	<select id="getAllReportCnt"
+			resultType="Integer">
+
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_REPORT 
+		WHERE 
+			BR_IS_DELETED = 1	
 	
+	</select>
+	
+	<!-- 처리되지 않은 신고의 개수 가져오기 (모든 신고) -->
+	<select id="getUnresultedReportCnt"
+			resultType="Integer">
+			
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_REPORT 
+		WHERE 
+			BR_IS_DELETED = 1 
+		AND 
+			BR_STATE = 1
+	
+	</select>
+	
+	<!-- 신고 한 개 가져오기 -->
+	<select id="getReport"
+			parameterType="Integer"
+			resultMap="ReportDto">
+			
+		SELECT 
+			BR.*, 
+			BRC.*, 
+			BRR.*, 
+			A.A_NO, A.A_ID, A.A_NAME, A.A_DEPARTMENT, A.A_LEVEL, A.A_POSITION, 
+			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
+		FROM 
+			BOARD_REPORT AS BR 
+		JOIN 
+			BOARD_REPORT_CATEGORY AS BRC 
+		ON 
+			BR.BR_CATEGORY_NO = BRC.BRC_NO 
+		JOIN 
+			USER_ACCOUNT AS U 
+		ON 
+			BR.BR_REPORTER_NO = U.U_NO 
+		LEFT JOIN 
+			BOARD_REPORT_RESULT AS BRR 
+		ON 
+			BR.BR_RESULT_NO = BRR.BRR_NO 
+		LEFT JOIN 
+			ADMIN_ACCOUNT AS A 
+		ON 
+			A.A_NO = BRR.BRR_ANSWER_A_NO 
+		WHERE 
+			BR.BR_IS_DELETED = 1 
+		AND 
+			BR.BR_NO = #{br_no}
+	
+	</select>
+	
+	<!-- 페이지 번호에 따른 신고 리스트들 가져오기 (카테고리 별 신고) -->
+	<select id="getReportListByCategoryWithPage"
+			parameterType="Integer"
+			resultMap="ReportDto">
+	
+		SELECT 
+			BR.*, 
+			BRC.*, 
+			BRR.*, 
+			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
+		FROM 
+			BOARD_REPORT AS BR 
+		LEFT JOIN 
+			BOARD_REPORT_CATEGORY AS BRC 
+		ON 
+			BR.BR_CATEGORY_NO = BRC.BRC_NO 
+		LEFT JOIN 
+			USER_ACCOUNT AS U 
+		ON 
+			BR.BR_REPORTER_NO = U.U_NO 
+		LEFT JOIN 
+			BOARD_REPORT_RESULT AS BRR 
+		ON 
+			BRR.BRR_NO = BR.BR_RESULT_NO 
+		WHERE 
+			BR.BR_IS_DELETED = 1 
+		AND 
+			BRC.BRC_IS_DELETED = 1 
+		AND 
+			BR.BR_CATEGORY_NO = #{brc_no} 
+		ORDER BY
+			BR.${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>
+	
+	<!-- 신고의 총 리스트 개수 구하기 (카테고리별 신고) -->
+	<select id="getReportCntByCategory"
+			resultType="Integer">
+
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_REPORT 
+		WHERE 
+			BR_IS_DELETED = 1 
+		AND 
+			BR_CATEGORY_NO = #{brc_no} 
+	
+	</select>
+	
+	<!-- 처리되지 않은 신고의 개수 가져오기 (카테고리별 신고) -->
+	<select id="getUnresultedReportCntByCategory"
+			resultType="Integer">
+			
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_REPORT 
+		WHERE 
+			BR_IS_DELETED = 1 
+		AND 
+			BR_STATE = 1 
+		AND 
+			BR_CATEGORY_NO = #{brc_no}
+	
+	</select>
+	
+	<!-- 페이지 번호에 따른 신고 리스트들 가져오기 (검색한 신고) -->
+	<select id="getSearchReport"
+			parameterType="Integer"
+			resultMap="ReportDto">
+	
+		SELECT 
+			BR.*, 
+			BRC.*, 
+			BRR.*, 
+			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
+		FROM 
+			BOARD_REPORT AS BR 
+		LEFT JOIN 
+			BOARD_REPORT_CATEGORY AS BRC 
+		ON 
+			BR.BR_CATEGORY_NO = BRC.BRC_NO 
+		LEFT JOIN 
+			USER_ACCOUNT AS U 
+		ON 
+			BR.BR_REPORTER_NO = U.U_NO 
+		LEFT JOIN 
+			BOARD_REPORT_RESULT AS BRR 
+		ON 
+			BRR.BRR_NO = BR.BR_RESULT_NO 
+		WHERE 
+			BR.BR_IS_DELETED = 1 
+		AND 
+			BRC.BRC_IS_DELETED = 1 
+		AND 
+			BR.${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+		ORDER BY
+			BR.${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>
+	
+	<!-- 신고의 총 리스트 개수 구하기 (검색한 신고) -->
+	<select id="getSearchReportListCnt"
+			resultType="Integer">
+
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_REPORT 
+		WHERE 
+			BR_IS_DELETED = 1 
+		AND 
+			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+	
+	</select>
+	
+	<!-- 처리되지 않은 신고의 개수 가져오기 (검색한 신고) -->
+	<select id="getUnresultedReportCntBySearch"
+			resultType="Integer">
+			
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_REPORT 
+		WHERE 
+			BR_IS_DELETED = 1 
+		AND 
+			BR_STATE = 1 
+		AND 
+			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+	
+	</select>
 	
 <!-- 신고 답변 관련 -->
 

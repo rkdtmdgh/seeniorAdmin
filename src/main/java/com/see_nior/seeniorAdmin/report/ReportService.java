@@ -19,14 +19,6 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 public class ReportService {
 	
-	// 신고 카테고리
-	final static public boolean REPORT_CATEGORY_CREATE_FAIL = false;	// 신고 카테고리 생성 실패
-	final static public boolean REPORT_CATEGORY_CREATE_SUCCESS = true;	// 신고 카테고리 생성 성공
-	final static public boolean REPORT_CATEGORY_MODIFY_FAIL = false;	// 신고 카테고리 수정 실패
-	final static public boolean REPORT_CATEGORY_MODIFY_SUCCESS = true;	// 신고 카테고리 수정 성공
-	final static public boolean REPORT_CATEGORY_DELETE_FAIL = false;	// 신고 카테고리 삭제 실패
-	final static public boolean REPORT_CATEGORY_DELETE_SUCCESS = true;	// 신고 카테고리 삭제 성공
-	
 	// 페이지네이션 관련
 	private int pageLimit = 10;	// 한 페이지당 보여줄 항목의 개수
 	private int blockLimit = 5;	// 하단에 보여질 페이지 번호의 수
@@ -66,7 +58,7 @@ public class ReportService {
 		
 		List<ReportCategoryDto> reportCategoryDto = (List<ReportCategoryDto>) reportMapper.getReportCategoryList();
 		
-		reportCategoryDtos.put("reportCategoryDto", reportCategoryDto);
+		reportCategoryDtos.put("reportCategoryDtos", reportCategoryDto);
 		
 		return reportCategoryDtos;
 		
@@ -241,6 +233,186 @@ public class ReportService {
 		pagingList.put("reportDtos", reportDtos);
 		
 		return pagingList;
+		
+	}
+
+	// 신고의 총 페이지 개수 구하기 (모든 신고)
+	public Map<String, Object> getReportListPageNum(int page) {
+		log.info("getReportListPageNum()");
+		
+		Map<String, Object> reportListPageNum = new HashMap<>();
+				
+		// 전체 리스트 개수 조회
+		int reportListCnt = reportMapper.getAllReportCnt();
+		
+		// 전체 페이지 개수 계산
+		int maxPage = (int) (Math.ceil((double) reportListCnt / pageLimit));
+		
+		// 시작 페이지 값 계산
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
+		
+		// 마지막 페이지 값 계산
+		int endPage = startPage + blockLimit - 1;
+		if (endPage > maxPage) endPage = maxPage;
+		
+		reportListPageNum.put("reportListCnt", reportListCnt);
+		reportListPageNum.put("page", page);
+		reportListPageNum.put("maxPage", maxPage);
+		reportListPageNum.put("startPage", startPage);
+		reportListPageNum.put("endPage", endPage);
+		reportListPageNum.put("blockLimit", blockLimit);
+		reportListPageNum.put("pageLimit", pageLimit);
+		
+		return reportListPageNum;
+		
+	}
+
+	// 처리 되지 않은 신고의 개수 (모든 신고)
+	public int getUnresultedReportCnt() {
+		log.info("getUnresultedReportCnt()");
+		
+		return reportMapper.getUnresultedReportCnt();
+		
+	}
+
+	// 신고 한개 가져오기
+	public ReportDto getReport(int br_no, int br_post_no) {
+		log.info("getReport()");
+		
+		ReportDto reportDto = reportMapper.getReport(br_no);
+		
+		return reportDto;
+		
+	}
+
+	// 페이지 번호에 따른 카테고리별 질환 리스트들 가져오기
+	public Map<String, Object> getReportListByCategoryWithPage(int page, String sortValue, String order, int brc_no) {
+		log.info("getReportListByCategoryWithPage()");
+		
+		int pagingStart = (page - 1) * pageLimit;
+		
+		Map<String, Object> pagingList = new HashMap<>();
+		
+		Map<String, Object> pagingParams = new HashMap<>();
+		pagingParams.put("start", pagingStart);
+		pagingParams.put("limit", pageLimit);
+		pagingParams.put("sortValue", sortValue);
+		pagingParams.put("order", order);
+		pagingParams.put("dc_no", brc_no);
+		
+		List<ReportDto> reportDtos = reportMapper.getReportListByCategoryWithPage(pagingParams);
+		pagingList.put("reportDtos", reportDtos);
+		
+		return pagingList;
+		
+	}
+
+	// 신고의 총 페이지 개수 구하기 (카테고리별 신고)
+	public Map<String, Object> getReportListByCategoryPageNum(int page, int brc_no) {
+		log.info("getReportListPageNum()");
+		
+		Map<String, Object> reportListPageNum = new HashMap<>();
+				
+		// 전체 리스트 개수 조회
+		int reportListCnt = reportMapper.getReportCntByCategory(brc_no);
+		
+		// 전체 페이지 개수 계산
+		int maxPage = (int) (Math.ceil((double) reportListCnt / pageLimit));
+		
+		// 시작 페이지 값 계산
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
+		
+		// 마지막 페이지 값 계산
+		int endPage = startPage + blockLimit - 1;
+		if (endPage > maxPage) endPage = maxPage;
+		
+		reportListPageNum.put("reportListCnt", reportListCnt);
+		reportListPageNum.put("page", page);
+		reportListPageNum.put("maxPage", maxPage);
+		reportListPageNum.put("startPage", startPage);
+		reportListPageNum.put("endPage", endPage);
+		reportListPageNum.put("blockLimit", blockLimit);
+		reportListPageNum.put("pageLimit", pageLimit);
+		
+		return reportListPageNum;
+		
+	}
+
+	// 처리 되지 않은 신고의 개수 (카테고리별 신고)
+	public int getUnresultedReportCntByCategory(int brc_no) {
+		log.info("getUnresultedReportCntByCategory()");
+		
+		return reportMapper.getUnresultedReportCntByCategory(brc_no);
+		
+	}
+
+	// 페이지에 따른 신고 가져오기 (검색한 신고)
+	public Map<String, Object> getSearchReportListWithPage(String searchPart, String searchString, String sortValue,
+			String order, int page) {
+		log.info("getSearchReportListWithPage()");
+		
+		int pagingStart = (page - 1) * pageLimit;
+		
+		Map<String, Object> pagingList = new HashMap<>();
+		
+		Map<String, Object> pagingParams = new HashMap<>();
+		pagingParams.put("start", pagingStart);
+		pagingParams.put("limit", pageLimit);
+		pagingParams.put("searchPart", searchPart);
+		pagingParams.put("searchString", searchString);
+		pagingParams.put("sortValue", sortValue);
+		pagingParams.put("order", order);
+		
+		List<ReportDto> searchReportDtos = reportMapper.getSearchReport(pagingParams);
+		pagingList.put("searchReportDtos", searchReportDtos);
+		
+		return pagingList;
+	}
+
+	// 신고의 총 페이지 개수 구하기 (검색한 신고)
+	public Map<String, Object> getSearchReportListPageNum(String searchPart, String searchString, int page) {
+		log.info("getSearchReportListPageNum()");
+		
+		Map<String, Object> searchReportListPageNum = new HashMap<>();
+		
+		Map<String, Object> pagingParams = new HashMap<>();
+		pagingParams.put("searchPart", searchPart);
+		pagingParams.put("searchString", searchString);
+		
+		// 전체 리스트 개수 조회
+		int searchReportListCnt = reportMapper.getSearchReportListCnt(pagingParams);
+		
+		// 전체 페이지 개수 계산
+		int maxPage = (int) (Math.ceil((double) searchReportListCnt / pageLimit));
+		
+		// 시작 페이지 값 계산
+		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
+		
+		// 마지막 페이지 값 계산
+		int endPage = startPage + blockLimit - 1;
+		if (endPage > maxPage) endPage = maxPage;
+		
+		searchReportListPageNum.put("searchReportListCnt", searchReportListCnt);
+		searchReportListPageNum.put("page", page);
+		searchReportListPageNum.put("maxPage", maxPage);
+		searchReportListPageNum.put("startPage", startPage);
+		searchReportListPageNum.put("endPage", endPage);
+		searchReportListPageNum.put("blockLimit", blockLimit);
+		searchReportListPageNum.put("pageLimit", pageLimit);
+		
+		return searchReportListPageNum;
+		
+	}
+
+	// 처리 되지 않은 신고의 개수 (카테고리별 신고)
+	public int getUnresultedReportCntBySearch(String searchPart, String searchString) {
+		log.info("getUnresultedReportCntByCategory()");
+		
+		Map<String, Object> pagingParams = new HashMap<>();
+		pagingParams.put("pagingParams", searchPart);
+		pagingParams.put("pagingParams", searchString);
+		
+		return reportMapper.getUnresultedReportCntBySearch(pagingParams);
 		
 	}
 	

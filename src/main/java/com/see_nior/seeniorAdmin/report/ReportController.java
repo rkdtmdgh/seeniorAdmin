@@ -2,7 +2,6 @@ package com.see_nior.seeniorAdmin.report;
 
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.databind.ser.std.StdArraySerializers.BooleanArraySerializer;
+import com.see_nior.seeniorAdmin.board.BoardService;
+import com.see_nior.seeniorAdmin.dto.BoardPostsDto;
 import com.see_nior.seeniorAdmin.dto.ReportCategoryDto;
+import com.see_nior.seeniorAdmin.dto.ReportDto;
 import com.see_nior.seeniorAdmin.enums.PagePath;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import lombok.extern.log4j.Log4j2;
 public class ReportController {
 
 	final private ReportService reportService;
+	final private BoardService boardService;
 	
 ///////////////////////////////////////////////////////////////////////// 신고 카테고리
 	
@@ -71,7 +73,7 @@ public class ReportController {
 	
 	// 모든 신고 카테고리 가져오기 (신고 리스트에서 <select>박스 => 비동기)
 	@ResponseBody
-	@GetMapping("/cate_info/get_report_list_select")
+	@GetMapping("/cate_info/get_category_list_select")
 	public Object getReportListSelect() {
 		log.info("getReportListSelect()");
 		
@@ -191,25 +193,95 @@ public class ReportController {
 		// 페이지 번호에 따른 신고 리스트들 가져오기
 		Map<String, Object> reportListWithPage = reportService.getReportListWithPage(page, sortValue, order);
 		
-		// 신고 총 페이지 개수 가져오기
-//		Map<String, Object> reportListPageNum = reportService.getReportListPageNum(page);
+		// 처리 안된 신고의 개수 가져오기
+		int unresultedReportCnt = reportService.getUnresultedReportCnt();
 		
-//		reportListWithPage.put("reportListPageNum", reportListPageNum);
+		// 신고 총 페이지 개수 가져오기
+		Map<String, Object> reportListPageNum = reportService.getReportListPageNum(page);
+		
+		reportListWithPage.put("reportListPageNum", reportListPageNum);
 		reportListWithPage.put("sortValue", sortValue);
 		reportListWithPage.put("order", order);
+		reportListWithPage.put("unresultedReportCnt", unresultedReportCnt);
 		
 		return reportListWithPage;
 		
 	}
 	
+	// 카테고리에 따른 신고 가져오기(페이지네이션 => 비동기)
+	@ResponseBody
+	@GetMapping("/info/get_report_list_by_category")
+	public Object getReportListByCategory(
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+			@RequestParam(value = "sortValue", required = false, defaultValue = "d_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
+			@RequestParam(value = "infoNo") int brc_no) {
+		log.info("getReportListByCategory()");
+		
+		// 페이지 번호에 따른 카테고리별 질환 리스트들 가져오기
+		Map<String, Object> reportListByCategoryWithPage = reportService.getReportListByCategoryWithPage(page, sortValue, order, brc_no);
+		
+		// 처리 안된 신고의 개수 가져오기(카테고리별)
+		int unresultedReportCntByCategory = reportService.getUnresultedReportCntByCategory(brc_no);
+		
+		// 카테고리별 질환 총 페이지 개수 가져오기
+		Map<String, Object> reportListByCategoryPageNum = reportService.getReportListByCategoryPageNum(page, brc_no);
+		
+		reportListByCategoryWithPage.put("reportListByCategoryPageNum", reportListByCategoryPageNum);
+		reportListByCategoryWithPage.put("sortValue", sortValue);
+		reportListByCategoryWithPage.put("order", order);
+		reportListByCategoryWithPage.put("infoNo", brc_no);
+		reportListByCategoryWithPage.put("unresultedReportCntByCategory", unresultedReportCntByCategory);
+		
+		return reportListByCategoryWithPage;
+		
+	} 
 	
+	// 신고 검색 (페이지네이션 => 비동기)
+	@ResponseBody
+	@GetMapping("/info/search_report_list")
+	public Object searchReportList(
+			@RequestParam(value = "searchPart") String searchPart,
+			@RequestParam(value = "searchString") String searchString,
+			@RequestParam(value = "sortValue", required = false, defaultValue = "d_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+		log.info("searchReportList()");
+		
+		// 페이지 번호에 따른 검색 신고 리스트들 가져오기
+		Map<String, Object> searchReportListWithPage = reportService.getSearchReportListWithPage(searchPart, searchString, sortValue, order, page);
+		
+		// 처리 안된 신고의 개수 가져오기(검색한 신고)
+		int unresultedReportCntBySearch = reportService.getUnresultedReportCntBySearch(searchPart, searchString);
+		
+		// 검색한 질환 총 페이지 개수 가져오기
+		Map<String, Object> searchreportListPageNum = reportService.getSearchReportListPageNum(searchPart, searchString, page);
+		
+		searchReportListWithPage.put("searchreportListPageNum", searchreportListPageNum);
+		searchReportListWithPage.put("searchPart", searchPart);
+		searchReportListWithPage.put("searchString", searchString);
+		searchReportListWithPage.put("sortValue", sortValue);
+		searchReportListWithPage.put("order", order);
+		searchReportListWithPage.put("unresultedReportCntBySearch", unresultedReportCntBySearch);
+		
+		return searchReportListWithPage;
+		
+	}
 	
 	// ------------------------------------------------------------------- 신고 결과
 	
-	// 신고 상세 양식
-	@GetMapping("/info/result_form")
-	public String resultForm(@RequestParam(value = "br_no") int br_no, Model model) {
-		log.info("resultForm");
+	// 신고 처리하기 양식
+	@GetMapping("/info/detail_form")
+	public String detailForm(
+			@RequestParam(value = "br_no") int br_no, 
+			@RequestParam(value = "br_post_no") int br_post_no, 
+			Model model) {
+		log.info("detailForm");
+		
+		ReportDto reportDto = reportService.getReport(br_no, br_post_no);
+		BoardPostsDto boardPostsDto = boardService.modifyForm(br_post_no);
+		model.addAttribute("reportDto", reportDto);
+		model.addAttribute("boardPostsDto", boardPostsDto);
 		
 		return PagePath.REPORT_RESULT_FORM.getValue();
 		

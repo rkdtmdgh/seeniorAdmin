@@ -310,6 +310,7 @@ public class DiseaseService {
 		diseaseListPageNum.put("pageLimit", pageLimit);
 		
 		return diseaseListPageNum;
+		
 	}
 	
 	// 페이지에 따른 질환 가져오기(카테고리별 질환)
