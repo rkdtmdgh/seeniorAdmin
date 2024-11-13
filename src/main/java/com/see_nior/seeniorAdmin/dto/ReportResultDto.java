@@ -17,4 +17,6 @@ public class ReportResultDto {
 	private String brr_reg_date;
 	private String brr_mod_date;
 	
+	private AdminAccountDto adminAccountDto;
+	
 }

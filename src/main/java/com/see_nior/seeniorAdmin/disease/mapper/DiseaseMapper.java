@@ -11,7 +11,7 @@ import com.see_nior.seeniorAdmin.dto.DiseaseDto;
 @Mapper
 public interface DiseaseMapper {
 	
-	// -----------------------------------질환 카테고리 -----------------------------------------------------
+////////////////////////////////////////////////////////// 질환 카테고리 
 	
 	// 질환 카테고리 등록
 	public int insertNewDiseaseCategory(DiseaseCategoryDto diseaseCategoryDto);
@@ -43,8 +43,8 @@ public interface DiseaseMapper {
 	// 질환 카테고리의 총 페이지 개수 구하기(검색한 질환 카테고리)
 	public int getSearchDiseaseCategoryListCnt(Map<String, Object> pagingParams);
 	
-	// -----------------------------------질환 -------------------------------------------------------------
-
+////////////////////////////////////////////////////////// 질환
+	
 	// 질환 등록
 	public int insertNewDisease(DiseaseDto diseaseDto);
 		

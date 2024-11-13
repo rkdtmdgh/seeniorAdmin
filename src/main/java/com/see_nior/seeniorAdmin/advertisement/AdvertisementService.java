@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.advertisement.mapper.AdvertisementMapper;
 import com.see_nior.seeniorAdmin.dto.AdvertisementCategoryDto;
 import com.see_nior.seeniorAdmin.dto.AdvertisementDto;
+import com.see_nior.seeniorAdmin.enums.SqlResult;
 import com.see_nior.seeniorAdmin.util.ImageFileService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,25 +30,6 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 public class AdvertisementService {
 	
-	
-	// 광고 위치 관련
-	final static public boolean ADVERTISEMENT_CATEGORY_CREATE_FAIL = false;		// 광고 위치 추가 실패
-	final static public boolean ADVERTISEMENT_CATEGORY_CREATE_SUCCESS = true;	// 광고 위치 추가 성공
-	final static public boolean ADVERTISEMENT_CATEGORY_MODIFY_FAIL = false;		// 광고 위치 수정 실패
-	final static public boolean ADVERTISEMENT_CATEGORY_MODIFY_SUCCESS = true;	// 광고 위치 수정 성공
-	final static public boolean ADVERTISEMENT_CATEGORY_DELETE_FAIL = false;		// 광고 위치 삭제 실패
-	final static public boolean ADVERTISEMENT_CATEGORY_DELETE_SUCCESS = true;	// 광고 위치 삭제 성공
-	
-	// 광고 관련
-	final static public boolean ADVERTISEMENT_CREATE_FAIL = false;			// 광고 추가 실패
-	final static public boolean ADVERTISEMENT_CREATE_SUCCESS = true;		// 광고 추가 성공
-	final static public boolean ADVERTISEMENT_MODIFY_FAIL = false;			// 광고 수정 실패
-	final static public boolean ADVERTISEMENT_MODIFY_SUCCESS = true;		// 광고 수정 성공
-	final static public boolean ADVERTISEMENT_IDX_MODIFY_FAIL = false;		// 광고 idx 수정 실패
-	final static public boolean ADVERTISEMENT_IDX_MODIFY_SUCCESS = true;	// 광고 idx  수정 성공
-	final static public boolean ADVERTISEMENT_DELETE_FAIL = false;			// 광고 삭제 실패
-	final static public boolean ADVERTISEMENT_DELETE_SUCCESS = true;		// 광고 삭제 성공
-	
 	// 페이지네이션 관련
 	private int pageLimit = 10;	// 한 페이지당 보여줄 항목의 개수
 	private int blockLimit = 5;	// 하단에 보여질 페이지 번호의 수
@@ -55,7 +37,7 @@ public class AdvertisementService {
 	final private AdvertisementMapper advertisementMapper;
 	final private ImageFileService imageFileService;
 	
-	// --------------------------------------------------------- 광고 위치
+////////////////////////////////////////////////////////// 광고 위치
 	
 	// 광고 위치명 중복 확인
 	public boolean isAdvertisementCategory(String ac_name) {
@@ -74,16 +56,9 @@ public class AdvertisementService {
 		int createResult = advertisementMapper.insertNewAdvertisementCategory(advertisementCategoryDto);
 		
 		// DB에 입력 실패
-		if (createResult <= 0) {
-			
-			return ADVERTISEMENT_CATEGORY_CREATE_FAIL;
-			
+		if (createResult <= 0) return SqlResult.FAIL.getValue();
 		// DB에 입력 성공
-		} else {
-			
-			return ADVERTISEMENT_CATEGORY_CREATE_SUCCESS;
-			
-		}		
+		else return SqlResult.SUCCESS.getValue();		
 		
 	}
 	
@@ -102,8 +77,8 @@ public class AdvertisementService {
 	}
 	
 	// 페이지에 따른 광고 위치 리스트 가져오기
-	public Map<String, Object> getCategoryListWithPage(int page, String sortValue, String order) {
-		log.info("getCategoryListWithPage()");
+	public Map<String, Object> getAdvertisementCategoryListWithPage(int page, String sortValue, String order) {
+		log.info("getAdvertisementCategoryListWithPage()");
 		
 		int pagingStart = (page - 1) * pageLimit;
 		
@@ -171,16 +146,9 @@ public class AdvertisementService {
 		int modifyResult = advertisementMapper.updateAdvertisementCategory(advertisementCategoryDto);
 		
 		// DB에 입력 실패
-		if (modifyResult <= 0) {
-			
-			return ADVERTISEMENT_CATEGORY_MODIFY_FAIL;
-			
+		if (modifyResult <= 0) return SqlResult.FAIL.getValue();
 		// DB에 입력 성공
-		} else {
-			
-			return ADVERTISEMENT_CATEGORY_MODIFY_SUCCESS;
-			
-		}
+		else return SqlResult.SUCCESS.getValue();	
 	
 	}
 	
@@ -191,16 +159,9 @@ public class AdvertisementService {
 		int deleteResult = advertisementMapper.deleteAdvertisementCategory(ac_no);
 		
 		// DB에 입력 실패
-		if (deleteResult <= 0) {
-			
-			return ADVERTISEMENT_CATEGORY_DELETE_FAIL;
-		
+		if (deleteResult <= 0) return SqlResult.FAIL.getValue();
 		// DB에 입력 성공
-		} else {
-			
-			return ADVERTISEMENT_CATEGORY_DELETE_SUCCESS;
-			
-		}
+		else return SqlResult.SUCCESS.getValue();	
 		
 	}
 	
@@ -263,10 +224,7 @@ public class AdvertisementService {
 		
 	}
 	
-	
-	
-	
-	// --------------------------------------------------------- 광고
+////////////////////////////////////////////////////////// 광고
 	
 	// 광고 등록 양식에서 광고를 등록할 위치를 선택 했을 시 해당 위치의 maxIdx 가져오기
 	public int getAdvertisementIdxMaxNum(int ad_category_no) {
@@ -343,7 +301,7 @@ public class AdvertisementService {
 					
 					// DB에 입력 성공
 					} else {
-						return ADVERTISEMENT_CREATE_SUCCESS;
+						return SqlResult.SUCCESS.getValue();
 								
 					}
 					
@@ -351,7 +309,7 @@ public class AdvertisementService {
 					log.info("createConfirm() Exception 발생!!");
 					e.printStackTrace();
 					
-					return ADVERTISEMENT_CREATE_FAIL;
+					return SqlResult.FAIL.getValue();
 					
 				}
 				
@@ -359,20 +317,20 @@ public class AdvertisementService {
 				log.info("JsonMappingException!!");
 				e.printStackTrace();
 				
-				return ADVERTISEMENT_CREATE_FAIL;
+				return SqlResult.FAIL.getValue();
 				
 			} catch (JsonProcessingException e) {
 				log.info("JsonProcessingException!!");
 				e.printStackTrace();
 				
-				return ADVERTISEMENT_CREATE_FAIL;
+				return SqlResult.FAIL.getValue();
 				
 			}
 			
 		} else {
 			log.info("upload file fail!!");
 			
-			return ADVERTISEMENT_CREATE_FAIL;
+			return SqlResult.FAIL.getValue();
 			
 		}
 		
@@ -472,7 +430,7 @@ public class AdvertisementService {
 					
 				} else {
 					
-					return ADVERTISEMENT_IDX_MODIFY_SUCCESS;
+					return SqlResult.SUCCESS.getValue();
 					
 				}
 				
@@ -486,7 +444,7 @@ public class AdvertisementService {
 			log.info("modifyAdvertisementIdx() Exception 발생!!");
 			e.printStackTrace();
 			
-			return ADVERTISEMENT_IDX_MODIFY_FAIL;
+			return SqlResult.FAIL.getValue();
 			
 		}
 		
@@ -735,14 +693,14 @@ public class AdvertisementService {
 				
 			} else {
 				
-				return ADVERTISEMENT_MODIFY_SUCCESS;
+				return SqlResult.SUCCESS.getValue();
 			}
 			
 		} catch (Exception e) {
 			log.info("modifyConfirm() Exception 발생!!");
 			e.printStackTrace();
 			
-			return ADVERTISEMENT_MODIFY_FAIL;
+			return SqlResult.FAIL.getValue();
 			
 		}
 		
@@ -755,14 +713,9 @@ public class AdvertisementService {
 		int deleteResult = advertisementMapper.deleteAdvertisement(ad_no);
 		
 		// DB에 입력 실패
-		if (deleteResult <= 0) {
-			return ADVERTISEMENT_DELETE_FAIL;
-		
+		if (deleteResult <= 0) return SqlResult.FAIL.getValue();
 		// DB에 입력 성공
-		} else {
-			return ADVERTISEMENT_DELETE_SUCCESS;
-			
-		}
+		else return SqlResult.SUCCESS.getValue();	
 		
 	}
 

@@ -31,7 +31,7 @@
 		<collection property="advertisementCategoryDto" resultMap="AdvertisementCategoryDto" />
 	</resultMap>
 
-	<!-- 광고 위치 관련 -->
+<!-- 광고 위치 관련 -->
 
 	<!-- 광고 위치 등록 -->
 	<insert id="insertNewAdvertisementCategory"
@@ -70,8 +70,8 @@
 		WHERE 
 			AC_IS_DELETED = 1 
 		ORDER BY 
-			AC_NAME ASC
-	
+			AC_NO DESC 
+				
 	</select>
 	
 	<!-- 광고 위치 별 광고의 개수 구하기 -->
@@ -237,7 +237,7 @@
 	
 	</select>
 
-	<!-- 광고 관련 -->
+<!-- 광고 관련 -->
 	
 	<!-- 해당 광고 위치의 광고 maxIdx값 구하기 -->
 	<select id="getAdvertisementIdxMaxNumByCategory"

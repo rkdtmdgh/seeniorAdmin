@@ -11,7 +11,7 @@ import com.see_nior.seeniorAdmin.dto.AdvertisementDto;
 @Mapper
 public interface AdvertisementMapper {
 	
-	// -------------------------------------------광고 위치-------------------------------------------
+////////////////////////////////////////////////////////// 광고 위치
 	
 	// 광고 위치 등록
 	public int insertNewAdvertisementCategory(AdvertisementCategoryDto advertisementCategoryDto);
@@ -43,7 +43,7 @@ public interface AdvertisementMapper {
 	// 광고 위치의 총 페이지 개수 구하기(검색한 광고 위치)
 	public int getSearchAdvertisementCategoryListCnt(Map<String, Object> pagingParams);
 	
-	// -------------------------------------------광고 -------------------------------------------
+////////////////////////////////////////////////////////// 광고
 
 	// 해당 광고 위치의 광고 maxIdx값 구하기
 	public Integer getAdvertisementIdxMaxNumByCategory(int ad_category_no);
