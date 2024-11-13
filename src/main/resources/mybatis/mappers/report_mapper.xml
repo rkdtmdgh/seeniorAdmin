@@ -38,7 +38,34 @@
 	
 	<!-- 신고 카테고리 관련 -->
 	
+	<!-- 신고 카테고리 중복 확인 -->
+	<select id="isReportCategory"
+			parameterType="String"
+			resultType="boolean">
+			
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_REPORT_CATEGORY 
+		WHERE 
+			BRC_NAME = #{brc_name}
 	
+	</select>
+	
+	<!-- 모든 신고 카테고리 가져오기 (신고 리스트에서 select박스 => 비동기) -->
+	<select id="getReportCategoryList"
+			resultMap="ReportCategoryDto">
+	
+		SELECT 
+			* 
+		FROM 
+			BOARD_REPORT_CATEGORY 
+		WHERE 
+			BRC_IS_DELETED = 1 
+		ORDER BY 
+			BRC_NAME ASC 
+	
+	</select>
 	
 	
 	<!-- 신고 관련 -->
