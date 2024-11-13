@@ -155,30 +155,90 @@
 						    	<input type="hidden" name="a_no">
 						    	<input type="hidden" name="bp_no" th:value="${boardPostsDto.bp_no}">
 						    
-						    	<div class="reply_content_wrap">
-						    		 <div class="content_top">
+						    	<div class="comment_wrap">
+					    			<div class="content_top">
 							            <p class="sub_title">댓글 <span class="reply_title_num">123</span></p>
 								    </div>
 								    
-						    		<div class="reply_content_container sc">
-						    			<div class="reply_content_list">
-				    						<div class="reply_top_info">
-				    							<a href="" class="reply_profile">
-				    								<span class="profile_thumbnail">
-					    								<img src="/image/images/basic_profile_img.jpg" alt="profile image" class="profile_thumbnail_img">
-				    								</span>
-				    								
-				    								<span class="reply_profile_info">
-				    									<span class="reply_profilce_id">userTest10@seenior.com</span>
-				    									<span class="reply_profilce_name">user10<span class="divider"></span>user_nick_11</span>
-				    								</span>
-				    							</a>
-				    							
-				    							<div class="">
-				    								수정 삭제
+						    		<div class="comment_container sc">
+						    			<div class="comment_list" data-type="comment">
+							    			<div class="comment_content">							    				
+					    						<div class="comment_info">
+						    						<div class="reply_top_info">
+						    							<a href="" class="reply_profile">
+						    								<span class="profile_thumbnail">
+							    								<img src="/image/images/basic_profile_img.jpg" alt="profile image" class="profile_thumbnail_img">
+						    								</span>
+						    								
+						    								<span class="reply_profile_info">
+						    									<span class="reply_profilce_id">
+						    										userTest10@seenior.com
+						    										<span class="divider"></span>
+						    										<span class="reg_time">5분</span>					    										
+						    									</span>
+						    									<span class="reply_profilce_name">user10<span class="divider"></span>user_nick_11</span>
+						    								</span>
+						    							</a>
+						    							
+						    							<div class="btn_list">
+						    								<div class="text_btns">삭제</div>
+						    							</div>
+						    						</div>
+					    						
+					    							<div class="reply_content_info">			    									
+					    								<div class="comment">
+						    								<div class="content">
+						    									1231231231232323<br>qwedwqef<br>waed
+						    								</div>
+						    								
+						    								<div class="btn_list f_jc_left">
+							    								<div class="text_btns">답글 달기</div>
+							    								<span class="text_btns">답글 6개 보기/숨기기</span>
+						    								</div>
+						    							</div>
+					    							</div>
 				    							</div>
-				    						</div>
-				    						
+				    							
+				    							<div class="comment_list" data-type="reply">
+					    							<div class="comment_info reply_info">
+							    						<div class="reply_top_info">
+							    							<a href="" class="reply_profile">
+							    								<span class="profile_thumbnail">
+								    								<img src="/image/images/basic_profile_img.jpg" alt="profile image" class="profile_thumbnail_img">
+							    								</span>
+							    								
+							    								<span class="reply_profile_info">
+							    									<span class="reply_profilce_id">
+							    										userTest10@seenior.com
+							    										<span class="divider"></span>
+							    										<span class="reg_time">5분</span>					    										
+							    									</span>
+							    									<span class="reply_profilce_name">user10<span class="divider"></span>user_nick_11</span>
+							    								</span>
+							    							</a>
+							    							
+							    							<div class="btn_list">
+							    								<div class="text_btns">삭제</div>
+							    							</div>
+							    						</div>
+						    						
+						    							<div class="reply_content_info">			    									
+						    								<div class="comment">
+							    								<div class="content">
+							    									1231231231232323<br>qwedwqef<br>waed
+							    								</div>
+							    								
+							    								<div class="btn_list f_jc_left">
+								    								<div class="text_btns">답글 달기</div>
+								    								<span class="text_btns">답글 6개 보기/숨기기</span>
+							    								</div>
+							    							</div>
+						    							</div>
+					    							</div>
+					    							
+					    							<div id="last_scroll"></div>
+				    							</div>
+							    			</div>
 						    			</div>
 						    			
 						    			<div id="last_scroll"></div>
