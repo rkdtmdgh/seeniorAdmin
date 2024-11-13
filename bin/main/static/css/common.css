@@ -53,10 +53,11 @@
     --contentSubThumbWidth: 200px;
     
     --headerHeight: 70px;
-    --tableTextareaHeight: 150px;
-    --tablecontentHeight: 500px;
+    --shortContentHeight: 150px;
+    --longContentHeight: 350px;
+    --contentMaxHeight: 525px;
     --contentThumbHeight: 350px;
-    --borderTextareaHeight: 100px;
+    --borderTextareaHeight: 103px;
 
     --innerPadding: 50px;
     --signFormInnerPadding: 30px;
@@ -204,10 +205,36 @@ table {
     border-collapse: collapse;
     text-align: center;
     font-size: var(--tableTextSize);
-
-    tr {
-        border-bottom: 1px solid var(--lightGrayColor);
+    
+    thead {
+    	border-bottom: 1px solid var(--lightGrayColor);
+    	
+    	th:first-child {
+    		border-radius: var(--bdrs) 0 0 0;
+    	}
+    	
+    	th:last-child {
+    		border-radius: 0 var(--bdrs) 0 0;
+    	}
     }
+    
+    tbody {
+    	tr:first-child th {
+    		border-radius: var(--bdrs) 0 0 0;
+    	}
+    	
+    	tr:last-child th {
+    		border-radius: 0 0 0 var(--bdrs);
+    	}
+    }
+	
+	tr {
+        border-top: 1px solid var(--lightGrayColor);
+		
+		&:first-child {
+			border: none;
+		}
+	}
 
     th {
         vertical-align: middle;
@@ -267,7 +294,6 @@ table {
     overflow-x: hidden;
 	
 	&::-webkit-scrollbar-thumb {
-	    border-radius: var(--bdrs);
 	    background-color: transparent;
 	}
 

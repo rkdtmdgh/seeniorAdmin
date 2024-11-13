@@ -41,8 +41,10 @@ function modalContent(formName, contentFunction) {
 							oninput="setTextLimit(this, 'short')"
 						></textarea>
 						
-						<div id="text_limit">
-	        				<span id="current_size">0</span> / <span id="max_size">250 byte</span>
+						<div class="table_info">
+							<div id="text_limit">
+		        				<span id="current_size">0</span> / <span id="max_size">250 byte</span>
+		        			</div>
 	        			</div>
 	        			
 	        			<div class="btn_list">

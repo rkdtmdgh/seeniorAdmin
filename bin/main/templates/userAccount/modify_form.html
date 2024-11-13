@@ -26,7 +26,7 @@
 	                    
 	                    <div class="profile_thumbnail_wrap">
 	           				<div class="profile_thumbnail_container">
-	           					<img alt="profile thumbnail" class="profile_thumbnail" th:src="${
+	           					<img alt="profile thumbnail" class="profile_thumbnail_img" th:src="${
 	           						userAccountDto.u_profile_img == null ? 
 	           							'/image/images/basic_profile_img.jpg' 
            							:
@@ -204,21 +204,21 @@
 		                                </tr>
 	                                </tbody>
 	                            </table>
-	
-	                            <div class="btn_list">
-	                            	<div th:onclick="delSingleData(
-                       			 		[[${userAccountDto.u_name}]], 
-                       			 		'u_no', 
-                       			 		[[${userAccountDto.u_no}]]
-                       			 	)" class="btns delete">삭제</div>	
-		                        		                         		 
-	                                <div class="btn_list">
-	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    <div onclick="putUserAccountModify('user_account_modify_form')" class="btns">수정</div>
-	                                </div>
-	                            </div>
 	                        </div>
 	                    </form>
+
+                        <div class="btn_list_wrap">
+                       		<div th:onclick="delSingleData(
+                 			 		[[${userAccountDto.u_name}]], 
+                 			 		'u_no', 
+                 			 		[[${userAccountDto.u_no}]]
+                 			 	)" class="btns delete">삭제</div>	
+                    		                         		 
+                            <div class="btn_list">
+                                <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
+                            	<div onclick="putUserAccountModify('user_account_modify_form')" class="btns">수정</div>
+                        	</div>
+                   		</div>
 	                </section>
 	            </div>
 	        </div>
