@@ -149,7 +149,7 @@ public class ReportController {
 	public Object searchReportCategoryList(
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
-			@RequestParam(value = "sortValue", required = false, defaultValue = "dc_no") String sortValue,
+			@RequestParam(value = "sortValue", required = false, defaultValue = "brc_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("searchReportCategoryList()");
@@ -213,7 +213,7 @@ public class ReportController {
 	@GetMapping("/info/get_report_list_by_category")
 	public Object getReportListByCategory(
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-			@RequestParam(value = "sortValue", required = false, defaultValue = "d_no") String sortValue,
+			@RequestParam(value = "sortValue", required = false, defaultValue = "br_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "infoNo") int brc_no) {
 		log.info("getReportListByCategory()");
@@ -243,7 +243,7 @@ public class ReportController {
 	public Object searchReportList(
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
-			@RequestParam(value = "sortValue", required = false, defaultValue = "d_no") String sortValue,
+			@RequestParam(value = "sortValue", required = false, defaultValue = "br_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("searchReportList()");
