@@ -56,7 +56,7 @@ function mainContentApiResponse(apiUrl, response, loddingParentEle) {
 		
 	} else {
 		logger.info('데이터가 없거나 유효하지 않습니다.');
-		const maxCols = setTableColumnsNum();
+		const maxCols = setTableColumnsNum(`.${loddingParentEle}`);
 		$contentTable.html(`
 			<tr>
                 <td colspan="${maxCols}">
@@ -170,12 +170,12 @@ async function getSearchListProcess(event, apiUrl, sortValue, order, page) {
 }
 
 // 콘텐츠 리스트 요청 성공 시 처리 로직
-function contentApiResponse(apiUrl, sortValue, order, response, contentTable = '.content_table tbody') {
+function contentApiResponse(apiUrl, sortValue, order, response, contentTable = '.content_table') {
 	const { getListDtos, getListPage, getListCnt, otherData } = mapApiResponseObject(apiUrl, response); // 요청 Api Response 객체 설정
 	const searchPart = response.searchPart || null; // 리턴된 searchPart 값
 	const searchString = response.searchString || null; // 리턴된 searchString 값
 	const isSearch = searchString !== null; // searchString 값이 있을 경우 검색 요청
-	const $contentTable = $(contentTable); // 데이터가 나열될 테이블 요소
+	const $contentTable = $(`${contentTable} tbody`); // 데이터가 나열될 테이블 요소
 	const $pagination = $('.pagination_wrap'); // 페이지 네이션 요소
 	$contentTable.html(''); // 콘텐츠 초기화
 	$pagination.html(''); // 페이지네이션 초기화
@@ -201,7 +201,7 @@ function contentApiResponse(apiUrl, sortValue, order, response, contentTable = '
 		
 	} else {
 		logger.info('데이터가 없거나 유효하지 않습니다.');
-		const maxCols = setTableColumnsNum();
+		const maxCols = setTableColumnsNum(contentTable);
 		$contentTable.html(`
 			<tr>
                 <td colspan="${maxCols}">
