@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.see_nior.seeniorAdmin.disease.mapper.DiseaseMapper;
 import com.see_nior.seeniorAdmin.dto.DiseaseCategoryDto;
 import com.see_nior.seeniorAdmin.dto.DiseaseDto;
+import com.see_nior.seeniorAdmin.enums.SqlResult;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,29 +20,13 @@ import lombok.extern.log4j.Log4j2;
 @Service
 public class DiseaseService {
 	
-	// 질환 카테고리
-	final static public boolean DISEASE_CATEGORY_CREATE_FAIL = false;	// 질환 카테고리 생성 실패
-	final static public boolean DISEASE_CATEGORY_CREATE_SUCCESS = true;	// 질환 카테고리 생성 성공
-	final static public boolean DISEASE_CATEGORY_MODIFY_FAIL = false;	// 질환 카테고리 수정 실패
-	final static public boolean DISEASE_CATEGORY_MODIFY_SUCCESS = true;	// 질환 카테고리 수정 성공
-	final static public boolean DISEASE_CATEGORY_DELETE_FAIL = false;	// 질환 카테고리 삭제 실패
-	final static public boolean DISEASE_CATEGORY_DELETE_SUCCESS = true;	// 질환 카테고리 삭제 성공
-	
-	// 질환
-	final static public boolean DISEASE_CREATE_FAIL = false;			// 질환 생성 실패
-	final static public boolean DISEASE_CREATE_SUCCESS = true;			// 질환 생성 성공
-	final static public boolean DISEASE_MODIFY_FAIL = false;			// 질환 수정 실패
-	final static public boolean DISEASE_MODIFY_SUCCESS = true;			// 질환 수정 성공
-	final static public boolean DISEASE_DELETE_FAIL = false;			// 질환 삭제 실패
-	final static public boolean DISEASE_DELETE_SUCCESS = true;			// 질환 삭제 성공
-	
 	// 페이지네이션 관련
 	private int pageLimit = 10;	// 한 페이지당 보여줄 항목의 개수
 	private int blockLimit = 5;	// 하단에 보여질 페이지 번호의 수
 	
 	final private DiseaseMapper diseaseMapper;
 	
-	// --------------------------------------------- 질환 카테고리
+////////////////////////////////////////////////////////// 질환 카테고리
 
 	// 질환 카테고리명 중복 확인
 	public boolean isDiseaseCategory(String dc_name) {
@@ -59,16 +44,9 @@ public class DiseaseService {
 		int createResult = diseaseMapper.insertNewDiseaseCategory(diseaseCategoryDto);
 		
 		// DB에 입력 실패
-		if (createResult <= 0) {
-			
-			return DISEASE_CATEGORY_CREATE_FAIL;
-			
+		if (createResult <= 0) return SqlResult.FAIL.getValue();
 		// DB에 입력 성공
-		} else {
-			
-			return DISEASE_CATEGORY_CREATE_SUCCESS;
-			
-		}		
+		else return SqlResult.SUCCESS.getValue();	
 		
 	}
 	
@@ -87,8 +65,8 @@ public class DiseaseService {
 	}
 	
 	// 페이지에 따른 질환 카테고리 리스트 가져오기
-	public Map<String, Object> getCategoryListWithPage(int page, String sortValue, String order) {
-		log.info("getCategoryListWithPage()");
+	public Map<String, Object> getDiseaseCategoryListWithPage(int page, String sortValue, String order) {
+		log.info("getDiseaseCategoryListWithPage()");
 		
 		int pagingStart = (page - 1) * pageLimit;
 		
@@ -105,6 +83,7 @@ public class DiseaseService {
 		pagingList.put("diseaseCategoryDtos", diseaseCategoryDtos);
 		
 		return pagingList;
+		
 	}
 	
 	// 질환 카테고리의 총 페이지 개수 구하기
@@ -154,16 +133,9 @@ public class DiseaseService {
 		int modifyResult = diseaseMapper.updateDiseaseCategory(diseaseCategoryDto);
 		
 		// DB에 입력 실패
-		if (modifyResult <= 0) {
-			
-			return DISEASE_CATEGORY_MODIFY_FAIL;
-			
+		if (modifyResult <= 0) return SqlResult.FAIL.getValue();
 		// DB에 입력 성공
-		} else {
-			
-			return DISEASE_CATEGORY_MODIFY_SUCCESS;
-			
-		}
+		else return SqlResult.SUCCESS.getValue();
 	
 	}
 	
@@ -174,16 +146,9 @@ public class DiseaseService {
 		int deleteResult = diseaseMapper.deleteDiseaseCategory(dc_no);
 		
 		// DB에 입력 실패
-		if (deleteResult <= 0) {
-			
-			return DISEASE_CATEGORY_DELETE_FAIL;
-		
+		if (deleteResult <= 0) return SqlResult.FAIL.getValue();
 		// DB에 입력 성공
-		} else {
-			
-			return DISEASE_CATEGORY_DELETE_SUCCESS;
-			
-		}
+		else return SqlResult.SUCCESS.getValue();
 		
 	}
 	
@@ -248,7 +213,7 @@ public class DiseaseService {
 	}
 	
 	
-	// --------------------------------------------- 질환
+////////////////////////////////////////////////////////// 질환
 	
 	// 질환명 중복 확인
 	public boolean isDisease(String d_name, int d_no) {
@@ -290,15 +255,9 @@ public class DiseaseService {
 		int createResult = diseaseMapper.insertNewDisease(diseaseDto);
 		
 		// DB에 입력 실패
-		if (createResult <= 0) {
-			return DISEASE_CREATE_FAIL;
-			
+		if (createResult <= 0) return SqlResult.FAIL.getValue();
 		// DB에 입력 성공
-		} else {
-			
-			return DISEASE_CREATE_SUCCESS;
-		}
-	
+		else return SqlResult.SUCCESS.getValue();
 		
 	}
 	
@@ -351,6 +310,7 @@ public class DiseaseService {
 		diseaseListPageNum.put("pageLimit", pageLimit);
 		
 		return diseaseListPageNum;
+		
 	}
 	
 	// 페이지에 따른 질환 가져오기(카테고리별 질환)
@@ -419,19 +379,12 @@ public class DiseaseService {
 	public boolean modifyConfirm(DiseaseDto diseaseDto) {
 		log.info("modifyConfirm");
 			
-			int modifyResult = diseaseMapper.updateDisease(diseaseDto);
-			
-			// DB에 입력 실패
-			if (modifyResult <= 0) {
-				
-				return DISEASE_MODIFY_FAIL;
-				
-			// DB에 입력 성공
-			} else {
-				
-				return DISEASE_MODIFY_SUCCESS;
-				
-			}
+		int modifyResult = diseaseMapper.updateDisease(diseaseDto);
+		
+		// DB에 입력 실패
+		if (modifyResult <= 0) return SqlResult.FAIL.getValue();
+		// DB에 입력 성공
+		else return SqlResult.SUCCESS.getValue();
 		
 	}
 
@@ -458,11 +411,11 @@ public class DiseaseService {
 	   } catch (Exception e) {
 		   log.error("deleteConfirm Error : {}",e);
 		   
-		   return DISEASE_DELETE_FAIL;
+		   return SqlResult.FAIL.getValue();
 		   
 	   }
 	   
-	   return DISEASE_DELETE_SUCCESS;
+	   return SqlResult.SUCCESS.getValue();
 	
 	}
 
