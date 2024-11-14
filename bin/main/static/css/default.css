@@ -202,41 +202,6 @@
     }
 }
 
-.connect_vertical {
-	position: relative;
-	
-	&::before {
-		content: '';
-		display: inline-block;
-		width: 1px;
-		height: calc(100% - 90px);
-		border-right: 1px solid var(--middleGrayColor);
-		position: absolute;
-		left: 32px;
-		top: 56px;
-		z-index: 1;
-	}
-}
-
-.connect_horizontal {
-	position: relative;
-	
-	&::before {
-		content: '';
-		display: inline-block;
-		width: 14px;
-		height: 14px;
-		border-width: 0 0 1px 1px;
-		border-style: solid;
-		border-color: var(--middleGrayColor);
-		border-bottom-left-radius: 75%;
-		position: absolute;
-		top: -4px;
-		left: -24px;
-		z-index: 1;
-	}
-}
-
 /* search */
 .search_input_inner {
 	font-size: var(--smallFontSize);

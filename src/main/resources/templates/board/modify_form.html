@@ -101,10 +101,9 @@
 	                                        	<p th:if="${boardPostsDto.bp_account != 'admin'}" class="table_title">이름<span class='divider'></span>닉네임</p>
 	                                        </th>
 		                                	<td class="disabled">
-		                                		<div class="table_info table_flex_info">
-			                                		<p th:if="${boardPostsDto.bp_account == 'admin'}" th:text="${boardPostsDto.adminAccountDto.a_name}"></p>
-			                                		<img src="/image/icons/manager.png" alt="관리자" class="table_info_icons"
-                               						th:if="${boardPostsDto.bp_account == 'admin'}">
+		                                		<div class="table_info table_flex_info" th:if="${boardPostsDto.bp_account == 'admin'}">
+			                                		<p th:text="${boardPostsDto.adminAccountDto.a_name}"></p>
+			                                		<img src="/image/icons/manager.png" alt="관리자" class="table_info_icons">
                              					</div>	
 	                                					
 	                                        	<p th:if="${boardPostsDto.bp_account != 'admin'}" class="table_info" th:utext="|
@@ -162,7 +161,7 @@
 								    
 						    		<div class="comment_container sc">
 						    			<div class="comment_list" data-type="comment">
-							    			<div class="comment_content connect_vertical">							    				
+							    			<div class="comment_content">							    				
 					    						<div class="comment_info">
 						    						<div class="reply_top_info">
 						    							<a href="" class="reply_profile">
@@ -191,7 +190,7 @@
 						    								</div>
 						    							</div>
 						    							
-						    							<div class="reply_info_btns connect_horizontal">
+						    							<div class="reply_info_btns">
 						    								<div class="text_btns">댓글 달기</div>
 						    								<span class="text_btns">답글 6개 보기/숨기기</span>
 					    								</div>
@@ -228,7 +227,7 @@
 								    								</div>
 								    							</div>
 							    								
-							    								<div class="reply_info_btns connect_horizontal">
+							    								<div class="reply_info_btns">
 								    								<div class="text_btns">댓글 달기</div>
 							    								</div>
 							    							</div>
@@ -264,7 +263,7 @@
 								    								</div>
 								    							</div>
 							    								
-							    								<div class="reply_info_btns connect_horizontal">
+							    								<div class="reply_info_btns">
 								    								<div class="text_btns">댓글 달기</div>
 							    								</div>
 							    							</div>
@@ -300,7 +299,7 @@
 								    								</div>
 								    							</div>
 							    								
-							    								<div class="reply_info_btns connect_horizontal">
+							    								<div class="reply_info_btns">
 								    								<div class="text_btns">댓글 달기</div>
 							    								</div>
 							    							</div>
@@ -336,7 +335,7 @@
 								    								</div>
 								    							</div>
 							    								
-							    								<div class="reply_info_btns connect_horizontal">
+							    								<div class="reply_info_btns">
 								    								<div class="text_btns">댓글 달기</div>
 							    								</div>
 							    							</div>
@@ -347,7 +346,7 @@
 				    							</div>
 							    			</div>
 							    			
-							    			<div class="comment_content connect_vertical">							    				
+							    			<div class="comment_content">							    				
 					    						<div class="comment_info">
 						    						<div class="reply_top_info">
 						    							<a href="" class="reply_profile">
@@ -376,7 +375,7 @@
 						    								</div>
 						    							</div>
 					    								
-					    								<div class="reply_info_btns connect_horizontal">
+					    								<div class="reply_info_btns">
 						    								<div class="text_btns">댓글 달기</div>
 						    								<span class="text_btns">답글 6개 보기/숨기기</span>
 					    								</div>
@@ -413,7 +412,7 @@
 								    								</div>
 								    							</div>
 							    								
-							    								<div class="reply_info_btns connect_horizontal">
+							    								<div class="reply_info_btns">
 								    								<div class="text_btns">댓글 달기</div>
 							    								</div>
 							    							</div>
@@ -424,7 +423,7 @@
 				    							</div>
 							    			</div>
 							    			
-							    			<div class="comment_content connect_vertical">							    				
+							    			<div class="comment_content">							    				
 					    						<div class="comment_info">
 						    						<div class="reply_top_info">
 						    							<a href="" class="reply_profile">
@@ -453,7 +452,7 @@
 						    								</div>
 						    							</div>
 					    								
-					    								<div class="reply_info_btns connect_horizontal">
+					    								<div class="reply_info_btns">
 						    								<div class="text_btns">댓글 달기</div>
 						    								<span class="text_btns">답글 6개 보기/숨기기</span>
 					    								</div>
@@ -490,7 +489,7 @@
 								    								</div>
 								    							</div>
 							    								
-							    								<div class="reply_info_btns connect_horizontal">
+							    								<div class="reply_info_btns">
 								    								<div class="text_btns">댓글 달기</div>
 							    								</div>
 							    							</div>
