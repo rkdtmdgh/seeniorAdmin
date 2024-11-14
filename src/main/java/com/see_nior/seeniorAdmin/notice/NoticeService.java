@@ -1,6 +1,7 @@
 package com.see_nior.seeniorAdmin.notice;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -376,7 +377,7 @@ public class NoticeService {
 	}
 	
 	// 전체 공지사항 삭제(is_deleted 값 update) 한달 후 img 저장 폴더 삭제 스케쥴러
-	@Scheduled(cron = "0 0 0 * * ?")
+	@Scheduled(cron = "0 1 0 * * ?")
 	public void deleteImgFolder() {
 		log.info("deleteImgFolder()");
 		
@@ -385,7 +386,21 @@ public class NoticeService {
 		
 		if (dleteNoticeDots.size() != 0) {
 			
+			List<String> deleteFolderPaths = new ArrayList();
 			
+			for (int i = 0; i < dleteNoticeDots.size(); i++) {
+				
+				String folderPath = ImgUrlPath.NOTICE_FILE_PATH.getValue();
+				folderPath += dleteNoticeDots.get(i).getDn_dir_name();
+				deleteFolderPaths.add(folderPath);
+				
+			}
+			
+			ResponseEntity<String> deleteFolders =
+					imageFileService.deleteFolders(deleteFolderPaths);
+			
+		} else {
+			log.info("dleteNoticeDots is null");
 			
 		}
 		
