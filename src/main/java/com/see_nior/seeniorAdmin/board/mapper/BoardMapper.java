@@ -69,6 +69,8 @@ public interface BoardMapper {
 
 	List<DeleteBoardPostsDto> getDeleteBoardPostsValid();
 
+	int updateDeleteBoardPostsIsDeleted(int dbp_no);
+
 	
 
 }

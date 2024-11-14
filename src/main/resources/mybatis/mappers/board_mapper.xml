@@ -98,6 +98,7 @@
 		<result column="dbp_dir_name" property="dbp_dir_name" />
 		<result column="dbp_is_valid" property="dbp_is_valid" />
 		<result column="dbp_is_deleted" property="dbp_is_deleted" />
+		<result column="dbp_is_recovered" property="dbp_is_recovered" />
 		<result column="dbp_request_time" property="dbp_request_time" />
 		<collection property="deleteBoardPostsDto" resultMap="DeleteBoardPostsDto" />
 	</resultMap>
@@ -545,7 +546,22 @@
 			DBP_IS_VALID = 0
 		AND
 			DBP_IS_DELETED = 1	
+		AND
+			DBP_IS_RECOVERED = 1
+		AND 
+			DBP_DIR_NAME IS NOT NULL
 	
 	</select>
+	
+	<update id="updateDeleteBoardPostsIsDeleted" parameterType="Integer">
+		
+		UPDATE 
+			DELETE_BOARD_POSTS
+    	SET 
+    		DBP_IS_DELETED = 0
+    	WHERE 
+    		DBP_NO = #{dbp_no};
+		
+	</update>
 	 
 </mapper>

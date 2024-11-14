@@ -16,6 +16,7 @@ public class DeleteBoardPostsDto {
 	private String dbp_dir_name;
 	private boolean dbp_is_valid;
 	private boolean dbp_is_deleted;
+	private boolean dbp_is_recovered;	
 	private String dbp_request_time;
 	
 }
