@@ -136,34 +136,34 @@
 		                                </tr>
 		                            </tbody>
 	                            </table>
-	
-	                            <div th:classappend="${
-	                               		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
-	                               		(qnaNoticeDto.adminAccountDto.a_id !=  #authentication.name) ?
-	                               		'f_jc_right' : ''
-                                	}" class="btn_list">
-                                	
-	                            	<div th:if="${
-											#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
-											(qnaNoticeDto.adminAccountDto.a_id ==  #authentication.name)
-										}"
-										th:onclick="delSingleData(
-											'QnA 공지 사항',
-											'bqn_no',
-											[[${qnaNoticeDto.bqn_no}]])" class="btns delete">삭제</div>
-		                        		 
-	                                <div class="btn_list">
-	                                    <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-	                                    
-	                                    <div th:if="${
-	                                    		#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
-		                                    	(qnaNoticeDto.adminAccountDto.a_id ==  #authentication.name)
-	                                    	}"
-	                                    	onclick="putQnaNoticeModify('qna_notice_modify_form')" class="btns">수정</div>
-	                                </div>
-	                            </div>
-	                        </div>
+                            </div>
 	                    </form>
+
+                        <div th:classappend="${
+                           		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
+                           		(qnaNoticeDto.adminAccountDto.a_id !=  #authentication.name) ?
+                           		'f_jc_right' : ''
+                           	}" class="btn_list_wrap">
+                           	
+                        	<div th:if="${
+								#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
+								(qnaNoticeDto.adminAccountDto.a_id ==  #authentication.name)
+							}"
+							th:onclick="delSingleData(
+								'QnA 공지 사항',
+								'bqn_no',
+								[[${qnaNoticeDto.bqn_no}]])" class="btns delete">삭제</div>
+                     		 
+                            <div class="btn_list">
+                                <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
+                                
+                                <div th:if="${
+                                		#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
+                                 	(qnaNoticeDto.adminAccountDto.a_id ==  #authentication.name)
+                                	}"
+                                	onclick="putQnaNoticeModify('qna_notice_modify_form')" class="btns">수정</div>
+                            </div>
+                        </div>
 	                </section>
 	            </div>
 	        </div>

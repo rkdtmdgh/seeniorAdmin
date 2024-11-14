@@ -120,23 +120,23 @@
 		                                				oninput="setTextareaAutoHeight(this)" 
 		                                				onkeyup="setTextLimit(this)"
 		                                				onblur="validateEmpty(this, '질환 / 질병 정보')"></textarea>
-	                                				<div id="text_limit">
+	                                				<span id="text_limit">
 		                                				<span id="current_size"></span> / <span id="max_size"></span>
-		                                			</div>
+		                                			</span>
 	                                			</label>
 	                                        </td>
 		                                </tr>
 		                            </tbody>
 		                        </table>
-		                        
-		                        <div class="btn_list f_jc_right">
-	                                <div class="btn_list">
-	                                    <div onclick="history.back();" class="btns cancel">뒤로가기</div>
-	                                    <div onclick="postDiseaseCreate('disease_reg_form')" class="btns">등록</div>
-	                                </div>
-	                            </div>
 		                    </div>
 	                    </form>
+                        
+                        <div class="btn_list_wrap f_jc_right">
+                        	<div class="btn_list">
+                                <div onclick="history.back();" class="btns cancel">뒤로가기</div>
+                            	<div onclick="postDiseaseCreate('disease_reg_form')" class="btns">등록</div>
+                            </div>
+                        </div>
 					</section>
                 </div>
             </div>

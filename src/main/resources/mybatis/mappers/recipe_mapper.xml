@@ -205,7 +205,7 @@
 		FROM 
 			RECIPE 
 		ORDER BY 
-			RCP_PAT2 DESC
+			RCP_PAT2 ASC
 	
 	</select>
 	
@@ -221,7 +221,7 @@
 		ORDER BY 
 			${sortValue} ${order} 
 		LIMIT 
-			#{start}, #{limit}		
+			#{start}, #{limit} 	
 	
 	</select>
 	

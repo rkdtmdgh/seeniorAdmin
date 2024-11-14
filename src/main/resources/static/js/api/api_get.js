@@ -309,12 +309,14 @@ function mapApiResponseObject(apiUrl, response) {
 			getListDtos = response.recipeDtos;
 			getListPage = response.searchRecipeListPageNum;
 			getListCnt = response.searchRecipeListPageNum.searchRecipeListCnt;
+			otherData = `마지막 업데이트 ${response.reg_date}`;
 			break;	
 			
 		case '/recipe/info/get_recipe_list_by_type': // 식단 정보 관리 음식 종류별 데이터
 			getListDtos = response.recipeDtos;
 			getListPage = response.recipeListByTypePageNum;
 			getListCnt = response.recipeListByTypePageNum.recipeListByTypeCnt;
+			otherData = `마지막 업데이트 ${response.reg_date}`;
 			break;
 			
 		case '/video/info/get_video_list': // 영상 정보 관리
@@ -438,21 +440,21 @@ function mapApiResponseObject(apiUrl, response) {
 			getListDtos = response.reportDtos;
 			getListPage = response.reportListPageNum;
 			getListCnt = response.reportListPageNum.reportListCnt;
-			otherData = response.unresultReportCnt > 0 ? `처리 대기 ${response.unresultReportCnt}` : null;
+			otherData = response.unresultedReportCnt > 0 ? `처리 대기 ${response.unresultedReportCnt}` : null;
 			break;
 			
 		case '/report/info/search_report_list': // 신고 관리 검색
 			getListDtos = response.reportDtos;
 			getListPage = response.searchReportListPageNum;
 			getListCnt = response.searchReportListPageNum.searchReportListCnt;
-			otherData = response.unresultSearchReportCnt > 0 ? `처리 대기 ${response.unresultSearchReportCnt}` : null;
+			otherData = response.unresultedSearchReportCnt > 0 ? `처리 대기 ${response.unresultedSearchReportCnt}` : null;
 			break;	
 			
 		case '/report/info/get_report_list_by_category': // 신고 유형별 데이터
 			getListDtos = response.reportDtos;
 			getListPage = response.reportListByCategoryPageNum;
 			getListCnt = response.reportListByCategoryPageNum.reportListCnt;
-			otherData = response.unresultCategoryReportCnt > 0 ? `처리 대기 ${response.unresultCategoryReportCnt}` : null;
+			otherData = response.unresultedReportCntByCategory > 0 ? `처리 대기 ${response.unresultedReportCntByCategory}` : null;
 			break;	
 			
 		case '/advertisement/info/get_advertisement_list': // 광고 관리
@@ -1126,7 +1128,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            </td>
 		            <td>
 		                <a href="/report/info/report_list_form?sortType=2&infoNo=${data.brc_no}&sortValue=br_state&order=asc" class="table_info">
-		                	${data.brc_item_cnt} / ${data.brc_unresult_cnt}
+		                	${data.brc_item_cnt} / ${data.brc_unresulted_cnt}
 		                </a>
 		            </td>
 		            <td>
@@ -1143,20 +1145,20 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			tableTrContent = `
 				<tr>
 		            <td>
-		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info">${listIndex}</a>
+		                <a href="/report/info/result_form?br_no=${data.br_no}&br_post_no=${data.br_post_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info">${data.reportCategoryDto.bqc_name}</a>
+		                <a href="/report/info/result_form?br_no=${data.br_no}&br_post_no=${data.br_post_no}" class="table_info">${data.reportCategoryDto.brc_name}</a>
 		            </td>
 		            <td class="va_m">
-		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="flex_area">
+		                <a href="/report/info/result_form?br_no=${data.br_no}&br_post_no=${data.br_post_no}" class="flex_area">
 		                	<span class="state icon ${data.br_state === 1 ? 'off' : ''}">
 		                		${data.br_state === 1 ? '대기' : '처리완료'}
 		                	</span>
 		                </a>
 		            </td>
 					<td>
-		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info table_flex_info">
+		                <a href="/report/info/result_form?br_no=${data.br_no}&br_post_no=${data.br_post_no}" class="table_info table_flex_info">
 		                	<p class="info_text">${data.br_title}</p>
 		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
 		                </a>
@@ -1165,10 +1167,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/user_account/info/modify_form?u_no=${data.userAccountDto.u_no}" class="table_info">${data.userAccountDto.u_name}</a>
 		            </td>
 					<td>
-		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info">${setFormatDate(data.br_reg_date)}</a>
+		                <a href="/report/info/result_form?br_no=${data.br_no}&br_post_no=${data.br_post_no}" class="table_info">${setFormatDate(data.br_reg_date)}</a>
 		            </td>
 		            <td>
-		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info">${setFormatDate(data.br_mod_date)}</a>
+		                <a href="/report/info/result_form?br_no=${data.br_no}&br_post_no=${data.br_post_no}" class="table_info">${setFormatDate(data.br_mod_date)}</a>
 		            </td>
 		        </tr>
 			`;
