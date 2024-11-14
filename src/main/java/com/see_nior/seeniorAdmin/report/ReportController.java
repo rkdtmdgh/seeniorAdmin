@@ -271,7 +271,7 @@ public class ReportController {
 	// ------------------------------------------------------------------- 신고 결과
 	
 	// 신고 처리하기 양식
-	@GetMapping("/info/detail_form")
+	@GetMapping("/info/result_form")
 	public String detailForm(
 			@RequestParam(value = "br_no") int br_no, 
 			@RequestParam(value = "br_post_no") int br_post_no, 
