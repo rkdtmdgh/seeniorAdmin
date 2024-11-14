@@ -1145,20 +1145,20 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			tableTrContent = `
 				<tr>
 		            <td>
-		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info">${listIndex}</a>
+		                <a href="/report/info/result_form?br_no=${data.br_no}&br_post_no=${data.br_post_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info">${data.reportCategoryDto.brc_name}</a>
+		                <a href="/report/info/result_form?br_no=${data.br_no}&br_post_no=${data.br_post_no}" class="table_info">${data.reportCategoryDto.brc_name}</a>
 		            </td>
 		            <td class="va_m">
-		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="flex_area">
+		                <a href="/report/info/result_form?br_no=${data.br_no}&br_post_no=${data.br_post_no}" class="flex_area">
 		                	<span class="state icon ${data.br_state === 1 ? 'off' : ''}">
 		                		${data.br_state === 1 ? '대기' : '처리완료'}
 		                	</span>
 		                </a>
 		            </td>
 					<td>
-		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info table_flex_info">
+		                <a href="/report/info/result_form?br_no=${data.br_no}&br_post_no=${data.br_post_no}" class="table_info table_flex_info">
 		                	<p class="info_text">${data.br_title}</p>
 		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
 		                </a>
@@ -1167,10 +1167,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/user_account/info/modify_form?u_no=${data.userAccountDto.u_no}" class="table_info">${data.userAccountDto.u_name}</a>
 		            </td>
 					<td>
-		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info">${setFormatDate(data.br_reg_date)}</a>
+		                <a href="/report/info/result_form?br_no=${data.br_no}&br_post_no=${data.br_post_no}" class="table_info">${setFormatDate(data.br_reg_date)}</a>
 		            </td>
 		            <td>
-		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info">${setFormatDate(data.br_mod_date)}</a>
+		                <a href="/report/info/result_form?br_no=${data.br_no}&br_post_no=${data.br_post_no}" class="table_info">${setFormatDate(data.br_mod_date)}</a>
 		            </td>
 		        </tr>
 			`;
