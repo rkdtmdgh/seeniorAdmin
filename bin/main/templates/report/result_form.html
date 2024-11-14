@@ -51,6 +51,15 @@
 		                                    <td>
 		                                    	<p class="table_info" th:text="${reportDto.reportCategoryDto.brc_name}"></p>
 		                                    </td>
+		                                    
+		                                    <th><p class="table_title">등록일<span class="divider"></span>수정일</p></th>
+	                                        <td>
+	                                        	<p class="table_info" th:utext="|
+	                                        		${reportDto.br_reg_date}
+	                                        		<span class='divider'></span>
+	                                        		${reportDto.br_mod_date}
+	                                        	|"></p>
+	                                        </td>
 		                                </tr>
 		                                
 		                                <tr>
@@ -75,17 +84,6 @@
 	                                    		|"></p>
 		                                    </td>
 		                                </tr>
-		                                
-		                                <tr>
-		                                	<th><p class="table_title">등록일<span class="divider"></span>수정일</p></th>
-	                                        <td colspan="3">
-	                                        	<p class="table_info" th:utext="|
-	                                        		${reportDto.br_reg_date}
-	                                        		<span class='divider'></span>
-	                                        		${reportDto.br_mod_date}
-	                                        	|"></p>
-	                                        </td>
-										</tr>
 		                                
 		                                <tr>
 		                                	<th><p class="table_title">신고 내용</p></th>
