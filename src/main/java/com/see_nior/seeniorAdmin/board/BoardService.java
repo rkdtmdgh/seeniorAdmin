@@ -840,7 +840,7 @@ public class BoardService {
 	
 	//게시물 삭제 요청 30일 경과 후 이미지 삭제요청
 	//초 분 시 일 월 요일 년 (각 자리에 *는 모든 값을 의미)
-	@Scheduled(cron = "0 20 15 * * ?") // 매일 자정 실행	
+	@Scheduled(cron = "0 1 0 * * ?") // 매일 자정 실행	
 	public void deleteFolderRequest() {
 		log.info("deleteFolderRequest()");
 		

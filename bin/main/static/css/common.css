@@ -11,12 +11,13 @@
     --baseFontFamily: 'Pretendard Variable';
     --subFontSize: 0.9em;
     --smallFontSize: 0.75em;
+    --middleFontSize: 0.8em;
     --menuFontSize: 0.95em;
     --titleFontSize: 1.3em;
-    --tableTextSize: 0.8em;
     --basicLineHeight: 1.4;
     --titleLineHeight: 1.7;
     --etcFontSize: 12px;
+    --semiBold: 500;
     --bold: 600;
     --thin: 300;
 
@@ -24,14 +25,15 @@
     --primaryColor: #1291AD; /* primary */
     --blackColor: #2B2B2B; /* black */
     --whiteColor: #FFF;
-    --grayColor: #555; /* gray */
-    --middleGrayColor: #C1C1C1; /* middle gray */
+    --grayColor: #767676; /* gray */
+    --middleGrayColor: #989898; /* middle gray */
     --lightGrayColor: #E8E8E8; /* light gray */
-    --lightBlueColor: #F3F6FB; /* blue */ 
+    --lightBlueColor: #F6F9FF; /* blue */ 
     --greenColor: #96c970; /* green */
     --yellowColor: #FFC73C; /* yellow */
     --redColor: #FF5B45; /* red */
     --optionColor: #1967D2;
+    --disabled: #545454;
 
     /* background color palette */
     --bgColor: #F3F9F9; /* default */
@@ -45,6 +47,7 @@
     --sideMenuWidth: 270px;
     --signFormWidth: 340px;
     --iconsWidth: 20px;
+    --smallIconsWidth: 15px;
     --bigIconsWidth: 45px;
     --profileThumbWidth: 65px;
     --smallThumbWidth: 30px;
@@ -53,10 +56,11 @@
     --contentSubThumbWidth: 200px;
     
     --headerHeight: 70px;
-    --tableTextareaHeight: 150px;
-    --tablecontentHeight: 500px;
+    --shortContentHeight: 150px;
+    --longContentHeight: 350px;
+    --contentMaxHeight: 525px;
     --contentThumbHeight: 350px;
-    --borderTextareaHeight: 100px;
+    --borderTextareaHeight: 103px;
 
     --innerPadding: 50px;
     --signFormInnerPadding: 30px;
@@ -136,7 +140,6 @@ input[type="text"], input[type="password"], input[type="date"], input[type="numb
     font-size: inherit;
     font-weight: inherit;
     border: none;
-    color: var(--grayColor);
     outline: none;
 }
 
@@ -175,6 +178,7 @@ input::placeholder, textarea::placeholder {
 input:disabled, input[type="text"]:read-only {
 	cursor: not-allowed;
 	background-color: unset;
+	color: var(--disabled);
 }
 
 input:-webkit-autofill,
@@ -203,21 +207,46 @@ table {
     table-layout: fixed;
     border-collapse: collapse;
     text-align: center;
-    font-size: var(--tableTextSize);
-
-    tr {
-        border-bottom: 1px solid var(--lightGrayColor);
+    font-size: var(--middleFontSize);
+    
+    thead {
+    	border-bottom: 1px solid var(--lightGrayColor);
+    	
+    	th:first-child {
+    		border-radius: var(--bdrs) 0 0 0;
+    	}
+    	
+    	th:last-child {
+    		border-radius: 0 var(--bdrs) 0 0;
+    	}
     }
+    
+    tbody {
+    	tr:first-child th {
+    		border-radius: var(--bdrs) 0 0 0;
+    	}
+    	
+    	tr:last-child th {
+    		border-radius: 0 0 0 var(--bdrs);
+    	}
+    }
+	
+	tr {
+        border-top: 1px solid var(--lightGrayColor);
+		
+		&:first-child {
+			border: none;
+		}
+	}
 
     th {
         vertical-align: middle;
-        font-weight: var(--bold);
+        font-weight: var(--semiBold);
         background-color: var(--tableTitleBgColor);
     }
 
     td {
         vertical-align: top;
-        color: var(--grayColor);
         border-right: 1px solid var(--lightGrayColor);
 
         &:last-child {
@@ -267,7 +296,6 @@ table {
     overflow-x: hidden;
 	
 	&::-webkit-scrollbar-thumb {
-	    border-radius: var(--bdrs);
 	    background-color: transparent;
 	}
 

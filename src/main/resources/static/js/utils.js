@@ -12,14 +12,14 @@ function setInputFocus(name) {
 	}
 }
 
-// 디바운싱(리딩 엣지 방식) 상태 관리 유틸 함수 
-const debounceMap = {}; // 각 함수별로 관리되는 디바운스 상태 객체
-function debounceAsync(func, key) { // 비동기 방식 디바운싱 처리
+// 디바운싱(리딩 엣지 방식) 중복 요청 방지 유틸 함수 
+const debounceAsyncMap = {}; // 각 함수별로 관리되는 디바운스 상태 객체
+function debounceAsync(func, key) { // 비동기 요청 디바운스 처리
 	return async function(...args) { // 모든 인자
-		if(debounceMap[key]) return; // key에 해당하는 함수가 실행 중일 경우 요청 무시(중복 요청 방지) 
+		if(debounceAsyncMap[key]) return; // key에 해당하는 함수가 실행 중일 경우 요청 무시(중복 요청 방지) 
 		
 		// 요청 시작
-		debounceMap[key] = true; // key에 해당하는 함수 디바운싱 상태 처리 추가
+		debounceAsyncMap[key] = true; // key에 해당하는 함수 디바운싱 상태 처리 추가
 		logger.info(`'${key}' debounceAsync() start`);
 		
 		try {
@@ -27,9 +27,32 @@ function debounceAsync(func, key) { // 비동기 방식 디바운싱 처리
 			
 		} finally {
 			// 요청 종료
-			debounceMap[key] = false; // key에 해당하는 함수 디바운싱 상태 제거 
+			debounceAsyncMap[key] = false; // key에 해당하는 함수 디바운싱 상태 제거 
 			logger.info(`'${key}' debounceAsync() end`);
 		}
+	}
+}
+
+// 디바운싱(트레일링 엣지 방식) 중복 요청 방지 유틸 함수 
+const debounceTrailingMap = {}; // 각 함수별로 관리되는 디바운스 상태 객체
+function debounceTrailing(func, key, delay = 300) { // 실시간 검색, 무한 스크롤 요청 디바운스 처리
+	return async function(...args) { // 모든 인자
+		if(debounceTrailingMap[key]) {
+			clearTimeout(debounceTrailingMap[key]); // key에 해당하는 함수가 실행 중일 경우 제거 후 코드 진행
+			logger.info(`'${key} debounceTrailing() reset'`);			
+		} 
+		
+		// 새 타이머 설정
+		debounceTrailingMap[key] = setTimeout(async () => {
+			try {
+				await func(...args); // delay 후 요청 함수 실행
+				
+			} finally {
+				// 요청 종료
+				debounceTrailingMap[key] = false; // key에 해당하는 함수 디바운싱 상태 제거 
+				logger.info(`'${key}' debounceTrailing() end`);
+			}
+		}, delay); 
 	}
 }
 
@@ -615,14 +638,15 @@ function setAccountModifyForm(data) {
 						}						
                     </tbody>
                 </table>
-
-                <div class="btn_list f_jc_right">
-                    <div class="btn_list">
-                        <div onclick="putMyAccountSubmit('modify_form')" class="btns">수정</div>
-                    </div>
-                </div>
             </div>
         </form>
+        
+		<div class="btn_list_wrap f_jc_right">
+            <div class="btn_list">
+                <div onclick="putMyAccountSubmit('modify_form')" class="btns">수정</div>
+            </div>
+        </div>
+        
 	`;
 	
 	return dataFormContent;
