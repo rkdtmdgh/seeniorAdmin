@@ -308,8 +308,11 @@ public class RecipeService {
 		pagingParams.put("order", order);
 		pagingParams.put("rcp_pat2", rcp_pat2);
 		
+		Date reg_date = recipeMapper.getRecipeTableCreateTime();
+		
 		List<RecipeDto> recipeDtos = recipeMapper.getRecipeListByTypeWithPage(pagingParams);
 		pagingList.put("recipeDtos", recipeDtos);
+		pagingList.put("reg_date", reg_date);
 		
 		return pagingList;
 		
@@ -362,8 +365,11 @@ public class RecipeService {
 		pagingParams.put("sortValue", sortValue);
 		pagingParams.put("order", order);
 		
+		Date reg_date = recipeMapper.getRecipeTableCreateTime();
+		
 		List<RecipeDto> searchRecipeDtos = recipeMapper.getSearchRecipe(pagingParams);
 		pagingList.put("recipeDtos", searchRecipeDtos);
+		pagingList.put("reg_date", reg_date);
 		
 		return pagingList;
 		

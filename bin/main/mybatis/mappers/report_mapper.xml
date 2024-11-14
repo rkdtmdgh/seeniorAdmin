@@ -200,7 +200,7 @@
 	</select>
 	
 	<!-- 신고 카테고리 수정 -->
-	<update id="updateDiseaseCategory"
+	<update id="updateReportCategory"
 			parameterType="ReportCategoryDto">
 			
 		UPDATE 
@@ -218,7 +218,7 @@
 			parameterType="Integer">
 	
 		UPDATE 
-			BORAD_REPORT_CATEGORY 
+			BOARD_REPORT_CATEGORY 
 		SET 
 			BRC_IS_DELETED = 0, 
 			BRC_MOD_DATE = NOW() 
@@ -443,7 +443,7 @@
 	
 	<!-- 페이지 번호에 따른 신고 리스트들 가져오기 (검색한 신고) -->
 	<select id="getSearchReport"
-			parameterType="Integer"
+			parameterType="Map"
 			resultMap="ReportDto">
 	
 		SELECT 
