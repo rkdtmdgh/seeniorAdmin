@@ -840,13 +840,13 @@ public class BoardService {
 	
 	//게시물 삭제 요청 30일 경과 후 이미지 삭제요청
 	//초 분 시 일 월 요일 년 (각 자리에 *는 모든 값을 의미)
-	@Scheduled(cron = "0 0 0 * * ?") // 매일 자정 실행	
+	@Scheduled(cron = "0 1 0 * * ?") // 매일 자정 실행	
 	public void deleteFolderRequest() {
 		log.info("deleteFolderRequest()");
 		
 		List<DeleteBoardPostsDto> deleteBoardPostsDtos = boardMapper.getDeleteBoardPostsValid();  
 		
-		if(deleteBoardPostsDtos.size() != 0) {
+		if(deleteBoardPostsDtos.size() != 0) {//최 상위 조건
 			log.info("deleteBoardPostsDtos: {}",deleteBoardPostsDtos);
 			
 			List<String> deleteFolderPaths = new ArrayList();
@@ -858,12 +858,43 @@ public class BoardService {
 				+"\\"+deleteBoardPostsDtos.get(i).getDbp_dir_name();
 				deleteFolderPaths.add(folderPath);
 			}
-
+			
+			//deletedFolders.getBody() = "1"(성공), "0"(실패 - 폴더 경로가 없음), "-1"(실패 - 이미지 서버 오류)
 			ResponseEntity<String> deletedFolders = imageFileService.deleteFolders(deleteFolderPaths);
-			log.info("deletedFolders: {}",deletedFolders.getBody());
+						
+			if(deletedFolders.getBody().equals("1")) {//두번째 조건
+				log.info("DELETEDFOLDERS SUCCESS!");
+				
+				boolean result = true;
+				int UpdateResult = 0;
+				
+				for(int i = 0; i < deleteBoardPostsDtos.size(); i++) {//반복문 시작
+					
+					if(result) {//반복문 안쪽 첫번째 조건
+						
+						UpdateResult = boardMapper.updateDeleteBoardPostsIsDeleted(deleteBoardPostsDtos.get(i).getDbp_no());
+						
+						if(UpdateResult <= 0) {//반복문 안쪽 두번째 조건
+							result = false;
+						}
+						
+					}else {
+						log.info("updateDeleteBoardPostsIsDeleted() fail!");
+					}//반복문 안쪽 첫번째 조건 끝	
+					
+				}//반복문 끝
+				
+			}else if(deletedFolders.getBody().equals("0")){
+				log.info("FOLDER NAME OR PATH NOT FOUND!!");
+				log.info("response value: {}",deletedFolders.getBody());
+			}else{
+				log.info("FOLDER DELETE FAIL!!");
+				log.info("response value: {}",deletedFolders.getBody());
+			}//두번째 조건 끝
+			
 		}else {
 			log.info("deleteBoardPostsDtos is null: {}",deleteBoardPostsDtos);
-		}
+		}//최 상위 조건 끝
 		
 		
 	}//deleteFolderRequest() END

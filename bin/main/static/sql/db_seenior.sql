@@ -321,8 +321,8 @@ AFTER UPDATE ON BOARD_POSTS
 FOR EACH ROW
 BEGIN
     IF OLD.BP_IS_DELETED = 0 AND NEW.BP_IS_DELETED = 1 THEN
-        -- 게시글이 복원된 경우에는 DELETE_BOARD_POSTS 테이블에서 해당 레코드 삭제
-        DELETE FROM DELETE_BOARD_POSTS WHERE DBP_POST_NO = OLD.BP_NO;
+        -- 게시글이 복원된 경우에는 DELETE_BOARD_POSTS 테이블에서 해당 레코드 DBP_IS_RECOVERED값 변경
+        UPDATE DELETE_BOARD_POSTS SET DBP_IS_RECOVERED = 0 WHERE DBP_POST_NO = OLD.BP_NO;
     ELSEIF OLD.BP_IS_DELETED = 1 AND NEW.BP_IS_DELETED = 0 THEN
         -- 게시글이 삭제된 경우에는 DELETE_BOARD_POSTS 테이블에 새로운 레코드 삽입
         INSERT INTO DELETE_BOARD_POSTS (
@@ -354,7 +354,8 @@ CREATE TABLE DELETE_BOARD_POSTS (
 	DBP_DIR_NAME				VARCHAR(20) COMMENT "이미지 저장된 폴더 이름"	,										-- 게시물 이미지 저장된 폴더명
     DBP_IS_VALID				TINYINT DEFAULT 1 COMMENT "게시물 삭제요청 후 30일 경과 여부(기본값 = 1, 경과 시 = 0)",	-- 게시물 삭제요청 후 30일 경과 여부(기본값 = 1, 경과 시 = 0)
     DBP_IS_DELETED				TINYINT DEFAULT 1 COMMENT "게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)",			-- 게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)
-	DBP_REQUEST_TIME			DATETIME DEFAULT NOW() COMMENT "게시물 삭제 요청 시간",								-- 게시물 수정일
+	DBP_IS_RECOVERED			TINYINT DEFAULT 1 COMMENT "게시물 복구 여부(기본값 = 1, 복구 시 = 0)",					-- 게시물 복구 여부(기본값 = 1, 복구 시 = 0)
+    DBP_REQUEST_TIME			DATETIME DEFAULT NOW() COMMENT "게시물 삭제 요청 시간",								-- 게시물 수정일
     PRIMARY KEY(DBP_NO)
 );
 SELECT * FROM DELETE_BOARD_POSTS;
@@ -379,7 +380,7 @@ DROP PROCEDURE DELETE_EXPIRED_POSTS;
 -- 프로시저(함수) 실행 부분 -----------------------------------------------------------------------------------------------------------------
 CREATE EVENT DELETE_EXPIRED_POSTS_EVENT
 ON SCHEDULE EVERY 1 DAY 
-STARTS '2024-11-10 00:00:00'  -- 시작 날짜와 시간 설정 (필요에 따라 수정)
+STARTS '2024-11-14 00:00:00'  -- 시작 날짜와 시간 설정 (필요에 따라 수정)
 ON COMPLETION PRESERVE
 DO
     CALL DELETE_EXPIRED_POSTS();

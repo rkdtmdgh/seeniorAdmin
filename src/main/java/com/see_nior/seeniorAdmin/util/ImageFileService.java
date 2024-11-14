@@ -127,6 +127,8 @@ public class ImageFileService {
 
 		// API 호출
 		String serverURL = "http://localhost:8091/delete_folder"; //local
+		
+		//response.getBody() = "1"(성공), "0"(실패 - 폴더 경로가 없음), "-1"(실패 - 이미지 서버 오류)
 		ResponseEntity<String> response = restTemplate.postForEntity(serverURL, requestEntity, String.class);
 
 		return response;
