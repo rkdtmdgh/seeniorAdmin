@@ -90,8 +90,10 @@
 		                                <tr>
 		                                	<th><p class="table_title">신고 내용</p></th>
 		                                	<td colspan="3" class="ta_l">
-		                                		<p class="table_textarea sc" th:text="${reportDto.br_reason}"></p>
-		                                    </td>
+			                                    <div class="table_info"> 
+			                                		<p class="table_textarea sc" th:text="${reportDto.br_reason}"></p>
+	                                			</div>
+                                			</td>
 		                                </tr>
 		                                
 		                                <tr th:if="${reportDto.reportResultDto}">

@@ -1050,6 +1050,10 @@
 	background-color: var(--middleGrayColor);
 	margin: 0 var(--ssize2);
 	vertical-align: middle;
+	
+	&.tp {
+		background-color: transparent;
+	}
 }
 
 /* flex property */
