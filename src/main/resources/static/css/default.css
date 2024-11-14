@@ -392,10 +392,12 @@
             
             .title_other_info_text {
             	display: inline-block;
-            	padding-left: var(--ssize1);
+            	padding: var(--smallBtnsPadding);
             	font-size: var(--smallFontSize);
             	font-weight: normal;
+            	line-height: 1;
             	border-radius: var(--bdrs);
+            	background-color: var(--lightBlueColor);
             	color: var(--redColor);
             }
     

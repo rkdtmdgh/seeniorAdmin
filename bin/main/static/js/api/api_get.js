@@ -309,12 +309,14 @@ function mapApiResponseObject(apiUrl, response) {
 			getListDtos = response.recipeDtos;
 			getListPage = response.searchRecipeListPageNum;
 			getListCnt = response.searchRecipeListPageNum.searchRecipeListCnt;
+			otherData = `마지막 업데이트 ${response.reg_date}`;
 			break;	
 			
 		case '/recipe/info/get_recipe_list_by_type': // 식단 정보 관리 음식 종류별 데이터
 			getListDtos = response.recipeDtos;
 			getListPage = response.recipeListByTypePageNum;
 			getListCnt = response.recipeListByTypePageNum.recipeListByTypeCnt;
+			otherData = `마지막 업데이트 ${response.reg_date}`;
 			break;
 			
 		case '/video/info/get_video_list': // 영상 정보 관리
@@ -438,7 +440,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListDtos = response.reportDtos;
 			getListPage = response.reportListPageNum;
 			getListCnt = response.reportListPageNum.reportListCnt;
-			otherData = response.unresuledtReportCnt > 0 ? `처리 대기 ${response.unresultedReportCnt}` : null;
+			otherData = response.unresultedReportCnt > 0 ? `처리 대기 ${response.unresultedReportCnt}` : null;
 			break;
 			
 		case '/report/info/search_report_list': // 신고 관리 검색
@@ -1146,7 +1148,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info">${data.reportCategoryDto.bqc_name}</a>
+		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="table_info">${data.reportCategoryDto.brc_name}</a>
 		            </td>
 		            <td class="va_m">
 		                <a href="/report/info/detail_form?br_no=${data.br_no}" class="flex_area">
