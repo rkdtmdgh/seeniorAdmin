@@ -1032,8 +1032,8 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            </td>
 		            <td class="va_m">
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="flex_area">
-		                	<span class="state ${data.bp_report_state === 2 ? 'on' : data.bp_report_state === 0 ? 'off' :  ''}">
-		                		${data.bp_report_state === 2 ? '처리중' : data.bp_report_state === 0 ? '처리완료' : '정상'}
+		                	<span class="state ${data.bp_report_state === 1 ? '' : 'on'}">
+		                		${data.bp_report_state === 1 ? '정상' : '블럭'}
 		                	</span>
 		                </a>
 		            </td>
