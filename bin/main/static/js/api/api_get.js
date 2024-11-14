@@ -454,7 +454,7 @@ function mapApiResponseObject(apiUrl, response) {
 			getListDtos = response.reportDtos;
 			getListPage = response.reportListByCategoryPageNum;
 			getListCnt = response.reportListByCategoryPageNum.reportListCnt;
-			otherData = response.unresultedCategoryReportCnt > 0 ? `처리 대기 ${response.unresultedCategoryReportCnt}` : null;
+			otherData = response.unresultedReportCntByCategory > 0 ? `처리 대기 ${response.unresultedReportCntByCategory}` : null;
 			break;	
 			
 		case '/advertisement/info/get_advertisement_list': // 광고 관리
