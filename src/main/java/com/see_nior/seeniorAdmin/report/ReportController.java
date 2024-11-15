@@ -255,9 +255,9 @@ public class ReportController {
 		int unresultedReportCntBySearch = reportService.getUnresultedReportCntBySearch(searchPart, searchString);
 		
 		// 검색한 질환 총 페이지 개수 가져오기
-		Map<String, Object> searchreportListPageNum = reportService.getSearchReportListPageNum(searchPart, searchString, page);
+		Map<String, Object> searchReportListPageNum = reportService.getSearchReportListPageNum(searchPart, searchString, page);
 		
-		searchReportListWithPage.put("searchreportListPageNum", searchreportListPageNum);
+		searchReportListWithPage.put("searchReportListPageNum", searchReportListPageNum);
 		searchReportListWithPage.put("searchPart", searchPart);
 		searchReportListWithPage.put("searchString", searchString);
 		searchReportListWithPage.put("sortValue", sortValue);

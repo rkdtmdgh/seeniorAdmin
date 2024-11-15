@@ -298,7 +298,7 @@ public class ReportService {
 		pagingParams.put("limit", pageLimit);
 		pagingParams.put("sortValue", sortValue);
 		pagingParams.put("order", order);
-		pagingParams.put("dc_no", brc_no);
+		pagingParams.put("brc_no", brc_no);
 		
 		List<ReportDto> reportDtos = reportMapper.getReportListByCategoryWithPage(pagingParams);
 		pagingList.put("reportDtos", reportDtos);
@@ -409,8 +409,8 @@ public class ReportService {
 		log.info("getUnresultedReportCntByCategory()");
 		
 		Map<String, Object> pagingParams = new HashMap<>();
-		pagingParams.put("pagingParams", searchPart);
-		pagingParams.put("pagingParams", searchString);
+		pagingParams.put("searchPart", searchPart);
+		pagingParams.put("searchString", searchString);
 		
 		return reportMapper.getUnresultedReportCntBySearch(pagingParams);
 		

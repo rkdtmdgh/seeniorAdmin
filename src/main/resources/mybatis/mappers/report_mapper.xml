@@ -128,7 +128,7 @@
 		WHERE 
 			BRC_IS_DELETED = 1 
 		ORDER BY 
-			BRC_NAME ASC 
+			BRC_NO DESC 
 	
 	</select>
 	
@@ -475,8 +475,22 @@
 			BR.BR_IS_DELETED = 1 
 		AND 
 			BRC.BRC_IS_DELETED = 1 
-		AND 
-			BR.${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+		<if test="searchPart != null and searchString != null">
+			<choose>
+				<when test="searchPart == 'u_id'">
+					AND 
+						U.U_ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'u_name'">
+					AND 
+						U.U_NAME LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<otherwise>
+					AND 
+						BR.${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+				</otherwise>
+			</choose>
+		</if>
 		ORDER BY
 			BR.${sortValue} ${order} 
 		LIMIT 
@@ -494,8 +508,22 @@
 			BOARD_REPORT 
 		WHERE 
 			BR_IS_DELETED = 1 
-		AND 
-			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+		<if test="searchPart != null and searchString != null">
+			<choose>
+				<when test="searchPart == 'u_id'">
+					AND 
+						U.U_ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'u_name'">
+					AND 
+						U.U_NAME LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<otherwise>
+					AND 
+						BR.${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+				</otherwise>
+			</choose>
+		</if>
 	
 	</select>
 	
@@ -511,8 +539,22 @@
 			BR_IS_DELETED = 1 
 		AND 
 			BR_STATE = 1 
-		AND 
-			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+		<if test="searchPart != null and searchString != null">
+			<choose>
+				<when test="searchPart == 'u_id'">
+					AND 
+						U.U_ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'u_name'">
+					AND 
+						U.U_NAME LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<otherwise>
+					AND 
+						BR.${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+				</otherwise>
+			</choose>
+		</if>
 	
 	</select>
 	
