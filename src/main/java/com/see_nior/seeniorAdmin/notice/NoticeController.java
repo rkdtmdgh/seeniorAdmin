@@ -182,16 +182,8 @@ public class NoticeController {
 	public Object test() {
 		log.info("test()");
 		
-		Map<String, Object> noticeList = 
-				noticeService.getNoticePagingList("n_no", "desc", 1);
 		
-		Map<String, Object> noticeListPageNum = noticeService.getNoticeListPageNum(1);
-		
-		noticeList.put("noticeListPageNum", noticeListPageNum);
-		noticeList.put("n_no", "m_no");
-		noticeList.put("desc", "desc");
-		
-		return noticeList;
+		return null;
 		
 	}
 	
