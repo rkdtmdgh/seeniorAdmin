@@ -38,14 +38,16 @@ public class VideoController {
 	@GetMapping("/info/get_video_list")
 	@ResponseBody
 	public Object getVideoList(
+			@RequestParam("page_limit") int page_limit,
+			@RequestParam("block_limit") int block_limit,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "v_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("getVideoList()");
 		
-		Map<String, Object> videoList = videoService.getVideoPagingList(sortValue, order, page);
+		Map<String, Object> videoList = videoService.getVideoPagingList(page_limit, sortValue, order, page);
 		
-		Map<String, Object> videoListPage = videoService.getVideoListPageNum(page);
+		Map<String, Object> videoListPage = videoService.getVideoListPageNum(page_limit, block_limit, page);
 		videoList.put("videoListPage", videoListPage);
 		videoList.put("sortValue", sortValue);
 		videoList.put("order", order);
@@ -58,6 +60,8 @@ public class VideoController {
 	@GetMapping("/info/search_video_list")
 	@ResponseBody
 	public Object searchVideo(
+			@RequestParam("page_limit") int page_limit,
+			@RequestParam("block_limit") int block_limit,
 			@RequestParam("searchPart") String searchPart,
 			@RequestParam("searchString") String searchString,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "v_no") String sortValue,
@@ -66,10 +70,10 @@ public class VideoController {
 		log.info("searchVideoList()");
 		
 		Map<String, Object> searchVideoList =
-				videoService.searchVideoPagingList(searchPart, searchString, sortValue, order, page);
+				videoService.searchVideoPagingList(page_limit, searchPart, searchString, sortValue, order, page);
 		
 		Map<String, Object> searchVideoListPage = 
-				videoService.searchVideoListPageNum(searchPart, searchString, page);
+				videoService.searchVideoListPageNum(page_limit, block_limit, searchPart, searchString, page);
 		
 		searchVideoList.put("searchVideoListPage", searchVideoListPage);
 		searchVideoList.put("sortValue", sortValue);
