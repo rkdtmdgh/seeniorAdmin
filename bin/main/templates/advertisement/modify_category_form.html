@@ -13,7 +13,7 @@
 				
 				switch(sortType) {
 					case '2': // select
-						await getList('/advertisement/cate_info/get_advertisement_list_by_category', 'ad_idx', 'asc', page);
+						await getList('/advertisement/cate_info/get_advertisement_list_by_category', 'ad_idx', 'asc', page, false, 'advertisement_list_table');
 						break;
 				}
 	        });

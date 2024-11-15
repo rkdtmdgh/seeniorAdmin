@@ -55,6 +55,22 @@
 	                                </colgroup>
 	
 	                                <tbody>
+	                                	<tr>
+		                                	<th><p class="table_title">상태</th>
+	                                        <td class="disabled">
+	                                        	<p class="table_info" th:text="${boardPostsDto.bp_report_state == true ? '정지' : '정상'}"></p>
+	                                        </td>
+	                                        
+		                                	<th><p class="table_title">등록일<span class="divider"></span>수정일</p></th>
+	                                        <td class="disabled">
+	                                        	<p class="table_info" th:utext="|
+	                                        		${boardPostsDto.bp_reg_date}
+	                                        		<span class='divider'></span>
+	                                        		${boardPostsDto.bp_mod_date}
+	                                        	|"></p>
+	                                        </td>
+		                                </tr>
+		                                
 		                                <tr>
 	                                        <th><p class="table_title">제목</p></th>
 		                                	<td th:classappend="${
@@ -72,22 +88,6 @@
 						                               		(boardPostsDto.bp_account == 'admin' and boardPostsDto.adminAccountDto.a_id !=  #authentication.name)
 					                                	}">
 	                                			</label>
-	                                        </td>
-		                                </tr>
-		                                
-		                                <tr>
-		                                	<th><p class="table_title">상태</th>
-	                                        <td class="disabled">
-	                                        	<p class="table_info" th:text="${boardPostsDto.bp_report_state == true ? '정지' : '정상'}"></p>
-	                                        </td>
-	                                        
-		                                	<th><p class="table_title">등록일<span class="divider"></span>수정일</p></th>
-	                                        <td class="disabled">
-	                                        	<p class="table_info" th:utext="|
-	                                        		${boardPostsDto.bp_reg_date}
-	                                        		<span class='divider'></span>
-	                                        		${boardPostsDto.bp_mod_date}
-	                                        	|"></p>
 	                                        </td>
 		                                </tr>
 		                                
