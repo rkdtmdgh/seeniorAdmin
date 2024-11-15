@@ -1,4 +1,5 @@
-// 에러 메세지 추가 내용
+// 에러 메세지
+const errorMsg = `<span style="color: var(--redColor)">Error! Please contact the developer</span>`;
 const addMsg = '\n다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 
 // input focus
