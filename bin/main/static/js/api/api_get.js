@@ -87,6 +87,8 @@ async function getListProcess(apiUrl, sortValue, order, page, resetParams = fals
 		params.append('order', order);
 	}
 	params.append('page', page || 1); // 페이지 추가
+	params.append('page_limit', 10); // 리스트 개수 추가
+	params.append('block_limit', 10); // 페이지네이션 개수 추가
 	
 	logger.info(`apiUrl: ${apiUrl}?${params.toString()}`);
 	
@@ -146,6 +148,8 @@ async function getSearchListProcess(event, apiUrl, sortValue, order, page) {
 		params.append('order', order);				
 	}
 	params.append('page', page || 1); // 페이지 추가
+	params.append('page_limit', 10); // 리스트 개수 추가
+	params.append('block_limit', 10); // 페이지네이션 개수 추가
 	
 	logger.info('search params:', params.toString());
 			
@@ -1032,8 +1036,8 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            </td>
 		            <td class="va_m">
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="flex_area">
-		                	<span class="state ${data.bp_report_state === 1 ? '' : 'on'}">
-		                		${data.bp_report_state === 1 ? '정상' : '블럭'}
+		                	<span class="state ${data.bp_report_state === true ? 'off' : ''}">
+		                		${data.bp_report_state === true ? '정지' : '정상'}
 		                	</span>
 		                </a>
 		            </td>

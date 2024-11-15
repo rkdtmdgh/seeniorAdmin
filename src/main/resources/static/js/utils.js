@@ -145,9 +145,9 @@ function setSelectGuidelineInfo(selectElement, formName) {
 	let $selectOption;
 	const $infoEle = $('#guideline');
 	let info = `영상: 최대 5개
-				<br>이미지: 최대 10개
-				<br>이미지별 최대 용량: 2MB
-				<br>삽입 가능`;
+				<span class="divider"></span>이미지: 최대 10개
+				<span class="divider"></span>이미지별 최대 용량: 2MB
+				삽입 가능`;
 	
 	if(selectElement) {
 		$selectOption = $(selectElement).find('option:selected'); // 선택된 옵션
