@@ -1413,6 +1413,10 @@ function mapSortListApiObject(dbTable, sortType) {
 			0: '/video/info/get_video_list',
 			1: '/video/info/search_video_list',
 		},
+		'notice': { // 공지 사항 페이지
+			0: '/notice/info/get_notice_list',
+			1: '/notice/info/search_notice_list',
+		},
 		'board_qna_notice': { // 질문과 답변 공지 사항 페이지
 			0: '/qna/noti_info/get_notice_list',
 			1: '/qna/noti_info/search_notice_list',
