@@ -1,9 +1,27 @@
 /* quill editor */
+.editor_wrap {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: var(--baseGap);
+}
+
+.editor_container {
+	width: 100%;
+	border-radius: var(--bdrs);
+	border: 1px solid var(--lightGrayColor);
+	
+	.editor_info {
+		font-size: var(--middleFontSize);
+	}
+}
+   
 .ql-toolbar.ql-snow {
 	display: flex;
 	justify-content: flex-start;
 	line-height: var(--basicLineHeight);
-	padding: var(--textPadding);
+	padding: var(--optionPadding);
 	background-color: #FAFAFA;
 	border: none;
 	border-bottom: 1px solid var(--lightGrayColor);
