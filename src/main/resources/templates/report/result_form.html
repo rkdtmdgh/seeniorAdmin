@@ -86,8 +86,32 @@
 		                                </tr>
 		                                
 		                                <tr>
+		                                	<th><p class="table_title">신고 게시물</p></th>
+		                                    <td class="va_m">
+		                                    	<div class="cont_info">		                                    		
+			                                    	<div class="table_info">
+		                                            	<label class="radio">
+		                                            		<input type="radio" name="u_gender" value="M"> 정상
+		                                            	</label>
+		                                            	<label class="radio">
+		                                            		<input type="radio" name="u_gender" value="F"> 숨김
+		                                            	</label>
+		                                            </div>
+
+		                                    		<a class="btns small white" target="_blank"
+		                                    			th:href="|/board/info/modify_form?infoNo=${reportDto.br_no}&bp_no=${reportDto.br_no}|">게시물 보기</a>
+	                                            </div>
+		                                    </td>
+		                                    
+		                                    <th><p class="table_title">처리 상태</p></th>
+		                                	<td>
+			                                    <p class="table_info" th:text="${reportDto.br_state == true ? '대기' : '처리 완료'}"></p>
+                                			</td>
+		                                </tr>
+		                                
+		                                <tr>
 		                                	<th><p class="table_title">신고 내용</p></th>
-		                                	<td colspan="3" class="ta_l">
+		                                	<td colspan="3">
 			                                    <div class="table_info"> 
 			                                		<p class="table_textarea sc" th:text="${reportDto.br_reason}"></p>
 	                                			</div>
