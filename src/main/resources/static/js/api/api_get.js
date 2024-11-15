@@ -757,7 +757,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                </a>
 		            </td>
 		            <td>
-		                <a href="/disease/info/disease_list_form?sortType=2&infoNo=${data.dc_no}&sortValue=d_no&order=desc" class="table_info">${data.dc_item_cnt}</a>
+		                <a href="/disease/info/disease_list_form?sortType=2&infoNo=${data.dc_no}" class="table_info table_list_other_link"
+		                	data-link-type="list" 
+		                	data-link-content="disease"
+		                >${data.dc_item_cnt}</a>
 		            </td>
 		            <td>
 		                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${setFormatDate(data.dc_reg_date)}</a>
@@ -1042,7 +1045,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            <td class="va_m">
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="flex_area">
 		                	<span class="state ${data.bp_report_state === true ? 'off' : ''}">
-		                		${data.bp_report_state === true ? '정지' : '정상'}
+		                		${data.bp_report_state === true ? '숨김' : '정상'}
 		                	</span>
 		                </a>
 		            </td>
