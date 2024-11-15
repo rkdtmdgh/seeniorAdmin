@@ -90,8 +90,6 @@ async function getListProcess(apiUrl, sortValue, order, page, resetParams = fals
 	params.append('page_limit', 10); // 리스트 개수 추가
 	params.append('block_limit', 10); // 페이지네이션 개수 추가
 	
-	const page_limit = 5; // 데이터 리스트 개수
-	
 	logger.info(`apiUrl: ${apiUrl}?${params.toString()}`);
 	
 	setLoading(true, 'content_inner'); // 로딩 추가
@@ -150,6 +148,8 @@ async function getSearchListProcess(event, apiUrl, sortValue, order, page) {
 		params.append('order', order);				
 	}
 	params.append('page', page || 1); // 페이지 추가
+	params.append('page_limit', 10); // 리스트 개수 추가
+	params.append('block_limit', 10); // 페이지네이션 개수 추가
 	
 	logger.info('search params:', params.toString());
 			
