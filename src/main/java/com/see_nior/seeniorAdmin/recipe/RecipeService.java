@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +19,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.see_nior.seeniorAdmin.api.ApiExplorer;
 import com.see_nior.seeniorAdmin.dto.RecipeDto;
 import com.see_nior.seeniorAdmin.recipe.mapper.RecipeMapper;
+import com.see_nior.seeniorAdmin.util.PagingUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -29,17 +29,10 @@ import lombok.extern.log4j.Log4j2;
 @Service
 public class RecipeService {
 	
-	@Autowired
-	private ApiExplorer apiExplorer;
-	
-	@Autowired
-	private ObjectMapper objectMapper;
+	final private ApiExplorer apiExplorer;
+	final private ObjectMapper objectMapper;
 	
 	final private RecipeMapper recipeMapper;
-	
-	// 페이지네이션 관련
-	private int pageLimit = 10;	// 한 페이지당 보여줄 항목의 개수
-	private int blockLimit = 5;	// 하단에 보여질 페이지 번호의 수
 	
 	// 기존 레시피 테이블 삭제 후 테이블 생성 후 API 데이터 DB에 저장하기
 	@Transactional
@@ -207,18 +200,10 @@ public class RecipeService {
  	} 	
 
 	// 페이지에 따른 식단 가져오기 (모든 식단)
-	public Map<String, Object> getRecipeListWithPage(int page, String sortValue, String order) {
+	public Map<String, Object> getRecipeListWithPage(int page_limit, String sortValue, String order, int page) {
 		log.info("getRecipeListWithPage()");
 		
-		int pagingStart = (page - 1) * pageLimit;
-		
 		Map<String, Object> pagingList = new HashMap<>();
-		
-		Map<String, Object> pagingParams = new HashMap<>();
-		pagingParams.put("start", pagingStart);
-		pagingParams.put("limit", pageLimit);
-		pagingParams.put("sortValue", sortValue);
-		pagingParams.put("order", order);
 		
 		// 식단 테이블이 있는지 확인하기 (1: 식단 테이블 있음 / 0: 식단 테이블 없음)
 		int tableCnt = recipeMapper.checkTableExists();
@@ -230,7 +215,7 @@ public class RecipeService {
 			Date reg_date = recipeMapper.getRecipeTableCreateTime();
 			
 			// 식단 리스트 가져오기
-			List<RecipeDto> recipeDtos = recipeMapper.getRecipeListWithPage(pagingParams);
+			List<RecipeDto> recipeDtos = recipeMapper.getRecipeListWithPage(PagingUtil.pagingParams(page_limit, sortValue, order, page));
 			pagingList.put("recipeDtos", recipeDtos);
 			pagingList.put("reg_date", reg_date);
 			
@@ -241,13 +226,12 @@ public class RecipeService {
 			
 		}
 		
-		
 		return pagingList;
 		
 	}
 
 	// 식단의 총 페이지 개수 구하기 (모든 식단)
-	public Map<String, Object> getRecipeListPageNum(int page) {
+	public Map<String, Object> getRecipeListPageNum(int page_limit, int block_limit, int page) {
 		log.info("getRecipeListPageNum()");
 		
 		Map<String, Object> recipeListPageNum = new HashMap<>();
@@ -259,23 +243,7 @@ public class RecipeService {
 			// 전체 리스트 개수 조회
 			int recipeListCnt = recipeMapper.getAllRecipeCnt();
 			
-			// 전체 페이지 개수 계산
-			int maxPage = (int) (Math.ceil((double) recipeListCnt / pageLimit));
-			
-			// 시작 페이지 값 계산
-			int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
-			
-			// 마지막 페이지 값 계산
-			int endPage = startPage+ + blockLimit - 1;
-			if (endPage > maxPage) endPage = maxPage;
-			
-			recipeListPageNum.put("recipeListCnt", recipeListCnt);
-			recipeListPageNum.put("page", page);
-			recipeListPageNum.put("maxPage", maxPage);
-			recipeListPageNum.put("startPage", startPage);
-			recipeListPageNum.put("endPage", endPage);
-			recipeListPageNum.put("blockLimit", blockLimit);
-			recipeListPageNum.put("pageLimit", pageLimit);
+			return PagingUtil.pageNum(page_limit, block_limit, "recipeListCnt", recipeListCnt, page);
 			
 		} else {
 			
@@ -287,30 +255,21 @@ public class RecipeService {
 			recipeListPageNum.put("blockLimit", null);
 			recipeListPageNum.put("pageLimit", null);
 			
+			return recipeListPageNum;
+			
 		}
-		
-		return recipeListPageNum;
 		
 	}
 	
 	// 페이지에 따른 식단 가져오기(카테고리별 식단)
-	public Map<String, Object> getRecipeListByTypeWithPage(int page, String sortValue, String order, String rcp_pat2) {
+	public Map<String, Object> getRecipeListByTypeWithPage(int page_limit, int page, String sortValue, String order, String rcp_pat2) {
 		log.info("getRecipeListByTypeWithPage()");
-		
-		int pagingStart = (page - 1) * pageLimit;
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		Map<String, Object> pagingParams = new HashMap<>();
-		pagingParams.put("start", pagingStart);
-		pagingParams.put("limit", pageLimit);
-		pagingParams.put("sortValue", sortValue);
-		pagingParams.put("order", order);
-		pagingParams.put("rcp_pat2", rcp_pat2);
-		
 		Date reg_date = recipeMapper.getRecipeTableCreateTime();
 		
-		List<RecipeDto> recipeDtos = recipeMapper.getRecipeListByTypeWithPage(pagingParams);
+		List<RecipeDto> recipeDtos = recipeMapper.getRecipeListByTypeWithPage(PagingUtil.pagingParamsForSelectBox(page_limit, sortValue, order, page, rcp_pat2));
 		pagingList.put("recipeDtos", recipeDtos);
 		pagingList.put("reg_date", reg_date);
 		
@@ -319,55 +278,25 @@ public class RecipeService {
 	}
 	
 	// 식단의 총 페이지 개수 구하기(카테고리별 식단)
-	public Map<String, Object> getRecipeListByTypePageNum(int page, String rcp_pat2) {
+	public Map<String, Object> getRecipeListByTypePageNum(int page_limit, int block_limit, int page, String rcp_pat2) {
 		log.info("getRecipeListByTypePageNum()");
-		
-		Map<String, Object> recipeListByTypePageNum = new HashMap<>();
 		
 		// 전체 리스트 개수 조회
 		int recipeListByTypeCnt = recipeMapper.getRecipeByTypeCnt(rcp_pat2);
 		
-		// 전체 페이지 개수 계산
-		int maxPage = (int) (Math.ceil((double) recipeListByTypeCnt / pageLimit));
-		
-		// 시작 페이지 값 계산
-		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
-		
-		// 마지막 페이지 값 계산
-		int endPage = startPage + blockLimit - 1;
-		if (endPage > maxPage) endPage = maxPage;
-		
-		recipeListByTypePageNum.put("recipeListByTypeCnt", recipeListByTypeCnt);
-		recipeListByTypePageNum.put("page", page);
-		recipeListByTypePageNum.put("maxPage", maxPage);
-		recipeListByTypePageNum.put("startPage", startPage);
-		recipeListByTypePageNum.put("endPage", endPage);
-		recipeListByTypePageNum.put("blockLimit", blockLimit);
-		recipeListByTypePageNum.put("pageLimit", pageLimit);
-		
-		return recipeListByTypePageNum;
+		return PagingUtil.pageNum(page_limit, block_limit, "recipeListByTypeCnt", recipeListByTypeCnt, page);
 		
 	}
 
 	// 페이지에 따른 식단 가져오기(검색한 식단)
-	public Map<String, Object> getSearchRecipeListWithPage(String searchPart, String searchString, String sortValue, String order, int page) {
+	public Map<String, Object> getSearchRecipeListWithPage(int page_limit, String searchPart, String searchString, String sortValue, String order, int page) {
 		log.info("getSearchRecipeListWithPage()");
-		
-		int pagingStart = (page - 1) * pageLimit;
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		Map<String, Object> pagingParams = new HashMap<>();
-		pagingParams.put("start", pagingStart);
-		pagingParams.put("limit", pageLimit);
-		pagingParams.put("searchPart", searchPart);
-		pagingParams.put("searchString", searchString);
-		pagingParams.put("sortValue", sortValue);
-		pagingParams.put("order", order);
-		
 		Date reg_date = recipeMapper.getRecipeTableCreateTime();
 		
-		List<RecipeDto> searchRecipeDtos = recipeMapper.getSearchRecipe(pagingParams);
+		List<RecipeDto> searchRecipeDtos = recipeMapper.getSearchRecipe(PagingUtil.searchPagingParams(page_limit, searchPart, searchString, sortValue, order, page));
 		pagingList.put("recipeDtos", searchRecipeDtos);
 		pagingList.put("reg_date", reg_date);
 		
@@ -375,38 +304,18 @@ public class RecipeService {
 		
 	}
 	
-	// 질환의 총 페이지 개수 구하기(검색한 질환)
-	public Map<String, Object> getSearchRecipeListPageNum(String searchPart, String searchString, int page) {
+	// 식단의 총 페이지 개수 구하기(검색한 식단)
+	public Map<String, Object> getSearchRecipeListPageNum(int page_limit, int block_limit, String searchPart, String searchString, int page) {
 		log.info("getSearchRecipeListPageNum()");
 		
-		Map<String, Object> searchRecipeListPageNum = new HashMap<>();
-		
-		Map<String, Object> pagingParams = new HashMap<>();
-		pagingParams.put("searchPart", searchPart);
-		pagingParams.put("searchString", searchString);
+		Map<String, Object> searchParams = new HashMap<>();
+		searchParams.put("searchPart", searchPart);
+		searchParams.put("searchString", searchString);
 		
 		// 전체 리스트 개수 조회
-		int searchRecipeListCnt = recipeMapper.getSearchRecipeListCnt(pagingParams);
+		int searchRecipeListCnt = recipeMapper.getSearchRecipeListCnt(searchParams);
 		
-		// 전체 페이지 개수 계산
-		int maxPage = (int) (Math.ceil((double) searchRecipeListCnt / pageLimit));
-		
-		// 시작 페이지 값 계산
-		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
-		
-		// 마지막 페이지 값 계산
-		int endPage = startPage + blockLimit - 1;
-		if (endPage > maxPage) endPage = maxPage;
-		
-		searchRecipeListPageNum.put("searchRecipeListCnt", searchRecipeListCnt);
-		searchRecipeListPageNum.put("page", page);
-		searchRecipeListPageNum.put("maxPage", maxPage);
-		searchRecipeListPageNum.put("startPage", startPage);
-		searchRecipeListPageNum.put("endPage", endPage);
-		searchRecipeListPageNum.put("blockLimit", blockLimit);
-		searchRecipeListPageNum.put("pageLimit", pageLimit);
-		
-		return searchRecipeListPageNum;
+		return PagingUtil.pageNum(page_limit, block_limit, "searchRecipeListCnt", searchRecipeListCnt, page);
 		
 	}
 	
@@ -417,10 +326,7 @@ public class RecipeService {
 		RecipeDto recipeDto = recipeMapper.getRecipe(rcp_seq);
 		
 		return recipeDto;
+		
 	}
-
-
-	
-
 		
 } 

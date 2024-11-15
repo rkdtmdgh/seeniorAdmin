@@ -21,6 +21,7 @@ import com.see_nior.seeniorAdmin.dto.AdvertisementCategoryDto;
 import com.see_nior.seeniorAdmin.dto.AdvertisementDto;
 import com.see_nior.seeniorAdmin.enums.SqlResult;
 import com.see_nior.seeniorAdmin.util.ImageFileService;
+import com.see_nior.seeniorAdmin.util.PagingUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -29,10 +30,6 @@ import lombok.extern.log4j.Log4j2;
 @Service
 @RequiredArgsConstructor
 public class AdvertisementService {
-	
-	// 페이지네이션 관련
-	private int pageLimit = 10;	// 한 페이지당 보여줄 항목의 개수
-	private int blockLimit = 5;	// 하단에 보여질 페이지 번호의 수
 	
 	final private AdvertisementMapper advertisementMapper;
 	final private ImageFileService imageFileService;
@@ -77,20 +74,12 @@ public class AdvertisementService {
 	}
 	
 	// 페이지에 따른 광고 위치 리스트 가져오기
-	public Map<String, Object> getAdvertisementCategoryListWithPage(int page, String sortValue, String order) {
+	public Map<String, Object> getAdvertisementCategoryListWithPage(int page_limit, String sortValue, String order, int page) {
 		log.info("getAdvertisementCategoryListWithPage()");
-		
-		int pagingStart = (page - 1) * pageLimit;
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		Map<String, Object> pagingParams = new HashMap<>();
-		pagingParams.put("start", pagingStart);
-		pagingParams.put("limit", pageLimit);
-		pagingParams.put("sortValue", sortValue);
-		pagingParams.put("order", order);
-		
-		List<AdvertisementCategoryDto> advertisementCategoryDtos = advertisementMapper.getAdvertisementCategoryListWithPage(pagingParams);
+		List<AdvertisementCategoryDto> advertisementCategoryDtos = advertisementMapper.getAdvertisementCategoryListWithPage(PagingUtil.pagingParams(page_limit, sortValue, order, page));
 		
 		pagingList.put("advertisementCategoryDtos", advertisementCategoryDtos);
 		
@@ -99,33 +88,13 @@ public class AdvertisementService {
 	}
 	
 	// 광고 위치의 총 페이지 개수 구하기
-	public Map<String, Object> getAdvertisementCategoryListPageNum(int page) {
+	public Map<String, Object> getAdvertisementCategoryListPageNum(int page_limit, int block_limit, int page) {
 		log.info("getAdvertisementCategoryListPageNum()");
-		
-		Map<String, Object> advertisementCategoryListPageNum = new HashMap<>();
 		
 		// 전체 리스트 개수 조회
 		int advertisementCategoryListCnt = advertisementMapper.getAllAdvertisementCategoryCnt();
 		
-		// 전체 페이지 개수 계산
-		int maxPage = (int) (Math.ceil((double) advertisementCategoryListCnt / pageLimit));
-		
-		// 시작 페이지 값 계산 
-		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
-		
-		// 마지막 페이지 값 계산
-		int endPage = startPage + blockLimit - 1;
-		if (endPage > maxPage) endPage = maxPage;
-		
-		advertisementCategoryListPageNum.put("advertisementCategoryListCnt", advertisementCategoryListCnt);
-		advertisementCategoryListPageNum.put("page", page);
-		advertisementCategoryListPageNum.put("maxPage", maxPage);
-		advertisementCategoryListPageNum.put("startPage", startPage);
-		advertisementCategoryListPageNum.put("endPage", endPage);
-		advertisementCategoryListPageNum.put("blockLimit", blockLimit);
-		advertisementCategoryListPageNum.put("pageLimit", pageLimit);
-		
-		return advertisementCategoryListPageNum;
+		return PagingUtil.pageNum(page_limit, block_limit, "advertisementCategoryListCnt", advertisementCategoryListCnt, page);
 		
 	}
 	
@@ -166,61 +135,31 @@ public class AdvertisementService {
 	}
 	
 	// 페이지에 따른 광고 위치 가져오기(검색한 광고 위치)
-	public Map<String, Object> getSearchAdvertisementCategoryListWithPage(String searchPart, String searchString, String sortValue, String order, int page) {
+	public Map<String, Object> getSearchAdvertisementCategoryListWithPage(int page_limit, String searchPart, String searchString, String sortValue, String order, int page) {
 		log.info("getSearchAdvertisementCategoryListWithPage()");
 		
-		int pagingStart = (page - 1) * pageLimit;
+		Map<String, Object> pagingCategoryList = new HashMap<>();
 		
-		Map<String, Object> pagingList = new HashMap<>();
-		
-		Map<String, Object> pagingParams = new HashMap<>();
-		pagingParams.put("start", pagingStart);
-		pagingParams.put("limit", pageLimit);
-		pagingParams.put("searchPart", searchPart);
-		pagingParams.put("searchString", searchString);
-		pagingParams.put("sortValue", sortValue);
-		pagingParams.put("order", order);
-		
-		List<AdvertisementCategoryDto> searchAdvertisementCategoryDtos = advertisementMapper.getSearchAdvertisementCategory(pagingParams);
+		List<AdvertisementCategoryDto> searchAdvertisementCategoryDtos = advertisementMapper.getSearchAdvertisementCategory(PagingUtil.searchPagingParams(page_limit, searchPart, searchString, sortValue, order, page));
 				
-		pagingList.put("advertisementCategoryDtos", searchAdvertisementCategoryDtos);
+		pagingCategoryList.put("advertisementCategoryDtos", searchAdvertisementCategoryDtos);
 		
-		return pagingList;
+		return pagingCategoryList;
 		
 	}
 	
 	// 광고 카테고리의 총 페이지 개수 구하기(검색한 광고 카테고리)
-	public Map<String, Object> getSearchAdvertisementCategoryListPageNum(String searchPart, String searchString, int page) {
+	public Map<String, Object> getSearchAdvertisementCategoryListPageNum(int page_limit, int block_limit, String searchPart, String searchString, int page) {
 		log.info("getSearchAdvertisementCategoryListPageNum()");
 		
-		Map<String, Object> searchAdvertisementCategoryListPageNum = new HashMap<>();
-		
-		Map<String, Object> pagingParams = new HashMap<>();
-		pagingParams.put("searchPart", searchPart);
-		pagingParams.put("searchString", searchString);
+		Map<String, Object> searchParams = new HashMap<>();
+		searchParams.put("searchPart", searchPart);
+		searchParams.put("searchString", searchString);
 		
 		// 전체 리스트 개수 조회
-		int searchAdvertisementCategoryListCnt = advertisementMapper.getSearchAdvertisementCategoryListCnt(pagingParams);
+		int searchAdvertisementCategoryListCnt = advertisementMapper.getSearchAdvertisementCategoryListCnt(searchParams);
 		
-		// 전체 페이지 개수 계산
-		int maxPage = (int) (Math.ceil((double) searchAdvertisementCategoryListCnt / pageLimit));
-		
-		// 시작 페이지 값 계산
-		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
-		
-		// 마지막 페이지 값 계산
-		int endPage = startPage + blockLimit - 1;
-		if (endPage > maxPage) endPage = maxPage;
-		
-		searchAdvertisementCategoryListPageNum.put("searchAdvertisementCategoryListCnt", searchAdvertisementCategoryListCnt);
-		searchAdvertisementCategoryListPageNum.put("page", page);
-		searchAdvertisementCategoryListPageNum.put("maxPage", maxPage);
-		searchAdvertisementCategoryListPageNum.put("startPage", startPage);
-		searchAdvertisementCategoryListPageNum.put("endPage", endPage);
-		searchAdvertisementCategoryListPageNum.put("blockLimit", blockLimit);
-		searchAdvertisementCategoryListPageNum.put("pageLimit", pageLimit);
-		
-		return searchAdvertisementCategoryListPageNum;
+		return PagingUtil.pageNum(page_limit, block_limit, "searchAdvertisementCategoryListCnt", searchAdvertisementCategoryListCnt, page);
 		
 	}
 	
@@ -336,33 +275,25 @@ public class AdvertisementService {
 		
 	}
 	
-	// 홈 화면에서 보여질 광고 가져오기(5개)
+	// 홈 화면에서 보여질 광고 가져오기
 	public Object getAdvertisementListForMain(int page_limit) {
 		log.info("getAdvertisementListForMain()");
 		
 		Map<String, Object> responseMap = new HashMap<>();
-		List<AdvertisementDto> advertisementDtosForMain = advertisementMapper.getAdvertisementListForMain(page_limit);
-		responseMap.put("advertisementDtos", advertisementDtosForMain);
+		List<AdvertisementDto> advertisementDtos = advertisementMapper.getAdvertisementListForMain(page_limit);
+		responseMap.put("advertisementDtos", advertisementDtos);
 		
 		return responseMap;
 		
 	}
 	
 	// 페이지에 따른 광고 가져오기(모든 광고)
-	public Map<String, Object> getAdvertisementListWithPage(int page, String sortValue, String order) {
+	public Map<String, Object> getAdvertisementListWithPage(int page_limit, String sortValue, String order, int page) {
 		log.info("getAdvertisementListWithPage()");
-		
-		int pagingStart = (page - 1) * pageLimit;
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		Map<String, Object> pagingParams = new HashMap<>();
-		pagingParams.put("start", pagingStart);
-		pagingParams.put("limit", pageLimit);
-		pagingParams.put("sortValue", sortValue);
-		pagingParams.put("order", order);
-		
-		List<AdvertisementDto> advertisementDtos = advertisementMapper.getAdvertisementListWithPage(pagingParams);
+		List<AdvertisementDto> advertisementDtos = advertisementMapper.getAdvertisementListWithPage(PagingUtil.pagingParams(page_limit, sortValue, order, page));
 		pagingList.put("advertisementDtos", advertisementDtos);
 		
 		return pagingList;
@@ -370,33 +301,13 @@ public class AdvertisementService {
 	}
 
 	// 광고의 총 페이지 개수 구하기(모든 광고)
-	public Map<String, Object> getAdvertisementListPageNum(int page) {
+	public Map<String, Object> getAdvertisementListPageNum(int page_limit, int block_limit, int page) {
 		log.info("getAdvertisementListPageNum()");
-		
-		Map<String, Object> advertisementListPageNum = new HashMap<>();
 		
 		// 전체 리스트 개수 조회
 		int advertisementListCnt = advertisementMapper.getAllAdvertisementCnt();
 		
-		// 전체 페이지 개수 계산
-		int maxPage = (int) (Math.ceil((double) advertisementListCnt / pageLimit));
-		
-		// 시작 페이지 값 계산
-		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
-		
-		// 마지막 페이지 값 계산
-		int endPage = startPage + blockLimit - 1;
-		if (endPage > maxPage) endPage = maxPage;
-		
-		advertisementListPageNum.put("advertisementListCnt", advertisementListCnt);
-		advertisementListPageNum.put("page", page);
-		advertisementListPageNum.put("maxPage", maxPage);
-		advertisementListPageNum.put("startPage", startPage);
-		advertisementListPageNum.put("endPage", endPage);
-		advertisementListPageNum.put("blockLimit", blockLimit);
-		advertisementListPageNum.put("pageLimit", pageLimit);
-		
-		return advertisementListPageNum;
+		return PagingUtil.pageNum(page_limit, block_limit, "advertisementListCnt", advertisementListCnt, page);
 		
 	}
 
@@ -451,21 +362,12 @@ public class AdvertisementService {
 	}
 	
 	// 페이지에 따른 광고 가져오기(위치별 광고)
-	public Map<String, Object> getAdvertisementListByCategoryWithPage(int page, String sortValue, String order, int ac_no) {
+	public Map<String, Object> getAdvertisementListByCategoryWithPage(int page_limit, int page, String sortValue, String order, int ac_no) {
 		log.info("getAdvertisementListByCategoryWithPage()");
-		
-		int pagingStart = (page - 1) * pageLimit;
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		Map<String, Object> pagingParams = new HashMap<>();
-		pagingParams.put("start", pagingStart);
-		pagingParams.put("limit", pageLimit);
-		pagingParams.put("sortValue", sortValue);
-		pagingParams.put("order", order);
-		pagingParams.put("ac_no", ac_no);
-		
-		List<AdvertisementDto> advertisementDtos = advertisementMapper.getAdvertisementListByCategoryWithPage(pagingParams);
+		List<AdvertisementDto> advertisementDtos = advertisementMapper.getAdvertisementListByCategoryWithPage(PagingUtil.pagingParamsForSelectBox(page_limit, sortValue, order, page, ac_no));
 		pagingList.put("advertisementDtos", advertisementDtos);
 		
 		return pagingList;
@@ -473,33 +375,14 @@ public class AdvertisementService {
 	}
 	
 	// 광고의 총 페이지 개수 구하기 (위치별 광고)
-	public Map<String, Object> getAdvertisementByCategoryPageNum(int page, int ac_no) {
+	public Map<String, Object> getAdvertisementByCategoryPageNum(int page_limit, int block_limit, int page, int ac_no) {
 		log.info("getAdvertisementByCategoryPageNum()");
-		
-		Map<String, Object> advertisementListByCategoryPageNum = new HashMap<>();
 		
 		// 전체 리스트 개수 주회
 		int advertisementListByCategoryCnt = advertisementMapper.getAdvertisementByCategoryCnt(ac_no);
 		
-		// 전체 페이지 개수 계산
-		int maxPage = (int) (Math.ceil((double) advertisementListByCategoryCnt / pageLimit));
-		
-		// 시작 페이지 값 계산
-		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
-		
-		// 마지막 페이지 값 계산
-		int endPage = startPage + blockLimit - 1;
-		if (endPage > maxPage) endPage = maxPage;
-		
-		advertisementListByCategoryPageNum.put("advertisementListByCategoryCnt", advertisementListByCategoryCnt);
-		advertisementListByCategoryPageNum.put("page", page);
-		advertisementListByCategoryPageNum.put("maxPage", maxPage);
-		advertisementListByCategoryPageNum.put("startPage", startPage);
-		advertisementListByCategoryPageNum.put("endPage", endPage);
-		advertisementListByCategoryPageNum.put("blockLimit", blockLimit);
-		advertisementListByCategoryPageNum.put("pageLimit", pageLimit);
-		
-		return advertisementListByCategoryPageNum;
+		return PagingUtil.pageNum(page_limit, block_limit, "advertisementListByCategoryCnt", advertisementListByCategoryCnt, page);
+	
 	}
 	
 
@@ -720,22 +603,12 @@ public class AdvertisementService {
 	}
 
 	// 페이지에 따른 광고 가져오기(검색한 광고)
-	public Map<String, Object> getSearchAdvertisementListWithPage(String searchPart, String searchString, String sortValue, String order, int page) {
+	public Map<String, Object> getSearchAdvertisementListWithPage(int page_limit, String searchPart, String searchString, String sortValue, String order, int page) {
 		log.info("getSearchAdvertisementListWithPage()");
-		
-		int pagingStart = (page - 1) * pageLimit;
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		Map<String, Object> pagingParams = new HashMap<>();
-		pagingParams.put("start", pagingStart);
-		pagingParams.put("limit", pageLimit);
-		pagingParams.put("searchPart", searchPart);
-		pagingParams.put("searchString", searchString);
-		pagingParams.put("sortValue", sortValue);
-		pagingParams.put("order", order);
-		
-		List<AdvertisementDto> searchAdvertisementDtos = advertisementMapper.getSearchAdvertisement(pagingParams);
+		List<AdvertisementDto> searchAdvertisementDtos = advertisementMapper.getSearchAdvertisement(PagingUtil.searchPagingParams(page_limit, searchPart, searchString, sortValue, order, page));
 		pagingList.put("advertisementDtos", searchAdvertisementDtos);
 		
 		return pagingList;
@@ -743,40 +616,18 @@ public class AdvertisementService {
 	}
 
 	// 광고의 총 페이지 개수 구하기(검색한 광고)
-	public Map<String, Object> getSearchAdvertisementListPageNum(String searchPart, String searchString, int page) {
+	public Map<String, Object> getSearchAdvertisementListPageNum(int page_limit, int block_limit, String searchPart, String searchString, int page) {
 		log.info("getSearchAdvertisementListPageNum()");
 		
-		Map<String, Object> searchAdvertisementListPageNum = new HashMap<>();
-		
-		Map<String, Object> pagingParams = new HashMap<>();
-		pagingParams.put("searchPart", searchPart);
-		pagingParams.put("searchString", searchString);
+		Map<String, Object> searchParams = new HashMap<>();
+		searchParams.put("searchPart", searchPart);
+		searchParams.put("searchString", searchString);
 		
 		// 전체 리스트 개수 조회
-		int searchAdvertisementListCnt = advertisementMapper.getSearchAdvertisementListCnt(pagingParams);
+		int searchAdvertisementListCnt = advertisementMapper.getSearchAdvertisementListCnt(searchParams);
 		
-		// 전체 페이지 개수 계산
-		int maxPage = (int) (Math.ceil((double) searchAdvertisementListCnt / pageLimit));
-		
-		// 시작 페이지 값 계산
-		int startPage = ((int) (Math.ceil((double) page / blockLimit)) - 1) * blockLimit + 1;
-		
-		// 마지막 페이지 값 계산
-		int endPage = startPage + blockLimit - 1;
-		if (endPage > maxPage) endPage = maxPage;
-		
-		searchAdvertisementListPageNum.put("searchAdvertisementListCnt", searchAdvertisementListCnt);
-		searchAdvertisementListPageNum.put("page", page);
-		searchAdvertisementListPageNum.put("maxPage", maxPage);
-		searchAdvertisementListPageNum.put("startPage", startPage);
-		searchAdvertisementListPageNum.put("endPage", endPage);
-		searchAdvertisementListPageNum.put("blockLimit", blockLimit);
-		searchAdvertisementListPageNum.put("pageLimit", pageLimit);
-		
-		return searchAdvertisementListPageNum;
+		return PagingUtil.pageNum(page_limit, block_limit, "searchAdvertisementListCnt", searchAdvertisementListCnt, page);
 		
 	}
-
-	
 	
 }
