@@ -444,7 +444,7 @@
 		AND 
 			AC.AC_IS_DELETED = 1 
 		AND 
-			AD.AD_CATEGORY_NO = #{ac_no} 
+			AD.AD_CATEGORY_NO = #{infoNo} 
 		ORDER BY 
 			${sortValue} ${order} 
 		LIMIT 
@@ -464,7 +464,7 @@
 		WHERE 
 			AD_IS_DELETED = 1 
 		AND 
-			AD_CATEGORY_NO = #{ac_no} 
+			AD_CATEGORY_NO = #{infoNo} 
 	
 	</select>
 	

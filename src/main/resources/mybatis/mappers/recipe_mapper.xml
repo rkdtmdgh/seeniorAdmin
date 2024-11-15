@@ -246,7 +246,7 @@
 		FROM 
 			RECIPE 
 		WHERE 
-			RCP_PAT2 = #{rcp_pat2} 
+			RCP_PAT2 = #{infoNo} 
 		ORDER BY 
 			${sortValue} ${order} 
 		LIMIT 
@@ -264,7 +264,7 @@
 		FROM 
 			RECIPE 
 		WHERE 
-			RCP_PAT2 = #{rcp_pat2}
+			RCP_PAT2 = #{infoNo}
 	
 	</select>
 	

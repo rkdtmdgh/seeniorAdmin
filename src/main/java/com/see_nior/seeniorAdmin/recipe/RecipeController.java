@@ -60,16 +60,18 @@ public class RecipeController {
 	@ResponseBody
 	@GetMapping("info/get_recipe_list")
 	public Object getRecipeList(
+			@RequestParam(value = "page_limit") int page_limit,
+			@RequestParam(value = "block_limit") int block_limit,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "rcp_seq") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		log.info("getRecipeList()");
 		
 		// 페이지 번호에 따른 식단 리스트들 가져오기
-		Map<String, Object> recipeListWithPage = recipeService.getRecipeListWithPage(page, sortValue, order);
+		Map<String, Object> recipeListWithPage = recipeService.getRecipeListWithPage(page_limit, sortValue, order , page);
 		
 		// 식단 총 페이지 개수 가져오기
-		Map<String, Object> recipeListPageNum = recipeService.getRecipeListPageNum(page);
+		Map<String, Object> recipeListPageNum = recipeService.getRecipeListPageNum(page_limit, block_limit, page);
 		
 		recipeListWithPage.put("recipeListPageNum", recipeListPageNum);
 		recipeListWithPage.put("sortValue", sortValue);
@@ -83,6 +85,8 @@ public class RecipeController {
 	@ResponseBody
 	@GetMapping("info/get_recipe_list_by_type")
 	public Object getRecipeListByType(
+			@RequestParam(value = "page_limit") int page_limit,
+			@RequestParam(value = "block_limit") int block_limit,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "rcp_seq") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
@@ -90,10 +94,10 @@ public class RecipeController {
 		log.info("getRecipeListByType()");
 		
 		// 페이지 번호에 따른 카테고리별 식단 리스트들 가져오기
-		Map<String, Object> recipeListByTypeWithPage = recipeService.getRecipeListByTypeWithPage(page, sortValue, order, rcp_pat2);
+		Map<String, Object> recipeListByTypeWithPage = recipeService.getRecipeListByTypeWithPage(page_limit, page, sortValue, order, rcp_pat2);
 		
 		// 카테고리별 식단 총 페이지 개수 가져오기
-		Map<String, Object> recipeListByTypePageNum = recipeService.getRecipeListByTypePageNum(page, rcp_pat2);
+		Map<String, Object> recipeListByTypePageNum = recipeService.getRecipeListByTypePageNum(page_limit, block_limit, page, rcp_pat2);
 		
 		recipeListByTypeWithPage.put("recipeListByTypePageNum", recipeListByTypePageNum);
 		recipeListByTypeWithPage.put("sortValue", sortValue);
@@ -108,6 +112,8 @@ public class RecipeController {
 	@ResponseBody
 	@GetMapping("info/search_recipe_list")
 	public Object searchRecipeList(
+			@RequestParam(value = "page_limit") int page_limit,
+			@RequestParam(value = "block_limit") int block_limit,
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "rcp_seq") String sortValue,
@@ -116,10 +122,10 @@ public class RecipeController {
 		log.info("searchRecipeList()");
 		
 		// 페이지 번호에 따른 검색 식단 리스트들 가져오기
-		Map<String, Object> searchRecipeListWithPage = recipeService.getSearchRecipeListWithPage(searchPart, searchString, sortValue, order, page);
+		Map<String, Object> searchRecipeListWithPage = recipeService.getSearchRecipeListWithPage(page_limit, searchPart, searchString, sortValue, order, page);
 
 		// 검색 식단 총 페이지 개수 가져오기
-		Map<String, Object> searchRecipeListPageNum = recipeService.getSearchRecipeListPageNum(searchPart, searchString, page);
+		Map<String, Object> searchRecipeListPageNum = recipeService.getSearchRecipeListPageNum(page_limit, block_limit, searchPart, searchString, page);
 		
 		searchRecipeListWithPage.put("searchRecipeListPageNum", searchRecipeListPageNum);
 		searchRecipeListWithPage.put("searchPart", searchPart);
