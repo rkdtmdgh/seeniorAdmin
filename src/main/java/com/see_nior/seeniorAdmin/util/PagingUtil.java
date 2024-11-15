@@ -3,8 +3,6 @@ package com.see_nior.seeniorAdmin.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.see_nior.seeniorAdmin.enums.PagingStatus;
-
 public class PagingUtil {
 
 	// pageNum 계산

@@ -24,44 +24,44 @@ public class VideoService {
 	final private VideoMapper videoMapper;
 	
 	// 비디오 리스트 가져오기
-	public Map<String, Object> getVideoPagingList(String sortValue, String order, int page) {
+	public Map<String, Object> getVideoPagingList(int page_limit, String sortValue, String order, int page) {
 		log.info("getVideoPagingList()");
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
 		List<AdminAccountDto> videoDtos = 
-				videoMapper.selectVideoList(PagingUtil.pagingParams(sortValue, order, page));
+				videoMapper.selectVideoList(PagingUtil.pagingParams(page_limit, sortValue, order, page));
 		pagingList.put("videoDtos", videoDtos);
 		
 		return pagingList;
 	}
 
 	// 비디오 리스트 총 개수
-	public Map<String, Object> getVideoListPageNum(int page) {
+	public Map<String, Object> getVideoListPageNum(int page_limit, int block_limit, int page) {
 		log.info("getVideoListPageNum()");
 		
 		// 전체 리스트 개수 조회 
 		int videoListCnt = videoMapper.selectAllVideoListCnt();
 		
-		return PagingUtil.pageNum("videoListCnt", videoListCnt, page);
+		return PagingUtil.pageNum(page_limit, block_limit, "videoListCnt", videoListCnt, page);
 		
 	}
 	
 	// 비디오 검색 리스트 가져오기
-	public Map<String, Object> searchVideoPagingList(String searchPart, String searchString, String sortValue, String order, int page) {
+	public Map<String, Object> searchVideoPagingList(int page_limit, String searchPart, String searchString, String sortValue, String order, int page) {
 		log.info("searchVideoPagingList()");
 		
 		Map<String, Object> pagingSearchList = new HashMap<>();
 
 		List<VideoDto> videoDtos = 
-				videoMapper.selectSearchVideoList(PagingUtil.searchPagingParams(searchPart, searchString, sortValue, order, page));
+				videoMapper.selectSearchVideoList(PagingUtil.searchPagingParams(page_limit, searchPart, searchString, sortValue, order, page));
 		pagingSearchList.put("videoDtos", videoDtos);
 		
 		return pagingSearchList;
 	}
 
 	// 비디오 검색 리스트 총 개수
-	public Map<String, Object> searchVideoListPageNum(String searchPart, String searchString, int page) {
+	public Map<String, Object> searchVideoListPageNum(int page_limit, int block_limit, String searchPart, String searchString, int page) {
 		log.info("searchVideoPagingList()");
 		
 		Map<String, Object> searchParams = new HashMap<>();
@@ -71,7 +71,7 @@ public class VideoService {
 		// 전체 리스트 개수 조회 
 		int searchVideoListCnt = videoMapper.selectSearchVideoListCnt(searchParams);
 		
-		return PagingUtil.pageNum("searchVideoListCnt", searchVideoListCnt, page);
+		return PagingUtil.pageNum(page_limit, block_limit, "searchVideoListCnt", searchVideoListCnt, page);
 		
 	}
 	

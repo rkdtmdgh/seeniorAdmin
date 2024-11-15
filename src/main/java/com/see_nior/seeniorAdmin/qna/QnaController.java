@@ -45,16 +45,18 @@ public class QnaController {
 	@GetMapping("/info/get_qna_list")
 	@ResponseBody
 	public Object getQnaList(
+			@RequestParam("page_limit") int page_limit,
+			@RequestParam("block_limit") int block_limit,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "bq_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("getQnaList()");
 	
-		Map<String, Object> qnaList = qnaService.getQnaPagingList(sortValue, order, page);
+		Map<String, Object> qnaList = qnaService.getQnaPagingList(page_limit, sortValue, order, page);
 		
 		int unansweredQnaCnt = qnaService.getUnansweredQnaCnt();
 		
-		Map<String, Object> qnaListPage = qnaService.getQnaListPageNum(page);
+		Map<String, Object> qnaListPage = qnaService.getQnaListPageNum(page_limit, block_limit, page);
 		
 		qnaList.put("qnaListPageNum", qnaListPage);
 		qnaList.put("sortValue", sortValue);
@@ -69,6 +71,8 @@ public class QnaController {
 	@GetMapping("/info/search_qna_list")
 	@ResponseBody
 	public Object searchQnaList(
+			@RequestParam("page_limit") int page_limit,
+			@RequestParam("block_limit") int block_limit,
 			@RequestParam("searchPart") String searchPart,
 			@RequestParam("searchString") String searchString, 
 			@RequestParam(value = "sortValue", required = false, defaultValue = "bq_no") String sortValue,
@@ -77,12 +81,12 @@ public class QnaController {
 		log.info("searchQnaList()");
 
 		Map<String, Object> searchQnaList = 
-				qnaService.searchQnaPagingList(searchPart, searchString, sortValue, order, page);
+				qnaService.searchQnaPagingList(page_limit, searchPart, searchString, sortValue, order, page);
 		
 		int unansweredSearchQnaCnt = qnaService.getUnansweredSearchQnaCnt(searchPart, searchString);
 		
 		Map<String, Object> searchQnaListPageNum = 
-				qnaService.searchQnaListPageNum(searchPart, searchString, page);
+				qnaService.searchQnaListPageNum(page_limit, block_limit, searchPart, searchString, page);
 		
 		searchQnaList.put("searchQnaListPageNum", searchQnaListPageNum);
 		searchQnaList.put("sortValue", sortValue);
@@ -99,6 +103,8 @@ public class QnaController {
 	@GetMapping("/info/get_qna_list_by_category")
 	@ResponseBody
 	public Object getQnaListByCategory(
+			@RequestParam("page_limit") int page_limit,
+			@RequestParam("block_limit") int block_limit,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "bq_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -106,12 +112,12 @@ public class QnaController {
 		log.info("getQnaListByCategory()");
 		
 		Map<String, Object> qnaListByCategoryWithPage = 
-				qnaService.getQnaListByCategoryWithPage(page, sortValue, order, bqc_no);
+				qnaService.getQnaListByCategoryWithPage(page_limit, page, sortValue, order, bqc_no);
 		
 		int unansweredCategoryQnaCnt = qnaService.getUnansweredCategoryQnaCnt(bqc_no);
 				
 		Map<String, Object> qnaListByCategoryPageNum = 
-				qnaService.getQnaByCategoryPageNum(page, bqc_no);
+				qnaService.getQnaByCategoryPageNum(page_limit, block_limit, page, bqc_no);
 		
 		qnaListByCategoryWithPage.put("qnaListByCategoryPageNum", qnaListByCategoryPageNum);
 		qnaListByCategoryWithPage.put("sortValue", sortValue);
@@ -260,14 +266,18 @@ public class QnaController {
 	@GetMapping("/cate_info/get_category_list")
 	@ResponseBody
 	public Object getCategoryList(
+			@RequestParam("page_limit") int page_limit,
+			@RequestParam("block_limit") int block_limit,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "bqc_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("getCategoryList()");
 		
-		Map<String, Object> qnaCategoryList = qnaService.getQnaCategoryPagingList(sortValue, order, page);
+		Map<String, Object> qnaCategoryList = 
+				qnaService.getQnaCategoryPagingList(page_limit, sortValue, order, page);
 		
-		Map<String, Object> qnaCategoryListPage = qnaService.getQnaCategoryListPageNum(page);
+		Map<String, Object> qnaCategoryListPage = 
+				qnaService.getQnaCategoryListPageNum(page_limit, block_limit, page);
 		
 		qnaCategoryList.put("qnaCategoryListPageNum", qnaCategoryListPage);
 		qnaCategoryList.put("sortValue", sortValue);
@@ -281,6 +291,8 @@ public class QnaController {
 	@GetMapping("/cate_info/search_category_list")
 	@ResponseBody
 	public Object searchCategoryList(
+			@RequestParam("page_limit") int page_limit,
+			@RequestParam("block_limit") int block_limit,
 			@RequestParam("searchPart") String searchPart,
 			@RequestParam("searchString") String searchString, 
 			@RequestParam(value = "sortValue", required = false, defaultValue = "bqc_no") String sortValue,
@@ -289,10 +301,10 @@ public class QnaController {
 		log.info("searchCategoryList()");
 	
 		Map<String, Object> searchQnaCategoryList = 
-				qnaService.searchQnaCategoryPagingList(searchPart, searchString, sortValue, order, page);
+				qnaService.searchQnaCategoryPagingList(page_limit, searchPart, searchString, sortValue, order, page);
 		
 		Map<String, Object> searchQnaCategoryListPageNum = 
-				qnaService.searchQnaCategoryListPageNum(searchPart, searchString, page);
+				qnaService.searchQnaCategoryListPageNum(page_limit, block_limit, searchPart, searchString, page);
 		
 		searchQnaCategoryList.put("searchQnaCategoryListPageNum", searchQnaCategoryListPageNum);
 		searchQnaCategoryList.put("sortValue", sortValue);
@@ -354,14 +366,16 @@ public class QnaController {
 	@GetMapping("/noti_info/get_notice_list")
 	@ResponseBody
 	public Object getNoticeList(
+			@RequestParam("page_limit") int page_limit,
+			@RequestParam("block_limit") int block_limit,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "bqn_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("getNoticeList()");
 		
-		Map<String, Object> qnaNoticeList = qnaService.getQnaNoticePagingList(sortValue, order, page);
+		Map<String, Object> qnaNoticeList = qnaService.getQnaNoticePagingList(page_limit, sortValue, order, page);
 		
-		Map<String, Object> qnaNoticeListPageNum = qnaService.getQnaNoticeListPageNum(page);
+		Map<String, Object> qnaNoticeListPageNum = qnaService.getQnaNoticeListPageNum(page_limit, block_limit, page);
 		qnaNoticeList.put("qnaNoticeListPageNum", qnaNoticeListPageNum);
 		qnaNoticeList.put("sortValue", sortValue);
 		qnaNoticeList.put("order", order);
@@ -374,6 +388,8 @@ public class QnaController {
 	@GetMapping("/noti_info/search_notice_list")
 	@ResponseBody
 	public Object searchNoticeList(
+			@RequestParam("page_limit") int page_limit,
+			@RequestParam("block_limit") int block_limit,
 			@RequestParam("searchPart") String searchPart,
 			@RequestParam("searchString") String searchString, 
 			@RequestParam(value = "sortValue", required = false, defaultValue = "bqn_no") String sortValue,
@@ -382,10 +398,10 @@ public class QnaController {
 		log.info("searchNoticeList()");
 		
 		Map<String, Object> searchQnaNoticeList = 
-				qnaService.searchQnaNoticePagingList(searchPart, searchString, sortValue, order, page);
+				qnaService.searchQnaNoticePagingList(page_limit, searchPart, searchString, sortValue, order, page);
 		
 		Map<String, Object> searchQnaNoticeListPageNum = 
-				qnaService.searchQnaNoticeListPageNum(searchPart, searchString, page);
+				qnaService.searchQnaNoticeListPageNum(page_limit, block_limit, searchPart, searchString, page);
 		
 		searchQnaNoticeList.put("searchQnaNoticeListPageNum", searchQnaNoticeListPageNum);
 		searchQnaNoticeList.put("sortValue", sortValue);
