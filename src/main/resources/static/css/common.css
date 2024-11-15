@@ -14,7 +14,7 @@
     --middleFontSize: 0.8em;
     --menuFontSize: 0.95em;
     --titleFontSize: 1.3em;
-    --basicLineHeight: 1.4;
+    --basicLineHeight: 1.5;
     --titleLineHeight: 1.7;
     --etcFontSize: 12px;
     --semiBold: 500;
@@ -59,6 +59,7 @@
     --shortContentHeight: 150px;
     --longContentHeight: 350px;
     --contentMaxHeight: 525px;
+    --contConnectMaxHeight: 610px;
     --contentThumbHeight: 350px;
     --borderTextareaHeight: 103px;
 
