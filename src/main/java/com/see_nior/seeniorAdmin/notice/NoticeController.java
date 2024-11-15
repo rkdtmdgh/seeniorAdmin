@@ -42,15 +42,18 @@ public class NoticeController {
 	@GetMapping("/info/get_notice_list")
 	@ResponseBody
 	public Object getNoticeList(
+			@RequestParam("page_limit") int page_limit,
+			@RequestParam("block_limit") int block_limit,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "n_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("getNoticeList()");
 		
 		Map<String, Object> noticeList = 
-				noticeService.getNoticePagingList(sortValue, order, page);
+				noticeService.getNoticePagingList(page_limit, sortValue, order, page);
 		
-		Map<String, Object> noticeListPageNum = noticeService.getNoticeListPageNum(page);
+		Map<String, Object> noticeListPageNum = 
+				noticeService.getNoticeListPageNum(page_limit, block_limit, page);
 		
 		noticeList.put("noticeListPageNum", noticeListPageNum);
 		noticeList.put("sortValue", sortValue);
@@ -63,6 +66,8 @@ public class NoticeController {
 	@GetMapping("/info/search_notice_list")
 	@ResponseBody
 	public Object searchNoticeList(
+			@RequestParam("page_limit") int page_limit,
+			@RequestParam("block_limit") int block_limit,
 			@RequestParam("searchPart") String searchPart,
 			@RequestParam("searchString") String searchString, 
 			@RequestParam(value = "sortValue", required = false, defaultValue = "n_no") String sortValue,
@@ -71,10 +76,10 @@ public class NoticeController {
 		log.info("searchNoticeList()");
 		
 		Map<String, Object> searchNoticeList = 
-				noticeService.searchNoticePagingList(searchPart, searchString, sortValue, order, page);
+				noticeService.searchNoticePagingList(page_limit, searchPart, searchString, sortValue, order, page);
 		
 		Map<String, Object> searchNoticeListPageNum = 
-				noticeService.searchNoticeListPageNum(searchPart, searchString, page);
+				noticeService.searchNoticeListPageNum(page_limit, block_limit, searchPart, searchString, page);
 		
 		searchNoticeList.put("searchNoticeListPageNum", searchNoticeListPageNum);
 		searchNoticeList.put("sortValue", sortValue);
@@ -177,16 +182,8 @@ public class NoticeController {
 	public Object test() {
 		log.info("test()");
 		
-		Map<String, Object> noticeList = 
-				noticeService.getNoticePagingList("n_no", "desc", 1);
 		
-		Map<String, Object> noticeListPageNum = noticeService.getNoticeListPageNum(1);
-		
-		noticeList.put("noticeListPageNum", noticeListPageNum);
-		noticeList.put("n_no", "m_no");
-		noticeList.put("desc", "desc");
-		
-		return noticeList;
+		return null;
 		
 	}
 	

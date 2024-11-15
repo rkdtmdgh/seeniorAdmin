@@ -38,14 +38,18 @@ public class UserController {
 	@GetMapping("/info/get_user_account_list")
 	@ResponseBody
 	public Object getUserAccountList(
+			@RequestParam("page_limit") int page_limit,
+			@RequestParam("block_limit") int block_limit,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "u_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("getUserAccountList()");
 		
-		Map<String, Object> userAccountList = userService.getUserAccountPagingList(sortValue, order, page);
+		Map<String, Object> userAccountList = 
+				userService.getUserAccountPagingList(page_limit, sortValue, order, page);
 		
-		Map<String, Object> userAccountListPage = userService.getUserListPageNum(page);
+		Map<String, Object> userAccountListPage = 
+				userService.getUserListPageNum(page_limit, block_limit, page);
 		userAccountList.put("userAccountListPage", userAccountListPage);
 		userAccountList.put("sortValue", sortValue);
 		userAccountList.put("order", order);
@@ -57,6 +61,8 @@ public class UserController {
 	@GetMapping("/info/search_user_account_list")
 	@ResponseBody
 	public Object searchUserAccountList(
+			@RequestParam("page_limit") int page_limit,
+			@RequestParam("block_limit") int block_limit,
 			@RequestParam("searchPart") String searchPart,
 			@RequestParam("searchString") String searchString, 
 			@RequestParam(value = "sortValue", required = false, defaultValue = "u_no") String sortValue,
@@ -65,10 +71,10 @@ public class UserController {
 		log.info("searchUserAccountList()");
 		
 		Map<String, Object> searchUserList = 
-				userService.searchUserPagingList(searchPart, searchString, sortValue, order, page);
+				userService.searchUserPagingList(page_limit, searchPart, searchString, sortValue, order, page);
 		
 		Map<String, Object> searchUserAccountListPageNum = 
-				userService.searchUserListPageNum(page, searchPart, searchString);
+				userService.searchUserListPageNum(page_limit, block_limit, page, searchPart, searchString);
 		
 		searchUserList.put("searchUserAccountListPageNum", searchUserAccountListPageNum);
 		searchUserList.put("sortValue", sortValue);
