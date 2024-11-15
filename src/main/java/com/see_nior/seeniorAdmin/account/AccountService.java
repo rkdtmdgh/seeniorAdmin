@@ -151,43 +151,48 @@ public class AccountService {
 	}
 	
 	// 관리자 리스트 가져오기
-	public Map<String, Object> getAdminPagingList(String sortValue, String order, int page) {
+	public Map<String, Object> getAdminPagingList(int page_limit, String sortValue, String order, int page) {
 		log.info("getAdminList()");
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
 		List<AdminAccountDto> adminAccountDtos = 
-				accountMapper.selectAdminList(PagingUtil.pagingParams(sortValue, order, page));
+				accountMapper.selectAdminList(PagingUtil.pagingParams(page_limit, sortValue, order, page));
 		pagingList.put("adminAccountDtos", adminAccountDtos);
 		
 		return pagingList;
+		
 	}
 	
 	// 관리자 리스트 총 개수
-	public Map<String, Object> getAdminListPageNum(int page) {
+	public Map<String, Object> getAdminListPageNum(int page_limit, int block_limit, int page) {
 		log.info("getAccountListPageNum()");
 		
 		// 전체 리스트 개수 조회 
 		int accountListCnt = accountMapper.selectAllAccountListCnt();
 		
-		return PagingUtil.pageNum("accountListCnt", accountListCnt, page);
+		return PagingUtil.pageNum(page_limit, block_limit, "accountListCnt", accountListCnt, page);
+		
 	}
 	
 	// 관리자 검색 리스트 가져오기
-	public Map<String, Object> searchAdminPagingList(String searchPart, String searchString, String sortValue, String order, int page) {
+	public Map<String, Object> searchAdminPagingList(
+			int page_limit, String searchPart, String searchString, String sortValue, String order, int page) {
 		log.info("searchAdminPagingList()");
 		
 		Map<String, Object> pagingSearchList = new HashMap<>();
 
 		List<AdminAccountDto> adminAccountDtos = 
-				accountMapper.selectSearchAdminList(PagingUtil.searchPagingParams(searchPart, searchString, sortValue, order, page));
+				accountMapper.selectSearchAdminList(PagingUtil.searchPagingParams(page_limit, searchPart, searchString, sortValue, order, page));
 		pagingSearchList.put("adminAccountDtos", adminAccountDtos);
 		
 		return pagingSearchList;
+		
 	}
 	
 	// 관리자 검색 리스트 개수
-	public Map<String, Object> searchAdminListPageNum(String searchPart, String searchString, int page) {
+	public Map<String, Object> searchAdminListPageNum(
+			int page_limit, int block_limit, String searchPart, String searchString, int page) {
 		log.info("searchAdminListPageNum()");
 		
 		Map<String, Object> searchParams = new HashMap<>();
@@ -197,7 +202,8 @@ public class AccountService {
 		// 전체 리스트 개수 조회 
 		int searchAdminListCnt = accountMapper.selectSearchAdminListCnt(searchParams);
 		
-		return PagingUtil.pageNum("searchAdminListCnt", searchAdminListCnt, page);
+		return PagingUtil.pageNum(page_limit, block_limit, "searchAdminListCnt", searchAdminListCnt, page);
+		
 	}
 	
 	// 관리자 가입 승인
