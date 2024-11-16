@@ -1,5 +1,6 @@
 package com.see_nior.seeniorAdmin.report;
 
+import java.security.Principal;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -26,7 +27,6 @@ import lombok.extern.log4j.Log4j2;
 public class ReportController {
 
 	final private ReportService reportService;
-	final private BoardService boardService;
 	
 ///////////////////////////////////////////////////////////////////////// 신고 카테고리
 	
@@ -87,16 +87,18 @@ public class ReportController {
 	@ResponseBody
 	@GetMapping("/cate_info/get_category_list")
 	public Object getCategoryList(
+			@RequestParam(value = "page_limit") int page_limit,
+			@RequestParam(value = "block_limit") int block_limit,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
 			@RequestParam(value = "sortValue", required = false, defaultValue = "brc_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		log.info("getCategoryList()");
 		
 		// 페이지 번호에 따른 신고 카테고리 리스트들 가져오기
-		Map<String, Object> reportCategoryListWithPage = reportService.getReportCategoryListWithPage(page, sortValue, order);
+		Map<String, Object> reportCategoryListWithPage = reportService.getReportCategoryListWithPage(page_limit, sortValue, order, page);
 		
 		// 질환 카테고리 총 페이지 개수 가져오기
-		Map<String, Object> reportCategoryListPageNum = reportService.getReportCategoryListPageNum(page);
+		Map<String, Object> reportCategoryListPageNum = reportService.getReportCategoryListPageNum(page_limit, block_limit, page);
 		
 		reportCategoryListWithPage.put("reportCategoryListPageNum", reportCategoryListPageNum);
 		reportCategoryListWithPage.put("sortValue", sortValue);
@@ -147,6 +149,8 @@ public class ReportController {
 	@ResponseBody
 	@GetMapping("/cate_info/search_category_list")
 	public Object searchReportCategoryList(
+			@RequestParam(value = "page_limit") int page_limit,
+			@RequestParam(value = "block_limit") int block_limit,
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "brc_no") String sortValue,
@@ -155,10 +159,10 @@ public class ReportController {
 		log.info("searchReportCategoryList()");
 		
 		// 페이지 번호에 따른 검색 신고 카테고리 리스트들 가져오기
-		Map<String, Object> searchReportCategoryListWithPage = reportService.getSearchReportCategoryListWithPage(searchPart, searchString, sortValue, order, page);
+		Map<String, Object> searchReportCategoryListWithPage = reportService.getSearchReportCategoryListWithPage(page_limit, searchPart, searchString, sortValue, order, page);
 		
 		// 검색 신고 카테고리 총 페이지 개수 가져오기
-		Map<String, Object> searchReportCategoryListPageNum = reportService.getSearchReportCategoryListPageNum(searchPart, searchString, page);
+		Map<String, Object> searchReportCategoryListPageNum = reportService.getSearchReportCategoryListPageNum(page_limit, block_limit, searchPart, searchString, page);
 		
 		searchReportCategoryListWithPage.put("searchReportCategoryListPageNum", searchReportCategoryListPageNum);
 		searchReportCategoryListWithPage.put("searchPart", searchPart);
@@ -181,23 +185,35 @@ public class ReportController {
 		
 	}
 	
+	// 홈 화면에서 보여질 신고 가져오기(비동기)
+	@ResponseBody
+	@GetMapping("/main/get_report_list")
+	public Object getReportListForMain(@RequestParam(value = "page_limit") int page_limit) {
+		log.info("getReportListForMain()");
+		
+		return reportService.getReportListForMain(page_limit);
+		
+	}
+	
 	// 모든 신고 가져오기(페이지네이션 => 비동기)
 	@ResponseBody
 	@GetMapping("/info/get_report_list")
 	public Object getReportList(
+			@RequestParam(value = "page_limit") int page_limit,
+			@RequestParam(value = "block_limit") int block_limit,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "br_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		log.info("getReportList()");
 		
 		// 페이지 번호에 따른 신고 리스트들 가져오기
-		Map<String, Object> reportListWithPage = reportService.getReportListWithPage(page, sortValue, order);
+		Map<String, Object> reportListWithPage = reportService.getReportListWithPage(page_limit, sortValue, order, page);
 		
 		// 처리 안된 신고의 개수 가져오기
 		int unresultedReportCnt = reportService.getUnresultedReportCnt();
 		
 		// 신고 총 페이지 개수 가져오기
-		Map<String, Object> reportListPageNum = reportService.getReportListPageNum(page);
+		Map<String, Object> reportListPageNum = reportService.getReportListPageNum(page_limit, block_limit, page);
 		
 		reportListWithPage.put("reportListPageNum", reportListPageNum);
 		reportListWithPage.put("sortValue", sortValue);
@@ -212,6 +228,8 @@ public class ReportController {
 	@ResponseBody
 	@GetMapping("/info/get_report_list_by_category")
 	public Object getReportListByCategory(
+			@RequestParam(value = "page_limit") int page_limit,
+			@RequestParam(value = "block_limit") int block_limit,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "br_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
@@ -219,13 +237,13 @@ public class ReportController {
 		log.info("getReportListByCategory()");
 		
 		// 페이지 번호에 따른 카테고리별 질환 리스트들 가져오기
-		Map<String, Object> reportListByCategoryWithPage = reportService.getReportListByCategoryWithPage(page, sortValue, order, brc_no);
+		Map<String, Object> reportListByCategoryWithPage = reportService.getReportListByCategoryWithPage(page_limit, page, sortValue, order, brc_no);
 		
 		// 처리 안된 신고의 개수 가져오기(카테고리별)
 		int unresultedReportCntByCategory = reportService.getUnresultedReportCntByCategory(brc_no);
 		
 		// 카테고리별 질환 총 페이지 개수 가져오기
-		Map<String, Object> reportListByCategoryPageNum = reportService.getReportListByCategoryPageNum(page, brc_no);
+		Map<String, Object> reportListByCategoryPageNum = reportService.getReportListByCategoryPageNum(page_limit, block_limit, page, brc_no);
 		
 		reportListByCategoryWithPage.put("reportListByCategoryPageNum", reportListByCategoryPageNum);
 		reportListByCategoryWithPage.put("sortValue", sortValue);
@@ -241,6 +259,8 @@ public class ReportController {
 	@ResponseBody
 	@GetMapping("/info/search_report_list")
 	public Object searchReportList(
+			@RequestParam(value = "page_limit") int page_limit,
+			@RequestParam(value = "block_limit") int block_limit,
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "br_no") String sortValue,
@@ -249,15 +269,15 @@ public class ReportController {
 		log.info("searchReportList()");
 		
 		// 페이지 번호에 따른 검색 신고 리스트들 가져오기
-		Map<String, Object> searchReportListWithPage = reportService.getSearchReportListWithPage(searchPart, searchString, sortValue, order, page);
+		Map<String, Object> searchReportListWithPage = reportService.getSearchReportListWithPage(page_limit, searchPart, searchString, sortValue, order, page);
 		
 		// 처리 안된 신고의 개수 가져오기(검색한 신고)
 		int unresultedReportCntBySearch = reportService.getUnresultedReportCntBySearch(searchPart, searchString);
 		
 		// 검색한 질환 총 페이지 개수 가져오기
-		Map<String, Object> searchreportListPageNum = reportService.getSearchReportListPageNum(searchPart, searchString, page);
+		Map<String, Object> searchReportListPageNum = reportService.getSearchReportListPageNum(page_limit, block_limit, searchPart, searchString, page);
 		
-		searchReportListWithPage.put("searchreportListPageNum", searchreportListPageNum);
+		searchReportListWithPage.put("searchReportListPageNum", searchReportListPageNum);
 		searchReportListWithPage.put("searchPart", searchPart);
 		searchReportListWithPage.put("searchString", searchString);
 		searchReportListWithPage.put("sortValue", sortValue);
@@ -268,24 +288,40 @@ public class ReportController {
 		
 	}
 	
-	// ------------------------------------------------------------------- 신고 결과
+////////////////////////////////////////////////////////// 신고 결과
 	
 	// 신고 처리하기 양식
 	@GetMapping("/info/result_form")
-	public String detailForm(
+	public String resultForm(
 			@RequestParam(value = "br_no") int br_no, 
 			@RequestParam(value = "br_post_no") int br_post_no, 
 			Model model) {
-		log.info("detailForm");
+		log.info("resultForm");
 		
 		ReportDto reportDto = reportService.getReport(br_no, br_post_no);
-		BoardPostsDto boardPostsDto = boardService.modifyForm(br_post_no);
 		model.addAttribute("reportDto", reportDto);
-		model.addAttribute("boardPostsDto", boardPostsDto);
 		
 		return PagePath.REPORT_RESULT_FORM.getValue();
 		
 	}
+	
+	/*
+	// 신고 처리 확인
+	@ResponseBody
+	@PostMapping("/info/result_confirm")
+	public boolean reportResultConfirm(
+			@RequestParam(value = "br_no") int br_no,
+			@RequestParam(value = "brr_")
+			@RequestParam(value = "brr_result") String brr_result,
+			Principal principal) {
+		log.info("reportResultConfirm()");
+		
+		boolean reportResultConfirm = reportService.reportResultConfirm(br_no, brr_result, principal.getName());
+		
+		return reportResultConfirm;
+		
+	}
+	*/
 	
 	
 	

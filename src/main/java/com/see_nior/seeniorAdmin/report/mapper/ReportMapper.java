@@ -45,6 +45,9 @@ public interface ReportMapper {
 
 ////////////////////////////////////////////////////////// 신고
 	
+	// 홈 화면에서 보여질 신고 가져오기
+	public List<ReportDto> getReportListForMain(int page_limit);
+	
 	// 페이지 번호에 따른 신고 리스트들 가져오기 (모든 신고)
 	public List<ReportDto> getReportListWithPage(Map<String, Object> pagingParams);
 
@@ -74,6 +77,7 @@ public interface ReportMapper {
 
 	// 처리되지 않은 신고의 개수 가져오기 (검색한 신고)
 	public int getUnresultedReportCntBySearch(Map<String, Object> pagingParams);
+
 	
 
 }

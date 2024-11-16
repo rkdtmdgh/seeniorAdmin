@@ -30,7 +30,7 @@ public class AdvertisementController {
 	
 	// 이미지 서버 경로
 //	final private String advertisementImgServerPath = "http://127.0.0.1:8091/seeniorUploadImg/advertisement/";
-	private String advertisementImgServerPath = "http://" + ImgUrlPath.ADVERTISEMENT_PATH.getValue();
+	final private String advertisementImgServerPath = "http://" + ImgUrlPath.ADVERTISEMENT_PATH.getValue();
 	
 ////////////////////////////////////////////////////////// 광고 위치
 	
@@ -92,16 +92,18 @@ public class AdvertisementController {
 	@ResponseBody
 	@GetMapping("/cate_info/get_category_list")
 	public Object getCategoryList(
+			@RequestParam(value = "page_limit") int page_limit,
+			@RequestParam(value = "block_limit") int block_limit,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
 			@RequestParam(value = "sortValue", required = false, defaultValue = "ac_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		log.info("getCategoryList()");
 		
 		// 페이지 번호에 따른 광고 위치 리스트들 가져오기
-		Map<String, Object> advertisementCategoryListWithPage = advertisementService.getAdvertisementCategoryListWithPage(page, sortValue, order);
+		Map<String, Object> advertisementCategoryListWithPage = advertisementService.getAdvertisementCategoryListWithPage(page_limit, sortValue, order, page);
 		
 		// 광고 위치 총 페이지 개수 가져오기
-		Map<String, Object> advertisementCategoryListPageNum = advertisementService.getAdvertisementCategoryListPageNum(page);
+		Map<String, Object> advertisementCategoryListPageNum = advertisementService.getAdvertisementCategoryListPageNum(page_limit, block_limit, page);
 		
 		advertisementCategoryListWithPage.put("advertisementCategoryListPageNum", advertisementCategoryListPageNum);
 		advertisementCategoryListWithPage.put("sortValue", sortValue);
@@ -152,6 +154,8 @@ public class AdvertisementController {
 	@ResponseBody
 	@GetMapping("/cate_info/search_category_list")
 	public Object searchAdvertisementCategoryList(
+			@RequestParam(value = "page_limit") int page_limit,
+			@RequestParam(value = "block_limit") int block_limit,
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "ac_no") String sortValue,
@@ -160,10 +164,10 @@ public class AdvertisementController {
 		log.info("searchAdvertisementCategoryList()");
 		
 		// 페이지 번호에 따른 검색 광고 위치 리스트들 가져오기
-		Map<String, Object> searchAdvertisementCategoryListWithPage = advertisementService.getSearchAdvertisementCategoryListWithPage(searchPart, searchString, sortValue, order, page);
+		Map<String, Object> searchAdvertisementCategoryListWithPage = advertisementService.getSearchAdvertisementCategoryListWithPage(page_limit, searchPart, searchString, sortValue, order, page);
 		
 		// 검색 광고 위치 총 페이지 개수 가져오기
-		Map<String, Object> searchAdvertisementCategoryListPageNum = advertisementService.getSearchAdvertisementCategoryListPageNum(searchPart, searchString, page);
+		Map<String, Object> searchAdvertisementCategoryListPageNum = advertisementService.getSearchAdvertisementCategoryListPageNum(page_limit, block_limit, searchPart, searchString, page);
 		
 		searchAdvertisementCategoryListWithPage.put("searchAdvertisementCategoryListPageNum", searchAdvertisementCategoryListPageNum);
 		searchAdvertisementCategoryListWithPage.put("searchPart", searchPart);
@@ -219,7 +223,7 @@ public class AdvertisementController {
 		
 	}
 	
-	// 홈 화면에서 보여질 광고 가져오기(5개만 가져오기 => 비동기)
+	// 홈 화면에서 보여질 광고 가져오기(비동기)
 	@ResponseBody
 	@GetMapping("/main/get_advertisement_list")
 	public Object getAdvertismentListForMain(@RequestParam(value = "page_limit") int page_limit) {
@@ -233,16 +237,18 @@ public class AdvertisementController {
 	@ResponseBody
 	@GetMapping("/info/get_advertisement_list")
 	public Object getAdvertisementList(
+			@RequestParam(value = "page_limit") int page_limit,
+			@RequestParam(value = "block_limit") int block_limit,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "ad_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		log.info("getAdvertisementList()");
 		
 		// 페이지 번호에 따른 광고 리스트들 가져오기
-		Map<String, Object> advertisementListWithPage = advertisementService.getAdvertisementListWithPage(page, sortValue, order);
+		Map<String, Object> advertisementListWithPage = advertisementService.getAdvertisementListWithPage(page_limit, sortValue, order, page);
 		
 		// 질환 총 페이지 개수 가져오기
-		Map<String, Object> advertisementListPageNum = advertisementService.getAdvertisementListPageNum(page);
+		Map<String, Object> advertisementListPageNum = advertisementService.getAdvertisementListPageNum(page_limit, block_limit, page);
 		
 		advertisementListWithPage.put("advertisementListPageNum", advertisementListPageNum);
 		advertisementListWithPage.put("sortValue", sortValue);
@@ -257,6 +263,8 @@ public class AdvertisementController {
 	@GetMapping({"/info/get_advertisement_list_by_category",
 				"/cate_info/get_advertisement_list_by_category"})
 	public Object getAdvertisementListByCategory(
+			@RequestParam(value = "page_limit") int page_limit,
+			@RequestParam(value = "block_limit") int block_limit,
 			@RequestParam(value = "page", required = false, defaultValue = "1")int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "ad_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
@@ -264,10 +272,10 @@ public class AdvertisementController {
 		log.info("getAdvertisementListByCategory()");
 		
 		// 페이지 번호에 따른 위치별 광고 리스트들 가져오기
-		Map<String, Object> advertisementListByCategoryWithPage = advertisementService.getAdvertisementListByCategoryWithPage(page, sortValue, order, ac_no);
+		Map<String, Object> advertisementListByCategoryWithPage = advertisementService.getAdvertisementListByCategoryWithPage(page_limit, page, sortValue, order, ac_no);
 		
 		// 위치별 광고 총 페이지 개수 가져오기
-		Map<String, Object> advertisementByCategoryPageNum = advertisementService.getAdvertisementByCategoryPageNum(page, ac_no);
+		Map<String, Object> advertisementByCategoryPageNum = advertisementService.getAdvertisementByCategoryPageNum(page_limit, block_limit, page, ac_no);
 		
 		advertisementListByCategoryWithPage.put("advertisementByCategoryPageNum", advertisementByCategoryPageNum);
 		advertisementListByCategoryWithPage.put("sortValue", sortValue);
@@ -349,6 +357,8 @@ public class AdvertisementController {
 	@ResponseBody
 	@GetMapping("/info/search_advertisement_list")
 	public Object searchAdvertisementList(
+			@RequestParam(value = "page_limit") int page_limit,
+			@RequestParam(value = "block_limit") int block_limit,
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "ad_no") String sortValue,
@@ -357,10 +367,10 @@ public class AdvertisementController {
 		log.info("searchAdvertisementList()");
 		
 		// 페이지 번호에 따른 검색 광고 리스트들 가져오기
-		Map<String, Object> searchAdvertisementListWithPage = advertisementService.getSearchAdvertisementListWithPage(searchPart, searchString, sortValue, order, page);
+		Map<String, Object> searchAdvertisementListWithPage = advertisementService.getSearchAdvertisementListWithPage(page_limit, searchPart, searchString, sortValue, order, page);
 		
 		// 검색 광고 총 페이지 개수 가져오기
-		Map<String, Object> searchAdvertisementListPageNum = advertisementService.getSearchAdvertisementListPageNum(searchPart, searchString, page);
+		Map<String, Object> searchAdvertisementListPageNum = advertisementService.getSearchAdvertisementListPageNum(page_limit, block_limit, searchPart, searchString, page);
 		
 		searchAdvertisementListWithPage.put("searchAdvertisementListPageNum", searchAdvertisementListPageNum);
 		searchAdvertisementListWithPage.put("searchPart", searchPart);

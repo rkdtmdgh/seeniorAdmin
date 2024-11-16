@@ -88,16 +88,18 @@ public class DiseaseController {
 	@ResponseBody
 	@GetMapping("/cate_info/get_category_list")
 	public Object getCategoryList(
+			@RequestParam(value = "page_limit") int page_limit,
+			@RequestParam(value = "block_limit") int block_limit,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
 			@RequestParam(value = "sortValue", required = false, defaultValue = "dc_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		log.info("getCategoryList()");
 		
 		// 페이지 번호에 따른 질환 카테고리 리스트들 가져오기
-		Map<String, Object> diseaseCategoryListWithPage = diseaseService.getDiseaseCategoryListWithPage(page, sortValue, order);
+		Map<String, Object> diseaseCategoryListWithPage = diseaseService.getDiseaseCategoryListWithPage(page_limit, sortValue, order, page);
 		
 		// 질환 카테고리 총 페이지 개수 가져오기
-		Map<String, Object> diseaseCategoryListPageNum = diseaseService.getDiseaseCategoryListPageNum(page);
+		Map<String, Object> diseaseCategoryListPageNum = diseaseService.getDiseaseCategoryListPageNum(page_limit, block_limit, page);
 		
 		diseaseCategoryListWithPage.put("diseaseCategoryListPageNum", diseaseCategoryListPageNum);
 		diseaseCategoryListWithPage.put("sortValue", sortValue);
@@ -148,6 +150,8 @@ public class DiseaseController {
 	@ResponseBody
 	@GetMapping("/cate_info/search_category_list")
 	public Object searchDiseaseCategoryList(
+			@RequestParam(value = "page_limit") int page_limit,
+			@RequestParam(value = "block_limit") int block_limit,
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "dc_no") String sortValue,
@@ -156,10 +160,10 @@ public class DiseaseController {
 		log.info("searchDiseaseCategoryList()");
 		
 		// 페이지 번호에 따른 검색 질환 카테고리 리스트들 가져오기
-		Map<String, Object> searchDiseaseCategoryListWithPage = diseaseService.getSearchDiseaseCategoryListWithPage(searchPart, searchString, sortValue, order, page);
+		Map<String, Object> searchDiseaseCategoryListWithPage = diseaseService.getSearchDiseaseCategoryListWithPage(page_limit, searchPart, searchString, sortValue, order, page);
 		
 		// 검색 질환 카테고리 총 페이지 개수 가져오기
-		Map<String, Object> searchDiseaseCategoryListPageNum = diseaseService.getSearchDiseaseCategoryListPageNum(searchPart, searchString, page);
+		Map<String, Object> searchDiseaseCategoryListPageNum = diseaseService.getSearchDiseaseCategoryListPageNum(page_limit, block_limit, searchPart, searchString, page);
 		
 		searchDiseaseCategoryListWithPage.put("searchDiseaseCategoryListPageNum", searchDiseaseCategoryListPageNum);
 		searchDiseaseCategoryListWithPage.put("searchPart", searchPart);
@@ -220,16 +224,18 @@ public class DiseaseController {
 	@ResponseBody
 	@GetMapping("/info/get_disease_list")
 	public Object getDiseaseList(
+			@RequestParam(value = "page_limit") int page_limit,
+			@RequestParam(value = "block_limit") int block_limit,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "d_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		log.info("getDiseaseList()");
 		
 		// 페이지 번호에 따른 질환 리스트들 가져오기
-		Map<String, Object> diseaseListWithPage = diseaseService.getDiseaseListWithPage(page, sortValue, order);
+		Map<String, Object> diseaseListWithPage = diseaseService.getDiseaseListWithPage(page_limit, sortValue, order, page);
 		
 		// 질환 총 페이지 개수 가져오기
-		Map<String, Object> diseaseListPageNum = diseaseService.getDiseaseListPageNum(page);
+		Map<String, Object> diseaseListPageNum = diseaseService.getDiseaseListPageNum(page_limit, block_limit, page);
 		
 		diseaseListWithPage.put("diseaseListPageNum", diseaseListPageNum);
 		diseaseListWithPage.put("sortValue", sortValue);
@@ -243,17 +249,20 @@ public class DiseaseController {
 	@ResponseBody
 	@GetMapping("/info/get_disease_list_by_category")
 	public Object getDiseaseListByCategory(
+			@RequestParam(value = "page_limit") int page_limit,
+			@RequestParam(value = "block_limit") int block_limit,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "d_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "infoNo") int dc_no) {
 		log.info("getDiseaseListByCategory()");
 		
+		
 		// 페이지 번호에 따른 카테고리별 질환 리스트들 가져오기
-		Map<String, Object> diseaseListByCategoryWithPage = diseaseService.getDiseaseListByCategoryWithPage(page, sortValue, order, dc_no);
+		Map<String, Object> diseaseListByCategoryWithPage = diseaseService.getDiseaseListByCategoryWithPage(page_limit, page, sortValue, order, dc_no);
 		
 		// 카테고리별 질환 총 페이지 개수 가져오기
-		Map<String, Object> diseaseListByCategoryPageNum = diseaseService.getDiseaseListByCategoryPageNum(page, dc_no);
+		Map<String, Object> diseaseListByCategoryPageNum = diseaseService.getDiseaseListByCategoryPageNum(page_limit, block_limit, page, dc_no);
 		
 		diseaseListByCategoryWithPage.put("diseaseListByCategoryPageNum", diseaseListByCategoryPageNum);
 		diseaseListByCategoryWithPage.put("sortValue", sortValue);
@@ -315,6 +324,8 @@ public class DiseaseController {
 	@ResponseBody
 	@GetMapping("/info/search_disease_list")
 	public Object searchDiseaseList(
+			@RequestParam(value = "page_limit") int page_limit,
+			@RequestParam(value = "block_limit") int block_limit,
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "d_no") String sortValue,
@@ -323,10 +334,10 @@ public class DiseaseController {
 		log.info("searchDiseaseList()");
 		
 		// 페이지 번호에 따른 검색 질환 리스트들 가져오기
-		Map<String, Object> searchDiseaseListWithPage = diseaseService.getSearchDiseaseListWithPage(searchPart, searchString, sortValue, order, page);
+		Map<String, Object> searchDiseaseListWithPage = diseaseService.getSearchDiseaseListWithPage(page_limit, searchPart, searchString, sortValue, order, page);
 		
 		// 검색 질환 총 페이지 개수 가져오기
-		Map<String, Object> searchDiseaseListPageNum = diseaseService.getSearchDiseaseListPageNum(searchPart, searchString, page);
+		Map<String, Object> searchDiseaseListPageNum = diseaseService.getSearchDiseaseListPageNum(page_limit, block_limit, searchPart, searchString, page);
 		
 		searchDiseaseListWithPage.put("searchDiseaseListPageNum", searchDiseaseListPageNum);
 		searchDiseaseListWithPage.put("searchPart", searchPart);

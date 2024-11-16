@@ -48,13 +48,13 @@ public class QnaService {
 	final private ImageFileService imageFileService;
 	
 	// qna 리스트 가져오기
-	public Map<String, Object> getQnaPagingList(String sortValue, String order, int page) {
+	public Map<String, Object> getQnaPagingList(int page_limit, String sortValue, String order, int page) {
 		log.info("getQnaPagingList()");
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
 		List<AdminAccountDto> qnaDtos = 
-				qnaMapper.selectQnaList(PagingUtil.pagingParams(sortValue, order, page));
+				qnaMapper.selectQnaList(PagingUtil.pagingParams(page_limit, sortValue, order, page));
 		pagingList.put("qnaDtos", qnaDtos);
 		
 		return pagingList;
@@ -62,13 +62,13 @@ public class QnaService {
 	}
 
 	// qna 리스트 총 개수
-	public Map<String, Object> getQnaListPageNum(int page) {
+	public Map<String, Object> getQnaListPageNum(int page_limit, int block_limit, int page) {
 		log.info("getQnaListPageNum()");
 		
 		// 전체 리스트 개수 조회 
 		int qnaListCnt = qnaMapper.selectAllQnaListCnt();
 		
-		return PagingUtil.pageNum("qnaListCnt", qnaListCnt, page);
+		return PagingUtil.pageNum(page_limit, block_limit, "qnaListCnt", qnaListCnt, page);
 		
 	}
 	
@@ -90,14 +90,15 @@ public class QnaService {
 	}
 
 	// qna 검색 리스트 가져오기
-	public Map<String, Object> searchQnaPagingList(String searchPart, String searchString, String sortValue,
+	public Map<String, Object> searchQnaPagingList(
+			int page_limit, String searchPart, String searchString, String sortValue,
 			String order, int page) {
 		log.info("searchQnaPagingList()");
 		
 		Map<String, Object> pagingSearchList = new HashMap<>();
 
 		List<AdminAccountDto> qnaDtos = 
-				qnaMapper.selectSearchQnaList(PagingUtil.searchPagingParams(searchPart, searchString, sortValue, order, page));
+				qnaMapper.selectSearchQnaList(PagingUtil.searchPagingParams(page_limit, searchPart, searchString, sortValue, order, page));
 		pagingSearchList.put("qnaDtos", qnaDtos);
 		
 		return pagingSearchList;
@@ -105,7 +106,8 @@ public class QnaService {
 	}
 
 	// 검색 qna 리스트 개수 
-	public Map<String, Object> searchQnaListPageNum(String searchPart, String searchString, int page) {
+	public Map<String, Object> searchQnaListPageNum(
+			int page_limit, int block_limit, String searchPart, String searchString, int page) {
 		log.info("searchQnaListPageNum()");
 		
 		Map<String, Object> searchParams = new HashMap<>();
@@ -115,7 +117,7 @@ public class QnaService {
 		// 전체 리스트 개수 조회 
 		int searchQnaListCnt = qnaMapper.selectSearchQnaListCnt(searchParams);
 		
-		return PagingUtil.pageNum("searchQnaListCnt", searchQnaListCnt, page);
+		return PagingUtil.pageNum(page_limit, block_limit, "searchQnaListCnt", searchQnaListCnt, page);
 		
 	}
 	
@@ -133,13 +135,14 @@ public class QnaService {
 
 	
 	// qna 카테고리에 따른 리스트 가져오기
-	public Map<String, Object> getQnaListByCategoryWithPage(int page, String sortValue, String order, int bqc_no) {
+	public Map<String, Object> getQnaListByCategoryWithPage(
+			int page_limit, int page, String sortValue, String order, int bqc_no) {
 		log.info("getQnaListByCategoryWithPage()");
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
 		List<AdminAccountDto> qnaDtos = 
-				qnaMapper.selectQnaListForSelectBox(PagingUtil.pagingParamsForSelectBox(sortValue, order, page, bqc_no));
+				qnaMapper.selectQnaListForSelectBox(PagingUtil.pagingParamsForSelectBox(page_limit, sortValue, order, page, bqc_no));
 		pagingList.put("qnaDtos", qnaDtos);
 		
 		return pagingList;
@@ -147,13 +150,13 @@ public class QnaService {
 	}
 
 	// qna 카테고리에 따른 리스트 총 개수
-	public Map<String, Object> getQnaByCategoryPageNum(int page, int bqc_no) {
+	public Map<String, Object> getQnaByCategoryPageNum(int page_limit, int block_limit, int page, int bqc_no) {
 		log.info("getQnaByCategoryPageNum()");
 
 		// 전체 리스트 개수 조회 
 		int qnaListCnt = qnaMapper.selectAllQnaListCntForSelectBox(bqc_no);
 		
-		return PagingUtil.pageNum("qnaListCnt", qnaListCnt, page);
+		return PagingUtil.pageNum(page_limit, block_limit, "qnaListCnt", qnaListCnt, page);
 		
 	}
  
@@ -383,13 +386,13 @@ public class QnaService {
 	}
 
 	// qna 카테고리 페이징 리스트 가져오기
-	public Map<String, Object> getQnaCategoryPagingList(String sortValue, String order, int page) {
+	public Map<String, Object> getQnaCategoryPagingList(int page_limit, String sortValue, String order, int page) {
 		log.info("getQnaCategoryPagingList()");
 		
 		Map<String, Object> pagingCategoryList = new HashMap<>();
 		
 		List<AdminAccountDto> qnaCategoryDtos = 
-				qnaMapper.selectQnaCategoryList(PagingUtil.pagingParams(sortValue, order, page));
+				qnaMapper.selectQnaCategoryList(PagingUtil.pagingParams(page_limit, sortValue, order, page));
 		pagingCategoryList.put("qnaCategoryDtos", qnaCategoryDtos);
 		
 		return pagingCategoryList;
@@ -397,25 +400,25 @@ public class QnaService {
 	}
 
 	// qna 카테고리 리스트 총 개수
-	public Map<String, Object> getQnaCategoryListPageNum(int page) {
+	public Map<String, Object> getQnaCategoryListPageNum(int page_limit, int block_limit, int page) {
 		log.info("getQnaCategoryListPageNum()");
 		
 		// 전체 리스트 개수 조회 
 		int qnaCategoryListCnt = qnaMapper.selectAllQnaCategoryListCnt();
 		
-		return PagingUtil.pageNum("qnaCategoryListCnt", qnaCategoryListCnt, page);
+		return PagingUtil.pageNum(page_limit, block_limit, "qnaCategoryListCnt", qnaCategoryListCnt, page);
 
 	}
 
 	// qna 카테고리 검색 리스트 가져오기
-	public Map<String, Object> searchQnaCategoryPagingList(String searchPart, String searchString, String sortValue,
+	public Map<String, Object> searchQnaCategoryPagingList(int page_limit, String searchPart, String searchString, String sortValue,
 			String order, int page) {
 		log.info("searchQnaCategoryPagingList()");
 		
 		Map<String, Object> pagingSearchCategoryList = new HashMap<>();
 		
 		List<AdminAccountDto> qnaCategoryDtos = 
-				qnaMapper.selectSearchQnaCategoryList(PagingUtil.searchPagingParams(searchPart, searchString, sortValue, order, page));
+				qnaMapper.selectSearchQnaCategoryList(PagingUtil.searchPagingParams(page_limit, searchPart, searchString, sortValue, order, page));
 		pagingSearchCategoryList.put("qnaCategoryDtos", qnaCategoryDtos);
 		
 		return pagingSearchCategoryList;
@@ -423,7 +426,7 @@ public class QnaService {
 	}
 
 	// qna 카테고리 검색 리스트 총 개수
-	public Map<String, Object> searchQnaCategoryListPageNum(String searchPart, String searchString, int page) {
+	public Map<String, Object> searchQnaCategoryListPageNum(int page_limit, int block_limit, String searchPart, String searchString, int page) {
 		log.info("searchQnaCategoryListPageNum()");
 		
 		Map<String, Object> searchParams = new HashMap<>();
@@ -433,7 +436,7 @@ public class QnaService {
 		// 전체 리스트 개수 조회 
 		int searchQnaCategoryListCnt = qnaMapper.selectSearchQnaCategoryListCnt(searchParams);
 		
-		return PagingUtil.pageNum("searchQnaCategoryListCnt", searchQnaCategoryListCnt, page);
+		return PagingUtil.pageNum(page_limit, block_limit, "searchQnaCategoryListCnt", searchQnaCategoryListCnt, page);
 		
 	}
 
@@ -475,13 +478,13 @@ public class QnaService {
 	////////////// 공지사항
 	
 	// qna 공지사항 가져오기
-	public Map<String, Object> getQnaNoticePagingList(String sortValue, String order, int page) {
+	public Map<String, Object> getQnaNoticePagingList(int page_limit, String sortValue, String order, int page) {
 		log.info("getQnaNoticePagingList()");
 		
 		Map<String, Object> pagingNoticeList = new HashMap<>();
 		
 		List<AdminAccountDto> qnaNoticeDtos = 
-				qnaMapper.selectQnaNoticeList(PagingUtil.pagingParams(sortValue, order, page));
+				qnaMapper.selectQnaNoticeList(PagingUtil.pagingParams(page_limit, sortValue, order, page));
 		pagingNoticeList.put("qnaNoticeDtos", qnaNoticeDtos);
 		
 		return pagingNoticeList;
@@ -489,25 +492,25 @@ public class QnaService {
 	}
 
 	// qna 공지사항 총 개수
-	public Map<String, Object> getQnaNoticeListPageNum(int page) {
+	public Map<String, Object> getQnaNoticeListPageNum(int page_limit, int block_limit, int page) {
 		log.info("getQnaNoticeListPageNum()");
 		
 		// 전체 리스트 개수 조회 
 		int qnaNoticeListCnt = qnaMapper.selectAllQnaNoticeListCnt();
 		
-		return PagingUtil.pageNum("qnaNoticeListCnt", qnaNoticeListCnt, page);
+		return PagingUtil.pageNum(page_limit, block_limit, "qnaNoticeListCnt", qnaNoticeListCnt, page);
 		
 	}
 
 	// qna 공지사항 검색 리스트 가져오기
-	public Map<String, Object> searchQnaNoticePagingList(String searchPart, String searchString, String sortValue,
+	public Map<String, Object> searchQnaNoticePagingList(int page_limit, String searchPart, String searchString, String sortValue,
 			String order, int page) {
 		log.info("searchQnaNoticePagingList()");
 		
 		Map<String, Object> pagingSearchQnaNoticeList = new HashMap<>();
 		
 		List<AdminAccountDto> qnaNoticeDtos = 
-				qnaMapper.selectSearchQnaNoticeList(PagingUtil.searchPagingParams(searchPart, searchString, sortValue, order, page));
+				qnaMapper.selectSearchQnaNoticeList(PagingUtil.searchPagingParams(page_limit, searchPart, searchString, sortValue, order, page));
 		pagingSearchQnaNoticeList.put("qnaNoticeDtos", qnaNoticeDtos);
 		
 		return pagingSearchQnaNoticeList;
@@ -515,7 +518,7 @@ public class QnaService {
 	}
 
 	// qna 공지사항 검색 리스트 총 개수 
-	public Map<String, Object> searchQnaNoticeListPageNum(String searchPart, String searchString, int page) {
+	public Map<String, Object> searchQnaNoticeListPageNum(int page_limit, int block_limit, String searchPart, String searchString, int page) {
 		log.info("searchQnaNoticeListPageNum()");
 		
 		Map<String, Object> searchParams = new HashMap<>();
@@ -525,7 +528,7 @@ public class QnaService {
 		// 전체 리스트 개수 조회 
 		int searchQnaNoticeListCnt = qnaMapper.selectSearchQnaNoticeListCnt(searchParams);
 		
-		return PagingUtil.pageNum("searchQnaNoticeListCnt", searchQnaNoticeListCnt, page);
+		return PagingUtil.pageNum(page_limit, block_limit, "searchQnaNoticeListCnt", searchQnaNoticeListCnt, page);
 		
 	}
 

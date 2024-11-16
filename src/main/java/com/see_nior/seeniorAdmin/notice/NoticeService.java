@@ -1,6 +1,7 @@
 package com.see_nior.seeniorAdmin.notice;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -45,13 +46,13 @@ public class NoticeService {
 	}
 
 	// 전체 공지사항 페이징 리스트 가져오기 
-	public Map<String, Object> getNoticePagingList(String sortValue, String order, int page) {
+	public Map<String, Object> getNoticePagingList(int page_limit, String sortValue, String order, int page) {
 		log.info("getNoticePagingList()");
 		
 		Map<String, Object> pagingNoticeList = new HashMap<>();
 		
 		List<AdminAccountDto> noticeDtos = 
-				noticeMapper.selectNoticeList(PagingUtil.pagingParams(sortValue, order, page));
+				noticeMapper.selectNoticeList(PagingUtil.pagingParams(page_limit, sortValue, order, page));
 		pagingNoticeList.put("noticeDtos", noticeDtos);
 		
 		return pagingNoticeList;
@@ -59,25 +60,25 @@ public class NoticeService {
 	}
 
 	// 전체 공지사항 리스트 총 개수 
-	public Map<String, Object> getNoticeListPageNum(int page) {
+	public Map<String, Object> getNoticeListPageNum(int page_limit, int block_limit, int page) {
 		log.info("getNoticeListPageNum()");
 		
 		// 전체 리스트 개수 조회 
 		int noticeListCnt = noticeMapper.selectAllNoticeListCnt();
 		
-		return PagingUtil.pageNum("noticeListCnt", noticeListCnt, page);
+		return PagingUtil.pageNum(page_limit, block_limit, "noticeListCnt", noticeListCnt, page);
 		
 	}
 
 	// 전체 공지사항 검색 페이징 리스트 가져오기
-	public Map<String, Object> searchNoticePagingList(String searchPart, String searchString, String sortValue,
+	public Map<String, Object> searchNoticePagingList(int page_limit, String searchPart, String searchString, String sortValue,
 			String order, int page) {
 		log.info("searchNoticePagingList()");
 		
 		Map<String, Object> pagingSearchNoticeList = new HashMap<>();
 		
 		List<AdminAccountDto> noticeDtos = 
-				noticeMapper.selectSearchNoticeList(PagingUtil.searchPagingParams(searchPart, searchString, sortValue, order, page));
+				noticeMapper.selectSearchNoticeList(PagingUtil.searchPagingParams(page_limit, searchPart, searchString, sortValue, order, page));
 		pagingSearchNoticeList.put("noticeDtos", noticeDtos);
 		
 		return pagingSearchNoticeList;
@@ -85,7 +86,7 @@ public class NoticeService {
 	}
 
 	// 전체 공지사항 검색 리스트 총 개수
-	public Map<String, Object> searchNoticeListPageNum(String searchPart, String searchString, int page) {
+	public Map<String, Object> searchNoticeListPageNum(int page_limit, int block_limit, String searchPart, String searchString, int page) {
 		log.info("searchNoticeListPageNum()");
 
 		Map<String, Object> searchParams = new HashMap<>();
@@ -95,7 +96,7 @@ public class NoticeService {
 		// 전체 리스트 개수 조회 
 		int searchNoticeListCnt = noticeMapper.selectSearchNoticeListCnt(searchParams);
 		
-		return PagingUtil.pageNum("searchNoticeListCnt", searchNoticeListCnt, page);
+		return PagingUtil.pageNum(page_limit, block_limit, "searchNoticeListCnt", searchNoticeListCnt, page);
 		
 	}
 
@@ -376,7 +377,7 @@ public class NoticeService {
 	}
 	
 	// 전체 공지사항 삭제(is_deleted 값 update) 한달 후 img 저장 폴더 삭제 스케쥴러
-	@Scheduled(cron = "0 0 0 * * ?")
+	@Scheduled(cron = "0 1 0 * * ?")
 	public void deleteImgFolder() {
 		log.info("deleteImgFolder()");
 		
@@ -385,7 +386,21 @@ public class NoticeService {
 		
 		if (dleteNoticeDots.size() != 0) {
 			
+			List<String> deleteFolderPaths = new ArrayList();
 			
+			for (int i = 0; i < dleteNoticeDots.size(); i++) {
+				
+				String folderPath = ImgUrlPath.NOTICE_FILE_PATH.getValue();
+				folderPath += dleteNoticeDots.get(i).getDn_dir_name();
+				deleteFolderPaths.add(folderPath);
+				
+			}
+			
+			ResponseEntity<String> deleteFolders =
+					imageFileService.deleteFolders(deleteFolderPaths);
+			
+		} else {
+			log.info("dleteNoticeDots is null");
 			
 		}
 		

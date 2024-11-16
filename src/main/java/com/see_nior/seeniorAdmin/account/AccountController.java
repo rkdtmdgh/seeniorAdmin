@@ -210,14 +210,18 @@ public class AccountController {
 	@GetMapping("/list/get_admin_list")
 	@ResponseBody
 	public Object getAdminList(
+			@RequestParam("page_limit") int page_limit,
+			@RequestParam("block_limit") int block_limit,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "a_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("getAdminList()");
 		
-		Map<String, Object> adminList = accountService.getAdminPagingList(sortValue, order, page);
+		Map<String, Object> adminList = 
+				accountService.getAdminPagingList(page_limit, sortValue, order, page);
 		
-		Map<String, Object> adminListPage = accountService.getAdminListPageNum(page);
+		Map<String, Object> adminListPage = 
+				accountService.getAdminListPageNum(page_limit, block_limit, page);
 		adminList.put("adminListPage", adminListPage);
 		adminList.put("sortValue", sortValue);
 		adminList.put("order", order);
@@ -229,6 +233,8 @@ public class AccountController {
 	@GetMapping("/list/search_admin_list")
 	@ResponseBody
 	public Object searchAdminList(
+			@RequestParam("page_limit") int page_limit,
+			@RequestParam("block_limit") int block_limit,
 			@RequestParam("searchPart") String searchPart,
 			@RequestParam("searchString") String searchString,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "a_no") String sortValue,
@@ -237,10 +243,10 @@ public class AccountController {
 		log.info("searchAdminList()");
 		
 		Map<String, Object> searchAdminList = 
-				accountService.searchAdminPagingList(searchPart, searchString, sortValue, order, page);
+				accountService.searchAdminPagingList(page_limit, searchPart, searchString, sortValue, order, page);
 		
 		Map<String, Object> searchAdminListPage = 
-				accountService.searchAdminListPageNum(searchPart, searchString, page);
+				accountService.searchAdminListPageNum(page_limit, block_limit, searchPart, searchString, page);
 		
 		searchAdminList.put("searchAdminListPage", searchAdminListPage);
 		searchAdminList.put("sortValue", sortValue);

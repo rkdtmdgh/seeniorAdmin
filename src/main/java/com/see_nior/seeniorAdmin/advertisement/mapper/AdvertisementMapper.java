@@ -60,7 +60,7 @@ public interface AdvertisementMapper {
 	// 광고 등록
 	public int insertNewAdvertisement(AdvertisementDto advertisementDto);
 	
-	// 홈 화면에서 보여질 광고 가져오기(5개)
+	// 홈 화면에서 보여질 광고 가져오기
 	public List<AdvertisementDto> getAdvertisementListForMain(int page_limit);
 
 	// 페이지에 따른 광고 가져오기(모든 광고)

@@ -128,7 +128,7 @@
 		WHERE 
 			BRC_IS_DELETED = 1 
 		ORDER BY 
-			BRC_NAME ASC 
+			BRC_NO DESC 
 	
 	</select>
 	
@@ -278,6 +278,43 @@
 	</select>
 	
 <!-- 신고 관련 -->
+
+	<!-- 홈 화면에서 보여질 신고 가져오기 -->
+	<select id="getReportListForMain"
+			parameterType="Integer"
+			resultMap="ReportDto">
+			
+		SELECT 
+			BR.*, 
+			BRC.*, 
+			BRR.*, 
+			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
+		FROM 
+			BOARD_REPORT AS BR 
+		LEFT JOIN 
+			BOARD_REPORT_CATEGORY AS BRC 
+		ON 
+			BR.BR_CATEGORY_NO = BRC.BRC_NO 
+		LEFT JOIN 
+			USER_ACCOUNT AS U 
+		ON 
+			BR.BR_REPORTER_NO = U.U_NO 
+		LEFT JOIN 
+			BOARD_REPORT_RESULT AS BRR 
+		ON 
+			BRR.BRR_NO = BR.BR_RESULT_NO 
+		WHERE 
+			BR.BR_IS_DELETED = 1 
+		AND 
+			BRC.BRC_IS_DELETED = 1 
+		AND 
+			BR.BR_STATE = 1 
+		ORDER BY
+			BR.BR_NO DESC
+		LIMIT 
+			0, #{page_limit}
+	
+	</select>
 	
 	<!-- 페이지 번호에 따른 신고 리스트들 가져오기 (모든 신고) -->
 	<select id="getReportListWithPage"
@@ -475,8 +512,22 @@
 			BR.BR_IS_DELETED = 1 
 		AND 
 			BRC.BRC_IS_DELETED = 1 
-		AND 
-			BR.${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+		<if test="searchPart != null and searchString != null">
+			<choose>
+				<when test="searchPart == 'u_id'">
+					AND 
+						U.U_ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'u_name'">
+					AND 
+						U.U_NAME LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<otherwise>
+					AND 
+						BR.${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+				</otherwise>
+			</choose>
+		</if>
 		ORDER BY
 			BR.${sortValue} ${order} 
 		LIMIT 
@@ -491,11 +542,29 @@
 		SELECT 
 			COUNT(*) 
 		FROM 
-			BOARD_REPORT 
+			BOARD_REPORT AS BR 
+		LEFT JOIN 
+			USER_ACCOUNT AS U 
+		ON 
+			BR.BR_REPORTER_NO = U.U_NO 
 		WHERE 
-			BR_IS_DELETED = 1 
-		AND 
-			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+			BR.BR_IS_DELETED = 1 
+		<if test="searchPart != null and searchString != null">
+			<choose>
+				<when test="searchPart == 'u_id'">
+					AND 
+						U.U_ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'u_name'">
+					AND 
+						U.U_NAME LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<otherwise>
+					AND 
+						BR.${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+				</otherwise>
+			</choose>
+		</if>
 	
 	</select>
 	
@@ -506,13 +575,31 @@
 		SELECT 
 			COUNT(*) 
 		FROM 
-			BOARD_REPORT 
+			BOARD_REPORT AS BR 
+		LEFT JOIN 
+			USER_ACCOUNT AS U 
+		ON 
+			BR.BR_REPORTER_NO = U.U_NO 
 		WHERE 
-			BR_IS_DELETED = 1 
+			BR.BR_IS_DELETED = 1 
 		AND 
-			BR_STATE = 1 
-		AND 
-			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+			BR.BR_STATE = 1 
+		<if test="searchPart != null and searchString != null">
+			<choose>
+				<when test="searchPart == 'u_id'">
+					AND 
+						U.U_ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'u_name'">
+					AND 
+						U.U_NAME LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<otherwise>
+					AND 
+						BR.${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+				</otherwise>
+			</choose>
+		</if>
 	
 	</select>
 	

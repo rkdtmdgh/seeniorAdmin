@@ -34,6 +34,7 @@ async function getMainList(apiUrl, loddingParentEle) {
 		
 	} catch(error) {
 		logger.error(apiUrl + ' getMainList() error:', error);
+		mainContentApiResponse(null, null, loddingParentEle, true);
 		
 	} finally {
 		setLoading(false, loddingParentEle); // 로딩 제거
@@ -41,7 +42,7 @@ async function getMainList(apiUrl, loddingParentEle) {
 }
 
 // 메인 콘텐츠 요청 성공 시 처리 로직
-function mainContentApiResponse(apiUrl, response, loddingParentEle) {
+function mainContentApiResponse(apiUrl, response, loddingParentEle, error = false) {
 	const { getListDtos } = mapApiResponseObject(apiUrl, response); // 요청 Api Response 객체 설정
 	const $contentTable = $(`.${loddingParentEle} table tbody`); // 데이터가 나열될 테이블 요소
 	$contentTable.html(''); // 콘텐츠 초기화
@@ -56,11 +57,11 @@ function mainContentApiResponse(apiUrl, response, loddingParentEle) {
 		
 	} else {
 		logger.info('데이터가 없거나 유효하지 않습니다.');
-		const maxCols = setTableColumnsNum();
+		const maxCols = setTableColumnsNum(`.${loddingParentEle}`);
 		$contentTable.html(`
 			<tr>
                 <td colspan="${maxCols}">
-                    <p class="table_info">목록이 없습니다.</p>
+                    <p class="table_info">${error ? errorMsg : '목록이 없습니다.'}</p>
                 </td>
             </tr>
 		`);
@@ -68,7 +69,7 @@ function mainContentApiResponse(apiUrl, response, loddingParentEle) {
 }
 
 // 콘텐츠 리스트 요청
-async function getListProcess(apiUrl, sortValue, order, page, resetParams = false) {
+async function getListProcess(apiUrl, sortValue, order, page, resetParams = false, loddingParentEle = 'content_inner') {
 	setAllcheck(); // all_check 체크박스 초기화
 	
 	if(resetParams) setDelQueryString(); // 쿼리 파라미터 제거
@@ -87,10 +88,12 @@ async function getListProcess(apiUrl, sortValue, order, page, resetParams = fals
 		params.append('order', order);
 	}
 	params.append('page', page || 1); // 페이지 추가
+	params.append('page_limit', 10); // 리스트 개수 추가
+	params.append('block_limit', 10); // 페이지네이션 개수 추가
 	
 	logger.info(`apiUrl: ${apiUrl}?${params.toString()}`);
 	
-	setLoading(true, 'content_inner'); // 로딩 추가
+	setLoading(true, loddingParentEle); // 로딩 추가
 	try {
 		const response = await $.ajax({
 			url: `${apiUrl}?${params.toString()}`,
@@ -100,19 +103,20 @@ async function getListProcess(apiUrl, sortValue, order, page, resetParams = fals
 		logger.info(`${apiUrl} getList() response:`, response);
 		
 		// 요청 성공 시 처리 로직 실행
-		contentApiResponse(apiUrl, sortValue, order, response);
+		contentApiResponse(apiUrl, sortValue, order, response, loddingParentEle);
 		
 	} catch(error) {
 		logger.error(apiUrl + ' error:', error);
+		contentApiResponse(null, null, null, null, loddingParentEle, true);
 		
 	} finally {
-		setLoading(false, 'content_inner'); // 로딩 제거
+		setLoading(false, loddingParentEle); // 로딩 제거
 	}
 
 }
 
 // 검색 리스트 요청
-async function getSearchListProcess(event, apiUrl, sortValue, order, page) {
+async function getSearchListProcess(event, apiUrl, sortValue, order, page, loddingParentEle = 'content_inner') {
 	if(event) event.preventDefault();
 	const form = document.forms['search_form'];
 	let input;
@@ -146,10 +150,12 @@ async function getSearchListProcess(event, apiUrl, sortValue, order, page) {
 		params.append('order', order);				
 	}
 	params.append('page', page || 1); // 페이지 추가
+	params.append('page_limit', 10); // 리스트 개수 추가
+	params.append('block_limit', 10); // 페이지네이션 개수 추가
 	
 	logger.info('search params:', params.toString());
 			
-	setLoading(true, 'content_inner'); // 로딩 추가
+	setLoading(true, loddingParentEle); // 로딩 추가
 	try {
 		const response = await $.ajax({
 			url: `${apiUrl}?${params.toString()}`,
@@ -159,29 +165,32 @@ async function getSearchListProcess(event, apiUrl, sortValue, order, page) {
 		logger.info(`${apiUrl} searchForm() response:`, response);
 		
 		// 요청 성공 시 처리 로직 실행
-		contentApiResponse(apiUrl, sortValue, order, response);
+		contentApiResponse(apiUrl, sortValue, order, response, loddingParentEle);
 		
 	} catch(error) {
 		logger.error(apiUrl + ' searchForm() error:', error);
+		contentApiResponse(null, null, null, null, loddingParentEle, true);
 		
 	} finally {
-		setLoading(false, 'content_inner'); // 로딩 제거
+		setLoading(false, loddingParentEle); // 로딩 제거
 	}
 }
 
 // 콘텐츠 리스트 요청 성공 시 처리 로직
-function contentApiResponse(apiUrl, sortValue, order, response, contentTable = '.content_table tbody') {
+function contentApiResponse(apiUrl, sortValue, order, response, contentTable, error = false) {
 	const { getListDtos, getListPage, getListCnt, otherData } = mapApiResponseObject(apiUrl, response); // 요청 Api Response 객체 설정
-	const searchPart = response.searchPart || null; // 리턴된 searchPart 값
-	const searchString = response.searchString || null; // 리턴된 searchString 값
+	const searchPart = response?.searchPart || null; // 리턴된 searchPart 값
+	const searchString = response?.searchString || null; // 리턴된 searchString 값
 	const isSearch = searchString !== null; // searchString 값이 있을 경우 검색 요청
-	const $contentTable = $(contentTable); // 데이터가 나열될 테이블 요소
+	const $contentTable = $(`.${contentTable} tbody`); // 데이터가 나열될 테이블 요소
 	const $pagination = $('.pagination_wrap'); // 페이지 네이션 요소
 	$contentTable.html(''); // 콘텐츠 초기화
 	$pagination.html(''); // 페이지네이션 초기화
 	
-	setQueryString(sortValue, order, getListPage.page, searchPart, searchString); // 쿼리스트링 조건 추가
-	setContentSubInfo(otherData); // 타이틀 옆 서브내용 표시(예: 업데이트 날짜 등)
+	if(!error) {
+		setQueryString(sortValue, order, getListPage.page, searchPart, searchString); // 쿼리스트링 조건 추가
+		setContentSubInfo(otherData); // 타이틀 옆 서브내용 표시(예: 업데이트 날짜 등)
+	}
 	
 	if(response && getListDtos.length) {		
 		let pageLimit = getListPage.pageLimit; // 한 페이지에 노출될 리스트 수
@@ -201,11 +210,11 @@ function contentApiResponse(apiUrl, sortValue, order, response, contentTable = '
 		
 	} else {
 		logger.info('데이터가 없거나 유효하지 않습니다.');
-		const maxCols = setTableColumnsNum();
+		const maxCols = setTableColumnsNum(`.${contentTable}`);
 		$contentTable.html(`
 			<tr>
                 <td colspan="${maxCols}">
-                    <p class="table_info">${isSearch ? '검색된 내용이 없습니다.' : '목록이 없습니다.'}</p>
+                    <p class="table_info">${error ? errorMsg : isSearch ? '검색된 내용이 없습니다.' : '목록이 없습니다.'}</p>
                 </td>
             </tr>
 		`);
@@ -748,7 +757,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                </a>
 		            </td>
 		            <td>
-		                <a href="/disease/info/disease_list_form?sortType=2&infoNo=${data.dc_no}&sortValue=d_no&order=desc" class="table_info">${data.dc_item_cnt}</a>
+		                <a href="/disease/info/disease_list_form?sortType=2&infoNo=${data.dc_no}" class="table_info table_list_other_link"
+		                	data-link-type="list" 
+		                	data-link-content="disease"
+		                >${data.dc_item_cnt}</a>
 		            </td>
 		            <td>
 		                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${setFormatDate(data.dc_reg_date)}</a>
@@ -1032,8 +1044,8 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            </td>
 		            <td class="va_m">
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="flex_area">
-		                	<span class="state ${data.bp_report_state === 2 ? 'on' : data.bp_report_state === 0 ? 'off' :  ''}">
-		                		${data.bp_report_state === 2 ? '처리중' : data.bp_report_state === 0 ? '처리완료' : '정상'}
+		                	<span class="state ${data.bp_report_state === true ? 'off' : ''}">
+		                		${data.bp_report_state === true ? '숨김' : '정상'}
 		                	</span>
 		                </a>
 		            </td>
@@ -1403,6 +1415,10 @@ function mapSortListApiObject(dbTable, sortType) {
 		'video': { // 영상 정보 관리 페이지
 			0: '/video/info/get_video_list',
 			1: '/video/info/search_video_list',
+		},
+		'notice': { // 공지 사항 페이지
+			0: '/notice/info/get_notice_list',
+			1: '/notice/info/search_notice_list',
 		},
 		'board_qna_notice': { // 질문과 답변 공지 사항 페이지
 			0: '/qna/noti_info/get_notice_list',

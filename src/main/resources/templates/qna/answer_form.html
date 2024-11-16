@@ -52,7 +52,18 @@
 		                                    	<p class="table_info" th:text="${qnaDto.qnaCategoryDto.bqc_name}"></p>
 		                                    </td>
 		                                    
-		                                    <th><p class="table_title">공개 설정</p></th>
+		                                    <th><p class="table_title">등록일<span class="divider"></span>수정일</p></th>
+	                                        <td>
+	                                        	<p class="table_info" th:utext="|
+	                                        		${qnaDto.bq_reg_date}
+	                                        		<span class='divider'></span>
+	                                        		${qnaDto.bq_mod_date}
+	                                        	|"></p>
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">공개 설정</p></th>
 		                                    <td>
 		                                    	<div class="table_info bq_state">
 	                                            	<label class="radio">
@@ -93,17 +104,6 @@
 	                                    		|"></p>
 		                                    </td>
 		                                </tr>
-		                                
-		                                <tr>
-		                                	<th><p class="table_title">등록일<span class="divider"></span>수정일</p></th>
-	                                        <td colspan="3">
-	                                        	<p class="table_info" th:utext="|
-	                                        		${qnaDto.bq_reg_date}
-	                                        		<span class='divider'></span>
-	                                        		${qnaDto.bq_mod_date}
-	                                        	|"></p>
-	                                        </td>
-										</tr>
 		                                
 		                                <tr>
 		                                	<th><p class="table_title">내용</p></th>

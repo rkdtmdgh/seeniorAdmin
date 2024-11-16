@@ -1,4 +1,5 @@
-// 에러 메세지 추가 내용
+// 에러 메세지
+const errorMsg = `<span style="color: var(--redColor)">Error! Please contact the developer</span>`;
 const addMsg = '\n다시 시도해 주세요.\n문제가 지속될 경우 관리자에게 문의해 주세요.';
 
 // input focus
@@ -145,9 +146,9 @@ function setSelectGuidelineInfo(selectElement, formName) {
 	let $selectOption;
 	const $infoEle = $('#guideline');
 	let info = `영상: 최대 5개
-				<br>이미지: 최대 10개
-				<br>이미지별 최대 용량: 2MB
-				<br>삽입 가능`;
+				<span class="divider"></span>이미지: 최대 10개
+				<span class="divider"></span>이미지별 최대 용량: 2MB
+				삽입 가능`;
 	
 	if(selectElement) {
 		$selectOption = $(selectElement).find('option:selected'); // 선택된 옵션
@@ -219,6 +220,7 @@ function setRecipeContentInfo(recipeDto) {
 const maxSize = {
 	info: 5000,
 	short: 250,
+	reply: 150,
 }; 
 
 // 텍스트 바이트 계산
@@ -234,6 +236,7 @@ let previousText = '';
 // textarea 텍스트 입력 제한 표시 초기화
 function setTextareatLimitInit() {
 	const $textareaEle = $('[data-limit-target="textarea"]'); // textarea 타겟 선택
+	if(!$textareaEle.length) return; // 해당 타겟이 없을 경우 리턴
 	const limit = $textareaEle.data('limit'); // textarea 타겟의 리미트 값
 	const value = $textareaEle.val(); // 초깃값
 	const currentByte = extractionByte(value); // textarea의 현재 텍스트 값 바이트 크기
@@ -428,8 +431,8 @@ function setQueryString(sortValue, order, page, searchPart, searchString) {
 }
 
 // 테이블의 전체 열 수 계산하기
-function setTableColumnsNum() {
-	const maxCols = $('table thead tr').find('th').length;
+function setTableColumnsNum(ele) {
+	const maxCols = $(`${ele} thead`).find('th').length;
 	return maxCols;
 }
 
