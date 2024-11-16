@@ -852,12 +852,20 @@ public class BoardService {
 			List<String> deleteFolderPaths = new ArrayList();
 			
 			for(int i = 0; i < deleteBoardPostsDtos.size(); i++){
-				String folderPath = "\\board\\"
-				+deleteBoardPostsDtos.get(i).getDbp_category_no()
-				+"\\"+deleteBoardPostsDtos.get(i).getDbp_writer_no()
-				+"\\"+deleteBoardPostsDtos.get(i).getDbp_dir_name();
-				deleteFolderPaths.add(folderPath);
+				
+				if(deleteBoardPostsDtos.get(i).getDbp_dir_name() != null) {
+					
+					String folderPath = "\\board\\"
+							+deleteBoardPostsDtos.get(i).getDbp_category_no()
+							+"\\"+deleteBoardPostsDtos.get(i).getDbp_writer_no()
+							+"\\"+deleteBoardPostsDtos.get(i).getDbp_dir_name();
+							deleteFolderPaths.add(folderPath);
+				}
+				
 			}
+			
+			log.info("testFolderPaths: {}",deleteFolderPaths);
+			
 			
 			//deletedFolders.getBody() = "1"(성공), "0"(실패 - 폴더 경로가 없음), "-1"(실패 - 이미지 서버 오류)
 			ResponseEntity<String> deletedFolders = imageFileService.deleteFolders(deleteFolderPaths);

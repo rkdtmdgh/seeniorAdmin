@@ -250,8 +250,8 @@
     
      	SELECT 
      		bp.*,
-    		aa.A_NO, aa.A_ID, aa.A_NAME, 
-    		ua.U_NO, ua.U_NAME, ua.U_ID, ua.U_NICKNAME 
+    		aa.A_NO, aa.A_ID, aa.A_NAME, aa.A_IS_DELETED,
+    		ua.U_NO, ua.U_NAME, ua.U_ID, ua.U_NICKNAME, ua.U_IS_DELETED 
 		FROM 
 		    BOARD_POSTS AS bp
 		LEFT JOIN 
@@ -414,8 +414,8 @@
      <select id="modifyForm" parameterType="int" resultMap="BoardPostsDto">
      	SELECT 
      		bp.*,
-    		aa.A_NO, aa.A_ID, aa.A_NAME, 
-    		ua.U_NO, ua.U_NAME, ua.U_ID, ua.U_NICKNAME 
+    		aa.A_NO, aa.A_ID, aa.A_NAME, aa.A_IS_DELETED,
+    		ua.U_NO, ua.U_NAME, ua.U_ID, ua.U_NICKNAME, ua.U_IS_DELETED 
 		FROM 
 		    BOARD_POSTS AS bp
 		LEFT JOIN 
@@ -439,8 +439,8 @@
 	<select id="getSearchBoardPosts" parameterType="Map" resultMap="BoardPostsDto">
 		SELECT 
 	    	bp.*,
-	    	aa.A_NO, aa.A_ID, aa.A_NAME,
-	    	ua.U_NO, ua.U_ID, ua.U_NAME, ua.U_NICKNAME
+	    	aa.A_NO, aa.A_ID, aa.A_NAME, aa.A_IS_DELETED,
+	    	ua.U_NO, ua.U_ID, ua.U_NAME, ua.U_NICKNAME, ua.U_IS_DELETED
 		FROM 
 	    	BOARD_POSTS bp
 		LEFT JOIN 
@@ -548,8 +548,6 @@
 			DBP_IS_DELETED = 1	
 		AND
 			DBP_IS_RECOVERED = 1
-		AND 
-			DBP_DIR_NAME IS NOT NULL
 	
 	</select>
 	

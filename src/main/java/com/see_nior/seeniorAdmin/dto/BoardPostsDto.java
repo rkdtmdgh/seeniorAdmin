@@ -16,7 +16,7 @@ public class BoardPostsDto {
 	private int bp_writer_no;	//ADMIN_ACCOUNT a_no값 테이블 조인
 	private String bp_writer_id;
 	private String bp_account;	
-	private int bp_report_state;		
+	private boolean bp_report_state;		
 	private int bp_view_cnt;
 	private String bp_dir_name;
 	private int bp_reply_cnt;
