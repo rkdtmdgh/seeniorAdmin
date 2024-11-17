@@ -849,12 +849,14 @@ public class BoardService {
 		if(deleteBoardPostsDtos.size() != 0) {//최 상위 조건
 			log.info("deleteBoardPostsDtos: {}",deleteBoardPostsDtos);
 			
+			//삭제할 경로값을 담아서 이미지 서버로 보낼 배열 생성
 			List<String> deleteFolderPaths = new ArrayList();
 			
+			//반복문으로 삭제할 폴더 경로를 string으로 생성하여 deleteFolderPaths에 추가
 			for(int i = 0; i < deleteBoardPostsDtos.size(); i++){
-				
+				//deleteBoardPostsDtos에 dir_name컬럼 값이 null인 레코드는 이미지 서버에 folderPath경로가 없음
 				if(deleteBoardPostsDtos.get(i).getDbp_dir_name() != null) {
-					
+					//deleteBoardPostsDto에 dir_name이 null이 아닌 경우에만 folderPath생성 후 배열에 추가
 					String folderPath = "\\board\\"
 							+deleteBoardPostsDtos.get(i).getDbp_category_no()
 							+"\\"+deleteBoardPostsDtos.get(i).getDbp_writer_no()
@@ -864,14 +866,69 @@ public class BoardService {
 				
 			}
 			
-			log.info("testFolderPaths: {}",deleteFolderPaths);
+			log.info("=========>FolderPaths: {}",deleteFolderPaths);
 			
 			
-			//deletedFolders.getBody() = "1"(성공), "0"(실패 - 폴더 경로가 없음), "-1"(실패 - 이미지 서버 오류)
-			ResponseEntity<String> deletedFolders = imageFileService.deleteFolders(deleteFolderPaths);
+			/*
+			 * deleteBoardPostsDtos에 dir_name값이 null인 dto만 있을 경우에는 
+			 * deleteFolderPaths에 folderPath값이 하나도 없어서 이미지 서버에 갈 필요가 없음
+			*/
+			if(deleteFolderPaths.size() > 0) {//두번째 조건
+				
+				/*
+				 * deleteFolderPaths 값이 있는 경우
+				 * 이미지 서버에 삭제할 folderPath 경로가 존재 하기때문에
+				 * 이미지 서버에 먼저 삭제 요청 처리 후 결과에 따라서 다음 로직으로 넘어감
+				*/
+				
+				//deletedFolders.getBody() = "1"(성공), "0"(실패 - 폴더 경로가 없음), "-1"(실패 - 이미지 서버 오류)
+				ResponseEntity<String> deletedFolders = imageFileService.deleteFolders(deleteFolderPaths);
+				
+				//이미지 서버에서 deleteFolder요청이 성공한 경우
+				if(deletedFolders.getBody().equals("1")) {//세번째 조건
+					log.info("DELETEDFOLDERS SUCCESS!");
+					
+					boolean result = true;
+					int UpdateResult = 0;
+					
+					//반복문으로 DBP_IS_DELETED = 0으로 update처리
+					for(int i = 0; i < deleteBoardPostsDtos.size(); i++) {//반복문 시작
 						
-			if(deletedFolders.getBody().equals("1")) {//두번째 조건
-				log.info("DELETEDFOLDERS SUCCESS!");
+						if(result) {//반복문 안쪽 첫번째 조건
+							
+							UpdateResult = boardMapper.updateDeleteBoardPostsIsDeleted(deleteBoardPostsDtos.get(i).getDbp_no());
+							
+							if(UpdateResult <= 0) {//반복문 안쪽 두번째 조건
+								
+								result = false;
+							}
+							
+						}else {
+							/*
+							 * 반복문 update처리 중 DB에서 오류가 발생한 경우
+							 * 로그 찍고 반복을 멈추고 deleteFolderRequest() 메서드 종료
+							 */
+							log.info("updateDeleteBoardPostsIsDeleted() fail!");
+						}//반복문 안쪽 첫번째 조건 끝	
+						
+					}//반복문 끝
+					
+				}else if(deletedFolders.getBody().equals("0")){
+					log.info("FOLDER NAME OR PATH NOT FOUND!!");
+					log.info("response value: {}",deletedFolders.getBody());
+				}else{
+					log.info("FOLDER DELETE FAIL!!");
+					log.info("response value: {}",deletedFolders.getBody());
+				}//세번째 조건 끝
+				
+			}else {//두번째 조건 else문 (deleteFolderPaths 값이 없는 경우)
+				
+				log.info("deleteFolderPaths does not contain the folder path to delete.");
+				
+				/*
+				 * 이미지 서버에 폴더 경로가 없는(dir_name값이 null인) 레코드만 있기 때문에
+				 * 이미지 서버 요청 없이 바로 반복문으로 DBP_IS_DELETED = 0 update처리 함
+				*/				
 				
 				boolean result = true;
 				int UpdateResult = 0;
@@ -887,24 +944,21 @@ public class BoardService {
 						}
 						
 					}else {
+						/*
+						 * 반복문 update처리 중 DB에서 오류가 발생한 경우
+						 * 로그 찍고 반복을 멈추고 deleteFolderRequest() 메서드 종료
+						 */
 						log.info("updateDeleteBoardPostsIsDeleted() fail!");
 					}//반복문 안쪽 첫번째 조건 끝	
 					
 				}//반복문 끝
 				
-			}else if(deletedFolders.getBody().equals("0")){
-				log.info("FOLDER NAME OR PATH NOT FOUND!!");
-				log.info("response value: {}",deletedFolders.getBody());
-			}else{
-				log.info("FOLDER DELETE FAIL!!");
-				log.info("response value: {}",deletedFolders.getBody());
 			}//두번째 조건 끝
-			
+						
 		}else {
 			log.info("deleteBoardPostsDtos is null: {}",deleteBoardPostsDtos);
 		}//최 상위 조건 끝
-		
-		
+				
 	}//deleteFolderRequest() END
 	
 		
