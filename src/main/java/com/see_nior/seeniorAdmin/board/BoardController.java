@@ -45,16 +45,18 @@ public class BoardController {
 	@GetMapping("/cate_info/get_category_list")
 	@ResponseBody
 	public Object getCategoryList(
+			@RequestParam("page_limit") int page_limit,
+			@RequestParam("block_limit") int block_limit,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page, 
 			@RequestParam(value = "sortValue", required = false, defaultValue = "bc_idx") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "asc") String order) {		
 		log.info("getCategoryList()");
 					
 		// 페이지 번호에 따른 게시판 카테고리 리스트들 가져오기
-		Map<String, Object> boardCategoryListWithPage = boardService.getBoardCategoryListWithPage(page, sortValue, order);
+		Map<String, Object> boardCategoryListWithPage = boardService.getBoardCategoryListWithPage(page_limit, page, sortValue, order);
 					
 		// 게시판 카테고리 총 페이지 개수 가져오기
-		Map<String, Object> boardCategoryListPageNum = boardService.getBoardCategoryListPageNum(page);
+		Map<String, Object> boardCategoryListPageNum = boardService.getBoardCategoryListPageNum(page_limit, block_limit, page);
 			
 		boardCategoryListWithPage.put("boardCategoryListPageNum", boardCategoryListPageNum);
 		boardCategoryListWithPage.put("sortValue", sortValue);
@@ -190,17 +192,19 @@ public class BoardController {
 	//특정 게시판 게시물 리스트 가져오기
 	@GetMapping("/info/get_posts_list")
 	@ResponseBody
-	public Object getPostsList(@RequestParam("infoNo") int bp_category_no, 
+	public Object getPostsList(@RequestParam("infoNo") int bp_category_no,
+			@RequestParam("page_limit") int page_limit,
+			@RequestParam("block_limit") int block_limit,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "sortValue", required = false, defaultValue = "bp_no") String sortValue,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
 		log.info("getPostsList()");
 		
 		// 특정 게시판 페이지 번호에 따른 게시물 리스트들 가져오기
-		Map<String, Object> boardPostsListWithPage = boardService.getBoardPostsListWithPage(bp_category_no, page, sortValue, order);
+		Map<String, Object> boardPostsListWithPage = boardService.getBoardPostsListWithPage(bp_category_no, page_limit, page, sortValue, order);
 		log.info("return value: {}",boardPostsListWithPage);
 		// 특정 게시판 게시물 총 페이지 개수 가져오기
-		Map<String, Object> boardPostsListPageNum = boardService.getBoardPostsListPageNum(bp_category_no, page);
+		Map<String, Object> boardPostsListPageNum = boardService.getBoardPostsListPageNum(bp_category_no, page_limit, block_limit, page);
 				
 		boardPostsListWithPage.put("boardPostsListPageNum", boardPostsListPageNum);
 		boardPostsListWithPage.put("sortValue", sortValue);
@@ -232,16 +236,18 @@ public class BoardController {
 	@GetMapping("/cate_info/search_category_list")
 	@ResponseBody
 	public Object searchBoardCategoryList(
+			@RequestParam("page_limit") int page_limit,
+			@RequestParam("block_limit") int block_limit,
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
 		log.info("searchBoardCategoryList()");
 		
 		// 페이지 번호에 따른 검색 게시판 카테고리 리스트들 가져오기
-		Map<String, Object> searchBoardCategoryListWithPage = boardService.getSearchBoardCategoryListWithPage(searchPart, searchString, page);
+		Map<String, Object> searchBoardCategoryListWithPage = boardService.getSearchBoardCategoryListWithPage(page_limit, searchPart, searchString, page);
 				
 		// 검색 게시판 카테고리 총 페이지 개수 가져오기
-		Map<String, Object> searchBoardCategoryListPageNum = boardService.getSearchBoardCategoryListPageNum(searchPart, searchString, page);
+		Map<String, Object> searchBoardCategoryListPageNum = boardService.getSearchBoardCategoryListPageNum(page_limit, block_limit, searchPart, searchString, page);
 				
 		searchBoardCategoryListWithPage.put("searchBoardCategoryListPageNum", searchBoardCategoryListPageNum);
 		searchBoardCategoryListWithPage.put("searchPart", searchPart);
@@ -297,6 +303,8 @@ public class BoardController {
 	@ResponseBody
 	public Object searchPostsList(
 			@RequestParam("infoNo") int bc_no,
+			@RequestParam("page_limit") int page_limit,
+			@RequestParam("block_limit") int block_limit,
 			@RequestParam(value = "searchPart") String searchPart,
 			@RequestParam(value = "searchString") String searchString,
 			@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
@@ -307,10 +315,10 @@ public class BoardController {
 		log.info("page: {}",page);
 		
 		// 페이지 번호에 따른 검색한 게시물 리스트들 가져오기
-		Map<String, Object> searchBoardPostsListWithPage = boardService.getSearchPostsListWithPage(bc_no, searchPart, searchString, page);
+		Map<String, Object> searchBoardPostsListWithPage = boardService.getSearchPostsListWithPage(bc_no, page_limit, searchPart, searchString, page);
 				
 		// 검색 게시물 총 페이지 개수 가져오기
-		Map<String, Object> searchBoardPostsListPageNum = boardService.getSearchPostsListPageNum(bc_no, searchPart, searchString, page);
+		Map<String, Object> searchBoardPostsListPageNum = boardService.getSearchPostsListPageNum(bc_no, page_limit, block_limit, searchPart, searchString, page);
 				
 		searchBoardPostsListWithPage.put("searchBoardPostsListPageNum", searchBoardPostsListPageNum);
 		searchBoardPostsListWithPage.put("searchPart", searchPart);
