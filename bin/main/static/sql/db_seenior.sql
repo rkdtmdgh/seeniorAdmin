@@ -299,7 +299,7 @@ CREATE TABLE BOARD_POSTS (
 	BP_BODY				TEXT NOT NULL COMMENT "게시물 본문", 												-- 게시물 본문
 	BP_WRITER_NO		INT NOT NULL COMMENT "게시물 작성자 NO(USER_ACCOUNT TABLE PK)", 					-- 게시물 작성자 NO(USER_ACCOUNT TABLE PK)
     BP_ACCOUNT			VARCHAR(20) NOT NULL COMMENT "게시물 작성자 유형(admin or user)",					-- 게시물 작성자 유형(admin or user)
-    BP_REPORT_STATE		TINYINT DEFAULT 1 COMMENT "게시물 신고 진행 상태(기본값 = 1, 블럭처리 = 0)",	            -- 게시물 신고 진행 상태(기본값 = 1, 블럭처리 = 0)
+    BP_REPORT_STATE		TINYINT DEFAULT 1 COMMENT "게시물 신고 진행 상태(기본값 = 1, 블록처리 = 0)",				-- 게시물 신고 진행 상태(기본값 = 1, 처리중 = 2, 처리 완료 = 0)
 	BP_VIEW_CNT			INT DEFAULT 0 COMMENT "게시물 조회수", 												-- 게시물 조회수 
 	BP_DIR_NAME			VARCHAR(20) COMMENT "이미지 저장된 폴더 이름"	,										-- 게시물 이미지 저장된 폴더명
     BP_REPLY_CNT		INT DEFAULT 0 COMMENT "게시물 댓글 갯수",											-- 게시물 댓글 갯수(BOARD_REPLY COUNT(*) WHERE BR_POST_NO)
@@ -320,14 +320,7 @@ CREATE TRIGGER TR_UPDATE_POST_ON_DELETE
 AFTER UPDATE ON BOARD_POSTS
 FOR EACH ROW
 BEGIN
-<<<<<<< HEAD
     IF OLD.BP_IS_DELETED = 1 AND NEW.BP_IS_DELETED = 0 THEN
-=======
-    IF OLD.BP_IS_DELETED = 0 AND NEW.BP_IS_DELETED = 1 THEN
-        -- 게시글이 복원된 경우에는 DELETE_BOARD_POSTS 테이블에서 해당 레코드 DBP_IS_RECOVERED값 변경
-        UPDATE DELETE_BOARD_POSTS SET DBP_IS_RECOVERED = 0 WHERE DBP_POST_NO = OLD.BP_NO;
-    ELSEIF OLD.BP_IS_DELETED = 1 AND NEW.BP_IS_DELETED = 0 THEN
->>>>>>> 485944ec36ad8268b55c7fb7d435f20dc13a8150
         -- 게시글이 삭제된 경우에는 DELETE_BOARD_POSTS 테이블에 새로운 레코드 삽입
         INSERT INTO DELETE_BOARD_POSTS (
             DBP_POST_NO,
@@ -384,11 +377,7 @@ DROP PROCEDURE DELETE_EXPIRED_POSTS;
 -- 프로시저(함수) 실행 부분 -----------------------------------------------------------------------------------------------------------------
 CREATE EVENT DELETE_EXPIRED_POSTS_EVENT
 ON SCHEDULE EVERY 1 DAY 
-<<<<<<< HEAD
 STARTS '2024-11-18 00:00:00'  -- 시작 날짜와 시간 설정 (필요에 따라 수정)
-=======
-STARTS '2024-11-14 00:00:00'  -- 시작 날짜와 시간 설정 (필요에 따라 수정)
->>>>>>> 485944ec36ad8268b55c7fb7d435f20dc13a8150
 ON COMPLETION PRESERVE
 DO
     CALL DELETE_EXPIRED_POSTS();
