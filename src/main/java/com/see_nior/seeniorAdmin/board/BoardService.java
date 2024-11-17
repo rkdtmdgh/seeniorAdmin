@@ -240,13 +240,8 @@ public class BoardService {
     					log.info("createConfirm() insert fail!!");
     					return false;
     				}else {
-    					log.info("createConfirm() insert success!!");
-    					
-    					int bc_item_cnt = boardItemCntUpdater.selectCountBoardPostsByBcNo(boardPostsDto.getBp_category_no());
-    					log.info("bc_item_cnt: "+bc_item_cnt);
-    					Boolean upDateResult = boardItemCntUpdater.updateBoardCategoryForBcItemCntByBcNo(boardPostsDto.getBp_category_no(), bc_item_cnt);
-    					
-    					return upDateResult;
+    					log.info("createConfirm() insert success!!");    					    					
+    					return true;
     				}
     				
     			} catch (Exception e) {
@@ -269,80 +264,13 @@ public class BoardService {
 				return false;
 			}else {
 				log.info("createConfirm() insert success!!");
-				
-				int bc_item_cnt = boardItemCntUpdater.selectCountBoardPostsByBcNo(boardPostsDto.getBp_category_no());
-				log.info("bc_item_cnt: "+bc_item_cnt);
-				Boolean upDateResult = boardItemCntUpdater.updateBoardCategoryForBcItemCntByBcNo(boardPostsDto.getBp_category_no(), bc_item_cnt);
-				
-				return upDateResult;
+								
+				return true;
 			}
 		}
     	
 		  	        
     }//createConfirm() END
-    
-    // 게시글 DB에 저장 후 결과 값 가져오기
-//	public Boolean createConfirm(List<String> savedFileNames, int bp_category_no, int bp_writer_no, String bp_title,
-//			String old_bp_body, String bp_dir_name, String bp_writer_id) {
-//		log.info("createConfirm()");
-//		
-//		String bp_body = old_bp_body;
-//		
-//		if(savedFileNames != null) {
-//			
-//			// 정규 표현식 패턴
-//			Pattern pattern = Pattern.compile("img src=\"[^\"]*\"");
-//			Matcher matcher = pattern.matcher(old_bp_body);
-//			
-//			StringBuilder new_bp_body = new StringBuilder();
-//			int index = 0;
-//			
-//			while (matcher.find()) {
-//				
-//				String newSrc = "img src=\"http://" 
-//						+ imgServerPath 
-//						+"board/" 
-//						+ bp_category_no 
-//						+"/"
-//						+ bp_writer_no 
-//						+"/"
-//						+ bp_dir_name 
-//						+"/"
-//						+ savedFileNames.get(index++) + "\"";
-//				matcher.appendReplacement(new_bp_body, newSrc);
-//			}
-//			matcher.appendTail(new_bp_body);
-//			
-//			bp_body = new_bp_body.toString();
-//			
-//		}
-//		
-// 		BoardPostsDto boardPostsDto = new BoardPostsDto();
-// 		
-// 		boardPostsDto.setBp_category_no(bp_category_no);
-// 		boardPostsDto.setBp_writer_no(bp_writer_no);
-// 		boardPostsDto.setBp_writer_id(bp_writer_id);
-// 		boardPostsDto.setBp_account("admin");
-// 		boardPostsDto.setBp_title(bp_title);
-// 		boardPostsDto.setBp_body(bp_body);
-// 		boardPostsDto.setBp_dir_name(bp_dir_name);
-//		
-//		int result = boardMapper.createConfirm(boardPostsDto);
-//        
-//		if(result <= 0) {
-//			log.info("createConfirm() insert fail!!");
-//			return false;
-//		}else {
-//			log.info("createConfirm() insert success!!");
-//			
-//			int bc_item_cnt = boardItemCntUpdater.selectCountBoardPostsByBcNo(bp_category_no);
-//			log.info("bc_item_cnt: "+bc_item_cnt);
-//			Boolean upDateResult = boardItemCntUpdater.updateBoardCategoryForBcItemCntByBcNo(bp_category_no, bc_item_cnt);
-//			
-//			return upDateResult;
-//		}
-//				
-//	}
 	
 	// 특정 게시판 페이지 번호에 따른 게시물 리스트들 가져오기
 	public Map<String, Object> getBoardPostsListWithPage(int bp_category_no, int page_limit, int page, String sortValue, String order) {
