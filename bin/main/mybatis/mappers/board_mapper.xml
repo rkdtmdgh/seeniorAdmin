@@ -123,15 +123,29 @@
 			resultMap="BoardCategoryDto">
 	
 		SELECT 
-			* 
+			BC.*, 
+			IFNULL(BP_COUNTS.BC_ITEM_CNT, 0) AS BC_ITEM_CNT 
 		FROM 
-			BOARD_CATEGORY 
+			BOARD_CATEGORY BC
+		LEFT JOIN (
+			SELECT 
+				BP.BP_CATEGORY_NO,
+				COUNT(*) AS BC_ITEM_CNT
+			FROM 
+				BOARD_POSTS BP
+			WHERE 
+				BP.BP_IS_DELETED = 1
+			AND
+				BP.BP_REPORT_STATE = 1 
+			GROUP BY 
+				BP.BP_CATEGORY_NO
+		) AS BP_COUNTS ON BC.BC_NO = BP_COUNTS.BP_CATEGORY_NO
 		WHERE 
-			BC_IS_DELETED = 1 
+			BC.BC_IS_DELETED = 1 
 		ORDER BY 
 			${sortValue} ${order} 
 		LIMIT 
-			#{start}, #{limit}
+			#{start}, #{limit} 
 	
 	</select>
 	
