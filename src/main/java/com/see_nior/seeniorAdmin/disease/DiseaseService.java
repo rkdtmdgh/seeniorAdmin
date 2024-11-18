@@ -32,6 +32,7 @@ public class DiseaseService {
 		boolean isDiseaseCategory = diseaseMapper.isDiseaseCategory(dc_name);
 		
 		return isDiseaseCategory;
+		
 	}
 	
 	// 질환 카테고리 추가 확인
