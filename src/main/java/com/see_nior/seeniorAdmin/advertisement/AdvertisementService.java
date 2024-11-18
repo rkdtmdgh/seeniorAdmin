@@ -590,6 +590,7 @@ public class AdvertisementService {
 	}
 
 	// 광고 삭제 확인
+	/*
 	public boolean deleteConfirm(int ad_no) {
 		log.info("deleteConfirm()");
 		
@@ -599,6 +600,41 @@ public class AdvertisementService {
 		if (deleteResult <= 0) return SqlResult.FAIL.getValue();
 		// DB에 입력 성공
 		else return SqlResult.SUCCESS.getValue();	
+		
+	}
+	*/
+	
+	// 광고 삭제 확인
+	public boolean deleteConfirm(int ad_no) {
+		log.info("deleteConfirm()");
+		
+		AdvertisementDto deleteAdvertisementDto = advertisementMapper.getAdvertisementByNo(ad_no);
+		
+		List<String> deleteFolderPaths = new ArrayList<>();
+		
+		String folderPath = "\\advertisement\\" + deleteAdvertisementDto.getAd_no();
+		deleteFolderPaths.add(folderPath);
+		
+		ResponseEntity<String> deletedFolderResult = imageFileService.deleteFolders(deleteFolderPaths);
+		
+		// 이미지 서버에서 deleteFolder요청이 성공한 경우
+		if (deletedFolderResult.getBody().equals("1")) {
+			log.info("deleteFolder SUCCESS!!");
+			
+			int deleteResult = advertisementMapper.deleteAdvertisement(ad_no);
+			
+			// DB에 입력 실패
+			if (deleteResult <= 0) return SqlResult.FAIL.getValue();
+			// DB에 입력 성공
+			else return SqlResult.SUCCESS.getValue();
+			
+		} else {
+			log.info("deleteFolder FAIL!!");
+			
+			return SqlResult.FAIL.getValue();
+			
+		}
+			
 		
 	}
 
