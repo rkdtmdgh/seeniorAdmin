@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.see_nior.seeniorAdmin.board.BoardService;
-import com.see_nior.seeniorAdmin.dto.BoardPostsDto;
 import com.see_nior.seeniorAdmin.dto.ReportCategoryDto;
 import com.see_nior.seeniorAdmin.dto.ReportDto;
 import com.see_nior.seeniorAdmin.enums.PagePath;
@@ -311,10 +309,11 @@ public class ReportController {
 	@PostMapping("/info/result_confirm")
 	public boolean reportResultConfirm(
 			@RequestParam(value = "br_no") int br_no,
-			@RequestParam(value = "brr_")
+			@RequestParam(value = "brr_zo") String brr_zo,
 			@RequestParam(value = "brr_result") String brr_result,
 			Principal principal) {
 		log.info("reportResultConfirm()");
+		
 		
 		boolean reportResultConfirm = reportService.reportResultConfirm(br_no, brr_result, principal.getName());
 		
