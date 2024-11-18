@@ -515,7 +515,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			tableTrContent = `
 				<tr>
 		            <td>
-		                <a href="/report/info/result_form?br_no=${data.br_no}" class="table_info">${data.reportCategoryDto.brr_name}</a>
+		                <a href="/report/info/result_form?br_no=${data.br_no}" class="table_info">${data.reportCategoryDto.brc_name}</a>
 		            </td>
 		            <td>
 		                <a href="/report/info/result_form?br_no=${data.br_no}" class="table_info table_flex_info">
@@ -1044,8 +1044,8 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            </td>
 		            <td class="va_m">
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="flex_area">
-		                	<span class="state ${data.bp_report_state === true ? 'off' : ''}">
-		                		${data.bp_report_state === true ? '숨김' : '정상'}
+		                	<span class="state ${data.bp_report_state === true ? '' : 'off'}">
+		                		${data.bp_report_state === true ? '정상' : '정지'}
 		                	</span>
 		                </a>
 		            </td>
