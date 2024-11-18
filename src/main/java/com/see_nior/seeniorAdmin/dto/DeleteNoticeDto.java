@@ -13,7 +13,7 @@ public class DeleteNoticeDto {
 	private int dn_notice_no;						
 	private String dn_dir_name;
 	private boolean dn_is_valid;
-	private boolean dn_is_deleted;
+	private boolean dn_img_deleted;
 	private String dn_request_time;
 	
 }
