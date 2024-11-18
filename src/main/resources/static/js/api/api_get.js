@@ -208,6 +208,9 @@ function contentApiResponse(apiUrl, sortValue, order, response, contentTable, er
 		const paging = generatePagination(apiUrl, sortValue, order, getListPage, isSearch); // apiUrl, sortValue, order, 페이징벨류값, isSearch
 		$pagination.html(paging);
 		
+		// 테이블 리스트 서브 메뉴 클릭 이벤트
+		createListSubMenuEvent();
+		
 	} else {
 		logger.info('데이터가 없거나 유효하지 않습니다.');
 		const maxCols = setTableColumnsNum(`.${contentTable}`);
@@ -220,6 +223,28 @@ function contentApiResponse(apiUrl, sortValue, order, response, contentTable, er
 		`);
 	}
 };
+
+// 테이블 리스트 서브 메뉴 이벤트 설정
+function createListSubMenuEvent() {
+	const $contentTable = $('.content_table');
+	
+	if($contentTable.length) {
+		$contentTable.each(function() {
+			logger.info('createListSubMenuEvent() contentTable:', $(this));
+			
+			$(this).on('click', '.table_list_sub_menu', function(e) {
+				e.stopPropagation(); // 이벤트 버블링 방지
+				
+				// 다른 리스트 서브메뉴 닫기
+				$('.table_list_sub_menu .link_sub_menu_container')
+					.not($(this).find('.link_sub_menu_container'))
+					.slideUp(50).removeClass('active');
+					
+				setCreateListSubMenu(this); // 리스트 서브 메뉴 이벤트 설정
+			});
+		});
+	}
+}
 
 // 요청 Api Response 객체 설정 
 function mapApiResponseObject(apiUrl, response) { 
@@ -292,7 +317,7 @@ function mapApiResponseObject(apiUrl, response) {
 		case '/disease/info/get_disease_list_by_category': // 질환 / 질병 정보 관리 질병군별 데이터
 			getListDtos = response.diseaseDtos;
 			getListPage = response.diseaseListByCategoryPageNum;
-			getListCnt = response.diseaseListByCategoryPageNum.diseaseListCnt;
+			getListCnt = response.diseaseListByCategoryPageNum.diseaseListByCategoryCnt;
 			break;	
 			
 		case '/disease/cate_info/get_category_list': // 질환 / 질병 정보 분류 관리
@@ -757,10 +782,11 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                </a>
 		            </td>
 		            <td>
-		                <a href="/disease/info/disease_list_form?sortType=2&infoNo=${data.dc_no}" class="table_info table_list_other_link"
-		                	data-link-type="list" 
-		                	data-link-content="disease"
-		                >${data.dc_item_cnt}</a>
+		                <div class="table_info table_list_sub_menu"
+		                	data-category="disease"
+		            		data-info_no="${data.dc_no}">
+		            		${data.dc_item_cnt}
+		                </div>
 		            </td>
 		            <td>
 		                <a href="/disease/cate_info/modify_category_form?dc_no=${data.dc_no}" class="table_info">${setFormatDate(data.dc_reg_date)}</a>
@@ -782,7 +808,12 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
-		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info">${data.diseaseCategoryDto.dc_name}</a>
+		                <div class="table_info table_list_sub_menu"
+		                	data-category="disease_category"
+		            		data-info_no="${data.diseaseCategoryDto.dc_no}"
+		            		data-data_no="${data.d_no}">
+		            		${data.diseaseCategoryDto.dc_name}
+		                </div>
 		            </td>
 		            <td>
 		                <a href="/disease/info/modify_form?d_no=${data.d_no}" class="table_info table_flex_info f_jc_center">
@@ -876,7 +907,20 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                </a>
 		            </td>
 		            <td>
-		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
+			            ${data.adminAccountDto.a_is_deleted === false ? 
+				            `
+				            <div class="table_info table_list_sub_menu"
+			                	data-category="notice"
+			            		data-data_no="${data.n_no}"
+			            		data-account_no="${data.adminAccountDto.a_no}">
+			            		${data.adminAccountDto.a_name}
+			                </div>
+			            	`
+			            :
+				            `
+				            <p class="table_info">탈퇴 계정</p>
+				            `
+			            }
 		            </td>
 		            <td>
 		                <a href="/notice/info/modify_form?n_no=${data.n_no}" class="table_info">${data.n_view_cnt}</a>
@@ -913,7 +957,20 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                </a>
 		            </td>
 		            <td>
-		                <a href="/account/list/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_name}</a>
+		            	${data.adminAccountDto.a_is_deleted === false ? 
+				            `
+				            <div class="table_info table_list_sub_menu"
+			                	data-category="board_qna_notice"
+			            		data-data_no="${data.bqn_no}"
+			            		data-account_no="${data.adminAccountDto.a_no}">
+			            		${data.adminAccountDto.a_name}
+			                </div>
+			            	`
+			            :
+				            `
+				            <p class="table_info">탈퇴 계정</p>
+				            `
+			            }
 		            </td>
 		            <td>
 		                <a href="/qna/noti_info/modify_notice_form?bqn_no=${data.bqn_no}" class="table_info">${data.bqn_view_cnt}</a>
@@ -953,7 +1010,21 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                </a>
 		            </td>
 					<td>
-		                <a href="/account/noti_info/admin_modify_form?a_no=${data.adminAccountDto.a_no}" class="table_info">${data.adminAccountDto.a_id}</a>
+						${data.adminAccountDto.a_is_deleted === false ? 
+				            `
+				            <div class="table_info table_list_sub_menu"
+			                	data-category="board_notice"
+			            		data-info_no="${data.bn_category_no}"
+			            		data-data_no="${data.bn_no}"
+			            		data-account_no="${data.adminAccountDto.a_no}">
+			            		${data.adminAccountDto.a_name}
+			                </div>
+			            	`
+			            :
+				            `
+				            <p class="table_info">탈퇴 계정</p>
+				            `
+			            }
 		            </td>
 		            <td>
 		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">
@@ -974,6 +1045,75 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/board/noti_info/modify_board_notice_form?infoNo=${data.bn_category_no}&bn_no=${data.bn_no}" class="table_info">
 		                	${setFormatDate(data.bn_mod_date)}
 		                </a>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/qna/cate_info/get_category_list': // 질문 유형 분류 관리 리스트 테이블
+		case '/qna/cate_info/search_category_list': // 질문 유형 분류 관리 검색 리스트 테이블
+			regDate = new Date(new Date(data.bqc_reg_date).getTime() + newIconsHours);
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/qna/cate_info/modify_category_form?bqc_no=${data.bqc_no}" class="table_info">${listIndex}</a>
+		            </td>
+		            <td>
+		                <a href="/qna/cate_info/modify_category_form?bqc_no=${data.bqc_no}" class="table_info table_flex_info f_jc_center">
+		                	<p class="info_text">${data.bqc_name}</p>
+							${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
+		            </td>
+		            <td>
+		            	<div class="table_info table_list_sub_menu"
+		                	data-category="board_qna_category"
+		            		data-info_no="${data.bqc_no}"
+		            		data-sort_value="bq_answer_no"
+		            		data-order="asc">
+		            		${data.bqc_item_cnt} / ${data.bqc_unanswered_cnt}
+		                </div>
+		            </td>
+		            <td>
+		                <a href="/qna/cate_info/modify_category_form?bqc_no=${data.bqc_no}" class="table_info">${setFormatDate(data.bqc_reg_date)}</a>
+		            </td>
+		        </tr>
+			`;
+			break;
+			
+		case '/qna/info/get_qna_list': // 질문과 답변 리스트 테이블
+		case '/qna/info/search_qna_list': // 질문과 답변 검색 리스트 테이블
+		case '/qna/info/get_qna_list_by_category': // 질문 유형별 분류 리스트 테이블
+			regDate = new Date(new Date(data.bq_reg_date).getTime() + newIconsHours);
+			tableTrContent = `
+				<tr>
+		            <td>
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${listIndex}</a>
+		            </td>
+		            <td>
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.qnaCategoryDto.bqc_name}</a>
+		            </td>
+		            <td class="va_m">
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="flex_area">
+		                	<span class="state icon ${data.qnaAnswerDto === null ? 'off' : ''}">
+		                		${data.qnaAnswerDto === null ? '대기' : '답변'}
+		                	</span>
+		                </a>
+		            </td>
+					<td>
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info table_flex_info">
+		                	<p class="info_text">${data.bq_title}</p>
+		                	${data.bq_state === true ? '<img src="/image/icons/lock.png" alt="비공개글" class="table_info_icons">' : ''}
+		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
+		                </a>
+		            </td>
+					<td>
+		                <a href="/user_account/info/modify_form?u_no=${data.userAccountDto.u_no}" class="table_info">${data.userAccountDto.u_name}</a>
+		            </td>
+					<td>
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${setFormatDate(data.bq_reg_date)}</a>
+		            </td>
+		            <td>
+		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${setFormatDate(data.bq_mod_date)}</a>
 		            </td>
 		        </tr>
 			`;
@@ -1054,71 +1194,6 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            </td>
 		            <td>
 		                <a href="/board/info/modify_form?infoNo=${data.bp_category_no}&bp_no=${data.bp_no}" class="table_info">${setFormatDate(data.bp_mod_date)}</a>
-		            </td>
-		        </tr>
-			`;
-			break;
-			
-		case '/qna/cate_info/get_category_list': // 질문 유형 분류 관리 리스트 테이블
-		case '/qna/cate_info/search_category_list': // 질문 유형 분류 관리 검색 리스트 테이블
-			regDate = new Date(new Date(data.bqc_reg_date).getTime() + newIconsHours);
-			tableTrContent = `
-				<tr>
-		            <td>
-		                <a href="/qna/cate_info/modify_category_form?bqc_no=${data.bqc_no}" class="table_info">${listIndex}</a>
-		            </td>
-		            <td>
-		                <a href="/qna/cate_info/modify_category_form?bqc_no=${data.bqc_no}" class="table_info table_flex_info f_jc_center">
-		                	<p class="info_text">${data.bqc_name}</p>
-							${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
-		                </a>
-		            </td>
-		            <td>
-		                <a href="/qna/info/qna_list_form?sortType=2&infoNo=${data.bqc_no}&sortValue=bq_answer_no&order=asc" class="table_info">
-		                	${data.bqc_item_cnt} / ${data.bqc_unanswered_cnt}
-		                </a>
-		            </td>
-		            <td>
-		                <a href="/qna/cate_info/modify_category_form?bqc_no=${data.bqc_no}" class="table_info">${setFormatDate(data.bqc_reg_date)}</a>
-		            </td>
-		        </tr>
-			`;
-			break;
-			
-		case '/qna/info/get_qna_list': // 질문과 답변 리스트 테이블
-		case '/qna/info/search_qna_list': // 질문과 답변 검색 리스트 테이블
-		case '/qna/info/get_qna_list_by_category': // 질문 유형별 분류 리스트 테이블
-			regDate = new Date(new Date(data.bq_reg_date).getTime() + newIconsHours);
-			tableTrContent = `
-				<tr>
-		            <td>
-		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${listIndex}</a>
-		            </td>
-		            <td>
-		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.qnaCategoryDto.bqc_name}</a>
-		            </td>
-		            <td class="va_m">
-		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="flex_area">
-		                	<span class="state icon ${data.qnaAnswerDto === null ? 'off' : ''}">
-		                		${data.qnaAnswerDto === null ? '대기' : '답변'}
-		                	</span>
-		                </a>
-		            </td>
-					<td>
-		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info table_flex_info">
-		                	<p class="info_text">${data.bq_title}</p>
-		                	${data.bq_state === true ? '<img src="/image/icons/lock.png" alt="비공개글" class="table_info_icons">' : ''}
-		                	${nowDate <= regDate ? '<img src="/image/icons/new.png" alt="새글" class="table_info_icons">' : ''}
-		                </a>
-		            </td>
-					<td>
-		                <a href="/user_account/info/modify_form?u_no=${data.userAccountDto.u_no}" class="table_info">${data.userAccountDto.u_name}</a>
-		            </td>
-					<td>
-		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${setFormatDate(data.bq_reg_date)}</a>
-		            </td>
-		            <td>
-		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${setFormatDate(data.bq_mod_date)}</a>
 		            </td>
 		        </tr>
 			`;
