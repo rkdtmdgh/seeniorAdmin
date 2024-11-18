@@ -43,7 +43,6 @@
             .side_sub_menu_list {
                 overflow: hidden;
                 max-height: 0;
-                transform-origin: top;
                 transition: max-height var(--transition), padding var(--transition);
 
                 .side_sub_menu_btn {
@@ -72,7 +71,6 @@
                 }
                 
                 &.open {
-                	transform: scaleY(1);
                 	max-height: 500px;
                 	padding-bottom: var(--ssize3);
                 }
