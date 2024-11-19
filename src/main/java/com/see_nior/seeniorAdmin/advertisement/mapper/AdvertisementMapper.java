@@ -93,13 +93,13 @@ public interface AdvertisementMapper {
 	// 광고 삭제 확인
 	public int deleteAdvertisement(int ad_no);
 
+	// 만료된 지 30일이 지난 광고 리스트 가져오기
+	public List<AdvertisementDto> getAdvertisementsEnded30Days();
+	
 	// 페이지에 따른 광고 가져오기(검색한 광고)
 	public List<AdvertisementDto> getSearchAdvertisement(Map<String, Object> pagingParams);
 
 	// 광고의 총 리스트 개수 구하기(검색한 광고)
 	public int getSearchAdvertisementListCnt(Map<String, Object> pagingParams);
-
-
-
 
 }

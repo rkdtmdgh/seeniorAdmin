@@ -4,10 +4,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -588,21 +590,6 @@ public class AdvertisementService {
 		}
 		
 	}
-
-	// 광고 삭제 확인
-	/*
-	public boolean deleteConfirm(int ad_no) {
-		log.info("deleteConfirm()");
-		
-		int deleteResult = advertisementMapper.deleteAdvertisement(ad_no);
-		
-		// DB에 입력 실패
-		if (deleteResult <= 0) return SqlResult.FAIL.getValue();
-		// DB에 입력 성공
-		else return SqlResult.SUCCESS.getValue();	
-		
-	}
-	*/
 	
 	// 광고 삭제 확인
 	public boolean deleteConfirm(int ad_no) {
@@ -634,10 +621,42 @@ public class AdvertisementService {
 			return SqlResult.FAIL.getValue();
 			
 		}
-			
 		
 	}
 
+	// 광고 만료 후 30일 경과 후에 이미지 삭제 요청
+	// 초 분 시 일 월 요일 년 (각 자리에 *는 모든 값을 의미)
+	@Scheduled(cron = "0 1 0 * * ?")	// 매일 0:01분에 실행
+	public void deleteFolderForEndAdvertiemsent() {
+		log.info("deleteFolderForEndAdvertiemsent()");
+		
+		List<AdvertisementDto> deleteAdvertisementDtos = advertisementMapper.getAdvertisementsEnded30Days();
+		
+		if (deleteAdvertisementDtos.size() != 0) {
+			log.info("deleteAdvertisementDtos ==========> {}", deleteAdvertisementDtos);
+			
+			List<String> deleteFolderPaths = new ArrayList<>();
+			
+			for (int i = 0; i < deleteAdvertisementDtos.size(); i++) {
+				
+				String folderPath = "\\advertisement\\" + deleteAdvertisementDtos.get(i).getAd_no();
+				deleteFolderPaths.add(folderPath);
+				
+				ResponseEntity<String> deletedFolderResult = imageFileService.deleteFolders(deleteFolderPaths);
+				
+				// 이미지 서버에서 deleteFolder요청이 성공한 경우
+				if (deletedFolderResult.getBody().equals("1")) 
+					log.info("deleteFolder SUCCESS!!");
+					
+				 else 
+					log.info("deleteFolder FAIL!!");
+				
+			}
+			
+		}
+		
+	}
+	
 	// 페이지에 따른 광고 가져오기(검색한 광고)
 	public Map<String, Object> getSearchAdvertisementListWithPage(int page_limit, String searchPart, String searchString, String sortValue, String order, int page) {
 		log.info("getSearchAdvertisementListWithPage()");

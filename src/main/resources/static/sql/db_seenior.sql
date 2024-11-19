@@ -1514,7 +1514,7 @@ SET GLOBAL event_scheduler = ON;
 
 -- AD_END_DATE가 현재 날짜보다 이전인 컬럼의 AD_STATE를 0으로 설정하는 프로시저
 DELIMITER //
-CREATE PROCEDURE update_ad_state()
+CREATE PROCEDURE UPDATE_AD_STATE()
 BEGIN
     UPDATE ADVERTISEMENT
     SET AD_STATE = 0
@@ -1524,7 +1524,7 @@ DELIMITER ;
 
 -- 이미 생성되어 있는 프로시저 확인 및 드롭
 SHOW PROCEDURE STATUS WHERE Db = 'DB_SEENIOR';
-DROP PROCEDURE update_ad_state;
+DROP PROCEDURE UPDATE_AD_STATE;
 
 -- update_ad_state() 프로시저를 매일 0시 00분 정각에 실행하도록 하는 이벤트 스케쥴러
 CREATE EVENT daily_ad_state_update
@@ -1534,6 +1534,7 @@ CALL update_ad_state();
 
 -- 이미 생성되어 있는 이벤트 스케쥴러 확인 및 드롭
 SELECT * FROM information_schema.events;
+SHOW EVENTS;
 DROP EVENT daily_ad_state_update;
 
 -- 환자 테이블 -------------------------------------------------------------------------------------------------------------------

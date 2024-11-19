@@ -536,6 +536,19 @@
 	
 	</update>
 	
+	<!-- 만료된 지 30일이 지난 광고 리스트 가져오기 -->
+	<select id="getAdvertisementsEnded30Days"
+			resultMap="AdvertisementDto">
+			
+		SELECT 
+			* 
+		FROM 
+			ADVERTISEMENT 
+		WHERE 
+			DATE_SUB(CURDATE(), INTERVAL 30 DAY) > AD_END_DATE
+	
+	</select>
+	
 	<!-- 페이지에 따른 광고 가져오기(검색한 광고) -->
 	<select id="getSearchAdvertisement"
 			parameterType="Map"
