@@ -55,6 +55,9 @@ function mainContentApiResponse(apiUrl, response, loddingParentEle, error = fals
 			);
 		});
 		
+		// 테이블 리스트 서브 메뉴 클릭 이벤트
+		createListSubMenuEvent();
+		
 	} else {
 		logger.info('데이터가 없거나 유효하지 않습니다.');
 		const maxCols = setTableColumnsNum(`.${loddingParentEle}`);
@@ -226,22 +229,26 @@ function contentApiResponse(apiUrl, sortValue, order, response, contentTable, er
 
 // 테이블 리스트 서브 메뉴 이벤트 설정
 function createListSubMenuEvent() {
-	const $contentTable = $('.content_table');
+	// 테이블 리스트 서브 메뉴가 삽입될 요소가 없을 경우 종료
+	if(!$('.table_list_sub_menu').length) {
+		logger.info('createListSubMenuEvent() ".table_list_sub_menu" elements not found');
+		return;
+	}
 	
+	// 페이징으로 인한 동적 요소들로 인하여 이벤트 위임방식으로 처리
+	const $contentTable = $('.content_table');
 	if($contentTable.length) {
-		$contentTable.each(function() {
-			logger.info('createListSubMenuEvent() contentTable:', $(this));
+		logger.info('createListSubMenuEvent() contentTable:', $(this));
+		
+		$contentTable.off('click', '.table_list_sub_menu').on('click', '.table_list_sub_menu', function(e) {
+			e.stopPropagation(); // 이벤트 버블링 방지
 			
-			$(this).on('click', '.table_list_sub_menu', function(e) {
-				e.stopPropagation(); // 이벤트 버블링 방지
+			// 다른 리스트 서브메뉴 닫기
+			$('.table_list_sub_menu .link_sub_menu_container')
+				.not($(this).find('.link_sub_menu_container'))
+				.slideUp(50).remove('active');
 				
-				// 다른 리스트 서브메뉴 닫기
-				$('.table_list_sub_menu .link_sub_menu_container')
-					.not($(this).find('.link_sub_menu_container'))
-					.slideUp(50).removeClass('active');
-					
-				setCreateListSubMenu(this); // 리스트 서브 메뉴 이벤트 설정
-			});
+			setCreateListSubMenu(this); // 리스트 서브 메뉴 이벤트 설정
 		});
 	}
 }
@@ -783,7 +790,8 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            </td>
 		            <td>
 		                <div class="table_info table_list_sub_menu"
-		                	data-category="disease"
+		                	data-category="disease_category"
+		                	data-type="list"
 		            		data-info_no="${data.dc_no}">
 		            		${data.dc_item_cnt}
 		                </div>
@@ -1090,6 +1098,13 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${listIndex}</a>
 		            </td>
 		            <td>
+		            	<div class="table_info table_list_sub_menu"
+		                	data-category="board_qna_category"
+		            		data-info_no="${data.bqc_no}"
+		            		data-sort_value="bq_answer_no"
+		            		data-order="asc">
+		            		${data.bqc_item_cnt} / ${data.bqc_unanswered_cnt}
+		                </div>
 		                <a href="/qna/info/answer_form?bq_no=${data.bq_no}" class="table_info">${data.qnaCategoryDto.bqc_name}</a>
 		            </td>
 		            <td class="va_m">
