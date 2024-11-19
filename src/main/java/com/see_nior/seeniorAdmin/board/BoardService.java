@@ -143,7 +143,12 @@ public class BoardService {
 		int bc_no = boardCategoryDto.getBc_no();
 		
 		List<BoardCategoryDto> boardCategoryDtos = boardMapper.getBoardCategoryForModify(bc_no);
-						
+
+		if(boardCategoryDtos.size() == 0) {
+			log.info("getBoardCategoryForModify() fail!!");
+			throw new RuntimeException("boardPostsDto is null");
+		}
+		
 		return boardCategoryDtos;
 	}
 	
@@ -455,7 +460,7 @@ public class BoardService {
 		
 		if(boardPostsDtos.size() == 0) {
 			log.info("modifyForm() fail!!");
-			return null;
+			throw new RuntimeException("boardPostsDto is null");
 		}
 		
 		return boardPostsDtos.get(0);
