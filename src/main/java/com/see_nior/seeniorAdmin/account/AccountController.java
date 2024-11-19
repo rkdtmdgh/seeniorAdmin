@@ -170,7 +170,7 @@ public class AccountController {
 		AdminAccountDto selectedAdminDto = 
 				accountService.getAdminAccountByNo(a_no);
 		
-		model.addAttribute("selectedAdminDto", selectedAdminDto);
+		model.addAttribute(selectedAdminDto);
 		
 		return PagePath.ACCOUNT_ADMIN_MODIFY_FORM.getValue();
 		
