@@ -1,0 +1,32 @@
+.error_info_wrap {
+	height: 100%;
+	
+	.error_container {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		gap: var(--stepGap);
+		
+		.error_icon {
+			width: var(--profileThumbWidth);
+			
+			.error_4xx {
+				stroke: var(--greenColor);
+			}
+			
+			.error_5xx {
+				stroke: var(--redColor);
+			}
+		}
+		
+		.error_info {
+			.error_title {
+				font-size: var(--largeFontSize);
+				padding-bottom: var(--smallGap);
+			}
+		}
+	}
+}
