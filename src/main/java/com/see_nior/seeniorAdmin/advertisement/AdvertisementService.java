@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -626,7 +625,7 @@ public class AdvertisementService {
 
 	// 광고 만료 후 30일 경과 후에 이미지 삭제 요청
 	// 초 분 시 일 월 요일 년 (각 자리에 *는 모든 값을 의미)
-	@Scheduled(cron = "0 1 0 * * ?")	// 매일 0:01분에 실행
+	@Scheduled(cron = "0 23 18 * * ?")	// 매일 0:01분에 실행
 	public void deleteFolderForEndAdvertiemsent() {
 		log.info("deleteFolderForEndAdvertiemsent()");
 		
@@ -647,8 +646,8 @@ public class AdvertisementService {
 				// 이미지 서버에서 deleteFolder요청이 성공한 경우
 				if (deletedFolderResult.getBody().equals("1")) 
 					log.info("deleteFolder SUCCESS!!");
-					
-				 else 
+				// 이미지 서버에서 deleteFolder 요청이 실패한 경우
+				else 
 					log.info("deleteFolder FAIL!!");
 				
 			}
