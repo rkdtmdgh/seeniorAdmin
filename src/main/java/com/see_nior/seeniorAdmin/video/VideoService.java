@@ -107,6 +107,10 @@ public class VideoService {
 		
 		VideoDto videoDto = videoMapper.selectVideoInfoByNo(v_no);
 		
+		if (videoDto == null) {
+			throw new RuntimeException("videoDto is null");
+		}
+		
 		return videoDto;
 	}
 

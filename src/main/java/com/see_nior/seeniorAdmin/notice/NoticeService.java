@@ -41,7 +41,14 @@ public class NoticeService {
 	public NoticeDto getNoticeInfoByNo(int n_no) {
 		log.info("getNoticeInfoByNo()");
 		
-		return noticeMapper.selectNoticeInfoByNo(n_no);
+		NoticeDto noticeDto = 
+				noticeMapper.selectNoticeInfoByNo(n_no);
+		
+		if (noticeDto == null) {
+			throw new RuntimeException("noticeDto is null");
+		}
+		
+		return noticeDto;
 		
 	}
 
@@ -377,34 +384,52 @@ public class NoticeService {
 	}
 	
 	// 전체 공지사항 삭제(is_deleted 값 update) 한달 후 img 저장 폴더 삭제 스케쥴러
-	@Scheduled(cron = "0 1 0 * * ?")
-	public void deleteImgFolder() {
-		log.info("deleteImgFolder()");
-		
-		List<DeleteNoticeDto> dleteNoticeDots = 
-				noticeMapper.selectDeleteNoticeInfo();
-		
-		if (dleteNoticeDots.size() != 0) {
-			
-			List<String> deleteFolderPaths = new ArrayList();
-			
-			for (int i = 0; i < dleteNoticeDots.size(); i++) {
-				
-				String folderPath = ImgUrlPath.NOTICE_FILE_PATH.getValue();
-				folderPath += dleteNoticeDots.get(i).getDn_dir_name();
-				deleteFolderPaths.add(folderPath);
-				
-			}
-			
-			ResponseEntity<String> deleteFolders =
-					imageFileService.deleteFolders(deleteFolderPaths);
-			
-		} else {
-			log.info("dleteNoticeDots is null");
-			
-		}
-		
-	}
+//	@Scheduled(cron = "0 1 0 * * ?")
+//	public void deleteImgFolder() {
+//		log.info("deleteImgFolder()");
+//		
+//		List<DeleteNoticeDto> deleteNoticeDots = 
+//				noticeMapper.selectDeleteNoticeInfo();
+//		
+//		if (deleteNoticeDots.size() != 0) {
+//			
+//			List<String> deleteFolderPaths = new ArrayList();
+//			
+//			for (int i = 0; i < deleteNoticeDots.size(); i++) {
+//				
+//				if (deleteNoticeDots.get(i).getDn_dir_name() != null) {
+//					
+//					String folderPath = ImgUrlPath.NOTICE_FILE_PATH.getValue() 
+//							+ deleteNoticeDots.get(i).getDn_dir_name();
+//					deleteFolderPaths.add(folderPath);
+//					
+//				}
+//				
+//			}
+//			
+//			if (deleteFolderPaths.size() >= 0) {
+//				
+//				ResponseEntity<String> deleteFolders =
+//						imageFileService.deleteFolders(deleteFolderPaths);
+//				
+//				if (deleteFolders.getBody().equals("1")) {
+//					
+//					for (int i = 0; i < deleteNoticeDots.size(); i++) {
+//						
+//						
+//						
+//					}
+//					
+//				}
+//				
+//			}
+//			
+//		} else {
+//			log.info("dleteNoticeDots is null");
+//			
+//		}
+//		
+//	}
 	
 	
 	

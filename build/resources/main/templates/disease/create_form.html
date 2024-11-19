@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
+<head>
+	<th:block th:insert="~{fragments/head.html :: head('질환 / 질병 정보 등록')}"></th:block>
+	<script type="text/javascript">
+		$(async function() {
+			// disease category 가져오기
+			await getCategoryList('d_category_no', 'create'); // element id, form 종류, selectedValue
+        });
+	</script>
+</head>
+
+<body>
+	<main class="contents_wrap">
+		<header th:replace="~{fragments/header.html :: header}"></header>
+	
+		<article class="contents_container">
+			<nav th:replace="~{fragments/nav.html :: nav}"></nav>
+			
+			<div class="content">
+                <div class="content_inner sc">
+					<section class="content_info_wrap">
+						<div class="content_top">
+					        <div class="content_top_info">
+					            <h2 class="title">질환 / 질병 정보 관리</h2>
+					        </div>
+				            <p class="sub_title">질환 / 질병 분류 등록</p>
+					    </div>
+					    
+						<form name="disease_category_reg_form" onsubmit="return false">					    	
+						    <div class="table_wrap mb_stepGap">
+		                        <table class="content_edit_table">
+		                            <colgroup>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                </colgroup>
+	                                
+		                            <tbody>
+		                                <tr>
+	                                        <th><p class="table_title">분류명</p></th>
+		                                	<td class="cont_info table_info">
+		                                		<input type="text" name="dc_name" id="dc_name" placeholder="신규 분류 등록 시 입력해 주세요"
+		                                			onblur="requestDuplicateCheck(this)">
+		                                		<div onclick="postDiseaseCategoryCreate('disease_category_reg_form')" class="btns small">등록</div>
+	                                        </td>
+		                                </tr>
+		                            </tbody>
+		                        </table>
+		                    </div>
+	                    </form>
+	                    
+					    <div class="content_top">
+				            <p class="sub_title">질환 / 질병 정보 등록</p>
+					    </div>
+					    
+					    <form name="disease_reg_form" onsubmit="return false">					    	
+						    <div class="table_wrap">
+		                        <table class="content_edit_table">
+		                            <colgroup>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                </colgroup>
+	                                
+		                            <tbody>
+		                                <tr>
+		                                	<th><p class="table_title">분류 선택</p></th>
+		                                	<td class="select d_category_no_select">
+		                                		<select class="table_info" name="d_category_no" id="d_category_no">
+		                                			<option value="" selected disabled>선택하세요</option>
+		                                		</select>
+	                                        </td>
+	                                        
+	                                        <th><p class="table_title">질환 / 질병명</p></th>
+		                                	<td>
+		                                		<label class="table_info">
+			                                		<input type="text" name="d_name" id="d_name" placeholder="질환 / 질병명"
+			                                			onblur="requestDuplicateCheck(this, true);">
+	                        					</label>
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">추천 식단 재료</p></th>
+		                                	<td colspan="3">
+		                                		<label class="table_info">
+			                                		<textarea rows="1" name="d_good_food" id="d_good_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
+			                                			onkeyup="setTextareaAddCommaBeforeEnter(this, event)" 
+			                                			oninput="setTextareaAutoHeight(this)" 
+			                                			onblur="validateEmpty(this, '추천 식단 재료')"></textarea>
+	                                			</label>
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">비추천 식단 재료</p></th>
+		                                	<td colspan="3">
+		                                		<label class="table_info">
+			                                		<textarea rows="1" name="d_bad_food" id="d_bad_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
+			                                			onkeyup="setTextareaAddCommaBeforeEnter(this, event)" 
+			                                			oninput="setTextareaAutoHeight(this)" 
+			                                			onblur="validateEmpty(this, '비추천 식단 재료')"></textarea>
+	                                			</label>
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">질환 / 질병 정보</p></th>
+		                                	<td colspan="3">
+		                                		<label class="table_info">
+		                                			<textarea name="d_info" id="d_info" class="table_textarea" placeholder="내용을 입력하세요"
+		                                				data-limit-target="textarea" 
+		                                				data-limit="info" 
+		                                				oninput="setTextareaAutoHeight(this)" 
+		                                				onkeyup="setTextLimit(this)"
+		                                				onblur="validateEmpty(this, '질환 / 질병 정보')"></textarea>
+	                                				<span id="text_limit">
+		                                				<span id="current_size"></span> / <span id="max_size"></span>
+		                                			</span>
+	                                			</label>
+	                                        </td>
+		                                </tr>
+		                            </tbody>
+		                        </table>
+		                    </div>
+	                    </form>
+                        
+                        <div class="btn_list_wrap f_jc_right">
+                        	<div class="btn_list">
+                                <div onclick="history.back();" class="btns cancel">뒤로가기</div>
+                            	<div onclick="postDiseaseCreate('disease_reg_form')" class="btns">등록</div>
+                            </div>
+                        </div>
+					</section>
+                </div>
+            </div>
+		</article>
+	</main>
+</body>
+</html>

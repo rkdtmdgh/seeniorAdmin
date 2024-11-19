@@ -1,5 +1,5 @@
 $(function() {
-	// 게시판 리스트 요청 후 NAV SET
+	// 게시판 리스트 요청 후 네비 메뉴 설정
 	getBoardList(); 
 });
 

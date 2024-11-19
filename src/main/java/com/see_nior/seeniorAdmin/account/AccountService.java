@@ -93,6 +93,10 @@ public class AccountService {
 		AdminAccountDto adminAccountDto = 
 				accountMapper.selectAdminAccountByNo(a_no);
 		
+		if (adminAccountDto == null) {
+			throw new RuntimeException("adminAccountDto is null");
+		}
+		
 		return adminAccountDto;
 		
 	}

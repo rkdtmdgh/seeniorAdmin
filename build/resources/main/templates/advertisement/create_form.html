@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
+<head>
+	<th:block th:insert="~{fragments/head.html :: head('광고 등록')}"></th:block>
+	<script type="text/javascript">
+		$(async function() {
+			// advertisement category 가져오기
+			await getCategoryList('ad_category_no', 'create'); // element id, form 종류, selectedValue
+        });
+	</script>
+</head>
+
+<body>
+	<main class="contents_wrap">
+		<header th:replace="~{fragments/header.html :: header}"></header>
+	
+		<article class="contents_container">
+			<nav th:replace="~{fragments/nav.html :: nav}"></nav>
+			
+			<div class="content">
+                <div class="content_inner sc">
+					<section class="content_info_wrap">
+						<div class="content_top">
+					        <div class="content_top_info">
+					            <h2 class="title">광고 관리</h2>
+					        </div>
+				            <p class="sub_title">광고 등록</p>
+					    </div>
+					    
+					    <form name="advertisement_reg_form" onsubmit="return false">
+						    <div class="table_wrap">
+		                        <table class="content_edit_table">
+		                            <colgroup>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                </colgroup>
+	                                
+		                            <tbody>
+		                            	<tr>		                                	
+		                                	<th><p class="table_title">위치</p></th>
+		                                	<td>
+		                                		<select class="table_info select ad_category_no_select" name="ad_category_no" id="ad_category_no">
+		                                			<option value="" selected disabled>선택하세요</option>
+	                                			</select>
+		                                	</td>
+		                                	
+		                                	<th><p class="table_title">클라이언트</p></th>
+		                                	<td>
+		                                		<label class="table_info">
+			                                		<input type="text" name="ad_client" id="ad_client" placeholder="클라이언트"
+			                                			onblur="validateEmpty(this, '클라이언트')">
+	                        					</label>
+		                                	</td>
+	                                	</tr>
+	                                	
+	                                	<tr>
+		                                	<th><p class="table_title">시작일</p></th>
+		                                	<td>
+		                                		<label class="table_info">
+			                                		<input type="date" name="ad_start_date" id="ad_start_date" max="9999-12-31" min="1900-01-01"
+		                                            	onchange="validateEmpty(this, '시작일')" onblur="validateEmpty(this, '시작일')">
+	                        					</label>
+		                                	</td>
+		                                	
+		                                	<th><p class="table_title">종료일</p></th>
+		                                	<td>
+		                                		<label class="table_info">
+			                                		<input type="date" name="ad_end_date" id="ad_end_date" max="9999-12-31" min="1900-01-01"
+		                                            	onchange="validateEmpty(this, '종료일')" onblur="validateEmpty(this, '종료일')">
+	                        					</label>
+		                                	</td>
+	                                	</tr>
+	                                	
+	                                	<tr>
+		                                	<th><p class="table_title">URL</p></th>
+		                                	<td>
+		                                		<label class="table_info">
+			                                		<input type="text" name="ad_url" id="ad_url" placeholder="URL"
+		                                				onblur="validateEmpty(this, 'URL 주소')">
+	                        					</label>
+		                                	</td>
+		                                	
+		                                	<th><p class="table_title">순번</p></th>
+		                                	<td class="order_number">
+		                                		<label class="table_info">
+			                                		<input type="number" name="ad_idx" id="idx_number" placeholder="순번"
+			                                			min="1"
+			                                			onkeydown="blockEKey(event)"
+			                                			oninput="replaceNumber(this)"
+			                                			value="1">
+	                        					</label>
+		                                	</td>
+	                                	</tr>
+	                                	
+	                                	<tr>
+		                                	<th>
+		                                		<p class="table_title">
+		                                			파일 첨부
+			                                		<span id="guideline"></span>
+		                                		</p>
+		                                	</th>
+		                                	<td colspan="2">
+		                                		<div class="table_info">
+		                                			<label class="file_upload_container">
+		                                				<input type="file" name="files" id="files" accept="image/*"  onchange="setInputFileImageCheck(this)"> 
+		                                				<img src="/image/icons/image_file_upload.png" alt="image file uploader" class="file_upload_img">
+		                                				<span class="file_upload_info">
+			                                				<span class="file_upload_txt">클릭하거나 이미지 파일을 끌어다 놓으세요.</span>
+			                                				<span class="file_upload_restrictions">5MB 이하의 이미지 파일 형식만 첨부 가능합니다.</span>
+		                                				</span>
+		                                			</label>
+		                                		</div>
+		                                	</td>
+	                                	</tr>
+		                            </tbody>
+		                        </table>
+		                    </div>
+	                    </form>
+                        
+                        <div class="btn_list_wrap f_jc_right">
+                            <div class="btn_list">
+                                <div onclick="history.back();" class="btns cancel">뒤로가기</div>
+                                <div onclick="postAdvertisementCreate('advertisement_reg_form')" class="btns">등록</div>
+                            </div>
+                        </div>
+					</section>
+                </div>
+            </div>
+		</article>
+	</main>
+</body>
+</html>

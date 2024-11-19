@@ -65,7 +65,7 @@ public class AccountController {
 	
 	// 로그인 양식
 	@GetMapping("/sign_in_form")
-	public String signInForm(Model model) {
+	public String signInForm() {
 		log.info("signInForm()");
 		
 		return PagePath.ACCOUNT_SIGN_IN_FORM.getValue();
@@ -88,7 +88,7 @@ public class AccountController {
 	
 	// 내 정보 수정 양식
 	@GetMapping("/info/modify_form")
-	public String modifyForm(Model model, Principal principal) {
+	public String modifyForm() {
 		log.info("modifyForm()");
 		
 		return PagePath.ACCOUNT_MODIFY_FORM.getValue();

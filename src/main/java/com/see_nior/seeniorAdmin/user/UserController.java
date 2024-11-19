@@ -92,7 +92,7 @@ public class UserController {
 		
 		UserAccountDto userAccountDto = userService.getUserAccountByNo(u_no);
 		
-		model.addAttribute(userAccountDto);
+		model.addAttribute("userAccountDto", userAccountDto);
 		
 		return PagePath.USER_MODIFY_FORM.getValue();
 		

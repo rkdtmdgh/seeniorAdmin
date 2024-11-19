@@ -172,7 +172,13 @@ public class QnaService {
 	public QnaDto getQnaInfoByNo(int bq_no) {
 		log.info("getQnaInfoByNo()");
 		
-		return qnaMapper.selectQnaInfoByNo(bq_no);
+		QnaDto qnaDto = qnaMapper.selectQnaInfoByNo(bq_no);
+		
+		if (qnaDto == null) {
+			throw new RuntimeException("qnaDto is null");
+		}
+		
+		return qnaDto;
 		
 	}
 	
@@ -444,7 +450,14 @@ public class QnaService {
 	public QnaCategoryDto getQnaCategoryDtoByNo(int bqc_no) {
 		log.info("getQnaCategoryDtoByNo()");
 		
-		return qnaMapper.selectQnaCategoryDtoByNo(bqc_no);
+		QnaCategoryDto qnaCategoryDto = 
+				qnaMapper.selectQnaCategoryDtoByNo(bqc_no);
+		
+		if (qnaCategoryDto == null) {
+			throw new RuntimeException("qnaCategoryDto is null");
+		}
+		
+		return qnaCategoryDto;
 		
 	}
 
@@ -644,7 +657,14 @@ public class QnaService {
 	public QnaNoticeDto getQnaNoticeInfoByNo(int bqn_no) {
 		log.info("getQnaNoticeInfoByNo()");
 		
-		return qnaMapper.selectQnaNoticeInfoByNo(bqn_no);
+		QnaNoticeDto qnaNoticeDto = 
+				qnaMapper.selectQnaNoticeInfoByNo(bqn_no);
+		
+		if (qnaNoticeDto == null) {
+			throw new RuntimeException("qnaNoticeDto is null");
+		}
+		
+		return qnaNoticeDto;
 		
 	}
 

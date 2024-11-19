@@ -109,6 +109,7 @@ public class VideoController {
 		log.info("modifyForm()");
 		
 		VideoDto videoDto = videoService.getVideoInfo(v_no);
+		
 		model.addAttribute(videoDto);
 		
 		return PagePath.VIDEO_MODIFY_FORM.getValue();

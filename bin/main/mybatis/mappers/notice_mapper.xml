@@ -237,7 +237,7 @@
 		WHERE 
 			DN_IS_VALID = 0 
 		AND 
-			DN_IS_DELETED = 1 
+			DN_IMG_DELETED = 1 
 	
 	</select>
 	

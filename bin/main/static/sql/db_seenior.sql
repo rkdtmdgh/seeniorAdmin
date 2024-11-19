@@ -241,7 +241,6 @@ CREATE TABLE BOARD_CATEGORY (
 	BC_NO			INT AUTO_INCREMENT COMMENT "게시판 NO(PK)",						-- 게시판 NO(PK)
 	BC_NAME			VARCHAR(100) NOT NULL UNIQUE COMMENT "게시판 명",					-- 게시판 명
 	BC_IDX			INT COMMENT "게시판 정렬 순서",										-- 게시판 정렬 순서
-    BC_ITEM_CNT 	INT DEFAULT 0 COMMENT "게시물 갯수",								-- 게시판 안에 게시물 갯수
 	BC_IS_DELETED	TINYINT DEFAULT 1 COMMENT "게시판 삭제 여부 (기본값 = 1, 삭제 시 = 0)",	-- 게시판 삭제 여부 (기본값 = 1, 삭제시 = 0)
 	BC_REG_DATE		DATETIME DEFAULT NOW() COMMENT "게시판 등록일",						-- 게시판 등록일
 	BC_MOD_DATE		DATETIME DEFAULT NOW() COMMENT "게시판 수정일",						-- 게시판 수정일
@@ -684,6 +683,7 @@ INSERT INTO NOTICE(N_TITLE, N_BODY, N_WRITER_NO) VALUES("전체 공지사항 14�
 INSERT INTO NOTICE(N_TITLE, N_BODY, N_WRITER_NO) VALUES("전체 공지사항 15번", "전체 공지사항 15번 내용", 18);
 INSERT INTO NOTICE(N_TITLE, N_BODY, N_WRITER_NO) VALUES("전체 공지사항 16번", "전체 공지사항 16번 내용", 2);
 
+SHOW TRIGGERS;
 
 -- 전체 공지사항 삭제 트리거 -------------------------------------------------------------------------------------------------------------------
 DELIMITER //
@@ -691,10 +691,7 @@ CREATE TRIGGER TR_UPDATE_NOTICE_ON_DELETE
 AFTER UPDATE ON NOTICE
 FOR EACH ROW
 BEGIN
-    IF OLD.N_IS_DELETED = 0 AND NEW.N_IS_DELETED = 1 THEN
-        -- 공지사항이 복원된 경우에는 DELETE_NOTICE 테이블에서 해당 레코드 삭제
-        DELETE FROM DELETE_NOTICE WHERE DN_NOTICE_NO = OLD.N_NO;
-    ELSEIF OLD.N_IS_DELETED = 1 AND NEW.N_IS_DELETED = 0 THEN
+    IF OLD.N_IS_DELETED = 1 AND NEW.N_IS_DELETED = 0 THEN
         -- 게시글이 삭제된 경우에는 DELETE_NOTICE 테이블에 새로운 레코드 삽입
         INSERT INTO DELETE_NOTICE (
             DN_NOTICE_NO,
@@ -710,7 +707,7 @@ BEGIN
 END//
 DELIMITER ;
 
-DROP TRIGGER TR_UPDATE_POST_ON_DELETE;
+DROP TRIGGER TR_UPDATE_NOTICE_ON_DELETE;
 
 
 -- 삭제된 전체 공지사항 테이블 -----------------------------------------------------------------------------------------------------------------
@@ -719,7 +716,7 @@ CREATE TABLE DELETE_NOTICE (
 	DN_NOTICE_NO			INT NOT NULL COMMENT "삭제할 전체 공지사항 NO(NOTICE TABLE PK)",						-- 삭제할 전체 공지사항 NO(NOTICE TABLE PK)
 	DN_DIR_NAME				VARCHAR(20) COMMENT "이미지 저장된 폴더 이름"	,										-- 게시물 이미지 저장된 폴더명
     DN_IS_VALID				TINYINT DEFAULT 1 COMMENT "게시물 삭제요청 후 30일 경과 여부(기본값 = 1, 경과 시 = 0)",	-- 게시물 삭제요청 후 30일 경과 여부(기본값 = 1, 경과 시 = 0)
-    DN_IS_DELETED			TINYINT DEFAULT 1 COMMENT "게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)",			-- 게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)
+    DN_IMG_DELETED			TINYINT DEFAULT 1 COMMENT "게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)",			-- 게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)
 	DN_REQUEST_TIME			DATETIME DEFAULT NOW() COMMENT "게시물 삭제 요청 시간",								-- 게시물 수정일
     PRIMARY KEY(DN_NO)
 );
@@ -727,6 +724,7 @@ SELECT * FROM DELETE_NOTICE;
 DROP TABLE DELETE_NOTICE;
 DELETE FROM DELETE_NOTICE;
 
+SHOW EVENTS;
 
 -- 삭제 요청 후 30일 경과된 정보 완전 삭제 프로시저(함수) -----------------------------------------------------------------------------------------------------------------
 DELIMITER //

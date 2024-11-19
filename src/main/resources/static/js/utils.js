@@ -719,6 +719,13 @@ $(document).on('click', function(event) {
 	if($openSelectEle.length && !isSelectTriggerClick) { // 클릭한 요소가 커스텀 셀렉트 버튼이 아닐 경우
 		$openSelectEle.removeClass('active'); // 열려 있는 셀렉트 옵션 닫기
 	}
+	
+	// 테이블 리스트 서브 메뉴 노출 닫기
+	const $openListSubMenuEle = $('.link_sub_menu_container.active'); // 열려 있는 테이블 리스트 서브 메뉴 요소
+	const isListSubMenuTriggerClick = event.target.closest('.table_list_sub_menu'); // 클릭한 요소가 리스트 서브 메뉴인지 확인
+	if($openListSubMenuEle.length && !isListSubMenuTriggerClick) { // 클릭한 요소가 리스트 서브 메뉴가 아닐 경우
+		$openListSubMenuEle.slideUp(50).removeClass('active'); // 열려 리스트 서브 메뉴 닫기
+	}
 });
 
 // 문서가 준비된 후 실행
@@ -752,5 +759,6 @@ $(function() {
 		
 		if(file) setImageFilePreview(file, $input);
 	});
+
 	
 });
