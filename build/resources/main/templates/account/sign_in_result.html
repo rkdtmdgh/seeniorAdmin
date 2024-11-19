@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html 
+   xmlns:th="http://www.thymeleaf.org" 
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
+<script th:inline="javascript" th:if="${result} == true">
+	// 로그인성공으로 루트 페이지 이동
+	sessionStorage.clear();
+	location.replace("/");
+</script>
+	
+<script th:inline="javascript" th:if="${result} == false">
+	// 로그인 실패
+	alert(/*[[${errMsg}]]*/);
+	location.replace("/");
+</script>
+</html>

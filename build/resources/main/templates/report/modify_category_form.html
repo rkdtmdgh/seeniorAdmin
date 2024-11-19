@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
+<head>
+	<th:block th:insert="~{fragments/head.html :: head('신고 분류 수정')}"></th:block>
+	<script th:inline="javascript">
+    	logger.info('dto check reportCategoryDto:', /*[[${reportCategoryDto}]]*/);
+    </script>
+</head>
+
+<body>
+	<main class="contents_wrap">
+		<header th:replace="~{fragments/header.html :: header}"></header>
+	
+		<article class="contents_container">
+			<nav th:replace="~{fragments/nav.html :: nav}"></nav>
+			
+			<div class="content">
+                <div class="content_inner sc">
+					<section class="content_info_wrap">
+						<div class="content_top">
+					        <div class="content_top_info">
+					            <h2 class="title">신고 분류 관리</h2>
+					        </div>
+				            <p class="sub_title">신고 분류 수정</p>
+					    </div>
+					    
+					    <form name="report_category_modify_form">					    	
+                      		<input type="hidden" name="brc_no" th:value="${reportCategoryDto.brc_no}">
+                      		<input type="hidden" name="current_brc_name" th:value="${reportCategoryDto.brc_name}">
+                      		
+						    <div class="table_wrap">
+		                        <table class="content_edit_table">
+		                            <colgroup>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                </colgroup>
+	                                
+		                            <tbody>
+		                                <tr>
+		                                	<th><p class="table_title">분류명</p></th>
+		                                	<td>
+		                                		<label class="table_info">
+			                                		<input type="text" name="brc_name" id="brc_name" placeholder="신고 유형 분류명"
+			                                			th:onblur="requestDuplicateCheck(this, true, [[${reportCategoryDto.brc_name}]], null);"
+			                                			th:value="${reportCategoryDto.brc_name}">
+		                                		</label>
+	                                        </td>
+	                                        
+	                                        <th><p class="table_title">등록일<span class="divider"></span>수정일</p></th>
+	                                        <td class="disabled">
+	                                        	<p class="table_info" th:utext="|
+	                                        		${reportCategoryDto.brc_reg_date}
+	                                        		<span class='divider'></span>
+	                                        		${reportCategoryDto.brc_mod_date}
+	                                        	|"></p>
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>	                                        
+	                                        <th><p class="table_title">신고 수</p></th>
+	                                        <td>
+	                                        	<p class="table_info" th:text="${reportCategoryDto.brc_item_cnt}"></p>
+	                                        </td>
+	                                        
+	                                        <td colspan="2"></td>
+		                                </tr>
+		                            </tbody>
+		                        </table>
+		                    </div>
+	                    </form>
+                        
+                        <div class="btn_list_wrap">
+	                       	<div th:onclick="delSingleData(
+	              			 		[[${reportCategoryDto.brc_name}]], 
+	              			 		'brc_no', 
+	              			 		[[${reportCategoryDto.brc_no}]]
+	              			 	)" class="btns delete">삭제</div>
+	                 		 
+	                        <div class="btn_list">
+	                            <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
+	                            <div onclick="putReportCategoryModify('report_category_modify_form')" class="btns">수정</div>
+	                        </div>
+	                    </div>
+					</section>
+                </div>
+            </div>
+		</article>
+	</main>
+</body>
+</html>

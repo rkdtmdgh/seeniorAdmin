@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	
+<head>
+    <th:block th:insert="~{fragments/head.html :: head('질환 / 질병 정보 수정')}"></th:block>
+    <script th:inline="javascript">
+		$(async function() {
+         	// disease category 가져오기
+            await getCategoryList('d_category_no', 'modify', /*[[${diseaseDto.d_category_no}]]*/); // element id, form 종류, selectedValue
+        });
+    </script>
+</head>
+
+<body>
+	<main class="contents_wrap">
+	    <header th:replace="~{fragments/header.html :: header}"></header>
+	
+	    <article class="contents_container">
+	        <nav th:replace="~{fragments/nav.html :: nav}"></nav>
+	
+	        <div class="content">
+	            <div class="content_inner sc">
+	                <section class="content_info_wrap">
+	                    <div class="content_top">
+	                        <div class="content_top_info">
+	                            <h2 class="title">질환 / 질병 정보 관리</h2>
+	                        </div>
+	                        <p class="sub_title">질환 / 질병 정보 수정</p>
+	                    </div>
+	
+	                    <form name="disease_modify_form" onsubmit="return false">
+		                    <input type="hidden" name="d_no" th:value="${diseaseDto.d_no}">
+		                    <input type="hidden" name="current_d_name" th:value="${diseaseDto.d_name}">
+		                    
+	                        <div class="table_wrap">
+	                            <table class="content_edit_table">
+	                                <colgroup>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                </colgroup>
+	
+	                                <tbody>
+		                                <tr>
+		                                    <th><p class="table_title">분류</p></th>
+		                                    <td>
+		                                        <select class="table_info select d_category_no_select" name="d_category_no" id="d_category_no"></select>
+		                                    </td>
+		                                    
+		                                    <th><p class="table_title">등록일<span class="divider"></span>수정일</p></th>
+	                                        <td class="disabled">
+	                                        	<p class="table_info" th:utext="|
+	                                        		${diseaseDto.d_reg_date}
+	                                        		<span class='divider'></span>
+	                                        		${diseaseDto.d_mod_date}
+	                                        	|"></p>
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">질환 / 질병명</p></th>
+		                                    <td colspan="3">
+		                                    	<label class="table_info">
+			                                        <input type="text" name="d_name" id="d_name" placeholder="질환 / 질병명"
+			                                            th:onblur="requestDuplicateCheck(this, true, [[${diseaseDto.d_name}]], null);"
+			                                            th:value="${diseaseDto.d_name}">
+	                        					</label>
+		                                    </td>
+		                                </tr>
+		
+		                                <tr>
+		                                    <th><p class="table_title">추천 식단 재료</p></th>
+		                                    <td colspan="3">
+		                                    	<label class="table_info">
+			                                    	<textarea rows="1" name="d_good_food" id="d_good_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
+			                                    		onkeyup="setTextareaAddCommaBeforeEnter(this, event)" 
+			                                    		oninput="setTextareaAutoHeight(this)" 
+			                                    		onblur="validateEmpty(this, '추천 식단 재료')"
+			                                    		th:text="${diseaseDto.d_good_food}"></textarea>
+	                                    		</label>
+		                                    </td>
+		                                </tr>
+		                                <tr>
+		                                    <th><p class="table_title">비추천 식단 재료</p></th>
+		                                    <td colspan="3">
+		                                    	<label class="table_info">
+			                                    	<textarea rows="1" name="d_bad_food" id="d_bad_food" class="table_textarea small" placeholder='","로 구분하여 입력하세요'
+			                                    		onkeyup="setTextareaAddCommaBeforeEnter(this, event)" 
+			                                    		oninput="setTextareaAutoHeight(this)" 
+			                                    		onblur="validateEmpty(this, '추천 식단 재료')"
+			                                    		th:text="${diseaseDto.d_bad_food}"></textarea>
+	                                    		</label>
+		                                    </td>
+		                                </tr>
+		                                <tr>
+		                                    <th><p class="table_title">질환 / 질병 정보</p></th>
+		                                    <td colspan="3">
+		                                    	<label class="table_info">
+		                                           	<textarea name="d_info" id="d_info" class="table_textarea" placeholder="내용을 입력하세요"
+		                                				data-limit-target="textarea" 
+		                                				data-limit="info" 
+		                                				oninput="setTextareaAutoHeight(this)" 
+		                                				onkeyup="setTextLimit(this)"
+		                                				onblur="validateEmpty(this, '질환 / 질병 정보')"
+		                                				th:text="${diseaseDto.d_info}"></textarea>
+		                                           	<span id="text_limit">
+		                                				<span id="current_size"></span> / <span id="max_size"></span>
+		                                			</span>
+	                                			</label>
+		                                    </td>
+		                                </tr>
+	                                </tbody>
+	                            </table>
+	                        </div>
+	                    </form>
+
+                        <div class="btn_list_wrap">
+                     		<div class="btns delete" th:onclick="delListData('d_no')">삭제</div>
+                        		 
+                            <div class="btn_list">
+                                <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
+                                <div onclick="putDiseaseModify('disease_modify_form')" class="btns">수정</div>
+                        	</div>
+                    	</div>
+	                </section>
+	            </div>
+	        </div>
+	    </article>
+	</main>
+</body>
+</html>

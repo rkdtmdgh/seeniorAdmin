@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.see_nior.seeniorAdmin.notice.mapper.NoticeMapper">
+
+	<resultMap type="AdminAccountDto" id="AdminAccountDto">
+		<id column="a_no" property="a_no" />
+		<result column="a_id" property="a_id" />
+		<result column="a_pw" property="a_pw" />
+		<result column="a_name" property="a_name" />
+		<result column="a_phone" property="a_phone" />
+		<result column="a_birth" property="a_birth" />
+		<result column="a_department" property="a_department" />
+		<result column="a_level" property="a_level" />
+		<result column="a_position" property="a_position" />
+		<result column="a_authority_role" property="a_authority_role" />
+		<result column="a_isaccountnonexpired" property="a_isaccountnonexpired" />
+		<result column="a_isaccountnonlocked" property="a_isaccountnonlocked" />
+		<result column="a_iscredentialsnonexpired" property="a_iscredentialsnonexpired" />
+		<result column="a_isenabled" property="a_isenabled" />
+		<result column="a_is_deleted" property="a_is_deleted" />
+		<result column="a_mod_date" property="a_mod_date" />
+		<result column="a_reg_date" property="a_reg_date" />
+	</resultMap>
+
+	<resultMap type="NoticeDto" id="NoticeDto">
+		<id column="n_no" property="n_no"/>
+		<result column="n_title" property="n_title"/>	
+		<result column="n_body" property="n_body"/>	
+		<result column="n_view_cnt" property="n_view_cnt"/>	
+		<result column="n_state" property="n_state"/>	
+		<result column="n_is_deleted" property="n_is_deleted"/>	
+		<result column="n_reg_date" property="n_reg_date"/>	
+		<result column="n_mod_date" property="n_mod_date"/>	
+		<collection property="adminAccountDto" resultMap="AdminAccountDto"/>
+	</resultMap>
+
+	
+	<!-- 전체 공지사항 정보 가져오기 by no -->
+	<select id="selectNoticeInfoByNo"
+			resultMap="NoticeDto">
+	
+		SELECT 
+			N.*, 
+			A.A_NO, A.A_ID, A.A_NAME, A.A_DEPARTMENT, A.A_LEVEL, A.A_POSITION 
+		FROM 
+			NOTICE N  
+		LEFT JOIN 
+			ADMIN_ACCOUNT A 
+		ON 
+			N.N_WRITER_NO = A.A_NO 
+		WHERE 
+			N.N_IS_DELETED = 1 
+		AND 
+			N.N_NO = #{n_no}
+	
+	</select>
+	
+	<!-- 전체 공지사항 페이징 리스트 가져오기 -->
+	<select id="selectNoticeList"
+			resultMap="NoticeDto">
+	
+		SELECT 
+			N.*, 
+			A.A_NO, A.A_ID, A.A_NAME, A.A_DEPARTMENT, A.A_LEVEL, A.A_POSITION 
+		FROM 
+			NOTICE N 
+		JOIN 
+			ADMIN_ACCOUNT A
+		ON 
+			N.N_WRITER_NO = A.A_NO 
+		WHERE 
+			N_IS_DELETED = 1 
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>
+
+	<!-- 전체 공지사항 리스트 총 개수 -->
+	<select id="selectAllNoticeListCnt">
+	
+		SELECT 
+			COUNT(N_NO) 
+		FROM 
+			NOTICE 
+		WHERE 
+			N_IS_DELETED = 1 
+		
+	</select>
+	
+	<!-- 전체 공지사항 검색 페이징 리스트 가져오기 -->
+	<select id="selectSearchNoticeList"
+			resultMap="NoticeDto">
+	
+		SELECT 
+			N.*, 
+			A.A_NO, A.A_ID, A.A_NAME, A.A_DEPARTMENT, A.A_LEVEL, A.A_POSITION 
+		FROM 
+			NOTICE N 
+		JOIN 
+			ADMIN_ACCOUNT A
+		ON 
+			N.N_WRITER_NO = A.A_NO 
+		WHERE 
+			N.N_IS_DELETED = 1 
+		<if test="searchPart != null and searchString != null">
+			<choose>
+				<when test="searchPart == 'a_id'">
+					AND A.A_ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'a_name'">
+					AND A.A_NAME LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<otherwise>
+					AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+				</otherwise>
+			</choose>
+		</if>
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>
+
+	<!-- 전체 공지사항 검색 리스트 총 개수 -->
+	<select id="selectSearchNoticeListCnt">
+	
+		SELECT 
+			COUNT(N_NO) 
+		FROM 
+			NOTICE N 
+		LEFT JOIN 
+			ADMIN_ACCOUNT A 
+		ON 
+			N.N_WRITER_NO = A.A_NO 
+		WHERE 
+			N.N_IS_DELETED = 1 
+		<if test="searchPart != null and searchString != null">
+			<choose>
+				<when test="searchPart == 'a_id'">
+					AND A.A_ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'a_name'">
+					AND A.A_NAME LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<otherwise>
+					AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+				</otherwise>
+			</choose>
+		</if>
+		
+	</select>
+	
+	<!-- 전체 공지사항 main 화면 리스트 가져오기 -->
+	<select id="selectNoticeListForMain"
+			resultMap="NoticeDto">
+	
+		SELECT 
+			N.*, 
+			A.A_NO, A.A_ID, A.A_NAME, A.A_DEPARTMENT, A.A_LEVEL, A.A_POSITION 
+		FROM 
+			NOTICE N 
+		LEFT JOIN 
+			ADMIN_ACCOUNT A 
+		ON 
+			N.N_WRITER_NO = A.A_NO 
+		WHERE 
+			N.N_IS_DELETED = 1
+		AND 
+			N.N_STATE = 1  
+		ORDER BY 
+			N.N_NO DESC 
+		LIMIT 
+			#{page_limit} 
+			
+	</select>
+	
+	<!-- 공지사항 등록 확인 -->
+	<insert id="insertNewNotice">
+	
+		INSERT INTO 
+			NOTICE(
+				N_TITLE, N_BODY, N_WRITER_NO, N_DIR_NAME
+			) 
+		VALUES(
+			#{n_title}, #{n_body}, #{n_writer_no}, #{n_dir_name}
+		)
+	
+	</insert>
+	
+	<!-- 공지사항 수정 확인 -->
+	<update id="updateNotice">
+		
+		UPDATE 
+			NOTICE N 
+		SET 
+			N_TITLE = #{n_title}, 
+			N_BODY = #{n_body}, 
+			N_STATE = 
+			<if test="n_state == true">
+				1, 
+			</if>
+			<if test="n_state == false">
+				0, 
+			</if>
+			N_DIR_NAME = #{n_dir_name}, 
+			N_MOD_DATE = NOW()  
+		WHERE 
+			N_NO = #{n_no} 
+			
+	</update>
+	
+	<!-- 전체 공지사항 삭제 확인 -->
+	<update id="updateIsDeletedByNo">
+	
+		UPDATE 
+			NOTICE 
+		SET 
+			N_IS_DELETED = 0, 
+			N_MOD_DATE = NOW()  
+		WHERE 
+			N_NO = #{n_no} 
+	
+	</update>
+	
+	<!-- 삭제된 공지사항 정보 가져오기  -->
+	<select id="selectDeleteNoticeInfo"
+			resultType="DeleteNoticeDto">
+	
+		SELECT 
+			* 
+		FROM 
+			DELETE_NOTICE 
+		WHERE 
+			DN_IS_VALID = 0 
+		AND 
+			DN_IS_DELETED = 1 
+	
+	</select>
+	
+	
+	
+
+</mapper>
