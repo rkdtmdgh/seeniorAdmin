@@ -1,0 +1,836 @@
+// 함수 디바운싱 적용 // 함수, key명
+const putIntegSubmit = debounceAsync(putIntegSubmitProcess, 'putIntegSubmitProcess'); // put 통합 ajax 요청
+const putOrderModify = debounceAsync(putOrderModifyProcess, 'putOrderModifyProcess'); // 순번 수정
+
+// put 통합 ajax 요청
+async function putIntegSubmitProcess(apiUrl, formData, successMessage, errorMessage, loddingParentEle) {   
+	setFormDataCheckConsoleLog(formData); // FormData 키벨류, byte 확인
+	setLoading(true, loddingParentEle); // 로딩 추가
+	try {
+		const response = await $.ajax({
+			url: apiUrl,
+			method: 'POST',
+			data: formData,
+			processData: false,  // FormData가 자동으로 Content-Type 설정
+			contentType: false,  // FormData를 문자열로 변환하지 않음
+		});
+		
+		logger.info(`${apiUrl} putIntegSubmit() response:`, response);
+		
+		if(response) {
+			if(successMessage) alert(successMessage);
+			
+		} else {
+			if(errorMessage) alert(errorMessage + addMsg);
+		}
+		
+	} catch(error) {
+		logger.error(`${apiUrl} putIntegSubmit() error:`, error);
+		if(errorMessage) alert(errorMessage + addMsg);
+		
+	} finally {
+		location.reload(true);
+	}
+}
+
+// 순번 수정
+async function putOrderModifyProcess(event, idx, page) {    
+	const infoEle = event.target.closest('tr'); // 클릭된 요소의 가장 가까운 tr 요소 찾기
+    const name = infoEle.getAttribute('data-no-name'); 
+    const no = infoEle.getAttribute('data-no'); 
+    const current_idx = infoEle.getAttribute('data-idx'); 
+    
+    // 카테고리 분류 내 순번 수정이 필요한 경우 분류 no값 추출하여 추가 전송
+    const urlParams = new URLSearchParams(window.location.search);
+	const infoNo = urlParams.get('infoNo') || undefined; // 쿼리스트링에 infoNo값 추출
+    
+    const config = mapOrderModifyObject(name, page); // 요청에 필요한 객체
+    
+	// 실시간 비동기 작업으로 리로드 되지 않도록 putIntegSubmit함수 사용하지 않음
+	const formData = new FormData();
+	formData.append(name, no); // 순번 수정할 데이터 no값
+	formData.append([config.current_idx_key], current_idx); // 기존 순번 값
+	formData.append([config.idx_key], idx); // 변경할 순번 값
+	if(infoNo) formData.append([config.categoryKey], infoNo); // 카테고리 no 값	
+	const errorMessage = '순번 수정에 실패했습니다.';
+
+	setLoading(true, config.loddingSetEle); // 로딩 추가
+	try {
+		const response = await $.ajax({
+			url: config.orderModifyApiURL,
+			method: 'POST',
+			data: formData,
+			processData: false,  // FormData가 자동으로 Content-Type 설정
+			contentType: false,  // FormData를 문자열로 변환하지 않음
+		});
+		
+		logger.info(`${config.orderModifyApiURL} putOrderModify() response:`, response);
+		
+		if(!response) {
+			if(errorMessage) alert(errorMessage + addMsg);
+		}
+		
+	} catch(error) {
+		logger.error(`${config.orderModifyApiURL} putOrderModify() error:`, error);
+		if(errorMessage) alert(errorMessage + addMsg);
+		
+	} finally {
+		setLoading(false, config.loddingSetEle); // 로딩 종료
+		config.getListFunc(); // 지정된 함수 실행
+	}
+}
+
+// 순번 수정 요청에 필요한 객체 설정
+function mapOrderModifyObject(name, page) {
+	let orderModifyApiURL = null; // 순번 수정 요청 apiUrl
+	let getListFunc = null; // 함수 저장할 변수
+	let loddingSetEle = null; // 로딩 표시할 요소
+	let current_idx_key = null;
+	let idx_key = null;
+	let categoryKey = null;
+	
+	switch(name) {
+		case 'bc_no': // 게시판 분류 순번 수정
+			orderModifyApiURL = '/board/cate_info/modify_category_idx';
+			getListFunc = () => getList('/board/cate_info/get_category_list', null, null, page);
+			loddingSetEle = 'content_inner';
+			current_idx_key = 'current_bc_idx';
+			idx_key = 'bc_idx';
+			break;
+			
+		case 'ad_no': // 광고 분류 상세페이지 내 광고 순번 수정
+			orderModifyApiURL = '/advertisement/info/modify_advertisement_idx';
+			getListFunc = () => getList('/advertisement/cate_info/get_advertisement_list_by_category', 'ad_idx', 'asc', page);
+			loddingSetEle = 'advertisement_list_table';
+			current_idx_key = 'current_ad_idx';
+			idx_key = 'ad_idx';
+			categoryKey = 'ac_no';
+			break;
+		
+		default:
+			logger.error('mapOrderModifyObject() value:', name);
+			return false;
+	}
+	
+	return { orderModifyApiURL, getListFunc, loddingSetEle, current_idx_key, idx_key, categoryKey };
+}
+
+// 본인 계정 정보 수정
+async function putMyAccountSubmit(formName) {
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.a_name;
+	if(!validateEmpty(input, '이름', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.a_birth;
+	if(!validateEmpty(input, '생년월일', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.a_pw;
+	if(input.value.trim().length) {
+		const isConfirm = confirm('비밀번호를 변경하시겠습니까?\n변경하지 않을 경우 입력한 값을 삭제 후 다시 저장해 주세요.');
+		if(!isConfirm) return false;	
+		
+		if(!validatePw(input, true, true)) { 
+			input.focus();
+			return false;
+		}
+	}
+	
+	input = form.a_phone;
+	if(!validatePhone(input, true)) {
+		input.focus();
+		return false;
+	}
+	
+	const formData = new FormData(); // 비동기로 추가된 html로 폼 요소들이 DOM에 제대로 반영되지 않을 수 있어 append로 삽입
+	formData.append('a_no', form.a_no.value);
+	formData.append('a_id', form.a_id.value);
+	formData.append('a_pw', form.a_pw.value);
+	formData.append('a_name', form.a_name.value);
+	formData.append('a_birth', form.a_birth.value);
+	formData.append('a_phone', form.a_phone.value);
+	
+	const successMessage = '정보가 수정되었습니다';
+	const errorMessage = '정보 수정에 실패했습니다.';
+	logger.info('putMyAccountSubmit formData:', formData);
+	
+	await putIntegSubmit(
+		'/account/info/modify_confirm', // apiUrl
+		formData, 						// data
+		successMessage, 				// 성공 메세지
+		errorMessage,					// 실패 메세지
+		'content_inner'                 // 로딩 표시할 부모 요소
+	);
+}
+
+// 관리자 계정 정보 수정(SUPER_ADMIN)
+async function putAdminModify(formName) {
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.a_name;
+	if(!validateEmpty(input, '이름', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.a_birth;
+	if(!validateEmpty(input, '생년월일', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.a_phone;
+	if(!validatePhone(input, true)) {
+		input.focus();
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	const successMessage = `"${form.a_id.value}" 정보가 수정되었습니다`;
+	const errorMessage = `"${form.a_id.value}" 정보 수정에 실패했습니다.`;
+
+	await putIntegSubmit(
+		'/account/list/admin_modify_confirm', 
+		formData, 
+		successMessage, 
+		errorMessage,
+		'content_inner'
+	);
+}
+
+// 관리자 계정 비밀번호 초기화
+async function putResetPassword(a_no, a_id) {
+	const isConfirm = confirm(`${a_id} 계정 비밀번호를 초기화하시겠습니까?`);
+	if(!isConfirm) return false;	
+		
+	const formData = new FormData(); // 비동기로 추가된 html로 폼 요소들이 DOM에 제대로 반영되지 않을 수 있어 append로 삽입
+	formData.append('a_no', a_no);
+	
+	const successMessage = `"${a_id}" 비밀번호가 초기화되었습니다.`;
+	const errorMessage = `"${a_id}" 비밀번호 초기화에 실패했습니다.`;
+	
+	await putIntegSubmit(
+		'/account/list/reset_password', 
+		formData, 
+		successMessage, 
+		errorMessage,
+		'content_inner'
+	);
+}
+
+// 회원 정보 수정
+async function putUserAccountModify(formName) {
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.u_blocked_reason;
+	if(input && !validateEmpty(input, '사유', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.u_name;
+	if(!validateEmpty(input, '이름', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.u_nickname;
+	if(!validateEmpty(input, '닉네임', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.u_birth;
+	if(!validateEmpty(input, '생년월일', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.u_phone;
+	if(!validatePhone(input, true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.u_company;
+	if(!form.u_is_personal.value && !validateEmpty(input, '소속기관', true)) {
+		input.focus();
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	if(!form.u_blocked_reason) formData.set('u_blocked_reason', null); // 정지상태가 아닐경우 u_blocked_reason요소가 없기에 빈값 추가
+		
+	const successMessage = `"${form.u_id.value}" 계정 정보가 수정되었습니다`;
+	const errorMessage = `"${form.u_id.value}" 계정 정보 수정에 실패했습니다.`;
+
+	await putIntegSubmit(
+		'/user_account/info/modify_confirm', 
+		formData, 
+		successMessage, 
+		errorMessage,
+		'content_inner'
+	);
+}
+
+// 회원 계정 상태 수정
+async function putUserAccountBlockModify(formName, u_is_blocked) {
+	const form = document.forms[formName];
+	let input;
+	
+	if(!u_is_blocked) { // 정지할 경우에만 사유 입력
+		input = form.u_blocked_reason;
+		if(!validateEmpty(input, '사유', true, true)) {
+			input.focus();
+			return false;
+		}
+	}
+	
+	const isConfirm = confirm(`"${form.u_id.value}" 계정을 ${u_is_blocked ? '활성화' : '정지'}하시겠습니까?`);
+	if(!isConfirm) return false;
+	
+	const formData = new FormData(form);
+	formData.set('u_is_blocked', u_is_blocked); // 불리언값 입력
+	if(u_is_blocked) formData.set('u_blocked_reason', null); // 정지를 활성화할 경우 사유 제거
+	
+	const successMessage = `"${form.u_id.value}" 정보가 수정되었습니다`;
+	const errorMessage = `"${form.u_id.value}" 정보 수정에 실패했습니다.`;
+	
+	await putIntegSubmit(
+		'/user_account/info/bolcked_confirm',
+		formData,
+		successMessage,
+		errorMessage,
+		'content_inner'
+	);
+}
+
+// 단순 데이터 상태 토글 (boolean)
+async function putModifyState(ele, formName) {
+	const info = $(ele).data('info');
+	const name = $(ele).attr('name');
+	const value = JSON.parse($(ele).val()); // boolean으로 변환
+	
+	const isConfirm = confirm(`${info} 처리하시겠습니까?`);
+	if(!isConfirm) {
+		$(`input[name="${name}"][value="${!value}"]`).prop('checked', true);
+		return;
+	}
+	
+	const form = document.forms[formName];
+	const apiUrl = mapStateModifyObject(name); // apiUrl 가져오기
+		
+	const formData = new FormData(form);
+	formData.set(`${name}`, value);
+	
+	const successMessage = `${info} 처리되었습니다.`;
+	const errorMessage = `${info} 처리에 실패했습니다.`;
+	
+	await putIntegSubmit(
+		apiUrl,
+		formData,
+		successMessage,
+		errorMessage,
+		name
+	);
+}
+
+// 단순 데이터 상태 수정 요청에 필요한 객체 설정
+function mapStateModifyObject(name) {
+	let apiUrl = null;
+	
+	switch(name) {
+		case 'bq_state':
+			apiUrl = '/qna/info/modify_qna_state';
+			break;
+	}
+	
+	return apiUrl;
+}
+
+// 질환/질병 분류 수정
+async function putDiseaseCategoryModify(formName) {
+	const form = document.forms[formName];
+	const current_dc_name = form.current_dc_name;
+	let input;
+	
+	input = form.dc_name;
+	if(input.value !== current_dc_name.value) { // 수정이 되었을 경우
+		if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+			input.focus();
+			return false;
+		}
+		
+	} else {
+		alert('수정된 내용이 없습니다');
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	const successMessage = `"${input.value}" 질환/질병 분류명이 수정되었습니다`;
+	const errorMessage = `"${input.value}" 질환/질병 분류명 수정에 실패했습니다.`;
+
+	await putIntegSubmit(
+		'/disease/cate_info/modify_category_confirm', 
+		formData, 
+		successMessage, 
+		errorMessage,
+		'content_inner'
+	);
+}
+
+// 질환 / 질병 수정
+async function putDiseaseModify(formName) {
+	const form = document.forms[formName];
+	const current_d_name = form.current_d_name;
+	let input;
+	
+	input = form.d_category_no;
+	if(input.value === "") {
+		alert('분류를 선택해 주세요.');
+		return false;
+	}
+	
+	input = form.d_name;
+	if(input.value !== current_d_name.value) { // 수정이 되었을 경우
+		if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+			input.focus();
+			return false;
+		}
+	}
+	
+	input = form.d_good_food;
+	if(!validateEmpty(input, '추천 식단 재료', true)) {
+		input.focus();
+		return false;
+	}
+		
+	input = form.d_bad_food;
+	if(!validateEmpty(input, '비추천 식단 재료', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.d_info;
+	if(!validateEmpty(input, '질환 / 질병 정보', true)) {
+		input.focus();
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	const successMessage = `"${form.d_name.value}" 질환/질병 정보가 수정되었습니다`;
+	const errorMessage = `"${form.d_name.value}" 질환/질병 정보 수정에 실패했습니다.`;
+
+	await putIntegSubmit(
+		'/disease/info/modify_confirm', 
+		formData, 
+		successMessage, 
+		errorMessage,
+		'content_inner'
+	);
+}
+
+// 영상 정보 수정
+async function putVideoModify(formName) {
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.v_title;
+	if(!validateEmpty(input, '제목', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.v_link;
+	if(!validateEmpty(input, 'URL 주소', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.v_text;
+	if(!validateEmpty(input, '내용', true)) {
+		input.focus();
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	const successMessage = `"${form.v_title.value}" 영상 정보가 수정되었습니다`;
+	const errorMessage = `"${form.v_title.value}" 영상 정보 수정에 실패했습니다.`;
+
+	await putIntegSubmit(
+		'/video/info/modify_confirm', 
+		formData, 
+		successMessage, 
+		errorMessage,
+		'content_inner'
+	);
+}
+
+// 공지사항 수정
+async function putNoticeModify(formName) {
+	const form = document.forms[formName];
+	
+	input = form.n_title;
+	if(!validateEmpty(input, '제목', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(!validateQuill(quill)) { // 내용 유효성 및 비속어 검사
+		quill.focus();
+		return false;
+	}
+	
+	const successMessage = `"${input.value}" 공지사항이 수정되었습니다.`;
+	const errorMessage = `"${input.value}" 공지사항 수정에 실패했습니다.`;
+	
+	const formData = new FormData(form);
+	formData.set('n_body', quill.root.innerHTML); // quill 에디터 내용
+	
+	// 이미지 파일 리사이즈 및 압축하여 formData에 담기 (선택된 이미지 요소가 없을 시 빈 파일 객체가 담김)
+	const $newImgTags = $(quill.root).find('img').filter(function() {
+		return $(this).attr('src').startsWith('blob:'); // src가 blob 으로 시작하는 태그 필터링 즉 추가된 이미지 태그
+	});
+	await addImagesToFormData($newImgTags, formData);
+	
+	const deleteFileNames = []; // 제거된 이미지 파일명이 담길 배열
+	if(deletedImageSrcs.length) { // 제거된 이미지가 있다면
+		logger.info('제거된 이미지가 있음');
+		
+		deletedImageSrcs.forEach((src) => {
+			const filename = src.split('/').pop(); // src에서 파일명만 추출
+			deleteFileNames.push(filename);
+		});
+	}
+	formData.append('deleteFileNames', deleteFileNames);
+	
+	await putIntegSubmit(
+		'/notice/info/modify_confirm',
+		formData,
+		successMessage,
+		errorMessage,
+		'content_inner'
+	);
+}
+
+
+// QnA 공지사항 수정
+async function putQnaNoticeModify(formName) {
+	const form = document.forms[formName];
+	
+	input = form.bqn_title;
+	if(!validateEmpty(input, '제목', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(!validateQuill(quill)) { // 내용 유효성 및 비속어 검사
+		quill.focus();
+		return false;
+	}
+	
+	const successMessage = `"${input.value}" QnA 공지사항이 수정되었습니다.`;
+	const errorMessage = `"${input.value}" QnA 공지사항 수정에 실패했습니다.`;
+	
+	const formData = new FormData(form);
+	formData.set('bqn_body', quill.root.innerHTML); // quill 에디터 내용
+	
+	// 이미지 파일 리사이즈 및 압축하여 formData에 담기 (선택된 이미지 요소가 없을 시 빈 파일 객체가 담김)
+	const $newImgTags = $(quill.root).find('img').filter(function() {
+		return $(this).attr('src').startsWith('blob:'); // src가 blob 으로 시작하는 태그 필터링 즉 추가된 이미지 태그
+	});
+	await addImagesToFormData($newImgTags, formData);
+	
+	const deleteFileNames = []; // 제거된 이미지 파일명이 담길 배열
+	if(deletedImageSrcs.length) { // 제거된 이미지가 있다면
+		logger.info('제거된 이미지가 있음');
+		
+		deletedImageSrcs.forEach((src) => {
+			const filename = src.split('/').pop(); // src에서 파일명만 추출
+			deleteFileNames.push(filename);
+		});
+	}
+	formData.append('deleteFileNames', deleteFileNames);
+	
+	await putIntegSubmit(
+		'/qna/noti_info/modify_notice_confirm',
+		formData,
+		successMessage,
+		errorMessage,
+		'content_inner'
+	);
+}
+
+// QnA 질문 유형 분류 수정
+async function putQnaCategoryModify(formName) {
+	const form = document.forms[formName];
+	const current_bqc_name = form.current_bqc_name;
+	
+	input = form.bqc_name;
+	if(!validateEmpty(input, '분류명', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(input.value !== current_bqc_name.value) { // 수정이 되었을 경우
+		if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+			input.focus();
+			return false;
+		}
+		
+	} else {
+		alert('수정된 내용이 없습니다');
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	const successMessage = `"${input.value}" 질문 유형 분류명이 수정되었습니다.`;
+	const errorMessage = `"${input.value}" 질문 유형 분류명 수정에 실패했습니다.`;
+	
+	await putIntegSubmit(
+		'/qna/cate_info/modify_category_confirm',
+		formData,
+		successMessage,
+		errorMessage,
+		'content_inner'
+	);
+}
+
+// QnA 답변 수정
+async function putAnswerModify(formName) {
+	const form = document.forms[formName];
+	const current_bqa_answer = form.current_bqa_answer;
+	
+	input = form.bqa_answer;
+	if(!validateEmpty(input, '답변', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(input.value === current_bqa_answer.value) {
+		alert('수정된 내용이 없습니다');
+		return false;		
+	}
+	
+	const formData = new FormData(form);
+	const successMessage = `"${form.a_id.value}" 님의 답변이 수정되었습니다.`;
+	const errorMessage = `"${form.a_id.value}" 님의 답변 수정에 실패했습니다.`;
+	
+	await putIntegSubmit(
+		'/qna/info/answer_modify_confirm',
+		formData,
+		successMessage,
+		errorMessage,
+		'content_inner'
+	);
+}
+
+// 게시판 수정
+async function putBoardCategoryModify(formName) {
+	const form = document.forms[formName];
+	const bc_name = form.bc_name;
+	const bc_idx = form.bc_idx;
+	const current_bc_name = form.current_bc_name;
+	const current_bc_idx = form.current_bc_idx;
+	
+	if(bc_name.value === current_bc_name.value && bc_idx === current_bc_idx.value) {
+		alert('수정된 내용이 없습니다');
+		return false;		
+	}
+	
+	if(bc_name.value !== current_bc_name.value) { // 수정이 되었을 경우
+		if(!(await requestDuplicateCheck(bc_name, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+			bc_name.focus();
+			return false;
+		}
+	} 
+	
+	const formData = new FormData(form);
+	const successMessage = `"${bc_name.value}" 이(가) 수정되었습니다`;
+	const errorMessage = `"${bc_name.value}" 이(가) 수정에 실패했습니다.`;
+
+	await putIntegSubmit(
+		'/board/cate_info/modify_category_confirm', 
+		formData, 
+		successMessage, 
+		errorMessage,
+		'content_inner'
+	);
+}
+
+
+// 게시물 수정
+async function putPostsModify(formName) {
+	const form = document.forms[formName];
+	
+	input = form.bp_title;
+	if(!validateEmpty(input, '제목', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(!validateQuill(quill)) { // 내용 유효성 및 비속어 검사
+		quill.focus();
+		return false;
+	}
+	
+	const successMessage = `"${input.value}" 게시물이 수정되었습니다.`;
+	const errorMessage = `"${input.value}" 게시물 수정에 실패했습니다.`;
+	
+	const formData = new FormData(form);
+	formData.set('bp_body', quill.root.innerHTML); // quill 에디터 내용
+	
+	// 이미지 파일 리사이즈 및 압축하여 formData에 담기 (선택된 이미지 요소가 없을 시 빈 파일 객체가 담김)
+	const $newImgTags = $(quill.root).find('img').filter(function() {
+		return $(this).attr('src').startsWith('blob:'); // src가 blob 으로 시작하는 태그 필터링 즉 추가된 이미지 태그
+	});
+	await addImagesToFormData($newImgTags, formData);
+	
+	const deleteFileNames = []; // 제거된 이미지 파일명이 담길 배열
+	if(deletedImageSrcs.length) { // 제거된 이미지가 있다면
+		logger.info('제거된 이미지가 있음');
+		
+		deletedImageSrcs.forEach((src) => {
+			const filename = src.split('/').pop(); // src에서 파일명만 추출
+			deleteFileNames.push(filename);
+		});
+	}
+	formData.append('deleteFileNames', deleteFileNames);
+	
+	await putIntegSubmit(
+		'/board/info/modify_confirm',
+		formData,
+		successMessage,
+		errorMessage,
+		'content_inner'
+	);
+}
+
+// 신고 유형 분류 수정
+async function putReportCategoryModify(formName) {
+	const form = document.forms[formName];
+	
+	input = form.brc_name;
+	if(!validateEmpty(input, '분류명', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(input.value === form.current_brc_name.value) {
+		alert('수정된 내용이 없습니다');
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	const successMessage = `"${input.value}" 신고 유형 분류명이 수정되었습니다.`;
+	const errorMessage = `"${form.brc_name.value}" 신고 유형 분류명 수정에 실패했습니다.`;
+	
+	await putIntegSubmit(
+		'/report/cate_info/modify_category_confirm',
+		formData,
+		successMessage,
+		errorMessage,
+		'content_inner'
+	);
+}
+
+// 광고 위치 분류 수정
+async function putAdvertisementCategoryModify(formName) {
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.ac_name;
+	if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+		input.focus();
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	const successMessage = `"${input.value}" 광고 위치 분류명이 수정되었습니다`;
+	const errorMessage = `"${input.value}" 광고 위치 분류명 수정에 실패했습니다.`;
+
+	await putIntegSubmit(
+		'/advertisement/cate_info/modify_category_confirm', 
+		formData, 
+		successMessage, 
+		errorMessage,
+		'content_inner'
+	);
+}
+
+// 광고 수정
+async function putAdvertisementModify(formName) {
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.ad_category_no;
+	if(input.value === "") {
+		alert('분류를 선택해 주세요.');
+		return false;
+	}
+	
+	input = form.ad_client;
+	if(!validateEmpty(input, '클라이언트', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.ad_start_date;
+	if(!validateEmpty(input, '시작일', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.ad_end_date;
+	if(!validateEmpty(input, '종료일', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(new Date(form.ad_end_date.value) < new Date(form.ad_start_date.value)) {
+		alert('종료일이 시작일보다 작을 수 없습니다.');
+		input.focus();
+		return false;
+	}
+	
+	input = form.ad_url;
+	if(!validateEmpty(input, 'URL 주소', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.files;
+	const $previewContainer = $('.image_file_preview'); // 미리보기 요소
+	const previewImgSrc = $previewContainer.find('img').attr('src'); // 미리보기 이미지 src
+	if(!previewImgSrc) { // 기존이미지 제거한 후 이미지 파일이 선택되지 않음
+		alert('이미지 파일을 선택해 주세요.');
+		return false;
+	}
+	
+	const formData = new FormData(form); 
+	const isChangedImg = previewImgSrc.startsWith('blob:'); // src가 blob으로 시작할 경우 수정됨
+	if(!isChangedImg) { // 이미지 파일이 수정되지 않았을 경우 formData에 files객체 수정
+		const emptyBlob = new Blob([], { type: 'application/octet-stream' }); // 빈 Blob 생성
+		formData.set('files', emptyBlob); 
+	}
+	
+	const successMessage = `"${form.ad_client.value}" 님의 광고가 수정되었습니다.`;
+	const errorMessage = `"${form.ad_client.value}" 님의 광고 수정에 실패했습니다.`;
+	
+	await putIntegSubmit(
+		'/advertisement/info/modify_confirm',
+		formData,
+		successMessage,
+		errorMessage,
+		'content_inner'
+	);
+}

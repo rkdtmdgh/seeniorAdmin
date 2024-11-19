@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html 
+   xmlns:th="http://www.thymeleaf.org" 
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
+<head>
+	<th:block th:insert="~{fragments/head.html :: head('SEE-NIOR 관리자 페이지')}"></th:block>
+	<link rel="stylesheet" href="/css/home.css">
+	<script type="text/javascript">
+		$(function() {
+			getMainContentList();
+        });
+	</script>
+</head>
+
+<body>
+	<main class="contents_wrap">
+		<header th:replace="~{fragments/header.html :: header}"></header>
+	
+		<article class="contents_container">
+			<nav th:replace="~{fragments/nav.html :: nav}"></nav>
+			
+			<div class="content">
+                <div class="content_inner sc">
+                    <div class="main_content">
+                        <section th:insert="~{fragments/main.html :: mainSection('main_report_table')}" class="content_info_wrap"></section>
+                        <section th:insert="~{fragments/main.html :: mainSection('main_advertisement_table')}" class="content_info_wrap"></section>
+                        <section th:insert="~{fragments/main.html :: mainSection('main_qna_table')}" class="content_info_wrap"></section>
+                        <section th:insert="~{fragments/main.html :: mainSection('main_notice_table')}" class="content_info_wrap"></section>
+                        <section th:insert="~{fragments/main.html :: mainSection('main_qna_notice_table')}" class="content_info_wrap"></section>
+                        <section th:insert="~{fragments/main.html :: mainSection('main_board_notice_table')}" class="content_info_wrap"></section>
+                    </div>
+                </div>
+            </div>
+		</article>
+	</main>
+</body>
+</html>

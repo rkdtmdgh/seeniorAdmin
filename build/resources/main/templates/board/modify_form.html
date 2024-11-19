@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	
+<head>
+    <th:block th:insert="~{fragments/head.html :: head('게시물 수정')}"></th:block>
+    <script th:inline="javascript">
+    	logger.info('dto check boardPostsDto --->', /*[[${boardPostsDto}]]*/);	
+    
+		$(function() {
+			// 타이틀 설정
+			setBoardTitle(/*[[${infoNo}]]*/);
+			
+			// 가이드라인 설정
+			setSelectGuidelineInfo();
+			
+			// 댓글 작성자 no 값 설정
+			setLoginUserInfoInputValue('br_writer_no', 'a_no');
+        });
+	</script>
+</head>
+
+<body>
+	<main class="contents_wrap">
+	    <header th:replace="~{fragments/header.html :: header}"></header>
+	
+	    <article class="contents_container">
+	        <nav th:replace="~{fragments/nav.html :: nav}"></nav>
+	
+	        <div class="content">
+	            <div class="content_inner sc">
+	                <section class="content_info_wrap">
+	                    <div class="content_top">
+	                        <div class="content_top_info">
+	                            <h2 class="title categoty_title"></h2>
+	                        </div>
+	                        <p class="sub_title">게시물 수정</p>
+	                    </div>
+	
+	                    <form name="posts_modify_form">
+		                    <input type="hidden" name="bp_no" th:value="${boardPostsDto.bp_no}">
+		                    <input type="hidden" name="bp_category_no" th:value="${infoNo}">
+		                    <input type="hidden" name="bp_writer_no" th:value="${boardPostsDto.bp_writer_no}">
+		                    <input type="hidden" name="bp_dir_name" th:if="${boardPostsDto.bp_dir_name}" th:value="${boardPostsDto.bp_dir_name}">
+		                    <input type="hidden" name="br_writer_no">
+		                    
+	                        <div class="table_wrap">
+	                            <table class="content_edit_table">
+	                                <colgroup>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                </colgroup>
+	
+	                                <tbody>
+	                                	<tr>
+		                                	<th><p class="table_title">상태</th>
+	                                        <td class="disabled">
+	                                        	<p class="table_info" th:text="${boardPostsDto.bp_report_state == true ? '정상' : '정지'}"></p>
+	                                        </td>
+	                                        
+		                                	<th><p class="table_title">등록일<span class="divider"></span>수정일</p></th>
+	                                        <td class="disabled">
+	                                        	<p class="table_info" th:utext="|
+	                                        		${boardPostsDto.bp_reg_date}
+	                                        		<span class='divider'></span>
+	                                        		${boardPostsDto.bp_mod_date}
+	                                        	|"></p>
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>
+	                                        <th><p class="table_title">제목</p></th>
+		                                	<td th:classappend="${
+				                               		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
+				                               		(boardPostsDto.bp_account == 'admin' and boardPostsDto.adminAccountDto.a_id != #authentication.name) ?
+				                               		'disabled' : ''
+			                                	}"
+		                                		colspan="3">
+	                                			<label class="table_info">
+			                                		<input type="text" name="bp_title" id="bp_title" placeholder="제목"
+			                                			onblur="validateEmpty(this, '제목')"
+			                                			th:value="${boardPostsDto.bp_title}"
+			                                			th:disabled="${
+						                               		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
+						                               		(boardPostsDto.bp_account == 'admin' and boardPostsDto.adminAccountDto.a_id !=  #authentication.name)
+					                                	}">
+	                                			</label>
+	                                        </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">작성자 아이디</p></th>
+		                                	<td class="disabled">
+		                                		<div class="table_info table_flex_info">
+		                                			<p th:if="${boardPostsDto.bp_account == 'admin'}"
+	                                					th:text="${boardPostsDto.adminAccountDto.a_id}" class="info_text"></p>
+                                					<p th:if="${boardPostsDto.bp_account != 'admin'}"
+	                                					th:text="${boardPostsDto.userAccountDto.u_id}" class="info_text"></p>
+		                                		</div>
+	                                        </td>
+	                                        
+	                                        <th>	                                        	
+	                                        	<p th:if="${boardPostsDto.bp_account == 'admin'}" class="table_title">이름</p>
+	                                        	<p th:if="${boardPostsDto.bp_account != 'admin'}" class="table_title">이름<span class='divider'></span>닉네임</p>
+	                                        </th>
+		                                	<td class="disabled">
+		                                		<div class="table_info table_flex_info" th:if="${boardPostsDto.bp_account == 'admin'}">
+			                                		<p th:text="${boardPostsDto.adminAccountDto.a_name}"></p>
+			                                		<img src="/image/icons/manager.png" alt="관리자" class="table_info_icons">
+                             					</div>	
+	                                					
+	                                        	<p th:if="${boardPostsDto.bp_account != 'admin'}" class="table_info" th:utext="|
+	                                        		${boardPostsDto.userAccountDto.u_name}
+	                                        		<span class='divider'></span>
+	                                        		${boardPostsDto.userAccountDto.u_nickname}
+	                                        	|"></p>
+	                                        </td>
+		                                </tr>
+		                            </tbody>
+	                            </table>
+	                        </div>
+	                        
+	                        <div class="content_post_wrap">
+	                        	<div class="editor_wrap">
+	                        		<div class="editor_container">
+	                        			<div class="content_top">
+								            <p class="sub_title">내용 <span id="guideline" class="pd0"></span></p>
+									    </div>
+									    
+	                        			<div class="editor_info" th:if="${
+			                               		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
+			                               		(boardPostsDto.bp_account == 'admin' and boardPostsDto.adminAccountDto.a_id !=  #authentication.name)
+		                                	}">
+	                                		<div class="ql-editor" th:utext="${boardPostsDto.bp_body}"></div>
+                                		</div>
+	                                		
+                                		<div class="editor_info" th:unless="${
+			                               		!#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') and
+			                               		(boardPostsDto.bp_account == 'admin' and boardPostsDto.adminAccountDto.a_id !=  #authentication.name)
+		                                	}">
+                                			<div id="editor" th:utext="${boardPostsDto.bp_body}"></div>
+
+                                			<div class="table_info">
+	                                			<div id="text_limit">
+	                                				<span id="current_size"></span> / <span id="max_size"></span>
+	                                			</div>
+                                			</div>
+                          				</div>
+	                        		</div>
+	                        		
+	                        		<div class="btn_list_wrap">
+			                        	<div th:if="${
+												#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
+												boardPostsDto.bp_account == 'user' or 
+												(boardPostsDto.bp_account == 'admin' and boardPostsDto.adminAccountDto.a_id ==  #authentication.name)
+											}"
+											th:onclick="delListData('bp_no', false, {'infoNo': [[${infoNo}]]})" 
+			                     			class="btns delete">게시물 삭제</div>
+									    	
+			                           	
+			                            <div class="btn_list">
+			                                <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
+			                                
+			                                <div th:if="${
+			                                		#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
+			                                 	boardPostsDto.bp_account == 'user' or 
+			                                 	(boardPostsDto.bp_account == 'admin' and boardPostsDto.adminAccountDto.a_id ==  #authentication.name)
+			                                	}"
+			                                	onclick="putPostsModify('posts_modify_form')" class="btns">게시물 수정</div>
+			                            </div>
+			                        </div>
+	                        	</div>
+	                        
+	                        	<div class="comment_wrap">
+					    			<div class="comment_content_container">
+						    			<div class="content_top">
+								            <p class="sub_title">댓글 <span class="reply_title_num">123</span></p>
+									    </div>
+									    
+							    		<div class="comment_container sc">
+							    			<div class="comment_list" data-type="comment">
+								    			<div class="comment_content connect_vertical">							    				
+						    						<div class="comment_info">
+							    						<div class="reply_top_info">
+							    							<a href="" class="reply_profile">
+							    								<span class="profile_thumbnail">
+								    								<img src="/image/images/basic_profile_img.jpg" alt="profile image" class="profile_thumbnail_img">
+							    								</span>
+							    								
+							    								<span class="reply_profile_info">
+							    									<span class="reply_profilce_id">
+							    										userTest10@seenior.com
+							    										<span class="reg_time">5분</span>					    										
+							    									</span>
+							    									<span class="reply_profilce_name">user10<span class="divider"></span>user_nick_11</span>
+							    								</span>
+							    							</a>
+							    							
+							    							<div class="btn_list">
+							    								<div class="text_btns">삭제</div>
+							    							</div>
+							    						</div>
+						    						
+						    							<div class="reply_content_info">			    									
+						    								<div class="comment">
+							    								<div class="content">
+							    									1231231231232323<br>qwedwqef<br>waed
+							    								</div>
+							    							</div>
+							    							
+							    							<div class="reply_info_btns connect_horizontal">
+							    								<div class="text_btns">댓글 달기</div>
+							    								<span class="text_btns">답글 6개 보기/숨기기</span>
+						    								</div>
+						    							</div>
+					    							</div>
+					    							
+					    							<div class="comment_list" data-type="reply">
+						    							<div class="comment_content reply_content">
+							    							<div class="comment_info">
+									    						<div class="reply_top_info">
+									    							<a href="" class="reply_profile connect_horizontal">
+									    								<span class="profile_thumbnail">
+										    								<img src="/image/images/basic_profile_img.jpg" alt="profile image" class="profile_thumbnail_img">
+									    								</span>
+									    								
+									    								<span class="reply_profile_info">
+									    									<span class="reply_profilce_id">
+									    										userTest10@seenior.com
+									    										<span class="reg_time">5분</span>					    										
+									    									</span>
+									    									<span class="reply_profilce_name">user10<span class="divider"></span>user_nick_11</span>
+									    								</span>
+									    							</a>
+									    							
+									    							<div class="btn_list">
+									    								<div class="text_btns">삭제</div>
+									    							</div>
+									    						</div>
+								    						
+								    							<div class="reply_content_info">			    									
+								    								<div class="comment">
+									    								<div class="content">
+									    									1231231231232323<br>qwedwqef<br>waed
+									    								</div>
+									    							</div>
+								    								
+								    								<div class="reply_info_btns">
+									    								<div class="text_btns">댓글 달기</div>
+								    								</div>
+								    							</div>
+							    							</div>
+						    							</div>
+						    							
+						    							<div class="comment_content reply_content">
+							    							<div class="comment_info">
+									    						<div class="reply_top_info">
+									    							<a href="" class="reply_profile connect_horizontal">
+									    								<span class="profile_thumbnail">
+										    								<img src="/image/images/basic_profile_img.jpg" alt="profile image" class="profile_thumbnail_img">
+									    								</span>
+									    								
+									    								<span class="reply_profile_info">
+									    									<span class="reply_profilce_id">
+									    										userTest10@seenior.com
+									    										<span class="reg_time">5분</span>					    										
+									    									</span>
+									    									<span class="reply_profilce_name">user10<span class="divider"></span>user_nick_11</span>
+									    								</span>
+									    							</a>
+									    							
+									    							<div class="btn_list">
+									    								<div class="text_btns">삭제</div>
+									    							</div>
+									    						</div>
+								    						
+								    							<div class="reply_content_info">			    									
+								    								<div class="comment">
+									    								<div class="content">
+									    									1231231231232323<br>qwedwqef<br>waed
+									    								</div>
+									    							</div>
+								    								
+								    								<div class="reply_info_btns">
+									    								<div class="text_btns">댓글 달기</div>
+								    								</div>
+								    							</div>
+							    							</div>
+						    							</div>
+						    							
+						    							<div class="comment_content reply_content">
+							    							<div class="comment_info">
+									    						<div class="reply_top_info">
+									    							<a href="" class="reply_profile connect_horizontal">
+									    								<span class="profile_thumbnail">
+										    								<img src="/image/images/basic_profile_img.jpg" alt="profile image" class="profile_thumbnail_img">
+									    								</span>
+									    								
+									    								<span class="reply_profile_info">
+									    									<span class="reply_profilce_id">
+									    										userTest10@seenior.com
+									    										<span class="reg_time">5분</span>					    										
+									    									</span>
+									    									<span class="reply_profilce_name">user10<span class="divider"></span>user_nick_11</span>
+									    								</span>
+									    							</a>
+									    							
+									    							<div class="btn_list">
+									    								<div class="text_btns">삭제</div>
+									    							</div>
+									    						</div>
+								    						
+								    							<div class="reply_content_info">			    									
+								    								<div class="comment">
+									    								<div class="content">
+									    									1231231231232323<br>qwedwqef<br>waed
+									    								</div>
+									    							</div>
+								    								
+								    								<div class="reply_info_btns">
+									    								<div class="text_btns">댓글 달기</div>
+								    								</div>
+								    							</div>
+							    							</div>
+						    							</div>
+						    							
+						    							<div class="comment_content reply_content">
+							    							<div class="comment_info">
+									    						<div class="reply_top_info">
+									    							<a href="" class="reply_profile connect_horizontal">
+									    								<span class="profile_thumbnail">
+										    								<img src="/image/images/basic_profile_img.jpg" alt="profile image" class="profile_thumbnail_img">
+									    								</span>
+									    								
+									    								<span class="reply_profile_info">
+									    									<span class="reply_profilce_id">
+									    										userTest10@seenior.com
+									    										<span class="reg_time">5분</span>					    										
+									    									</span>
+									    									<span class="reply_profilce_name">user10<span class="divider"></span>user_nick_11</span>
+									    								</span>
+									    							</a>
+									    							
+									    							<div class="btn_list">
+									    								<div class="text_btns">삭제</div>
+									    							</div>
+									    						</div>
+								    						
+								    							<div class="reply_content_info">			    									
+								    								<div class="comment">
+									    								<div class="content">
+									    									1231231231232323<br>qwedwqef<br>waed
+									    								</div>
+									    							</div>
+								    								
+								    								<div class="reply_info_btns">
+									    								<div class="text_btns">댓글 달기</div>
+								    								</div>
+								    							</div>
+							    							</div>
+						    							</div>
+						    							<!-- //reply -->
+						    							
+					    							</div>
+								    			</div>
+								    			
+								    			<div class="comment_content connect_vertical">							    				
+						    						<div class="comment_info">
+							    						<div class="reply_top_info">
+							    							<a href="" class="reply_profile">
+							    								<span class="profile_thumbnail">
+								    								<img src="/image/images/basic_profile_img.jpg" alt="profile image" class="profile_thumbnail_img">
+							    								</span>
+							    								
+							    								<span class="reply_profile_info">
+							    									<span class="reply_profilce_id">
+							    										userTest10@seenior.com
+							    										<span class="reg_time">5분</span>					    										
+							    									</span>
+							    									<span class="reply_profilce_name">user10<span class="divider"></span>user_nick_11</span>
+							    								</span>
+							    							</a>
+							    							
+							    							<div class="btn_list">
+							    								<div class="text_btns">삭제</div>
+							    							</div>
+							    						</div>
+						    						
+						    							<div class="reply_content_info">			    									
+						    								<div class="comment">
+							    								<div class="content">
+							    									1231231231232323<br>qwedwqef<br>waed
+							    								</div>
+							    							</div>
+						    								
+						    								<div class="reply_info_btns connect_horizontal">
+							    								<div class="text_btns">댓글 달기</div>
+							    								<span class="text_btns">답글 6개 보기/숨기기</span>
+						    								</div>
+						    							</div>
+					    							</div>
+								    			</div>
+								    			
+								    			<div class="comment_content connect_vertical">							    				
+						    						<div class="comment_info">
+							    						<div class="reply_top_info">
+							    							<a href="" class="reply_profile">
+							    								<span class="profile_thumbnail">
+								    								<img src="/image/images/basic_profile_img.jpg" alt="profile image" class="profile_thumbnail_img">
+							    								</span>
+							    								
+							    								<span class="reply_profile_info">
+							    									<span class="reply_profilce_id">
+							    										userTest10@seenior.com
+							    										<span class="reg_time">5분</span>					    										
+							    									</span>
+							    									<span class="reply_profilce_name">user10<span class="divider"></span>user_nick_11</span>
+							    								</span>
+							    							</a>
+							    							
+							    							<div class="btn_list">
+							    								<div class="text_btns">삭제</div>
+							    							</div>
+							    						</div>
+						    						
+						    							<div class="reply_content_info">			    									
+						    								<div class="comment">
+							    								<div class="content">
+							    									1231231231232323<br>qwedwqef<br>waed
+							    								</div>
+							    							</div>
+						    								
+						    								<div class="reply_info_btns connect_horizontal">
+							    								<div class="text_btns">댓글 달기</div>
+							    								<span class="text_btns">답글 6개 보기/숨기기</span>
+						    								</div>
+						    							</div>
+					    							</div>
+					    							
+					    							<div class="comment_list" data-type="reply">
+						    							<div class="comment_content reply_content">
+							    							<div class="comment_info">
+									    						<div class="reply_top_info">
+									    							<a href="" class="reply_profile connect_horizontal">
+									    								<span class="profile_thumbnail">
+										    								<img src="/image/images/basic_profile_img.jpg" alt="profile image" class="profile_thumbnail_img">
+									    								</span>
+									    								
+									    								<span class="reply_profile_info">
+									    									<span class="reply_profilce_id">
+									    										userTest10@seenior.com
+									    										<span class="reg_time">5분</span>					    										
+									    									</span>
+									    									<span class="reply_profilce_name">user10<span class="divider"></span>user_nick_11</span>
+									    								</span>
+									    							</a>
+									    							
+									    							<div class="btn_list">
+									    								<div class="text_btns">삭제</div>
+									    							</div>
+									    						</div>
+								    						
+								    							<div class="reply_content_info">			    									
+								    								<div class="comment">
+									    								<div class="content">
+									    									1231231231232323<br>qwedwqef<br>waed
+									    								</div>
+									    							</div>
+								    								
+								    								<div class="reply_info_btns">
+									    								<div class="text_btns">댓글 달기</div>
+								    								</div>
+								    							</div>
+							    							</div>
+						    							</div>
+						    							<!-- //reply -->
+						    							
+					    							</div>
+								    			</div>
+							    			</div>
+							    		</div>
+						    			<!-- //comment -->
+					    			</div>
+						    		
+						    		<div class="comment_input_wrap">
+					    				<div class="comment_input_container">
+						    				<label class="comment_input">
+						    					<textarea rows="1" name="" id="" class="table_textarea small" 
+						    						onkeyup="setTextareaAddCommaBeforeEnter(this, event)" 
+						    						oninput="setTextareaAutoHeight(this)" 
+						    						th:placeholder="${
+						    							boardPostsDto.bp_account == 'admin' ? '관리자' : boardPostsDto.userAccountDto.u_nickname
+					    							} + '님에게 댓글 달기...'"></textarea>
+						    				</label>
+						    				<div class="btns small">등록</div>
+					    				</div>
+					    			</div>
+						    	</div>
+	                        </div>
+	                    </form>
+	                </section>
+	            </div>
+	        </div>
+	    </article>
+	</main>
+</body>
+</html>

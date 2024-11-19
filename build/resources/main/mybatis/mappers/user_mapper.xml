@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.see_nior.seeniorAdmin.user.mapper.UserMapper">
+
+	<resultMap type="UserAccountDto" id="UserAccountDto">
+		<id column="u_no" property="u_no"/>
+		<result column="u_id" property="u_id"/>
+		<result column="u_pw" property="u_pw"/>
+		<result column="u_name" property="u_name"/>
+		<result column="u_phone" property="u_phone"/>
+		<result column="u_nickname" property="u_nickname"/>
+		<result column="u_gender" property="u_gender"/>
+		<result column="u_birth" property="u_birth"/>
+		<result column="u_zip_code" property="u_zip_code"/>
+		<result column="u_address" property="u_address"/>
+		<result column="u_detailed_address" property="u_detailed_address"/>
+		<result column="u_profile_img" property="u_profile_img"/>
+		<result column="u_company" property="u_company"/>
+		<result column="u_is_personal" property="u_is_personal"/>
+		<result column="u_social_id" property="u_social_id"/>
+		<result column="u_is_blocked" property="u_is_blocked"/>
+		<result column="u_blocked_reason" property="u_blocked_reason"/>
+		<result column="u_isaccountnonexpired" property="u_isaccountnonexpired"/>
+		<result column="u_isaccountnonlocked" property="u_isaccountnonlocked"/>
+		<result column="u_iscredentialsnonexpired" property="u_iscredentialsnonexpired"/>
+		<result column="u_isenabled" property="u_isenabled"/>
+		<result column="u_is_deleted" property="u_is_deleted"/>
+		<result column="u_reg_date" property="u_reg_date"/>
+		<result column="u_mod_date" property="u_mod_date"/>
+	</resultMap>
+
+	
+	<!-- 멤버 리스트 페이징  -->
+	<select id="selectUserList"
+			resultType="UserAccountDto">
+	
+		SELECT 
+			* 
+		FROM 
+			USER_ACCOUNT 
+		WHERE 
+			U_IS_DELETED = 1
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit} 
+
+	</select>
+	
+	<!-- 멤버 리스트 카운트 -->
+	<select id="selectAllUserListCnt"
+			resultType="Integer">
+	
+		SELECT 
+			COUNT(U_NO)
+		FROM 
+			USER_ACCOUNT  
+		WHERE 
+			U_IS_DELETED = 1
+	
+	</select>
+	
+	<!-- 일반 멤버 검색 리스트 페이징 -->
+	<select id="selectSearchUserList"
+			resultType="UserAccountDto">
+	
+		SELECT 
+			* 
+		FROM 
+			USER_ACCOUNT 
+		WHERE 
+			U_IS_DELETED = 1
+		<if test="searchPart != null and searchString != null">
+			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+		</if>
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit} 
+	
+	</select>
+	
+	<!-- 일반 멤버 검색 리스트 개수 -->
+	<select id="selectSearchUserListCnt"
+			resultType="Integer">
+			
+		SELECT 
+			COUNT(U_NO)
+		FROM 
+			USER_ACCOUNT 
+		WHERE 
+			U_IS_DELETED = 1
+		<if test="searchPart != null and searchString != null">
+			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+		</if>
+	
+	</select>
+	
+	<!-- 일반 멤버 정보 조회 by no -->
+	<select id="selectUserAccountByNo"
+			resultType="UserAccountDto">
+		
+		SELECT 
+			* 
+		FROM 
+			USER_ACCOUNT 
+		WHERE 
+			U_NO = #{u_no} 
+		AND 
+			U_IS_DELETED = 1 
+	
+	</select>
+	
+	<!-- 일반 멤버 정보 수정 확인 -->
+	<update id="updateUserAccountInfo"
+			parameterType="UserAccountDto">
+	
+		UPDATE 
+			USER_ACCOUNT 
+		SET 
+			U_NAME = #{u_name}, 
+			U_PHONE = #{u_phone}, 
+			U_NICKNAME = #{u_nickname}, 
+			U_GENDER = #{u_gender}, 
+			U_BIRTH = #{u_birth}, 
+			U_ZIP_CODE = #{u_zip_code}, 
+			U_ADDRESS = #{u_address}, 
+			U_DETAILED_ADDRESS = #{u_detailed_address}, 
+			<if test="u_profile_img != '' and u_profile_img != null">
+				U_PROFILE_IMG = #{u_profile_img}, 
+			</if>
+			U_COMPANY = #{u_company}, 
+			U_IS_PERSONAL = 
+			<if test="u_is_personal == true">
+				1, 
+			</if>
+			<if test="u_is_personal == false">
+				0, 
+			</if>
+			U_IS_BLOCKED = 
+			<if test="u_is_blocked == true">
+				1, 
+			</if>
+			<if test="u_is_blocked == false">
+				0, 
+			</if>
+			U_BLOCKED_REASON = #{u_blocked_reason},
+			U_MOD_DATE = NOW() 
+		WHERE 
+			U_NO = #{u_no} 
+	
+	</update>
+	
+	<!-- 일반 멤버 탈퇴 상태 업데이트 BY NO -->
+	<update id="updateUserIsDeletedByNo">
+	
+		UPDATE 
+			USER_ACCOUNT 
+		SET 
+			U_IS_DELETED = 0, 
+			U_MOD_DATE = NOW() 
+		WHERE 
+			U_NO = #{u_no} 
+	
+	</update>
+	
+	<!-- 일반 멤버 계정 정지 확인 by no -->
+	<update id="updateUserIsBlockedByNo">
+	
+		UPDATE 
+			USER_ACCOUNT 
+		SET 
+			U_IS_BLOCKED = 
+			<if test="u_is_blocked == true">
+				1, 
+			</if>
+			<if test="u_is_blocked == false">
+				0, 
+			</if>
+			U_BLOCKED_REASON = #{u_blocked_reason},  
+			U_MOD_DATE = NOW() 
+		WHERE 
+			U_NO = #{u_no} 
+			
+	</update>
+	
+</mapper>

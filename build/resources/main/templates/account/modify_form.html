@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
+<head>
+	<th:block th:insert="~{fragments/head.html :: head('내 정보 관리')}"></th:block>
+	<link rel="stylesheet" href="/css/account/sign_form.css">
+	<script th:inline="javascript">
+		$(function() {
+			// 세션 만료 확인
+			if(!setSessionIdentityCheck(/*[[${#authentication.name}]]*/)) { // 만료
+				setIdentityCheckForm(); // 본인 확인 폼 SET
+				setInputFocus('a_pw');
+				
+			} else {
+				getAccountInfo(true); // 정보 수정 폼 SET
+			}
+        });
+    </script>
+</head>
+
+<body>
+	<main class="contents_wrap">
+		<header th:replace="~{fragments/header.html :: header}"></header>
+	
+		<article class="contents_container">
+			<nav th:replace="~{fragments/nav.html :: nav}"></nav>
+			
+			<div class="content">
+                <div class="content_inner sc">
+					<section class="content_info_wrap">
+						<!-- 컨텐츠 -->
+					</section>
+                </div>
+            </div>
+		</article>
+	</main>
+</body>
+</html>
