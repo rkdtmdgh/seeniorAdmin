@@ -6,6 +6,8 @@
 <head>
 	<th:block th:insert="~{fragments/head.html :: head('광고 분류 수정')}"></th:block>
 	<script th:inline="javascript">
+		logger.info('dto check advertisementCategoryDto --->', /*[[${advertisementCategoryDto}]]*/);
+	
 		const itemCnt = /*[[${advertisementCategoryDto.ac_item_cnt}]]*/ 0;
 		if(itemCnt > 0) {
 			$(async function() {
