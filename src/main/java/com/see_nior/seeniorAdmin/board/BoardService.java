@@ -37,15 +37,9 @@ public class BoardService {
 	
 	// 이미지 서버 경로
 	private String imgServerPath = "127.0.0.1:8091/seeniorUploadImg/";
-	
-	// 페이지네이션 관련
-	//private int pageLimit = 10;	// 한 페이지당 보여줄 항목의 개수
-	//private int blockLimit = 5;	// 하단에 보여질 페이지 번호의 수
-	
+		
 	//필드 선언
 	final private BoardMapper boardMapper;
-	final private RestTemplate restTemplate;
-	final private BoardItemCntUpdater boardItemCntUpdater;
 	final private ImageFileService imageFileService;
 	
 	//모든 게시판 항목 가져오기
@@ -149,7 +143,12 @@ public class BoardService {
 		int bc_no = boardCategoryDto.getBc_no();
 		
 		List<BoardCategoryDto> boardCategoryDtos = boardMapper.getBoardCategoryForModify(bc_no);
-						
+
+		if(boardCategoryDtos.size() == 0) {
+			log.info("getBoardCategoryForModify() fail!!");
+			throw new RuntimeException("boardPostsDto is null");
+		}
+		
 		return boardCategoryDtos;
 	}
 	
@@ -461,7 +460,7 @@ public class BoardService {
 		
 		if(boardPostsDtos.size() == 0) {
 			log.info("modifyForm() fail!!");
-			return null;
+			throw new RuntimeException("boardPostsDto is null");
 		}
 		
 		return boardPostsDtos.get(0);
