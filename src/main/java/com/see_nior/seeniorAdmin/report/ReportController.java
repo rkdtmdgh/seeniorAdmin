@@ -290,7 +290,7 @@ public class ReportController {
 	
 	// 신고 처리 확인
 	@ResponseBody
-	@GetMapping("/info/result_confirm")
+	@PostMapping("/info/result_confirm")
 	public boolean reportResultConfirm(
 			@RequestParam(value = "br_no") int br_no,
 			@RequestParam(value = "br_post_no") String br_post_no,
@@ -299,7 +299,7 @@ public class ReportController {
 			Principal principal) {
 		log.info("reportResultConfirm()");
 		
-		boolean reportResultConfirm = reportService.reportResultConfirm(br_no, br_post_no, brr_result, principal.getName());
+		boolean reportResultConfirm = reportService.reportResultConfirm(br_no, br_post_no, bp_report_state, brr_result, principal.getName());
 		
 		return reportResultConfirm;
 		

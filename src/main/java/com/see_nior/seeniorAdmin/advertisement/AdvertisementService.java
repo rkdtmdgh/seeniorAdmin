@@ -104,6 +104,7 @@ public class AdvertisementService {
 		log.info("getCategory()");
 		
 		AdvertisementCategoryDto advertisementCategoryDto = advertisementMapper.getAdvertisementCategory(ac_no);
+		if (advertisementCategoryDto == null) throw new RuntimeException("advertisementCategoryDto is null!!");
 		
 		return advertisementCategoryDto;
 		
@@ -392,6 +393,7 @@ public class AdvertisementService {
 		log.info("getAdvertisement()");
 		
 		AdvertisementDto advertisementDto = advertisementMapper.getAdvertisementByNo(ad_no);
+		if (advertisementDto == null) throw new RuntimeException("advertisementDto is null!!");
 		
 		return advertisementDto;
 		

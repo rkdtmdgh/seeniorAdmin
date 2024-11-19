@@ -656,6 +656,20 @@
 			1
 	
 	</select>
+	
+	<!-- 신고 테이블에 신고 처리 결과 no와 처리 상태 업데이트 -->
+	<update id="updateBoardReportWithResult"
+			parameterType="Map">
+			
+		UPDATE 
+			BOARD_REPORT 
+		SET 
+			BR_RESULT_NO = #{brr_no}, 
+			BR_STATE = 0 
+		WHERE 
+			BR_NO = #{br_post_no}
+	
+	</update>
 
 
 </mapper>

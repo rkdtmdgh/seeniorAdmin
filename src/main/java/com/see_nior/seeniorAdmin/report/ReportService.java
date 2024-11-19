@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Options;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -97,6 +96,7 @@ public class ReportService {
 		log.info("getCategory()");
 		
 		ReportCategoryDto reportCategoryDto = reportMapper.getReportCategory(brc_no);
+		if (reportCategoryDto == null) throw new RuntimeException("reportCategoryDto is null!!");
 
 		return reportCategoryDto;
 		
@@ -209,6 +209,7 @@ public class ReportService {
 		log.info("getReport()");
 		
 		ReportDto reportDto = reportMapper.getReport(br_no);
+		if (reportDto == null) throw new RuntimeException("reportDto is null!!");
 		
 		return reportDto;
 		
@@ -291,7 +292,7 @@ public class ReportService {
 
 	// 신고 처리 확인
 	@Transactional
-	public boolean reportResultConfirm(int br_no, String br_post_no, String brr_result, String a_id) {
+	public boolean reportResultConfirm(int br_no, String br_post_no, int bp_report_state, String brr_result, String a_id) {
 		log.info("reportResultConfirm()");
 		
 		Map<String, Object> insertParams = new HashMap<>();
@@ -306,45 +307,36 @@ public class ReportService {
 		try {
 			
 			// 신고 처리 결과 테이블에 신고 처리 결과 저장
-			
 			int createReportResult = reportMapper.insertNewReportResult(insertParams);
 			
-			if (createReportResult > 0) {
+			if (createReportResult <= 0) throw new RuntimeException("신고 처리 결과 테이블에 신고 처리 결과 저장 실패!!");
 				
-				// BOARD_REPORT_RESULT 마지막에 insert된 컬럼의 NO 가져오기
-				int brr_no = reportMapper.getReportResultLastNo();
-				
-				Map<String, Object> updateParams = new HashMap<>();
-				updateParams.put("br_no", br_no);
-				updateParams.put("brr_no", brr_no);
-				
-				// 신고 테이블에 처리 상태 업데이트
-				
-				/*
-				int updateBoardReportWithResult = reportMapper.updateBoardReportWithResult(updateParams);
-				
-				if (updateBoardReportWithResult > 0) {
-					
-					// 게시물 숨김처리 결과(BP_REPORT_STATE) 게시물 테이블에 업데이트
-					
-					
-				} else throw new RuntimeException("신고 테이블에 처리 상태 업데이트 실패!!");
-				
-				*/
-				
-			} else throw new RuntimeException("신고 처리 결과 테이블에 신고 처리 결과 저장 실패!!");
+			// BOARD_REPORT_RESULT 테이블에 마지막으로 insert된 컬럼의 NO 가져오기
+			int brr_no = reportMapper.getReportResultLastNo();
 			
+			Map<String, Object> updateParams = new HashMap<>();
+			updateParams.put("br_no", br_no);
+			updateParams.put("brr_no", brr_no);
 			
+			// 신고 테이블에 신고 처리 결과 no와 처리 상태 업데이트
+			int updateBoardReportWithResult = reportMapper.updateBoardReportWithResult(updateParams);
 			
+			if (updateBoardReportWithResult <= 0) throw new RuntimeException("신고 테이블에 신고 처리 결과 no와 처리 상태 업데이트 실패!!");
+				
+			Map<String, Object> updateBoardPostsParams = new HashMap<>();
+			updateBoardPostsParams.put("br_post_no", br_post_no);
+			updateBoardPostsParams.put("bp_report_state", bp_report_state);
 			
+			// 게시물 숨김처리 결과(BP_REPORT_STATE)를 게시물 테이블에 업데이트
+			int updateBoardPostsWithResult = reportMapper.updateBoardPostsWithResult(updateBoardPostsParams);
 			
-			return false;
+			if (updateBoardPostsWithResult <= 0) throw new RuntimeException("게시물 테이블에 게시물 블락 처리 결과 업데이트 실패!");
 			
+			return SqlResult.SUCCESS.getValue();
 			
 		} catch (Exception e) {
-			log.error("에러 발생!!");
-			
-			throw e;
+			log.error("에러 발생!!", e);
+			return SqlResult.FAIL.getValue();
 			
 		}
 		

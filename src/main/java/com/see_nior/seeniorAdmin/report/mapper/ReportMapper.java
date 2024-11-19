@@ -83,8 +83,14 @@ public interface ReportMapper {
 	// 신고 처리 결과 테이블에 신고 처리 결과 저장
 	public int insertNewReportResult(Map<String, Object> reportResultParams);
 	
-	// BOARD_REPORT_RESULT 마지막에 insert된 컬럼의 NO 가져오기
+	// BOARD_REPORT_RESULT 테이블에 마지막으로 insert된 컬럼의 NO 가져오기
 	public int getReportResultLastNo();
+
+	// 신고 테이블에 신고 처리 결과 no와 처리 상태 업데이트
+	public int updateBoardReportWithResult(Map<String, Object> updateParams);
+
+	// 게시물 숨김처리 결과(BP_REPORT_STATE)를 게시물 테이블에 업데이트
+	public int updateBoardPostsWithResult(Map<String, Object> updateBoardPostsParams);
 	
 
 	

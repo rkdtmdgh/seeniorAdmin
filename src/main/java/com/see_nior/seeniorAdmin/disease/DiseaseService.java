@@ -92,6 +92,7 @@ public class DiseaseService {
 		log.info("getCategory()");
 		
 		DiseaseCategoryDto diseaseCategoryDto = diseaseMapper.getDiseaseCategory(dc_no);
+		if (diseaseCategoryDto == null) throw new RuntimeException("diseaseCategoryDto is null!!");
 		
 		return diseaseCategoryDto;
 	}
@@ -256,6 +257,7 @@ public class DiseaseService {
 		log.info("getDisease()");
 		
 		DiseaseDto diseaseDto = diseaseMapper.getDiseaseByNo(d_no);
+		if (diseaseDto == null) throw new RuntimeException("diseaseDto is null!!");
 		
 		return diseaseDto;
 	}
