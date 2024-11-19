@@ -35,10 +35,10 @@ async function putIntegSubmitProcess(apiUrl, formData, successMessage, errorMess
 
 // 순번 수정
 async function putOrderModifyProcess(event, idx, page) {    
-	const infoEle = event.target.closest('tr'); // 클릭된 요소의 가장 가까운 tr 요소 찾기
-    const name = infoEle.getAttribute('data-no-name'); 
-    const no = infoEle.getAttribute('data-no'); 
-    const current_idx = infoEle.getAttribute('data-idx'); 
+	const $infoEle = $(event.target).closest('tr'); // 클릭된 요소의 가장 가까운 tr 요소 찾기
+    const name = $infoEle.data('no_name'); 
+    const no = $infoEle.data('no'); 
+    const current_idx = $infoEle.data('idx');
     
     // 카테고리 분류 내 순번 수정이 필요한 경우 분류 no값 추출하여 추가 전송
     const urlParams = new URLSearchParams(window.location.search);

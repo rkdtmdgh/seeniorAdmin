@@ -715,6 +715,16 @@
 	}
 }
 
+.content_table {
+	tbody tr {
+		transition: background-color var(--transition);
+		
+		&:hover {
+			background-color: var(--lightBlueColor);
+		}
+	}
+}
+
 .content_edit_table {
     th, td {
         border-right: 1px solid var(--lightGrayColor);
