@@ -21,6 +21,8 @@ public class ReportDto {
 	private String br_reg_date;
 	private String br_mod_date;	
 	
+	private BoardPostsDto boardPostsDto;
+	
 	private ReportCategoryDto reportCategoryDto;
 	
 	private ReportResultDto reportResultDto;

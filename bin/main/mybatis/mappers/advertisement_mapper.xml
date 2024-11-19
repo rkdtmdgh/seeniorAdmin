@@ -536,12 +536,12 @@
 	
 	</update>
 	
-	<!-- 만료된 지 30일이 지난 광고 리스트 가져오기 -->
+	<!-- 만료된 지 30일이 지난 광고 리스트의 No들 가져오기 -->
 	<select id="getAdvertisementsEnded30Days"
-			resultMap="AdvertisementDto">
+			resultType="Integer">
 			
 		SELECT 
-			* 
+			AD_NO 
 		FROM 
 			ADVERTISEMENT 
 		WHERE 

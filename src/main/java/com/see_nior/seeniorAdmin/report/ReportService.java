@@ -4,8 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Options;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.see_nior.seeniorAdmin.account.AccountService;
+import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 import com.see_nior.seeniorAdmin.dto.ReportCategoryDto;
 import com.see_nior.seeniorAdmin.dto.ReportDto;
 import com.see_nior.seeniorAdmin.enums.SqlResult;
@@ -21,6 +25,8 @@ import lombok.extern.log4j.Log4j2;
 public class ReportService {
 	
 	final private ReportMapper reportMapper;
+	
+	final private AccountService accountService;
 	
 ////////////////////////////////////////////////////////// 신고 카테고리
 	
@@ -278,6 +284,69 @@ public class ReportService {
 		pagingParams.put("searchString", searchString);
 		
 		return reportMapper.getUnresultedReportCntBySearch(pagingParams);
+		
+	}
+	
+////////////////////////////////////////////////////////// 신고 처리
+
+	// 신고 처리 확인
+	@Transactional
+	public boolean reportResultConfirm(int br_no, String br_post_no, String brr_result, String a_id) {
+		log.info("reportResultConfirm()");
+		
+		Map<String, Object> insertParams = new HashMap<>();
+		
+		// a_id값으로 a_no 가져오기
+		AdminAccountDto loginedAdminDto = accountService.getAdminAccountById(a_id);
+		
+		insertParams.put("br_no", br_no);
+		insertParams.put("brr_result", brr_result);
+		insertParams.put("a_no", loginedAdminDto.getA_no());
+		
+		try {
+			
+			// 신고 처리 결과 테이블에 신고 처리 결과 저장
+			
+			int createReportResult = reportMapper.insertNewReportResult(insertParams);
+			
+			if (createReportResult > 0) {
+				
+				// BOARD_REPORT_RESULT 마지막에 insert된 컬럼의 NO 가져오기
+				int brr_no = reportMapper.getReportResultLastNo();
+				
+				Map<String, Object> updateParams = new HashMap<>();
+				updateParams.put("br_no", br_no);
+				updateParams.put("brr_no", brr_no);
+				
+				// 신고 테이블에 처리 상태 업데이트
+				
+				/*
+				int updateBoardReportWithResult = reportMapper.updateBoardReportWithResult(updateParams);
+				
+				if (updateBoardReportWithResult > 0) {
+					
+					// 게시물 숨김처리 결과(BP_REPORT_STATE) 게시물 테이블에 업데이트
+					
+					
+				} else throw new RuntimeException("신고 테이블에 처리 상태 업데이트 실패!!");
+				
+				*/
+				
+			} else throw new RuntimeException("신고 처리 결과 테이블에 신고 처리 결과 저장 실패!!");
+			
+			
+			
+			
+			
+			return false;
+			
+			
+		} catch (Exception e) {
+			log.error("에러 발생!!");
+			
+			throw e;
+			
+		}
 		
 	}
 

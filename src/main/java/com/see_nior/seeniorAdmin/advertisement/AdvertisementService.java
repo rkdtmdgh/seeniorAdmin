@@ -624,33 +624,34 @@ public class AdvertisementService {
 	}
 
 	// 광고 만료 후 30일 경과 후에 이미지 삭제 요청
-	// 초 분 시 일 월 요일 년 (각 자리에 *는 모든 값을 의미)
-	@Scheduled(cron = "0 23 18 * * ?")	// 매일 0:01분에 실행
+	// 초 분 시 일 월 요일 년(생략 가능) => 각 자리에 *는 모든 값을 의미
+	@Scheduled(cron = "00 01 00 * * ?")	// 매일 0:01분에 실행
 	public void deleteFolderForEndAdvertiemsent() {
 		log.info("deleteFolderForEndAdvertiemsent()");
 		
-		List<AdvertisementDto> deleteAdvertisementDtos = advertisementMapper.getAdvertisementsEnded30Days();
+		// 만료된 지 30일이 지난 광고 리스트의 No들 가져오기
+		List<Integer> deleteAdvertisementNos = advertisementMapper.getAdvertisementsEnded30Days();
 		
-		if (deleteAdvertisementDtos.size() != 0) {
-			log.info("deleteAdvertisementDtos ==========> {}", deleteAdvertisementDtos);
+		if (deleteAdvertisementNos.size() != 0) {
+			log.info("deleteAdvertisementNos ==========> {}", deleteAdvertisementNos);
 			
 			List<String> deleteFolderPaths = new ArrayList<>();
 			
-			for (int i = 0; i < deleteAdvertisementDtos.size(); i++) {
+			for (int i = 0; i < deleteAdvertisementNos.size(); i++) {
 				
-				String folderPath = "\\advertisement\\" + deleteAdvertisementDtos.get(i).getAd_no();
+				String folderPath = "\\advertisement\\" + deleteAdvertisementNos.get(i);
 				deleteFolderPaths.add(folderPath);
 				
-				ResponseEntity<String> deletedFolderResult = imageFileService.deleteFolders(deleteFolderPaths);
-				
-				// 이미지 서버에서 deleteFolder요청이 성공한 경우
-				if (deletedFolderResult.getBody().equals("1")) 
-					log.info("deleteFolder SUCCESS!!");
-				// 이미지 서버에서 deleteFolder 요청이 실패한 경우
-				else 
-					log.info("deleteFolder FAIL!!");
-				
 			}
+			
+			ResponseEntity<String> deletedFolderResult = imageFileService.deleteFolders(deleteFolderPaths);
+			
+			// 이미지 서버에서 deleteFolder요청이 성공한 경우
+			if (deletedFolderResult.getBody().equals("1")) 
+				log.info("deleteFolder SUCCESS!!");
+			// 이미지 서버에서 deleteFolder 요청이 실패한 경우
+			else 
+				log.info("deleteFolder FAIL!!");
 			
 		}
 		

@@ -77,6 +77,15 @@ public interface ReportMapper {
 
 	// 처리되지 않은 신고의 개수 가져오기 (검색한 신고)
 	public int getUnresultedReportCntBySearch(Map<String, Object> pagingParams);
+	
+////////////////////////////////////////////////////////// 신고 처리
+
+	// 신고 처리 결과 테이블에 신고 처리 결과 저장
+	public int insertNewReportResult(Map<String, Object> reportResultParams);
+	
+	// BOARD_REPORT_RESULT 마지막에 insert된 컬럼의 NO 가져오기
+	public int getReportResultLastNo();
+	
 
 	
 
