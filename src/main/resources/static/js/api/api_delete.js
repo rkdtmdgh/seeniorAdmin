@@ -38,8 +38,10 @@ async function delSingleData(dataName, key, noValue, additionalData = {}) { // �
 	const isConfirm = confirm(`${applyJosa(dataName, '을/를')} 삭제하시겠습니까?`);
 	if(!isConfirm) return false;
 	
-	const data = { [key]: noValue };
-	Object.assign(data, additionalData); // 추가 데이터가 필요 시 data에 추가
+	const data = { 
+		[key]: noValue, 
+		...additionalData, // 추가 데이터가 필요 시 data에 추가
+	};
 	
 	const deleteConfig = mapDeleteObject(key); // 커맨드와 경로 설정
 		

@@ -146,7 +146,12 @@ function setCreateListSubMenu(ele) {
 	let $subMenuContainer = $(ele).find('.link_sub_menu_container'); // 서브 메뉴 요소
 	if(!$subMenuContainer.length) {
 		$subMenuContainer = $('<div class="link_sub_menu_container sc">'); // 서브 메뉴가 담길 요소 생성
-		const dataList = $(ele).data(); // data 속성 값을 담은 객체
+		
+		const dataList = {
+			...$(ele).closest('tr').data(), // 기본 data 속성 값
+			...$(ele).data(), // 추가될 요소의 data 속성 값
+		};
+		
 		const objectMap = mapCreateListSubMenueObject(dataList); // 서브 메뉴 설정 객체 가져오기
 
 		if(objectMap && Object.keys(objectMap).length) {
@@ -191,56 +196,170 @@ function mapCreateListSubMenueObject(dataList) {
 					link: `/disease/cate_info/modify_category_form?dc_no=${dataList.info_no}`,
 				},
 				{
-					subMenuTitle: '질환/질병 리스트 보기',
-					link: `/disease/info/disease_list_form?sortType=2&infoNo=${dataList.info_no}`,
+					subMenuTitle: '질환/질병 보기',
+					link: `/disease/info/modify_form?d_no=${dataList.data_no}`,
 				},
 			],
 		},
 		'notice': { 
 			'admin': [
 				{
-					subMenuTitle: '공지 사항 보기',
-					link: `/notice/info/modify_form?n_no=${dataList.data_no}`,
-				},
-				{
 					subMenuTitle: '계정 정보 보기',
 					link: `/account/list/admin_modify_form?a_no=${dataList.account_no}`,
+				},
+				{
+					subMenuTitle: '공지 사항 보기',
+					link: `/notice/info/modify_form?n_no=${dataList.data_no}`,
 				},
 			],
 		},
 		'board_qna_notice': {
 			'admin': [
 				{
-					subMenuTitle: '공지 사항 보기',
-					link: `/qna/noti_info/modify_notice_form?bqn_no=${dataList.data_no}`,
-				},
-				{
 					subMenuTitle: '계정 정보 보기',
 					link: `/account/list/admin_modify_form?a_no=${dataList.account_no}`,
+				},
+				{
+					subMenuTitle: '공지 사항 보기',
+					link: `/qna/noti_info/modify_notice_form?bqn_no=${dataList.data_no}`,
 				},
 			], 
 		},
 		'board_notice': { 
 			'admin': [
 				{
-					subMenuTitle: '공지 사항 보기',
-					link: `/board/noti_info/modify_board_notice_form?infoNo=${dataList.info_no}&bn_no=${dataList.data_no}`,
-				},
-				{
 					subMenuTitle: '계정 정보 보기',
 					link: `/account/list/admin_modify_form?a_no=${dataList.account_no}`,
+				},
+				{
+					subMenuTitle: '공지 사항 보기',
+					link: `/board/noti_info/modify_board_notice_form?infoNo=${dataList.info_no}&bn_no=${dataList.data_no}`,
 				},
 			],
 		},
 		'board_qna_category': {
+			'list': [
+				{
+					subMenuTitle: '질문 리스트 보기',
+					link: `/qna/info/qna_list_form?sortType=2&infoNo=${dataList.info_no}&sortValue=${dataList.sort_value}&order=${dataList.order}`,
+				},
+				{
+					subMenuTitle: '질문 분류 보기',
+					link: `/qna/cate_info/modify_category_form?bqc_no=${dataList.info_no}`,
+				},
+			],
+		},
+		'board_qna': {
 			'cate': [
 				{
 					subMenuTitle: '질문 분류 보기',
 					link: `/qna/cate_info/modify_category_form?bqc_no=${dataList.info_no}`,
 				},
 				{
-					subMenuTitle: '질문 리스트 보기',
-					link: `/qna/info/qna_list_form?sortType=2&infoNo=${dataList.info_no}&sortValue=${dataList.sort_value}&order=${dataList.order}`,
+					subMenuTitle: '질문 보기',
+					link: `/qna/info/answer_form?bq_no=${dataList.data_no}`,
+				},
+			],
+			'user': [
+				{
+					subMenuTitle: '계정 정보 보기',
+					link: `/user_account/info/modify_form?u_no=${dataList.account_no}`,
+				},
+				{
+					subMenuTitle: '질문 보기',
+					link: `/qna/info/answer_form?bq_no=${dataList.data_no}`,
+				},
+			],
+		},
+		'board_category': {
+			'list': [
+				{
+					subMenuTitle: '게시물 리스트 보기',
+					link: `/board/info/posts_list_form?infoNo=${dataList.info_no}`,
+				},
+				{
+					subMenuTitle: '게시판 분류 보기',
+					link: `/board/cate_info/modify_category_form?bc_no=${dataList.info_no}`,
+				},
+			],
+		},
+		'board_posts': {
+			'admin': [
+				{
+					subMenuTitle: '계정 정보 보기',
+					link: `/account/list/admin_modify_form?a_no=${dataList.account_no}`,
+				},
+				{
+					subMenuTitle: '게시물 보기',
+					link: `/board/info/modify_form?infoNo=${dataList.info_no}&bp_no=${dataList.data_no}`,
+				},
+			],
+			'user': [
+				{
+					subMenuTitle: '계정 정보 보기',
+					link: `/user_account/info/modify_form?u_no=${dataList.account_no}`,
+				},
+				{
+					subMenuTitle: '게시물 보기',
+					link: `/board/info/modify_form?infoNo=${dataList.info_no}&bp_no=${dataList.data_no}`,
+				},
+			],
+		},
+		'board_report_category': {
+			'list': [
+				{
+					subMenuTitle: '신고 리스트 보기',
+					link: `/report/info/report_list_form?sortType=2&infoNo=${dataList.info_no}&sortValue=${dataList.sort_value}&order=${dataList.order}`,
+				},
+				{
+					subMenuTitle: '신고 분류 보기',
+					link: `/report/cate_info/modify_category_form?brc_no=${dataList.info_no}`,
+				},
+			],
+		},
+		'board_report': {
+			'cate': [
+				{
+					subMenuTitle: '신고 분류 보기',
+					link: `/report/cate_info/modify_category_form?brc_no=${dataList.info_no}`,
+				},
+				{
+					subMenuTitle: '신고 보기',
+					link: `/report/info/result_form?br_no=${dataList.data_no}&br_post_no=${dataList.post_no}`,
+				},
+			],
+			'user': [
+				{
+					subMenuTitle: '계정 정보 보기',
+					link: `/user_account/info/modify_form?u_no=${dataList.account_no}`,
+				},
+				{
+					subMenuTitle: '신고 보기',
+					link: `/report/info/result_form?br_no=${dataList.data_no}&br_post_no=${dataList.post_no}`,
+				},
+			],
+		},
+		'advertisement_category': {
+			'list': [
+				{
+					subMenuTitle: '신고 리스트 보기',
+					link: `/advertisement/info/advertisement_list_form?sortType=2&infoNo=${dataList.info_no}&sortValue=${dataList.sort_value}&order=${dataList.order}`,
+				},
+				{
+					subMenuTitle: '신고 분류 보기',
+					link: `/advertisement/cate_info/modify_category_form?sortType=2&infoNo=${dataList.info_no}`,
+				},
+			],
+		},
+		'advertisement': {
+			'cate': [
+				{
+					subMenuTitle: '광고 분류 보기',
+					link: `/advertisement/cate_info/modify_category_form?sortType=2&infoNo=${dataList.info_no}`,
+				},
+				{
+					subMenuTitle: '광고 보기',
+					link: `/advertisement/info/modify_form?ad_no=${dataList.data_no}`,
 				},
 			],
 		},
