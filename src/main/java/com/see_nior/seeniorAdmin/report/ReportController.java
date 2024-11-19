@@ -286,7 +286,24 @@ public class ReportController {
 		
 	}
 	
-////////////////////////////////////////////////////////// 신고 결과
+////////////////////////////////////////////////////////// 신고 처리
+	
+	// 신고 처리 확인
+	@ResponseBody
+	@PostMapping("/info/result_confirm")
+	public boolean reportResultConfirm(
+			@RequestParam(value = "br_no") int br_no,
+			@RequestParam(value = "br_post_no") String br_post_no,
+			@RequestParam(value = "bp_report_state") int bp_report_state,
+			@RequestParam(value = "brr_result") String brr_result,
+			Principal principal) {
+		log.info("reportResultConfirm()");
+		
+		boolean reportResultConfirm = reportService.reportResultConfirm(br_no, br_post_no, bp_report_state, brr_result, principal.getName());
+		
+		return reportResultConfirm;
+		
+	}
 	
 	// 신고 처리하기 양식
 	@GetMapping("/info/result_form")
@@ -303,24 +320,11 @@ public class ReportController {
 		
 	}
 	
-	/*
-	// 신고 처리 확인
-	@ResponseBody
-	@PostMapping("/info/result_confirm")
-	public boolean reportResultConfirm(
-			@RequestParam(value = "br_no") int br_no,
-			@RequestParam(value = "brr_zo") String brr_zo,
-			@RequestParam(value = "brr_result") String brr_result,
-			Principal principal) {
-		log.info("reportResultConfirm()");
-		
-		
-		boolean reportResultConfirm = reportService.reportResultConfirm(br_no, brr_result, principal.getName());
-		
-		return reportResultConfirm;
-		
-	}
-	*/
+	// 신고 처리 수정하기
+	
+	
+	// 신고 처리 삭제하기
+
 	
 	
 	

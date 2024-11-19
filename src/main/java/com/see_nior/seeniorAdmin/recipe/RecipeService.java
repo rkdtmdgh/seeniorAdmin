@@ -324,6 +324,7 @@ public class RecipeService {
 		log.info("getRecipe()");
 		
 		RecipeDto recipeDto = recipeMapper.getRecipe(rcp_seq);
+		if (recipeDto == null) throw new RuntimeException("recipeDto is null!!");
 		
 		return recipeDto;
 		

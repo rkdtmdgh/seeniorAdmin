@@ -50,6 +50,25 @@
 		<result column="u_reg_date" property="u_reg_date"/>
 		<result column="u_mod_date" property="u_mod_date"/>
 	</resultMap>
+	
+	<resultMap type="BoardPostsDto" id="BoardPostsDto">
+		<id column="bp_no" property="bp_no" />
+		<result column="bp_category_no" property="bp_category_no" />		
+		<result column="bp_title" property="bp_title" />
+		<result column="bp_body" property="bp_body" />
+		<result column="bp_writer_no" property="bp_writer_no" />
+		<result column="bp_writer_id" property="bp_writer_id" />
+		<result column="bp_account" property="bp_account" />
+		<result column="bp_report_state" property="bp_report_state" />
+		<result column="bp_view_cnt" property="bp_view_cnt" />
+		<result column="bp_dir_name" property="bp_dir_name" />
+		<result column="bp_reply_cnt" property="bp_reply_cnt" />
+		<result column="bp_is_deleted" property="bp_is_deleted" />
+		<result column="bp_reg_date" property="bp_reg_date" />
+		<result column="bp_mod_date" property="bp_mod_date" />
+		<collection property="adminAccountDto" resultMap="AdminAccountDto" />
+		<collection property="userAccountDto" resultMap="UserAccountDto" />
+	</resultMap>
 
 	<resultMap type="ReportCategoryDto" id="ReportCategoryDto">
 		<id column="brc_no" property="brc_no"></id>
@@ -86,6 +105,7 @@
 		<result column="br_mod_date" property="br_mod_date"></result>
 		<collection property="reportCategoryDto" resultMap="ReportCategoryDto" />
 		<collection property="reportResultDto" resultMap="ReportResultDto" />
+		<collection property="boardPostsDto" resultMap="BoardPostsDto" />
 		<collection property="userAccountDto" resultMap="UserAccountDto" />
 	</resultMap>
 	
@@ -388,6 +408,7 @@
 			BR.*, 
 			BRC.*, 
 			BRR.*, 
+			BP.BP_CATEGORY_NO, 
 			A.A_NO, A.A_ID, A.A_NAME, A.A_DEPARTMENT, A.A_LEVEL, A.A_POSITION, 
 			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
 		FROM 
@@ -396,6 +417,10 @@
 			BOARD_REPORT_CATEGORY AS BRC 
 		ON 
 			BR.BR_CATEGORY_NO = BRC.BRC_NO 
+		JOIN 
+			BOARD_POSTS AS BP 
+		ON 
+			BR.BR_POST_NO = BP.BP_NO 
 		JOIN 
 			USER_ACCOUNT AS U 
 		ON 
@@ -603,7 +628,48 @@
 	
 	</select>
 	
-<!-- 신고 답변 관련 -->
+<!-- 신고 처리 관련 -->
+
+	<!-- 신고 처리 결과 테이블에 신고 처리 결과 저장 -->
+	<insert id="insertNewReportResult"
+			parameterType="Map">
+	
+		INSERT INTO 
+			BOARD_REPORT_RESULT(
+				BRR_REPORT_NO, BRR_RESULT, BRR_ANSWER_A_NO) 
+		VALUES(
+				#{br_no}, #{brr_result}, #{a_no})
+	
+	</insert>
+	
+	<!-- BOARD_REPORT_RESULT에 마지막에 insert된 컬럼의 NO 가져오기 -->
+	<select id="getReportResultLastNo"
+			resultType="Integer">
+	
+		SELECT 
+			BRR_NO 
+		FROM 
+			BOARD_REPORT_RESULT 
+		ORDER BY 
+			BRR_NO DESC 
+		LIMIT 
+			1
+	
+	</select>
+	
+	<!-- 신고 테이블에 신고 처리 결과 no와 처리 상태 업데이트 -->
+	<update id="updateBoardReportWithResult"
+			parameterType="Map">
+			
+		UPDATE 
+			BOARD_REPORT 
+		SET 
+			BR_RESULT_NO = #{brr_no}, 
+			BR_STATE = 0 
+		WHERE 
+			BR_NO = #{br_post_no}
+	
+	</update>
 
 
 </mapper>
