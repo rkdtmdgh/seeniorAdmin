@@ -1527,15 +1527,15 @@ SHOW PROCEDURE STATUS WHERE Db = 'DB_SEENIOR';
 DROP PROCEDURE UPDATE_AD_STATE;
 
 -- update_ad_state() 프로시저를 매일 0시 00분 정각에 실행하도록 하는 이벤트 스케쥴러
-CREATE EVENT daily_ad_state_update
+CREATE EVENT DAILY_AD_STATE_UPDATE
 ON SCHEDULE EVERY 1 DAY STARTS '2024-11-07 00:01:00'
 DO
-CALL update_ad_state();
+CALL UPDATE_AD_STATE();
 
 -- 이미 생성되어 있는 이벤트 스케쥴러 확인 및 드롭
 SELECT * FROM information_schema.events;
 SHOW EVENTS;
-DROP EVENT daily_ad_state_update;
+DROP EVENT DAILY_AD_STATE_UPDATE;
 
 -- 환자 테이블 -------------------------------------------------------------------------------------------------------------------
 CREATE TABLE CARE_LIST (
