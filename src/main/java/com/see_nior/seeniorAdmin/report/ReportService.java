@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.see_nior.seeniorAdmin.account.AccountService;
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
@@ -336,6 +337,9 @@ public class ReportService {
 			
 		} catch (Exception e) {
 			log.error("에러 발생!!", e);
+			
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			
 			return SqlResult.FAIL.getValue();
 			
 		}
