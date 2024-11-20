@@ -284,6 +284,54 @@ function setCreateListSubMenu(ele) {
 	}
 	
 	$subMenuContainer.slideToggle(100).toggleClass('active'); // 서브 메뉴 노출
+	
+	// 서브 메뉴 위치 조정
+	adjustSubMenuPosition($subMenuContainer);
+}
+
+// 서브 메뉴 화면 경계 위치 조정
+function adjustSubMenuPosition($subMenuContainer) {
+    const padding = 70; // 화면 끝 최소 여유 공간
+    const $parent = $('.content_inner'); // 기준이 될 부모 요소
+	const parentOffset = $parent.offset(); // 부모 요소의 위치(top, left) 절대 값 가져오기
+    const parentWidth = $parent.outerWidth(); // 부모 요소 가로 크기
+    const parentHeight = $parent.outerHeight(); // 부모 요소 세로 크기
+    const containerOffset = $subMenuContainer.offset(); // 해당 요소의 위치(top, left) 절대 값 가져오기
+    const containerWidth = $subMenuContainer.outerWidth(); // 해당 요소 가로 크기
+    const containerHeight = $subMenuContainer.outerHeight(); // 해당 요소 세로 크기
+    
+    let newTop = containerOffset.top; // top 절대 값
+    let newLeft = containerOffset.left; // left 절대 값
+    let isAdjusted = false; // 위치가 조정되었는지 여부
+    
+    // 화면 상단 범위 체크
+    if(containerOffset.top < parentOffset.top) {
+		newTop = parentOffset.top + padding;
+		isAdjusted = true;
+	}
+    
+    // 화면 하단 범위 체크
+    if(containerOffset.top + containerHeight > parentOffset.top + parentHeight) { // 요소 top 절대 값 + 요소 높이 = 요소의 bottom 절대 값
+		newTop = parentOffset.top + parentHeight - containerHeight - padding;
+		isAdjusted = true;
+	}
+	
+	// 화면 좌측 범위 체크
+    if(containerOffset.left < parentOffset.left) {
+		newLeft = parentOffset.left + padding;
+		isAdjusted = true;
+	}
+	
+	// 화면 우측 범위 체크
+    if(containerOffset.left + containerWidth > parentOffset.left + parentWidth) { // 요소 left 절대 값 + 요소 가로 = 요소의 right 절대 값
+		newTop = parentOffset.left + parentWidth - containerWidth - padding;
+		isAdjusted = true;
+	}
+	
+	// 위치 조정이 필요한 경우에만 CSS 수정
+	if(isAdjusted) {
+		$subMenuContainer.css({top: newTop, left: newLeft});
+	}
 }
 
 // 리스트 서브 메뉴 이벤트 객체 설정
@@ -1655,7 +1703,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		case '/advertisement/cate_info/get_advertisement_list_by_category': // 광고 분류 상세페이지 내 위치별 분류 리스트 테이블	
 			regDate = new Date(new Date(data.ad_reg_date).getTime() + newIconsHours);
 			tableTrContent = `
-				<tr data-no-name="ad_no" data-no="${data.ad_no}" data-idx="${data.ad_idx}">
+				<tr data-no_name="ad_no" data-no="${data.ad_no}" data-idx="${data.ad_idx}">
 					<td class="va_m">
 						<div class="flex_area">
 							${getListCnt > 1 ? `
