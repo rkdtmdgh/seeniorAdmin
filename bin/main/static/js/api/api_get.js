@@ -255,13 +255,14 @@ function createListSubMenuEvent() {
 
 // 리스트 서브 메뉴 이벤트 설정
 function setCreateListSubMenu(ele) {
-	let $subMenuContainer = $(ele).find('.link_sub_menu_container'); // 서브 메뉴 요소
+	const $parent = $(ele);
+	let $subMenuContainer = $parent.find('.link_sub_menu_container'); // 서브 메뉴 요소
 	if(!$subMenuContainer.length) {
 		$subMenuContainer = $('<div class="link_sub_menu_container sc">'); // 서브 메뉴가 담길 요소 생성
 		
 		const dataList = {
-			...$(ele).closest('tr').data(), // 기본 data 속성 값
-			...$(ele).data(), // 추가될 요소의 data 속성 값
+			...$parent.closest('tr').data(), // 기본 data 속성 값
+			...$parent.data(), // 추가될 요소의 data 속성 값
 		};
 		
 		const objectMap = mapCreateListSubMenueObject(dataList); // 서브 메뉴 설정 객체 가져오기
@@ -280,58 +281,54 @@ function setCreateListSubMenu(ele) {
 			$subMenuContainer.append($errorMsg);
 		}
 		
-		$(ele).append($subMenuContainer);  // 부모 요소에 추가
+		$parent.append($subMenuContainer);  // 부모 요소에 추가
 	}
 	
-	$subMenuContainer.slideToggle(100).toggleClass('active'); // 서브 메뉴 노출
+	// 서브 메뉴 위치 조정 후 노출
+	const position = adjustSubMenuPosition($subMenuContainer);
+	logger.info('setCreateListSubMenu() position:', position);
 	
-	// 서브 메뉴 위치 조정
-	adjustSubMenuPosition($subMenuContainer);
+	$subMenuContainer.css({display: 'none', visibility: 'visible'}).slideToggle(100).toggleClass('active');
 }
 
 // 서브 메뉴 화면 경계 위치 조정
 function adjustSubMenuPosition($subMenuContainer) {
-    const padding = 70; // 화면 끝 최소 여유 공간
-    const $parent = $('.content_inner'); // 기준이 될 부모 요소
-	const parentOffset = $parent.offset(); // 부모 요소의 위치(top, left) 절대 값 가져오기
-    const parentWidth = $parent.outerWidth(); // 부모 요소 가로 크기
-    const parentHeight = $parent.outerHeight(); // 부모 요소 세로 크기
-    const containerOffset = $subMenuContainer.offset(); // 해당 요소의 위치(top, left) 절대 값 가져오기
-    const containerWidth = $subMenuContainer.outerWidth(); // 해당 요소 가로 크기
-    const containerHeight = $subMenuContainer.outerHeight(); // 해당 요소 세로 크기
+    const padding = 40; // 범위 기준 가장자리 최소 여유 공간
+    const $container = $subMenuContainer.closest('.content_inner'); // 범위 기준이 될 부모 요소
+    const containerInnerWidth = $container.innerWidth() - padding;
+    const containerInnerHeight = $container.innerHeight() - padding;
+    const scrollTop = $container.scrollTop();
     
-    let newTop = containerOffset.top; // top 절대 값
-    let newLeft = containerOffset.left; // left 절대 값
-    let isAdjusted = false; // 위치가 조정되었는지 여부
+    const subMenuOffset = $subMenuContainer.offset();
+    const subMenuWidth = $subMenuContainer.outerWidth(true);
+    const subMenuHeight = $subMenuContainer.outerHeight(true);
     
-    // 화면 상단 범위 체크
-    if(containerOffset.top < parentOffset.top) {
-		newTop = parentOffset.top + padding;
-		isAdjusted = true;
+    // .content_inner 기준 서브 메뉴의 가로/세로 위치
+    const adjustedLeft = subMenuOffset.left - $container.offset().left;
+    const adjustedTop = subMenuOffset.top - $container.offset().top - scrollTop;
+    
+    // position 위치 초기화
+    let positionX = 'left';
+    let positionY = 'top';
+    
+    // 서브 메뉴가 화면 우측 경계를 넘을 경우
+	if (adjustedLeft + subMenuWidth > containerInnerWidth) {
+	    positionX = 'right';
 	}
     
-    // 화면 하단 범위 체크
-    if(containerOffset.top + containerHeight > parentOffset.top + parentHeight) { // 요소 top 절대 값 + 요소 높이 = 요소의 bottom 절대 값
-		newTop = parentOffset.top + parentHeight - containerHeight - padding;
-		isAdjusted = true;
+	// 서브 메뉴가 화면 하단 경계를 넘을 경우
+	if (adjustedTop + subMenuHeight > containerInnerHeight) {
+	    positionY = 'bottom';
 	}
 	
-	// 화면 좌측 범위 체크
-    if(containerOffset.left < parentOffset.left) {
-		newLeft = parentOffset.left + padding;
-		isAdjusted = true;
-	}
-	
-	// 화면 우측 범위 체크
-    if(containerOffset.left + containerWidth > parentOffset.left + parentWidth) { // 요소 left 절대 값 + 요소 가로 = 요소의 right 절대 값
-		newTop = parentOffset.left + parentWidth - containerWidth - padding;
-		isAdjusted = true;
-	}
-	
-	// 위치 조정이 필요한 경우에만 CSS 수정
-	if(isAdjusted) {
-		$subMenuContainer.css({top: newTop, left: newLeft});
-	}
+	// position css 초기화 후 재입력
+	$subMenuContainer.css({top: '', bottom: '', left: '', right: ''});
+	$subMenuContainer.css({[positionY]: 0, [positionX]: '50%'});
+		
+	const position = {}; // 위치 값 저장할 객체
+	position.positionX = positionX;
+	position.positionY = positionY;
+	return position;
 }
 
 // 리스트 서브 메뉴 이벤트 객체 설정
