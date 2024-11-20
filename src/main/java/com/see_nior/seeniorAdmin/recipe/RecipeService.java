@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +19,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.see_nior.seeniorAdmin.api.ApiExplorer;
 import com.see_nior.seeniorAdmin.dto.RecipeDto;
+import com.see_nior.seeniorAdmin.enums.SqlResult;
 import com.see_nior.seeniorAdmin.recipe.mapper.RecipeMapper;
 import com.see_nior.seeniorAdmin.util.PagingUtil;
 
@@ -150,19 +152,21 @@ public class RecipeService {
 					
 				}
 				
-				return true;
+				return SqlResult.SUCCESS.getValue();
 			
 			// rowNode를 가지고 오지 못 했다면
 			} else {
 				log.info("데이터의 row값을 가져오는데 실패하였습니다.");
 				
-				return false;
+				return SqlResult.FAIL.getValue();
 			}
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 			
-			return false;
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			
+			return SqlResult.FAIL.getValue();
 			
 		}
 		
@@ -197,6 +201,7 @@ public class RecipeService {
  		recipeTypeDtos.put("recipeTypeDtos", recipeTypeDto);
  		
  		return recipeTypeDtos;
+ 		
  	} 	
 
 	// 페이지에 따른 식단 가져오기 (모든 식단)

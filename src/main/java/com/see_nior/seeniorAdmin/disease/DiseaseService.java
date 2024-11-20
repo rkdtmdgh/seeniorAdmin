@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.see_nior.seeniorAdmin.disease.mapper.DiseaseMapper;
 import com.see_nior.seeniorAdmin.dto.DiseaseCategoryDto;
@@ -298,6 +299,7 @@ public class DiseaseService {
 		
 	   } catch (Exception e) {
 		   log.error("deleteConfirm Error : {}",e);
+		   TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 		   
 		   return SqlResult.FAIL.getValue();
 		   

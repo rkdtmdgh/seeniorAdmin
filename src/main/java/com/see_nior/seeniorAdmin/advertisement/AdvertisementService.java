@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -250,6 +251,8 @@ public class AdvertisementService {
 					log.info("createConfirm() Exception 발생!!");
 					e.printStackTrace();
 					
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+					
 					return SqlResult.FAIL.getValue();
 					
 				}
@@ -258,11 +261,15 @@ public class AdvertisementService {
 				log.info("JsonMappingException!!");
 				e.printStackTrace();
 				
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+				
 				return SqlResult.FAIL.getValue();
 				
 			} catch (JsonProcessingException e) {
 				log.info("JsonProcessingException!!");
 				e.printStackTrace();
+				
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 				
 				return SqlResult.FAIL.getValue();
 				
@@ -270,6 +277,8 @@ public class AdvertisementService {
 			
 		} else {
 			log.info("upload file fail!!");
+			
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			
 			return SqlResult.FAIL.getValue();
 			
@@ -356,6 +365,8 @@ public class AdvertisementService {
 		} catch (Exception e) {
 			log.info("modifyAdvertisementIdx() Exception 발생!!");
 			e.printStackTrace();
+			
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			
 			return SqlResult.FAIL.getValue();
 			
@@ -448,20 +459,26 @@ public class AdvertisementService {
 					log.info("JsonMappingException!!");
 					e.printStackTrace();
 					
-					return false;
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+					
+					return SqlResult.FAIL.getValue();
 					
 				} catch (JsonProcessingException e) {
 					log.info("JsonProcessingException!!");
 					e.printStackTrace();
 					
-					return false;
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+					
+					return SqlResult.FAIL.getValue();
 					
 				}
 				
 			} else {
 					log.info("upload file fail!!");
 					
-					return false;
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+					
+					return SqlResult.FAIL.getValue();
 					
 				}
 		
@@ -585,6 +602,8 @@ public class AdvertisementService {
 		} catch (Exception e) {
 			log.info("modifyConfirm() Exception 발생!!");
 			e.printStackTrace();
+			
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			
 			return SqlResult.FAIL.getValue();
 			
