@@ -617,17 +617,17 @@
 	position: relative;
 	
 	.link_sub_menu_container {
-		display: none;
+		display: block;
 		width: max-content;
+		height: max-content;
    		max-width: 200px;
+   		margin: var(--ssize2) var(--baseGap);
    		background-color: var(--whiteColor);
    		border-radius: var(--bdrs);
    		border: 1px solid Var(--lightGayColor);
+   		visibility: hidden;
    		box-shadow: var(--bxsh);
 	   	position: absolute;
-	   	top: var(--ssize2);
-	   	left: 50%;
-	   	transform: translateX(30%);
 	   	z-index: 1;
 	   	
    		.link_sub_menu {
