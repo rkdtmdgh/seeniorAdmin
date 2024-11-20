@@ -1085,7 +1085,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            <td>
 		                <div class="table_info table_list_sub_menu f_jc_center"
 		                	data-type="cate">
-		                	<p class="info_text">${data.diseaseCategoryDto.dc_name}</p>f_jc_center
+		                	<p class="info_text">${data.diseaseCategoryDto.dc_name}</p>
 		                </div>
 		            </td>
 		            <td>
@@ -1543,8 +1543,8 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            </td>
 		            <td class="va_m">
 		                <a href="/report/info/result_form?br_no=${data.br_no}&br_post_no=${data.br_post_no}" class="flex_area">
-		                	<span class="state icon ${data.br_state === 1 ? 'off' : ''}">
-		                		${data.br_state === 1 ? '대기' : '처리완료'}
+		                	<span class="state icon ${data.br_state === true ? 'off' : ''}">
+		                		${data.br_state === true ? '대기' : '처리완료'}
 		                	</span>
 		                </a>
 		            </td>
@@ -1631,8 +1631,8 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            </td>
 		            <td class="va_m">
 		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="flex_area">
-		                	<span class="state ${data.ad_state === 1 ? '' : 'off'}">
-		                		${data.ad_state === 1 ? '사용' : '만료'}
+		                	<span class="state ${data.ad_state === true ? '' : 'off'}">
+		                		${data.ad_state === true ? '사용' : '만료'}
 		                	</span>
 		                </a>
 		            </td>

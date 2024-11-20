@@ -649,6 +649,7 @@
 }
 
 .flex_area {
+	padding: 0 var(--sidePadding);
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -683,6 +684,9 @@
 	   	border-radius: var(--bdrs);
 	   	background-color: var(--greenColor);
 	   	color: var(--whiteColor);
+	   	overflow: hidden;
+	   	text-overflow: ellipsis;
+	   	white-space: nowrap;
    	
 	   	&.icon {
 	   		padding: var(--ssize2);
