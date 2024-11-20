@@ -667,7 +667,20 @@
 			BR_RESULT_NO = #{brr_no}, 
 			BR_STATE = 0 
 		WHERE 
-			BR_NO = #{br_post_no}
+			BR_NO = #{br_no}
+	
+	</update>
+	
+	<!-- 게시물 숨김처리 결과(BP_REPORT_STATE)를 게시물 테이블에 업데이트 -->
+	<update id="updateBoardPostsWithResult"
+			parameterType="Map">
+			
+		UPDATE 
+			BOARD_POSTS 
+		SET 
+			BP_REPORT_STATE = #{bp_report_state} 
+		WHERE 
+			BP_NO = #{br_post_no}
 	
 	</update>
 
