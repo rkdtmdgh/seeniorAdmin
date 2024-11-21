@@ -33,7 +33,6 @@
 		                    
 		                    <th:block th:if="${reportDto.reportResultDto}">
 			                    <input type="hidden" name=brr_no th:value="${reportDto.reportResultDto.brr_no}">
-			                    <input type="hidden" name="a_id" th:value="${reportDto.reportResultDto.adminAccountDto.a_id}">
 			                    <input type="hidden" name="current_brr_result" th:value="${reportDto.reportResultDto.brr_result}">
 			                    <input type="hidden" name="current_bp_report_state" th:value="${reportDto.boardPostsDto.bp_report_state}">
 		                    </th:block>

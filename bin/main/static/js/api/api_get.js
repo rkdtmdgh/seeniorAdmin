@@ -64,7 +64,7 @@ function mainContentApiResponse(apiUrl, response, loddingParentEle, error = fals
 		$contentTable.html(`
 			<tr>
                 <td colspan="${maxCols}">
-                    <p class="table_info">${error ? errorMsg : '목록이 없습니다.'}</p>
+                    <p class="table_info">${error ? errorMsg : '목록이 없습니다'}</p>
                 </td>
             </tr>
 		`);
@@ -220,7 +220,7 @@ function contentApiResponse(apiUrl, sortValue, order, response, contentTable, er
 		$contentTable.html(`
 			<tr>
                 <td colspan="${maxCols}">
-                    <p class="table_info">${error ? errorMsg : isSearch ? '검색된 내용이 없습니다.' : '목록이 없습니다.'}</p>
+                    <p class="table_info">${error ? errorMsg : isSearch ? '검색된 내용이 없습니다' : '목록이 없습니다'}</p>
                 </td>
             </tr>
 		`);

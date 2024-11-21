@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   
+<head>
+	<th:block th:insert="~{fragments/head.html :: head('게시글 복구 관리')}"></th:block>
+	<script type="text/javascript">
+		$(async function() {
+			const { sortType, sortValue, order, page } = setFormValuesFromUrl(); // 로드 시 현재 상태 쿼리스트링 체크
+			switch(sortType) {
+				case '1': // search
+					await getSearchList(null, '/board/del_info/search_posts_list', sortValue, order, page);
+					break;
+			}
+        });
+	</script>
+</head>
+
+<body>
+	<main class="contents_wrap">
+		<header th:replace="~{fragments/header.html :: header}"></header>
+	
+		<article class="contents_container">
+			<nav th:replace="~{fragments/nav.html :: nav}"></nav>
+			
+			<div class="content">
+                <div class="content_inner sc">
+					<section class="content_info_wrap">
+					    <div class="content_top">
+					        <div class="content_top_info">
+					            <h2 class="title categoty_title">게시글 복구 관리</h2>
+					            <span class="title_other_info_text">삭제 후 30일 이전 데이터만 복구 가능</span>
+					            
+					            <div class="content_top_right">
+									<form name="search_form" onsubmit="getSearchList(event, '/board/del_info/search_posts_list')">
+										<th:block th:insert="~{fragments/search.html :: search('게시글 복구 관리')}"></th:block>
+									</form>
+					            </div>
+					        </div>
+					    </div>
+					    
+					    <div class="table_wrap">
+	                        <table class="content_table deleted_posts_list_table">
+	                            <colgroup>
+	                                <col class="col_no">
+	                                <col>
+	                                <col class="col_default">
+	                                <col class="col_no">
+	                                <col class="col_default">
+	                                <col class="col_default">
+	                                <col class="col_state">
+	                            </colgroup>
+	
+	                            <thead>
+	                                <tr>	                                    
+	                                    <th>
+	                                        <p class="table_title">No</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">제목 (댓글 수)</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">작성자</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">조회수</p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                    	<p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'delete_board_posts', 'dbp_request_time')">
+	                                        	등록일
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                    	<p data-current-sort-value="all" class="table_title sort"
+	                                        	onclick="getSortList(event, 'delete_board_posts', 'dbp_request_time')">
+	                                        	삭제일
+	                                        	<span class="sort_icon"></span>
+	                                        </p>
+	                                    </th>
+	                                    
+	                                    <th>
+	                                        <p class="table_title">잔여일</p>
+	                                    </th>
+	                                </tr>
+	                            </thead>
+	
+	                            <tbody>
+	                                <!-- 리스트 테이블 -->
+	                                <tr>
+	                                	<th colspan="6">
+	                                		<p class="table_info">검색해 주세요</p>
+	                                	</th>
+	                                </tr>
+	                            </tbody>
+	                        </table>
+	                    </div>
+                        
+                        <div class="pagination_wrap"></div>
+					</section>
+                </div>
+            </div>
+		</article>
+	</main>
+</body>
+</html>
