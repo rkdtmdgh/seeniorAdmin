@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 import com.see_nior.seeniorAdmin.dto.UserAccountDto;
 import com.see_nior.seeniorAdmin.enums.SqlResult;
 import com.see_nior.seeniorAdmin.user.mapper.UserMapper;
@@ -32,7 +31,7 @@ public class UserService {
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		List<AdminAccountDto> userAccountDtos = 
+		List<UserAccountDto> userAccountDtos = 
 				userMapper.selectUserList(PagingUtil.pagingParams(page_limit, sortValue, order, page));
 		pagingList.put("userAccountDtos", userAccountDtos);
 		
@@ -57,7 +56,7 @@ public class UserService {
 		
 		Map<String, Object> pagingSearchList = new HashMap<>();
 		
-		List<AdminAccountDto> userAccountDtos = 
+		List<UserAccountDto> userAccountDtos = 
 				userMapper.selectSearchUserList(PagingUtil.searchPagingParams(page_limit, searchPart, searchString, sortValue, order, page));
 		pagingSearchList.put("userAccountDtos", userAccountDtos);
 		

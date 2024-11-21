@@ -236,11 +236,17 @@
 		FROM 
 			BOARD_QNA BQ 
 		LEFT JOIN 
+			BOARD_QNA_CATEGORY BQC 
+		ON 
+			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
+		LEFT JOIN 
 			USER_ACCOUNT U  
 		ON 
 			BQ.BQ_USER_NO = U.U_NO 
 		WHERE 
-			BQ_IS_DELETED = 1 
+			BQ.BQ_IS_DELETED = 1 
+		AND 
+			BQC.BQC_IS_DELETED = 1 
 		<if test="searchPart != null and searchString != null">
 			<choose>
 				<when test="searchPart == 'u_id'">
@@ -265,6 +271,10 @@
 		FROM 
 			BOARD_QNA BQ 
 		LEFT JOIN 
+			BOARD_QNA_CATEGORY BQC 
+		ON 
+			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
+		LEFT JOIN 
 			USER_ACCOUNT U  
 		ON 
 			BQ.BQ_USER_NO = U.U_NO 
@@ -272,6 +282,8 @@
 			BQ.BQ_IS_DELETED = 1 
 		AND 
 			U.U_IS_DELETED = 1 
+		AND 
+			BQC.BQC_IS_DELETED = 1 
 		<if test="searchPart != null and searchString != null">
 			<choose>
 				<when test="searchPart == 'u_id'">

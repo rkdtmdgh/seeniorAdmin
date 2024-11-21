@@ -7,7 +7,6 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 import com.see_nior.seeniorAdmin.dto.VideoDto;
 import com.see_nior.seeniorAdmin.enums.SqlResult;
 import com.see_nior.seeniorAdmin.util.PagingUtil;
@@ -29,7 +28,7 @@ public class VideoService {
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		List<AdminAccountDto> videoDtos = 
+		List<VideoDto> videoDtos = 
 				videoMapper.selectVideoList(PagingUtil.pagingParams(page_limit, sortValue, order, page));
 		pagingList.put("videoDtos", videoDtos);
 		
