@@ -296,7 +296,7 @@ function setCreateListSubMenu(ele) {
 
 // 서브 메뉴 화면 경계 위치 조정
 function adjustSubMenuPosition($subMenuContainer) {
-    const padding = 10; // 범위 기준 가장자리 최소 여유 공간
+    const padding = 20; // 범위 기준 가장자리 최소 여유 공간
     const $container = $subMenuContainer.closest('.content_inner'); // 범위 기준이 될 부모 요소
     const scrollTop = $container.scrollTop();
     const containerInnerWidth = $container.innerWidth() - padding;
