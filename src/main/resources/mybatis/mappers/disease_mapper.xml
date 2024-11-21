@@ -263,9 +263,15 @@
 		SELECT 
 			COUNT(*) 
 		FROM 
-			DISEASE 
+			DISEASE AS D 
+		JOIN 
+			DISEASE_CATEGORY AS DC 
+		ON 
+			D.D_CATEGORY_NO = DC.DC_NO 
 		WHERE 
-			D_IS_DELETED = 1
+			D.D_IS_DELETED = 1 
+		AND 
+			DC.DC_IS_DELETED = 1
 	
 	</select>
 	
@@ -304,11 +310,17 @@
 		SELECT 
 			COUNT(*) 
 		FROM 
-			DISEASE 
+			DISEASE AS D 
+		JOIN 
+			DISEASE_CATEGORY AS DC 
+		ON 
+			D.D_CATEGORY_NO = DC.DC_NO 
 		WHERE 
-			D_IS_DELETED = 1 
+			D.D_IS_DELETED = 1 
 		AND 
-			D_CATEGORY_NO = #{infoNo}
+			DC.DC_IS_DELETED = 1 
+		AND 
+			D.D_CATEGORY_NO = #{infoNo}
 	
 	</select>
 	
@@ -389,13 +401,19 @@
 	<select id="getSearchDiseaseListCnt"
 			parameterType="Map"
 			resultType="Integer">
-	
+
 		SELECT 
 			COUNT(*) 
 		FROM 
-			DISEASE 
+			DISEASE AS D 
+		JOIN 
+			DISEASE_CATEGORY AS DC 
+		ON 
+			D.D_CATEGORY_NO = DC.DC_NO 
 		WHERE 
-			D_IS_DELETED = 1 
+			D.D_IS_DELETED = 1 
+		AND 
+			DC.DC_IS_DELETED = 1 
 		AND 
 			${searchPart} LIKE CONCAT('%', #{searchString}, '%')
 	

@@ -378,25 +378,37 @@
 		SELECT 
 			COUNT(*) 
 		FROM 
-			BOARD_REPORT 
+			BOARD_REPORT AS BR 
+		JOIN 
+			BOARD_REPORT_CATEGORY AS BRC 
+		ON 
+			BR.BR_CATEGORY_NO = BRC.BRC_NO 
 		WHERE 
-			BR_IS_DELETED = 1	
+			BR.BR_IS_DELETED = 1 
+		AND 
+			BRC.BRC_IS_DELETED = 1
 	
 	</select>
 	
 	<!-- 처리되지 않은 신고의 개수 가져오기 (모든 신고) -->
 	<select id="getUnresultedReportCnt"
 			resultType="Integer">
-			
+		
 		SELECT 
 			COUNT(*) 
 		FROM 
-			BOARD_REPORT 
+			BOARD_REPORT AS BR 
+		JOIN 
+			BOARD_REPORT_CATEGORY AS BRC 
+		ON 
+			BR.BR_CATEGORY_NO = BRC.BRC_NO 
 		WHERE 
-			BR_IS_DELETED = 1 
+			BR.BR_IS_DELETED = 1 
 		AND 
-			BR_STATE = 1
-	
+			BRC.BRC_IS_DELETED = 1 
+		AND 
+			BR.BR_STATE = 1 
+
 	</select>
 	
 	<!-- 신고 한 개 가져오기 -->
@@ -469,7 +481,7 @@
 		AND 
 			BRC.BRC_IS_DELETED = 1 
 		AND 
-			BR.BR_CATEGORY_NO = #{brc_no} 
+			BR.BR_CATEGORY_NO = #{infoNo} 
 		ORDER BY
 			BR.${sortValue} ${order} 
 		LIMIT 
@@ -484,11 +496,17 @@
 		SELECT 
 			COUNT(*) 
 		FROM 
-			BOARD_REPORT 
+			BOARD_REPORT AS BR 
+		JOIN 
+			BOARD_REPORT_CATEGORY AS BRC 
+		ON 
+			BR.BR_CATEGORY_NO = BRC.BRC_NO 
 		WHERE 
-			BR_IS_DELETED = 1 
+			BR.BR_IS_DELETED = 1 
 		AND 
-			BR_CATEGORY_NO = #{brc_no} 
+			BRC.BRC_IS_DELETED = 1 
+		AND 
+			BR.BR_CATEGORY_NO = #{infoNo}
 	
 	</select>
 	
@@ -499,13 +517,19 @@
 		SELECT 
 			COUNT(*) 
 		FROM 
-			BOARD_REPORT 
+			BOARD_REPORT AS BR 
+		JOIN 
+			BOARD_REPORT_CATEGORY AS BRC 
+		ON 
+			BR.BR_CATEGORY_NO = BRC.BRC_NO 
 		WHERE 
-			BR_IS_DELETED = 1 
+			BR.BR_IS_DELETED = 1 
 		AND 
-			BR_STATE = 1 
+			BRC.BRC_IS_DELETED = 1 
 		AND 
-			BR_CATEGORY_NO = #{brc_no}
+			BR.BR_STATE = 1 
+		AND 
+			BR.BR_CATEGORY_NO = #{infoNo}
 	
 	</select>
 	
@@ -568,12 +592,18 @@
 			COUNT(*) 
 		FROM 
 			BOARD_REPORT AS BR 
+		JOIN 
+			BOARD_REPORT_CATEGORY AS BRC 
+		ON 
+			BR.BR_CATEGORY_NO = BRC.BRC_NO 
 		LEFT JOIN 
 			USER_ACCOUNT AS U 
 		ON 
 			BR.BR_REPORTER_NO = U.U_NO 
 		WHERE 
 			BR.BR_IS_DELETED = 1 
+		AND 
+			BRC.BRC_IS_DELETED = 1 
 		<if test="searchPart != null and searchString != null">
 			<choose>
 				<when test="searchPart == 'u_id'">
@@ -595,18 +625,24 @@
 	
 	<!-- 처리되지 않은 신고의 개수 가져오기 (검색한 신고) -->
 	<select id="getUnresultedReportCntBySearch"
-			resultType="Integer">
+			resultType="Integer">		
 			
 		SELECT 
 			COUNT(*) 
 		FROM 
 			BOARD_REPORT AS BR 
+		JOIN 
+			BOARD_REPORT_CATEGORY AS BRC 
+		ON 
+			BR.BR_CATEGORY_NO = BRC.BRC_NO 
 		LEFT JOIN 
 			USER_ACCOUNT AS U 
 		ON 
 			BR.BR_REPORTER_NO = U.U_NO 
 		WHERE 
 			BR.BR_IS_DELETED = 1 
+		AND 
+			BRC.BRC_IS_DELETED = 1 
 		AND 
 			BR.BR_STATE = 1 
 		<if test="searchPart != null and searchString != null">
