@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 import com.see_nior.seeniorAdmin.dto.QnaCategoryDto;
 import com.see_nior.seeniorAdmin.dto.QnaDto;
 import com.see_nior.seeniorAdmin.dto.QnaNoticeDto;
@@ -14,7 +13,7 @@ import com.see_nior.seeniorAdmin.dto.QnaNoticeDto;
 public interface QnaMapper {
 
 	// qna
-	public List<AdminAccountDto> selectQnaList(Map<String, Object> pagingParams);
+	public List<QnaDto> selectQnaList(Map<String, Object> pagingParams);
 
 	public int selectAllQnaListCnt();
 	
@@ -22,7 +21,7 @@ public interface QnaMapper {
 
 	public List<QnaDto> selectUnansweredQuestions();
 
-	public List<AdminAccountDto> selectSearchQnaList(Map<String, Object> pagingParams);
+	public List<QnaDto> selectSearchQnaList(Map<String, Object> pagingParams);
 
 	public int selectSearchQnaListCnt(Map<String, Object> searchParams);
 	
@@ -32,11 +31,11 @@ public interface QnaMapper {
 
 	public int updateQnaAnswer(Map<String, Object> params);
 
-	public List<AdminAccountDto> selectQnaNoticeList(Map<String, Object> pagingParams);
+	public List<QnaNoticeDto> selectQnaNoticeList(Map<String, Object> pagingParams);
 
 	public int selectAllQnaNoticeListCnt();
 	
-	public List<AdminAccountDto> selectQnaListForSelectBox(Map<String, Object> pagingParamsForSelectBox);
+	public List<QnaDto> selectQnaListForSelectBox(Map<String, Object> pagingParamsForSelectBox);
 
 	public int selectAllQnaListCntForSelectBox(int bqc_no);
 	
@@ -58,17 +57,16 @@ public interface QnaMapper {
 	
 	public List<QnaDto> selectQnaListForMain(int page_limit);
 	
-	
 	// category
 	public boolean isQnaCategory(String bqc_name);
 
 	public int insertNewQnaCategory(String bqc_name);
 
-	public List<AdminAccountDto> selectQnaCategoryList(Map<String, Object> pagingParams);
+	public List<QnaCategoryDto> selectQnaCategoryList(Map<String, Object> pagingParams);
 
 	public int selectAllQnaCategoryListCnt();
 
-	public List<AdminAccountDto> selectSearchQnaCategoryList(Map<String, Object> pagingParams);
+	public List<QnaCategoryDto> selectSearchQnaCategoryList(Map<String, Object> pagingParams);
 
 	public int selectSearchQnaCategoryListCnt(Map<String, Object> searchParams);
 
@@ -80,9 +78,8 @@ public interface QnaMapper {
 	
 	public List<QnaCategoryDto> selectQnaCategoryListForSelectBox();
 	
-	
 	// notice
-	public List<AdminAccountDto> selectSearchQnaNoticeList(Map<String, Object> searchPagingParams);
+	public List<QnaNoticeDto> selectSearchQnaNoticeList(Map<String, Object> searchPagingParams);
 
 	public int selectSearchQnaNoticeListCnt(Map<String, Object> searchParams);
 
@@ -96,24 +93,4 @@ public interface QnaMapper {
 
 	public List<QnaNoticeDto> selectQnaNoticeListForMain(int page_limit);
 
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-
-
-	
-	
 }

@@ -53,7 +53,7 @@ public class QnaService {
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		List<AdminAccountDto> qnaDtos = 
+		List<QnaDto> qnaDtos = 
 				qnaMapper.selectQnaList(PagingUtil.pagingParams(page_limit, sortValue, order, page));
 		pagingList.put("qnaDtos", qnaDtos);
 		
@@ -97,7 +97,7 @@ public class QnaService {
 		
 		Map<String, Object> pagingSearchList = new HashMap<>();
 
-		List<AdminAccountDto> qnaDtos = 
+		List<QnaDto> qnaDtos = 
 				qnaMapper.selectSearchQnaList(PagingUtil.searchPagingParams(page_limit, searchPart, searchString, sortValue, order, page));
 		pagingSearchList.put("qnaDtos", qnaDtos);
 		
@@ -141,7 +141,7 @@ public class QnaService {
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		List<AdminAccountDto> qnaDtos = 
+		List<QnaDto> qnaDtos = 
 				qnaMapper.selectQnaListForSelectBox(PagingUtil.pagingParamsForSelectBox(page_limit, sortValue, order, page, bqc_no));
 		pagingList.put("qnaDtos", qnaDtos);
 		
@@ -334,6 +334,7 @@ public class QnaService {
 		Map<String, Object> responseMap = new HashMap<>();
 		
 		List<QnaDto> qnaDtosForMain = qnaMapper.selectQnaListForMain(page_limit);
+		
 		responseMap.put("qnaDtos", qnaDtosForMain);
 		
 		return responseMap;
@@ -397,7 +398,7 @@ public class QnaService {
 		
 		Map<String, Object> pagingCategoryList = new HashMap<>();
 		
-		List<AdminAccountDto> qnaCategoryDtos = 
+		List<QnaCategoryDto> qnaCategoryDtos = 
 				qnaMapper.selectQnaCategoryList(PagingUtil.pagingParams(page_limit, sortValue, order, page));
 		pagingCategoryList.put("qnaCategoryDtos", qnaCategoryDtos);
 		
@@ -423,7 +424,7 @@ public class QnaService {
 		
 		Map<String, Object> pagingSearchCategoryList = new HashMap<>();
 		
-		List<AdminAccountDto> qnaCategoryDtos = 
+		List<QnaCategoryDto> qnaCategoryDtos = 
 				qnaMapper.selectSearchQnaCategoryList(PagingUtil.searchPagingParams(page_limit, searchPart, searchString, sortValue, order, page));
 		pagingSearchCategoryList.put("qnaCategoryDtos", qnaCategoryDtos);
 		
@@ -496,7 +497,7 @@ public class QnaService {
 		
 		Map<String, Object> pagingNoticeList = new HashMap<>();
 		
-		List<AdminAccountDto> qnaNoticeDtos = 
+		List<QnaNoticeDto> qnaNoticeDtos = 
 				qnaMapper.selectQnaNoticeList(PagingUtil.pagingParams(page_limit, sortValue, order, page));
 		pagingNoticeList.put("qnaNoticeDtos", qnaNoticeDtos);
 		
@@ -522,7 +523,7 @@ public class QnaService {
 		
 		Map<String, Object> pagingSearchQnaNoticeList = new HashMap<>();
 		
-		List<AdminAccountDto> qnaNoticeDtos = 
+		List<QnaNoticeDto> qnaNoticeDtos = 
 				qnaMapper.selectSearchQnaNoticeList(PagingUtil.searchPagingParams(page_limit, searchPart, searchString, sortValue, order, page));
 		pagingSearchQnaNoticeList.put("qnaNoticeDtos", qnaNoticeDtos);
 		
