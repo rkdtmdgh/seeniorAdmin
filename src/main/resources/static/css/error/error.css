@@ -35,7 +35,7 @@
 			margin-top: 1em;
 			padding: var(--optionPadding);
 			border-radius: var(--bdrs);
-			background-color: var(--lightGrayColor);
+			background-color: var(--tableTitleBgColor);
 		}
 	}
 }
