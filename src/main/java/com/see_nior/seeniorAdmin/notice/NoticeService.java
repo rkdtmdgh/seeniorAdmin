@@ -16,10 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 import com.see_nior.seeniorAdmin.dto.DeleteNoticeDto;
 import com.see_nior.seeniorAdmin.dto.NoticeDto;
-import com.see_nior.seeniorAdmin.dto.QnaNoticeDto;
 import com.see_nior.seeniorAdmin.enums.ImgUrlPath;
 import com.see_nior.seeniorAdmin.enums.SqlResult;
 import com.see_nior.seeniorAdmin.notice.mapper.NoticeMapper;
@@ -58,7 +56,7 @@ public class NoticeService {
 		
 		Map<String, Object> pagingNoticeList = new HashMap<>();
 		
-		List<AdminAccountDto> noticeDtos = 
+		List<NoticeDto> noticeDtos = 
 				noticeMapper.selectNoticeList(PagingUtil.pagingParams(page_limit, sortValue, order, page));
 		pagingNoticeList.put("noticeDtos", noticeDtos);
 		
@@ -84,7 +82,7 @@ public class NoticeService {
 		
 		Map<String, Object> pagingSearchNoticeList = new HashMap<>();
 		
-		List<AdminAccountDto> noticeDtos = 
+		List<NoticeDto> noticeDtos = 
 				noticeMapper.selectSearchNoticeList(PagingUtil.searchPagingParams(page_limit, searchPart, searchString, sortValue, order, page));
 		pagingSearchNoticeList.put("noticeDtos", noticeDtos);
 		
@@ -113,7 +111,8 @@ public class NoticeService {
 		
 		Map<String, Object> responseMap = new HashMap<>();
 		
-		List<QnaNoticeDto> noticeDtos = noticeMapper.selectNoticeListForMain(page_limit);
+		List<NoticeDto> noticeDtos = noticeMapper.selectNoticeListForMain(page_limit);
+		
 		responseMap.put("noticeDtos", noticeDtos);
 		
 		return responseMap;
@@ -384,52 +383,52 @@ public class NoticeService {
 	}
 	
 	// 전체 공지사항 삭제(is_deleted 값 update) 한달 후 img 저장 폴더 삭제 스케쥴러
-//	@Scheduled(cron = "0 1 0 * * ?")
-//	public void deleteImgFolder() {
-//		log.info("deleteImgFolder()");
-//		
-//		List<DeleteNoticeDto> deleteNoticeDots = 
-//				noticeMapper.selectDeleteNoticeInfo();
-//		
-//		if (deleteNoticeDots.size() != 0) {
-//			
-//			List<String> deleteFolderPaths = new ArrayList();
-//			
-//			for (int i = 0; i < deleteNoticeDots.size(); i++) {
-//				
-//				if (deleteNoticeDots.get(i).getDn_dir_name() != null) {
-//					
-//					String folderPath = ImgUrlPath.NOTICE_FILE_PATH.getValue() 
-//							+ deleteNoticeDots.get(i).getDn_dir_name();
-//					deleteFolderPaths.add(folderPath);
-//					
-//				}
-//				
-//			}
-//			
-//			if (deleteFolderPaths.size() >= 0) {
-//				
-//				ResponseEntity<String> deleteFolders =
-//						imageFileService.deleteFolders(deleteFolderPaths);
-//				
-//				if (deleteFolders.getBody().equals("1")) {
-//					
-//					for (int i = 0; i < deleteNoticeDots.size(); i++) {
-//						
-//						
-//						
-//					}
-//					
-//				}
-//				
-//			}
-//			
-//		} else {
-//			log.info("dleteNoticeDots is null");
-//			
-//		}
-//		
-//	}
+	@Scheduled(cron = "0 1 0 * * ?")
+	public void deleteImgFolder() {
+		log.info("deleteImgFolder()");
+		
+		List<DeleteNoticeDto> deleteNoticeDots = 
+				noticeMapper.selectDeleteNoticeInfo();
+		
+		if (deleteNoticeDots.size() != 0) {
+			
+			List<String> deleteFolderPaths = new ArrayList<String>();
+			
+			for (int i = 0; i < deleteNoticeDots.size(); i++) {
+				
+				if (deleteNoticeDots.get(i).getDn_dir_name() != null) {
+					
+					String folderPath = ImgUrlPath.NOTICE_FILE_PATH.getValue() 
+							+ deleteNoticeDots.get(i).getDn_dir_name();
+					deleteFolderPaths.add(folderPath);
+					
+				}
+				
+			}
+			
+			if (deleteFolderPaths.size() >= 0) {
+				
+				ResponseEntity<String> deleteFolders =
+						imageFileService.deleteFolders(deleteFolderPaths);
+				
+				if (deleteFolders.getBody().equals("1")) {
+					
+					for (int i = 0; i < deleteNoticeDots.size(); i++) {
+						
+						
+						
+					}
+					
+				}
+				
+			}
+			
+		} else {
+			log.info("deleteNoticeDots is null");
+			
+		}
+		
+	}
 	
 	
 	
