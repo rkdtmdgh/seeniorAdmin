@@ -268,8 +268,6 @@ function setCreateListSubMenu(ele) {
 		const objectMap = mapCreateListSubMenueObject(dataList); // 서브 메뉴 설정 객체 가져오기
 
 		if(objectMap && Object.keys(objectMap).length) {
-			logger.info('setCreateListSubMenu() create success:', ele);
-			
 			Object.keys(objectMap).forEach((key) => {
 				const {subMenuTitle, link} = objectMap[key]; // 객체에서 설정 데이터 추출
 				const $subMenu = $(`<a href="${link}" class="link_sub_menu">${subMenuTitle}</a>`); // 서브 메뉴 생성
@@ -282,22 +280,27 @@ function setCreateListSubMenu(ele) {
 		}
 		
 		$parent.append($subMenuContainer);  // 부모 요소에 추가
+		
+		// 서브 메뉴 위치 조정 후 노출
+		const position = adjustSubMenuPosition($subMenuContainer);
+		
+		logger.info('setCreateListSubMenu() create success:', ele);
+		logger.info('setCreateListSubMenu() position:', position);
+		
+		// css 초기화
+		$subMenuContainer.css({display: 'none', visibility: 'visible'});
 	}
 	
-	// 서브 메뉴 위치 조정 후 노출
-	const position = adjustSubMenuPosition($subMenuContainer);
-	logger.info('setCreateListSubMenu() position:', position);
-	
-	$subMenuContainer.css({display: 'none', visibility: 'visible'}).slideToggle(100).toggleClass('active');
+	$subMenuContainer.slideToggle(100).toggleClass('active');
 }
 
 // 서브 메뉴 화면 경계 위치 조정
 function adjustSubMenuPosition($subMenuContainer) {
-    const padding = 40; // 범위 기준 가장자리 최소 여유 공간
+    const padding = 20; // 범위 기준 가장자리 최소 여유 공간
     const $container = $subMenuContainer.closest('.content_inner'); // 범위 기준이 될 부모 요소
-    const containerInnerWidth = $container.innerWidth() - padding;
-    const containerInnerHeight = $container.innerHeight() - padding;
     const scrollTop = $container.scrollTop();
+    const containerInnerWidth = $container.innerWidth() - padding;
+    const containerInnerHeight = $container[0].scrollHeight - padding;
     
     const subMenuOffset = $subMenuContainer.offset();
     const subMenuWidth = $subMenuContainer.outerWidth(true);
@@ -305,7 +308,7 @@ function adjustSubMenuPosition($subMenuContainer) {
     
     // .content_inner 기준 서브 메뉴의 가로/세로 위치
     const adjustedLeft = subMenuOffset.left - $container.offset().left;
-    const adjustedTop = subMenuOffset.top - $container.offset().top - scrollTop;
+    const adjustedTop = subMenuOffset.top - $container.offset().top + scrollTop;
     
     // position 위치 초기화
     let positionX = 'left';
@@ -321,13 +324,11 @@ function adjustSubMenuPosition($subMenuContainer) {
 	    positionY = 'bottom';
 	}
 	
-	// position css 초기화 후 재입력
-	$subMenuContainer.css({top: '', bottom: '', left: '', right: ''});
+	// position css 적용
 	$subMenuContainer.css({[positionY]: 0, [positionX]: '50%'});
-		
-	const position = {}; // 위치 값 저장할 객체
-	position.positionX = positionX;
-	position.positionY = positionY;
+	
+	// 위치 값 저장
+	const position = {positionX, positionY};
 	return position;
 }
 
