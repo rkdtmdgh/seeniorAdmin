@@ -97,7 +97,7 @@
 		<result column="dbp_writer_no" property="dbp_writer_no" />
 		<result column="dbp_dir_name" property="dbp_dir_name" />
 		<result column="dbp_is_valid" property="dbp_is_valid" />
-		<result column="dbp_is_deleted" property="dbp_is_deleted" />
+		<result column="dbp_img_deleted" property="dbp_img_deleted" />
 		<result column="dbp_is_recovered" property="dbp_is_recovered" />
 		<result column="dbp_request_time" property="dbp_request_time" />
 		<collection property="deleteBoardPostsDto" resultMap="DeleteBoardPostsDto" />
@@ -209,13 +209,27 @@
     <select id="getBoardCategoryForModify" parameterType="int" resultType="com.see_nior.seeniorAdmin.dto.BoardCategoryDto">
     
     	SELECT 
-    		* 
+    		BC.*,
+		IFNULL(BP_COUNTS.BC_ITEM_CNT, 0) AS BC_ITEM_CNT
     	FROM 
-    		BOARD_CATEGORY 
+    		BOARD_CATEGORY BC
+		LEFT JOIN (
+			SELECT 
+				BP.BP_CATEGORY_NO,
+				COUNT(*) AS BC_ITEM_CNT
+			FROM 
+				BOARD_POSTS BP
+			WHERE 
+				BP.BP_IS_DELETED = 1
+			AND
+				BP.BP_REPORT_STATE = 1 
+			GROUP BY 
+				BP.BP_CATEGORY_NO
+			) AS BP_COUNTS ON BC.BC_NO = BP_COUNTS.BP_CATEGORY_NO
     	WHERE 
-    		BC_NO = #{bc_no} 
+    		BC.BC_NO = #{bc_no} 
     	AND 
-    		BC_IS_DELETED = 1
+    		BC.BC_IS_DELETED = 1
     
     </select>
     
@@ -559,7 +573,7 @@
 		WHERE
 			DBP_IS_VALID = 0
 		AND
-			DBP_IS_DELETED = 1	
+			DBP_IMG_DELETED = 1	
 		AND
 			DBP_IS_RECOVERED = 1
 	
@@ -570,7 +584,7 @@
 		UPDATE 
 			DELETE_BOARD_POSTS
     	SET 
-    		DBP_IS_DELETED = 0
+    		DBP_IMG_DELETED = 0
     	WHERE 
     		DBP_NO = #{dbp_no};
 		

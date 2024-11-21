@@ -29,11 +29,12 @@
 	
 	                    <form name="report_result_form">
 		                    <input type="hidden" name="br_no" th:value="${reportDto.br_no}">
+		                    <input type="hidden" name="br_post_no" th:value="${reportDto.br_post_no}">
 		                    
 		                    <th:block th:if="${reportDto.reportResultDto}">
 			                    <input type="hidden" name=brr_no th:value="${reportDto.reportResultDto.brr_no}">
-			                    <input type="hidden" name="a_id" th:value="${reportDto.reportResultDto.adminAccountDto.a_id}">
 			                    <input type="hidden" name="current_brr_result" th:value="${reportDto.reportResultDto.brr_result}">
+			                    <input type="hidden" name="current_bp_report_state" th:value="${reportDto.boardPostsDto.bp_report_state}">
 		                    </th:block>
 		                    
 	                        <div class="table_wrap">
@@ -88,18 +89,20 @@
 		                                <tr>
 		                                	<th><p class="table_title">신고 게시물</p></th>
 		                                    <td class="va_m">
-		                                    	<div class="cont_info">		                                    		
+		                                    	<div class="cont_info">
 			                                    	<div class="table_info">
 		                                            	<label class="radio">
-		                                            		<input type="radio" name="u_gender" value="M"> 정상
+		                                            		<input type="radio" name="bp_report_state" value="1"
+		                                            			th:checked="${reportDto.boardPostsDto.bp_report_state == false}"> 정상
 		                                            	</label>
 		                                            	<label class="radio">
-		                                            		<input type="radio" name="u_gender" value="F"> 숨김
+		                                            		<input type="radio" name="bp_report_state" value="0"
+		                                            			th:checked="${reportDto.boardPostsDto.bp_report_state == true}"> 숨김
 		                                            	</label>
 		                                            </div>
 
 		                                    		<a class="btns small white" target="_blank"
-		                                    			th:href="|/board/info/modify_form?infoNo=${reportDto.br_no}&bp_no=${reportDto.br_no}|">게시물 보기</a>
+		                                    			th:href="|/board/info/modify_form?infoNo=${reportDto.boardPostsDto.bp_category_no}&bp_no=${reportDto.br_post_no}|">게시물 보기</a>
 	                                            </div>
 		                                    </td>
 		                                    
@@ -180,17 +183,17 @@
 		                 		 		{
 		                 		 			'br_no': [[${reportDto.br_no}]],
 		                 		 		}
-		                				)" class="btns delete">답변 삭제</div>
+		                				)" class="btns delete">처리 내용 삭제</div>
 	                 		 
 	                            <div th:if="${reportDto.reportResultDto == null}"
-	                            	onclick="postReportResultCreate('report_result_form')" class="btns">답변 등록</div>
+	                            	onclick="postReportResultCreate('report_result_form')" class="btns">등록</div>
 	                           	
 	                           	<div th:if="${
 	                            		reportDto.reportResultDto != null and
 	                            		(#authorization.expression('hasAnyRole(''SUPER_ADMIN'')') or
 	                            		reportDto.reportResultDto.adminAccountDto.a_id == #authentication.name)
 	                            	}"
-	                            	onclick="putReportResultrModify('report_result_form')" class="btns">답변 수정</div>
+	                            	onclick="putReportResultrModify('report_result_form')" class="btns">수정</div>
 	                        </div>
                         </div>
 	                </section>

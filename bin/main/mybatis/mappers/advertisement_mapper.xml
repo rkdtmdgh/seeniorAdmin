@@ -387,9 +387,15 @@
 		SELECT 
 			COUNT(*) 
 		FROM 
-			ADVERTISEMENT 
+			ADVERTISEMENT AS AD 
+		JOIN 
+			ADVERTISEMENT_CATEGORY AS AC 
+		ON 
+			AD.AD_CATEGORY_NO = AC.AC_NO 
 		WHERE 
-			AD_IS_DELETED = 1 
+			AD.AD_IS_DELETED = 1 
+		AND 
+			AC.AC_IS_DELETED = 1 
 	
 	</select>
 	
@@ -460,11 +466,17 @@
 		SELECT 
 			COUNT(*) 
 		FROM 
-			ADVERTISEMENT 
+			ADVERTISEMENT AS AD 
+		JOIN 
+			ADVERTISEMENT_CATEGORY AS AC 
+		ON 
+			AD.AD_CATEGORY_NO = AC.AC_NO 
 		WHERE 
-			AD_IS_DELETED = 1 
+			AD.AD_IS_DELETED = 1 
 		AND 
-			AD_CATEGORY_NO = #{infoNo} 
+			AC.AC_IS_DELETED = 1 
+		AND 
+			AD.AD_CATEGORY_NO = #{infoNo}
 	
 	</select>
 	
@@ -536,6 +548,19 @@
 	
 	</update>
 	
+	<!-- 만료된 지 30일이 지난 광고 리스트의 No들 가져오기 -->
+	<select id="getAdvertisementsEnded30Days"
+			resultType="Integer">
+			
+		SELECT 
+			AD_NO 
+		FROM 
+			ADVERTISEMENT 
+		WHERE 
+			DATE_SUB(CURDATE(), INTERVAL 30 DAY) > AD_END_DATE
+	
+	</select>
+	
 	<!-- 페이지에 따른 광고 가져오기(검색한 광고) -->
 	<select id="getSearchAdvertisement"
 			parameterType="Map"
@@ -571,9 +596,15 @@
 		SELECT 
 			COUNT(*) 
 		FROM 
-			ADVERTISEMENT 
+			ADVERTISEMENT AS AD 
+		JOIN 
+			ADVERTISEMENT_CATEGORY AS AC 
+		ON 
+			AD.AD_CATEGORY_NO = AC.AC_NO 
 		WHERE 
-			AD_IS_DELETED = 1 
+			AD.AD_IS_DELETED = 1 
+		AND 
+			AC.AC_IS_DELETED = 1 
 		AND 
 			${searchPart} LIKE CONCAT ('%', #{searchString}, '%')
 	

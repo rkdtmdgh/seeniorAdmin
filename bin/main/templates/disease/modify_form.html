@@ -6,6 +6,8 @@
 <head>
     <th:block th:insert="~{fragments/head.html :: head('질환 / 질병 정보 수정')}"></th:block>
     <script th:inline="javascript">
+    	logger.info('dto check diseaseDto --->', /*[[${diseaseDto}]]*/);
+    
 		$(async function() {
          	// disease category 가져오기
             await getCategoryList('d_category_no', 'modify', /*[[${diseaseDto.d_category_no}]]*/); // element id, form 종류, selectedValue

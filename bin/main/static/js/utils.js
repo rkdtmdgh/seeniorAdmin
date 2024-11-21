@@ -141,99 +141,6 @@ function setContentSubInfo(txt) {
 	}
 }
 
-// 리스트 서브 메뉴 이벤트 설정
-function setCreateListSubMenu(ele) {
-	let $subMenuContainer = $(ele).find('.link_sub_menu_container'); // 서브 메뉴 요소
-	
-	if(!$subMenuContainer.length) { // 서브 메뉴 요소가 없을 경우
-		logger.info('setCreateListSubMenu() create:', ele);
-		const dataList = $(ele).data(); // data 속성 값을 담은 객체
-		$subMenuContainer = $('<div class="link_sub_menu_container sc">'); // 서브 메뉴가 담길 요소 생성
-
-		const objectMap = mapCreateListSubMenueObject(dataList); // 서브 메뉴 설정 객체 가져오기
-		
-		Object.keys(objectMap).forEach((key) => {
-			const {subMenuTitle, link} = objectMap[key]; // 객체에서 설정 데이터 추출
-			const $subMenu = $(`<a href="${link}" class="link_sub_menu">${subMenuTitle}</a>`); // 서브 메뉴 생성
-			$subMenuContainer.append($subMenu); // 서브 메뉴 추가
-		});
-		
-		$(ele).append($subMenuContainer);  // 부모 요소에 추가
-	}
-	
-	$subMenuContainer.slideToggle(100).toggleClass('active'); // 서브 메뉴 노출
-}
-
-// 리스트 서브 메뉴 이벤트 객체 설정
-function mapCreateListSubMenueObject(dataList) {
-	const objectMap = { // 해당하는 카테고리 서브메뉴 객체 데이터 (순서)
-		'disease_category': [ 
-			{
-				subMenuTitle: '질환/질병 분류 보기',
-				link: `/disease/cate_info/modify_category_form?dc_no=${dataList.info_no}`,
-			},
-			{
-				subMenuTitle: '질환/질병 정보 보기',
-				link: `/disease/info/modify_form?d_no=${dataList.data_no}`,
-			},
-		],
-		'disease': [ 
-			{
-				subMenuTitle: '질환/질병 분류 보기',
-				link: `/disease/cate_info/modify_category_form?dc_no=${dataList.info_no}`,
-			},
-			{
-				subMenuTitle: '질환/질병 리스트 보기',
-				link: `/disease/info/disease_list_form?sortType=2&infoNo=${dataList.info_no}`,
-			},
-		],
-		'notice': [ 
-			{
-				subMenuTitle: '공지 사항 보기',
-				link: `/notice/info/modify_form?n_no=${dataList.data_no}`,
-			},
-			{
-				subMenuTitle: '계정 정보 보기',
-				link: `/account/list/admin_modify_form?a_no=${dataList.account_no}`,
-			},
-		],
-		'board_qna_notice': [ 
-			{
-				subMenuTitle: '공지 사항 보기',
-				link: `/qna/noti_info/modify_notice_form?bqn_no=${dataList.data_no}`,
-			},
-			{
-				subMenuTitle: '계정 정보 보기',
-				link: `/account/list/admin_modify_form?a_no=${dataList.account_no}`,
-			},
-		],
-		'board_notice': [ 
-			{
-				subMenuTitle: '공지 사항 보기',
-				link: `/board/noti_info/modify_board_notice_form?infoNo=${dataList.info_no}&bn_no=${dataList.data_no}`,
-			},
-			{
-				subMenuTitle: '계정 정보 보기',
-				link: `/account/list/admin_modify_form?a_no=${dataList.account_no}`,
-			},
-		],
-		'board_qna_category': [ 
-			{
-				subMenuTitle: '질문 분류 보기',
-				link: `/qna/cate_info/modify_category_form?bqc_no=${dataList.info_no}`,
-			},
-			{
-				subMenuTitle: '질문 리스트 보기',
-				link: `/qna/info/qna_list_form?sortType=2&infoNo=${dataList.info_no}&sortValue=${dataList.sort_value}&order=${dataList.order}`,
-			},
-		],
-	};
-	
-	if(!objectMap[dataList.category]) logger.error(`Invalid dataList = ${dataList}`); // 해당하는 객체가 없을 경우
-	
-	return objectMap[dataList.category];
-}
-
 // 가이드라인 요소 텍스트 변경
 function setSelectGuidelineInfo(selectElement, formName) {
 	let $selectOption;
@@ -814,7 +721,7 @@ $(document).on('click', function(event) {
 	}
 	
 	// 테이블 리스트 서브 메뉴 노출 닫기
-	const $openListSubMenuEle = $('.link_sub_menu_container'); // 열려 있는 테이블 리스트 서브 메뉴 요소
+	const $openListSubMenuEle = $('.link_sub_menu_container.active'); // 열려 있는 테이블 리스트 서브 메뉴 요소
 	const isListSubMenuTriggerClick = event.target.closest('.table_list_sub_menu'); // 클릭한 요소가 리스트 서브 메뉴인지 확인
 	if($openListSubMenuEle.length && !isListSubMenuTriggerClick) { // 클릭한 요소가 리스트 서브 메뉴가 아닐 경우
 		$openListSubMenuEle.slideUp(50).removeClass('active'); // 열려 리스트 서브 메뉴 닫기

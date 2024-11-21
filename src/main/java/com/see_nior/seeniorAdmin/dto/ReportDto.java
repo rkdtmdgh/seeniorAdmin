@@ -16,10 +16,12 @@ public class ReportDto {
 	private String br_reason;
 	private int br_reporter_no;
 	private int br_result_no;
-	private int br_state;
-	private int br_is_deleted;
+	private boolean br_state;
+	private boolean br_is_deleted;
 	private String br_reg_date;
 	private String br_mod_date;	
+	
+	private BoardPostsDto boardPostsDto;
 	
 	private ReportCategoryDto reportCategoryDto;
 	

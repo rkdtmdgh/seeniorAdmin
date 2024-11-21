@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	
+<head>
+    <th:block th:insert="~{fragments/head.html :: head('회원 정보')}"></th:block>
+</head>
+
+<body>
+	<main class="contents_wrap">
+	    <header th:replace="~{fragments/header.html :: header}"></header>
+	
+	    <article class="contents_container">
+	        <nav th:replace="~{fragments/nav.html :: nav}"></nav>
+	
+	        <div class="content">
+	            <div class="content_inner sc">
+	                <section class="content_info_wrap">
+	                    <div class="content_top">
+	                        <div class="content_top_info">
+	                            <h2 class="title">회원 관리</h2>
+	                        </div>
+	                        <p class="sub_title">회원 정보</p>
+	                    </div>
+	                    
+	                    <div class="profile_thumbnail_wrap">
+	           				<div class="profile_thumbnail_container">
+	           					<img alt="profile thumbnail" class="profile_thumbnail_img" th:src="${
+	           						userAccountDto.u_profile_img == null ? 
+	           							'/image/images/basic_profile_img.jpg' 
+           							:
+           								'userAccountDto.u_profile_img'
+	           					}">
+	           				</div>
+	                    </div>
+	
+	                    <form name="user_account_modify_form">
+		                    <input type="hidden" name="u_no" th:value="${userAccountDto.u_no}">
+		                    <input type="hidden" name="u_is_blocked" th:value="${userAccountDto.u_is_blocked}">
+		                    
+	                        <div class="table_wrap">
+	                            <table class="content_edit_table">
+	                                <colgroup>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                    <col class="col_row_title">
+	                                    <col>
+	                                </colgroup>
+	
+	                                <tbody>
+                                		<tr>
+                                			<th><p class="table_title">아아디</p></th>
+                                			<td>
+                                				<div class="cont_info disabled">
+		                                			<input type="text" name="u_id" class="table_info" disabled
+		                                				th:value="${userAccountDto.u_id}">
+		                                		
+		                                			<div th:if="${userAccountDto.u_is_blocked == true}" class="btns small white"
+		                                				onclick="openModal('user_account_modify_form', 'putUserAccountBlockModify', '#u_blocked_reason');">정상</div>
+	                                				<div th:if="${userAccountDto.u_is_blocked == false}" class="btns small delete"
+		                                				onclick="putUserAccountBlockModify('user_account_modify_form', true);">정지</div>
+		                                        </div>
+                                			</td>
+                                			
+                                			<th><p class="table_title">가입일</p></th>
+	                                		<td class="disabled">
+		                                        <input type="text" class="table_info" disabled
+		                                            th:value="${userAccountDto.u_reg_date}">
+		                                    </td>
+                                		</tr>
+                                		
+                                		<tr th:if="${userAccountDto.u_is_blocked == false}">
+											<th><p class="table_title">정지 사유</p></th>
+											<td colspan="3">
+												<label class="table_info">
+	                               					<textarea rows="1" name="u_blocked_reason" id="u_blocked_reason" class="table_textarea small" placeholder='정지 사유'
+			                                    		oninput="setTextareaAutoHeight(this)" 
+			                                    		th:text="${userAccountDto.u_blocked_reason}"></textarea>
+												</label>
+											</td>                                		
+                                		</tr>
+                                		
+                                		<tr>
+                                			<th><p class="table_title">이름</p></th>
+                                			<td>
+                                				<label class="table_info">
+			                                        <input type="text" name="u_name" id="u_name" placeholder="이름"
+			                                        	onblur="validateEmpty(this, '이름')"
+			                                            th:value="${userAccountDto.u_name}">
+	                        					</label>
+		                                    </td>
+                                			
+                                			<th><p class="table_title">닉네임</p></th>
+                                			<td>
+                                				<label class="table_info">
+	                                				<input type="text" name="u_nickname" id="u_nickname" placeholder="닉네임"
+			                                        	onblur="validateEmpty(this, '닉네임')"
+			                                            th:value="${userAccountDto.u_nickname}">
+	                        					</label>
+                                            </td>
+                               			</tr>
+		                                
+		                                <tr>
+		                                    <th><p class="table_title">생년월일</p></th>
+		                                	<td>
+		                                		<label class="table_info">
+		                                            <input type="date" name="u_birth" id="u_birth" max="9999-12-31" min="1900-01-01"
+		                                            	onblur="replaceDate(this)"
+		                                            	th:value="${userAccountDto.u_birth}">
+	                        					</label>
+	                                        </td>
+	                                        
+	                                        <th><p class="table_title">연락처</p></th>
+		                                    <td>
+		                                    	<label class="table_info">
+			                                        <input type="text" name="u_phone" id="u_phone" placeholder='"-" 없이 입력하세요'
+			                                        	onkeydown="replacePhone(this)"
+														onkeyup="validatePhone(this)" 
+														onblur="validatePhone(this)"
+			                                            th:value="${userAccountDto.u_phone}">
+	                        					</label>
+		                                    </td>
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">성별</p></th>
+		                                    <td>
+		                                        <div class="table_info">
+	                                            	<label class="radio">
+	                                            		<input type="radio" name="u_gender" value="M"
+	                                            			th:checked="${userAccountDto.u_gender == 'M'}"> 남
+	                                            	</label>
+	                                            	<label class="radio">
+	                                            		<input type="radio" name="u_gender" value="F"
+	                                            			th:checked="${userAccountDto.u_gender == 'F'}"> 여
+	                                            	</label>
+	                                            </div>
+		                                    </td>
+		                                    
+		                                    <th><p class="table_title">우편번호</p></th>
+		                                    <td>
+		                                    	<div class="cont_info table_info">
+		                                			<input type="text" name="u_zip_code" id="zip_code" placeholder="우편번호 5자리"
+		                                				maxlength="5"
+		                                				onkeyup="replaceNumber(this)"
+		                                				onblur="validateEmpty(this, '우편번호')"
+		                                				th:value="${userAccountDto.u_zip_code}">
+		                                		
+		                                			<div onclick="searchPostcode('user_account_modify_form');" class="btns small">주소 검색</div>
+		                                        </div>
+		                                    </td>	
+		                                </tr>
+		                                
+		                                <tr>
+		                                	<th><p class="table_title">회원 유형</p></th>
+		                                    <td>
+		                                    	<div class="table_info">
+	                                            	<label class="radio">
+	                                            		<input type="radio" name="u_is_personal" value="true"
+	                                            			onclick="setInputStateFromRadio(false, '#u_company')"
+	                                            			th:checked="${userAccountDto.u_is_personal == true}"> 개인
+	                                            	</label>
+	                                            	<label class="radio">
+	                                            		<input type="radio" name="u_is_personal" value="false"
+	                                            			th:onclick="setInputStateFromRadio(true, '#u_company', [[${userAccountDto.u_company}]])"
+	                                            			th:checked="${userAccountDto.u_is_personal == false}"> 기업
+	                                            	</label>
+	                                            </div>
+		                                    </td>
+		                                    
+		                                    <th><p class="table_title">주소</p></th>
+		                                    <td>
+		                                    	<label class="table_info">
+		                                    		<input type="text" name="u_address" id="address" placeholder="주소"
+		                                				onblur="validateEmpty(this, '주소')"
+		                                				th:value="${userAccountDto.u_address}">
+	                        					</label>
+		                                    </td>	
+		                                </tr>
+		                                
+		                                <tr>
+		                                    <th><p class="table_title">소속기관</p></th>
+		                                    <td>
+		                                    	<label class="table_info">
+			                                    	<input type="text" name="u_company" id="u_company"
+			                                    		data-placeholder-readonly="기업 선택 시 입력 가능"
+			                                    		data-placeholder-enabled="소속 기관"
+			                                    		th:placeholder="${userAccountDto.u_is_personal == true ? '기업 선택 시 입력 가능' : '소속 기관'}"
+			                                            th:readonly="${userAccountDto.u_is_personal}"
+			                                            th:attr="onblur=${userAccountDto.u_is_personal == false ? 'validateEmpty(this, ''소속기관'')' : null}"
+			                                            th:value="${userAccountDto.u_company}">
+	                        					</label>
+		                                    </td>
+		                                    
+		                                    <th><p class="table_title">상세주소</p></th>
+		                                    <td>
+		                                    	<label class="table_info">
+			                                    	<input type="text" name="u_detailed_address" id="detailed_address" placeholder="상세주소"
+		                                				onblur="validateEmpty(this, '상세주소')"
+		                                				th:value="${userAccountDto.u_detailed_address}">
+	                        					</label>
+		                                    </td>	
+		                                </tr>
+	                                </tbody>
+	                            </table>
+	                        </div>
+	                    </form>
+
+                        <div class="btn_list_wrap">
+                       		<div th:onclick="delSingleData(
+                 			 		[[${userAccountDto.u_name}]], 
+                 			 		'u_no', 
+                 			 		[[${userAccountDto.u_no}]]
+                 			 	)" class="btns delete">삭제</div>	
+                    		                         		 
+                            <div class="btn_list">
+                                <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
+                            	<div onclick="putUserAccountModify('user_account_modify_form')" class="btns">수정</div>
+                        	</div>
+                   		</div>
+	                </section>
+	            </div>
+	        </div>
+	    </article>
+	</main>
+</body>
+</html>

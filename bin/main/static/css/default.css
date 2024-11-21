@@ -609,22 +609,25 @@
 }
 
 .table_list_sub_menu {
+	display: flex;
+	align-items: center;
+	gap: var(--ssize1);
 	overflow: visible;
 	cursor: pointer;
 	position: relative;
 	
 	.link_sub_menu_container {
-		display: none;
+		display: block;
 		width: max-content;
+		height: max-content;
    		max-width: 200px;
+   		margin: var(--ssize2) var(--baseGap);
    		background-color: var(--whiteColor);
    		border-radius: var(--bdrs);
    		border: 1px solid Var(--lightGayColor);
+   		visibility: hidden;
    		box-shadow: var(--bxsh);
 	   	position: absolute;
-	   	top: var(--ssize2);
-	   	left: 50%;
-	   	transform: translateX(30%);
 	   	z-index: 1;
 	   	
    		.link_sub_menu {
@@ -646,6 +649,7 @@
 }
 
 .flex_area {
+	padding: 0 var(--sidePadding);
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -680,6 +684,9 @@
 	   	border-radius: var(--bdrs);
 	   	background-color: var(--greenColor);
 	   	color: var(--whiteColor);
+	   	overflow: hidden;
+	   	text-overflow: ellipsis;
+	   	white-space: nowrap;
    	
 	   	&.icon {
 	   		padding: var(--ssize2);
@@ -712,6 +719,16 @@
 	   	&.on {
 	   		background-color: var(--primaryColor);
 	   	}
+	}
+}
+
+.content_table {
+	tbody tr {
+		transition: background-color var(--transition);
+		
+		&:hover {
+			background-color: var(--lightBlueColor);
+		}
 	}
 }
 

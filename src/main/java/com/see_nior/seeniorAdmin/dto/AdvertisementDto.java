@@ -18,8 +18,8 @@ public class AdvertisementDto {
 	private String ad_start_date;
 	private String ad_end_date;
 	private String ad_client;
-	private int ad_state;
-	private int ad_is_deleted;
+	private boolean ad_state;
+	private boolean ad_is_deleted;
 	private String ad_reg_date;
 	private String ad_mod_date;
 	

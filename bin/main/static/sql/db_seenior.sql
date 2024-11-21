@@ -298,7 +298,7 @@ CREATE TABLE BOARD_POSTS (
 	BP_BODY				TEXT NOT NULL COMMENT "게시물 본문", 												-- 게시물 본문
 	BP_WRITER_NO		INT NOT NULL COMMENT "게시물 작성자 NO(USER_ACCOUNT TABLE PK)", 					-- 게시물 작성자 NO(USER_ACCOUNT TABLE PK)
     BP_ACCOUNT			VARCHAR(20) NOT NULL COMMENT "게시물 작성자 유형(admin or user)",					-- 게시물 작성자 유형(admin or user)
-    BP_REPORT_STATE		TINYINT DEFAULT 1 COMMENT "게시물 신고 진행 상태(기본값 = 1, 블록처리 = 0)",				-- 게시물 신고 진행 상태(기본값 = 1, 처리중 = 2, 처리 완료 = 0)
+    BP_REPORT_STATE		TINYINT DEFAULT 1 COMMENT "게시물 신고 진행 상태(기본값 = 1, 블록처리 = 0)",				-- 게시물 신고 진행 상태(기본값 = 1, 블록처리 = 0)
 	BP_VIEW_CNT			INT DEFAULT 0 COMMENT "게시물 조회수", 												-- 게시물 조회수 
 	BP_DIR_NAME			VARCHAR(20) COMMENT "이미지 저장된 폴더 이름"	,										-- 게시물 이미지 저장된 폴더명
     BP_REPLY_CNT		INT DEFAULT 0 COMMENT "게시물 댓글 갯수",											-- 게시물 댓글 갯수(BOARD_REPLY COUNT(*) WHERE BR_POST_NO)
@@ -349,7 +349,7 @@ CREATE TABLE DELETE_BOARD_POSTS (
 	DBP_WRITER_NO				INT NOT NULL COMMENT "게시물 작성자 NO(USER_ACCOUNT TABLE PK)", 					-- 게시물 작성자 NO(USER_ACCOUNT TABLE PK)
 	DBP_DIR_NAME				VARCHAR(20) COMMENT "이미지 저장된 폴더 이름"	,										-- 게시물 이미지 저장된 폴더명
     DBP_IS_VALID				TINYINT DEFAULT 1 COMMENT "게시물 삭제요청 후 30일 경과 여부(기본값 = 1, 경과 시 = 0)",	-- 게시물 삭제요청 후 30일 경과 여부(기본값 = 1, 경과 시 = 0)
-    DBP_IS_DELETED				TINYINT DEFAULT 1 COMMENT "게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)",			-- 게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)
+    DBP_IMG_DELETED				TINYINT DEFAULT 1 COMMENT "게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)",			-- 게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)
 	DBP_IS_RECOVERED			TINYINT DEFAULT 1 COMMENT "게시물 복구 여부(기본값 = 1, 복구 시 = 0)",					-- 게시물 복구 여부(기본값 = 1, 복구 시 = 0)
     DBP_REQUEST_TIME			DATETIME DEFAULT NOW() COMMENT "게시물 삭제 요청 시간",								-- 게시물 수정일
     PRIMARY KEY(DBP_NO)
@@ -620,7 +620,7 @@ DROP TABLE BOARD_REPORT;
 
 INSERT INTO BOARD_REPORT(BR_CATEGORY_NO, BR_POST_NO, BR_TITLE, BR_REASON, BR_REPORTER_NO) VALUES(1, 1, "신고 제목1", "신고 내용1", 1);
 INSERT INTO BOARD_REPORT(BR_CATEGORY_NO, BR_POST_NO, BR_TITLE, BR_REASON, BR_REPORTER_NO) VALUES(1, 2, "신고 제목2", "신고 내용2", 2);
-INSERT INTO BOARD_REPORT(BR_CATEGORY_NO, BR_POST_NO, BR_TITLE, BR_REASON, BR_REPORTER_NO) VALUES(1, 3, "신고 제목1", "신고 내용3", 3);
+INSERT INTO BOARD_REPORT(BR_CATEGORY_NO, BR_POST_NO, BR_TITLE, BR_REASON, BR_REPORTER_NO) VALUES(1, 3, "신고 제목3", "신고 내용3", 3);
 INSERT INTO BOARD_REPORT(BR_CATEGORY_NO, BR_POST_NO, BR_TITLE, BR_REASON, BR_REPORTER_NO) VALUES(2, 1, "신고 제목4", "신고 내용4", 1);
 INSERT INTO BOARD_REPORT(BR_CATEGORY_NO, BR_POST_NO, BR_TITLE, BR_REASON, BR_REPORTER_NO) VALUES(2, 2, "신고 제목5", "신고 내용5", 2);
 INSERT INTO BOARD_REPORT(BR_CATEGORY_NO, BR_POST_NO, BR_TITLE, BR_REASON, BR_REPORTER_NO) VALUES(2, 3, "신고 제목6", "신고 내용6", 3);
@@ -1514,7 +1514,7 @@ SET GLOBAL event_scheduler = ON;
 
 -- AD_END_DATE가 현재 날짜보다 이전인 컬럼의 AD_STATE를 0으로 설정하는 프로시저
 DELIMITER //
-CREATE PROCEDURE update_ad_state()
+CREATE PROCEDURE UPDATE_AD_STATE()
 BEGIN
     UPDATE ADVERTISEMENT
     SET AD_STATE = 0
@@ -1524,17 +1524,18 @@ DELIMITER ;
 
 -- 이미 생성되어 있는 프로시저 확인 및 드롭
 SHOW PROCEDURE STATUS WHERE Db = 'DB_SEENIOR';
-DROP PROCEDURE update_ad_state;
+DROP PROCEDURE UPDATE_AD_STATE;
 
 -- update_ad_state() 프로시저를 매일 0시 00분 정각에 실행하도록 하는 이벤트 스케쥴러
-CREATE EVENT daily_ad_state_update
+CREATE EVENT DAILY_AD_STATE_UPDATE
 ON SCHEDULE EVERY 1 DAY STARTS '2024-11-07 00:01:00'
 DO
-CALL update_ad_state();
+CALL UPDATE_AD_STATE();
 
 -- 이미 생성되어 있는 이벤트 스케쥴러 확인 및 드롭
 SELECT * FROM information_schema.events;
-DROP EVENT daily_ad_state_update;
+SHOW EVENTS;
+DROP EVENT DAILY_AD_STATE_UPDATE;
 
 -- 환자 테이블 -------------------------------------------------------------------------------------------------------------------
 CREATE TABLE CARE_LIST (

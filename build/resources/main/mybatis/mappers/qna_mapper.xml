@@ -1,0 +1,880 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.see_nior.seeniorAdmin.qna.mapper.QnaMapper">
+
+	<resultMap type="AdminAccountDto" id="AdminAccountDto">
+		<id column="a_no" property="a_no" />
+		<result column="a_id" property="a_id" />
+		<result column="a_pw" property="a_pw" />
+		<result column="a_name" property="a_name" />
+		<result column="a_phone" property="a_phone" />
+		<result column="a_birth" property="a_birth" />
+		<result column="a_department" property="a_department" />
+		<result column="a_level" property="a_level" />
+		<result column="a_position" property="a_position" />
+		<result column="a_authority_role" property="a_authority_role" />
+		<result column="a_isaccountnonexpired" property="a_isaccountnonexpired" />
+		<result column="a_isaccountnonlocked" property="a_isaccountnonlocked" />
+		<result column="a_iscredentialsnonexpired" property="a_iscredentialsnonexpired" />
+		<result column="a_isenabled" property="a_isenabled" />
+		<result column="a_is_deleted" property="a_is_deleted" />
+		<result column="a_mod_date" property="a_mod_date" />
+		<result column="a_reg_date" property="a_reg_date" />
+	</resultMap>
+
+	<resultMap type="UserAccountDto" id="UserAccountDto">
+		<id column="u_no" property="u_no"/>
+		<result column="u_id" property="u_id"/>
+		<result column="u_pw" property="u_pw"/>
+		<result column="u_name" property="u_name"/>
+		<result column="u_phone" property="u_phone"/>
+		<result column="u_nickname" property="u_nickname"/>
+		<result column="u_gender" property="u_gender"/>
+		<result column="u_birth" property="u_birth"/>
+		<result column="u_zip_code" property="u_zip_code"/>
+		<result column="u_address" property="u_address"/>
+		<result column="u_detailed_address" property="u_detailed_address"/>
+		<result column="u_profile_img" property="u_profile_img"/>
+		<result column="u_company" property="u_company"/>
+		<result column="u_is_personal" property="u_is_personal"/>
+		<result column="u_social_id" property="u_social_id"/>
+		<result column="u_is_blocked" property="u_is_blocked"/>
+		<result column="u_blocked_reason" property="u_blocked_reason"/>
+		<result column="u_isaccountnonexpired" property="u_isaccountnonexpired"/>
+		<result column="u_isaccountnonlocked" property="u_isaccountnonlocked"/>
+		<result column="u_iscredentialsnonexpired" property="u_iscredentialsnonexpired"/>
+		<result column="u_isenabled" property="u_isenabled"/>
+		<result column="u_is_deleted" property="u_is_deleted"/>
+		<result column="u_reg_date" property="u_reg_date"/>
+		<result column="u_mod_date" property="u_mod_date"/>
+	</resultMap>
+	
+	<resultMap type="QnaCategoryDto" id="QnaCategoryDto">
+		<id column="bqc_no" property="bqc_no"/> 
+		<result column="bqc_name" property="bqc_name"/>
+		<result column="bqc_note" property="bqc_note"/>
+		<result column="bqc_is_deleted" property="bqc_is_deleted"/>
+		<result column="bqc_item_cnt" property="bqc_item_cnt"/>
+		<result column="bqc_reg_date" property="bqc_reg_date"/>
+		<result column="bqc_mod_date" property="bqc_mod_date"/>
+		<result column="bqc_unanswered_cnt" property="bqc_unanswered_cnt"/>
+	</resultMap>
+	
+	<resultMap type="QnaAnswerDto" id="QnaAnswerDto">
+		<id column="bqa_no" property="bqa_no"/>
+		<result column="bqa_qna_no" property="bqa_qna_no"/>
+		<result column="bqa_answer" property="bqa_answer"/>
+		<result column="bqa_is_deleted" property="bqa_is_deleted"/>
+		<result column="bqa_reg_date" property="bqa_reg_date"/>
+		<result column="bqa_mod_date" property="bqa_mod_date"/>
+		<collection property="adminAccountDto" resultMap="AdminAccountDto"/>
+	</resultMap>
+	
+	<resultMap type="QnaDto" id="QnaDto">
+		<id column="bq_no" property="bq_no"/>
+		<result column="bq_title" property="bq_title"/>
+		<result column="bq_body" property="bq_body"/>
+		<result column="bq_view_cnt" property="bq_view_cnt"/>
+		<result column="bq_state" property="bq_state"/>
+		<result column="bq_is_deleted" property="bq_is_deleted"/>
+		<result column="bq_reg_date" property="bq_reg_date"/>
+		<result column="bq_mod_date" property="bq_mod_date"/>
+		<collection property="qnaCategoryDto" resultMap="QnaCategoryDto"/>
+		<collection property="qnaAnswerDto" resultMap="QnaAnswerDto"/>
+		<collection property="userAccountDto" resultMap="UserAccountDto"/>
+	</resultMap>
+	
+	<resultMap type="QnaNoticeDto" id="QnaNoticeDto">
+		<id column="bqn_no" property="bqn_no"/>	
+		<result column="bqn_title" property="bqn_title"/>
+		<result column="bqn_body" property="bqn_body"/>
+		<result column="bqn_view_cnt" property="bqn_view_cnt"/>
+		<result column="bqn_state" property="bqn_state"/>
+		<result column="bqn_dir_name" property="bqn_dir_name"/>
+		<result column="bqn_is_deleted" property="bqn_is_deleted"/>
+		<result column="bqn_reg_date" property="bqn_reg_date"/>
+		<result column="bqn_mod_date" property="bqn_mod_date"/>
+		<collection property="adminAccountDto" resultMap="AdminAccountDto"></collection>
+	</resultMap>
+
+	<!-- qna 리스트 가져오기 -->
+	<select id="selectQnaList"
+			resultMap="QnaDto">
+	
+		SELECT 
+			BQ.*, 
+			BQC.*, 
+			BQA.*, 
+			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
+		FROM 
+			BOARD_QNA BQ 
+		LEFT JOIN 
+			BOARD_QNA_CATEGORY BQC 
+		ON 
+			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
+		LEFT JOIN 
+			USER_ACCOUNT U 
+		ON 
+			BQ.BQ_USER_NO = U.U_NO 
+		LEFT JOIN 
+			BOARD_QNA_ANSWER BQA 
+		ON 
+			BQA.BQA_NO = BQ.BQ_ANSWER_NO 
+		WHERE 
+			BQ.BQ_IS_DELETED = 1 
+		AND 
+			BQC.BQC_IS_DELETED = 1 
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>
+	
+	<!-- qna 리스트 전체 개수 -->
+	<select id="selectAllQnaListCnt"
+			resultType="Integer">
+		
+		SELECT 
+			COUNT(BQ_NO) 
+		FROM 
+			BOARD_QNA 
+		WHERE 
+			BQ_IS_DELETED = 1 
+		
+	</select>
+	
+	<!-- qna 리스트 중 답변 안 한 개수 -->
+	<select id="selectUnansweredQnaCnt">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_QNA 
+		WHERE 
+			BQ_IS_DELETED = 1 
+		AND 
+			BQ_ANSWER_NO IS NULL 
+	
+	</select>
+	
+	<!-- 답변 안된 qna 리스트 가져오기 -->
+	<select id="selectUnansweredQuestions"
+			resultMap="QnaDto">
+	
+		SELECT 
+			* 
+		FROM 
+			BOARD_QNA 
+		WHERE 
+			BQ_STATE = 1 
+		AND 
+			BQ_IS_DELETED = 1
+	
+	</select>
+	
+	<!-- 검색 qna 리스트 가져오기 -->
+	<select id="selectSearchQnaList"
+			resultMap="QnaDto">
+			
+		SELECT 
+			BQ.*, 
+			BQC.*, 
+			BQA.* ,
+			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
+		FROM 
+			BOARD_QNA BQ 
+		LEFT JOIN 
+			BOARD_QNA_CATEGORY BQC 
+		ON 
+			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
+		LEFT JOIN 
+			USER_ACCOUNT U  
+		ON 
+			BQ.BQ_USER_NO = U.U_NO 
+		LEFT JOIN 
+			BOARD_QNA_ANSWER BQA 
+		ON 
+			BQA.BQA_NO = BQ.BQ_ANSWER_NO 
+		WHERE 
+			BQ.BQ_IS_DELETED = 1 
+		AND 
+			BQC.BQC_IS_DELETED = 1 
+		<if test="searchPart != null and searchString != null">
+			<choose>
+				<when test="searchPart == 'u_id'">
+					AND U.U_ID LIKE CONCAT('%', #{searchString}, '%') 
+				</when>
+				<when test="searchPart == 'u_name'">
+					AND U.U_NAME LIKE CONCAT('%', #{searchString}, '%') 
+				</when>
+				<otherwise>
+					AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%') 
+				</otherwise>
+			</choose>
+		</if>
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit} 
+		
+	</select>
+	
+	<!-- 검색 qna 리스트 개수 -->
+	<select id="selectSearchQnaListCnt"
+			resultType="Integer">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_QNA BQ 
+		LEFT JOIN 
+			USER_ACCOUNT U  
+		ON 
+			BQ.BQ_USER_NO = U.U_NO 
+		WHERE 
+			BQ_IS_DELETED = 1 
+		<if test="searchPart != null and searchString != null">
+			<choose>
+				<when test="searchPart == 'u_id'">
+					AND U.U_ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'u_name'">
+					AND U.U_NAME LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<otherwise>
+					AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+				</otherwise>
+			</choose>
+		</if>
+	
+	</select>
+	
+	<!-- qna 검색 리스트 중 답변 안 한 개수 -->
+	<select id="selectUnansweredSearchQnaCnt">
+	
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_QNA BQ 
+		LEFT JOIN 
+			USER_ACCOUNT U  
+		ON 
+			BQ.BQ_USER_NO = U.U_NO 
+		WHERE 
+			BQ.BQ_IS_DELETED = 1 
+		AND 
+			U.U_IS_DELETED = 1 
+		<if test="searchPart != null and searchString != null">
+			<choose>
+				<when test="searchPart == 'u_id'">
+					AND U.U_ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'u_name'">
+					AND U.U_NAME LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<otherwise>
+					AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+				</otherwise>
+			</choose>
+		</if>
+		AND 
+			BQ_ANSWER_NO IS NULL 
+	
+	</select>
+	
+	<!-- qna 카테고리에 따른 리스트 가져오기 -->
+	<select id="selectQnaListForSelectBox"
+			resultMap="QnaDto">
+	
+		SELECT 
+			BQ.*, 
+			BQC.*, 
+			BQA.*, 
+			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
+		FROM 
+			BOARD_QNA BQ 
+		LEFT JOIN 
+			BOARD_QNA_CATEGORY BQC 
+		ON 
+			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
+		LEFT JOIN 
+			USER_ACCOUNT U 
+		ON 
+			BQ.BQ_USER_NO = U.U_NO 
+		LEFT JOIN 
+			BOARD_QNA_ANSWER BQA 
+		ON 
+			BQA.BQA_NO = BQ.BQ_ANSWER_NO 
+		WHERE 
+			BQ.BQ_IS_DELETED = 1 
+		AND 
+			BQC.BQC_IS_DELETED = 1 
+		AND 
+			BQ.BQ_CATEGORY_NO = #{infoNo}
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit}
+		
+	
+	</select>
+	
+	<!-- qna 카테고리에 따른 리스트 총 개수 -->
+	<select id="selectAllQnaListCntForSelectBox">
+	
+		SELECT 
+			COUNT(*)
+		FROM 
+			BOARD_QNA BQ 
+		LEFT JOIN 
+			BOARD_QNA_CATEGORY BQC 
+		ON 
+			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
+		WHERE 
+			BQ.BQ_IS_DELETED = 1 
+		AND 
+			BQC.BQC_IS_DELETED = 1 
+		AND 
+			BQ_CATEGORY_NO = #{bqc_no} 
+	
+	</select>
+	
+	<!-- qna 카테고리 리스트 중 답변 안 한 개수 -->
+	<select id="selectUnansweredCategoryQnaCnt">
+		
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_QNA 
+		WHERE 
+			BQ_IS_DELETED = 1 
+		AND 
+			BQ_CATEGORY_NO = #{bqc_no} 
+		AND 
+			BQ_ANSWER_NO IS NULL 
+	
+	</select>
+	
+	
+	<!-- qna 정보 가져오기 by no -->
+	<select id="selectQnaInfoByNo"
+			resultMap="QnaDto">
+		
+		SELECT 
+			BQ.*, 
+			BQC.*, 
+			BQA.*, 
+			A.A_NO, A.A_ID, A.A_NAME, A.A_DEPARTMENT, A.A_LEVEL, A.A_POSITION, 
+			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
+		FROM 
+			BOARD_QNA BQ 
+		JOIN 
+			BOARD_QNA_CATEGORY BQC 
+		ON 
+			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
+		JOIN 
+			USER_ACCOUNT U 
+		ON 
+			BQ.BQ_USER_NO = U.U_NO 
+		LEFT JOIN 
+			BOARD_QNA_ANSWER BQA 
+		ON 
+			BQ.BQ_ANSWER_NO = BQA.BQA_NO  
+		LEFT JOIN 
+			ADMIN_ACCOUNT A 
+		ON 
+			A.A_NO  = BQA.BQA_ANSWER_A_NO
+		WHERE 
+			BQ.BQ_IS_DELETED = 1 
+		AND 
+			BQ.BQ_NO = #{bq_no} 
+	
+	</select>
+	
+	<!-- qna 답변 등록 확인 -->
+	<insert id="insertNewAnswer">
+	
+		INSERT INTO 
+			BOARD_QNA_ANSWER(
+				BQA_ANSWER, 
+				BQA_ANSWER_A_NO, 
+				BQA_ANSWER_A_ID 
+			)
+		VALUES(
+			#{bqa_answer}, 
+			#{a_no}, 
+			#{a_id}
+		)
+		
+	</insert>
+	
+	<!-- qna answer 마지막 no 값 가져오기 -->
+	<select id="selectQnaAnswerLastNo"
+			resultType="int">
+		
+		SELECT 
+			MAX(BQA_NO) AS LAST_NO
+		FROM 
+			BOARD_QNA_ANSWER
+			
+	</select>
+	
+	<!-- qna 답변 완료 후 bq_state update -->
+	<update id="updateQnaFromAnswerComplete">
+		
+		UPDATE 
+			BOARD_QNA 
+		SET 
+			BQ_ANSWER_NO = #{bqa_no},
+			BQ_MOD_DATE = NOW() 
+		WHERE 
+			BQ_NO = #{bq_no} 
+	
+	</update>
+	
+	<!-- qna 답변 수정 확인 -->
+	<update id="updateQnaAnswer">
+	
+		UPDATE 
+			BOARD_QNA_ANSWER 
+		SET 
+			BQA_ANSWER = #{bqa_answer}, 
+			BQA_MOD_DATE = NOW() 
+		WHERE 
+			BQA_NO = #{bqa_no}
+	
+	</update>
+	
+	<!-- qna 질문 공개/비공개 변경 확인 -->
+	<update id="updateQnaStateByNo">
+	
+		UPDATE 
+			BOARD_QNA 
+		SET 
+			BQ_STATE = #{bq_state}, 
+			BQ_MOD_DATE = NOW() 
+		WHERE 
+			BQ_NO = #{bq_no} 
+	
+	</update>
+	
+	<!-- qna 질문 삭제 확인. board_qna 테이블 bq_is_deleted 값 update -->
+	<update id="updateQnaIsDeletedByNo">
+	
+		UPDATE 
+			BOARD_QNA 
+		SET 
+			BQ_IS_DELETED = 0, 
+			BQ_MOD_DATE = NOW() 
+		WHERE 
+			BQ_NO = #{bq_no} 
+	
+	</update>
+	
+	<!-- qna 답변 삭제 확인. board_qna_answer 테이블 bqa_is_deleted 값 update -->
+	<update id="updateQnaAnswerIsDeletedByNo">
+	
+		UPDATE 
+			BOARD_QNA_ANSWER 
+		SET 
+			BQA_IS_DELETED = 0, 
+			BQA_MOD_DATE = NOW() 
+		WHERE 
+			BQA_NO = #{bqa_no} 
+	
+	</update>
+	
+	<!-- qna 답변 삭제 후 board_qna 테이블 bq_answer_no 삭제 -->
+	<update id="updateQnaBqAnswerNoDelete">
+		
+		UPDATE 
+			BOARD_QNA 
+		SET 
+			BQ_ANSWER_NO = null, 
+			BQ_MOD_DATE = NOW() 
+		WHERE 
+			BQ_NO = #{bq_no} 
+	
+	</update>
+	
+	
+	
+	<!-- qna 카테고리명 중복 확인 -->
+	<select id="isQnaCategory"
+			resultType="boolean">
+		
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_QNA_CATEGORY 
+		WHERE 
+			BQC_NAME = #{bqc_name} 
+	
+	</select>
+	
+	<!-- qna 카테고리 등록 확인 -->
+	<insert id="insertNewQnaCategory">
+	
+		INSERT INTO 
+			BOARD_QNA_CATEGORY(BQC_NAME) 
+		VALUES(#{bqc_name})
+		
+	</insert>
+	
+	<!-- qna 카테고리 리스트 가져오기 (select box) -->
+	<select id="selectQnaCategoryListForSelectBox"
+			resultMap="QnaCategoryDto">
+	
+		SELECT 
+			* 
+		FROM 
+			BOARD_QNA_CATEGORY 
+		WHERE 
+			BQC_IS_DELETED = 1 
+		ORDER BY 
+			BQC_NO DESC 
+	
+	</select>
+	
+	
+	<!-- qna 카테고리 리스트 가져오기 -->
+	<select id="selectQnaCategoryList"
+			resultMap="QnaCategoryDto">
+	
+		SELECT 
+			BQC.*, 
+			IFNULL(BQ_COUNTS.BQC_UNANSWERED_CNT, 0) AS BQC_UNANSWERED_CNT, 
+			IFNULL(BQ_COUNTS.BQC_ITEM_CNT, 0) AS BQC_ITEM_CNT 
+		FROM 
+			BOARD_QNA_CATEGORY BQC
+		LEFT JOIN (
+			SELECT 
+				BQ.BQ_CATEGORY_NO, 
+				COUNT(*) AS BQC_ITEM_CNT,
+				COUNT(CASE WHEN BQ.BQ_IS_DELETED = 1 AND BQ.BQ_ANSWER_NO IS NULL THEN 1 END) AS BQC_UNANSWERED_CNT
+			FROM 
+				BOARD_QNA BQ
+			WHERE 
+				BQ.BQ_IS_DELETED = 1 
+			GROUP BY 
+				BQ.BQ_CATEGORY_NO
+		) AS BQ_COUNTS ON BQC.BQC_NO = BQ_COUNTS.BQ_CATEGORY_NO
+		WHERE 
+			BQC.BQC_IS_DELETED = 1 
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit} 
+	
+	</select>
+	
+	<!-- qna 카테고리 리스트 총 개수 -->
+	<select id="selectAllQnaCategoryListCnt"
+			resultType="int">
+		
+		SELECT 
+			COUNT(BQC_NO) 
+		FROM 
+			BOARD_QNA_CATEGORY  
+		WHERE 
+			BQC_IS_DELETED = 1 
+		
+	</select>
+	
+	<!-- qna 카테고리 검색 리스트 가져오기 -->
+	<select id="selectSearchQnaCategoryList"
+			resultMap="QnaCategoryDto">
+	
+		SELECT 
+			* 
+		FROM 
+			BOARD_QNA_CATEGORY
+		WHERE 
+			BQC_IS_DELETED = 1 
+		<if test="searchPart != null and searchString != null">
+			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+		</if>
+		ORDER BY 
+			${sortValue} ${order}
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>
+	
+	<!-- qna 카테고리 검색 리스트 총 개수 -->
+	<select id="selectSearchQnaCategoryListCnt">
+		
+		SELECT 
+			COUNT(BQC_NO) 
+		FROM 
+			BOARD_QNA_CATEGORY  
+		WHERE 
+			BQC_IS_DELETED = 1 
+		<if test="searchPart != null and searchString != null">
+			AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+		</if>
+		
+	</select>
+	
+	<!-- qna 카테고리 정보 가져오기 by no -->
+	<select id="selectQnaCategoryDtoByNo"
+			resultMap="QnaCategoryDto">
+		
+		SELECT 
+			BQC.*, 
+			(SELECT 
+				COUNT(*) 
+			FROM 
+				BOARD_QNA BQ 
+			WHERE 
+				BQ.BQ_CATEGORY_NO = BQC.BQC_NO
+			AND 
+				BQ.BQ_IS_DELETED = 1) AS BQC_ITEM_CNT
+		FROM 
+			BOARD_QNA_CATEGORY BQC 
+		WHERE 
+			BQC_IS_DELETED = 1 
+		AND 
+			BQC_NO = #{bqc_no}
+	
+	</select>
+	
+	<!-- qna 카테고리 수정 확인 -->
+	<update id="updateQnaCategoryInfo">
+		
+		UPDATE 
+			BOARD_QNA_CATEGORY 
+		SET 
+			BQC_NAME = #{bqc_name}, 
+			BQC_MOD_DATE = NOW() 
+		WHERE 
+			BQC_NO = #{bqc_no} 
+	
+	</update>
+	
+	<!-- qna 카테고리 삭제 확인 -->
+	<update id="updateQnaCategoryIsDeletedByNo">
+	
+		UPDATE 
+			BOARD_QNA_CATEGORY 
+		SET 
+			BQC_IS_DELETED = 0, 
+			BQC_MOD_DATE = NOW() 
+		WHERE 
+			BQC_NO = #{bqc_no} 
+	
+	</update>
+	
+	<!-- qna 공지사항 리스트 가져오기 -->
+	<select id="selectQnaNoticeList"
+			resultMap="QnaNoticeDto">
+		
+		SELECT 
+			BQN.*, 
+			A.A_NO, A.A_ID, A.A_NAME, A_DEPARTMENT, A_LEVEL, A_POSITION 
+		FROM 
+			BOARD_QNA_NOTICE BQN
+		JOIN 
+			ADMIN_ACCOUNT A
+		ON 
+			BQN.BQN_WRITER_NO = A.A_NO 
+		WHERE 
+			BQN_IS_DELETED = 1 
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit} 
+	
+	</select>
+	
+	<!-- qna 공지사항 리스트 총 개수 -->
+	<select id="selectAllQnaNoticeListCnt">
+		
+		SELECT 
+			COUNT(BQN_NO) 
+		FROM 
+			BOARD_QNA_NOTICE 
+		WHERE 
+			BQN_IS_DELETED = 1 
+	
+	</select>
+	
+	<!-- qna 공지사항 검색 리스트 가져오기 -->	
+	<select id="selectSearchQnaNoticeList"
+			resultMap="QnaNoticeDto">
+	
+		SELECT 
+			BQN.*, 
+			A.A_NO, A.A_ID, A.A_NAME, A_DEPARTMENT, A_LEVEL, A_POSITION 
+		FROM 
+			BOARD_QNA_NOTICE BQN 
+		LEFT JOIN 
+			ADMIN_ACCOUNT A 
+		ON 
+			BQN.BQN_WRITER_NO = A.A_NO 
+		WHERE 
+			BQN.BQN_IS_DELETED = 1 
+		<if test="searchPart != null and searchString != null">
+			<choose>
+				<when test="searchPart == 'a_id'">
+					AND A.A_ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'a_name'">
+					AND A.A_NAME LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<otherwise>
+					AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+				</otherwise>
+			</choose>
+		</if>
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit} 
+	
+	</select>
+	
+	<!-- qna 공지사항 검색 리스트 총 개수 -->
+	<select id="selectSearchQnaNoticeListCnt">
+		
+		SELECT 
+			COUNT(*) 
+		FROM 
+			BOARD_QNA_NOTICE BQN 
+		LEFT JOIN 
+			ADMIN_ACCOUNT A 
+		ON 
+			BQN.BQN_WRITER_NO = A.A_NO  
+		WHERE 
+			BQN.BQN_IS_DELETED = 1 
+		<if test="searchPart != null and searchString != null">
+			<choose>
+				<when test="searchPart == 'a_id'">
+					AND A.A_ID LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<when test="searchPart == 'a_name'">
+					AND A.A_NAME LIKE CONCAT('%', #{searchString}, '%')
+				</when>
+				<otherwise>
+					AND ${searchPart} LIKE CONCAT('%', #{searchString}, '%')
+				</otherwise>
+			</choose>
+		</if>
+		
+	</select>
+	
+	<!-- qna 공지사항 등록 확인 -->
+	<insert id="insertNewQnaNotice">
+	
+		INSERT INTO 
+			BOARD_QNA_NOTICE(
+				BQN_TITLE, BQN_BODY, BQN_WRITER_NO, BQN_DIR_NAME
+			)
+		VALUES(
+			#{bqn_title}, #{bqn_body}, #{bqn_writer_no}, #{bqn_dir_name}
+		) 
+		
+	</insert>
+	
+	<!-- qna 공지사항 정보 가져오기 by no -->
+	<select id="selectQnaNoticeInfoByNo"
+			resultMap="QnaNoticeDto">
+	
+		SELECT 
+			BQN.*, 
+			A.A_NO, A.A_ID, A.A_NAME, A.A_DEPARTMENT, A.A_LEVEL, A.A_POSITION 
+		FROM 
+			BOARD_QNA_NOTICE BQN 
+		LEFT JOIN 
+			ADMIN_ACCOUNT A 
+		ON 
+			BQN.BQN_WRITER_NO = A.A_NO 
+		WHERE 
+			BQN.BQN_IS_DELETED = 1 
+		AND 
+			BQN.BQN_NO = #{bqn_no} 
+	
+	</select>
+	
+	<!-- qna 공지사항 수정 확인 -->
+	<update id="updateQnaNotice">
+	
+		UPDATE 
+			BOARD_QNA_NOTICE 
+		SET 
+			BQN_TITLE = #{bqn_title}, 
+			BQN_BODY = #{bqn_body}, 
+			BQN_DIR_NAME = #{bqn_dir_name}, 
+			BQN_MOD_DATE = NOW() 
+		WHERE 
+			BQN_NO = #{bqn_no} 
+	
+	</update>
+	
+	<!-- qna 공지사항 삭제 확인 -->
+	<update id="updateQnaNoticeIsDeletedByNo">
+	
+		UPDATE 
+			BOARD_QNA_NOTICE 
+		SET 
+			BQN_IS_DELETED = 0,  
+			BQN_MOD_DATE = NOW() 
+		WHERE 
+			BQN_NO = #{bqn_no} 
+	
+	</update>
+	
+	<select id="selectQnaListForMain"
+			resultMap="QnaDto">
+		
+		SELECT 
+			BQ.*, 
+			BQC.*, 
+			U.U_NO, U.U_ID, U.U_NAME, U.U_NICKNAME 
+		FROM 
+			BOARD_QNA BQ 
+		LEFT JOIN 
+			BOARD_QNA_CATEGORY BQC 
+		ON 
+			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
+		LEFT JOIN 
+			USER_ACCOUNT U 
+		ON  
+			BQ.BQ_USER_NO = U.U_NO 
+		WHERE 
+			BQ.BQ_IS_DELETED = 1 
+		AND 
+			 BQ_ANSWER_NO IS NULL 
+		ORDER BY 
+			BQ.BQ_NO DESC 
+		LIMIT 
+			#{page_limit}
+	
+	</select>
+	
+	<select id="selectQnaNoticeListForMain"
+			resultMap="QnaNoticeDto">
+	
+		SELECT 
+			BQN.*, 
+			A.A_NO, A.A_ID, A.A_NAME, A.A_DEPARTMENT, A.A_LEVEL, A.A_POSITION 
+		FROM 
+			BOARD_QNA_NOTICE BQN 
+		LEFT JOIN 
+			ADMIN_ACCOUNT A 
+		ON 
+			BQN.BQN_WRITER_NO = A.A_NO 
+		WHERE 
+			BQN.BQN_STATE = 1 
+		AND 
+			BQN.BQN_IS_DELETED = 1 
+		ORDER BY 
+			BQN.BQN_NO DESC 
+		LIMIT 
+			#{page_limit} 
+	
+	</select>
+	
+</mapper>

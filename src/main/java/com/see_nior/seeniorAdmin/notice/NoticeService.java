@@ -41,7 +41,14 @@ public class NoticeService {
 	public NoticeDto getNoticeInfoByNo(int n_no) {
 		log.info("getNoticeInfoByNo()");
 		
-		return noticeMapper.selectNoticeInfoByNo(n_no);
+		NoticeDto noticeDto = 
+				noticeMapper.selectNoticeInfoByNo(n_no);
+		
+		if (noticeDto == null) {
+			throw new RuntimeException("noticeDto is null");
+		}
+		
+		return noticeDto;
 		
 	}
 

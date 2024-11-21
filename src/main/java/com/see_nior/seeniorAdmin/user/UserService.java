@@ -86,6 +86,10 @@ public class UserService {
 		UserAccountDto userAccountDto =
 				userMapper.selectUserAccountByNo(u_no);
 		
+		if (userAccountDto == null) {
+			throw new RuntimeException("userAccountDto is null");
+		}
+		
 		return userAccountDto;
 	}
 

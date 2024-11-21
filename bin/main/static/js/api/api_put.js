@@ -35,10 +35,10 @@ async function putIntegSubmitProcess(apiUrl, formData, successMessage, errorMess
 
 // 순번 수정
 async function putOrderModifyProcess(event, idx, page) {    
-	const infoEle = event.target.closest('tr'); // 클릭된 요소의 가장 가까운 tr 요소 찾기
-    const name = infoEle.getAttribute('data-no-name'); 
-    const no = infoEle.getAttribute('data-no'); 
-    const current_idx = infoEle.getAttribute('data-idx'); 
+	const $infoEle = $(event.target).closest('tr'); // 클릭된 요소의 가장 가까운 tr 요소 찾기
+    const name = $infoEle.data('no_name'); 
+    const no = $infoEle.data('no'); 
+    const current_idx = $infoEle.data('idx');
     
     // 카테고리 분류 내 순번 수정이 필요한 경우 분류 no값 추출하여 추가 전송
     const urlParams = new URLSearchParams(window.location.search);
@@ -100,7 +100,7 @@ function mapOrderModifyObject(name, page) {
 			
 		case 'ad_no': // 광고 분류 상세페이지 내 광고 순번 수정
 			orderModifyApiURL = '/advertisement/info/modify_advertisement_idx';
-			getListFunc = () => getList('/advertisement/cate_info/get_advertisement_list_by_category', 'ad_idx', 'asc', page);
+			getListFunc = () => getList('/advertisement/cate_info/get_advertisement_list_by_category', 'ad_idx', 'asc', page, null, 'advertisement_list_table');
 			loddingSetEle = 'advertisement_list_table';
 			current_idx_key = 'current_ad_idx';
 			idx_key = 'ad_idx';
@@ -478,6 +478,7 @@ async function putVideoModify(formName) {
 // 공지사항 수정
 async function putNoticeModify(formName) {
 	const form = document.forms[formName];
+	let input;
 	
 	input = form.n_title;
 	if(!validateEmpty(input, '제목', true)) {
@@ -526,6 +527,7 @@ async function putNoticeModify(formName) {
 // QnA 공지사항 수정
 async function putQnaNoticeModify(formName) {
 	const form = document.forms[formName];
+	let input;
 	
 	input = form.bqn_title;
 	if(!validateEmpty(input, '제목', true)) {
@@ -574,6 +576,7 @@ async function putQnaNoticeModify(formName) {
 async function putQnaCategoryModify(formName) {
 	const form = document.forms[formName];
 	const current_bqc_name = form.current_bqc_name;
+	let input;
 	
 	input = form.bqc_name;
 	if(!validateEmpty(input, '분류명', true)) {
@@ -609,6 +612,7 @@ async function putQnaCategoryModify(formName) {
 async function putAnswerModify(formName) {
 	const form = document.forms[formName];
 	const current_bqa_answer = form.current_bqa_answer;
+	let input;
 	
 	input = form.bqa_answer;
 	if(!validateEmpty(input, '답변', true)) {
@@ -671,6 +675,7 @@ async function putBoardCategoryModify(formName) {
 // 게시물 수정
 async function putPostsModify(formName) {
 	const form = document.forms[formName];
+	let input;
 	
 	input = form.bp_title;
 	if(!validateEmpty(input, '제목', true)) {
@@ -718,6 +723,7 @@ async function putPostsModify(formName) {
 // 신고 유형 분류 수정
 async function putReportCategoryModify(formName) {
 	const form = document.forms[formName];
+	let input;
 	
 	input = form.brc_name;
 	if(!validateEmpty(input, '분류명', true)) {
@@ -732,10 +738,47 @@ async function putReportCategoryModify(formName) {
 	
 	const formData = new FormData(form);
 	const successMessage = `"${input.value}" 신고 유형 분류명이 수정되었습니다.`;
-	const errorMessage = `"${form.brc_name.value}" 신고 유형 분류명 수정에 실패했습니다.`;
+	const errorMessage = `"${input.value}" 신고 유형 분류명 수정에 실패했습니다.`;
 	
 	await putIntegSubmit(
 		'/report/cate_info/modify_category_confirm',
+		formData,
+		successMessage,
+		errorMessage,
+		'content_inner'
+	);
+}
+
+// 신고 처리 수정
+async function putReportResultrModify(formName) {
+	const form = document.forms[formName];
+	const current_brr_result = form.current_brr_result;
+	const current_bp_report_state = form.current_bp_report_state;
+	let input;
+	
+	if(form.bp_report_state === current_bp_report_state && form.brr_result.value === current_brr_result.value) {
+		alert('수정된 내용이 없습니다');
+		return false;		
+	}
+	
+	input = form.brr_result;
+	if(!validateEmpty(input, '내용', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.bp_report_state;
+	if(input.value === "") {
+		alert('처리 상태를 선택해 주세요.');
+		return false;
+	}
+	
+	const formData = new FormData(form);
+	const successMessage = '신고 처리 내용이 수정되었습니다.';
+	const errorMessage = '신고 처리 내용 수정에 실패했습니다.';
+	
+	await putIntegSubmit(
+		'/report/info/result_modify_confirm',
 		formData,
 		successMessage,
 		errorMessage,
