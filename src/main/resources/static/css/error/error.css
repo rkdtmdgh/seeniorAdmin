@@ -28,5 +28,14 @@
 				padding-bottom: var(--smallGap);
 			}
 		}
+		
+		.error_code {
+			font-size: var(--middleFontSize);
+			font-weight: var(--thin);
+			margin-top: 1em;
+			padding: var(--optionPadding);
+			border-radius: var(--bdrs);
+			background-color: var(--tableTitleBgColor);
+		}
 	}
 }
