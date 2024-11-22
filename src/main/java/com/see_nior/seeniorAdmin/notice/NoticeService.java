@@ -383,55 +383,47 @@ public class NoticeService {
 	}
 	
 	// 전체 공지사항 삭제(is_deleted 값 update) 한달 후 img 저장 폴더 삭제 스케쥴러
-	@Scheduled(cron = "0 1 0 * * ?")
+	@Scheduled(cron = "0 1 0 * * ?")	//초 분 시 일 월 요일 년 (각 자리에 *는 모든 값을 의미)
 	public void deleteImgFolder() {
 		log.info("deleteImgFolder()");
 		
 		List<DeleteNoticeDto> deleteNoticeDots = 
 				noticeMapper.selectDeleteNoticeInfo();
-		
-		if (deleteNoticeDots.size() != 0) {
+
+		if (deleteNoticeDots.size() == 0) {
+			log.info("deleteNoticeDots.size() == 0");
+			return;
+		}	
 			
-			List<String> deleteFolderPaths = new ArrayList<String>();
+		List<String> deleteFolderPaths = new ArrayList<String>();
+		
+		for (int i = 0; i < deleteNoticeDots.size(); i++) {
+			if (deleteNoticeDots.get(i).getDn_dir_name() != null) {
+				String folderPath = ImgUrlPath.NOTICE_FILE_PATH.getValue() 
+						+ deleteNoticeDots.get(i).getDn_dir_name();
+				deleteFolderPaths.add(folderPath);
+			}
+		}
+		
+		if (deleteFolderPaths.size() == 0) {
+			log.info("deleteFolderPaths.size() == 0");
+			return;
+		}
+			
+		ResponseEntity<String> deleteFolders =
+				imageFileService.deleteFolders(deleteFolderPaths);
+		
+		if (deleteFolders.getBody().equals("1")) {
 			
 			for (int i = 0; i < deleteNoticeDots.size(); i++) {
 				
-				if (deleteNoticeDots.get(i).getDn_dir_name() != null) {
-					
-					String folderPath = ImgUrlPath.NOTICE_FILE_PATH.getValue() 
-							+ deleteNoticeDots.get(i).getDn_dir_name();
-					deleteFolderPaths.add(folderPath);
-					
-				}
+				
 				
 			}
-			
-			if (deleteFolderPaths.size() >= 0) {
-				
-				ResponseEntity<String> deleteFolders =
-						imageFileService.deleteFolders(deleteFolderPaths);
-				
-				if (deleteFolders.getBody().equals("1")) {
-					
-					for (int i = 0; i < deleteNoticeDots.size(); i++) {
-						
-						
-						
-					}
-					
-				}
-				
-			}
-			
-		} else {
-			log.info("deleteNoticeDots is null");
 			
 		}
 		
+		
 	}
-	
-	
-	
-	
 	
 }
