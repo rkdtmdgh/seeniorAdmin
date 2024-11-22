@@ -486,9 +486,14 @@
 			resultMap="AdvertisementDto">
 	
 		SELECT 
-			* 	
+			AD.*, 
+			AC.* 	
 		FROM 
-			ADVERTISEMENT 
+			ADVERTISEMENT AS AD
+		JOIN 
+			ADVERTISEMENT_CATEGORY AS AC 
+		ON 
+			AD.AD_CATEGORY_NO = AC.AC_NO 
 		WHERE 
 			AD_NO = #{ad_no}
 	
