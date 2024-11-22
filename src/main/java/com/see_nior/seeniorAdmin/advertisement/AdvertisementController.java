@@ -286,6 +286,33 @@ public class AdvertisementController {
 		
 	}
 	
+	// 광고 위치에 따른 광고 가져오기(페이지네이션 => 광고 위치 디테일 뷰에서)
+	@ResponseBody
+	@GetMapping("/info/get_advertisement_list_for_category_modify")
+	public Object getAdvertisementListForCategoryModify(
+			@RequestParam(value = "page_limit") int page_limit,
+			@RequestParam(value = "block_limit") int block_limit,
+			@RequestParam(value = "page", required = false, defaultValue = "1")int page,
+			@RequestParam(value = "sortValue", required = false, defaultValue = "ad_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
+			@RequestParam(value = "infoNo") int ac_no) {
+		log.info("getAdvertisementListByCategory()");
+		
+		// 페이지 번호에 따른 위치별 광고 리스트들 가져오기
+		Map<String, Object> advertisementListForCategoryModifyWithPage = advertisementService.getAdvertisementListForCategoryModify(page_limit, page, sortValue, order, ac_no);
+		
+		// 위치별 광고 총 페이지 개수 가져오기
+		Map<String, Object> advertisementListForCategoryModifyPageNum = advertisementService.getAdvertisementListForCategoryModifyPageNum(page_limit, block_limit, page, ac_no);
+		
+		advertisementListForCategoryModifyWithPage.put("advertisementListForCategoryModifyPageNum", advertisementListForCategoryModifyPageNum);
+		advertisementListForCategoryModifyWithPage.put("sortValue", sortValue);
+		advertisementListForCategoryModifyWithPage.put("order", order);
+		advertisementListForCategoryModifyWithPage.put("infoNo", ac_no);
+		
+		return advertisementListForCategoryModifyWithPage;
+		
+	}
+	
 	// 광고 순서 변경(광고 위치 디테일뷰에서)
 	@PostMapping("/info/modify_advertisement_idx")
 	@ResponseBody

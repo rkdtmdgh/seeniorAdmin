@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -191,7 +192,8 @@ public class AdvertisementService {
 		String date = dateFormat.format(now);
 		
 		// advertisement 테이블에서 maxNo값 가져오기
-		int maxNo = advertisementMapper.getAdvertisementMaxNo();
+		Integer maxNo = advertisementMapper.getAdvertisementMaxNo();
+		if (maxNo == null) maxNo = 0;
 		
 		String filePath = "\\advertisement\\" + (maxNo + 1) + "\\" + date;
 		
@@ -391,10 +393,34 @@ public class AdvertisementService {
 	public Map<String, Object> getAdvertisementByCategoryPageNum(int page_limit, int block_limit, int page, int ac_no) {
 		log.info("getAdvertisementByCategoryPageNum()");
 		
-		// 전체 리스트 개수 주회
+		// 전체 리스트 개수 조회
 		int advertisementListByCategoryCnt = advertisementMapper.getAdvertisementByCategoryCnt(ac_no);
 		
 		return PagingUtil.pageNum(page_limit, block_limit, "advertisementListByCategoryCnt", advertisementListByCategoryCnt, page);
+	
+	}
+	
+	// 페이지에 따른 광고 가져오기(위치별 광고 => 광고 위치 디테일 뷰에서)
+	public Map<String, Object> getAdvertisementListForCategoryModify(int page_limit, int page, String sortValue, String order, int ac_no) {
+		log.info("getAdvertisementListForCategoryModify()");
+		
+		Map<String, Object> pagingList = new HashMap<>();
+		
+		List<AdvertisementDto> advertisementDtos = advertisementMapper.getAdvertisementListForCategoryModifyWithPage(PagingUtil.pagingParamsForSelectBox(page_limit, sortValue, order, page, ac_no));
+		pagingList.put("advertisementDtos", advertisementDtos);
+		
+		return pagingList;
+		
+	}
+	
+	// 광고의 총 페이지 개수 구하기 (위치별 광고 => 광고 위치 디테일 뷰에서)
+	public Map<String, Object> getAdvertisementListForCategoryModifyPageNum(int page_limit, int block_limit, int page, int ac_no) {
+		log.info("getAdvertisementForCategoryModifyPageNum()");
+		
+		// 전체 리스트 개수 조회
+		int advertisementListForCategoryModifyCnt = advertisementMapper.getAdvertisementForCategoryModifyCnt(ac_no);
+		
+		return PagingUtil.pageNum(page_limit, block_limit, "advertisementListForCategoryModifyCnt", advertisementListForCategoryModifyCnt, page);
 	
 	}
 	
@@ -612,6 +638,7 @@ public class AdvertisementService {
 	}
 	
 	// 광고 삭제 확인
+	@Transactional
 	public boolean deleteConfirm(int ad_no) {
 		log.info("deleteConfirm()");
 		
@@ -628,15 +655,42 @@ public class AdvertisementService {
 		if (deletedFolderResult.getBody().equals("1")) {
 			log.info("deleteFolder SUCCESS!!");
 			
-			int deleteResult = advertisementMapper.deleteAdvertisement(ad_no);
-			
-			// DB에 입력 실패
-			if (deleteResult <= 0) return SqlResult.FAIL.getValue();
-			// DB에 입력 성공
-			else return SqlResult.SUCCESS.getValue();
+			try {
+				
+				// 삭제하는 광고의 광고 위치에 있는 IDX들 중 삭제하는 광고의 IDX보다 큰 것들 -1 처리 하기
+				int idxModifyResult = advertisementMapper.updateAdvertisementIdxSubForDelete(deleteAdvertisementDto);
+				
+				if (idxModifyResult == 0) {
+					
+					log.info("삭제하려는 광고 분류에서 삭제하는 광고의 IDX보다 높은 IDX 번호가 없습니다.");
+					
+				}
+				int deleteResult = advertisementMapper.deleteAdvertisement(ad_no);
+				
+				// DB에 입력 실패
+				if (deleteResult <= 0) {
+					log.error("광고 DB데이터 삭제 실패!!");
+					
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+					
+					return SqlResult.FAIL.getValue();
+				}
+				// DB에 입력 성공
+				else return SqlResult.SUCCESS.getValue();
+				
+			} catch (DataAccessException e) {
+				log.error("광고 삭제 중 idx 번호 삭제 오류 발생", e);
+				
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+				
+				return SqlResult.FAIL.getValue();
+				
+			}
 			
 		} else {
 			log.info("deleteFolder FAIL!!");
+			
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			
 			return SqlResult.FAIL.getValue();
 			
@@ -705,5 +759,7 @@ public class AdvertisementService {
 		return PagingUtil.pageNum(page_limit, block_limit, "searchAdvertisementListCnt", searchAdvertisementListCnt, page);
 		
 	}
+
+	
 	
 }

@@ -1526,6 +1526,7 @@ CREATE TABLE ADVERTISEMENT (
 );
 
 SELECT * FROM ADVERTISEMENT;
+DELETE FROM ADVERTISEMENT;
 SHOW INDEX FROM ADVERTISEMENT;
 DROP TABLE ADVERTISEMENT;
 
@@ -1580,30 +1581,71 @@ SHOW VARIABLES LIKE 'event%';
 -- Value가 OFF로 되어있을 경우 ON으로 변경
 SET GLOBAL event_scheduler = ON;
 
--- AD_END_DATE가 현재 날짜보다 이전인 컬럼의 AD_STATE를 0으로 설정하는 프로시저
+DROP PROCEDURE UPDATE_AD_STATE;
+
+-- 만료된 광고의 AD_STATE를 0으로 설정하고 IDX순서 조정하는 프로시저
 DELIMITER //
-CREATE PROCEDURE UPDATE_AD_STATE()
+
+CREATE PROCEDURE UPDATE_AD_STATE_AND_IDX()
 BEGIN
-    UPDATE ADVERTISEMENT
-    SET AD_STATE = 0
-    WHERE AD_END_DATE < CURDATE() AND AD_STATE != 0;
+    DECLARE done INT DEFAULT 0;
+    DECLARE current_ad_no INT;
+    DECLARE current_ad_idx INT;
+    DECLARE current_ad_category_no INT;
+    DECLARE cur_cursor CURSOR FOR 
+        SELECT AD_NO, AD_CATEGORY_NO
+        FROM ADVERTISEMENT
+        WHERE AD_STATE = 1 AND AD_END_DATE < CURDATE();
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    -- 커서 열기
+    OPEN cur_cursor;
+
+    read_loop: LOOP
+        FETCH cur_cursor INTO current_ad_no, current_ad_category_no;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        -- 현재 AD_IDX 값을 SELECT로 가져오기
+        SELECT AD_IDX INTO current_ad_idx
+        FROM ADVERTISEMENT
+        WHERE AD_NO = current_ad_no;
+
+        -- AD_STATE와 AD_IDX 업데이트
+        UPDATE ADVERTISEMENT
+        SET AD_STATE = 0, AD_IDX = 0
+        WHERE AD_NO = current_ad_no;
+
+        -- 같은 AD_CATEGORY_NO에서 AD_IDX가 현재 AD_IDX보다 큰 행들의 AD_IDX를 -1 감소
+        UPDATE ADVERTISEMENT
+        SET AD_IDX = AD_IDX - 1
+        WHERE AD_CATEGORY_NO = current_ad_category_no AND AD_IDX > current_ad_idx;
+    END LOOP;
+
+    -- 커서 닫기
+    CLOSE cur_cursor;
 END //
+
 DELIMITER ;
 
 -- 이미 생성되어 있는 프로시저 확인 및 드롭
 SHOW PROCEDURE STATUS WHERE Db = 'DB_SEENIOR';
-DROP PROCEDURE UPDATE_AD_STATE;
+DROP PROCEDURE UPDATE_AD_STATE_AND_IDX;
 
--- update_ad_state() 프로시저를 매일 0시 00분 정각에 실행하도록 하는 이벤트 스케쥴러
-CREATE EVENT DAILY_AD_STATE_UPDATE
+DROP EVENT DAILY_AD_STATE_UPDATE;
+
+-- UPDATE_AD_STATE_AND_IDX() 프로시저를 매일 0시 01분에 실행하도록 하는 이벤트 스케쥴러
+CREATE EVENT DAILY_AD_STATE_AND_IDX_UPDATE
 ON SCHEDULE EVERY 1 DAY STARTS '2024-11-07 00:01:00'
 DO
-CALL UPDATE_AD_STATE();
+CALL UPDATE_AD_STATE_AND_IDX();
 
 -- 이미 생성되어 있는 이벤트 스케쥴러 확인 및 드롭
 SELECT * FROM information_schema.events;
 SHOW EVENTS;
-DROP EVENT DAILY_AD_STATE_UPDATE;
+DROP EVENT DAILY_AD_STATE_AND_IDX_UPDATE;
 
 -- 환자 테이블 -------------------------------------------------------------------------------------------------------------------
 CREATE TABLE CARE_LIST (
