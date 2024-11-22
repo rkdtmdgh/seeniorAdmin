@@ -10,12 +10,15 @@
     	
 		$(async function() {
 			// advertisement category 가져오기
-            const selectedCategory = /*[[${advertisementDto.ad_category_no}]]*/ // 기본값 설정
-            await getCategoryList('ad_category_no', 'modify', selectedCategory); // element id, form 종류, selectedValue
-            
-            // 순번 max값 설정
-            const categoryMaxIdx = $('#ad_category_no').find('option:selected').val();
-            getMaxIdxAndSetAttribute('ad_category_no', categoryMaxIdx, 'modify');
+			const isState = /*[[${advertisementDto.ad_state}]]*/ true;
+			if(isState) {
+	            const selectedCategory = /*[[${advertisementDto.ad_category_no}]]*/ // 기본값 설정
+	            await getCategoryList('ad_category_no', 'modify', selectedCategory); // element id, form 종류, selectedValue
+	            
+	            // 순번 max값 설정
+	            const categoryMaxIdx = $('#ad_category_no').find('option:selected').val();
+	            getMaxIdxAndSetAttribute('ad_category_no', categoryMaxIdx, 'modify');
+			}
         });
     </script>
 </head>
@@ -55,7 +58,11 @@
 		                                <tr>
 		                                    <th><p class="table_title">위치</p></th>
 		                                    <td>
-		                                        <select class="table_info select ad_category_no_select" name="ad_category_no" id="ad_category_no"></select>
+		                                        <select class="table_info select ad_category_no_select" name="ad_category_no" id="ad_category_no"
+		                                        	th:if="${advertisementDto.ad_state}"></select>
+	                                    		<p class="table_info disabled" 
+	                                    			th:unless="${advertisementDto.ad_state}"
+	                                    			th:text="${advertisementDto.advertisementCategoryDto.ac_name}"></p>
 		                                    </td>
 		                                    
 		                                    <th><p class="table_title">등록일<span class="divider"></span>수정일</p></th>
@@ -71,11 +78,14 @@
 		                                <tr>
 		                                	<th><p class="table_title">클라이언트</p></th>
 		                                    <td>
-		                                    	<label class="table_info">
+		                                    	<label class="table_info" th:if="${advertisementDto.ad_state}">
 			                                        <input type="text" name="ad_client" id="ad_client" placeholder="클라이언트"
 			                                            onblur="validateEmpty(this, '클라이언트')"
 			                                            th:value="${advertisementDto.ad_client}">
 		                                		</label>
+		                                		<p class="table_info disabled" 
+	                                    			th:unless="${advertisementDto.ad_state}"
+	                                    			th:text="${advertisementDto.ad_client}"></p>
 		                                    </td>
 		                                    
 		                                    <th><p class="table_title">상태</p></th>
@@ -87,38 +97,47 @@
 		                                <tr>
 		                                	<th><p class="table_title">시작일</p></th>
 		                                	<td>
-		                                		<label class="table_info">
+		                                		<label class="table_info" th:if="${advertisementDto.ad_state}">
 			                                		<input type="date" name="ad_start_date" id="ad_start_date" max="9999-12-31" min="1900-01-01"
 		                                            	onchange="validateEmpty(this, '시작일')" 
 		                                            	onblur="validateEmpty(this, '시작일')"
 		                                            	th:value="${advertisementDto.ad_start_date}">
 		                                		</label>
+		                                		<p class="table_info disabled" 
+	                                    			th:unless="${advertisementDto.ad_state}"
+	                                    			th:text="${advertisementDto.ad_start_date}"></p>
 		                                	</td>
 		                                	
 		                                	<th><p class="table_title">종료일</p></th>
 		                                	<td>
-		                                		<label class="table_info">
+		                                		<label class="table_info" th:if="${advertisementDto.ad_state}">
 			                                		<input type="date" name="ad_end_date" id="ad_end_date" max="9999-12-31" min="1900-01-01"
 		                                            	onchange="validateEmpty(this, '종료일')" 
 		                                            	onblur="validateEmpty(this, '종료일')"
 		                                            	th:value="${advertisementDto.ad_end_date}">
 		                                		</label>
+		                                		<p class="table_info disabled" 
+	                                    			th:unless="${advertisementDto.ad_state}"
+	                                    			th:text="${advertisementDto.ad_end_date}"></p>
 		                                	</td>
 	                                	</tr>
 	                                	
 	                                	<tr>
 		                                	<th><p class="table_title">URL</p></th>
 		                                	<td>
-		                                		<label class="table_info">
+		                                		<label class="table_info" th:if="${advertisementDto.ad_state}">
 			                                		<input type="text" name="ad_url" id="ad_url" placeholder="URL"
 		                                				onblur="validateEmpty(this, 'URL 주소')"
 	                                					th:value="${advertisementDto.ad_url}">
 		                                		</label>
+		                                		<p class="table_info disabled" 
+	                                    			th:unless="${advertisementDto.ad_state}"
+	                                    			th:text="${advertisementDto.ad_url}"></p>
 		                                	</td>
 		                                	
 		                                	<th><p class="table_title">순번</p></th>
 		                                	<td class="order_number">
-		                                		<label class="table_info">
+		                                		<label class="table_info" th:if="${advertisementDto.ad_state}">
 			                                		<input type="number" name="ad_idx" id="idx_number" placeholder="순번"
 			                                			min="1"
 			                                			onkeydown="blockEKey(event)"
@@ -138,7 +157,7 @@
 		                                	</th>
 		                                	<td colspan="2">
 		                                		<div class="table_info">
-		                                			<label class="file_upload_container displayNone">
+		                                			<label class="file_upload_container displayNone" th:if="${advertisementDto.ad_state}">
 		                                				<input type="file" name="files" id="files" accept="image/*"  onchange="setInputFileImageCheck(this)"> 
 		                                				<img src="/image/icons/image_file_upload.png" alt="image file uploader" class="file_upload_img">
 		                                				<span class="file_upload_info">
@@ -156,7 +175,8 @@
 		                                						advertisementDto.ad_img
 		                                					}" 
 		                                					alt="select image file preview">
-		                                				<div class="close" onclick="setImageFilePreviewInit('files')"></div>
+		                                				<div class="close" onclick="setImageFilePreviewInit('files')"
+		                                					 th:if="${advertisementDto.ad_state}"></div>
 	                                				</div>
 		                                		</div>
 		                                	</td>
@@ -175,7 +195,8 @@
                     		 		                        		 
                            <div class="btn_list">
                                <a href="javascript: history.back();" class="btns cancel">뒤로가기</a>
-                               <div onclick="putAdvertisementModify('advertisement_modify_form')" class="btns">수정</div>
+                               <div class="btns" onclick="putAdvertisementModify('advertisement_modify_form')" 
+                                   th:if="${advertisementDto.ad_state}">수정</div>
                            </div>
                     	</div>
 	                </section>
