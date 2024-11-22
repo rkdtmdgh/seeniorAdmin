@@ -830,6 +830,13 @@
 		SET 
 			BQN_TITLE = #{bqn_title}, 
 			BQN_BODY = #{bqn_body}, 
+			BQN_STATE = 
+			<if test="bqn_state == true">
+				1, 
+			</if>
+			<if test="bqn_state == false">
+				0, 
+			</if>
 			BQN_DIR_NAME = #{bqn_dir_name}, 
 			BQN_MOD_DATE = NOW() 
 		WHERE 

@@ -725,6 +725,7 @@ DROP TABLE DELETE_NOTICE;
 DELETE FROM DELETE_NOTICE;
 
 SHOW EVENTS;
+SHOW PROCEDURE STATUS;
 
 -- 삭제 요청 후 30일 경과된 정보 완전 삭제 프로시저(함수) -----------------------------------------------------------------------------------------------------------------
 DELIMITER //
