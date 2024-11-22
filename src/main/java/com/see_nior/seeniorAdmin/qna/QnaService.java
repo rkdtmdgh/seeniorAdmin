@@ -765,6 +765,7 @@ public class QnaService {
 					QnaNoticeDto newQnaNoticeDto = new QnaNoticeDto();
 					newQnaNoticeDto.setBqn_no(qnaNoticeDto.getBqn_no());
 					newQnaNoticeDto.setBqn_title(qnaNoticeDto.getBqn_title());
+					newQnaNoticeDto.setBqn_state(qnaNoticeDto.isBqn_state());
 					newQnaNoticeDto.setBqn_dir_name(qnaNoticeDto.getBqn_dir_name());
 					newQnaNoticeDto.setBqn_body(bqn_body);
 					

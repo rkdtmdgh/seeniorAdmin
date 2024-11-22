@@ -228,7 +228,8 @@ public class NoticeService {
 	}
 
 	// 전체 공지사항 수정 확인
-	public boolean modifyConfirm(List<MultipartFile> files, List<String> deleteFileNames, NoticeDto noticeDto) {
+	public boolean modifyConfirm(
+			List<MultipartFile> files, List<String> deleteFileNames, NoticeDto noticeDto) {
 		log.info("modifyConfirm()");
 		
 		String filePath = "";
@@ -292,7 +293,7 @@ public class NoticeService {
 					Map<String,Object> savedFileObj = 
 							objectMapper.readValue(savedFiles.getBody(), new TypeReference<Map<String,Object>>() {});
 					
-					@SuppressWarnings("unchecked") //(List<String>) 강제 캐스팅 에러
+					@SuppressWarnings("unchecked")
 					List<String> savedFileNames = (List<String>) savedFileObj.get("savedFileNames");
 					
 					String n_body = noticeDto.getN_body();
@@ -323,6 +324,7 @@ public class NoticeService {
 					newNoticeDto.setN_no(noticeDto.getN_no());
 					newNoticeDto.setN_title(noticeDto.getN_title());
 					newNoticeDto.setN_dir_name(noticeDto.getN_dir_name());
+					newNoticeDto.setN_state(noticeDto.isN_state());
 					newNoticeDto.setN_body(n_body);
 					
 					int updateResult = noticeMapper.updateNotice(newNoticeDto);
@@ -382,7 +384,7 @@ public class NoticeService {
 		
 	}
 	
-	// 전체 공지사항 삭제(is_deleted 값 update) 한달 후 img 저장 폴더 삭제 스케쥴러
+	// 전체 공지사항 삭제(is_deleted 값 update) 30일 경과 후 img 저장 폴더 삭제 스케쥴러
 	@Scheduled(cron = "0 1 0 * * ?")	//초 분 시 일 월 요일 년 (각 자리에 *는 모든 값을 의미)
 	public void deleteImgFolder() {
 		log.info("deleteImgFolder()");
@@ -390,13 +392,15 @@ public class NoticeService {
 		List<DeleteNoticeDto> deleteNoticeDots = 
 				noticeMapper.selectDeleteNoticeInfo();
 
+		// 공지사항 삭제 후 30일 경과된 컬럼이 없는 경우 리턴.  
 		if (deleteNoticeDots.size() == 0) {
 			log.info("deleteNoticeDots.size() == 0");
 			return;
-		}	
-			
+		}
+		
 		List<String> deleteFolderPaths = new ArrayList<String>();
 		
+		// 30일이 경과된 컬럼이 있는 경우 삭제 할 dir 경로 추출.
 		for (int i = 0; i < deleteNoticeDots.size(); i++) {
 			if (deleteNoticeDots.get(i).getDn_dir_name() != null) {
 				String folderPath = ImgUrlPath.NOTICE_FILE_PATH.getValue() 
@@ -405,24 +409,61 @@ public class NoticeService {
 			}
 		}
 		
+		// 30일이 경과된 컬럼이 있지만 삭제 할 이미지는 없는 경우.
 		if (deleteFolderPaths.size() == 0) {
 			log.info("deleteFolderPaths.size() == 0");
-			return;
-		}
 			
-		ResponseEntity<String> deleteFolders =
-				imageFileService.deleteFolders(deleteFolderPaths);
-		
-		if (deleteFolders.getBody().equals("1")) {
+			int updateResult = 0;
+			List<Integer> deleteFailedList = new ArrayList<>();
 			
 			for (int i = 0; i < deleteNoticeDots.size(); i++) {
 				
+				updateResult =
+						noticeMapper.updateDeleteNoticeIsDeleted(deleteNoticeDots.get(i).getDn_no());
 				
+				if (updateResult <= 0) {
+					deleteFailedList.add(deleteNoticeDots.get(i).getDn_no());
+				}
 				
 			}
 			
+			log.info("updateDeleteNoticeIsDeleted failed list ----- {}", deleteFailedList);
+			
+			return;
 		}
 		
+		// 30일이 경과된 컬럼 이미지 서버 삭제 요청 
+		ResponseEntity<String> deletedFolders =
+				imageFileService.deleteFolders(deleteFolderPaths);
+		
+		// 이미지 서버 삭제 성공
+		if (deletedFolders.getBody().equals("1")) {
+			log.info("DELETEDFOLDERS SUCCESS!");
+			
+			int updateResult = 0;
+			List<Integer> deleteFailedList = new ArrayList<>();
+			
+			for (int i = 0; i < deleteNoticeDots.size(); i++) {
+				
+				updateResult =
+						noticeMapper.updateDeleteNoticeIsDeleted(deleteNoticeDots.get(i).getDn_no());
+				
+				if (updateResult <= 0) {
+					deleteFailedList.add(deleteNoticeDots.get(i).getDn_no());
+				}
+				
+			}
+			
+			log.info("updateDeleteNoticeIsDeleted failed list ----- {}", deleteFailedList);
+			
+		// 이미지 서버 삭제 실패
+		} else if (deletedFolders.getBody().equals("0")) {
+			log.info("FOLDER NAME OR PATH NOT FOUND!!");
+			log.info("response value: {}", deletedFolders.getBody());
+		} else {
+			log.info("FOLDER DELETE FAIL!!");
+			log.info("response value: {}",deletedFolders.getBody());
+		}
 		
 	}
 	
