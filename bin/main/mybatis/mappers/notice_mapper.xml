@@ -29,6 +29,7 @@
 		<result column="n_body" property="n_body"/>	
 		<result column="n_view_cnt" property="n_view_cnt"/>	
 		<result column="n_state" property="n_state"/>	
+		<result column="n_dir_name" property="n_dir_name"/>	
 		<result column="n_is_deleted" property="n_is_deleted"/>	
 		<result column="n_reg_date" property="n_reg_date"/>	
 		<result column="n_mod_date" property="n_mod_date"/>	
@@ -241,6 +242,16 @@
 	
 	</select>
 	
+	<update id="updateDeleteNoticeIsDeleted">
+	
+		UPDATE 
+			DELETE_NOTICE 
+		SET 
+			DN_IMG_DELETED = 0 
+		WHERE 
+			DN_NO = #{dn_no}
+	
+	</update>
 	
 	
 

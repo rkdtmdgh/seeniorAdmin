@@ -31,4 +31,6 @@ public interface NoticeMapper {
 
 	public List<DeleteNoticeDto> selectDeleteNoticeInfo();
 
+	public int updateDeleteNoticeIsDeleted(int dn_no);
+
 }
