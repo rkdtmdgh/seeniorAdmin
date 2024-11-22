@@ -908,4 +908,29 @@
 	
 	</select>
 	
+	<select id="selectDeleteQnaNoticeInfo"
+			resultType="DeleteQnaoticeDto">
+	
+		SELECT 
+			* 
+		FROM 
+			DELETE_BOARD_QNA_NOTICE 
+		WHERE 
+			DBQN_IS_VALID = 0 
+		AND 
+			DBQN_IMG_DELETED = 1 
+			
+	</select>
+	
+	<update id="updateDeleteQnaNoticeIsDeleted">
+	
+		UPDATE 
+			DELETE_BOARD_QNA_NOTICE 
+		SET 
+			DBQN_IMG_DELETED = 0 
+		WHERE 
+			DBQN_NO = #{dbqn_no}
+	
+	</update>
+	
 </mapper>

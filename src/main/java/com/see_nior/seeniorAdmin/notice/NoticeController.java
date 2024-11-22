@@ -176,19 +176,4 @@ public class NoticeController {
 		
 	}
 	
-	
-	
-	////////////////////////////////
-	@GetMapping("/test")
-	@ResponseBody
-	public Object test() {
-		log.info("test()");
-		
-		
-		return null;
-		
-	}
-	
-	
-	
 }
