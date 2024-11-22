@@ -546,10 +546,9 @@ async function postReportResultCreate(formName) {
 	}
 	
 	input = form.bp_report_state;
-	if(input.value === "") {
-		alert('처리 상태를 선택해 주세요.');
-		return false;
-	}
+	const resultState = input.value === '1' ? '정상' : '정지'
+	const isConfirm = confirm(`신고 게시물을 ${resultState} 처리하시겠습니까?`);
+	if(!isConfirm) return false;
 	
 	const formData = new FormData(form);
 	const successMessage = '신고 처리 내용이 등록되었습니다.';
