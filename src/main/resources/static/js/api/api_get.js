@@ -208,7 +208,7 @@ function contentApiResponse(apiUrl, sortValue, order, response, contentTable, er
 		});
 		
 		// 페이지네이션 생성	
-		const paging = generatePagination(apiUrl, sortValue, order, getListPage, isSearch); // apiUrl, sortValue, order, 페이징벨류값, isSearch
+		const paging = generatePagination(apiUrl, sortValue, order, getListPage, contentTable, isSearch); // apiUrl, sortValue, order, 페이징벨류값, 로딩요소, isSearch
 		$pagination.html(paging);
 		
 		// 테이블 리스트 서브 메뉴 클릭 이벤트
@@ -1743,7 +1743,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 }
 
 // 페이지네이션 생성
-function generatePagination(apiUrl, sortValue, order, pagingValues, isSearch) { // apiUrl, sortValue, order, 페이징벨류값, isSearch
+function generatePagination(apiUrl, sortValue, order, pagingValues, contentTable, isSearch) { // apiUrl, sortValue, order, 페이징벨류값, isSearch
 	const blockLimit = pagingValues.blockLimit; // 한 블럭에 포함되는 페이지 수
 	const startPage = pagingValues.startPage; // 현재 블럭의 시작 페이지
 	const endPage = pagingValues.endPage; // 현재 블럭의 마지막 페이지
@@ -1760,14 +1760,14 @@ function generatePagination(apiUrl, sortValue, order, pagingValues, isSearch) { 
 	
 	if(totalBlocks > 1 && currentBlock > 1) { // 블럭이 1개 이상일 경우 2번째 블럭 부터 노출
 		paging += `
-			<div onclick="${handlerFunction}(${args}, 1)" class="first func_icon">
+			<div onclick="${handlerFunction}(${args}, 1, false, '${contentTable}')" class="first func_icon">
 	            <svg aria-label="first" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" enable-background="new 0 0 20 20">
 	                <polygon points="10,5 10,0 0,10 10,20 10,15 5,10 	"/>
 	             <polygon points="15,5 10,10 15,15 20,20 20,0 	"/>
 	            </svg>
 	        </div>
 	        
-	        <div onclick="${handlerFunction}(${args}, ${startPage - 1})" class="prev func_icon">
+	        <div onclick="${handlerFunction}(${args}, ${startPage - 1}, false, '${contentTable}')" class="prev func_icon">
 	            <svg aria-label="first" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" enable-background="new 0 0 20 20">
 	                <polygon points="15,0 5,10 15,20 "/>
 	            </svg>
@@ -1779,19 +1779,19 @@ function generatePagination(apiUrl, sortValue, order, pagingValues, isSearch) { 
 		if(i === currentPage) {
 			paging += `<div class="current">${i}</div>`;
 		} else {
-			paging += `<div class="num" onclick="${handlerFunction}(${args}, ${i})">${i}</div>`;
+			paging += `<div class="num" onclick="${handlerFunction}(${args}, ${i}, false, '${contentTable}')">${i}</div>`;
 		}
 	}
 	
 	if(totalBlocks > 1 && currentBlock < totalBlocks) { // 마지막 전 블럭까지 노출
 		paging += `
-			<div onclick="${handlerFunction}(${args}, ${endPage + 1})" class="next func_icon">
+			<div onclick="${handlerFunction}(${args}, ${endPage + 1}, false, '${contentTable}')" class="next func_icon">
 	            <svg aria-label="first" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" enable-background="new 0 0 20 20">
 	                <polygon points="15,0 5,10 15,20 "/>
 	            </svg>
 	        </div>
 	        
-	        <div onclick="${handlerFunction}(${args}, ${maxPage})" class="last func_icon">
+	        <div onclick="${handlerFunction}(${args}, ${maxPage}, false, '${contentTable}')" class="last func_icon">
 	            <svg aria-label="first" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" enable-background="new 0 0 20 20">
 	                <polygon points="10,5 10,0 0,10 10,20 10,15 5,10 	"/>
 	             <polygon points="15,5 10,10 15,15 20,20 20,0 	"/>
