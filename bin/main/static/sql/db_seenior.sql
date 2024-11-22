@@ -568,6 +568,74 @@ INSERT INTO BOARD_QNA_NOTICE(BQN_TITLE, BQN_BODY, BQN_WRITER_NO) VALUES("QNA 공
 INSERT INTO BOARD_QNA_NOTICE(BQN_TITLE, BQN_BODY, BQN_WRITER_NO) VALUES("QNA 공지사항 7번", "QNA 공지사항 77번 내용입니다.", 8);
 INSERT INTO BOARD_QNA_NOTICE(BQN_TITLE, BQN_BODY, BQN_WRITER_NO) VALUES("QNA 공지사항 8번", "QNA 공지사항 88번 내용입니다.", 9);
 
+SHOW TRIGGERS;
+
+-- QNA 공지사항 삭제 트리거 -------------------------------------------------------------------------------------------------------------------
+DELIMITER //
+CREATE TRIGGER TR_UPDATE_BOARD_QNA_NOTICE_ON_DELETE 
+AFTER UPDATE ON BOARD_QNA_NOTICE 
+FOR EACH ROW
+BEGIN
+    IF OLD.BQN_IS_DELETED = 1 AND NEW.BQN_IS_DELETED = 0 THEN
+        -- 게시글이 삭제된 경우에는 DELETE_QNA_NOTICE 테이블에 새로운 레코드 삽입
+        INSERT INTO DELETE_BOARD_QNA_NOTICE (
+            DBQN_NOTICE_NO,
+            DBQN_DIR_NAME,
+            DBQN_REQUEST_TIME
+        )
+        VALUES (
+            OLD.BQN_NO,
+            OLD.BQN_DIR_NAME,
+            NOW()
+        );
+    END IF;
+END//
+DELIMITER ;
+
+DROP TRIGGER TR_UPDATE_BOARD_QNA_NOTICE_ON_DELETE;
+
+-- 삭제된 QNA 공지사항 테이블 -----------------------------------------------------------------------------------------------------------------
+CREATE TABLE DELETE_BOARD_QNA_NOTICE (
+	DBQN_NO					INT	AUTO_INCREMENT COMMENT "삭제 테이블 NO(PK)",									-- 삭제 테이블 NO(PK)
+	DBQN_NOTICE_NO			INT NOT NULL COMMENT "삭제할 QNA 공지사항 NO(BOARD QNANOTICE TABLE PK)",			-- 삭제할 전체 공지사항 NO(NOTICE TABLE PK)
+	DBQN_DIR_NAME			VARCHAR(20) COMMENT "이미지 저장된 폴더 이름"	,										-- 게시물 이미지 저장된 폴더명
+    DBQN_IS_VALID			TINYINT DEFAULT 1 COMMENT "게시물 삭제요청 후 30일 경과 여부(기본값 = 1, 경과 시 = 0)",	-- 게시물 삭제요청 후 30일 경과 여부(기본값 = 1, 경과 시 = 0)
+    DBQN_IMG_DELETED		TINYINT DEFAULT 1 COMMENT "게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)",			-- 게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)
+	DBQN_REQUEST_TIME		DATETIME DEFAULT NOW() COMMENT "게시물 삭제 요청 시간",								-- 게시물 수정일
+    PRIMARY KEY(DBQN_NO)
+);
+
+SELECT * FROM DELETE_BOARD_QNA_NOTICE;
+DROP TABLE DELETE_BOARD_QNA_NOTICE;
+DELETE FROM DELETE_BOARD_QNA_NOTICE;
+
+SHOW EVENTS;
+SHOW PROCEDURE STATUS;
+
+-- 삭제 요청 후 30일 경과된 정보 완전 삭제 프로시저(함수) -----------------------------------------------------------------------------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE DELETE_EXPIRED_BOARD_QNA_NOTICE()
+BEGIN
+    UPDATE DELETE_BOARD_QNA_NOTICE
+    SET DBQN_IS_VALID = 0
+    WHERE DBQN_REQUEST_TIME < DATE_SUB(NOW(), INTERVAL 30 DAY);
+END //
+
+DELIMITER ;
+
+DROP PROCEDURE DELETE_EXPIRED_BOARD_QNA_NOTICE;
+
+-- 프로시저(함수) 실행 부분 -----------------------------------------------------------------------------------------------------------------
+CREATE EVENT DELETE_EXPIRED_BOARD_QNA_NOTICE_EVENT
+ON SCHEDULE EVERY 1 DAY 
+STARTS '2024-11-10 00:00:00'  -- 시작 날짜와 시간 설정 (필요에 따라 수정)
+ON COMPLETION PRESERVE
+DO
+    CALL DELETE_EXPIRED_BOARD_QNA_NOTICE();
+
+DROP EVENT DELETE_EXPIRED_BOARD_QNA_NOTICE_EVENT;
+
 -- 신고 분류 테이블 ---------------------------------------------------------------------------------------------------------------
 CREATE TABLE BOARD_REPORT_CATEGORY(
 	BRC_NO			INT	AUTO_INCREMENT COMMENT "신고 분류 NO(PK)", 						-- 신고 분류 NO(PK)
@@ -708,7 +776,6 @@ END//
 DELIMITER ;
 
 DROP TRIGGER TR_UPDATE_NOTICE_ON_DELETE;
-
 
 -- 삭제된 전체 공지사항 테이블 -----------------------------------------------------------------------------------------------------------------
 CREATE TABLE DELETE_NOTICE (
