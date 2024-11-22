@@ -38,10 +38,10 @@ public interface AdvertisementMapper {
 	public int deleteAdvertisementCategory(int ac_no);
 	
 	// 페이지에 따른 광고 위치 가져오기(검색한 광고 위치)
-	public List<AdvertisementCategoryDto> getSearchAdvertisementCategory(Map<String, Object> pagingParams);
+	public List<AdvertisementCategoryDto> getSearchAdvertisementCategory(Map<String, Object> searchPagingParams);
 	
 	// 광고 위치의 총 페이지 개수 구하기(검색한 광고 위치)
-	public int getSearchAdvertisementCategoryListCnt(Map<String, Object> pagingParams);
+	public int getSearchAdvertisementCategoryListCnt(Map<String, Object> searchPagingParams);
 	
 ////////////////////////////////////////////////////////// 광고
 
@@ -49,7 +49,7 @@ public interface AdvertisementMapper {
 	public Integer getAdvertisementIdxMaxNumByCategory(int ad_category_no);
 	
 	// 광고 테이블의 maxNo값 구하기
-	public int getAdvertisementMaxNo();
+	public Integer getAdvertisementMaxNo();
 	
 	// idx값을 기존 idx들의 중간값 혹은 기존idx값보다 작은값으로 입력 시 나머지 idx들 +1 처리 하기
 	public int updateAdvertisementIdxSum(Map<String, Object> updateIdxSumParams);
@@ -76,10 +76,16 @@ public interface AdvertisementMapper {
 	public int targetModifyAdvertisementIdx(Map<String, Object> modifyIdxParams);
 	
 	// 페이지에 따른 광고 가져오기(위치별 광고)
-	public List<AdvertisementDto> getAdvertisementListByCategoryWithPage(Map<String, Object> pagingParams);
+	public List<AdvertisementDto> getAdvertisementListByCategoryWithPage(Map<String, Object> pagingParamsForSelectBox);
 
 	// 광고의 총 리스트 개수 구하기(위치별 광고)
 	public int getAdvertisementByCategoryCnt(int ac_no);
+	
+	// 페이지에 따른 광고 가져오기(위치별 광고 => 광고 위치 디테일 뷰에서)
+	public List<AdvertisementDto> getAdvertisementListForCategoryModifyWithPage(Map<String, Object> pagingParamsForSelectBox);
+	
+	// 광고의 총 리스트 개수 구하기(위치별 광고 => 광고 위치 디테일 뷰에서)
+	public int getAdvertisementForCategoryModifyCnt(int ac_no);
 	
 	// 광고 한개 가져오기
 	public AdvertisementDto getAdvertisementByNo(int ad_no);
@@ -90,6 +96,9 @@ public interface AdvertisementMapper {
 	// 광고 수정 확인
 	public int updateAdvertisement(AdvertisementDto advertisementDto);
 
+	// 삭제하는 광고의 광고 위치에 있는 IDX들 중 삭제하는 광고의 IDX보다 큰 것들 -1 처리 하기
+	public int updateAdvertisementIdxSubForDelete(AdvertisementDto deleteAdvertisementDto);
+	
 	// 광고 삭제 확인
 	public int deleteAdvertisement(int ad_no);
 
@@ -97,9 +106,12 @@ public interface AdvertisementMapper {
 	public List<Integer> getAdvertisementsEnded30Days();
 	
 	// 페이지에 따른 광고 가져오기(검색한 광고)
-	public List<AdvertisementDto> getSearchAdvertisement(Map<String, Object> pagingParams);
+	public List<AdvertisementDto> getSearchAdvertisement(Map<String, Object> searchPagingParams);
 
 	// 광고의 총 리스트 개수 구하기(검색한 광고)
-	public int getSearchAdvertisementListCnt(Map<String, Object> pagingParams);
+	public int getSearchAdvertisementListCnt(Map<String, Object> searchPagingParams);
+
+
+
 
 }
