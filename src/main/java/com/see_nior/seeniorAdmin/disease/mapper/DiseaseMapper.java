@@ -38,10 +38,10 @@ public interface DiseaseMapper {
 	public int deleteDiseaseCategory(int dc_no);
 	
 	// 페이지에 따른 질환 카테고리 가져오기(검색한 질환 카테고리)
-	public List<DiseaseCategoryDto> getSearchDiseaseCategory(Map<String, Object> pagingParams);
+	public List<DiseaseCategoryDto> getSearchDiseaseCategory(Map<String, Object> searchPagingParams);
 	
 	// 질환 카테고리의 총 페이지 개수 구하기(검색한 질환 카테고리)
-	public int getSearchDiseaseCategoryListCnt(Map<String, Object> pagingParams);
+	public int getSearchDiseaseCategoryListCnt(Map<String, Object> searchPagingParams);
 	
 ////////////////////////////////////////////////////////// 질환
 	
@@ -58,7 +58,7 @@ public interface DiseaseMapper {
 	public int getAllDiseaseCnt();
 	
 	// 페이지에 따른 질환 가져오기(카테고리별 질환)
-	public List<DiseaseDto> getDiseaseListByCategoryWithPage(Map<String, Object> pagingParams);
+	public List<DiseaseDto> getDiseaseListByCategoryWithPage(Map<String, Object> pagingParamsForSelectBox);
 	
 	// 질환의 총 리스트 개수 구하기(카테고리별 질환)
 	public int getDiseaseByCategoryCnt(int dc_no);
@@ -73,10 +73,10 @@ public interface DiseaseMapper {
 	public int deleteDisease(int d_no);
 
 	// 페이지에 따른 질환 가져오기(검색한 질환)
-	public List<DiseaseDto> getSearchDisease(Map<String, Object> pagingParams);
+	public List<DiseaseDto> getSearchDisease(Map<String, Object> searchPagingParams);
 
 	// 질환의 총 리스트 개수 구하기(검색한 질환)
-	public int getSearchDiseaseListCnt(Map<String, Object> pagingParams);
+	public int getSearchDiseaseListCnt(Map<String, Object> searchPagingParams);
 
 
 

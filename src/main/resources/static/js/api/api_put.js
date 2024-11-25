@@ -100,7 +100,7 @@ function mapOrderModifyObject(name, page) {
 			
 		case 'ad_no': // 광고 분류 상세페이지 내 광고 순번 수정
 			orderModifyApiURL = '/advertisement/info/modify_advertisement_idx';
-			getListFunc = () => getList('/advertisement/cate_info/get_advertisement_list_by_category', 'ad_idx', 'asc', page, null, 'advertisement_list_table');
+			getListFunc = () => getList('/advertisement/info/get_advertisement_list_for_category_modify', 'ad_idx', 'asc', page, null, 'advertisement_list_table');
 			loddingSetEle = 'advertisement_list_table';
 			current_idx_key = 'current_ad_idx';
 			idx_key = 'ad_idx';
@@ -768,10 +768,9 @@ async function putReportResultrModify(formName) {
 	}
 	
 	input = form.bp_report_state;
-	if(input.value === "") {
-		alert('처리 상태를 선택해 주세요.');
-		return false;
-	}
+	const resultState = input.value === 1 ? '정상' : '정지'
+	const isConfirm = confirm(`신고 게시물을 ${resultState} 처리하시겠습니까?`);
+	if(!isConfirm) return false;
 	
 	const formData = new FormData(form);
 	const successMessage = '신고 처리 내용이 수정되었습니다.';

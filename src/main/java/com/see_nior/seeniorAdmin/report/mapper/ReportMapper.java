@@ -38,10 +38,10 @@ public interface ReportMapper {
 	public int deleteReportCategory(int brc_no);
 
 	// 페이지에 따른 신고 카테고리 가져오기(검색한 신고 카테고리)
-	public List<ReportCategoryDto> getSearchReportCategory(Map<String, Object> pagingParams);
+	public List<ReportCategoryDto> getSearchReportCategory(Map<String, Object> searchPagingParams);
 
 	// 신고 카테고리의 총 페이지 개수 구하기(검색한 신고 카테고리)
-	public int getSearchReportCategoryListCnt(Map<String, Object> pagingParams);
+	public int getSearchReportCategoryListCnt(Map<String, Object> searchPagingParams);
 
 ////////////////////////////////////////////////////////// 신고
 	
@@ -61,7 +61,7 @@ public interface ReportMapper {
 	public ReportDto getReport(int br_no);
 
 	// 페이지에 따른 신고 가져오기(카테고리별 신고)
-	public List<ReportDto> getReportListByCategoryWithPage(Map<String, Object> pagingParams);
+	public List<ReportDto> getReportListByCategoryWithPage(Map<String, Object> pagingParamsForSelectBox);
 
 	// 신고의 총 리스트 개수 구하기 (카테고리별 신고)
 	public int getReportCntByCategory(int brc_no);
@@ -70,13 +70,13 @@ public interface ReportMapper {
 	public int getUnresultedReportCntByCategory(int brc_no);
 
 	// 페이지에 따른 신고 가져오기 (검색한 신고)
-	public List<ReportDto> getSearchReport(Map<String, Object> pagingParams);
+	public List<ReportDto> getSearchReport(Map<String, Object> searchPagingParams);
 
 	// 신고의 총 리스트 개수 구하기 (검색한 신고)
-	public int getSearchReportListCnt(Map<String, Object> pagingParams);
+	public int getSearchReportListCnt(Map<String, Object> searchPagingParams);
 
 	// 처리되지 않은 신고의 개수 가져오기 (검색한 신고)
-	public int getUnresultedReportCntBySearch(Map<String, Object> pagingParams);
+	public int getUnresultedReportCntBySearch(Map<String, Object> searchPagingParams);
 	
 ////////////////////////////////////////////////////////// 신고 처리
 

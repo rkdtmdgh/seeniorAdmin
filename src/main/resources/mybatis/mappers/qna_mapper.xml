@@ -830,6 +830,13 @@
 		SET 
 			BQN_TITLE = #{bqn_title}, 
 			BQN_BODY = #{bqn_body}, 
+			BQN_STATE = 
+			<if test="bqn_state == true">
+				1, 
+			</if>
+			<if test="bqn_state == false">
+				0, 
+			</if>
 			BQN_DIR_NAME = #{bqn_dir_name}, 
 			BQN_MOD_DATE = NOW() 
 		WHERE 
@@ -900,5 +907,30 @@
 			#{page_limit} 
 	
 	</select>
+	
+	<select id="selectDeleteQnaNoticeInfo"
+			resultType="DeleteQnaoticeDto">
+	
+		SELECT 
+			* 
+		FROM 
+			DELETE_BOARD_QNA_NOTICE 
+		WHERE 
+			DBQN_IS_VALID = 0 
+		AND 
+			DBQN_IMG_DELETED = 1 
+			
+	</select>
+	
+	<update id="updateDeleteQnaNoticeIsDeleted">
+	
+		UPDATE 
+			DELETE_BOARD_QNA_NOTICE 
+		SET 
+			DBQN_IMG_DELETED = 0 
+		WHERE 
+			DBQN_NO = #{dbqn_no}
+	
+	</update>
 	
 </mapper>

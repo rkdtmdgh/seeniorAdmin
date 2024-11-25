@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.see_nior.seeniorAdmin.dto.DeleteQnaoticeDto;
 import com.see_nior.seeniorAdmin.dto.QnaCategoryDto;
 import com.see_nior.seeniorAdmin.dto.QnaDto;
 import com.see_nior.seeniorAdmin.dto.QnaNoticeDto;
@@ -92,5 +93,9 @@ public interface QnaMapper {
 	public int updateQnaNoticeIsDeletedByNo(int bqn_no);
 
 	public List<QnaNoticeDto> selectQnaNoticeListForMain(int page_limit);
+
+	public List<DeleteQnaoticeDto> selectDeleteQnaNoticeInfo();
+
+	public int updateDeleteQnaNoticeIsDeleted(int dbqn_no);
 
 }

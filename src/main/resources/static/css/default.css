@@ -695,7 +695,9 @@
 		   		content: '';
 		   		display: inline-block;
 		   		width: 1em;
+		   		min-width: 1em;
 		   		height: 1em;
+		   		min-height: 1em;
 		   		background: url(/image/icons/state_check.png) center no-repeat;
 		   		background-size: contain;
 		   	}
