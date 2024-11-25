@@ -100,7 +100,7 @@ function mapOrderModifyObject(name, page) {
 			
 		case 'ad_no': // 광고 분류 상세페이지 내 광고 순번 수정
 			orderModifyApiURL = '/advertisement/info/modify_advertisement_idx';
-			getListFunc = () => getList('/advertisement/cate_info/get_advertisement_list_by_category', 'ad_idx', 'asc', page, null, 'advertisement_list_table');
+			getListFunc = () => getList('/advertisement/info/get_advertisement_list_for_category_modify', 'ad_idx', 'asc', page, null, 'advertisement_list_table');
 			loddingSetEle = 'advertisement_list_table';
 			current_idx_key = 'current_ad_idx';
 			idx_key = 'ad_idx';
