@@ -500,11 +500,11 @@ function mapCreateListSubMenueObject(dataList) {
 		'advertisement_category': {
 			'list': [
 				{
-					subMenuTitle: '신고 리스트 보기',
+					subMenuTitle: '광고 리스트 보기',
 					link: `/advertisement/info/advertisement_list_form?sortType=2&infoNo=${dataList.info_no}&sortValue=${dataList.sort_value}&order=${dataList.order}`,
 				},
 				{
-					subMenuTitle: '신고 분류 보기',
+					subMenuTitle: '광고 분류 보기',
 					link: `/advertisement/cate_info/modify_category_form?sortType=2&infoNo=${dataList.info_no}`,
 				},
 			],
@@ -789,10 +789,15 @@ function mapApiResponseObject(apiUrl, response) {
 			break;	
 			
 		case '/advertisement/info/get_advertisement_list_by_category': // 광고 관리 위치별 데이터
-		case '/advertisement/cate_info/get_advertisement_list_by_category': // 광고 분류 상세페이지 내 위치별 데이터
 			getListDtos = response.advertisementDtos;
 			getListPage = response.advertisementByCategoryPageNum;
 			getListCnt = response.advertisementByCategoryPageNum.advertisementListByCategoryCnt;
+			break;
+			
+		case '/advertisement/info/get_advertisement_list_for_category_modify': // 광고 분류 상세페이지 내 위치별 데이터
+			getListDtos = response.advertisementDtos;
+			getListPage = response.advertisementListForCategoryModifyPageNum;
+			getListCnt = response.advertisementListForCategoryModifyPageNum.advertisementListForCategoryModifyCnt;
 			break;
 			
 		case '/advertisement/cate_info/get_category_list': // 광고 분류 관리
@@ -1698,7 +1703,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			`;
 			break;
 			
-		case '/advertisement/cate_info/get_advertisement_list_by_category': // 광고 분류 상세페이지 내 위치별 분류 리스트 테이블	
+		case '/advertisement/info/get_advertisement_list_for_category_modify': // 광고 분류 상세페이지 내 위치별 분류 리스트 테이블	
 			regDate = new Date(new Date(data.ad_reg_date).getTime() + newIconsHours);
 			tableTrContent = `
 				<tr data-no_name="ad_no" data-no="${data.ad_no}" data-idx="${data.ad_idx}">
