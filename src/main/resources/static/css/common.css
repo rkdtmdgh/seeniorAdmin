@@ -92,7 +92,7 @@
     --bxsh: 0 1px 5px rgba(0,0,0, .15);
     --inputBorder: 1px solid var(--lightGrayColor);
 
-    --transition: .2s; 
+    --transition: .2s ease-in-out; 
 
     /* position */
     --trslC: -50%, -50%; /*translate center*/
