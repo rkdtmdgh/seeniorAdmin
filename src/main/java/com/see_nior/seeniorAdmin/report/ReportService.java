@@ -291,10 +291,10 @@ public class ReportService {
 	
 ////////////////////////////////////////////////////////// 신고 처리
 
-	// 신고 처리 확인
+	// 신고 처리 등록 확인
 	@Transactional
-	public boolean reportResultConfirm(int br_no, String br_post_no, int bp_report_state, String brr_result, String a_id) {
-		log.info("reportResultConfirm()");
+	public boolean createResultConfirm(int br_no, String br_post_no, int bp_report_state, String brr_result, String a_id) {
+		log.info("createResultConfirm()");
 		
 		Map<String, Object> insertParams = new HashMap<>();
 		
@@ -343,6 +343,61 @@ public class ReportService {
 			return SqlResult.FAIL.getValue();
 			
 		}
+		
+	}
+
+	// 신고 처리 수정 확인
+	@Transactional
+	public boolean modifyResultConfirm(int brr_no, String br_post_no, int bp_report_state, String brr_result,
+			String a_id) {
+		log.info("modifyResultConfirm()");
+
+		Map<String, Object> modifyParams = new HashMap<>();
+		
+		// a_id값으로 a_no 가져오기
+		AdminAccountDto loginedAdminDto = accountService.getAdminAccountById(a_id);
+		
+		modifyParams.put("brr_no", brr_no);
+		modifyParams.put("brr_result", brr_result);
+		modifyParams.put("a_no", loginedAdminDto.getA_no());
+		
+		try {
+			// 신고 처리 결과 테이블에 신고 처리 결과 업데이트
+			int updateReportResult = reportMapper.updateReportResult(modifyParams);
+			
+			if (updateReportResult <= 0) throw new RuntimeException("신고 처리 결과 테이블에 신고 처리 결과 저장 실패!!");
+				
+			Map<String, Object> updateBoardPostsParams = new HashMap<>();
+			updateBoardPostsParams.put("br_post_no", br_post_no);
+			updateBoardPostsParams.put("bp_report_state", bp_report_state);
+			
+			// 게시물 숨김처리 결과(BP_REPORT_STATE)를 게시물 테이블에 업데이트
+			int updateBoardPostsWithResult = reportMapper.updateBoardPostsWithResult(updateBoardPostsParams);
+			
+			if (updateBoardPostsWithResult <= 0) throw new RuntimeException("게시물 테이블에 게시물 블락 처리 결과 업데이트 실패!");
+			
+			return SqlResult.SUCCESS.getValue();
+			
+		} catch (Exception e) {
+			log.error("에러 발생!!", e);
+			
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			
+			return SqlResult.FAIL.getValue();
+		
+		}
+		
+	}
+
+	// 신고 처리 결과 삭제
+	public boolean deleteResultConfirm(int brr_no) {
+		log.info("deleteResultConfirm()");
+		
+		int deleteResult = reportMapper.deleteReportResult(brr_no);
+		
+		if (deleteResult <= 0) return SqlResult.FAIL.getValue();
+		
+		else return SqlResult.SUCCESS.getValue();
 		
 	}
 

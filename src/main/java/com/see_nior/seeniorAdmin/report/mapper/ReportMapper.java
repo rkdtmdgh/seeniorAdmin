@@ -91,8 +91,11 @@ public interface ReportMapper {
 
 	// 게시물 숨김처리 결과(BP_REPORT_STATE)를 게시물 테이블에 업데이트
 	public int updateBoardPostsWithResult(Map<String, Object> updateBoardPostsParams);
-	
 
-	
+	// 신고 처리 결과 수정
+	public int updateReportResult(Map<String, Object> modifyParams);
+
+	// 신고 처리 결과 삭제
+	public int deleteReportResult(int brr_no);
 
 }
