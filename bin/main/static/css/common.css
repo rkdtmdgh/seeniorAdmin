@@ -70,8 +70,8 @@
     --btnsPadding: 1em 1.5em;
     --smallBtnsPadding: 0.5em 1em;
     --tableBtnPadding: 0.3em;
-    --sidePadding: 1.2em;
-    --textPadding: 0.95em var(--sidePadding);
+    --sidePadding: 0.9em;
+    --textPadding: 0.8em var(--sidePadding);
     --subTextPadding: 0.3em 1em;
     --subTextIndent: 0 0 0 0.85em;
     --borderInputPadding: 1em 1em 10px;
@@ -273,7 +273,7 @@ table {
 /* colgroup */
 .col_checkBox { width: 50px; }
 .col_no { width: 70px; }
-.col_state { width: 8%; }
+.col_state { width: 9%; }
 .col_default { width: 20%; }
 .col_short { width: 13%; }
 .col_long { width: 30%; }
