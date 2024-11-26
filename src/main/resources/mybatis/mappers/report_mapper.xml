@@ -719,6 +719,35 @@
 			BP_NO = #{br_post_no}
 	
 	</update>
+	
+	<!-- 신고 처리 결과 수정 -->
+	<update id="updateReportResult"
+			parameterType="Map">
+		
+		UPDATE 
+			BOARD_REPORT_RESULT 
+		SET 
+			BRR_RESULT = #{brr_result}, 
+			BRR_ANSWER_A_NO = #{a_no}, 
+			BRR_MOD_DATE = NOW() 
+		WHERE 
+			BRR_NO = #{brr_no}
+	
+	</update>
+	
+	<!-- 신고 처리 결과 삭제 -->
+	<update id="deleteReportResult"
+			parameterType="Integer">
+	
+		UPDATE 
+			BOARD_REPORT_RESULT 
+		SET 
+			BRR_IS_DELETED = 0, 
+			BRR_MOD_DATE = NOW() 
+		WHERE 
+			BRR_NO = #{brr_no}
+	
+	</update>
 
 
 </mapper>
