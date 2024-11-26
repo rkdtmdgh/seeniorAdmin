@@ -212,7 +212,7 @@
 		height: calc(100% - 90px);
 		border-right: 2px solid var(--lightGrayColor);
 		position: absolute;
-		left: 34px;
+		left: 30px;
 		top: 56px;
 		z-index: 1;
 	}
@@ -232,7 +232,7 @@
 		border-bottom-left-radius: 75%;
 		position: absolute;
 		top: 50%;
-		left: -27px;
+		left: -26px;
 		transform: translateY(-90%);
 		z-index: 2;
 	}
@@ -778,8 +778,8 @@
        	
        	.btns {
        		position: absolute;
-       		top: 0.5em;
-       		right: 1.2em;
+       		top: 0.3em;
+       		right: var(--sidePadding);
        		font-size: var(--menuFontSize);
        	}
 	}	
