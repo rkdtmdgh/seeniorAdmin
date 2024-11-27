@@ -305,8 +305,7 @@ public class ReportController {
 	
 	// 신고 처리 확인
 	@ResponseBody
-	@PostMapping("/info/result_confirm")
-//	@PostMapping("/info/create_result_confirm")
+	@PostMapping("/info/create_result_confirm")
 	public boolean createResultConfirm(
 			@RequestParam(value = "br_no") int br_no,
 			@RequestParam(value = "br_post_no") String br_post_no,
