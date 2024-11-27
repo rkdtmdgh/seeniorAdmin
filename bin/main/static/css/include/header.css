@@ -35,8 +35,8 @@
            		position: relative;
            		
            		.alarm_num {
-           			width: var(--iconsWidth);
-           			height: var(--iconsWidth);
+           			width: var(--iconsSize);
+           			height: var(--iconsSize);
            			position: absolute;
            			top: 0;
            			right: 0;

@@ -93,11 +93,11 @@
 			                                    	<div class="table_info">
 		                                            	<label class="radio">
 		                                            		<input type="radio" name="bp_report_state" value="1"
-		                                            			th:checked="${reportDto.boardPostsDto.bp_report_state == false}"> 정상
+		                                            			th:checked="${reportDto.boardPostsDto.bp_report_state == true}"> 정상
 		                                            	</label>
 		                                            	<label class="radio">
 		                                            		<input type="radio" name="bp_report_state" value="0"
-		                                            			th:checked="${reportDto.boardPostsDto.bp_report_state == true}"> 정지
+		                                            			th:checked="${reportDto.boardPostsDto.bp_report_state == false}"> 정지
 		                                            	</label>
 		                                            </div>
 
@@ -177,12 +177,9 @@
 	                            		reportDto.reportResultDto.adminAccountDto.a_id == #authentication.name)
 	                           		}"
 		                 			th:onclick="delSingleData(
-		                					[[${reportDto.reportResultDto.adminAccountDto.a_id} + '님의 처리 내용']],
+	                					[[${reportDto.reportResultDto.adminAccountDto.a_id} + '님의 처리 내용']],
 		                 		 		'brr_no', 
-		                 		 		[[${reportDto.reportResultDto.brr_no}]],
-		                 		 		{
-		                 		 			'br_no': [[${reportDto.br_no}]],
-		                 		 		}
+		                 		 		[[${reportDto.reportResultDto.brr_no}]]
 		                				)" class="btns delete">처리 내용 삭제</div>
 	                 		 
 	                            <div th:if="${reportDto.reportResultDto == null}"

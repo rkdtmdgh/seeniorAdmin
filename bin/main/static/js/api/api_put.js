@@ -777,7 +777,7 @@ async function putReportResultrModify(formName) {
 	const errorMessage = '신고 처리 내용 수정에 실패했습니다.';
 	
 	await putIntegSubmit(
-		'/report/info/result_modify_confirm',
+		'/report/info/modify_result_confirm',
 		formData,
 		successMessage,
 		errorMessage,
