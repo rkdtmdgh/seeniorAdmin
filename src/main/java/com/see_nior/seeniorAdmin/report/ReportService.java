@@ -213,7 +213,11 @@ public class ReportService {
 		
 		ReportDto reportDto = reportMapper.getReport(br_no);
 		if (reportDto == null) throw new RuntimeException("reportDto is null!!");
-		if (reportDto.getReportResultDto().isBrr_is_deleted() == false) reportDto.setReportResultDto(null);
+		else {
+			
+			if (reportDto.getReportResultDto().isBrr_is_deleted() == false) reportDto.setReportResultDto(null);
+			
+		}
 		
 		return reportDto;
 		
