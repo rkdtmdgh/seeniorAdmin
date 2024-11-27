@@ -555,7 +555,7 @@ async function postReportResultCreate(formName) {
 	const errorMessage = '신고 처리 내용 등록에 실패했습니다.';
 	
 	await postIntegSubmit(
-		'/report/info/result_confirm',
+		'/report/info/create_result_confirm',
 		formData,
 		successMessage,
 		errorMessage, 																
