@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.management.RuntimeErrorException;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -211,6 +213,7 @@ public class ReportService {
 		
 		ReportDto reportDto = reportMapper.getReport(br_no);
 		if (reportDto == null) throw new RuntimeException("reportDto is null!!");
+		if (reportDto.getReportResultDto().isBrr_is_deleted() == false) reportDto.setReportResultDto(null);
 		
 		return reportDto;
 		

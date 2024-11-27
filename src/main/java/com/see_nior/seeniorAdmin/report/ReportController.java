@@ -340,7 +340,7 @@ public class ReportController {
 	
 	// 신고 처리 삭제하기
 	@ResponseBody
-	@GetMapping("/info/delete_result_confirm")
+	@PostMapping("/info/delete_result_confirm")
 	public boolean deleteResultConfirm(@RequestParam(value = "brr_no") int brr_no) {
 		log.info("deleteResultConfirm()");
 		
