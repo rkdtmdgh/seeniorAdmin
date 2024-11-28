@@ -89,7 +89,7 @@
     --formGap: 30px;
 
     --bdrs: 0.5em;
-    --bxsh: 0 1px 5px rgba(0,0,0, .1);
+    --bxsh: 0 1px 5px rgba(0,0,0, .07);
     --inputBorder: 1px solid var(--lightGrayColor);
 
     --transition: .2s ease-in-out; 
