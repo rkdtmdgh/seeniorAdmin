@@ -258,6 +258,19 @@ public class ReportService {
 		
 	}
 
+	// 신고 삭제 확인
+	public boolean deleteConfirm(int br_no) {
+		log.info("deleteConfirm()");
+		
+		int deleteResult = reportMapper.deleteReport(br_no);
+		
+		// DB에 입력 실패
+		if (deleteResult <= 0) return SqlResult.FAIL.getValue();
+		// DB에 입력 성공
+		else return SqlResult.SUCCESS.getValue();
+		
+	}
+	
 	// 페이지에 따른 신고 가져오기 (검색한 신고)
 	public Map<String, Object> getSearchReportListWithPage(int page_limit, String searchPart, String searchString, String sortValue,
 			String order, int page) {
@@ -410,5 +423,7 @@ public class ReportService {
 		else return SqlResult.SUCCESS.getValue();
 		
 	}
+
+
 
 }

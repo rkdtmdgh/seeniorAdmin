@@ -253,6 +253,19 @@ public class ReportController {
 		
 	} 
 	
+	// 신고 삭제 확인 (비동기 => 사용하지 않지만 기능 구현 해 둠)
+	@ResponseBody
+	@PostMapping("/info/delete_confirm")
+	public boolean deleteConfirm(@RequestParam(value = "br_no") int br_no) {
+		log.info("deleteConfirm()");
+		
+		boolean deleteResult = reportService.deleteConfirm(br_no);
+		
+		return deleteResult;
+		
+	}
+	
+	
 	// 신고 검색 (페이지네이션 => 비동기)
 	@ResponseBody
 	@GetMapping("/info/search_report_list")
