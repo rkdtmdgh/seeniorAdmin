@@ -533,6 +533,19 @@
 	
 	</select>
 	
+	<!-- 신고 삭제 확인 -->
+	<update id="deleteReport"
+			parameterType="Integer">
+			
+		UPDATE 
+			BOARD_REPORT 
+		SET 
+			BR_IS_DELETED = 0 
+		WHERE 
+			BR_NO = #{br_no}
+				
+	</update>
+	
 	<!-- 페이지 번호에 따른 신고 리스트들 가져오기 (검색한 신고) -->
 	<select id="getSearchReport"
 			parameterType="Map"
