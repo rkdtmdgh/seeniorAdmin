@@ -68,8 +68,8 @@ async function validateEmail(input, usedCheck, alertMsg) {
 
 // 비밀번호 유효성 검사
 function validatePw(input, alertMsg, notViewMsg = false) { 
-	const regEx = /^(?=.*[a-zA-Z])(?=.*[@$!%*?&])[a-zA-Z\d@$!%*?&]{8,16}$/; // 8~16자의 영문 대소문자 중 최소 1개, 특수문자 최소 1개, 숫자 선택 입력
-    const errorMessage = "비밀번호는 8~16자의 영문대소문자, 특수문자(@, $, !, %, *, ?, &), 숫자를 사용할 수 있습니다. (필수: 영문대소문자, 특수문자)";
+	const regEx = /^(?=.*[a-zA-Z])(?=.*[@$!%*?&])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,16}$/; // 8~16자의 영문 대소문자 중 최소 1개, 특수문자 최소 1개, 숫자 최소 1개 입력
+    const errorMessage = "비밀번호는 8~16자의 영문대소문자, 특수문자(@, $, !, %, *, ?, &), 숫자를 사용할 수 있습니다. (필수: 영문, 특수문자, 숫자)";
 	const isValid = validateInput(input, regEx, errorMessage);
 	if(alertMsg && !isValid) {
 		if(notViewMsg) setClearErrorMessage(input);
