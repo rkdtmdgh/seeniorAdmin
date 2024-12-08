@@ -64,7 +64,7 @@ function mainContentApiResponse(apiUrl, response, loddingParentEle, error = fals
 		$contentTable.html(`
 			<tr>
                 <td colspan="${maxCols}">
-                    <p class="table_info">${error ? errorMsg : '목록이 없습니다.'}</p>
+                    <p class="table_info">${error ? errorMsg : '목록이 없습니다'}</p>
                 </td>
             </tr>
 		`);
@@ -208,7 +208,7 @@ function contentApiResponse(apiUrl, sortValue, order, response, contentTable, er
 		});
 		
 		// 페이지네이션 생성	
-		const paging = generatePagination(apiUrl, sortValue, order, getListPage, isSearch); // apiUrl, sortValue, order, 페이징벨류값, isSearch
+		const paging = generatePagination(apiUrl, sortValue, order, getListPage, contentTable, isSearch); // apiUrl, sortValue, order, 페이징벨류값, 로딩요소, isSearch
 		$pagination.html(paging);
 		
 		// 테이블 리스트 서브 메뉴 클릭 이벤트
@@ -220,7 +220,7 @@ function contentApiResponse(apiUrl, sortValue, order, response, contentTable, er
 		$contentTable.html(`
 			<tr>
                 <td colspan="${maxCols}">
-                    <p class="table_info">${error ? errorMsg : isSearch ? '검색된 내용이 없습니다.' : '목록이 없습니다.'}</p>
+                    <p class="table_info">${error ? errorMsg : isSearch ? '검색된 내용이 없습니다' : '목록이 없습니다'}</p>
                 </td>
             </tr>
 		`);
@@ -255,20 +255,19 @@ function createListSubMenuEvent() {
 
 // 리스트 서브 메뉴 이벤트 설정
 function setCreateListSubMenu(ele) {
-	let $subMenuContainer = $(ele).find('.link_sub_menu_container'); // 서브 메뉴 요소
+	const $parent = $(ele);
+	let $subMenuContainer = $parent.find('.link_sub_menu_container'); // 서브 메뉴 요소
 	if(!$subMenuContainer.length) {
 		$subMenuContainer = $('<div class="link_sub_menu_container sc">'); // 서브 메뉴가 담길 요소 생성
 		
 		const dataList = {
-			...$(ele).closest('tr').data(), // 기본 data 속성 값
-			...$(ele).data(), // 추가될 요소의 data 속성 값
+			...$parent.closest('tr').data(), // 기본 data 속성 값
+			...$parent.data(), // 추가될 요소의 data 속성 값
 		};
 		
 		const objectMap = mapCreateListSubMenueObject(dataList); // 서브 메뉴 설정 객체 가져오기
 
 		if(objectMap && Object.keys(objectMap).length) {
-			logger.info('setCreateListSubMenu() create success:', ele);
-			
 			Object.keys(objectMap).forEach((key) => {
 				const {subMenuTitle, link} = objectMap[key]; // 객체에서 설정 데이터 추출
 				const $subMenu = $(`<a href="${link}" class="link_sub_menu">${subMenuTitle}</a>`); // 서브 메뉴 생성
@@ -280,10 +279,57 @@ function setCreateListSubMenu(ele) {
 			$subMenuContainer.append($errorMsg);
 		}
 		
-		$(ele).append($subMenuContainer);  // 부모 요소에 추가
+		$parent.append($subMenuContainer);  // 부모 요소에 추가
+		
+		// 서브 메뉴 위치 조정 후 노출
+		const position = adjustSubMenuPosition($subMenuContainer);
+		
+		logger.info('setCreateListSubMenu() create success:', ele);
+		logger.info('setCreateListSubMenu() position:', position);
+		
+		// css 초기화
+		$subMenuContainer.css({display: 'none', visibility: 'visible'});
 	}
 	
-	$subMenuContainer.slideToggle(100).toggleClass('active'); // 서브 메뉴 노출
+	$subMenuContainer.slideToggle(100).toggleClass('active');
+}
+
+// 서브 메뉴 화면 경계 위치 조정
+function adjustSubMenuPosition($subMenuContainer) {
+    const padding = 20; // 범위 기준 가장자리 최소 여유 공간
+    const $container = $subMenuContainer.closest('.content_inner'); // 범위 기준이 될 부모 요소
+    const scrollTop = $container.scrollTop();
+    const containerInnerWidth = $container.innerWidth() - padding;
+    const containerInnerHeight = $container[0].scrollHeight - padding;
+    
+    const subMenuOffset = $subMenuContainer.offset();
+    const subMenuWidth = $subMenuContainer.outerWidth(true);
+    const subMenuHeight = $subMenuContainer.outerHeight(true);
+    
+    // .content_inner 기준 서브 메뉴의 가로/세로 위치
+    const adjustedLeft = subMenuOffset.left - $container.offset().left;
+    const adjustedTop = subMenuOffset.top - $container.offset().top + scrollTop;
+    
+    // position 위치 초기화
+    let positionX = 'left';
+    let positionY = 'top';
+    
+    // 서브 메뉴가 화면 우측 경계를 넘을 경우
+	if (adjustedLeft + subMenuWidth > containerInnerWidth) {
+	    positionX = 'right';
+	}
+    
+	// 서브 메뉴가 화면 하단 경계를 넘을 경우
+	if (adjustedTop + subMenuHeight > containerInnerHeight) {
+	    positionY = 'bottom';
+	}
+	
+	// position css 적용
+	$subMenuContainer.css({[positionY]: 0, [positionX]: '50%'});
+	
+	// 위치 값 저장
+	const position = {positionX, positionY};
+	return position;
 }
 
 // 리스트 서브 메뉴 이벤트 객체 설정
@@ -454,11 +500,11 @@ function mapCreateListSubMenueObject(dataList) {
 		'advertisement_category': {
 			'list': [
 				{
-					subMenuTitle: '신고 리스트 보기',
+					subMenuTitle: '광고 리스트 보기',
 					link: `/advertisement/info/advertisement_list_form?sortType=2&infoNo=${dataList.info_no}&sortValue=${dataList.sort_value}&order=${dataList.order}`,
 				},
 				{
-					subMenuTitle: '신고 분류 보기',
+					subMenuTitle: '광고 분류 보기',
 					link: `/advertisement/cate_info/modify_category_form?sortType=2&infoNo=${dataList.info_no}`,
 				},
 			],
@@ -743,10 +789,15 @@ function mapApiResponseObject(apiUrl, response) {
 			break;	
 			
 		case '/advertisement/info/get_advertisement_list_by_category': // 광고 관리 위치별 데이터
-		case '/advertisement/cate_info/get_advertisement_list_by_category': // 광고 분류 상세페이지 내 위치별 데이터
 			getListDtos = response.advertisementDtos;
 			getListPage = response.advertisementByCategoryPageNum;
 			getListCnt = response.advertisementByCategoryPageNum.advertisementListByCategoryCnt;
+			break;
+			
+		case '/advertisement/info/get_advertisement_list_for_category_modify': // 광고 분류 상세페이지 내 위치별 데이터
+			getListDtos = response.advertisementDtos;
+			getListPage = response.advertisementListForCategoryModifyPageNum;
+			getListCnt = response.advertisementListForCategoryModifyPageNum.advertisementListForCategoryModifyCnt;
 			break;
 			
 		case '/advertisement/cate_info/get_category_list': // 광고 분류 관리
@@ -1085,7 +1136,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            <td>
 		                <div class="table_info table_list_sub_menu f_jc_center"
 		                	data-type="cate">
-		                	<p class="info_text">${data.diseaseCategoryDto.dc_name}</p>f_jc_center
+		                	<p class="info_text">${data.diseaseCategoryDto.dc_name}</p>
 		                </div>
 		            </td>
 		            <td>
@@ -1543,8 +1594,8 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            </td>
 		            <td class="va_m">
 		                <a href="/report/info/result_form?br_no=${data.br_no}&br_post_no=${data.br_post_no}" class="flex_area">
-		                	<span class="state icon ${data.br_state === 1 ? 'off' : ''}">
-		                		${data.br_state === 1 ? '대기' : '처리완료'}
+		                	<span class="state icon ${data.br_state === true ? 'off' : ''}">
+		                		${data.br_state === true ? '대기' : '처리완료'}
 		                	</span>
 		                </a>
 		            </td>
@@ -1631,8 +1682,8 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 		            </td>
 		            <td class="va_m">
 		                <a href="/advertisement/info/modify_form?ad_no=${data.ad_no}" class="flex_area">
-		                	<span class="state ${data.ad_state === 1 ? '' : 'off'}">
-		                		${data.ad_state === 1 ? '사용' : '만료'}
+		                	<span class="state ${data.ad_state === true ? '' : 'off'}">
+		                		${data.ad_state === true ? '사용' : '만료'}
 		                	</span>
 		                </a>
 		            </td>
@@ -1652,10 +1703,10 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 			`;
 			break;
 			
-		case '/advertisement/cate_info/get_advertisement_list_by_category': // 광고 분류 상세페이지 내 위치별 분류 리스트 테이블	
+		case '/advertisement/info/get_advertisement_list_for_category_modify': // 광고 분류 상세페이지 내 위치별 분류 리스트 테이블	
 			regDate = new Date(new Date(data.ad_reg_date).getTime() + newIconsHours);
 			tableTrContent = `
-				<tr data-no-name="ad_no" data-no="${data.ad_no}" data-idx="${data.ad_idx}">
+				<tr data-no_name="ad_no" data-no="${data.ad_no}" data-idx="${data.ad_idx}">
 					<td class="va_m">
 						<div class="flex_area">
 							${getListCnt > 1 ? `
@@ -1697,7 +1748,7 @@ function generateTableList(apiUrl, data, getListCnt, listIndex, page) {
 }
 
 // 페이지네이션 생성
-function generatePagination(apiUrl, sortValue, order, pagingValues, isSearch) { // apiUrl, sortValue, order, 페이징벨류값, isSearch
+function generatePagination(apiUrl, sortValue, order, pagingValues, contentTable, isSearch) { // apiUrl, sortValue, order, 페이징벨류값, isSearch
 	const blockLimit = pagingValues.blockLimit; // 한 블럭에 포함되는 페이지 수
 	const startPage = pagingValues.startPage; // 현재 블럭의 시작 페이지
 	const endPage = pagingValues.endPage; // 현재 블럭의 마지막 페이지
@@ -1714,14 +1765,14 @@ function generatePagination(apiUrl, sortValue, order, pagingValues, isSearch) { 
 	
 	if(totalBlocks > 1 && currentBlock > 1) { // 블럭이 1개 이상일 경우 2번째 블럭 부터 노출
 		paging += `
-			<div onclick="${handlerFunction}(${args}, 1)" class="first func_icon">
+			<div onclick="${handlerFunction}(${args}, 1, false, '${contentTable}')" class="first func_icon">
 	            <svg aria-label="first" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" enable-background="new 0 0 20 20">
 	                <polygon points="10,5 10,0 0,10 10,20 10,15 5,10 	"/>
 	             <polygon points="15,5 10,10 15,15 20,20 20,0 	"/>
 	            </svg>
 	        </div>
 	        
-	        <div onclick="${handlerFunction}(${args}, ${startPage - 1})" class="prev func_icon">
+	        <div onclick="${handlerFunction}(${args}, ${startPage - 1}, false, '${contentTable}')" class="prev func_icon">
 	            <svg aria-label="first" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" enable-background="new 0 0 20 20">
 	                <polygon points="15,0 5,10 15,20 "/>
 	            </svg>
@@ -1733,19 +1784,19 @@ function generatePagination(apiUrl, sortValue, order, pagingValues, isSearch) { 
 		if(i === currentPage) {
 			paging += `<div class="current">${i}</div>`;
 		} else {
-			paging += `<div class="num" onclick="${handlerFunction}(${args}, ${i})">${i}</div>`;
+			paging += `<div class="num" onclick="${handlerFunction}(${args}, ${i}, false, '${contentTable}')">${i}</div>`;
 		}
 	}
 	
 	if(totalBlocks > 1 && currentBlock < totalBlocks) { // 마지막 전 블럭까지 노출
 		paging += `
-			<div onclick="${handlerFunction}(${args}, ${endPage + 1})" class="next func_icon">
+			<div onclick="${handlerFunction}(${args}, ${endPage + 1}, false, '${contentTable}')" class="next func_icon">
 	            <svg aria-label="first" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" enable-background="new 0 0 20 20">
 	                <polygon points="15,0 5,10 15,20 "/>
 	            </svg>
 	        </div>
 	        
-	        <div onclick="${handlerFunction}(${args}, ${maxPage})" class="last func_icon">
+	        <div onclick="${handlerFunction}(${args}, ${maxPage}, false, '${contentTable}')" class="last func_icon">
 	            <svg aria-label="first" class="fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" enable-background="new 0 0 20 20">
 	                <polygon points="10,5 10,0 0,10 10,20 10,15 5,10 	"/>
 	             <polygon points="15,5 10,10 15,15 20,20 20,0 	"/>

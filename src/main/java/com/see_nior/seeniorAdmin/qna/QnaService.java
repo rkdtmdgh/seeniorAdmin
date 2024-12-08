@@ -1,6 +1,7 @@
 package com.see_nior.seeniorAdmin.qna;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -25,6 +27,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.account.mapper.AccountMapper;
 import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
+import com.see_nior.seeniorAdmin.dto.DeleteQnaoticeDto;
 import com.see_nior.seeniorAdmin.dto.QnaCategoryDto;
 import com.see_nior.seeniorAdmin.dto.QnaDto;
 import com.see_nior.seeniorAdmin.dto.QnaNoticeDto;
@@ -53,7 +56,7 @@ public class QnaService {
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		List<AdminAccountDto> qnaDtos = 
+		List<QnaDto> qnaDtos = 
 				qnaMapper.selectQnaList(PagingUtil.pagingParams(page_limit, sortValue, order, page));
 		pagingList.put("qnaDtos", qnaDtos);
 		
@@ -97,7 +100,7 @@ public class QnaService {
 		
 		Map<String, Object> pagingSearchList = new HashMap<>();
 
-		List<AdminAccountDto> qnaDtos = 
+		List<QnaDto> qnaDtos = 
 				qnaMapper.selectSearchQnaList(PagingUtil.searchPagingParams(page_limit, searchPart, searchString, sortValue, order, page));
 		pagingSearchList.put("qnaDtos", qnaDtos);
 		
@@ -141,7 +144,7 @@ public class QnaService {
 		
 		Map<String, Object> pagingList = new HashMap<>();
 		
-		List<AdminAccountDto> qnaDtos = 
+		List<QnaDto> qnaDtos = 
 				qnaMapper.selectQnaListForSelectBox(PagingUtil.pagingParamsForSelectBox(page_limit, sortValue, order, page, bqc_no));
 		pagingList.put("qnaDtos", qnaDtos);
 		
@@ -334,6 +337,7 @@ public class QnaService {
 		Map<String, Object> responseMap = new HashMap<>();
 		
 		List<QnaDto> qnaDtosForMain = qnaMapper.selectQnaListForMain(page_limit);
+		
 		responseMap.put("qnaDtos", qnaDtosForMain);
 		
 		return responseMap;
@@ -397,7 +401,7 @@ public class QnaService {
 		
 		Map<String, Object> pagingCategoryList = new HashMap<>();
 		
-		List<AdminAccountDto> qnaCategoryDtos = 
+		List<QnaCategoryDto> qnaCategoryDtos = 
 				qnaMapper.selectQnaCategoryList(PagingUtil.pagingParams(page_limit, sortValue, order, page));
 		pagingCategoryList.put("qnaCategoryDtos", qnaCategoryDtos);
 		
@@ -423,7 +427,7 @@ public class QnaService {
 		
 		Map<String, Object> pagingSearchCategoryList = new HashMap<>();
 		
-		List<AdminAccountDto> qnaCategoryDtos = 
+		List<QnaCategoryDto> qnaCategoryDtos = 
 				qnaMapper.selectSearchQnaCategoryList(PagingUtil.searchPagingParams(page_limit, searchPart, searchString, sortValue, order, page));
 		pagingSearchCategoryList.put("qnaCategoryDtos", qnaCategoryDtos);
 		
@@ -496,7 +500,7 @@ public class QnaService {
 		
 		Map<String, Object> pagingNoticeList = new HashMap<>();
 		
-		List<AdminAccountDto> qnaNoticeDtos = 
+		List<QnaNoticeDto> qnaNoticeDtos = 
 				qnaMapper.selectQnaNoticeList(PagingUtil.pagingParams(page_limit, sortValue, order, page));
 		pagingNoticeList.put("qnaNoticeDtos", qnaNoticeDtos);
 		
@@ -522,7 +526,7 @@ public class QnaService {
 		
 		Map<String, Object> pagingSearchQnaNoticeList = new HashMap<>();
 		
-		List<AdminAccountDto> qnaNoticeDtos = 
+		List<QnaNoticeDto> qnaNoticeDtos = 
 				qnaMapper.selectSearchQnaNoticeList(PagingUtil.searchPagingParams(page_limit, searchPart, searchString, sortValue, order, page));
 		pagingSearchQnaNoticeList.put("qnaNoticeDtos", qnaNoticeDtos);
 		
@@ -764,6 +768,7 @@ public class QnaService {
 					QnaNoticeDto newQnaNoticeDto = new QnaNoticeDto();
 					newQnaNoticeDto.setBqn_no(qnaNoticeDto.getBqn_no());
 					newQnaNoticeDto.setBqn_title(qnaNoticeDto.getBqn_title());
+					newQnaNoticeDto.setBqn_state(qnaNoticeDto.isBqn_state());
 					newQnaNoticeDto.setBqn_dir_name(qnaNoticeDto.getBqn_dir_name());
 					newQnaNoticeDto.setBqn_body(bqn_body);
 					
@@ -892,14 +897,88 @@ public class QnaService {
 		
 	}
 
+	// QNA 공지사항 삭제(is_deleted 값 update) 30일 경과 후 img 저장 폴더 삭제 스케쥴러
+	@Scheduled(cron = "0 1 0 * * ?")	//초 분 시 일 월 요일 년 (각 자리에 *는 모든 값을 의미)
+	public void deleteImgFolder() {
+		log.info("deleteImgFolder()");
+		
+		List<DeleteQnaoticeDto> deleteQnaNoticeDots = 
+				qnaMapper.selectDeleteQnaNoticeInfo();
 
-
-
-
-
-
-
-
+		// 공지사항 삭제 후 30일 경과된 컬럼이 없는 경우 리턴.  
+		if (deleteQnaNoticeDots.size() == 0) {
+			log.info("deleteQnaNoticeDots.size() == 0");
+			return;
+		}
+		
+		List<String> deleteFolderPaths = new ArrayList<String>();
+		
+		// 30일이 경과된 컬럼이 있는 경우 삭제 할 dir 경로 추출.
+		for (int i = 0; i < deleteQnaNoticeDots.size(); i++) {
+			if (deleteQnaNoticeDots.get(i).getDbqn_dir_name() != null) {
+				String folderPath = ImgUrlPath.NOTICE_FILE_PATH.getValue() 
+						+ deleteQnaNoticeDots.get(i).getDbqn_dir_name();
+				deleteFolderPaths.add(folderPath);
+			}
+		}
+		
+		// 30일이 경과된 컬럼이 있지만 삭제 할 이미지는 없는 경우.
+		if (deleteFolderPaths.size() == 0) {
+			log.info("deleteFolderPaths.size() == 0");
+			
+			int updateResult = 0;
+			List<Integer> deleteFailedList = new ArrayList<>();
+			
+			for (int i = 0; i < deleteQnaNoticeDots.size(); i++) {
+				
+				updateResult =
+						qnaMapper.updateDeleteQnaNoticeIsDeleted(deleteQnaNoticeDots.get(i).getDbqn_no());
+				
+				if (updateResult <= 0) {
+					deleteFailedList.add(deleteQnaNoticeDots.get(i).getDbqn_no());
+				}
+				
+			}
+			
+			log.info("updateDeleteNoticeIsDeleted failed list ----- {}", deleteFailedList);
+			
+			return;
+		}
+		
+		// 30일이 경과된 컬럼 이미지 서버 삭제 요청 
+		ResponseEntity<String> deletedFolders =
+				imageFileService.deleteFolders(deleteFolderPaths);
+		
+		// 이미지 서버 삭제 성공
+		if (deletedFolders.getBody().equals("1")) {
+			log.info("DELETEDFOLDERS SUCCESS!");
+			
+			int updateResult = 0;
+			List<Integer> deleteFailedList = new ArrayList<>();
+			
+			for (int i = 0; i < deleteQnaNoticeDots.size(); i++) {
+				
+				updateResult =
+						qnaMapper.updateDeleteQnaNoticeIsDeleted(deleteQnaNoticeDots.get(i).getDbqn_no());
+				
+				if (updateResult <= 0) {
+					deleteFailedList.add(deleteQnaNoticeDots.get(i).getDbqn_no());
+				}
+				
+			}
+			
+			log.info("updateDeleteNoticeIsDeleted failed list ----- {}", deleteFailedList);
+			
+		// 이미지 서버 삭제 실패
+		} else if (deletedFolders.getBody().equals("0")) {
+			log.info("FOLDER NAME OR PATH NOT FOUND!!");
+			log.info("response value: {}", deletedFolders.getBody());
+		} else {
+			log.info("FOLDER DELETE FAIL!!");
+			log.info("response value: {}",deletedFolders.getBody());
+		}
+		
+	}
 
 
 }

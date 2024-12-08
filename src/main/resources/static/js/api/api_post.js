@@ -161,7 +161,7 @@ async function postDiseaseCategoryCreate(formName, nextPage) {
 	
 	const formData = new FormData(form);
 	const successMessage = `"${input.value}" 질환/질병 분류가 등록되었습니다.`;
-	const errorMessage = `"${input.value}" 질환/질병 분류 등록 실패했습니다.`;
+	const errorMessage = `"${input.value}" 질환/질병 분류 등록에 실패했습니다.`;
 	
 	await postIntegSubmit(
 		'/disease/cate_info/create_category_confirm', 				// apiUrl
@@ -291,6 +291,7 @@ async function postVideoCreate(formName) {
 // 공지사항 등록
 async function postNoticeCreate(formName) {
 	const form = document.forms[formName];
+	let input;
 	
 	input = form.n_title;
 	if(!validateEmpty(input, '제목', true)) {
@@ -326,6 +327,7 @@ async function postNoticeCreate(formName) {
 // QNA 공지사항 등록
 async function postQnaNoticeCreate(formName) {
 	const form = document.forms[formName];
+	let input;
 	
 	input = form.bqn_title;
 	if(!validateEmpty(input, '제목', true)) {
@@ -371,7 +373,7 @@ async function postQnaCategoryCreate(formName) {
 	
 	const formData = new FormData(form);
 	const successMessage = `"${input.value}" 질문 유형 분류가 등록되었습니다.`;
-	const errorMessage = `"${input.value}" 질문 유형 분류 등록 실패했습니다.`;
+	const errorMessage = `"${input.value}" 질문 유형 분류 등록에 실패했습니다.`;
 	
 	await postIntegSubmit(
 		'/qna/cate_info/create_category_confirm',
@@ -386,6 +388,7 @@ async function postQnaCategoryCreate(formName) {
 // QnA 답변 등록
 async function postAnswerCreate(formName) {
 	const form = document.forms[formName];
+	let input;
 	
 	input = form.bqa_answer;
 	if(!validateEmpty(input, '답변', true)) {
@@ -437,6 +440,7 @@ async function postBoardCategoryCreate(formName) {
 // 게시판 공지 사항 등록
 async function postNoticePostsCreate(formName) {
 	const form = document.forms[formName];
+	let input;
 	
 	input = form.bn_title;
 	if(!validateEmpty(input, '제목', true)) {
@@ -472,6 +476,7 @@ async function postNoticePostsCreate(formName) {
 // 일반 게시물 등록
 async function postPostsCreate(formName) {
 	const form = document.forms[formName];
+	let input;
 	
 	input = form.bp_title;
 	if(!validateEmpty(input, '제목', true)) {
@@ -517,7 +522,7 @@ async function postReportCategoryCreate(formName) {
 	
 	const formData = new FormData(form);
 	const successMessage = `"${input.value}" 신고 유형 분류가 등록되었습니다.`;
-	const errorMessage = `"${input.value}" 신고 유형 분류 등록 실패했습니다.`;
+	const errorMessage = `"${input.value}" 신고 유형 분류 등록에 실패했습니다.`;
 	
 	await postIntegSubmit(
 		'/report/cate_info/create_category_confirm',
@@ -529,6 +534,35 @@ async function postReportCategoryCreate(formName) {
 	);
 }
 
+// 신고 처리 등록
+async function postReportResultCreate(formName) {
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.brr_result;
+	if(!validateEmpty(input, '내용', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.bp_report_state;
+	const resultState = input.value === '1' ? '정상' : '정지'
+	const isConfirm = confirm(`신고 게시물을 ${resultState} 처리하시겠습니까?`);
+	if(!isConfirm) return false;
+	
+	const formData = new FormData(form);
+	const successMessage = '신고 처리 내용이 등록되었습니다.';
+	const errorMessage = '신고 처리 내용 등록에 실패했습니다.';
+	
+	await postIntegSubmit(
+		'/report/info/create_result_confirm',
+		formData,
+		successMessage,
+		errorMessage, 																
+		null,
+		'content_inner'
+	);
+}
 
 // 광고 위치 분류 등록
 async function postAdvertisementCategoryCreate(formName, nextPage) {
@@ -543,7 +577,7 @@ async function postAdvertisementCategoryCreate(formName, nextPage) {
 	
 	const formData = new FormData(form);
 	const successMessage = `"${input.value}" 광고 위치 분류가 등록되었습니다.`;
-	const errorMessage = `"${input.value}" 광고 위치 분류 등록 실패했습니다.`;
+	const errorMessage = `"${input.value}" 광고 위치 분류 등록에 실패했습니다.`;
 	
 	await postIntegSubmit(
 		'/advertisement/cate_info/create_category_confirm',

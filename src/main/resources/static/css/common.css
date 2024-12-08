@@ -8,7 +8,7 @@
 :root {
 
     /* font */
-    --baseFontFamily: 'Pretendard Variable';
+    --basicFontFamily: 'Pretendard Variable';
     --subFontSize: 0.9em;
     --smallFontSize: 0.75em;
     --middleFontSize: 0.8em;
@@ -47,13 +47,13 @@
     --logoWidth: 160px;
     --sideMenuWidth: 270px;
     --signFormWidth: 340px;
-    --iconsWidth: 20px;
-    --smallIconsWidth: 15px;
+    --iconsSize: 20px;
+    --smallIconsSize: 15px;
     --bigIconsWidth: 45px;
-    --profileThumbWidth: 65px;
-    --smallThumbWidth: 35px;
-    --arrowWidth: 5px; /* X2 (5px = 10px) */
-    --arrowButtonWidth: 15px;
+    --profileThumbSize: 65px;
+    --smallThumbSize: 35px;
+    --arrowSize: 5px; /* X2 (5px = 10px) */
+    --arrowButtonSize: 15px;
     --contentSubThumbWidth: 200px;
     
     --headerHeight: 70px;
@@ -70,7 +70,8 @@
     --btnsPadding: 1em 1.5em;
     --smallBtnsPadding: 0.5em 1em;
     --tableBtnPadding: 0.3em;
-    --textPadding: 0.95em 1.2em;
+    --sidePadding: 0.9em;
+    --textPadding: 0.8em var(--sidePadding);
     --subTextPadding: 0.3em 1em;
     --subTextIndent: 0 0 0 0.85em;
     --borderInputPadding: 1em 1em 10px;
@@ -78,23 +79,23 @@
     --iconsPadding: 0.5em;
     --smallIconsPadding: 0.3em 0.5em;
     --inputIconsPadding: 0.15em;
-    --tableInputErrorPadding: 0 1.2em 0.7em;
-    --optionPadding: 0.7em 1.2em;
+    --tableInputErrorPadding: 0 var(--sidePadding) 0.7em;
+    --optionPadding: 0.7em var(--sidePadding);
     --notificationsPadding: 1.5em;
 
-    --baseGap: 20px;
+    --basicGap: 20px;
     --smallGap: 10px;
     --stepGap: 40px;
     --formGap: 30px;
 
     --bdrs: 0.5em;
-    --bxsh: 0 1px 5px rgba(0,0,0, .15);
+    --bxsh: 0 1px 5px rgba(0,0,0, .07);
     --inputBorder: 1px solid var(--lightGrayColor);
 
-    --transition: .2s; 
+    --transition: .2s ease-in-out; 
 
     /* position */
-    --trslC: -50%, -50%; /*translate center*/
+    --trslC: translate(-50%, -50%); /*translate center*/
     --inputIconTop: 1em;
     --tableInputIconTop: 0.8em;
 
@@ -115,7 +116,7 @@
 }
 
 html, body {
-    font-family: var(--baseFontFamily);
+    font-family: var(--basicFontFamily);
     font-size: 16px;
     line-height: var(--basicLineHeight);
     background-color: var(--bgColor);
@@ -272,7 +273,7 @@ table {
 /* colgroup */
 .col_checkBox { width: 50px; }
 .col_no { width: 70px; }
-.col_state { width: 8%; }
+.col_state { width: 9%; }
 .col_default { width: 20%; }
 .col_short { width: 13%; }
 .col_long { width: 30%; }

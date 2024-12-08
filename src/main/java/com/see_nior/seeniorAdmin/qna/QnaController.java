@@ -495,19 +495,4 @@ public class QnaController {
 		
 	}
 	
-	
-	
-	
-
-	////////////////////////////////////////////////////////////
-	// qna test 
-	@GetMapping("/test")
-	@ResponseBody
-	public Object qnaTest() {
-		log.info("test()");
-		
-		return qnaService.getQnaListForMain(10);
-		
-	}
-	
 }

@@ -38,6 +38,12 @@
 									지금 입력하신 주소의 페이지는 사라졌거나 다른 페이지로 변경되었습니다.
 									<br>주소를 다시 확인해 주세요.
 								</p>
+								
+								<div class="error_code">
+									<span class="bold" th:if="${status}" th:text="${status}"></span>
+									<span th:if="${error}" th:text="| (${error})|"></span>
+									<p th:if="${message}" th:text="${message}"></p>
+								</div>
 							</div>
 							
 							<a href="javascript: history.back();" class="btns">이전 화면으로</a>

@@ -254,7 +254,7 @@
 			AD_IS_DELETED = 1 
 		ORDER BY 
 			AD_IDX DESC 
-		LIMIT 0, 1
+		LIMIT 1
 	
 	</select>
 	
@@ -271,7 +271,7 @@
 	
 	<!-- idx값을 기존 idx들의 중간값 혹은 기존 idx값 보다 작은 값으로 입력 시 나머지 idx들 +1 처리 하기 -->
 	<update id="updateAdvertisementIdxSum"
-			parameterType="Integer">
+			parameterType="Map">
 			
 		UPDATE 
 			ADVERTISEMENT 
@@ -291,7 +291,7 @@
 	
 	<!-- idx값을 기존 idx값 보다 큰 값으로 입력 시 나머지 idx들 -1 처리 하기 -->
 	<update id="updateAdvertisementIdxSub"
-			parameterType="Integer">
+			parameterType="Map">
 			
 		UPDATE 
 			ADVERTISEMENT 
@@ -387,9 +387,15 @@
 		SELECT 
 			COUNT(*) 
 		FROM 
-			ADVERTISEMENT 
+			ADVERTISEMENT AS AD 
+		JOIN 
+			ADVERTISEMENT_CATEGORY AS AC 
+		ON 
+			AD.AD_CATEGORY_NO = AC.AC_NO 
 		WHERE 
-			AD_IS_DELETED = 1 
+			AD.AD_IS_DELETED = 1 
+		AND 
+			AC.AC_IS_DELETED = 1 
 	
 	</select>
 	
@@ -460,11 +466,70 @@
 		SELECT 
 			COUNT(*) 
 		FROM 
-			ADVERTISEMENT 
+			ADVERTISEMENT AS AD 
+		JOIN 
+			ADVERTISEMENT_CATEGORY AS AC 
+		ON 
+			AD.AD_CATEGORY_NO = AC.AC_NO 
 		WHERE 
-			AD_IS_DELETED = 1 
+			AD.AD_IS_DELETED = 1 
 		AND 
-			AD_CATEGORY_NO = #{infoNo} 
+			AC.AC_IS_DELETED = 1 
+		AND 
+			AD.AD_CATEGORY_NO = #{infoNo}
+	
+	</select>
+	
+	<!-- 페이지에 따른 광고 가져오기 (위치별 광고 => 광고 위치 디테일 뷰에서) -->
+	<select id="getAdvertisementListForCategoryModifyWithPage"
+			parameterType="Map"
+			resultMap="AdvertisementDto">
+			
+		SELECT 
+			AD.*, 
+			AC.* 
+		FROM 
+		    ADVERTISEMENT AD 
+		JOIN 
+		    ADVERTISEMENT_CATEGORY AC 
+		ON 
+		    AD.AD_CATEGORY_NO = AC.AC_NO 
+		WHERE 
+		    AD.AD_IS_DELETED = 1 
+		AND 
+			AC.AC_IS_DELETED = 1 
+		AND 
+			AD.AD_STATE = 1 
+		AND 
+			AD.AD_CATEGORY_NO = #{infoNo} 
+		ORDER BY 
+			${sortValue} ${order} 
+		LIMIT 
+			#{start}, #{limit}
+	
+	</select>
+	
+	<!-- 광고의 총 리스트 개수 구하기(위치별 광고 => 광고 위치 디테일 뷰에서) -->
+	<select id="getAdvertisementForCategoryModifyCnt"
+			parameterType="Integer"
+			resultType="Integer">
+
+		SELECT 
+			COUNT(*) 
+		FROM 
+			ADVERTISEMENT AS AD 
+		JOIN 
+			ADVERTISEMENT_CATEGORY AS AC 
+		ON 
+			AD.AD_CATEGORY_NO = AC.AC_NO 
+		WHERE 
+			AD.AD_IS_DELETED = 1 
+		AND 
+			AC.AC_IS_DELETED = 1 
+		AND 
+			AD.AD_STATE = 1 
+		AND 
+			AD.AD_CATEGORY_NO = #{infoNo}
 	
 	</select>
 	
@@ -474,9 +539,14 @@
 			resultMap="AdvertisementDto">
 	
 		SELECT 
-			* 	
+			AD.*, 
+			AC.* 	
 		FROM 
-			ADVERTISEMENT 
+			ADVERTISEMENT AS AD
+		JOIN 
+			ADVERTISEMENT_CATEGORY AS AC 
+		ON 
+			AD.AD_CATEGORY_NO = AC.AC_NO 
 		WHERE 
 			AD_NO = #{ad_no}
 	
@@ -521,7 +591,23 @@
 	
 	</update>
 	
-	<!-- 광고 삭제 -->
+	<!-- 삭제하는 광고의 광고 위치에 있는 IDX들 중 삭제하는 광고의 IDX보다 큰 것들 -1 처리 하기 -->
+	<update id="updateAdvertisementIdxSubForDelete"
+			parameterType="AdvertisementDto">
+	
+		UPDATE 
+			ADVERTISEMENT 
+		SET 
+			AD_IDX = AD_IDX - 1, 
+			AD_MOD_DATE = NOW() 
+		WHERE 
+			AD_CATEGORY_NO = #{ad_category_no} 
+		AND 
+			AD_IDX >= #{ad_idx}
+	
+	</update>
+	
+	<!-- 광고 삭제 확인 -->
 	<update id="deleteAdvertisement"
 			parameterType="Integer">
 	
@@ -535,6 +621,19 @@
 			AD_NO = #{ad_no}
 	
 	</update>
+	
+	<!-- 만료된 지 30일이 지난 광고 리스트의 No들 가져오기 -->
+	<select id="getAdvertisementsEnded30Days"
+			resultType="Integer">
+			
+		SELECT 
+			AD_NO 
+		FROM 
+			ADVERTISEMENT 
+		WHERE 
+			DATE_SUB(CURDATE(), INTERVAL 30 DAY) > AD_END_DATE
+	
+	</select>
 	
 	<!-- 페이지에 따른 광고 가져오기(검색한 광고) -->
 	<select id="getSearchAdvertisement"
@@ -571,9 +670,15 @@
 		SELECT 
 			COUNT(*) 
 		FROM 
-			ADVERTISEMENT 
+			ADVERTISEMENT AS AD 
+		JOIN 
+			ADVERTISEMENT_CATEGORY AS AC 
+		ON 
+			AD.AD_CATEGORY_NO = AC.AC_NO 
 		WHERE 
-			AD_IS_DELETED = 1 
+			AD.AD_IS_DELETED = 1 
+		AND 
+			AC.AC_IS_DELETED = 1 
 		AND 
 			${searchPart} LIKE CONCAT ('%', #{searchString}, '%')
 	

@@ -139,9 +139,15 @@
 		SELECT 
 			COUNT(BQ_NO) 
 		FROM 
-			BOARD_QNA 
+			BOARD_QNA BQ 
+		LEFT JOIN 
+			BOARD_QNA_CATEGORY BQC 
+		ON 
+			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
 		WHERE 
-			BQ_IS_DELETED = 1 
+			BQ.BQ_IS_DELETED = 1 
+		AND 
+			BQC.BQC_IS_DELETED = 1 
 		
 	</select>
 	
@@ -151,12 +157,18 @@
 		SELECT 
 			COUNT(*) 
 		FROM 
-			BOARD_QNA 
+			BOARD_QNA BQ 
+		LEFT JOIN 
+			BOARD_QNA_CATEGORY BQC 
+		ON 
+			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
 		WHERE 
-			BQ_IS_DELETED = 1 
+			BQ.BQ_IS_DELETED = 1 
 		AND 
-			BQ_ANSWER_NO IS NULL 
-	
+			BQC.BQC_IS_DELETED = 1  
+		AND 
+			BQ.BQ_ANSWER_NO IS NULL 
+
 	</select>
 	
 	<!-- 답변 안된 qna 리스트 가져오기 -->
@@ -230,11 +242,17 @@
 		FROM 
 			BOARD_QNA BQ 
 		LEFT JOIN 
+			BOARD_QNA_CATEGORY BQC 
+		ON 
+			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
+		LEFT JOIN 
 			USER_ACCOUNT U  
 		ON 
 			BQ.BQ_USER_NO = U.U_NO 
 		WHERE 
-			BQ_IS_DELETED = 1 
+			BQ.BQ_IS_DELETED = 1 
+		AND 
+			BQC.BQC_IS_DELETED = 1 
 		<if test="searchPart != null and searchString != null">
 			<choose>
 				<when test="searchPart == 'u_id'">
@@ -259,6 +277,10 @@
 		FROM 
 			BOARD_QNA BQ 
 		LEFT JOIN 
+			BOARD_QNA_CATEGORY BQC 
+		ON 
+			BQ.BQ_CATEGORY_NO = BQC.BQC_NO 
+		LEFT JOIN 
 			USER_ACCOUNT U  
 		ON 
 			BQ.BQ_USER_NO = U.U_NO 
@@ -266,6 +288,8 @@
 			BQ.BQ_IS_DELETED = 1 
 		AND 
 			U.U_IS_DELETED = 1 
+		AND 
+			BQC.BQC_IS_DELETED = 1 
 		<if test="searchPart != null and searchString != null">
 			<choose>
 				<when test="searchPart == 'u_id'">
@@ -806,6 +830,13 @@
 		SET 
 			BQN_TITLE = #{bqn_title}, 
 			BQN_BODY = #{bqn_body}, 
+			BQN_STATE = 
+			<if test="bqn_state == true">
+				1, 
+			</if>
+			<if test="bqn_state == false">
+				0, 
+			</if>
 			BQN_DIR_NAME = #{bqn_dir_name}, 
 			BQN_MOD_DATE = NOW() 
 		WHERE 
@@ -876,5 +907,30 @@
 			#{page_limit} 
 	
 	</select>
+	
+	<select id="selectDeleteQnaNoticeInfo"
+			resultType="DeleteQnaoticeDto">
+	
+		SELECT 
+			* 
+		FROM 
+			DELETE_BOARD_QNA_NOTICE 
+		WHERE 
+			DBQN_IS_VALID = 0 
+		AND 
+			DBQN_IMG_DELETED = 1 
+			
+	</select>
+	
+	<update id="updateDeleteQnaNoticeIsDeleted">
+	
+		UPDATE 
+			DELETE_BOARD_QNA_NOTICE 
+		SET 
+			DBQN_IMG_DELETED = 0 
+		WHERE 
+			DBQN_NO = #{dbqn_no}
+	
+	</update>
 	
 </mapper>

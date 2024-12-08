@@ -5,7 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import com.see_nior.seeniorAdmin.account.AccountService;
+import com.see_nior.seeniorAdmin.dto.AdminAccountDto;
 import com.see_nior.seeniorAdmin.dto.ReportCategoryDto;
 import com.see_nior.seeniorAdmin.dto.ReportDto;
 import com.see_nior.seeniorAdmin.enums.SqlResult;
@@ -21,6 +25,8 @@ import lombok.extern.log4j.Log4j2;
 public class ReportService {
 	
 	final private ReportMapper reportMapper;
+	
+	final private AccountService accountService;
 	
 ////////////////////////////////////////////////////////// 신고 카테고리
 	
@@ -91,6 +97,7 @@ public class ReportService {
 		log.info("getCategory()");
 		
 		ReportCategoryDto reportCategoryDto = reportMapper.getReportCategory(brc_no);
+		if (reportCategoryDto == null) throw new RuntimeException("reportCategoryDto is null!!");
 
 		return reportCategoryDto;
 		
@@ -203,6 +210,17 @@ public class ReportService {
 		log.info("getReport()");
 		
 		ReportDto reportDto = reportMapper.getReport(br_no);
+		if (reportDto == null) throw new RuntimeException("reportDto is null!!");
+		
+		else {
+			
+			if (reportDto.getReportResultDto() != null)	{
+				
+				if (reportDto.getReportResultDto().isBrr_is_deleted() == false) reportDto.setReportResultDto(null);
+				
+			}
+			
+		}
 		
 		return reportDto;
 		
@@ -240,6 +258,19 @@ public class ReportService {
 		
 	}
 
+	// 신고 삭제 확인
+	public boolean deleteConfirm(int br_no) {
+		log.info("deleteConfirm()");
+		
+		int deleteResult = reportMapper.deleteReport(br_no);
+		
+		// DB에 입력 실패
+		if (deleteResult <= 0) return SqlResult.FAIL.getValue();
+		// DB에 입력 성공
+		else return SqlResult.SUCCESS.getValue();
+		
+	}
+	
 	// 페이지에 따른 신고 가져오기 (검색한 신고)
 	public Map<String, Object> getSearchReportListWithPage(int page_limit, String searchPart, String searchString, String sortValue,
 			String order, int page) {
@@ -280,5 +311,119 @@ public class ReportService {
 		return reportMapper.getUnresultedReportCntBySearch(pagingParams);
 		
 	}
+	
+////////////////////////////////////////////////////////// 신고 처리
+
+	// 신고 처리 등록 확인
+	@Transactional
+	public boolean createResultConfirm(int br_no, String br_post_no, int bp_report_state, String brr_result, String a_id) {
+		log.info("createResultConfirm()");
+		
+		Map<String, Object> insertParams = new HashMap<>();
+		
+		// a_id값으로 a_no 가져오기
+		AdminAccountDto loginedAdminDto = accountService.getAdminAccountById(a_id);
+		
+		insertParams.put("br_no", br_no);
+		insertParams.put("brr_result", brr_result);
+		insertParams.put("a_no", loginedAdminDto.getA_no());
+		
+		try {
+			
+			// 신고 처리 결과 테이블에 신고 처리 결과 저장
+			int createReportResult = reportMapper.insertNewReportResult(insertParams);
+			
+			if (createReportResult <= 0) throw new RuntimeException("신고 처리 결과 테이블에 신고 처리 결과 저장 실패!!");
+				
+			// BOARD_REPORT_RESULT 테이블에 마지막으로 insert된 컬럼의 NO 가져오기
+			int brr_no = reportMapper.getReportResultLastNo();
+			
+			Map<String, Object> updateParams = new HashMap<>();
+			updateParams.put("br_no", br_no);
+			updateParams.put("brr_no", brr_no);
+			
+			// 신고 테이블에 신고 처리 결과 no와 처리 상태 업데이트
+			int updateBoardReportWithResult = reportMapper.updateBoardReportWithResult(updateParams);
+			
+			if (updateBoardReportWithResult <= 0) throw new RuntimeException("신고 테이블에 신고 처리 결과 no와 처리 상태 업데이트 실패!!");
+				
+			Map<String, Object> updateBoardPostsParams = new HashMap<>();
+			updateBoardPostsParams.put("br_post_no", br_post_no);
+			updateBoardPostsParams.put("bp_report_state", bp_report_state);
+			
+			// 게시물 숨김처리 결과(BP_REPORT_STATE)를 게시물 테이블에 업데이트
+			int updateBoardPostsWithResult = reportMapper.updateBoardPostsWithResult(updateBoardPostsParams);
+			
+			if (updateBoardPostsWithResult <= 0) throw new RuntimeException("게시물 테이블에 게시물 블락 처리 결과 업데이트 실패!");
+			
+			return SqlResult.SUCCESS.getValue();
+			
+		} catch (Exception e) {
+			log.error("에러 발생!!", e);
+			
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			
+			return SqlResult.FAIL.getValue();
+			
+		}
+		
+	}
+
+	// 신고 처리 수정 확인
+	@Transactional
+	public boolean modifyResultConfirm(int brr_no, String br_post_no, int bp_report_state, String brr_result,
+			String a_id) {
+		log.info("modifyResultConfirm()");
+
+		Map<String, Object> modifyParams = new HashMap<>();
+		
+		// a_id값으로 a_no 가져오기
+		AdminAccountDto loginedAdminDto = accountService.getAdminAccountById(a_id);
+		
+		modifyParams.put("brr_no", brr_no);
+		modifyParams.put("brr_result", brr_result);
+		modifyParams.put("a_no", loginedAdminDto.getA_no());
+		
+		try {
+			// 신고 처리 결과 테이블에 신고 처리 결과 업데이트
+			int updateReportResult = reportMapper.updateReportResult(modifyParams);
+			
+			if (updateReportResult <= 0) throw new RuntimeException("신고 처리 결과 테이블에 신고 처리 결과 저장 실패!!");
+				
+			Map<String, Object> updateBoardPostsParams = new HashMap<>();
+			updateBoardPostsParams.put("br_post_no", br_post_no);
+			updateBoardPostsParams.put("bp_report_state", bp_report_state);
+			
+			// 게시물 숨김처리 결과(BP_REPORT_STATE)를 게시물 테이블에 업데이트
+			int updateBoardPostsWithResult = reportMapper.updateBoardPostsWithResult(updateBoardPostsParams);
+			
+			if (updateBoardPostsWithResult <= 0) throw new RuntimeException("게시물 테이블에 게시물 블락 처리 결과 업데이트 실패!");
+			
+			return SqlResult.SUCCESS.getValue();
+			
+		} catch (Exception e) {
+			log.error("에러 발생!!", e);
+			
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			
+			return SqlResult.FAIL.getValue();
+		
+		}
+		
+	}
+
+	// 신고 처리 결과 삭제
+	public boolean deleteResultConfirm(int brr_no) {
+		log.info("deleteResultConfirm()");
+		
+		int deleteResult = reportMapper.deleteReportResult(brr_no);
+		
+		if (deleteResult <= 0) return SqlResult.FAIL.getValue();
+		
+		else return SqlResult.SUCCESS.getValue();
+		
+	}
+
+
 
 }

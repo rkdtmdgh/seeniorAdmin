@@ -146,6 +146,8 @@ public class NoticeController {
 			Principal principal) {
 		log.info("modifyConfirm()");
 		
+		log.info("noticeDto.isN_state() -------- {}", noticeDto.isN_state());
+		
 		boolean comparedResult = 
 				accountService.compareId(principal.getName(), noticeDto.getN_writer_no());
 		
@@ -173,20 +175,5 @@ public class NoticeController {
 		return noticeService.deleteConfirm(n_no);
 		
 	}
-	
-	
-	
-	////////////////////////////////
-	@GetMapping("/test")
-	@ResponseBody
-	public Object test() {
-		log.info("test()");
-		
-		
-		return null;
-		
-	}
-	
-	
 	
 }

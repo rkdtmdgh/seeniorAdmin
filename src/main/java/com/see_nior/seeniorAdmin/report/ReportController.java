@@ -253,6 +253,19 @@ public class ReportController {
 		
 	} 
 	
+	// 신고 삭제 확인 (비동기 => 사용하지 않지만 기능 구현 해 둠)
+	@ResponseBody
+	@PostMapping("/info/delete_confirm")
+	public boolean deleteConfirm(@RequestParam(value = "br_no") int br_no) {
+		log.info("deleteConfirm()");
+		
+		boolean deleteResult = reportService.deleteConfirm(br_no);
+		
+		return deleteResult;
+		
+	}
+	
+	
 	// 신고 검색 (페이지네이션 => 비동기)
 	@ResponseBody
 	@GetMapping("/info/search_report_list")
@@ -286,7 +299,7 @@ public class ReportController {
 		
 	}
 	
-////////////////////////////////////////////////////////// 신고 결과
+////////////////////////////////////////////////////////// 신고 처리
 	
 	// 신고 처리하기 양식
 	@GetMapping("/info/result_form")
@@ -303,24 +316,51 @@ public class ReportController {
 		
 	}
 	
-	/*
 	// 신고 처리 확인
 	@ResponseBody
-	@PostMapping("/info/result_confirm")
-	public boolean reportResultConfirm(
+	@PostMapping("/info/create_result_confirm")
+	public boolean createResultConfirm(
 			@RequestParam(value = "br_no") int br_no,
-			@RequestParam(value = "brr_zo") String brr_zo,
+			@RequestParam(value = "br_post_no") String br_post_no,
+			@RequestParam(value = "bp_report_state") int bp_report_state,
 			@RequestParam(value = "brr_result") String brr_result,
 			Principal principal) {
-		log.info("reportResultConfirm()");
+		log.info("createResultConfirm()");
 		
+		boolean createResultConfirm = reportService.createResultConfirm(br_no, br_post_no, bp_report_state, brr_result, principal.getName());
 		
-		boolean reportResultConfirm = reportService.reportResultConfirm(br_no, brr_result, principal.getName());
-		
-		return reportResultConfirm;
+		return createResultConfirm;
 		
 	}
-	*/
+	
+	// 신고 처리 수정하기
+	@ResponseBody
+	@PostMapping("/info/modify_result_confirm")
+	public boolean modifyResultConfirm(
+			@RequestParam(value = "brr_no") int brr_no,
+			@RequestParam(value = "br_post_no") String br_post_no,
+			@RequestParam(value = "bp_report_state") int bp_report_state,
+			@RequestParam(value = "brr_result") String brr_result,
+			Principal principal) {
+		log.info("modifyResultConfirm()");
+		
+		boolean modifyResultConfirm = reportService.modifyResultConfirm(brr_no, br_post_no, bp_report_state, brr_result, principal.getName());
+		
+		return modifyResultConfirm;
+		
+	}
+	
+	// 신고 처리 삭제하기
+	@ResponseBody
+	@PostMapping("/info/delete_result_confirm")
+	public boolean deleteResultConfirm(@RequestParam(value = "brr_no") int brr_no) {
+		log.info("deleteResultConfirm()");
+		
+		boolean deleteResultConfirm = reportService.deleteResultConfirm(brr_no);
+		
+		return deleteResultConfirm;
+		
+	}
 	
 	
 	

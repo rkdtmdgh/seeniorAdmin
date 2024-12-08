@@ -7,9 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -103,6 +106,7 @@ public class AdvertisementService {
 		log.info("getCategory()");
 		
 		AdvertisementCategoryDto advertisementCategoryDto = advertisementMapper.getAdvertisementCategory(ac_no);
+		if (advertisementCategoryDto == null) throw new RuntimeException("advertisementCategoryDto is null!!");
 		
 		return advertisementCategoryDto;
 		
@@ -188,7 +192,8 @@ public class AdvertisementService {
 		String date = dateFormat.format(now);
 		
 		// advertisement 테이블에서 maxNo값 가져오기
-		int maxNo = advertisementMapper.getAdvertisementMaxNo();
+		Integer maxNo = advertisementMapper.getAdvertisementMaxNo();
+		if (maxNo == null) maxNo = 0;
 		
 		String filePath = "\\advertisement\\" + (maxNo + 1) + "\\" + date;
 		
@@ -248,6 +253,8 @@ public class AdvertisementService {
 					log.info("createConfirm() Exception 발생!!");
 					e.printStackTrace();
 					
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+					
 					return SqlResult.FAIL.getValue();
 					
 				}
@@ -256,11 +263,15 @@ public class AdvertisementService {
 				log.info("JsonMappingException!!");
 				e.printStackTrace();
 				
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+				
 				return SqlResult.FAIL.getValue();
 				
 			} catch (JsonProcessingException e) {
 				log.info("JsonProcessingException!!");
 				e.printStackTrace();
+				
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 				
 				return SqlResult.FAIL.getValue();
 				
@@ -268,6 +279,8 @@ public class AdvertisementService {
 			
 		} else {
 			log.info("upload file fail!!");
+			
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			
 			return SqlResult.FAIL.getValue();
 			
@@ -355,6 +368,8 @@ public class AdvertisementService {
 			log.info("modifyAdvertisementIdx() Exception 발생!!");
 			e.printStackTrace();
 			
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			
 			return SqlResult.FAIL.getValue();
 			
 		}
@@ -378,10 +393,34 @@ public class AdvertisementService {
 	public Map<String, Object> getAdvertisementByCategoryPageNum(int page_limit, int block_limit, int page, int ac_no) {
 		log.info("getAdvertisementByCategoryPageNum()");
 		
-		// 전체 리스트 개수 주회
+		// 전체 리스트 개수 조회
 		int advertisementListByCategoryCnt = advertisementMapper.getAdvertisementByCategoryCnt(ac_no);
 		
 		return PagingUtil.pageNum(page_limit, block_limit, "advertisementListByCategoryCnt", advertisementListByCategoryCnt, page);
+	
+	}
+	
+	// 페이지에 따른 광고 가져오기(위치별 광고 => 광고 위치 디테일 뷰에서)
+	public Map<String, Object> getAdvertisementListForCategoryModify(int page_limit, int page, String sortValue, String order, int ac_no) {
+		log.info("getAdvertisementListForCategoryModify()");
+		
+		Map<String, Object> pagingList = new HashMap<>();
+		
+		List<AdvertisementDto> advertisementDtos = advertisementMapper.getAdvertisementListForCategoryModifyWithPage(PagingUtil.pagingParamsForSelectBox(page_limit, sortValue, order, page, ac_no));
+		pagingList.put("advertisementDtos", advertisementDtos);
+		
+		return pagingList;
+		
+	}
+	
+	// 광고의 총 페이지 개수 구하기 (위치별 광고 => 광고 위치 디테일 뷰에서)
+	public Map<String, Object> getAdvertisementListForCategoryModifyPageNum(int page_limit, int block_limit, int page, int ac_no) {
+		log.info("getAdvertisementForCategoryModifyPageNum()");
+		
+		// 전체 리스트 개수 조회
+		int advertisementListForCategoryModifyCnt = advertisementMapper.getAdvertisementForCategoryModifyCnt(ac_no);
+		
+		return PagingUtil.pageNum(page_limit, block_limit, "advertisementListForCategoryModifyCnt", advertisementListForCategoryModifyCnt, page);
 	
 	}
 	
@@ -391,6 +430,7 @@ public class AdvertisementService {
 		log.info("getAdvertisement()");
 		
 		AdvertisementDto advertisementDto = advertisementMapper.getAdvertisementByNo(ad_no);
+		if (advertisementDto == null) throw new RuntimeException("advertisementDto is null!!");
 		
 		return advertisementDto;
 		
@@ -445,20 +485,26 @@ public class AdvertisementService {
 					log.info("JsonMappingException!!");
 					e.printStackTrace();
 					
-					return false;
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+					
+					return SqlResult.FAIL.getValue();
 					
 				} catch (JsonProcessingException e) {
 					log.info("JsonProcessingException!!");
 					e.printStackTrace();
 					
-					return false;
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+					
+					return SqlResult.FAIL.getValue();
 					
 				}
 				
 			} else {
 					log.info("upload file fail!!");
 					
-					return false;
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+					
+					return SqlResult.FAIL.getValue();
 					
 				}
 		
@@ -583,28 +629,16 @@ public class AdvertisementService {
 			log.info("modifyConfirm() Exception 발생!!");
 			e.printStackTrace();
 			
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			
 			return SqlResult.FAIL.getValue();
 			
 		}
 		
 	}
-
-	// 광고 삭제 확인
-	/*
-	public boolean deleteConfirm(int ad_no) {
-		log.info("deleteConfirm()");
-		
-		int deleteResult = advertisementMapper.deleteAdvertisement(ad_no);
-		
-		// DB에 입력 실패
-		if (deleteResult <= 0) return SqlResult.FAIL.getValue();
-		// DB에 입력 성공
-		else return SqlResult.SUCCESS.getValue();	
-		
-	}
-	*/
 	
 	// 광고 삭제 확인
+	@Transactional
 	public boolean deleteConfirm(int ad_no) {
 		log.info("deleteConfirm()");
 		
@@ -621,23 +655,83 @@ public class AdvertisementService {
 		if (deletedFolderResult.getBody().equals("1")) {
 			log.info("deleteFolder SUCCESS!!");
 			
-			int deleteResult = advertisementMapper.deleteAdvertisement(ad_no);
-			
-			// DB에 입력 실패
-			if (deleteResult <= 0) return SqlResult.FAIL.getValue();
-			// DB에 입력 성공
-			else return SqlResult.SUCCESS.getValue();
+			try {
+				
+				// 삭제하는 광고의 광고 위치에 있는 IDX들 중 삭제하는 광고의 IDX보다 큰 것들 -1 처리 하기
+				int idxModifyResult = advertisementMapper.updateAdvertisementIdxSubForDelete(deleteAdvertisementDto);
+				
+				if (idxModifyResult == 0) {
+					
+					log.info("삭제하려는 광고 분류에서 삭제하는 광고의 IDX보다 높은 IDX 번호가 없습니다.");
+					
+				}
+				int deleteResult = advertisementMapper.deleteAdvertisement(ad_no);
+				
+				// DB에 입력 실패
+				if (deleteResult <= 0) {
+					log.error("광고 DB데이터 삭제 실패!!");
+					
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+					
+					return SqlResult.FAIL.getValue();
+				}
+				// DB에 입력 성공
+				else return SqlResult.SUCCESS.getValue();
+				
+			} catch (DataAccessException e) {
+				log.error("광고 삭제 중 idx 번호 삭제 오류 발생", e);
+				
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+				
+				return SqlResult.FAIL.getValue();
+				
+			}
 			
 		} else {
 			log.info("deleteFolder FAIL!!");
 			
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			
 			return SqlResult.FAIL.getValue();
 			
 		}
-			
 		
 	}
 
+	// 광고 만료 후 30일 경과 후에 이미지 삭제 요청
+	// 초 분 시 일 월 요일 년(생략 가능) => 각 자리에 *는 모든 값을 의미
+	@Scheduled(cron = "00 01 00 * * ?")	// 매일 0:01분에 실행
+	public void deleteFolderForEndAdvertiemsent() {
+		log.info("deleteFolderForEndAdvertiemsent()");
+		
+		// 만료된 지 30일이 지난 광고 리스트의 No들 가져오기
+		List<Integer> deleteAdvertisementNos = advertisementMapper.getAdvertisementsEnded30Days();
+		
+		if (deleteAdvertisementNos.size() != 0) {
+			log.info("deleteAdvertisementNos ==========> {}", deleteAdvertisementNos);
+			
+			List<String> deleteFolderPaths = new ArrayList<>();
+			
+			for (int i = 0; i < deleteAdvertisementNos.size(); i++) {
+				
+				String folderPath = "\\advertisement\\" + deleteAdvertisementNos.get(i);
+				deleteFolderPaths.add(folderPath);
+				
+			}
+			
+			ResponseEntity<String> deletedFolderResult = imageFileService.deleteFolders(deleteFolderPaths);
+			
+			// 이미지 서버에서 deleteFolder요청이 성공한 경우
+			if (deletedFolderResult.getBody().equals("1")) 
+				log.info("deleteFolder SUCCESS!!");
+			// 이미지 서버에서 deleteFolder 요청이 실패한 경우
+			else 
+				log.info("deleteFolder FAIL!!");
+			
+		}
+		
+	}
+	
 	// 페이지에 따른 광고 가져오기(검색한 광고)
 	public Map<String, Object> getSearchAdvertisementListWithPage(int page_limit, String searchPart, String searchString, String sortValue, String order, int page) {
 		log.info("getSearchAdvertisementListWithPage()");
@@ -665,5 +759,7 @@ public class AdvertisementService {
 		return PagingUtil.pageNum(page_limit, block_limit, "searchAdvertisementListCnt", searchAdvertisementListCnt, page);
 		
 	}
+
+	
 	
 }

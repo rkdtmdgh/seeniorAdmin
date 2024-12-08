@@ -11,7 +11,7 @@
 		gap: var(--stepGap);
 		
 		.error_icon {
-			width: var(--profileThumbWidth);
+			width: var(--profileThumbSize);
 			
 			.error_4xx {
 				stroke: var(--greenColor);
@@ -27,6 +27,15 @@
 				font-size: var(--largeFontSize);
 				padding-bottom: var(--smallGap);
 			}
+		}
+		
+		.error_code {
+			font-size: var(--middleFontSize);
+			font-weight: var(--thin);
+			margin-top: 1em;
+			padding: var(--optionPadding);
+			border-radius: var(--bdrs);
+			background-color: var(--tableTitleBgColor);
 		}
 	}
 }

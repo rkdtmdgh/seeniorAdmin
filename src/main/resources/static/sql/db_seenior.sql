@@ -298,7 +298,7 @@ CREATE TABLE BOARD_POSTS (
 	BP_BODY				TEXT NOT NULL COMMENT "게시물 본문", 												-- 게시물 본문
 	BP_WRITER_NO		INT NOT NULL COMMENT "게시물 작성자 NO(USER_ACCOUNT TABLE PK)", 					-- 게시물 작성자 NO(USER_ACCOUNT TABLE PK)
     BP_ACCOUNT			VARCHAR(20) NOT NULL COMMENT "게시물 작성자 유형(admin or user)",					-- 게시물 작성자 유형(admin or user)
-    BP_REPORT_STATE		TINYINT DEFAULT 1 COMMENT "게시물 신고 진행 상태(기본값 = 1, 블록처리 = 0)",				-- 게시물 신고 진행 상태(기본값 = 1, 처리중 = 2, 처리 완료 = 0)
+    BP_REPORT_STATE		TINYINT DEFAULT 1 COMMENT "게시물 신고 진행 상태(기본값 = 1, 블록처리 = 0)",				-- 게시물 신고 진행 상태(기본값 = 1, 블록처리 = 0)
 	BP_VIEW_CNT			INT DEFAULT 0 COMMENT "게시물 조회수", 												-- 게시물 조회수 
 	BP_DIR_NAME			VARCHAR(20) COMMENT "이미지 저장된 폴더 이름"	,										-- 게시물 이미지 저장된 폴더명
     BP_REPLY_CNT		INT DEFAULT 0 COMMENT "게시물 댓글 갯수",											-- 게시물 댓글 갯수(BOARD_REPLY COUNT(*) WHERE BR_POST_NO)
@@ -568,6 +568,74 @@ INSERT INTO BOARD_QNA_NOTICE(BQN_TITLE, BQN_BODY, BQN_WRITER_NO) VALUES("QNA 공
 INSERT INTO BOARD_QNA_NOTICE(BQN_TITLE, BQN_BODY, BQN_WRITER_NO) VALUES("QNA 공지사항 7번", "QNA 공지사항 77번 내용입니다.", 8);
 INSERT INTO BOARD_QNA_NOTICE(BQN_TITLE, BQN_BODY, BQN_WRITER_NO) VALUES("QNA 공지사항 8번", "QNA 공지사항 88번 내용입니다.", 9);
 
+SHOW TRIGGERS;
+
+-- QNA 공지사항 삭제 트리거 -------------------------------------------------------------------------------------------------------------------
+DELIMITER //
+CREATE TRIGGER TR_UPDATE_BOARD_QNA_NOTICE_ON_DELETE 
+AFTER UPDATE ON BOARD_QNA_NOTICE 
+FOR EACH ROW
+BEGIN
+    IF OLD.BQN_IS_DELETED = 1 AND NEW.BQN_IS_DELETED = 0 THEN
+        -- 게시글이 삭제된 경우에는 DELETE_QNA_NOTICE 테이블에 새로운 레코드 삽입
+        INSERT INTO DELETE_BOARD_QNA_NOTICE (
+            DBQN_NOTICE_NO,
+            DBQN_DIR_NAME,
+            DBQN_REQUEST_TIME
+        )
+        VALUES (
+            OLD.BQN_NO,
+            OLD.BQN_DIR_NAME,
+            NOW()
+        );
+    END IF;
+END//
+DELIMITER ;
+
+DROP TRIGGER TR_UPDATE_BOARD_QNA_NOTICE_ON_DELETE;
+
+-- 삭제된 QNA 공지사항 테이블 -----------------------------------------------------------------------------------------------------------------
+CREATE TABLE DELETE_BOARD_QNA_NOTICE (
+	DBQN_NO					INT	AUTO_INCREMENT COMMENT "삭제 테이블 NO(PK)",									-- 삭제 테이블 NO(PK)
+	DBQN_NOTICE_NO			INT NOT NULL COMMENT "삭제할 QNA 공지사항 NO(BOARD QNANOTICE TABLE PK)",			-- 삭제할 전체 공지사항 NO(NOTICE TABLE PK)
+	DBQN_DIR_NAME			VARCHAR(20) COMMENT "이미지 저장된 폴더 이름"	,										-- 게시물 이미지 저장된 폴더명
+    DBQN_IS_VALID			TINYINT DEFAULT 1 COMMENT "게시물 삭제요청 후 30일 경과 여부(기본값 = 1, 경과 시 = 0)",	-- 게시물 삭제요청 후 30일 경과 여부(기본값 = 1, 경과 시 = 0)
+    DBQN_IMG_DELETED		TINYINT DEFAULT 1 COMMENT "게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)",			-- 게시물 이미지 삭제 여부(기본값 = 1, 삭제 시 = 0)
+	DBQN_REQUEST_TIME		DATETIME DEFAULT NOW() COMMENT "게시물 삭제 요청 시간",								-- 게시물 수정일
+    PRIMARY KEY(DBQN_NO)
+);
+
+SELECT * FROM DELETE_BOARD_QNA_NOTICE;
+DROP TABLE DELETE_BOARD_QNA_NOTICE;
+DELETE FROM DELETE_BOARD_QNA_NOTICE;
+
+SHOW EVENTS;
+SHOW PROCEDURE STATUS;
+
+-- 삭제 요청 후 30일 경과된 정보 완전 삭제 프로시저(함수) -----------------------------------------------------------------------------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE DELETE_EXPIRED_BOARD_QNA_NOTICE()
+BEGIN
+    UPDATE DELETE_BOARD_QNA_NOTICE
+    SET DBQN_IS_VALID = 0
+    WHERE DBQN_REQUEST_TIME < DATE_SUB(NOW(), INTERVAL 30 DAY);
+END //
+
+DELIMITER ;
+
+DROP PROCEDURE DELETE_EXPIRED_BOARD_QNA_NOTICE;
+
+-- 프로시저(함수) 실행 부분 -----------------------------------------------------------------------------------------------------------------
+CREATE EVENT DELETE_EXPIRED_BOARD_QNA_NOTICE_EVENT
+ON SCHEDULE EVERY 1 DAY 
+STARTS '2024-11-10 00:00:00'  -- 시작 날짜와 시간 설정 (필요에 따라 수정)
+ON COMPLETION PRESERVE
+DO
+    CALL DELETE_EXPIRED_BOARD_QNA_NOTICE();
+
+DROP EVENT DELETE_EXPIRED_BOARD_QNA_NOTICE_EVENT;
+
 -- 신고 분류 테이블 ---------------------------------------------------------------------------------------------------------------
 CREATE TABLE BOARD_REPORT_CATEGORY(
 	BRC_NO			INT	AUTO_INCREMENT COMMENT "신고 분류 NO(PK)", 						-- 신고 분류 NO(PK)
@@ -620,7 +688,7 @@ DROP TABLE BOARD_REPORT;
 
 INSERT INTO BOARD_REPORT(BR_CATEGORY_NO, BR_POST_NO, BR_TITLE, BR_REASON, BR_REPORTER_NO) VALUES(1, 1, "신고 제목1", "신고 내용1", 1);
 INSERT INTO BOARD_REPORT(BR_CATEGORY_NO, BR_POST_NO, BR_TITLE, BR_REASON, BR_REPORTER_NO) VALUES(1, 2, "신고 제목2", "신고 내용2", 2);
-INSERT INTO BOARD_REPORT(BR_CATEGORY_NO, BR_POST_NO, BR_TITLE, BR_REASON, BR_REPORTER_NO) VALUES(1, 3, "신고 제목1", "신고 내용3", 3);
+INSERT INTO BOARD_REPORT(BR_CATEGORY_NO, BR_POST_NO, BR_TITLE, BR_REASON, BR_REPORTER_NO) VALUES(1, 3, "신고 제목3", "신고 내용3", 3);
 INSERT INTO BOARD_REPORT(BR_CATEGORY_NO, BR_POST_NO, BR_TITLE, BR_REASON, BR_REPORTER_NO) VALUES(2, 1, "신고 제목4", "신고 내용4", 1);
 INSERT INTO BOARD_REPORT(BR_CATEGORY_NO, BR_POST_NO, BR_TITLE, BR_REASON, BR_REPORTER_NO) VALUES(2, 2, "신고 제목5", "신고 내용5", 2);
 INSERT INTO BOARD_REPORT(BR_CATEGORY_NO, BR_POST_NO, BR_TITLE, BR_REASON, BR_REPORTER_NO) VALUES(2, 3, "신고 제목6", "신고 내용6", 3);
@@ -709,7 +777,6 @@ DELIMITER ;
 
 DROP TRIGGER TR_UPDATE_NOTICE_ON_DELETE;
 
-
 -- 삭제된 전체 공지사항 테이블 -----------------------------------------------------------------------------------------------------------------
 CREATE TABLE DELETE_NOTICE (
 	DN_NO					INT	AUTO_INCREMENT COMMENT "삭제 테이블 NO(PK)",									-- 삭제 테이블 NO(PK)
@@ -725,6 +792,7 @@ DROP TABLE DELETE_NOTICE;
 DELETE FROM DELETE_NOTICE;
 
 SHOW EVENTS;
+SHOW PROCEDURE STATUS;
 
 -- 삭제 요청 후 30일 경과된 정보 완전 삭제 프로시저(함수) -----------------------------------------------------------------------------------------------------------------
 DELIMITER //
@@ -1458,6 +1526,7 @@ CREATE TABLE ADVERTISEMENT (
 );
 
 SELECT * FROM ADVERTISEMENT;
+DELETE FROM ADVERTISEMENT;
 SHOW INDEX FROM ADVERTISEMENT;
 DROP TABLE ADVERTISEMENT;
 
@@ -1512,29 +1581,71 @@ SHOW VARIABLES LIKE 'event%';
 -- Value가 OFF로 되어있을 경우 ON으로 변경
 SET GLOBAL event_scheduler = ON;
 
--- AD_END_DATE가 현재 날짜보다 이전인 컬럼의 AD_STATE를 0으로 설정하는 프로시저
+DROP PROCEDURE UPDATE_AD_STATE;
+
+-- 만료된 광고의 AD_STATE를 0으로 설정하고 IDX순서 조정하는 프로시저
 DELIMITER //
-CREATE PROCEDURE update_ad_state()
+
+CREATE PROCEDURE UPDATE_AD_STATE_AND_IDX()
 BEGIN
-    UPDATE ADVERTISEMENT
-    SET AD_STATE = 0
-    WHERE AD_END_DATE < CURDATE() AND AD_STATE != 0;
+    DECLARE done INT DEFAULT 0;
+    DECLARE current_ad_no INT;
+    DECLARE current_ad_idx INT;
+    DECLARE current_ad_category_no INT;
+    DECLARE cur_cursor CURSOR FOR 
+        SELECT AD_NO, AD_CATEGORY_NO
+        FROM ADVERTISEMENT
+        WHERE AD_STATE = 1 AND AD_END_DATE < CURDATE();
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    -- 커서 열기
+    OPEN cur_cursor;
+
+    read_loop: LOOP
+        FETCH cur_cursor INTO current_ad_no, current_ad_category_no;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        -- 현재 AD_IDX 값을 SELECT로 가져오기
+        SELECT AD_IDX INTO current_ad_idx
+        FROM ADVERTISEMENT
+        WHERE AD_NO = current_ad_no;
+
+        -- AD_STATE와 AD_IDX 업데이트
+        UPDATE ADVERTISEMENT
+        SET AD_STATE = 0, AD_IDX = 0
+        WHERE AD_NO = current_ad_no;
+
+        -- 같은 AD_CATEGORY_NO에서 AD_IDX가 현재 AD_IDX보다 큰 행들의 AD_IDX를 -1 감소
+        UPDATE ADVERTISEMENT
+        SET AD_IDX = AD_IDX - 1
+        WHERE AD_CATEGORY_NO = current_ad_category_no AND AD_IDX > current_ad_idx;
+    END LOOP;
+
+    -- 커서 닫기
+    CLOSE cur_cursor;
 END //
+
 DELIMITER ;
 
 -- 이미 생성되어 있는 프로시저 확인 및 드롭
 SHOW PROCEDURE STATUS WHERE Db = 'DB_SEENIOR';
-DROP PROCEDURE update_ad_state;
+DROP PROCEDURE UPDATE_AD_STATE_AND_IDX;
 
--- update_ad_state() 프로시저를 매일 0시 00분 정각에 실행하도록 하는 이벤트 스케쥴러
-CREATE EVENT daily_ad_state_update
+DROP EVENT DAILY_AD_STATE_UPDATE;
+
+-- UPDATE_AD_STATE_AND_IDX() 프로시저를 매일 0시 01분에 실행하도록 하는 이벤트 스케쥴러
+CREATE EVENT DAILY_AD_STATE_AND_IDX_UPDATE
 ON SCHEDULE EVERY 1 DAY STARTS '2024-11-07 00:01:00'
 DO
-CALL update_ad_state();
+CALL UPDATE_AD_STATE_AND_IDX();
 
 -- 이미 생성되어 있는 이벤트 스케쥴러 확인 및 드롭
 SELECT * FROM information_schema.events;
-DROP EVENT daily_ad_state_update;
+SHOW EVENTS;
+DROP EVENT DAILY_AD_STATE_AND_IDX_UPDATE;
 
 -- 환자 테이블 -------------------------------------------------------------------------------------------------------------------
 CREATE TABLE CARE_LIST (

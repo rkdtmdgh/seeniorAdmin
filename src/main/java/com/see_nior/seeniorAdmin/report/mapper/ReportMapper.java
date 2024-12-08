@@ -38,10 +38,10 @@ public interface ReportMapper {
 	public int deleteReportCategory(int brc_no);
 
 	// 페이지에 따른 신고 카테고리 가져오기(검색한 신고 카테고리)
-	public List<ReportCategoryDto> getSearchReportCategory(Map<String, Object> pagingParams);
+	public List<ReportCategoryDto> getSearchReportCategory(Map<String, Object> searchPagingParams);
 
 	// 신고 카테고리의 총 페이지 개수 구하기(검색한 신고 카테고리)
-	public int getSearchReportCategoryListCnt(Map<String, Object> pagingParams);
+	public int getSearchReportCategoryListCnt(Map<String, Object> searchPagingParams);
 
 ////////////////////////////////////////////////////////// 신고
 	
@@ -61,7 +61,7 @@ public interface ReportMapper {
 	public ReportDto getReport(int br_no);
 
 	// 페이지에 따른 신고 가져오기(카테고리별 신고)
-	public List<ReportDto> getReportListByCategoryWithPage(Map<String, Object> pagingParams);
+	public List<ReportDto> getReportListByCategoryWithPage(Map<String, Object> pagingParamsForSelectBox);
 
 	// 신고의 총 리스트 개수 구하기 (카테고리별 신고)
 	public int getReportCntByCategory(int brc_no);
@@ -69,15 +69,37 @@ public interface ReportMapper {
 	// 처리되지 않은 신고의 개수 가져오기 (카테고리별 신고)
 	public int getUnresultedReportCntByCategory(int brc_no);
 
+	// 신고 삭제 확인
+	public int deleteReport(int br_no);
+	
 	// 페이지에 따른 신고 가져오기 (검색한 신고)
-	public List<ReportDto> getSearchReport(Map<String, Object> pagingParams);
+	public List<ReportDto> getSearchReport(Map<String, Object> searchPagingParams);
 
 	// 신고의 총 리스트 개수 구하기 (검색한 신고)
-	public int getSearchReportListCnt(Map<String, Object> pagingParams);
+	public int getSearchReportListCnt(Map<String, Object> searchPagingParams);
 
 	// 처리되지 않은 신고의 개수 가져오기 (검색한 신고)
-	public int getUnresultedReportCntBySearch(Map<String, Object> pagingParams);
-
+	public int getUnresultedReportCntBySearch(Map<String, Object> searchPagingParams);
 	
+////////////////////////////////////////////////////////// 신고 처리
+
+	// 신고 처리 결과 테이블에 신고 처리 결과 저장
+	public int insertNewReportResult(Map<String, Object> reportResultParams);
+	
+	// BOARD_REPORT_RESULT 테이블에 마지막으로 insert된 컬럼의 NO 가져오기
+	public int getReportResultLastNo();
+
+	// 신고 테이블에 신고 처리 결과 no와 처리 상태 업데이트
+	public int updateBoardReportWithResult(Map<String, Object> updateParams);
+
+	// 게시물 숨김처리 결과(BP_REPORT_STATE)를 게시물 테이블에 업데이트
+	public int updateBoardPostsWithResult(Map<String, Object> updateBoardPostsParams);
+
+	// 신고 처리 결과 수정
+	public int updateReportResult(Map<String, Object> modifyParams);
+
+	// 신고 처리 결과 삭제
+	public int deleteReportResult(int brr_no);
+
 
 }

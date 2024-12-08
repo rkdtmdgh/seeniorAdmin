@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.see_nior.seeniorAdmin.disease.mapper.DiseaseMapper;
 import com.see_nior.seeniorAdmin.dto.DiseaseCategoryDto;
@@ -92,6 +93,7 @@ public class DiseaseService {
 		log.info("getCategory()");
 		
 		DiseaseCategoryDto diseaseCategoryDto = diseaseMapper.getDiseaseCategory(dc_no);
+		if (diseaseCategoryDto == null) throw new RuntimeException("diseaseCategoryDto is null!!");
 		
 		return diseaseCategoryDto;
 	}
@@ -256,6 +258,7 @@ public class DiseaseService {
 		log.info("getDisease()");
 		
 		DiseaseDto diseaseDto = diseaseMapper.getDiseaseByNo(d_no);
+		if (diseaseDto == null) throw new RuntimeException("diseaseDto is null!!");
 		
 		return diseaseDto;
 	}
@@ -296,6 +299,7 @@ public class DiseaseService {
 		
 	   } catch (Exception e) {
 		   log.error("deleteConfirm Error : {}",e);
+		   TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 		   
 		   return SqlResult.FAIL.getValue();
 		   
