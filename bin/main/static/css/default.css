@@ -607,6 +607,10 @@
 	}
 }
 
+.table_info_num {
+	max-width: 70px;
+}
+
 .table_list_sub_menu {
 	display: flex;
 	align-items: center;

@@ -50,9 +50,17 @@
 		                                		</label>
 	                                        </td>
 	                                        
-	                                        <th><p class="table_title">참고 사항</p></th>
+	                                        <th><p class="table_title">이미지 비율</p></th>
 		                                	<td>
-		                                		<input type="text" name="ac_note" id="ac_note" class="table_info" placeholder="참고 사항">
+		                                		<div class="table_info table_flex_info">
+			                                		(<input type="text" name="ac_width" id="ac_width" class="table_info_num" placeholder="가로"
+			                                			maxLength="4"
+			                                			oninput="replaceNumber(this)">)
+			                                		X
+			                                		(<input type="text" name="ac_height" id="ac_height" class="table_info_num" placeholder="세로"
+			                                			maxLength="4"
+			                                			oninput="replaceNumber(this)">)
+		                                		</div>
 	                                        </td>
 		                                </tr>
 		                            </tbody>
