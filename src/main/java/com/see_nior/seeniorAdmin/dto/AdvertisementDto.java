@@ -12,6 +12,7 @@ public class AdvertisementDto {
 	private int ad_no;
 	private int ad_category_no;
 	private String ad_img;
+	private String ad_alt;
 	private String ad_dir_name;
 	private int ad_idx;
 	private String ad_url;
