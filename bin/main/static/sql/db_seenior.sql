@@ -1486,7 +1486,7 @@ DROP TABLE VIDEO;
 CREATE TABLE ADVERTISEMENT_CATEGORY (
 	AC_NO			INT AUTO_INCREMENT COMMENT "광고 위치 NO(PK)",						-- 광고 위치 NO(PK)
     AC_NAME 		VARCHAR(100) NOT NULL COMMENT "광고 위치 명",							-- 광고 위치 명
-    AC_SIZE			VARCHAR(100) COMMENT "광고 위치 사이즈",								-- 광고 위치 사이즈
+    AC_SIZE			VARCHAR(100) NOT NULL COMMENT "광고 위치 사이즈",						-- 광고 위치 사이즈
     AC_IS_DELETED	TINYINT DEFAULT 1 COMMENT "광고 위치 삭제 여부(기본값 = 0, 삭제 시 = 1)",	-- 광고 위치 삭제 여부(기본값 = 0, 삭제 시 = 1)
     AC_REG_DATE		DATETIME DEFAULT NOW() COMMENT "광고 위치 등록일",						-- 광고 위치 등록일
 	AC_MOD_DATE		DATETIME DEFAULT NOW() COMMENT "광고 위치 수정일",						-- 광고 위치 수정일
