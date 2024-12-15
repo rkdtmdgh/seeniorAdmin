@@ -119,7 +119,6 @@
 	
 	img {
 		width: 100%;
-		border: 1px solid var(--lightGrayColor);
 	}
 }
 
@@ -606,6 +605,10 @@
 	.info_num {
 		width: max-content;
 	}
+}
+
+.table_info_num {
+	max-width: 70px;
 }
 
 .table_list_sub_menu {

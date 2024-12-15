@@ -7,7 +7,7 @@
 	<resultMap type="AdvertisementCategoryDto" id="AdvertisementCategoryDto">
 		<id column="ac_no" property="ac_no" />
 		<result column="ac_name" property="ac_name" />
-		<result column="ac_note" property="ac_note" />
+		<result column="ac_size" property="ac_size" />
 		<result column="ac_is_deleted" property="ac_is_deleted" />
 		<result column="ac_item_cnt" property="ac_item_cnt" />
 		<result column="ac_reg_date" property="ac_reg_date" />
@@ -18,6 +18,7 @@
 		<id column="ad_no" property="ad_no" />
 		<result column="ad_category_no" property="ad_category_no" />
 		<result column="ad_img" property="ad_img" />
+		<result column="ad_alt" property="ad_alt" />
 		<result column="ad_dir_name" property="ad_dir_name" />
 		<result column="ad_idx" property="ad_idx" />
 		<result column="ad_url" property="ad_url" />
@@ -39,9 +40,9 @@
 			
 		INSERT INTO 
 			ADVERTISEMENT_CATEGORY 
-			(AC_NAME, AC_NOTE) 
+			(AC_NAME, AC_SIZE) 
 		VALUES 
-			(#{ac_name}, #{ac_note})
+			(#{ac_name}, #{ac_size})
 	
 	</insert>
 
@@ -172,7 +173,7 @@
 			ADVERTISEMENT_CATEGORY 
 		SET 
 			AC_NAME = #{ac_name}, 
-			AC_NOTE = #{ac_note}, 
+			AC_SIZE = #{ac_size}, 
 			AC_MOD_DATE = NOW() 
 		WHERE 
 			AC_NO = #{ac_no}
@@ -325,9 +326,9 @@
 	
 		INSERT INTO 
 			ADVERTISEMENT 
-			(AD_CATEGORY_NO, AD_IMG, AD_DIR_NAME, AD_IDX, AD_URL, AD_START_DATE, AD_END_DATE, AD_CLIENT) 
+			(AD_CATEGORY_NO, AD_IMG, AD_ALT, AD_DIR_NAME, AD_IDX, AD_URL, AD_START_DATE, AD_END_DATE, AD_CLIENT) 
 		VALUES 
-			(#{ad_category_no}, #{ad_img}, #{ad_dir_name}, #{ad_idx}, #{ad_url}, #{ad_start_date}, #{ad_end_date}, #{ad_client})
+			(#{ad_category_no}, #{ad_img}, #{ad_alt}, #{ad_dir_name}, #{ad_idx}, #{ad_url}, #{ad_start_date}, #{ad_end_date}, #{ad_client})
 	
 	</insert>
 	
@@ -580,6 +581,7 @@
 			<if test="ad_dir_name != null">
 			AD_DIR_NAME = #{ad_dir_name}, 
 			</if>
+			AD_ALT = #{ad_alt}, 
 			AD_IDX = #{ad_idx}, 
 			AD_URL = #{ad_url}, 
 			AD_START_DATE = #{ad_start_date}, 

@@ -146,7 +146,7 @@ public class BoardService {
 
 		if(boardCategoryDtos.size() == 0) {
 			log.info("getBoardCategoryForModify() fail!!");
-			throw new RuntimeException("boardPostsDto is null");
+			throw new RuntimeException("boardCategoryDto is null");
 		}
 		
 		return boardCategoryDtos;
