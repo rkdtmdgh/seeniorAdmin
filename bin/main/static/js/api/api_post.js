@@ -589,8 +589,8 @@ async function postAdvertisementCategoryCreate(formName, nextPage) {
 	
 	const formData = new FormData(form);
 	formData.append('ac_size', `${form.ac_width.value}/${form.ac_height.value}`);
-	const successMessage = `"${input.value}" 광고 위치 분류가 등록되었습니다.`;
-	const errorMessage = `"${input.value}" 광고 위치 분류 등록에 실패했습니다.`;
+	const successMessage = `"${form.ac_name.value}" 광고 위치 분류가 등록되었습니다.`;
+	const errorMessage = `"${form.ac_name.value}" 광고 위치 분류 등록에 실패했습니다.`;
 	
 	await postIntegSubmit(
 		'/advertisement/cate_info/create_category_confirm',
