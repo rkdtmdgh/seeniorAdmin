@@ -42,6 +42,7 @@
 					    
 					    <form name="advertisement_category_modify_form">					    	
                       		<input type="hidden" name="ac_no" th:value="${advertisementCategoryDto.ac_no}">
+                      		<input type="hidden" name="current_ac_name" th:value="${advertisementCategoryDto.ac_name}">
                       		
 						    <div class="table_wrap">
 		                        <table class="content_edit_table">
@@ -80,12 +81,12 @@
 			                                		(<input type="text" name="ac_width" id="ac_width" class="table_info_num" placeholder="가로"
 			                                			maxLength="4"
 			                                			oninput="replaceNumber(this)"
-			                                			th:value="${advertisementCategoryDto.ac_width}">)
+			                                			th:value="${#strings.arraySplit(advertisementCategoryDto.ac_size, '/')[0]}">)
 			                                		X
 			                                		(<input type="text" name="ac_height" id="ac_height" class="table_info_num" placeholder="세로"
 			                                			maxLength="4"
 			                                			oninput="replaceNumber(this)"
-			                                			th:value="${advertisementCategoryDto.ac_height}">)
+			                                			th:value="${#strings.arraySplit(advertisementCategoryDto.ac_size, '/')[1]}">)
 		                                		</div>
 	                                        </td>
 	                                        

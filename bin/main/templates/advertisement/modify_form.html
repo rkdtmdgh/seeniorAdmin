@@ -76,6 +76,20 @@
 		                                </tr>
 		                                
 		                                <tr>
+		                            		<th><p class="table_title">광고명</p></th>
+		                            		<td colspan="3">
+		                                		<label class="table_info" th:if="${advertisementDto.ad_state}">
+			                                		<input type="text" name="ad_alt" id="ad_alt" placeholder="광고명"
+			                                			onblur="validateEmpty(this, '광고명')"
+			                                			th:value="${advertisementDto.ad_alt}">
+	                        					</label>
+	                        					<p class="table_info disabled" 
+	                                    			th:unless="${advertisementDto.ad_state}"
+	                                    			th:text="${advertisementDto.ad_alt}"></p>
+		                                	</td>
+		                            	</tr>
+		                                
+		                                <tr>
 		                                	<th><p class="table_title">클라이언트</p></th>
 		                                    <td>
 		                                    	<label class="table_info" th:if="${advertisementDto.ad_state}">
