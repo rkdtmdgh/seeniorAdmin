@@ -45,7 +45,7 @@ async function requestDuplicateCheck(input, nullCheck, defaultValue,  alertMsg) 
 		return false;
 	}
 	
-	if(defaultValue && input.value.trim() === defaultValue) {
+	if(defaultValue && input.value === defaultValue) {
 		setClearErrorMessage(input);
 		return false;
 	}

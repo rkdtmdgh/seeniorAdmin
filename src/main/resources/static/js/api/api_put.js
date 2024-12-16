@@ -789,16 +789,33 @@ async function putReportResultrModify(formName) {
 async function putAdvertisementCategoryModify(formName) {
 	const form = document.forms[formName];
 	let input;
+	const current_ac_name = form.current_ac_name;
 	
 	input = form.ac_name;
-	if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+	if(current_ac_name.value !== input.value) {
+		if(!(await requestDuplicateCheck(input, true, null, true))) { // 요소, 빈값 체크 여부, 기본값 비교 여부, 경고창 표시 여부
+			input.focus();
+			return false;
+		}
+	}
+
+	input = form.ac_width;
+	if(!validateEmpty(input, '이미지 가로 비율', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.ac_height;
+	if(!validateEmpty(input, '이미지 세로 비율', true)) {
 		input.focus();
 		return false;
 	}
 	
 	const formData = new FormData(form);
-	const successMessage = `"${input.value}" 광고 위치 분류명이 수정되었습니다`;
-	const errorMessage = `"${input.value}" 광고 위치 분류명 수정에 실패했습니다.`;
+	formData.append('ac_size', `${form.ac_width.value}/${form.ac_height.value}`);
+	
+	const successMessage = `"${form.ac_name.value}" 광고 위치 분류 내용이 수정되었습니다`;
+	const errorMessage = `"${form.ac_name.value}" 광고 위치 분류 내용 수정에 실패했습니다.`;
 
 	await putIntegSubmit(
 		'/advertisement/cate_info/modify_category_confirm', 

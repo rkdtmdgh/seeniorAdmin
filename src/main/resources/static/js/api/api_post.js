@@ -575,9 +575,22 @@ async function postAdvertisementCategoryCreate(formName, nextPage) {
 		return false;
 	}
 	
+	input = form.ac_width;
+	if(!validateEmpty(input, '이미지 가로 비율', true)) {
+		input.focus();
+		return false;
+	}
+	
+	input = form.ac_height;
+	if(!validateEmpty(input, '이미지 세로 비율', true)) {
+		input.focus();
+		return false;
+	}
+	
 	const formData = new FormData(form);
-	const successMessage = `"${input.value}" 광고 위치 분류가 등록되었습니다.`;
-	const errorMessage = `"${input.value}" 광고 위치 분류 등록에 실패했습니다.`;
+	formData.append('ac_size', `${form.ac_width.value}/${form.ac_height.value}`);
+	const successMessage = `"${form.ac_name.value}" 광고 위치 분류가 등록되었습니다.`;
+	const errorMessage = `"${form.ac_name.value}" 광고 위치 분류 등록에 실패했습니다.`;
 	
 	await postIntegSubmit(
 		'/advertisement/cate_info/create_category_confirm',
@@ -593,6 +606,12 @@ async function postAdvertisementCategoryCreate(formName, nextPage) {
 async function postAdvertisementCreate(formName) {
 	const form = document.forms[formName];
 	let input;
+	
+	input = form.ad_alt;
+	if(!validateEmpty(input, '광고명', true)) {
+		input.focus();
+		return false;
+	}
 	
 	input = form.ad_category_no;
 	if(input.value === "") {

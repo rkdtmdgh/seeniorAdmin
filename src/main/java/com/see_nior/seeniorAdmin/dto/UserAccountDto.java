@@ -22,7 +22,7 @@ public class UserAccountDto {
 	private String u_detailed_address;
 	private String u_profile_img;
 	private String u_company;
-	private boolean u_is_personal;					// true = 개인, false = 기관
+	private boolean u_is_personal;						// true = 개인, false = 기관
 	private String u_social_id;
 	private boolean u_is_blocked;					// 계정 정지 여부. 		true = 정지 X, false = 정지
 	private String u_blocked_reason;
