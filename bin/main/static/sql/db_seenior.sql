@@ -1649,13 +1649,30 @@ SELECT * FROM information_schema.events;
 SHOW EVENTS;
 DROP EVENT DAILY_AD_STATE_AND_IDX_UPDATE;
 
+-- 환자 카테고리 테이블 ------------------------------------------------------------------------------------------------------------
+CREATE TABLE CARE_LIST_CATEGORY (
+	CLC_NO			INT AUTO_INCREMENT COMMENT "환자 카테고리 NO(PK)",				-- 환자 카테고리 NO(PK)
+    CLC_USER_NO		INT NOT NULL COMMENT "유저 NO(USER ACCOUNT TABLE PK)",		-- 유저 NO(USER ACCOUNT TABLE PK)
+    CLC_NAME		VARCHAR(50) NOT NULL COMMENT "환자 카테고리 이름",						-- 환자 카테고리 이름
+    CLC_IS_DELETED	INT COMMENT "환자 카테고리 삭제 유무(기본값 = 1, 삭제 시 = 0)",		-- 환자 카테고리 삭제 유무(기본값 = 1, 삭제 시 = 0)
+    CLC_REG_DATE	DATETIME DEFAULT NOW() COMMENT "환자 카테고리 등록일",			-- 환자 카테고리 등록일
+    CLC_MOD_DATE	DATETIME DEFAULT NOW() COMMENT "환자 카테고리 수정일",			-- 환자 카테고리 수정일
+    PRIMARY KEY(CLC_NO)
+);
+
+SELECT * FROM CARE_LIST_CATEGORY;
+SHOW INDEX FROM CARE_LIST_CATEGORY;
+DROP TABLE CARE_LIST_CATEGORY;
+
 -- 환자 테이블 -------------------------------------------------------------------------------------------------------------------
 CREATE TABLE CARE_LIST (
 	CL_NO					INT	AUTO_INCREMENT COMMENT "환자 NO(PK)", 							-- 환자 NO(PK)
 	CL_USER_NO				INT	NOT NULL COMMENT "환자 관리하는 USER NO(USER_ACCOUNT TABLE PK)",	-- 환자 관리하는 USER NO(USER_ACCOUNT TABLE PK)
-	CL_GROUP				VARCHAR(50) COMMENT "환자 그룹",										-- 환자 그룹
+	CL_CATEGORY_NO			INT COMMENT "환자 카테고리 NO",											-- 환자 카테고리 NO
 	CL_NAME					VARCHAR(255) NOT NULL COMMENT "환자 이름",							-- 환자 이름
-	CL_GENDER				CHAR(1) NOT NULL COMMENT "환자 성별",									-- 환자 성별 
+	CL_IMG					VARCHAR(255) COMMENT "환자 사진 파일 명",								-- 환자 사진 파일 명
+	CL_DIR_NAME				VARCHAR(255) COMMENT "환자 사진 파일 저장 폴더 명",						-- 환자 사진 파일 저장 폴더 명
+    CL_GENDER				CHAR(1) NOT NULL COMMENT "환자 성별",									-- 환자 성별 
 	CL_AGE					INT	NOT NULL COMMENT "환자 나이",										-- 환자 나이
 	CL_ADDRESS				VARCHAR(255) NOT NULL COMMENT "환자 실 거주지",							-- 환자 실 거주지
 	CL_BLOOD_TYPE			CHAR(3) NOT NULL COMMENT "환자 혈액형",								-- 환자 혈액형
@@ -1679,7 +1696,7 @@ CREATE TABLE CARE_LIST (
 	CL_SOCIAL_STATE			TINYINT NOT NULL COMMENT "환자 사회적 교류 정도",						-- 환자 사회적 교류 정도
 	CL_ETC					VARCHAR(255) COMMENT "환자 기타 특이사항",								-- 환자 기타 특이사항
 	CL_FAVORITES			TINYINT DEFAULT 1 COMMENT "환자 즐겨찾기 여부(기본값 = 1, 즐겨찾기 시 = 0)",	-- 환자 즐겨찾기 여부 (기본값 = 1 즐겨찾기 시 = 0)
-	CL_IS_DELETED			TINYINT	DEFAULT 1 COMMENT "환자 삭제 여부(기본값 = 1, 즐겨찾기 시 = 0)",	-- 환자 삭제 여부(기본값 = 1, 즐겨찾기 시 = 0)
+	CL_IS_DELETED			TINYINT	DEFAULT 1 COMMENT "환자 삭제 여부(기본값 = 1, 삭제 시 = 0)",		-- 환자 삭제 여부(기본값 = 1, 삭제 시 = 0)
 	CL_REG_DATE				DATETIME DEFAULT NOW() COMMENT "환자 등록일",							-- 환자 등록일
 	CL_MOD_DATE				DATETIME DEFAULT NOW() COMMENT "환자 수정일",							-- 환자 수정일
     PRIMARY KEY(CL_NO)

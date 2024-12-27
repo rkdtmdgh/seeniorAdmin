@@ -348,6 +348,8 @@
 		WHERE  
 			AD.AD_IS_DELETED = 1 
 		AND 
+			AC.AC_IS_DELETED = 1 
+		AND 
 			AD.AD_STATE = 1 
 		ORDER BY 
 			AD.AD_NO DESC 
