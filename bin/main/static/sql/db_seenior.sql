@@ -1653,7 +1653,7 @@ DROP EVENT DAILY_AD_STATE_AND_IDX_UPDATE;
 CREATE TABLE CARE_LIST_CATEGORY (
 	CLC_NO			INT AUTO_INCREMENT COMMENT "환자 카테고리 NO(PK)",				-- 환자 카테고리 NO(PK)
     CLC_USER_NO		INT NOT NULL COMMENT "유저 NO(USER ACCOUNT TABLE PK)",		-- 유저 NO(USER ACCOUNT TABLE PK)
-    CLC_NAME		VARCHAR(50) NOT NULL COMMENT "환자 카테고리 이름",						-- 환자 카테고리 이름
+    CLC_NAME		VARCHAR(50) NOT NULL COMMENT "환자 카테고리 이름",				-- 환자 카테고리 이름
     CLC_IS_DELETED	INT COMMENT "환자 카테고리 삭제 유무(기본값 = 1, 삭제 시 = 0)",		-- 환자 카테고리 삭제 유무(기본값 = 1, 삭제 시 = 0)
     CLC_REG_DATE	DATETIME DEFAULT NOW() COMMENT "환자 카테고리 등록일",			-- 환자 카테고리 등록일
     CLC_MOD_DATE	DATETIME DEFAULT NOW() COMMENT "환자 카테고리 수정일",			-- 환자 카테고리 수정일
