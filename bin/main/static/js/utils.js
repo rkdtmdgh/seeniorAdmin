@@ -152,7 +152,7 @@ function setSelectGuidelineInfo(selectElement, formName) {
 	
 	if(selectElement) {
 		$selectOption = $(selectElement).find('option:selected'); // 선택된 옵션
-		info = $selectOption.data('info'); // 선택된 옵션의 data-info 속성 값 가져오기
+		info = processInfo($(selectElement).attr('name'), $selectOption.data('info')); // 선택된 옵션의 data-info 속성 값 가져오기
 	}
 	
 	if($infoEle.length && info) {
@@ -161,6 +161,22 @@ function setSelectGuidelineInfo(selectElement, formName) {
 	
 	// 동적으로 순번 max값 적용 해당하지 않은 경우 getMaxIdxAndSetAttribute함수에서 종료
 	if(selectElement) getMaxIdxAndSetAttribute($(selectElement).attr('name'), $selectOption.val(), formName);
+}
+
+// 가이드라인 요소 가공 로직 정의
+const infoProcessors = {
+	ad_category_no: (info) => {
+		const [width, height] = info.split('/');
+		return `권장 비율: ${width} x ${height}`;
+	},
+}
+
+// 가이드라인 요소 가공 함수
+function processInfo(name, info) {
+	if(infoProcessors[name]) {
+		return infoProcessors[name](info);
+	}
+	return info; // 해당 사항이 없을 경우 원본 반환
 }
 
 // 라디오 버튼으로 연계된 요소 제어
