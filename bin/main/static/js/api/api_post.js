@@ -125,6 +125,7 @@ async function postIntegSubmitProcess(apiUrl, formData, successMessage, errorMes
 		const response = await $.ajax({
 			url: apiUrl,
 			method: 'POST',
+			
 			data: formData,
 			processData: false,  // FormData가 자동으로 Content-Type 설정
 			contentType: false,  // FormData를 문자열로 변환하지 않음
