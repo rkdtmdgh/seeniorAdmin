@@ -2009,7 +2009,7 @@ async function getCategoryList(ele, formName, selectedValue, ) {
 							if(data[categoryConfig.note]){
 								logger.info('guideline:', data[categoryConfig.note]);
 								const $guideline = $('#guideline');
-								$guideline.text(data[categoryConfig.note]);									
+								$guideline.text(processInfo(ele, data[categoryConfig.note]));									
 							}
 							
 						} else {
@@ -2139,7 +2139,7 @@ function mapCategorylistObject(ele) {
 			infoNo = 'ac_no';
 			infoName = 'ac_name';
 			soltValue = 'ad_no';
-			note = 'ac_note';
+			note = 'ac_size';
 			break;
 		
 		default:
