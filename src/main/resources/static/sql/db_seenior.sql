@@ -1668,36 +1668,43 @@ INSERT INTO CARE_LIST_CATEGORY(CLC_USER_NO, CLC_NAME) VALUES(1, "카테고리이
 
 -- 환자 테이블 -------------------------------------------------------------------------------------------------------------------
 CREATE TABLE CARE_LIST (
-	CL_NO					INT	AUTO_INCREMENT COMMENT "환자 NO(PK)", 							-- 환자 NO(PK)
-	CL_USER_NO				INT	NOT NULL COMMENT "환자 관리하는 USER NO(USER_ACCOUNT TABLE PK)",	-- 환자 관리하는 USER NO(USER_ACCOUNT TABLE PK)
-	CL_CATEGORY_NO			INT COMMENT "환자 카테고리 NO",											-- 환자 카테고리 NO
-	CL_NAME					VARCHAR(255) NOT NULL COMMENT "환자 이름",							-- 환자 이름
-	CL_IMG					VARCHAR(255) COMMENT "환자 사진 파일 명",								-- 환자 사진 파일 명
-	CL_DIR_NAME				VARCHAR(255) COMMENT "환자 사진 파일 저장 폴더 명",						-- 환자 사진 파일 저장 폴더 명
-    CL_GENDER				CHAR(1) NOT NULL COMMENT "환자 성별",									-- 환자 성별 
-	CL_AGE					INT	NOT NULL COMMENT "환자 나이",										-- 환자 나이
-	CL_ZIP_CODE				VARCHAR(255) COMMENT "환자 우편 번호",									-- 환자 우편 번호
-    CL_ADDRESS				VARCHAR(255) COMMENT "환자 주소",										-- 환자 주소
-    CL_DETAIL_ADDRESS		VARCHAR(255) COMMENT "환자 상세 주소",									-- 환자 상세 주소
-    CL_BLOOD_TYPE			CHAR(3) NOT NULL COMMENT "환자 혈액형",								-- 환자 혈액형
-	CL_PHONE				VARCHAR(100) NOT NULL COMMENT "환자 연락처",							-- 환자 연락처
-	CL_EMERGENCY_CONTACT_1	VARCHAR(100) NOT NULL COMMENT "환자 비상 연락처 1. 최소 한개 필수",			-- 환자 비상 연락처 1. 최소 한개 필수
-	CL_EMERGENCY_CONTACT_2	VARCHAR(100) COMMENT "환자 비상 연락처 2",								-- 환자 비상 연락처 2
-	CL_EMERGENCY_CONTACT_3	VARCHAR(100) COMMENT "환자 비상 연락처 3",								-- 환자 비상 연락처 3
-	CL_EMERGENCY_CONTACT_4	VARCHAR(100) COMMENT "환자 비상 연락처 4",								-- 환자 비상 연락처 4
-	CL_FAVOR_FOOD			VARCHAR(100) COMMENT "환자 선호 음식",									-- 환자 선호 음식
-	CL_HATE_FOOD			VARCHAR(100) COMMENT "환자 비선호 음식",								-- 환자 비선호 음식
-	CL_DIABETIC_FOOD		TINYINT NOT NULL COMMENT "환자 당뇨식 유무",							-- 환자 당뇨식 유무
-	CL_MEDICATIONS			VARCHAR(100) COMMENT "환자 복용 중인 약",								-- 환자 복용중인 약
-	CL_HOSPITAL				VARCHAR(100) COMMENT "환자 담당 병원",									-- 환자 담당 병원
-	CL_DOCTOR				VARCHAR(100) COMMENT "환자 담당의",									-- 환자 담당의
-	CL_HOSPITAL_TEL			VARCHAR(100) COMMENT "환자 담당 병원 연락처",							-- 환자 담당 병원 연락처
-	CL_WALK_STATE			TINYINT NOT NULL COMMENT "환자 보행 상태",								-- 환자 보행 상태
-	CL_ASSISTIVE_DEVICE		VARCHAR(100) COMMENT "환자 보조 기구 유무", 								-- 환자 보조 기구 유무
-	CL_WASHING_ASSISTANCE	TINYINT NOT NULL COMMENT "환자 세면 도움 정도",							-- 환자 세면 도움 정도
-	CL_TOILET_ASSISTANCE	TINYINT NOT NULL COMMENT "환자 대소변 도움 정도",						-- 환자 대소변 도움 정도
-	CL_MENTAL_STATE			TINYINT NOT NULL COMMENT "환자 정신 건강 상태(우울증, 고립감 정도)",			-- 환자 정신 건강 상태(우울증, 고립감 정도)
-	CL_SOCIAL_STATE			TINYINT NOT NULL COMMENT "환자 사회적 교류 정도",						-- 환자 사회적 교류 정도
+	CL_NO					INT	AUTO_INCREMENT COMMENT "환자 NO(PK)", 								-- 환자 NO(PK)
+	CL_USER_NO				INT	NOT NULL COMMENT "환자 관리하는 USER NO(USER_ACCOUNT TABLE PK)",		-- 환자 관리하는 USER NO(USER_ACCOUNT TABLE PK)
+	CL_CATEGORY_NO			INT COMMENT "환자 카테고리 NO",												-- 환자 카테고리 NO
+	CL_NAME					VARCHAR(255) NOT NULL COMMENT "환자 이름",								-- 환자 이름
+	CL_IMG					VARCHAR(255) COMMENT "환자 사진 파일 명",									-- 환자 사진 파일 명
+	CL_DIR_NAME				VARCHAR(255) COMMENT "환자 사진 파일 저장 폴더 명",							-- 환자 사진 파일 저장 폴더 명
+    CL_GENDER				CHAR(1) NOT NULL COMMENT "환자 성별",										-- 환자 성별 
+	CL_BIRTH				DATE NOT NULL COMMENT "환자 생년월일",										-- 환자 생년월일
+	CL_ZIP_CODE				VARCHAR(255) COMMENT "환자 우편 번호",										-- 환자 우편 번호
+    CL_ADDRESS				VARCHAR(255) COMMENT "환자 주소",											-- 환자 주소
+    CL_DETAIL_ADDRESS		VARCHAR(255) COMMENT "환자 상세 주소",										-- 환자 상세 주소
+    CL_BLOOD_TYPE_RH		TINYINT NOT NULL COMMENT "환자 혈액형Rh(Rh+일 경우 = 1, Rh-일 경우 = 0)",		-- 환자 혈액형Rh(Rh+일 경우 = 1, Rh-일 경우 = 0)
+    CL_BLOOD_TYPE_ABO		VARCHAR(2) NOT NULL COMMENT "환자 혈액형ABO",								-- 환자 혈액형ABO
+	CL_PHONE				VARCHAR(100) NOT NULL COMMENT "환자 연락처",								-- 환자 연락처
+	CL_EMERGENCY_CONTACT_1	VARCHAR(100) NOT NULL COMMENT "환자 비상 연락처 1. 최소 한개 필수",				-- 환자 비상 연락처 1. 최소 한개 필수
+	CL_EMERGENCY_CONTACT_2	VARCHAR(100) COMMENT "환자 비상 연락처 2",									-- 환자 비상 연락처 2
+	CL_EMERGENCY_CONTACT_3	VARCHAR(100) COMMENT "환자 비상 연락처 3",									-- 환자 비상 연락처 3
+	CL_EMERGENCY_CONTACT_4	VARCHAR(100) COMMENT "환자 비상 연락처 4",									-- 환자 비상 연락처 4
+	CL_FAVOR_FOOD			VARCHAR(100) COMMENT "환자 선호 음식",										-- 환자 선호 음식
+	CL_HATE_FOOD			VARCHAR(100) COMMENT "환자 비선호 음식",									-- 환자 비선호 음식
+	CL_DIABETIC_FOOD		TINYINT NOT NULL COMMENT "환자 당뇨식 유무(당뇨식 무 = 1, 당뇨식 유 = 0)",		-- 환자 당뇨식 유무(당뇨식 무 = 1, 당뇨식 유 = 0)
+	CL_MEDICATIONS			VARCHAR(100) COMMENT "환자 복용 중인 약",									-- 환자 복용중인 약
+	CL_HOSPITAL				VARCHAR(100) COMMENT "환자 담당 병원",										-- 환자 담당 병원
+	CL_DOCTOR				VARCHAR(100) COMMENT "환자 담당의",										-- 환자 담당의
+	CL_HOSPITAL_TEL			VARCHAR(100) COMMENT "환자 담당 병원 연락처",								-- 환자 담당 병원 연락처
+	CL_WALK_STATE			TINYINT NOT NULL COMMENT 
+		"환자 보행 상태(자가보행 가능 = 0, 지팡이 사용 = 1, 목발 및 보행기 사용 = 2, 휠체어 사용 = 3, 보행 불가능 = 4)",
+        -- 환자 보행 상태(자가보행 가능 = 0, 지팡이 사용 = 1, 목발 및 보행기 사용 = 2, 휠체어 사용 = 3, 보행 불가능 = 4)
+	CL_ASSISTIVE_DEVICE		VARCHAR(100) COMMENT "환자 보조 기구 유무", 									-- 환자 보조 기구 유무
+	CL_WASHING_ASSISTANCE	TINYINT NOT NULL COMMENT "환자 세면 도움 정도(도움 불필요 = 1, 도움 필요 = 0)",	-- 환자 세면 도움 정도
+	CL_TOILET_ASSISTANCE	TINYINT NOT NULL COMMENT "환자 대소변 도움 정도(도움 불필요 = 1, 도움 필요 = 0)",	-- 환자 대소변 도움 정도
+	CL_MENTAL_STATE			TINYINT NOT NULL COMMENT 
+		"환자 정신 건강 상태(우울증, 고립감 정도 / 문제 없음 = 0, 가벼운 우울증 = 1, 심각한 우울증 = 2)",			
+        -- 환자 정신 건강 상태(우울증, 고립감 정도 / 문제 없음 = 0, 가벼운 우울증 = 1, 심각한 우울증 = 2)
+	CL_SOCIAL_STATE			TINYINT NOT NULL COMMENT 
+		"환자 사회적 교류 정도(사회적 교류 원활 = 0, 가족 및 친인척과 교류 = 1, 사회적 교류 없음 = 2)",						
+        -- 환자 사회적 교류 정도(사회적 교류 원활 = 0, 가족 및 친인척과 교류 = 1, 사회적 교류 없음 = 2)
 	CL_ETC					VARCHAR(255) COMMENT "환자 기타 특이사항",								-- 환자 기타 특이사항
 	CL_FAVORITES			TINYINT DEFAULT 1 COMMENT "환자 즐겨찾기 여부(기본값 = 1, 즐겨찾기 시 = 0)",	-- 환자 즐겨찾기 여부 (기본값 = 1 즐겨찾기 시 = 0)
 	CL_IS_DELETED			TINYINT	DEFAULT 1 COMMENT "환자 삭제 여부(기본값 = 1, 삭제 시 = 0)",		-- 환자 삭제 여부(기본값 = 1, 삭제 시 = 0)
