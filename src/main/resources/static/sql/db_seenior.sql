@@ -1686,8 +1686,6 @@ CREATE TABLE CARE_LIST (
 	CL_EMERGENCY_CONTACT_2	VARCHAR(100) COMMENT "환자 비상 연락처 2",									-- 환자 비상 연락처 2
 	CL_EMERGENCY_CONTACT_3	VARCHAR(100) COMMENT "환자 비상 연락처 3",									-- 환자 비상 연락처 3
 	CL_EMERGENCY_CONTACT_4	VARCHAR(100) COMMENT "환자 비상 연락처 4",									-- 환자 비상 연락처 4
-	CL_FAVOR_FOOD			VARCHAR(100) COMMENT "환자 선호 음식",										-- 환자 선호 음식
-	CL_HATE_FOOD			VARCHAR(100) COMMENT "환자 비선호 음식",									-- 환자 비선호 음식
 	CL_DIABETIC_FOOD		TINYINT NOT NULL COMMENT "환자 당뇨식 유무(당뇨식 무 = 1, 당뇨식 유 = 0)",		-- 환자 당뇨식 유무(당뇨식 무 = 1, 당뇨식 유 = 0)
 	CL_MEDICATIONS			VARCHAR(100) COMMENT "환자 복용 중인 약",									-- 환자 복용중인 약
 	CL_HOSPITAL				VARCHAR(100) COMMENT "환자 담당 병원",										-- 환자 담당 병원
