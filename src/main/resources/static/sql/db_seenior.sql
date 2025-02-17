@@ -1678,7 +1678,7 @@ CREATE TABLE CARE_LIST (
 	CL_BIRTH				DATE NOT NULL COMMENT "환자 생년월일",										-- 환자 생년월일
 	CL_ZIP_CODE				VARCHAR(255) COMMENT "환자 우편 번호",										-- 환자 우편 번호
     CL_ADDRESS				VARCHAR(255) COMMENT "환자 주소",											-- 환자 주소
-    CL_DETAIL_ADDRESS		VARCHAR(255) COMMENT "환자 상세 주소",										-- 환자 상세 주소
+    CL_DETAILED_ADDRESS		VARCHAR(255) COMMENT "환자 상세 주소",										-- 환자 상세 주소
     CL_BLOOD_TYPE_RH		TINYINT NOT NULL COMMENT "환자 혈액형Rh(Rh+일 경우 = 1, Rh-일 경우 = 0)",		-- 환자 혈액형Rh(Rh+일 경우 = 1, Rh-일 경우 = 0)
     CL_BLOOD_TYPE_ABO		VARCHAR(2) NOT NULL COMMENT "환자 혈액형ABO",								-- 환자 혈액형ABO
 	CL_PHONE				VARCHAR(100) NOT NULL COMMENT "환자 연락처",								-- 환자 연락처
