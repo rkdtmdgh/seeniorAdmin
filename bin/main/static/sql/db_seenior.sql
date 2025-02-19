@@ -201,7 +201,7 @@ CREATE TABLE USER_ACCOUNT (
 	U_ISCREDENTIALSNONEXPIRED 	TINYINT DEFAULT 1 COMMENT "유저 계정 자격 증명 만료 유무(만료X = 1, 만료 = 0)",	-- 유저 자격 증명 만료 유무(만료X = 1, 만료 = 0)
 	U_ISENABLED 				TINYINT DEFAULT 1 COMMENT "유저 계정 사용 가능 유무 (사용 = 1, 사용X = 0)",		-- 유저 계정 사용 가능 유무 (사용 = 1, 사용X = 0)
 	U_IS_DELETED 				TINYINT DEFAULT 1 COMMENT "유저 계정 탈퇴 여부(기본값 = 1, 탈퇴 시 = 0)",		-- 유저 계정 탈퇴 여부(기본값 = 1, 탈퇴 시 = 0)
-    U_AUTHORITY_ROLE 			VARCHAR(50) DEFAULT "USER" COMMENT "인가 권한명", 							-- 인가 권한명
+    U_AUTHORITY_ROLE 			VARCHAR(50) DEFAULT "ROLE_USER" COMMENT "인가 권한명", 							-- 인가 권한명
 	U_REG_DATE 					DATETIME DEFAULT NOW() COMMENT "유저 등록일",								-- 유저 등록일
 	U_MOD_DATE 					DATETIME DEFAULT NOW() COMMENT "유저 수정일", 								-- 유저 수정일
     PRIMARY KEY(U_NO)
@@ -1676,8 +1676,10 @@ CREATE TABLE CARE_LIST (
 	CL_DIR_NAME				VARCHAR(255) COMMENT "환자 사진 파일 저장 폴더 명",						-- 환자 사진 파일 저장 폴더 명
     CL_GENDER				CHAR(1) NOT NULL COMMENT "환자 성별",									-- 환자 성별 
 	CL_AGE					INT	NOT NULL COMMENT "환자 나이",										-- 환자 나이
-	CL_ADDRESS				VARCHAR(255) NOT NULL COMMENT "환자 실 거주지",							-- 환자 실 거주지
-	CL_BLOOD_TYPE			CHAR(3) NOT NULL COMMENT "환자 혈액형",								-- 환자 혈액형
+	CL_ZIP_CODE				VARCHAR(255) COMMENT "환자 우편 번호",									-- 환자 우편 번호
+    CL_ADDRESS				VARCHAR(255) COMMENT "환자 주소",										-- 환자 주소
+    CL_DETAIL_ADDRESS		VARCHAR(255) COMMENT "환자 상세 주소",									-- 환자 상세 주소
+    CL_BLOOD_TYPE			CHAR(3) NOT NULL COMMENT "환자 혈액형",								-- 환자 혈액형
 	CL_PHONE				VARCHAR(100) NOT NULL COMMENT "환자 연락처",							-- 환자 연락처
 	CL_EMERGENCY_CONTACT_1	VARCHAR(100) NOT NULL COMMENT "환자 비상 연락처 1. 최소 한개 필수",			-- 환자 비상 연락처 1. 최소 한개 필수
 	CL_EMERGENCY_CONTACT_2	VARCHAR(100) COMMENT "환자 비상 연락처 2",								-- 환자 비상 연락처 2
