@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
+import com.see_nior.seeniorAdmin.dto.BoardNoticePostsDto;
 import com.see_nior.seeniorAdmin.dto.BoardPostsDto;
 
 import lombok.extern.log4j.Log4j2;
@@ -356,21 +357,6 @@ public class BoardController {
 		return result;
 	}
 		
-	//작성한 공지 게시물 등록 요청
-	@PostMapping("/info/create_notice_confirm")
-	@ResponseBody
-	public String createNoticeConfirm(@RequestParam("files") List<MultipartFile> files, 
-									@RequestParam("bp_category_no") int bp_category_no, 
-									@RequestParam("bp_writer_no") int bp_writer_no) {
-		log.info("createNoticeConfirm()");
-		
-		log.info("files: {}",files.size());
-		log.info("bp_category_no: {}",bp_category_no);
-		log.info("bp_writer_no: {}",bp_writer_no);
-		
-		return null;
-	}
-	
 	//게시글 삭제 요청
 	@PostMapping("/info/delete_confirm")
 	@ResponseBody
@@ -382,5 +368,49 @@ public class BoardController {
 		
 		return result;
 	}
+	
+	//게시판 공지사항 게시물 작성 양식
+	@GetMapping("/noti_info/create_notice_form")
+	public String createNoticeForm(@RequestParam("infoNo") int bn_category_no, Model model) {
+		log.info("createForm()");
+			
+		model.addAttribute("bn_category_no", bn_category_no);
+			
+		String nextPage = "board/create_notice_form";
+			
+		return nextPage;
+	}
+	
+	//작성한 공지 게시물 등록 요청(board_notice)
+	@PostMapping("/noti_info/create_notice_confirm")
+	@ResponseBody
+	public boolean createNoticeConfirm(@RequestParam("files") List<MultipartFile> files, 
+									BoardNoticePostsDto boardNoticePostsDto) {
+		log.info("createNoticeConfirm()");
+		
+		log.info("files: {}",files.size());
+		log.info("bn_category_no: {}",boardNoticePostsDto.getBn_category_no());
+		log.info("bn_writer_no: {}",boardNoticePostsDto.getBn_writer_no());
+				
+		Boolean result = false;
+		
+		//file 첨부가 되어 있는지 확인
+		if( files != null && files.size() != 0 && files.get(0).getSize() != 0 ) {
+			log.info("files in value!");
+									
+			result = boardService.createNoticeConfirm(files,boardNoticePostsDto);
+					
+			
+		}else {
+			log.info("files empty!");
+			
+			result = boardService.createNoticeConfirm(null,boardNoticePostsDto);
+			
+			
+		}
+		
+		return result;
+	}
+	
 	
 }
