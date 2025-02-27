@@ -201,7 +201,7 @@ CREATE TABLE USER_ACCOUNT (
 	U_ISCREDENTIALSNONEXPIRED 	TINYINT DEFAULT 1 COMMENT "유저 계정 자격 증명 만료 유무(만료X = 1, 만료 = 0)",	-- 유저 자격 증명 만료 유무(만료X = 1, 만료 = 0)
 	U_ISENABLED 				TINYINT DEFAULT 1 COMMENT "유저 계정 사용 가능 유무 (사용 = 1, 사용X = 0)",		-- 유저 계정 사용 가능 유무 (사용 = 1, 사용X = 0)
 	U_IS_DELETED 				TINYINT DEFAULT 1 COMMENT "유저 계정 탈퇴 여부(기본값 = 1, 탈퇴 시 = 0)",		-- 유저 계정 탈퇴 여부(기본값 = 1, 탈퇴 시 = 0)
-    U_AUTHORITY_ROLE 			VARCHAR(50) DEFAULT "ROLE_USER" COMMENT "인가 권한명", 							-- 인가 권한명
+    U_AUTHORITY_ROLE 			VARCHAR(50) DEFAULT "USER" COMMENT "인가 권한명", 							-- 인가 권한명
 	U_REG_DATE 					DATETIME DEFAULT NOW() COMMENT "유저 등록일",								-- 유저 등록일
 	U_MOD_DATE 					DATETIME DEFAULT NOW() COMMENT "유저 수정일", 								-- 유저 수정일
     PRIMARY KEY(U_NO)
