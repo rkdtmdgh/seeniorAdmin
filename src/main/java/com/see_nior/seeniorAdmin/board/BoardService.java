@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.see_nior.seeniorAdmin.board.mapper.BoardMapper;
 import com.see_nior.seeniorAdmin.board.util.BoardItemCntUpdater;
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
+import com.see_nior.seeniorAdmin.dto.BoardNoticePostsDto;
 import com.see_nior.seeniorAdmin.dto.BoardPostsDto;
 import com.see_nior.seeniorAdmin.dto.DeleteBoardPostsDto;
 import com.see_nior.seeniorAdmin.dto.DiseaseDto;
@@ -835,8 +836,21 @@ public class BoardService {
 			log.info("deleteBoardPostsDtos is null: {}",deleteBoardPostsDtos);
 		}//최 상위 조건 끝
 				
+	}
+
+	//작성한 공지 게시물 등록 요청(board_notice)
+	public Boolean createNoticeConfirm(List<MultipartFile> files, BoardNoticePostsDto boardNoticePostsDto) {
+		log.info("createNoticeConfirm()");
+		
+		log.info("files: {}",files.size());
+		log.info("bn_category_no: {}",boardNoticePostsDto.getBn_category_no());
+		log.info("bn_writer_no: {}",boardNoticePostsDto.getBn_writer_no());
+		
+		return false;
 	}//deleteFolderRequest() END
 	
-		
+	//board_notice(게시판 공지사항) 메인 페이지 요청
+	
+
 	
 }
