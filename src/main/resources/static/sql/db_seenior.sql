@@ -180,7 +180,7 @@ INSERT INTO ADMIN_AUTHORITY(ROLE_NAME) VALUES("NOT_APPROVED");		-- 승인 되지
 -- USER 계정 테이블 -------------------------------------------------------------------------------------------------------------------------
 CREATE TABLE USER_ACCOUNT (
 	U_NO 						INT AUTO_INCREMENT COMMENT "유저 NO(PK)", 								-- 유저 NO(PK)
-	U_ID 						VARCHAR(100) NOT NULL UNIQUE COMMENT "유저 ID(E-MAIL)", 					-- 유저 ID(E-MAIL)
+	U_ID 						VARCHAR(255) NOT NULL UNIQUE COMMENT "유저 ID(E-MAIL)", 					-- 유저 ID(E-MAIL)
 	U_PW 						VARCHAR(200) NOT NULL COMMENT "유저 비밀번호", 								-- 유저 비밀번호
 	U_NAME 						VARCHAR(100) NOT NULL COMMENT "유저 이름", 								-- 유저 이름
 	U_PHONE 					VARCHAR(100) NOT NULL COMMENT "유저 연락처", 								-- 유저 연락처
