@@ -369,20 +369,28 @@ public class BoardController {
 		return result;
 	}
 	
+	//게시판 공지사항 리스트 요청
+	@GetMapping("/noti_info/notice_list_form")
+	public String noticeListForm() {
+		log.info("noticeListForm()");
+					
+		String nextPage = "board/notice_list_form";
+			
+		return nextPage;
+	}
+	
 	//게시판 공지사항 게시물 작성 양식
-	@GetMapping("/noti_info/create_notice_form")
-	public String createNoticeForm(@RequestParam("infoNo") int bn_category_no, Model model) {
-		log.info("createForm()");
-			
-		model.addAttribute("bn_category_no", bn_category_no);
-			
+	@GetMapping("/noti_info/create_board_notice_form")
+	public String createNoticeForm() {
+		log.info("createNoticeForm()");
+					
 		String nextPage = "board/create_notice_form";
 			
 		return nextPage;
 	}
 	
 	//작성한 공지 게시물 등록 요청(board_notice)
-	@PostMapping("/noti_info/create_notice_confirm")
+	@PostMapping("/noti_info/create_board_notice_confirm")
 	@ResponseBody
 	public boolean createNoticeConfirm(@RequestParam("files") List<MultipartFile> files, 
 									BoardNoticePostsDto boardNoticePostsDto) {
