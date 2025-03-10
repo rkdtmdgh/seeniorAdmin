@@ -369,6 +369,16 @@ public class BoardController {
 		return result;
 	}
 	
+	//게시판 공지사항 리스트 요청
+	@GetMapping("/noti_info/notice_list_form")
+	public String noticeListForm() {
+		log.info("noticeListForm()");
+					
+		String nextPage = "board/notice_list_form";
+			
+		return nextPage;
+	}
+	
 	//게시판 공지사항 게시물 작성 양식
 	@GetMapping("/noti_info/create_notice_form")
 	public String createNoticeForm(@RequestParam("infoNo") int bn_category_no, Model model) {
