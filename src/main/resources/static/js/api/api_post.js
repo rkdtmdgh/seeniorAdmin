@@ -410,6 +410,48 @@ async function postAnswerCreate(formName) {
 	);
 }
 
+// 게시판 공지 사항 등록
+async function postBoardNoticeCreate(formName) {
+	const form = document.forms[formName];
+	let input;
+	
+	input = form.bn_category_no;
+	if(!input.value === "") {
+		alert('게시판을 선택해 주세요.');
+		return false;
+	}
+	
+	input = form.bn_title;
+	if(!validateEmpty(input, '제목', true)) {
+		input.focus();
+		return false;
+	}
+	
+	if(!validateQuill(quill)) { // 내용 유효성 및 비속어 검사
+		quill.focus();
+		return false;
+	}
+	
+	const successMessage = `"${form.bn_category_no.value}" 게시판 공지 사항이 등록되었습니다.`;
+	const errorMessage = `"${form.bn_category_no.value}" 게시판 공지 사항 등록에 실패했습니다.`;
+	
+	const formData = new FormData();
+	formData.set('bn_body', quill.root.innerHTML); // quill 에디터 내용
+	
+	// 이미지 파일 리사이즈 및 압축하여 formData에 담기 (선택된 이미지 요소가 없을 시 빈 파일 객체가 담김)
+	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
+	await addImagesToFormData($imgTags, formData);
+	
+	await postIntegSubmit(
+		'/board/noti_info/create_notice_confirm',
+		formData,
+		successMessage,
+		errorMessage,
+		`/board/noti_info/notice_list_form?infoNo=${form.bn_category_no.value}`,
+		'content_inner'
+	);
+}
+
 // 게시판 등록
 async function postBoardCategoryCreate(formName) {
 	const form = document.forms[formName];
@@ -433,42 +475,6 @@ async function postBoardCategoryCreate(formName) {
 		successMessage, 
 		errorMessage, 
 		'/board/cate_info/category_list_form',
-		'content_inner'
-	);
-}
-
-// 게시판 공지 사항 등록
-async function postNoticePostsCreate(formName) {
-	const form = document.forms[formName];
-	let input;
-	
-	input = form.bn_title;
-	if(!validateEmpty(input, '제목', true)) {
-		input.focus();
-		return false;
-	}
-	
-	if(!validateQuill(quill)) { // 내용 유효성 및 비속어 검사
-		quill.focus();
-		return false;
-	}
-	
-	const successMessage = `"${bn_title.value.trim()}" 게시판 공지 사항이 등록되었습니다.`;
-	const errorMessage = `"${bn_title.value.trim()}" 게시판 공지 사항 등록에 실패했습니다.`;
-	
-	const formData = new FormData();
-	formData.set('bn_body', quill.root.innerHTML); // quill 에디터 내용
-	
-	// 이미지 파일 리사이즈 및 압축하여 formData에 담기 (선택된 이미지 요소가 없을 시 빈 파일 객체가 담김)
-	const $imgTags = $(quill.root).find('img'); // 모든 이미지 태그 탐색
-	await addImagesToFormData($imgTags, formData);
-	
-	await postIntegSubmit(
-		'/board/info/create_board_notice_confirm',
-		formData,
-		successMessage,
-		errorMessage,
-		`/board/info/board_notice_list_form?infoNo=${form.bn_category_no.value}`,
 		'content_inner'
 	);
 }
