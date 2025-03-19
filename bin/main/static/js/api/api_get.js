@@ -2124,6 +2124,14 @@ function mapCategorylistObject(ele) {
 			soltValue = 'bq_no';
 			break;
 			
+		case 'bn_category_no': // 게시판별 분류 리스트(분류별 관리o)
+			getCateSelectApiUrl = '/board/cate_info/get_list';
+			getListDtos = 'boardCategoryDtos';
+			infoNo = 'bc_no';
+			infoName = 'bc_name';
+			soltValue = 'bc_idx';
+			break;
+			
 		case 'br_category_no': // 신고 유형별 분류 리스트(분류별 관리o)
 			getCateSelectApiUrl = '/report/cate_info/get_category_list_select';
 			getListDtos = 'reportCategoryDtos';			
