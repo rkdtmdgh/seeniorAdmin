@@ -380,7 +380,7 @@ public class BoardController {
 	}
 	
 	//게시판 공지사항 게시물 작성 양식
-	@GetMapping("/noti_info/create_board_notice_form")
+	@GetMapping("/noti_info/create_notice_form")
 	public String createNoticeForm() {
 		log.info("createNoticeForm()");
 					
@@ -390,7 +390,7 @@ public class BoardController {
 	}
 	
 	//작성한 공지 게시물 등록 요청(board_notice)
-	@PostMapping("/noti_info/create_board_notice_confirm")
+	@PostMapping("/noti_info/create_notice_confirm")
 	@ResponseBody
 	public boolean createNoticeConfirm(@RequestParam("files") List<MultipartFile> files, 
 									BoardNoticePostsDto boardNoticePostsDto) {
