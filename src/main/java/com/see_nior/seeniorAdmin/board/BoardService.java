@@ -842,11 +842,23 @@ public class BoardService {
 	public Boolean createNoticeConfirm(List<MultipartFile> files, BoardNoticePostsDto boardNoticePostsDto) {
 		log.info("createNoticeConfirm()");
 		
-		log.info("files: {}",files.size());
-		log.info("bn_category_no: {}",boardNoticePostsDto.getBn_category_no());
-		log.info("bn_writer_no: {}",boardNoticePostsDto.getBn_writer_no());
 		
-		return false;
+		if(files != null) {
+			log.info("files: {}",files.size());
+			log.info("bn_category_no: {}",boardNoticePostsDto.getBn_category_no());
+			log.info("bn_writer_no: {}",boardNoticePostsDto.getBn_writer_no());
+			log.info("bn_title: {}",boardNoticePostsDto.getBn_title());
+			log.info("bn_body: {}",boardNoticePostsDto.getBn_body());
+			return false;
+		}else {
+			log.info("files: null!!");
+			log.info("bn_category_no: {}",boardNoticePostsDto.getBn_category_no());
+			log.info("bn_writer_no: {}",boardNoticePostsDto.getBn_writer_no());
+			log.info("bn_title: {}",boardNoticePostsDto.getBn_title());
+			log.info("bn_body: {}",boardNoticePostsDto.getBn_body());
+			return false;
+		}
+		
 	}//deleteFolderRequest() END
 	
 	//board_notice(게시판 공지사항) 메인 페이지 요청
