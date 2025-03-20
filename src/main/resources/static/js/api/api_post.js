@@ -435,7 +435,7 @@ async function postBoardNoticeCreate(formName) {
 	const successMessage = `"${form.bn_category_no.value}" 게시판 공지 사항이 등록되었습니다.`;
 	const errorMessage = `"${form.bn_category_no.value}" 게시판 공지 사항 등록에 실패했습니다.`;
 	
-	const formData = new FormData();
+	const formData = new FormData(form);
 	formData.set('bn_body', quill.root.innerHTML); // quill 에디터 내용
 	
 	// 이미지 파일 리사이즈 및 압축하여 formData에 담기 (선택된 이미지 요소가 없을 시 빈 파일 객체가 담김)
