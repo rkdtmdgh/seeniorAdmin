@@ -1707,7 +1707,7 @@ CREATE TABLE CARE_LIST (
 		"환자 사회적 교류 정도(사회적 교류 원활 = 0, 가족 및 친인척과 교류 = 1, 사회적 교류 없음 = 2)",						
         -- 환자 사회적 교류 정도(사회적 교류 원활 = 0, 가족 및 친인척과 교류 = 1, 사회적 교류 없음 = 2)
 	CL_ETC					VARCHAR(255) COMMENT "환자 기타 특이사항",								-- 환자 기타 특이사항
-	CL_FAVORITES			TINYINT DEFAULT 1 COMMENT "환자 즐겨찾기 여부(기본값 = 1, 즐겨찾기 시 = 0)",	-- 환자 즐겨찾기 여부 (기본값 = 1 즐겨찾기 시 = 0)
+	CL_FAVORITES			TINYINT DEFAULT 0 COMMENT "환자 즐겨찾기 여부(기본값 = 0, 즐겨찾기 시 = 1)",	-- 환자 즐겨찾기 여부 (기본값 = 0 즐겨찾기 시 = 1)
 	CL_IS_DELETED			TINYINT	DEFAULT 1 COMMENT "환자 삭제 여부(기본값 = 1, 삭제 시 = 0)",		-- 환자 삭제 여부(기본값 = 1, 삭제 시 = 0)
 	CL_REG_DATE				DATETIME DEFAULT NOW() COMMENT "환자 등록일",							-- 환자 등록일
 	CL_MOD_DATE				DATETIME DEFAULT NOW() COMMENT "환자 수정일",							-- 환자 수정일
