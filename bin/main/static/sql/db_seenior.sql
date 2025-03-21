@@ -1718,6 +1718,13 @@ SELECT * FROM CARE_LIST;
 SHOW INDEX FROM CARE_LIST;
 DROP TABLE CARE_LIST;
 
+UPDATE 
+			CARE_LIST 
+		SET 
+			CL_FAVORITES = CASE WHEN CL_FAVORITES = 0 THEN 1 ELSE 0 END 
+		WHERE 
+			CL_NO = 2;
+
 
 -- 환자 보유 질환 테이블 -------------------------------------------------------------------------------------------------------------
 CREATE TABLE CARE_PERSON_DISEASE (
