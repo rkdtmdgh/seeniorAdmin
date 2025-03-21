@@ -180,7 +180,7 @@ INSERT INTO ADMIN_AUTHORITY(ROLE_NAME) VALUES("NOT_APPROVED");		-- 승인 되지
 -- USER 계정 테이블 -------------------------------------------------------------------------------------------------------------------------
 CREATE TABLE USER_ACCOUNT (
 	U_NO 						INT AUTO_INCREMENT COMMENT "유저 NO(PK)", 								-- 유저 NO(PK)
-	U_ID 						VARCHAR(100) NOT NULL UNIQUE COMMENT "유저 ID(E-MAIL)", 					-- 유저 ID(E-MAIL)
+	U_ID 						VARCHAR(255) NOT NULL UNIQUE COMMENT "유저 ID(E-MAIL)", 					-- 유저 ID(E-MAIL)
 	U_PW 						VARCHAR(200) NOT NULL COMMENT "유저 비밀번호", 								-- 유저 비밀번호
 	U_NAME 						VARCHAR(100) NOT NULL COMMENT "유저 이름", 								-- 유저 이름
 	U_PHONE 					VARCHAR(100) NOT NULL COMMENT "유저 연락처", 								-- 유저 연락처
@@ -191,6 +191,7 @@ CREATE TABLE USER_ACCOUNT (
     U_ADDRESS 					VARCHAR(255) COMMENT "유저 주소",											-- 유저 주소
     U_DETAILED_ADDRESS 			VARCHAR(255) COMMENT "유저 상세 주소",										-- 유저 상세 주소
     U_PROFILE_IMG 				VARCHAR(255) COMMENT "유저프로필 이미지 파일 명",								-- 유저 프로필 이미지 파일 명
+    U_IMG_DIR_NAME				VARCHAR(255) COMMENT "이미지 파일 저장 폴더 이름", 							-- 이미지 파일 저장 폴더 이름
 	U_COMPANY 					VARCHAR(50) COMMENT "유저 소속 기관",										-- 유저 소속 기관
 	U_IS_PERSONAL 				TINYINT COMMENT "유저 개인회원 OR 기관회원 여부 (개인 = 1, 기관 = 0)",			-- 유저 개인회원 OR 기관회원 여부 (개인 = 1, 기관 = 0)
 	U_SOCIAL_ID 				VARCHAR(200) COMMENT "유저 3자 로그인 ID",									-- 유저 3자 로그인 ID
@@ -210,6 +211,8 @@ CREATE TABLE USER_ACCOUNT (
 SELECT * FROM USER_ACCOUNT;
 SHOW INDEX FROM USER_ACCOUNT;
 DROP TABLE USER_ACCOUNT;
+
+ALTER TABLE USER_ACCOUNT ADD COLUMN U_IMG_DIR_NAME VARCHAR(255) COMMENT "이미지 파일 저장 폴더 이름" AFTER U_PROFILE_IMG;
 
 INSERT INTO USER_ACCOUNT(U_ID, U_PW, U_NAME, U_PHONE, U_NICKNAME, U_GENDER, U_BIRTH, U_IS_PERSONAL)
 VALUES("userTest1@seenior.com", "12345678", "user1", "010-1234-1234", "user_nick_1", "F", "1990-01-01", 1);
@@ -1856,3 +1859,26 @@ INSERT INTO RECIPE VALUES(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,
 SELECT * FROM RECIPE;
 SHOW INDEX FROM RECIPE;
 DROP TABLE RECIPE;
+
+
+-- 프로필 이미지 삭제 실패 테이블 ----------------------------------------------------------
+CREATE TABLE IMG_DELETE_FAIL(
+	IDF_NO INT NOT NULL AUTO_INCREMENT COMMENT "PK",
+    IDF_FOLDER_PATH VARCHAR(255) NOT NULL COMMENT "삭제할 폴더 경로",
+    IDF_DELETE_STATE TINYINT DEFAULT 1 COMMENT "폴더 삭제 유무",
+    PRIMARY KEY(IDF_NO)
+);
+
+SELECT * FROM IMG_DELETE_FAIL;
+DROP TABLE IMG_DELETE_FAIL;
+
+CREATE EVENT delete_failed_images
+ON SCHEDULE EVERY 1 DAY  
+STARTS TIMESTAMP(CURRENT_DATE, '23:59:00')  
+DO  
+DELETE FROM IMG_DELETE_FAIL WHERE IDF_DELETE_STATE = 0;
+
+SHOW VARIABLES LIKE 'event_scheduler';
+
+SELECT EVENT_NAME, EVENT_SCHEMA, EVENT_DEFINITION, STATUS, ON_COMPLETION, LAST_EXECUTED, INTERVAL_VALUE, INTERVAL_FIELD
+FROM information_schema.EVENTS;

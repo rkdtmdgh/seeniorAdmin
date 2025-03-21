@@ -369,13 +369,21 @@ public class BoardController {
 		return result;
 	}
 	
+	//게시판 공지사항 리스트 요청
+	@GetMapping("/noti_info/notice_list_form")
+	public String noticeListForm() {
+		log.info("noticeListForm()");
+					
+		String nextPage = "board/notice_list_form";
+			
+		return nextPage;
+	}
+	
 	//게시판 공지사항 게시물 작성 양식
 	@GetMapping("/noti_info/create_notice_form")
-	public String createNoticeForm(@RequestParam("infoNo") int bn_category_no, Model model) {
-		log.info("createForm()");
-			
-		model.addAttribute("bn_category_no", bn_category_no);
-			
+	public String createNoticeForm() {
+		log.info("createNoticeForm()");
+					
 		String nextPage = "board/create_notice_form";
 			
 		return nextPage;
@@ -384,14 +392,15 @@ public class BoardController {
 	//작성한 공지 게시물 등록 요청(board_notice)
 	@PostMapping("/noti_info/create_notice_confirm")
 	@ResponseBody
-	public boolean createNoticeConfirm(@RequestParam("files") List<MultipartFile> files, 
+	public boolean createNoticeConfirm(@RequestParam(value = "files" , required = false) List<MultipartFile> files, 
 									BoardNoticePostsDto boardNoticePostsDto) {
 		log.info("createNoticeConfirm()");
 		
 		log.info("files: {}",files.size());
 		log.info("bn_category_no: {}",boardNoticePostsDto.getBn_category_no());
 		log.info("bn_writer_no: {}",boardNoticePostsDto.getBn_writer_no());
-				
+		log.info("bn_title: {}",boardNoticePostsDto.getBn_title());
+		log.info("bn_body: {}",boardNoticePostsDto.getBn_body());
 		Boolean result = false;
 		
 		//file 첨부가 되어 있는지 확인
