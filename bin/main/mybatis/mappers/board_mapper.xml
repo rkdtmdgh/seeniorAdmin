@@ -102,6 +102,20 @@
 		<result column="dbp_request_time" property="dbp_request_time" />
 		<collection property="deleteBoardPostsDto" resultMap="DeleteBoardPostsDto" />
 	</resultMap>
+	
+	<resultMap type="BoardNoticePostsDto" id="BoardNoticePostsDto">
+		<result column="bn_no" property="bn_no" />
+		<result column="bn_category_no" property="bn_category_no" />		
+		<result column="bn_title" property="bn_title" />
+		<result column="bn_body" property="bn_body" />
+		<result column="bn_writer_no" property="bn_writer_no" />
+		<result column="bn_dir_name" property="bn_dir_name" />
+		<result column="bn_view_cnt" property="bn_view_cnt" />
+		<result column="bn_state" property="bn_state" />
+		<result column="bn_is_deleted" property="bn_is_deleted" />
+		<result column="bn_reg_date" property="bn_reg_date" />
+		<result column="bn_mod_date" property="bn_mod_date" />
+	</resultMap>
 
 	<select id="getList" resultType="com.see_nior.seeniorAdmin.dto.BoardCategoryDto">
 	
@@ -589,5 +603,22 @@
     		DBP_NO = #{dbp_no};
 		
 	</update>
+	
+	<insert id="createNoticeConfirm" parameterType="com.see_nior.seeniorAdmin.dto.BoardNoticePostsDto">
+    	
+    	INSERT INTO
+    		BOARD_NOTICE(BN_CATEGORY_NO,
+    					BN_TITLE,
+    					BN_BODY,
+    					BN_WRITER_NO,
+    					BN_DIR_NAME) 
+    	VALUES
+    		(#{bn_category_no},
+    		#{bn_title},
+    		#{bn_body},
+    		#{bn_writer_no},
+    		#{bn_dir_name})
+    	
+    </insert>
 	 
 </mapper>
