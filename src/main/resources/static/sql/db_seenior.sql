@@ -414,6 +414,7 @@ CREATE TABLE BOARD_NOTICE (
 	BN_TITLE		VARCHAR(255) NOT NULL COMMENT "공지사항 제목",							-- 공지사항 제목
 	BN_BODY			TEXT NOT NULL COMMENT "공지사항 내용",									-- 공지사항 내용
 	BN_WRITER_NO	INT	NOT NULL COMMENT "공지사항 작성자 NO(ADMIN_ACCOUNT TABLE PK)",		-- 공지사항 작성자 NO(ADMIN_ACCOUNT TABLE PK)
+    BN_DIR_NAME		VARCHAR(20) COMMENT "이미지 저장된 폴더 이름"	,							-- 공지사항 게시물 이미지 저장된 폴더명
 	BN_VIEW_CNT		INT DEFAULT 0 COMMENT "공지사항 조회수", 			 					-- 공지사항 조회수
 	BN_STATE		TINYINT	DEFAULT 1 COMMENT "공지사항 숨김 상태(기본값 = 1, 숨김 시 = 0)",	-- 공지사항 숨김 상태(기본값 = 1, 숨김 시 = 0)
 	BN_IS_DELETED	TINYINT DEFAULT 1 COMMENT "공지사항 삭제 여부(기본값 = 1, 삭제 시 = 0)",	-- 공지사항 삭제 여부(기본값 = 1, 삭제 시 = 0)
