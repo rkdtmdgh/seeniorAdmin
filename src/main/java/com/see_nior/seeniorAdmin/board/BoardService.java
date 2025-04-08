@@ -849,13 +849,90 @@ public class BoardService {
 			log.info("bn_writer_no: {}",boardNoticePostsDto.getBn_writer_no());
 			log.info("bn_title: {}",boardNoticePostsDto.getBn_title());
 			log.info("bn_body: {}",boardNoticePostsDto.getBn_body());
-			return false;
+			
+			//이미지 서버에 요청할 파일 저장 경로 생성
+    		Date now = new Date();	      
+    		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+    		String date = dateFormat.format(now);
+    		
+    		String filePath = "\\board\\notice\\"
+    				+boardNoticePostsDto.getBn_category_no()
+    				+"\\"+boardNoticePostsDto.getBn_writer_no()
+    				+"\\"+date;
+    		//이미지 저장 요청
+    		ResponseEntity<String> savedFiles = imageFileService.uploadFiles(files, filePath);
+    	
+    		if(savedFiles != null) {
+    			log.info("uploadFiles succuess!");					
+    			
+    			ObjectMapper objectMapper = new ObjectMapper();
+    			
+    			try {
+    				Map<String,Object> savedFileObj = objectMapper.readValue(savedFiles.getBody(), new TypeReference<Map<String,Object>>() {});
+    				log.info("savedFiles(string) to savedFileNames(object) success!");
+    				
+    				@SuppressWarnings("unchecked") //(List<String>) 강제 캐스팅 에러
+    				List<String> savedFileNames = (List<String>) savedFileObj.get("savedFileNames");
+    				log.info("savedFileNames : {}",savedFileNames);
+    				
+    				String bn_body = boardNoticePostsDto.getBn_body();
+    				
+    				if(savedFileNames != null) {
+    					
+    					// 정규 표현식 패턴
+    					Pattern pattern = Pattern.compile("img src=\"[^\"]*\"");
+    					Matcher matcher = pattern.matcher(boardNoticePostsDto.getBn_body());
+    					
+    					StringBuilder new_bp_body = new StringBuilder();
+    					int index = 0;
+    					
+    					while (matcher.find()) {
+    						
+    						String newSrc = "img src=\"http://" 
+    								+ imgServerPath 
+    								+"board/notice/" 
+    								+ boardNoticePostsDto.getBn_category_no() 
+    								+"/"
+    								+ boardNoticePostsDto.getBn_writer_no() 
+    								+"/"
+    								+ date 
+    								+"/"
+    								+ savedFileNames.get(index++) + "\"";
+    						matcher.appendReplacement(new_bp_body, newSrc);
+    					}
+    					matcher.appendTail(new_bp_body);
+    					
+    					bn_body = new_bp_body.toString();
+    					
+    				}
+    				    				
+    				boardNoticePostsDto.setBn_body(bn_body);
+    				boardNoticePostsDto.setBn_dir_name(date);
+    				
+    				int result = boardMapper.createNoticeConfirm(boardNoticePostsDto);
+    				
+    				if(result <= 0) {
+    					log.info("createNoticeConfirm() insert fail!!");
+    					return false;
+    				}else {
+    					log.info("createNoticeConfirm() insert success!!");    					    					
+    					return true;
+    				}
+    				
+    			} catch (Exception e) {
+    				log.info("savedFiles(string) to savedFileNames(array) fail!");
+    				e.printStackTrace();
+    			}
+    			
+    			return true;
+    		}else {
+    			log.info("uploadFiles fail!");
+    			
+    			return false;
+    		}
+			
 		}else {
 			log.info("files: null!!");
-			log.info("bn_category_no: {}",boardNoticePostsDto.getBn_category_no());
-			log.info("bn_writer_no: {}",boardNoticePostsDto.getBn_writer_no());
-			log.info("bn_title: {}",boardNoticePostsDto.getBn_title());
-			log.info("bn_body: {}",boardNoticePostsDto.getBn_body());
 			
 			int result = boardMapper.createNoticeConfirm(boardNoticePostsDto);
     		if(result <= 0) {
