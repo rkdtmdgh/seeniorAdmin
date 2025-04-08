@@ -852,10 +852,6 @@ public class BoardService {
 			return false;
 		}else {
 			log.info("files: null!!");
-			log.info("bn_category_no: {}",boardNoticePostsDto.getBn_category_no());
-			log.info("bn_writer_no: {}",boardNoticePostsDto.getBn_writer_no());
-			log.info("bn_title: {}",boardNoticePostsDto.getBn_title());
-			log.info("bn_body: {}",boardNoticePostsDto.getBn_body());
 			
 			int result = boardMapper.createNoticeConfirm(boardNoticePostsDto);
     		if(result <= 0) {
