@@ -1751,7 +1751,7 @@ CREATE TABLE SCHEDULES (
 	S_CARE_LIST_NO		INT	NOT NULL COMMENT "일정 환자 NO(CARE_LIST TABLE PK)",			-- 일정 환자 NO(CARE_LIST TABLE PK)
 	S_TITLE				VARCHAR(100) NOT NULL COMMENT "일정 제목",						-- 일정 제목
 	S_COMMENT			VARCHAR(255) NOT NULL COMMENT "일정 상세",						-- 일정 상세
-	S_ALARM_CHECK		TINYINT	DEFAULT 1 COMMENT "일정 알람 유무(기본값 = 1, 알람 시 = 0)",	-- 일정 알람 유무(기본값 = 1, 알람 시 = 0)
+	S_ALARM_CHECK		TINYINT	COMMENT "일정 알람 유무(기본값 = 0, 알람 시 = 1)",				-- 일정 알람 유무(기본값 = 0, 알람 시 = 1)
 	S_ALARM_TIME		DATETIME COMMENT "일정 알람 시간",									-- 일정 알람 시간
 	S_START_DATE		DATE NOT NULL COMMENT "일정 시작일",								-- 일정 시작일
 	S_END_DATE			DATE NOT NULL COMMENT "일정 종료일", 								-- 일정 종료일
