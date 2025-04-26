@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.see_nior.seeniorAdmin.dto.BoardCategoryDto;
+import com.see_nior.seeniorAdmin.dto.BoardNoticePostsDto;
 import com.see_nior.seeniorAdmin.dto.BoardPostsDto;
 import com.see_nior.seeniorAdmin.dto.DeleteBoardPostsDto;
 import com.see_nior.seeniorAdmin.dto.DiseaseDto;
@@ -70,6 +71,8 @@ public interface BoardMapper {
 	List<DeleteBoardPostsDto> getDeleteBoardPostsValid();
 
 	int updateDeleteBoardPostsIsDeleted(int dbp_no);
+
+	int createNoticeConfirm(BoardNoticePostsDto boardNoticePostsDto);
 
 	
 

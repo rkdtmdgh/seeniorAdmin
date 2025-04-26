@@ -421,5 +421,16 @@ public class BoardController {
 		return result;
 	}
 	
+	//게시판 공지사항 리스트 요청
+	@GetMapping("/noti_info/get_notice_list")
+	public String getNoticeList(@RequestParam("page_limit") int page_limit,
+			@RequestParam("block_limit") int block_limit,
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+			@RequestParam(value = "sortValue", required = false, defaultValue = "bn_no") String sortValue,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order) {
+		log.info("getNoticeList()");
+					
+		return null;
+	}
 	
 }

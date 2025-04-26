@@ -14,6 +14,7 @@ public class BoardNoticePostsDto {
 	private String bn_title;	
 	private String bn_body;		
 	private int bn_writer_no;	
+	private String bn_dir_name;	
 	private int bn_view_cnt;	
 	private boolean bn_state;		
 	private boolean bn_is_deleted;	
