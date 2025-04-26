@@ -1,6 +1,0 @@
-.main_content {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: var(--stepGap);
-}
