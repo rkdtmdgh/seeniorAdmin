@@ -209,6 +209,7 @@ CREATE TABLE USER_ACCOUNT (
 );
 
 SELECT * FROM USER_ACCOUNT;
+
 SHOW INDEX FROM USER_ACCOUNT;
 DROP TABLE USER_ACCOUNT;
 
@@ -1744,7 +1745,7 @@ DROP TABLE CARE_PERSON_DISEASE;
 
 
 -- 일정 테이블 --------------------------------------------------------------------------------------------------------------------
-CREATE TABLE SCHEDULER (
+CREATE TABLE SCHEDULES (
 	S_NO				INT	AUTO_INCREMENT COMMENT "일정 NO(PK)", 						-- 일정 NO(PK)
 	S_USER_NO			INT	NOT NULL COMMENT "일정 유저 NO(USER_ACCOUNT TABLE PK)",		-- 일정 유저 NO(USER_ACCOUNT TABLE PK)
 	S_CARE_LIST_NO		INT	NOT NULL COMMENT "일정 환자 NO(CARE_LIST TABLE PK)",			-- 일정 환자 NO(CARE_LIST TABLE PK)
@@ -1752,52 +1753,69 @@ CREATE TABLE SCHEDULER (
 	S_COMMENT			VARCHAR(255) NOT NULL COMMENT "일정 상세",						-- 일정 상세
 	S_ALARM_CHECK		TINYINT	DEFAULT 1 COMMENT "일정 알람 유무(기본값 = 1, 알람 시 = 0)",	-- 일정 알람 유무(기본값 = 1, 알람 시 = 0)
 	S_ALARM_TIME		DATETIME COMMENT "일정 알람 시간",									-- 일정 알람 시간
-	S_YEAR				INT NOT NULL COMMENT "일정 년도",									-- 일정 년도
-	S_MONTH				INT	NOT NULL COMMENT "일정 월",									-- 일정 월
-	S_DATE				INT	NOT NULL COMMENT "일정 일",									-- 일정 일
 	S_START_DATE		DATE NOT NULL COMMENT "일정 시작일",								-- 일정 시작일
 	S_END_DATE			DATE NOT NULL COMMENT "일정 종료일", 								-- 일정 종료일
 	S_IS_DELETED		TINYINT DEFAULT 1 COMMENT "일정 삭제 여부(기본값 = 1, 삭제 시 = 0)",	-- 일정 삭제 여부(기본값 = 1, 삭제 시 = 0)
 	S_REG_DATE			DATETIME DEFAULT NOW() COMMENT "일정 등록일",						-- 일정 등록일
-	S_MOD_DATE			DATETIME DEFAULT NOW() COMMENT "일정 수정일",						-- 일정 수정일
+	S_MOD_DATE			DATETIME DEFAULT NOW() ON UPDATE NOW() COMMENT "일정 수정일",		-- 일정 수정일
     PRIMARY KEY(S_NO)
 );
 
-SELECT * FROM SCHEDULER;
-SHOW INDEX FROM SCHEDULER;
-DROP TABLE SCHEDULER;
+SELECT * FROM SCHEDULES;
+SHOW INDEX FROM SCHEDULES;
+DROP TABLE SCHEDULES;
 
 
 -- 복용약 테이블 --------------------------------------------------------------------------------------------------------------------
-CREATE TABLE PRESCRIPTIONS (
-	P_NO					INT	AUTO_INCREMENT COMMENT "복용 약 NO(PK)", 							-- 복용 약 NO(PK)
-	P_USER_NO				INT	NOT NULL COMMENT "복용 약 유저 NO(USER_ACCOUNT TABLE PK)",			-- 복용 약 유저 NO(USER_ACCOUNT TABLE PK)
-	P_CARE_LIST_NO			INT	NOT NULL COMMENT "복용 약 환자 NO(CARE_LIST TABLE PK)",			-- 복용 약 환자 NO(CARE_LIST TABLE PK)
-	P_TITLE					VARCHAR(100) NOT NULL COMMENT "복용 약 알림 제목",						-- 복용 약 알림 제목
-	P_COMMENT				VARCHAR(255) NOT NULL COMMENT "복용 약 알림 상세",						-- 복용 약 알림 상세
-	P_ALARM_CHECK			TINYINT	DEFAULT 1 COMMENT "복용 약 알람 유무(기본값 = 1, 알람 시 = 0)",		-- 복용 약 알람 유무(기본값 = 1, 알람 시 = 0)
-	P_ALARM_TIME_1			VARCHAR(100) COMMENT "복용 약 알람 시간 1",								-- 복용 약 알람 시간 1
-	P_TAKING_IT_OR_NOT_1	TINYINT DEFAULT 1 COMMENT "복용 유무 체크 1(기본값 = 1, 복용 시 = 0)",		-- 복용 유무 체크 1(기본값 = 1, 복용 시 = 0)
-	P_ALARM_TIME_2			VARCHAR(100) COMMENT "복용 약 알람 시간 2",								-- 복용 약 알람 시간 2
-	P_TAKING_IT_OR_NOT_2	TINYINT DEFAULT 1 COMMENT "복용 유무 체크 2(기본값 = 1, 복용 시 = 0)",		-- 복용 유무 체크 2(기본값 = 1, 복용 시 = 0)
-	P_ALARM_TIME_3			VARCHAR(100) COMMENT "복용 약 알람 시간 3",								-- 복용 약 알람 시간 3
-	P_TAKING_IT_OR_NOT_3	TINYINT DEFAULT 1 COMMENT "복용 유무 체크 3(기본값 = 1, 복용 시 = 0)",		-- 복용 유무 체크 3(기본값 = 1, 복용 시 = 0)
-	P_ALARM_TIME_4			VARCHAR(100) COMMENT "복용 약 알람 시간 4",								-- 복용 약 알람 시간 4
-	P_TAKING_IT_OR_NOT_4	TINYINT DEFAULT 1 COMMENT "복용 유무 체크 4(기본값 = 1, 복용 시 = 0)",		-- 복용 유무 체크 4(기본값 = 1, 복용 시 = 0)
-	P_ALARM_TIME_5			VARCHAR(100) COMMENT "복용 약 알람 시간 5",								-- 복용 약 알람 시간 5
-	P_TAKING_IT_OR_NOT_5	TINYINT DEFAULT 1 COMMENT "복용 유무 체크 5(기본값 = 1, 복용 시 = 0)",		-- 복용 유무 체크 5(기본값 = 1, 복용 시 = 0)	
-    P_BEFORE_AFTER			TINYINT COMMENT "복용 약 식전 OR 식후(식전 = 1, 식후 = 0)",				-- 복용 약 식전 OR 식후(식전 = 1, 식후 = 0)
-	P_START_DATE			DATE NOT NULL COMMENT "복용 시작일",									-- 복용 시작일
-	P_END_DATE				DATE NOT NULL COMMENT "복용 종료일",									-- 복용 종료일
-	P_IS_DELETED			TINYINT DEFAULT 1 COMMENT "복용 약 삭제 여부(기본값 = 1, 삭제 시 = 0)",		-- 복용 약 삭제 여부(기본값 = 1, 삭제 시 = 0)
-	P_REG_DATE				DATETIME DEFAULT NOW() COMMENT "복용 약 등록일",						-- 복용 약 등록일
-	P_MOD_DATE				DATETIME DEFAULT NOW() COMMENT "복용 약 수정일",						-- 복용 약 수정일
-    PRIMARY KEY(P_NO)
+CREATE TABLE MEDICINE (
+	M_NO 			INT NOT NULL COMMENT "일련번호(PK)",								-- 일련번호(PK)
+    M_USER_NO		INT	NOT NULL COMMENT "관리 유저 NO(USER_ACCOUNT TABLE PK)",		-- 관리 유저 NO(USER_ACCOUNT TABLE PK)
+    M_CARE_LIST_NO	INT	NOT NULL COMMENT "약 복용 환자 NO(CARE_LIST TABLE PK)",		-- 약 복용 환자 NO(CARE_LIST TABLE PK)
+    M_NAME			VARCHAR(100) NOT NULL COMMENT "약 이름",							-- 복용약 이름
+    M_START_DATE	DATE NOT NULL COMMENT "약 복용 시작일",								-- 약 복용 시작일
+    M_END_DATE		DATE NOT NULL COMMENT "약 복용 종료일",								-- 약 복용 종료일
+    M_IS_DELETED	TINYINT DEFAULT 1 COMMENT "복용약 삭제 여부(기본값 = 1, 삭제 시 = 0)",	-- 복용약 삭제 여부(기본값 = 1, 삭제 시 = 0)
+    M_REG_DATE		DATETIME DEFAULT NOW() COMMENT "약 등록일",						-- 약 등록일
+	M_MOD_DATE		DATETIME DEFAULT NOW() ON UPDATE NOW() COMMENT "약 수정일",		-- 약 수정일
+    PRIMARY KEY(M_NO)
 );
 
-SELECT * FROM PRESCRIPTIONS;
-SHOW INDEX FROM PRESCRIPTIONS;
-DROP TABLE PRESCRIPTIONS;
+SELECT * FROM MEDICINE;
+SHOW INDEX FROM MEDICINE;
+DROP TABLE MEDICINE;
+
+-- 복용약 스케쥴 테이블 -------------------------------------------------------------------------------------------------------------
+CREATE TABLE MEDICINE_SCHEDULE (
+	MS_NO 				INT NOT NULL COMMENT "일련번호(PK)",												-- 일련번호(PK)
+	MS_MEDICINE_NO 		INT	NOT NULL COMMENT "복용약 테이블 NO(MEDICINE TABLE PK)",							-- 복용약 테이블 NO(MEDICINE TABLE PK)
+    MS_DOSING_PERIOD 	ENUM('MORNING', 'LUNCH', 'DINNER', 'BEDTIME') COMMENT "아침, 점심, 저녁, 자기 전", 	-- 아침, 점심, 저녁, 자기 전
+    MS_MEAL_RELATION 	ENUM('BEFORE_MEAL', 'AFTER_MEAL', 'NONE') COMMENT "식전 / 식후 / 무관",				-- 식전 / 식후 / 무관
+    MS_REPEAT_DAY		VARCHAR(30) COMMENT "반복일 ex) 'MON,TUE,WED'", 									-- 반복일 ex) 'MON,TUE,WED'
+    MS_IS_DELETED		TINYINT DEFAULT 1 COMMENT "복용약 일정 삭제 여부(기본값 = 1, 삭제 시 = 0)",				-- 복용약 일정 삭제 여부(기본값 = 1, 삭제 시 = 0)
+    MS_REG_DATE			DATETIME DEFAULT NOW() COMMENT "약 일정 등록일",									-- 약 일정 등록일
+    MS_MOD_DATE			DATETIME DEFAULT NOW() ON UPDATE NOW() COMMENT "약 일정 수정일",					-- 약 일정 수정일
+	PRIMARY KEY(MS_NO)
+);
+
+SELECT * FROM MEDICINE_SCHEDULE;
+SHOW INDEX FROM MEDICINE_SCHEDULE;
+DROP TABLE MEDICINE_SCHEDULE;
+
+-- 복용약 로그 테이블 -------------------------------------------------------------------------------------------------------------
+CREATE TABLE MEDICINE_INTAKE_LOG (
+	MIL_NO 						INT NOT NULL COMMENT "일련번호(PK)",											-- 일련번호(PK)
+	MIL_MEDICINE_SCHEDULE_NO 	INT	NOT NULL COMMENT "복용약 스케줄 테이블 NO(MEDICINE_SCHEDULE TABLE PK)",		-- 복용약 스케줄 테이블 NO(MEDICINE_SCHEDULE TABLE PK)
+    MIL_DATE 					DATE NOT NULL COMMENT "복용 일자", 											-- 복용 일자
+    MIL_STATE					TINYINT DEFAULT 1 COMMENT "복용약 일정 삭제 여부(기본값 = 1, 삭제 시 = 0)",			-- 복용약 일정 삭제 여부(기본값 = 1, 삭제 시 = 0)
+    MIL_IS_DELETED				TINYINT DEFAULT 1 COMMENT "복용약 로그 삭제 여부(기본값 = 1, 삭제 시 = 0)",			-- 복용약 로그 삭제 여부(기본값 = 1, 삭제 시 = 0)
+    MIL_REG_DATE				DATETIME DEFAULT NOW() COMMENT "약 일정 등록일",								-- 복용약 로그 등록일
+    MIL_MOD_DATE				DATETIME DEFAULT NOW() ON UPDATE NOW() COMMENT "약 일정 수정일",				-- 복용약 로그 수정일
+	PRIMARY KEY(MIL_NO)
+);
+
+SELECT * FROM MEDICINE_INTAKE_LOG;
+SHOW INDEX FROM MEDICINE_INTAKE_LOG;
+DROP TABLE MEDICINE_INTAKE_LOG;
 
 -- 식단 테이블 (API 기준으로 컬럼명 채택) ----------------------------------------------------------------------------------------------
 CREATE TABLE RECIPE(
